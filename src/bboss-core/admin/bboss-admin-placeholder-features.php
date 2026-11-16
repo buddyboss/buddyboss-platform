@@ -31,6 +31,20 @@ function bboss_placeholder_features_transient_key() {
 	$version = defined( 'BBOSS_PLATFORM_VERSION' ) ? BBOSS_PLATFORM_VERSION : '0';
 	return 'bb_placeholder_features_data_v_' . md5( $version );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_placeholder_features_transient_key' ) && ! function_exists( 'bb_placeholder_features_transient_key' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_placeholder_features_transient_key()}.
+	 *
+	 * @deprecated Use bboss_placeholder_features_transient_key() instead.
+	 */
+	function bb_placeholder_features_transient_key() {
+		return bboss_placeholder_features_transient_key();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get the placeholder features catalog from the cache.
@@ -68,6 +82,20 @@ function bboss_get_placeholder_features_data() {
 	// the transient + stale-while-revalidate path above.
 	return bboss_refresh_placeholder_features_data();
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_placeholder_features_data' ) && ! function_exists( 'bb_get_placeholder_features_data' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_placeholder_features_data()}.
+	 *
+	 * @deprecated Use bboss_get_placeholder_features_data() instead.
+	 */
+	function bb_get_placeholder_features_data() {
+		return bboss_get_placeholder_features_data();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Schedule a single-event background refresh of the placeholder features catalog.
@@ -93,6 +121,20 @@ function bboss_schedule_placeholder_features_refresh() {
 		wp_schedule_single_event( time() + 5, 'bb_refresh_placeholder_features_cron' );
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_schedule_placeholder_features_refresh' ) && ! function_exists( 'bb_schedule_placeholder_features_refresh' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_schedule_placeholder_features_refresh()}.
+	 *
+	 * @deprecated Use bboss_schedule_placeholder_features_refresh() instead.
+	 */
+	function bb_schedule_placeholder_features_refresh() {
+		return bboss_schedule_placeholder_features_refresh();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Perform the actual remote fetch and populate the catalog cache.
@@ -151,6 +193,20 @@ function bboss_refresh_placeholder_features_data() {
 
 	return $data;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_refresh_placeholder_features_data' ) && ! function_exists( 'bb_refresh_placeholder_features_data' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_refresh_placeholder_features_data()}.
+	 *
+	 * @deprecated Use bboss_refresh_placeholder_features_data() instead.
+	 */
+	function bb_refresh_placeholder_features_data() {
+		return bboss_refresh_placeholder_features_data();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 // Cron handlers — single-event (on-demand refresh) and recurring (daily safety net).
 add_action( 'bb_refresh_placeholder_features_cron', 'bb_refresh_placeholder_features_data' );
@@ -166,6 +222,20 @@ function bboss_schedule_placeholder_features_daily_refresh() {
 		wp_schedule_event( time() + HOUR_IN_SECONDS, 'daily', 'bb_placeholder_features_daily_refresh' );
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_schedule_placeholder_features_daily_refresh' ) && ! function_exists( 'bb_schedule_placeholder_features_daily_refresh' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_schedule_placeholder_features_daily_refresh()}.
+	 *
+	 * @deprecated Use bboss_schedule_placeholder_features_daily_refresh() instead.
+	 */
+	function bb_schedule_placeholder_features_daily_refresh() {
+		return bboss_schedule_placeholder_features_daily_refresh();
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'admin_init', 'bb_schedule_placeholder_features_daily_refresh' );
 
 /**
@@ -191,6 +261,20 @@ function bboss_get_placeholder_product_slug( $item ) {
 
 	return '';
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_placeholder_product_slug' ) && ! function_exists( 'bb_get_placeholder_product_slug' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_placeholder_product_slug()}.
+	 *
+	 * @deprecated Use bboss_get_placeholder_product_slug() instead.
+	 */
+	function bb_get_placeholder_product_slug( $item ) {
+		return bboss_get_placeholder_product_slug( $item );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Determine the plugin status for a placeholder feature.
@@ -285,6 +369,20 @@ function bboss_get_placeholder_plugin_status( $item, $active_plugins = null ) {
 
 	return is_plugin_active( $plugin_file ) ? 'active' : 'installed_inactive';
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_placeholder_plugin_status' ) && ! function_exists( 'bb_get_placeholder_plugin_status' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_placeholder_plugin_status()}.
+	 *
+	 * @deprecated Use bboss_get_placeholder_plugin_status() instead.
+	 */
+	function bb_get_placeholder_plugin_status( $item, $active_plugins = null ) {
+		return bboss_get_placeholder_plugin_status( $item, $active_plugins );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Whether every plugin a placeholder item requires is currently active.
@@ -325,6 +423,20 @@ function bboss_placeholder_requirements_met( $requires, $active_plugins ) {
 
 	return true;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_placeholder_requirements_met' ) && ! function_exists( 'bb_placeholder_requirements_met' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_placeholder_requirements_met()}.
+	 *
+	 * @deprecated Use bboss_placeholder_requirements_met() instead.
+	 */
+	function bb_placeholder_requirements_met( $requires, $active_plugins ) {
+		return bboss_placeholder_requirements_met( $requires, $active_plugins );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Append placeholder features to the AJAX features response.
@@ -440,6 +552,20 @@ function bboss_admin_inject_placeholder_features( $features ) {
 
 	return $features;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_admin_inject_placeholder_features' ) && ! function_exists( 'bb_admin_inject_placeholder_features' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_admin_inject_placeholder_features()}.
+	 *
+	 * @deprecated Use bboss_admin_inject_placeholder_features() instead.
+	 */
+	function bb_admin_inject_placeholder_features( $features ) {
+		return bboss_admin_inject_placeholder_features( $features );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Hook the placeholder feature provider into the features AJAX response filter.
@@ -500,6 +626,20 @@ function bboss_admin_sort_features_response( $features ) {
 
 	return array_column( $indexed, 'data' );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_admin_sort_features_response' ) && ! function_exists( 'bb_admin_sort_features_response' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_admin_sort_features_response()}.
+	 *
+	 * @deprecated Use bboss_admin_sort_features_response() instead.
+	 */
+	function bb_admin_sort_features_response( $features ) {
+		return bboss_admin_sort_features_response( $features );
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_filter( 'bb_admin_features_response', 'bb_admin_sort_features_response', 30 );
 
 // @bbwt-com-start drm
@@ -606,6 +746,20 @@ function bboss_admin_mark_drm_locked_features( $features ) {
 
 	return $features;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_admin_mark_drm_locked_features' ) && ! function_exists( 'bb_admin_mark_drm_locked_features' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_admin_mark_drm_locked_features()}.
+	 *
+	 * @deprecated Use bboss_admin_mark_drm_locked_features() instead.
+	 */
+	function bb_admin_mark_drm_locked_features( $features ) {
+		return bboss_admin_mark_drm_locked_features( $features );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Hook DRM lock detection into the features AJAX response.
@@ -680,6 +834,20 @@ function bboss_maybe_clear_placeholder_features_cache() {
 	// the localized payload is read so it fires exactly once per trigger.
 	set_transient( 'bb_help_content_cache_flush_signal', time(), 5 * MINUTE_IN_SECONDS );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_maybe_clear_placeholder_features_cache' ) && ! function_exists( 'bb_maybe_clear_placeholder_features_cache' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_maybe_clear_placeholder_features_cache()}.
+	 *
+	 * @deprecated Use bboss_maybe_clear_placeholder_features_cache() instead.
+	 */
+	function bb_maybe_clear_placeholder_features_cache() {
+		return bboss_maybe_clear_placeholder_features_cache();
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'admin_init', 'bb_maybe_clear_placeholder_features_cache' );
 
 /**
@@ -749,6 +917,20 @@ function bboss_clear_help_content_transients() {
 		delete_transient( $transient_key );
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_clear_help_content_transients' ) && ! function_exists( 'bb_clear_help_content_transients' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_clear_help_content_transients()}.
+	 *
+	 * @deprecated Use bboss_clear_help_content_transients() instead.
+	 */
+	function bb_clear_help_content_transients() {
+		return bboss_clear_help_content_transients();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Clear the placeholder features cache when the license status changes.
@@ -767,6 +949,20 @@ function bboss_clear_placeholder_cache_on_license_change() {
 	delete_transient( bboss_placeholder_features_transient_key() );
 	bboss_schedule_placeholder_features_refresh();
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_clear_placeholder_cache_on_license_change' ) && ! function_exists( 'bb_clear_placeholder_cache_on_license_change' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_clear_placeholder_cache_on_license_change()}.
+	 *
+	 * @deprecated Use bboss_clear_placeholder_cache_on_license_change() instead.
+	 */
+	function bb_clear_placeholder_cache_on_license_change() {
+		return bboss_clear_placeholder_cache_on_license_change();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Register the license change hook with the dynamic plugin ID.
@@ -790,131 +986,8 @@ function bboss_register_placeholder_cache_clear_hooks() {
 		add_action( $plugin_id . '_license_status_changed', 'bb_clear_placeholder_cache_on_license_change' );
 	}
 }
-add_action( 'admin_init', 'bb_register_placeholder_cache_clear_hooks' );
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
-if ( function_exists( 'bboss_admin_inject_placeholder_features' ) && ! function_exists( 'bb_admin_inject_placeholder_features' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_admin_inject_placeholder_features()}.
-	 *
-	 * @deprecated Use bboss_admin_inject_placeholder_features() instead.
-	 */
-	function bb_admin_inject_placeholder_features( $features ) {
-		return bboss_admin_inject_placeholder_features( $features );
-	}
-}
-if ( function_exists( 'bboss_admin_mark_drm_locked_features' ) && ! function_exists( 'bb_admin_mark_drm_locked_features' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_admin_mark_drm_locked_features()}.
-	 *
-	 * @deprecated Use bboss_admin_mark_drm_locked_features() instead.
-	 */
-	function bb_admin_mark_drm_locked_features( $features ) {
-		return bboss_admin_mark_drm_locked_features( $features );
-	}
-}
-if ( function_exists( 'bboss_admin_sort_features_response' ) && ! function_exists( 'bb_admin_sort_features_response' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_admin_sort_features_response()}.
-	 *
-	 * @deprecated Use bboss_admin_sort_features_response() instead.
-	 */
-	function bb_admin_sort_features_response( $features ) {
-		return bboss_admin_sort_features_response( $features );
-	}
-}
-if ( function_exists( 'bboss_clear_help_content_transients' ) && ! function_exists( 'bb_clear_help_content_transients' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_clear_help_content_transients()}.
-	 *
-	 * @deprecated Use bboss_clear_help_content_transients() instead.
-	 */
-	function bb_clear_help_content_transients() {
-		return bboss_clear_help_content_transients();
-	}
-}
-if ( function_exists( 'bboss_clear_placeholder_cache_on_license_change' ) && ! function_exists( 'bb_clear_placeholder_cache_on_license_change' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_clear_placeholder_cache_on_license_change()}.
-	 *
-	 * @deprecated Use bboss_clear_placeholder_cache_on_license_change() instead.
-	 */
-	function bb_clear_placeholder_cache_on_license_change() {
-		return bboss_clear_placeholder_cache_on_license_change();
-	}
-}
-if ( function_exists( 'bboss_get_placeholder_features_data' ) && ! function_exists( 'bb_get_placeholder_features_data' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_placeholder_features_data()}.
-	 *
-	 * @deprecated Use bboss_get_placeholder_features_data() instead.
-	 */
-	function bb_get_placeholder_features_data() {
-		return bboss_get_placeholder_features_data();
-	}
-}
-if ( function_exists( 'bboss_get_placeholder_plugin_status' ) && ! function_exists( 'bb_get_placeholder_plugin_status' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_placeholder_plugin_status()}.
-	 *
-	 * @deprecated Use bboss_get_placeholder_plugin_status() instead.
-	 */
-	function bb_get_placeholder_plugin_status( $item, $active_plugins = null ) {
-		return bboss_get_placeholder_plugin_status( $item, $active_plugins );
-	}
-}
-if ( function_exists( 'bboss_get_placeholder_product_slug' ) && ! function_exists( 'bb_get_placeholder_product_slug' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_placeholder_product_slug()}.
-	 *
-	 * @deprecated Use bboss_get_placeholder_product_slug() instead.
-	 */
-	function bb_get_placeholder_product_slug( $item ) {
-		return bboss_get_placeholder_product_slug( $item );
-	}
-}
-if ( function_exists( 'bboss_maybe_clear_placeholder_features_cache' ) && ! function_exists( 'bb_maybe_clear_placeholder_features_cache' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_maybe_clear_placeholder_features_cache()}.
-	 *
-	 * @deprecated Use bboss_maybe_clear_placeholder_features_cache() instead.
-	 */
-	function bb_maybe_clear_placeholder_features_cache() {
-		return bboss_maybe_clear_placeholder_features_cache();
-	}
-}
-if ( function_exists( 'bboss_placeholder_features_transient_key' ) && ! function_exists( 'bb_placeholder_features_transient_key' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_placeholder_features_transient_key()}.
-	 *
-	 * @deprecated Use bboss_placeholder_features_transient_key() instead.
-	 */
-	function bb_placeholder_features_transient_key() {
-		return bboss_placeholder_features_transient_key();
-	}
-}
-if ( function_exists( 'bboss_placeholder_requirements_met' ) && ! function_exists( 'bb_placeholder_requirements_met' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_placeholder_requirements_met()}.
-	 *
-	 * @deprecated Use bboss_placeholder_requirements_met() instead.
-	 */
-	function bb_placeholder_requirements_met( $requires, $active_plugins ) {
-		return bboss_placeholder_requirements_met( $requires, $active_plugins );
-	}
-}
-if ( function_exists( 'bboss_refresh_placeholder_features_data' ) && ! function_exists( 'bb_refresh_placeholder_features_data' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_refresh_placeholder_features_data()}.
-	 *
-	 * @deprecated Use bboss_refresh_placeholder_features_data() instead.
-	 */
-	function bb_refresh_placeholder_features_data() {
-		return bboss_refresh_placeholder_features_data();
-	}
-}
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_register_placeholder_cache_clear_hooks' ) && ! function_exists( 'bb_register_placeholder_cache_clear_hooks' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_register_placeholder_cache_clear_hooks()}.
@@ -925,24 +998,6 @@ if ( function_exists( 'bboss_register_placeholder_cache_clear_hooks' ) && ! func
 		return bboss_register_placeholder_cache_clear_hooks();
 	}
 }
-if ( function_exists( 'bboss_schedule_placeholder_features_daily_refresh' ) && ! function_exists( 'bb_schedule_placeholder_features_daily_refresh' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_schedule_placeholder_features_daily_refresh()}.
-	 *
-	 * @deprecated Use bboss_schedule_placeholder_features_daily_refresh() instead.
-	 */
-	function bb_schedule_placeholder_features_daily_refresh() {
-		return bboss_schedule_placeholder_features_daily_refresh();
-	}
-}
-if ( function_exists( 'bboss_schedule_placeholder_features_refresh' ) && ! function_exists( 'bb_schedule_placeholder_features_refresh' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_schedule_placeholder_features_refresh()}.
-	 *
-	 * @deprecated Use bboss_schedule_placeholder_features_refresh() instead.
-	 */
-	function bb_schedule_placeholder_features_refresh() {
-		return bboss_schedule_placeholder_features_refresh();
-	}
-}
 // @bbwt-com-end compat-layer
+
+add_action( 'admin_init', 'bb_register_placeholder_cache_clear_hooks' );

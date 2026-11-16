@@ -30,6 +30,20 @@ function bboss_core_email_from_name_filter() {
 	 */
 	return apply_filters( 'bp_core_email_from_name_filter', bboss_get_option( 'blogname', 'WordPress' ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_core_email_from_name_filter' ) && ! function_exists( 'bp_core_email_from_name_filter' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_email_from_name_filter()}.
+	 *
+	 * @deprecated Use bboss_core_email_from_name_filter() instead.
+	 */
+	function bp_core_email_from_name_filter() {
+		return bboss_core_email_from_name_filter();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Add support for pre-2.5 email filters.
@@ -658,6 +672,20 @@ function bboss_core_deprecated_email_filters( $value, $property, $transform, $em
 
 	return $value;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_core_deprecated_email_filters' ) && ! function_exists( 'bp_core_deprecated_email_filters' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_deprecated_email_filters()}.
+	 *
+	 * @deprecated Use bboss_core_deprecated_email_filters() instead.
+	 */
+	function bp_core_deprecated_email_filters( $value, $property, $transform, $email ) {
+		return bboss_core_deprecated_email_filters( $value, $property, $transform, $email );
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_filter( 'bp_email_get_property', 'bp_core_deprecated_email_filters', 20, 4 );
 
 /**
@@ -873,6 +901,20 @@ function bboss_core_deprecated_email_actions( $delivery_status, $email ) {
 		do_action( 'bp_groups_sent_membership_approved_email', $tokens['requesting-user.id'], $email_subject, $email_content, $tokens['group.id'] );
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_core_deprecated_email_actions' ) && ! function_exists( 'bp_core_deprecated_email_actions' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_deprecated_email_actions()}.
+	 *
+	 * @deprecated Use bboss_core_deprecated_email_actions() instead.
+	 */
+	function bp_core_deprecated_email_actions( $delivery_status, $email ) {
+		return bboss_core_deprecated_email_actions( $delivery_status, $email );
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'bp_send_email_success', 'bp_core_deprecated_email_actions', 20, 2 );
 
 /**
@@ -889,6 +931,20 @@ function bboss_blogs_transition_activity_status( $new_status, $old_status, $comm
 	_deprecated_function( __FUNCTION__, '2.5.0', 'bp_activity_transition_post_type_comment_status()' );
 	bboss_activity_transition_post_type_comment_status( $new_status, $old_status, $comment );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_blogs_transition_activity_status' ) && ! function_exists( 'bp_blogs_transition_activity_status' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_blogs_transition_activity_status()}.
+	 *
+	 * @deprecated Use bboss_blogs_transition_activity_status() instead.
+	 */
+	function bp_blogs_transition_activity_status( $new_status, $old_status, $comment ) {
+		return bboss_blogs_transition_activity_status( $new_status, $old_status, $comment );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Record a new blog comment in the BuddyBoss activity feed.
@@ -906,6 +962,20 @@ function bboss_blogs_record_comment( $comment_id, $is_approved = true ) {
 	_deprecated_function( __FUNCTION__, '2.5.0', 'bp_activity_post_type_comment()' );
 	bboss_activity_post_type_comment( $comment_id, $is_approved );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_blogs_record_comment' ) && ! function_exists( 'bp_blogs_record_comment' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_blogs_record_comment()}.
+	 *
+	 * @deprecated Use bboss_blogs_record_comment() instead.
+	 */
+	function bp_blogs_record_comment( $comment_id, $is_approved = true ) {
+		return bboss_blogs_record_comment( $comment_id, $is_approved );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Remove a blog comment activity item from the activity feed.
@@ -918,20 +988,8 @@ function bboss_blogs_remove_comment( $comment_id ) {
 	_deprecated_function( __FUNCTION__, '2.5.0', 'bp_activity_post_type_remove_comment()' );
 	bboss_activity_post_type_remove_comment( $comment_id );
 }
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
-if ( function_exists( 'bboss_blogs_record_comment' ) && ! function_exists( 'bp_blogs_record_comment' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_blogs_record_comment()}.
-	 *
-	 * @deprecated Use bboss_blogs_record_comment() instead.
-	 */
-	function bp_blogs_record_comment( $comment_id, $is_approved = true ) {
-		return bboss_blogs_record_comment( $comment_id, $is_approved );
-	}
-}
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_blogs_remove_comment' ) && ! function_exists( 'bp_blogs_remove_comment' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_blogs_remove_comment()}.
@@ -942,44 +1000,5 @@ if ( function_exists( 'bboss_blogs_remove_comment' ) && ! function_exists( 'bp_b
 		return bboss_blogs_remove_comment( $comment_id );
 	}
 }
-if ( function_exists( 'bboss_blogs_transition_activity_status' ) && ! function_exists( 'bp_blogs_transition_activity_status' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_blogs_transition_activity_status()}.
-	 *
-	 * @deprecated Use bboss_blogs_transition_activity_status() instead.
-	 */
-	function bp_blogs_transition_activity_status( $new_status, $old_status, $comment ) {
-		return bboss_blogs_transition_activity_status( $new_status, $old_status, $comment );
-	}
-}
-if ( function_exists( 'bboss_core_deprecated_email_actions' ) && ! function_exists( 'bp_core_deprecated_email_actions' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_core_deprecated_email_actions()}.
-	 *
-	 * @deprecated Use bboss_core_deprecated_email_actions() instead.
-	 */
-	function bp_core_deprecated_email_actions( $delivery_status, $email ) {
-		return bboss_core_deprecated_email_actions( $delivery_status, $email );
-	}
-}
-if ( function_exists( 'bboss_core_deprecated_email_filters' ) && ! function_exists( 'bp_core_deprecated_email_filters' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_core_deprecated_email_filters()}.
-	 *
-	 * @deprecated Use bboss_core_deprecated_email_filters() instead.
-	 */
-	function bp_core_deprecated_email_filters( $value, $property, $transform, $email ) {
-		return bboss_core_deprecated_email_filters( $value, $property, $transform, $email );
-	}
-}
-if ( function_exists( 'bboss_core_email_from_name_filter' ) && ! function_exists( 'bp_core_email_from_name_filter' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_core_email_from_name_filter()}.
-	 *
-	 * @deprecated Use bboss_core_email_from_name_filter() instead.
-	 */
-	function bp_core_email_from_name_filter() {
-		return bboss_core_email_from_name_filter();
-	}
-}
 // @bbwt-com-end compat-layer
+

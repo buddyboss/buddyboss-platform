@@ -32,6 +32,20 @@ function bboss_get_invite_post_type() {
 	 */
 	return apply_filters( 'bp_get_invite_post_type', bboss()->invite_post_type );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_invite_post_type' ) && ! function_exists( 'bp_get_invite_post_type' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_invite_post_type()}.
+	 *
+	 * @deprecated Use bboss_get_invite_post_type() instead.
+	 */
+	function bp_get_invite_post_type() {
+		return bboss_get_invite_post_type();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Check whether a user can revoke (delete) an email invite.
@@ -68,6 +82,20 @@ function bboss_invites_user_can_revoke( $invite_id, $user_id = 0 ) {
 	 */
 	return (bool) apply_filters( 'bb_invites_user_can_revoke', $can_revoke, $invite, $user_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_invites_user_can_revoke' ) && ! function_exists( 'bb_invites_user_can_revoke' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_invites_user_can_revoke()}.
+	 *
+	 * @deprecated Use bboss_invites_user_can_revoke() instead.
+	 */
+	function bb_invites_user_can_revoke( $invite_id, $user_id = 0 ) {
+		return bboss_invites_user_can_revoke( $invite_id, $user_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return labels used by the invite post type.
@@ -102,6 +130,20 @@ function bboss_get_invite_post_type_labels() {
 	);
 
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_invite_post_type_labels' ) && ! function_exists( 'bp_get_invite_post_type_labels' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_invite_post_type_labels()}.
+	 *
+	 * @deprecated Use bboss_get_invite_post_type_labels() instead.
+	 */
+	function bp_get_invite_post_type_labels() {
+		return bboss_get_invite_post_type_labels();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return array of features that the invite post type supports.
@@ -128,6 +170,20 @@ function bboss_get_invite_post_type_supports() {
 		)
 	);
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_invite_post_type_supports' ) && ! function_exists( 'bp_get_invite_post_type_supports' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_invite_post_type_supports()}.
+	 *
+	 * @deprecated Use bboss_get_invite_post_type_supports() instead.
+	 */
+	function bp_get_invite_post_type_supports() {
+		return bboss_get_invite_post_type_supports();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Check if the current page is 'accept-invitation'?
@@ -145,6 +201,20 @@ function bboss_invites_member_invite_invitation_page() {
 
 	return apply_filters( 'invite_anyone_is_accept_invitation_page', $retval );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_invites_member_invite_invitation_page' ) && ! function_exists( 'bp_invites_member_invite_invitation_page' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_invites_member_invite_invitation_page()}.
+	 *
+	 * @deprecated Use bboss_invites_member_invite_invitation_page() instead.
+	 */
+	function bp_invites_member_invite_invitation_page() {
+		return bboss_invites_member_invite_invitation_page();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Allows invited users to register even if registration is disabled.
@@ -211,6 +281,20 @@ function bboss_invites_member_invite_remove_registration_lock() {
 		add_filter( 'option_users_can_register', '__return_true' );
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_invites_member_invite_remove_registration_lock' ) && ! function_exists( 'bp_invites_member_invite_remove_registration_lock' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_invites_member_invite_remove_registration_lock()}.
+	 *
+	 * @deprecated Use bboss_invites_member_invite_remove_registration_lock() instead.
+	 */
+	function bp_invites_member_invite_remove_registration_lock() {
+		return bboss_invites_member_invite_remove_registration_lock();
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'wp', 'bp_invites_member_invite_remove_registration_lock', 1 );
 
 /**
@@ -342,6 +426,20 @@ JS;
 	?>
 	<?php
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_invites_member_invite_register_screen_message' ) && ! function_exists( 'bp_invites_member_invite_register_screen_message' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_invites_member_invite_register_screen_message()}.
+	 *
+	 * @deprecated Use bboss_invites_member_invite_register_screen_message() instead.
+	 */
+	function bp_invites_member_invite_register_screen_message() {
+		return bboss_invites_member_invite_register_screen_message();
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'bp_before_register_page', 'bp_invites_member_invite_register_screen_message' );
 
 /**
@@ -376,6 +474,20 @@ function bboss_invites_member_invite_get_invitations_by_invited_email( $email ) 
 
 	return $bp_get_invitee_email;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_invites_member_invite_get_invitations_by_invited_email' ) && ! function_exists( 'bp_invites_member_invite_get_invitations_by_invited_email' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_invites_member_invite_get_invitations_by_invited_email()}.
+	 *
+	 * @deprecated Use bboss_invites_member_invite_get_invitations_by_invited_email() instead.
+	 */
+	function bp_invites_member_invite_get_invitations_by_invited_email( $email ) {
+		return bboss_invites_member_invite_get_invitations_by_invited_email( $email );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Returns the subject of invite email.
@@ -393,6 +505,20 @@ function bboss_get_member_invitation_subject() {
 
 	return apply_filters( 'bp_get_member_invitation_subject', stripslashes( $title ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_member_invitation_subject' ) && ! function_exists( 'bp_get_member_invitation_subject' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_member_invitation_subject()}.
+	 *
+	 * @deprecated Use bboss_get_member_invitation_subject() instead.
+	 */
+	function bp_get_member_invitation_subject() {
+		return bboss_get_member_invitation_subject();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Returns the body content of invite email.
@@ -439,6 +565,20 @@ function bboss_get_member_invitation_message() {
 
 	return apply_filters( 'bp_get_member_invitation_message', stripslashes( $text ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_member_invitation_message' ) && ! function_exists( 'bp_get_member_invitation_message' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_member_invitation_message()}.
+	 *
+	 * @deprecated Use bboss_get_member_invitation_message() instead.
+	 */
+	function bp_get_member_invitation_message() {
+		return bboss_get_member_invitation_message();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get email invite instructions text.
@@ -451,6 +591,20 @@ function bboss_get_invites_member_invite_url() {
 
 	return stripslashes( $invite_link );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_invites_member_invite_url' ) && ! function_exists( 'bp_get_invites_member_invite_url' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_invites_member_invite_url()}.
+	 *
+	 * @deprecated Use bboss_get_invites_member_invite_url() instead.
+	 */
+	function bp_get_invites_member_invite_url() {
+		return bboss_get_invites_member_invite_url();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Replaces the token, {{ }}, to it's appropriate content dynamically.
@@ -507,6 +661,20 @@ function bboss_get_member_invites_wildcard_replace( $text, $email = false ) {
 
 	return $text;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_member_invites_wildcard_replace' ) && ! function_exists( 'bp_get_member_invites_wildcard_replace' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_member_invites_wildcard_replace()}.
+	 *
+	 * @deprecated Use bboss_get_member_invites_wildcard_replace() instead.
+	 */
+	function bp_get_member_invites_wildcard_replace( $text, $email = false ) {
+		return bboss_get_member_invites_wildcard_replace( $text, $email );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Mark the invited user as registered.
@@ -586,6 +754,20 @@ function bboss_invites_member_invite_activate_user( $user_id, $key, $user ) {
 	}
 
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_invites_member_invite_activate_user' ) && ! function_exists( 'bp_invites_member_invite_activate_user' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_invites_member_invite_activate_user()}.
+	 *
+	 * @deprecated Use bboss_invites_member_invite_activate_user() instead.
+	 */
+	function bp_invites_member_invite_activate_user( $user_id, $key, $user ) {
+		return bboss_invites_member_invite_activate_user( $user_id, $key, $user );
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'bp_core_activated_user', 'bp_invites_member_invite_activate_user', 10, 3 );
 
 /**
@@ -670,6 +852,20 @@ function bboss_invites_member_invite_mark_register_user( $user_id ) {
 	}
 
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_invites_member_invite_mark_register_user' ) && ! function_exists( 'bp_invites_member_invite_mark_register_user' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_invites_member_invite_mark_register_user()}.
+	 *
+	 * @deprecated Use bboss_invites_member_invite_mark_register_user() instead.
+	 */
+	function bp_invites_member_invite_mark_register_user( $user_id ) {
+		return bboss_invites_member_invite_mark_register_user( $user_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'user_register', 'bp_invites_member_invite_mark_register_user', 10, 1 );
 
 /**
@@ -689,6 +885,20 @@ function bboss_nouveau_send_invite_content_css( $mceInit ) {
 	}
 	return $mceInit;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_send_invite_content_css' ) && ! function_exists( 'bp_nouveau_send_invite_content_css' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_send_invite_content_css()}.
+	 *
+	 * @deprecated Use bboss_nouveau_send_invite_content_css() instead.
+	 */
+	function bp_nouveau_send_invite_content_css( $mceInit ) {
+		return bboss_nouveau_send_invite_content_css( $mceInit );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Query to fetch email data for invite member.
@@ -719,6 +929,20 @@ function bboss_get_member_invitation_query() {
 
 	return apply_filters( 'bb_get_member_invitation_query', $cache );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_member_invitation_query' ) && ! function_exists( 'bb_get_member_invitation_query' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_member_invitation_query()}.
+	 *
+	 * @deprecated Use bboss_get_member_invitation_query() instead.
+	 */
+	function bb_get_member_invitation_query() {
+		return bboss_get_member_invitation_query();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Check if the invite already sent to particular email address by perticular inviter id if $inviter_id passed.
@@ -757,30 +981,8 @@ function bboss_is_email_address_already_invited( $email, $inviter_id = 0 ) {
 	 */
 	return apply_filters( 'bb_is_email_address_already_invited', $is_already_invited, $email, $inviter_id, $invites );
 }
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
-if ( function_exists( 'bboss_get_member_invitation_query' ) && ! function_exists( 'bb_get_member_invitation_query' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_member_invitation_query()}.
-	 *
-	 * @deprecated Use bboss_get_member_invitation_query() instead.
-	 */
-	function bb_get_member_invitation_query() {
-		return bboss_get_member_invitation_query();
-	}
-}
-if ( function_exists( 'bboss_invites_user_can_revoke' ) && ! function_exists( 'bb_invites_user_can_revoke' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_invites_user_can_revoke()}.
-	 *
-	 * @deprecated Use bboss_invites_user_can_revoke() instead.
-	 */
-	function bb_invites_user_can_revoke( $invite_id, $user_id = 0 ) {
-		return bboss_invites_user_can_revoke( $invite_id, $user_id );
-	}
-}
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_is_email_address_already_invited' ) && ! function_exists( 'bb_is_email_address_already_invited' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_is_email_address_already_invited()}.
@@ -791,144 +993,5 @@ if ( function_exists( 'bboss_is_email_address_already_invited' ) && ! function_e
 		return bboss_is_email_address_already_invited( $email, $inviter_id );
 	}
 }
-if ( function_exists( 'bboss_get_invite_post_type' ) && ! function_exists( 'bp_get_invite_post_type' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_invite_post_type()}.
-	 *
-	 * @deprecated Use bboss_get_invite_post_type() instead.
-	 */
-	function bp_get_invite_post_type() {
-		return bboss_get_invite_post_type();
-	}
-}
-if ( function_exists( 'bboss_get_invite_post_type_labels' ) && ! function_exists( 'bp_get_invite_post_type_labels' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_invite_post_type_labels()}.
-	 *
-	 * @deprecated Use bboss_get_invite_post_type_labels() instead.
-	 */
-	function bp_get_invite_post_type_labels() {
-		return bboss_get_invite_post_type_labels();
-	}
-}
-if ( function_exists( 'bboss_get_invite_post_type_supports' ) && ! function_exists( 'bp_get_invite_post_type_supports' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_invite_post_type_supports()}.
-	 *
-	 * @deprecated Use bboss_get_invite_post_type_supports() instead.
-	 */
-	function bp_get_invite_post_type_supports() {
-		return bboss_get_invite_post_type_supports();
-	}
-}
-if ( function_exists( 'bboss_get_invites_member_invite_url' ) && ! function_exists( 'bp_get_invites_member_invite_url' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_invites_member_invite_url()}.
-	 *
-	 * @deprecated Use bboss_get_invites_member_invite_url() instead.
-	 */
-	function bp_get_invites_member_invite_url() {
-		return bboss_get_invites_member_invite_url();
-	}
-}
-if ( function_exists( 'bboss_get_member_invitation_message' ) && ! function_exists( 'bp_get_member_invitation_message' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_member_invitation_message()}.
-	 *
-	 * @deprecated Use bboss_get_member_invitation_message() instead.
-	 */
-	function bp_get_member_invitation_message() {
-		return bboss_get_member_invitation_message();
-	}
-}
-if ( function_exists( 'bboss_get_member_invitation_subject' ) && ! function_exists( 'bp_get_member_invitation_subject' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_member_invitation_subject()}.
-	 *
-	 * @deprecated Use bboss_get_member_invitation_subject() instead.
-	 */
-	function bp_get_member_invitation_subject() {
-		return bboss_get_member_invitation_subject();
-	}
-}
-if ( function_exists( 'bboss_get_member_invites_wildcard_replace' ) && ! function_exists( 'bp_get_member_invites_wildcard_replace' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_member_invites_wildcard_replace()}.
-	 *
-	 * @deprecated Use bboss_get_member_invites_wildcard_replace() instead.
-	 */
-	function bp_get_member_invites_wildcard_replace( $text, $email = false ) {
-		return bboss_get_member_invites_wildcard_replace( $text, $email );
-	}
-}
-if ( function_exists( 'bboss_invites_member_invite_activate_user' ) && ! function_exists( 'bp_invites_member_invite_activate_user' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_invites_member_invite_activate_user()}.
-	 *
-	 * @deprecated Use bboss_invites_member_invite_activate_user() instead.
-	 */
-	function bp_invites_member_invite_activate_user( $user_id, $key, $user ) {
-		return bboss_invites_member_invite_activate_user( $user_id, $key, $user );
-	}
-}
-if ( function_exists( 'bboss_invites_member_invite_get_invitations_by_invited_email' ) && ! function_exists( 'bp_invites_member_invite_get_invitations_by_invited_email' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_invites_member_invite_get_invitations_by_invited_email()}.
-	 *
-	 * @deprecated Use bboss_invites_member_invite_get_invitations_by_invited_email() instead.
-	 */
-	function bp_invites_member_invite_get_invitations_by_invited_email( $email ) {
-		return bboss_invites_member_invite_get_invitations_by_invited_email( $email );
-	}
-}
-if ( function_exists( 'bboss_invites_member_invite_invitation_page' ) && ! function_exists( 'bp_invites_member_invite_invitation_page' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_invites_member_invite_invitation_page()}.
-	 *
-	 * @deprecated Use bboss_invites_member_invite_invitation_page() instead.
-	 */
-	function bp_invites_member_invite_invitation_page() {
-		return bboss_invites_member_invite_invitation_page();
-	}
-}
-if ( function_exists( 'bboss_invites_member_invite_mark_register_user' ) && ! function_exists( 'bp_invites_member_invite_mark_register_user' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_invites_member_invite_mark_register_user()}.
-	 *
-	 * @deprecated Use bboss_invites_member_invite_mark_register_user() instead.
-	 */
-	function bp_invites_member_invite_mark_register_user( $user_id ) {
-		return bboss_invites_member_invite_mark_register_user( $user_id );
-	}
-}
-if ( function_exists( 'bboss_invites_member_invite_register_screen_message' ) && ! function_exists( 'bp_invites_member_invite_register_screen_message' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_invites_member_invite_register_screen_message()}.
-	 *
-	 * @deprecated Use bboss_invites_member_invite_register_screen_message() instead.
-	 */
-	function bp_invites_member_invite_register_screen_message() {
-		return bboss_invites_member_invite_register_screen_message();
-	}
-}
-if ( function_exists( 'bboss_invites_member_invite_remove_registration_lock' ) && ! function_exists( 'bp_invites_member_invite_remove_registration_lock' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_invites_member_invite_remove_registration_lock()}.
-	 *
-	 * @deprecated Use bboss_invites_member_invite_remove_registration_lock() instead.
-	 */
-	function bp_invites_member_invite_remove_registration_lock() {
-		return bboss_invites_member_invite_remove_registration_lock();
-	}
-}
-if ( function_exists( 'bboss_nouveau_send_invite_content_css' ) && ! function_exists( 'bp_nouveau_send_invite_content_css' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_send_invite_content_css()}.
-	 *
-	 * @deprecated Use bboss_nouveau_send_invite_content_css() instead.
-	 */
-	function bp_nouveau_send_invite_content_css( $mceInit ) {
-		return bboss_nouveau_send_invite_content_css( $mceInit );
-	}
-}
 // @bbwt-com-end compat-layer
+

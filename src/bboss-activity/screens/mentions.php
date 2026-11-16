@@ -33,32 +33,8 @@ function bboss_activity_screen_mentions() {
 	 */
 	bboss_core_load_template( apply_filters( 'bp_activity_template_mention_activity', 'members/single/home' ) );
 }
-
-/**
- * Reset the logged-in user's new mentions data when he visits his mentions screen.
- *
- * @since BuddyPress 1.5.0
- */
-function bboss_activity_reset_my_new_mentions() {
-	if ( bboss_is_my_profile() ) {
-		bboss_activity_clear_new_mentions( bboss_loggedin_user_id() );
-	}
-}
-add_action( 'bp_activity_screen_mentions', 'bp_activity_reset_my_new_mentions' );
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
-if ( function_exists( 'bboss_activity_reset_my_new_mentions' ) && ! function_exists( 'bp_activity_reset_my_new_mentions' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_activity_reset_my_new_mentions()}.
-	 *
-	 * @deprecated Use bboss_activity_reset_my_new_mentions() instead.
-	 */
-	function bp_activity_reset_my_new_mentions() {
-		return bboss_activity_reset_my_new_mentions();
-	}
-}
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_activity_screen_mentions' ) && ! function_exists( 'bp_activity_screen_mentions' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_activity_screen_mentions()}.
@@ -70,3 +46,30 @@ if ( function_exists( 'bboss_activity_screen_mentions' ) && ! function_exists( '
 	}
 }
 // @bbwt-com-end compat-layer
+
+
+/**
+ * Reset the logged-in user's new mentions data when he visits his mentions screen.
+ *
+ * @since BuddyPress 1.5.0
+ */
+function bboss_activity_reset_my_new_mentions() {
+	if ( bboss_is_my_profile() ) {
+		bboss_activity_clear_new_mentions( bboss_loggedin_user_id() );
+	}
+}
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_activity_reset_my_new_mentions' ) && ! function_exists( 'bp_activity_reset_my_new_mentions' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_activity_reset_my_new_mentions()}.
+	 *
+	 * @deprecated Use bboss_activity_reset_my_new_mentions() instead.
+	 */
+	function bp_activity_reset_my_new_mentions() {
+		return bboss_activity_reset_my_new_mentions();
+	}
+}
+// @bbwt-com-end compat-layer
+
+add_action( 'bp_activity_screen_mentions', 'bp_activity_reset_my_new_mentions' );

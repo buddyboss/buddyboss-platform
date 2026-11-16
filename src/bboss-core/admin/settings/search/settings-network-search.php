@@ -311,6 +311,20 @@ function bboss_search_register_network_search_fields() {
 		);
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_search_register_network_search_fields' ) && ! function_exists( 'bb_search_register_network_search_fields' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_search_register_network_search_fields()}.
+	 *
+	 * @deprecated Use bboss_search_register_network_search_fields() instead.
+	 */
+	function bb_search_register_network_search_fields() {
+		return bboss_search_register_network_search_fields();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Lazy-register xProfile fields for the Search Network Search panel.
@@ -393,11 +407,8 @@ function bboss_search_lazy_register_xprofile_fields( $feature_id ) {
 		}
 	}
 }
-add_action( 'bb_admin_settings_before_get_feature', 'bb_search_lazy_register_xprofile_fields' );
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_search_lazy_register_xprofile_fields' ) && ! function_exists( 'bb_search_lazy_register_xprofile_fields' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_search_lazy_register_xprofile_fields()}.
@@ -408,14 +419,6 @@ if ( function_exists( 'bboss_search_lazy_register_xprofile_fields' ) && ! functi
 		return bboss_search_lazy_register_xprofile_fields( $feature_id );
 	}
 }
-if ( function_exists( 'bboss_search_register_network_search_fields' ) && ! function_exists( 'bb_search_register_network_search_fields' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_search_register_network_search_fields()}.
-	 *
-	 * @deprecated Use bboss_search_register_network_search_fields() instead.
-	 */
-	function bb_search_register_network_search_fields() {
-		return bboss_search_register_network_search_fields();
-	}
-}
 // @bbwt-com-end compat-layer
+
+add_action( 'bb_admin_settings_before_get_feature', 'bb_search_lazy_register_xprofile_fields' );

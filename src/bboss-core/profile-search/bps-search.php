@@ -133,6 +133,20 @@ function bboss_ps_set_request() {
 		}
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_ps_set_request' ) && ! function_exists( 'bp_ps_set_request' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_ps_set_request()}.
+	 *
+	 * @deprecated Use bboss_ps_set_request() instead.
+	 */
+	function bp_ps_set_request() {
+		return bboss_ps_set_request();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Gets BuddyBoss Profile Search request.
@@ -184,6 +198,20 @@ function bboss_ps_get_request( $type, $form = 0 ) {
 
 	return apply_filters( 'bp_ps_request', $request, $type, $form );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_ps_get_request' ) && ! function_exists( 'bp_ps_get_request' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_ps_get_request()}.
+	 *
+	 * @deprecated Use bboss_ps_get_request() instead.
+	 */
+	function bp_ps_get_request( $type, $form = 0 ) {
+		return bboss_ps_get_request( $type, $form );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Saves BuddyBoss Profile Search hidden filters.
@@ -265,6 +293,20 @@ function bboss_ps_save_hidden_filters( $attr, $content ) {
 		}
 	);
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_ps_save_hidden_filters' ) && ! function_exists( 'bp_ps_save_hidden_filters' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_ps_save_hidden_filters()}.
+	 *
+	 * @deprecated Use bboss_ps_save_hidden_filters() instead.
+	 */
+	function bp_ps_save_hidden_filters( $attr, $content ) {
+		return bboss_ps_save_hidden_filters( $attr, $content );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Hides BuddyBoss Profile Search filters.
@@ -277,6 +319,20 @@ function bboss_ps_hidden_filters() {
 	$filters = isset( $bp_ps_hidden_filters ) ? $bp_ps_hidden_filters : array();
 	return apply_filters( 'bp_ps_hidden_filters', $filters );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_ps_hidden_filters' ) && ! function_exists( 'bp_ps_hidden_filters' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_ps_hidden_filters()}.
+	 *
+	 * @deprecated Use bboss_ps_hidden_filters() instead.
+	 */
+	function bp_ps_hidden_filters() {
+		return bboss_ps_hidden_filters();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return current BuddyBoss Profile Search page.
@@ -290,6 +346,20 @@ function bboss_ps_current_page() {
 
 	return $current;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_ps_current_page' ) && ! function_exists( 'bp_ps_current_page' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_ps_current_page()}.
+	 *
+	 * @deprecated Use bboss_ps_current_page() instead.
+	 */
+	function bp_ps_current_page() {
+		return bboss_ps_current_page();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Check if BuddyBoss Profile Search debugging is set.
@@ -300,6 +370,20 @@ function bboss_ps_debug() {
 	$cookie = apply_filters( 'bp_ps_cookie_name', 'bp_ps_debug' );
 	return isset( $_REQUEST['bp_ps_debug'] ) ? true : ( isset( $_COOKIE[ $cookie ] ) ? true : false );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_ps_debug' ) && ! function_exists( 'bp_ps_debug' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_ps_debug()}.
+	 *
+	 * @deprecated Use bboss_ps_debug() instead.
+	 */
+	function bp_ps_debug() {
+		return bboss_ps_debug();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 // add_action ('bp_before_directory_members_content', 'bp_ps_display_filters');
 
@@ -314,6 +398,20 @@ function bboss_ps_display_filters() {
 		bp_ps_call_template( 'members/bp-ps-filters', array( $request, true ) );
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_ps_display_filters' ) && ! function_exists( 'bp_ps_display_filters' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_ps_display_filters()}.
+	 *
+	 * @deprecated Use bboss_ps_display_filters() instead.
+	 */
+	function bp_ps_display_filters() {
+		return bboss_ps_display_filters();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 add_filter( 'bp_ajax_querystring', 'bp_ps_filter_members', 99, 2 );
 
@@ -352,6 +450,20 @@ function bboss_ps_filter_members( $qs, $object ) {
 
 	return $qs;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_ps_filter_members' ) && ! function_exists( 'bp_ps_filter_members' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_ps_filter_members()}.
+	 *
+	 * @deprecated Use bboss_ps_filter_members() instead.
+	 */
+	function bp_ps_filter_members( $qs, $object ) {
+		return bboss_ps_filter_members( $qs, $object );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Returns BuddyBoss Profile Search results.
@@ -420,99 +532,8 @@ function bboss_ps_search( $request, $users = null ) {
 
 	return $results;
 }
-
-/**
- * Returns escaped $text with backslashes before characters _%\.
- *
- * @since BuddyBoss 1.0.0
- */
-function bboss_ps_esc_like( $text ) {
-	return addcslashes( $text, '_%\\' );
-}
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
-if ( function_exists( 'bboss_ps_current_page' ) && ! function_exists( 'bp_ps_current_page' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_ps_current_page()}.
-	 *
-	 * @deprecated Use bboss_ps_current_page() instead.
-	 */
-	function bp_ps_current_page() {
-		return bboss_ps_current_page();
-	}
-}
-if ( function_exists( 'bboss_ps_debug' ) && ! function_exists( 'bp_ps_debug' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_ps_debug()}.
-	 *
-	 * @deprecated Use bboss_ps_debug() instead.
-	 */
-	function bp_ps_debug() {
-		return bboss_ps_debug();
-	}
-}
-if ( function_exists( 'bboss_ps_display_filters' ) && ! function_exists( 'bp_ps_display_filters' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_ps_display_filters()}.
-	 *
-	 * @deprecated Use bboss_ps_display_filters() instead.
-	 */
-	function bp_ps_display_filters() {
-		return bboss_ps_display_filters();
-	}
-}
-if ( function_exists( 'bboss_ps_esc_like' ) && ! function_exists( 'bp_ps_esc_like' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_ps_esc_like()}.
-	 *
-	 * @deprecated Use bboss_ps_esc_like() instead.
-	 */
-	function bp_ps_esc_like( $text ) {
-		return bboss_ps_esc_like( $text );
-	}
-}
-if ( function_exists( 'bboss_ps_filter_members' ) && ! function_exists( 'bp_ps_filter_members' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_ps_filter_members()}.
-	 *
-	 * @deprecated Use bboss_ps_filter_members() instead.
-	 */
-	function bp_ps_filter_members( $qs, $object ) {
-		return bboss_ps_filter_members( $qs, $object );
-	}
-}
-if ( function_exists( 'bboss_ps_get_request' ) && ! function_exists( 'bp_ps_get_request' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_ps_get_request()}.
-	 *
-	 * @deprecated Use bboss_ps_get_request() instead.
-	 */
-	function bp_ps_get_request( $type, $form = 0 ) {
-		return bboss_ps_get_request( $type, $form );
-	}
-}
-if ( function_exists( 'bboss_ps_hidden_filters' ) && ! function_exists( 'bp_ps_hidden_filters' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_ps_hidden_filters()}.
-	 *
-	 * @deprecated Use bboss_ps_hidden_filters() instead.
-	 */
-	function bp_ps_hidden_filters() {
-		return bboss_ps_hidden_filters();
-	}
-}
-if ( function_exists( 'bboss_ps_save_hidden_filters' ) && ! function_exists( 'bp_ps_save_hidden_filters' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_ps_save_hidden_filters()}.
-	 *
-	 * @deprecated Use bboss_ps_save_hidden_filters() instead.
-	 */
-	function bp_ps_save_hidden_filters( $attr, $content ) {
-		return bboss_ps_save_hidden_filters( $attr, $content );
-	}
-}
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_ps_search' ) && ! function_exists( 'bp_ps_search' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_ps_search()}.
@@ -523,14 +544,28 @@ if ( function_exists( 'bboss_ps_search' ) && ! function_exists( 'bp_ps_search' )
 		return bboss_ps_search( $request, $users );
 	}
 }
-if ( function_exists( 'bboss_ps_set_request' ) && ! function_exists( 'bp_ps_set_request' ) ) {
+// @bbwt-com-end compat-layer
+
+
+/**
+ * Returns escaped $text with backslashes before characters _%\.
+ *
+ * @since BuddyBoss 1.0.0
+ */
+function bboss_ps_esc_like( $text ) {
+	return addcslashes( $text, '_%\\' );
+}
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_ps_esc_like' ) && ! function_exists( 'bp_ps_esc_like' ) ) {
 	/**
-	 * Backward-compatible alias of {@see bboss_ps_set_request()}.
+	 * Backward-compatible alias of {@see bboss_ps_esc_like()}.
 	 *
-	 * @deprecated Use bboss_ps_set_request() instead.
+	 * @deprecated Use bboss_ps_esc_like() instead.
 	 */
-	function bp_ps_set_request() {
-		return bboss_ps_set_request();
+	function bp_ps_esc_like( $text ) {
+		return bboss_ps_esc_like( $text );
 	}
 }
 // @bbwt-com-end compat-layer
+

@@ -42,6 +42,20 @@ function bboss_ps_get_fields() {
 
 	return array( $groups, $fields );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_ps_get_fields' ) && ! function_exists( 'bp_ps_get_fields' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_ps_get_fields()}.
+	 *
+	 * @deprecated Use bboss_ps_get_fields() instead.
+	 */
+	function bp_ps_get_fields() {
+		return bboss_ps_get_fields();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Setup BuddyBoss profile search fields.
@@ -301,6 +315,20 @@ function bboss_ps_parse_request( $request ) {
 
 	return $parsed;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_ps_parse_request' ) && ! function_exists( 'bp_ps_parse_request' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_ps_parse_request()}.
+	 *
+	 * @deprecated Use bboss_ps_parse_request() instead.
+	 */
+	function bp_ps_parse_request( $request ) {
+		return bboss_ps_parse_request( $request );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Check if BuddyBoss profile search field matches key.
@@ -316,6 +344,20 @@ function bboss_ps_match_key( $key, $fields ) {
 
 	return false;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_ps_match_key' ) && ! function_exists( 'bp_ps_match_key' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_ps_match_key()}.
+	 *
+	 * @deprecated Use bboss_ps_match_key() instead.
+	 */
+	function bp_ps_match_key( $key, $fields ) {
+		return bboss_ps_match_key( $key, $fields );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Check if request is a valid filter.
@@ -335,6 +377,20 @@ function bboss_ps_is_filter( $filter, $f ) {
 
 	return BBoss_ps_Fields::is_filter( $f, $filter );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_ps_is_filter' ) && ! function_exists( 'bp_ps_is_filter' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_ps_is_filter()}.
+	 *
+	 * @deprecated Use bboss_ps_is_filter() instead.
+	 */
+	function bp_ps_is_filter( $filter, $f ) {
+		return bboss_ps_is_filter( $filter, $f );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Returns version 4.7 escaped form data.
@@ -344,6 +400,20 @@ function bboss_ps_is_filter( $filter, $f ) {
 function bboss_ps_escaped_form_data( $version = '' ) {
 	 return bboss_ps_escaped_form_data47( $version );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_ps_escaped_form_data' ) && ! function_exists( 'bp_ps_escaped_form_data' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_ps_escaped_form_data()}.
+	 *
+	 * @deprecated Use bboss_ps_escaped_form_data() instead.
+	 */
+	function bp_ps_escaped_form_data( $version = '' ) {
+		return bboss_ps_escaped_form_data( $version );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Escape BuddyBoss profile search filter data.
@@ -360,6 +430,20 @@ function bboss_ps_escaped_filters_data( $version = '4.7' ) {
 
 	return false;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_ps_escaped_filters_data' ) && ! function_exists( 'bp_ps_escaped_filters_data' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_ps_escaped_filters_data()}.
+	 *
+	 * @deprecated Use bboss_ps_escaped_filters_data() instead.
+	 */
+	function bp_ps_escaped_filters_data( $version = '4.7' ) {
+		return bboss_ps_escaped_filters_data( $version );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Hide BuddyBoss profile search field.
@@ -376,79 +460,8 @@ function bboss_ps_set_hidden_field( $name, $value ) {
 
 	return $new;
 }
-
-/**
- * Sort BuddyBoss profile search fields.
- *
- * @since BuddyBoss 1.0.0
- */
-function bboss_ps_sort_fields( $a, $b ) {
-	return ( $a->order <= $b->order ) ? -1 : 1;
-}
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
-if ( function_exists( 'bboss_ps_escaped_filters_data' ) && ! function_exists( 'bp_ps_escaped_filters_data' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_ps_escaped_filters_data()}.
-	 *
-	 * @deprecated Use bboss_ps_escaped_filters_data() instead.
-	 */
-	function bp_ps_escaped_filters_data( $version = '4.7' ) {
-		return bboss_ps_escaped_filters_data( $version );
-	}
-}
-if ( function_exists( 'bboss_ps_escaped_form_data' ) && ! function_exists( 'bp_ps_escaped_form_data' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_ps_escaped_form_data()}.
-	 *
-	 * @deprecated Use bboss_ps_escaped_form_data() instead.
-	 */
-	function bp_ps_escaped_form_data( $version = '' ) {
-		return bboss_ps_escaped_form_data( $version );
-	}
-}
-if ( function_exists( 'bboss_ps_get_fields' ) && ! function_exists( 'bp_ps_get_fields' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_ps_get_fields()}.
-	 *
-	 * @deprecated Use bboss_ps_get_fields() instead.
-	 */
-	function bp_ps_get_fields() {
-		return bboss_ps_get_fields();
-	}
-}
-if ( function_exists( 'bboss_ps_is_filter' ) && ! function_exists( 'bp_ps_is_filter' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_ps_is_filter()}.
-	 *
-	 * @deprecated Use bboss_ps_is_filter() instead.
-	 */
-	function bp_ps_is_filter( $filter, $f ) {
-		return bboss_ps_is_filter( $filter, $f );
-	}
-}
-if ( function_exists( 'bboss_ps_match_key' ) && ! function_exists( 'bp_ps_match_key' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_ps_match_key()}.
-	 *
-	 * @deprecated Use bboss_ps_match_key() instead.
-	 */
-	function bp_ps_match_key( $key, $fields ) {
-		return bboss_ps_match_key( $key, $fields );
-	}
-}
-if ( function_exists( 'bboss_ps_parse_request' ) && ! function_exists( 'bp_ps_parse_request' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_ps_parse_request()}.
-	 *
-	 * @deprecated Use bboss_ps_parse_request() instead.
-	 */
-	function bp_ps_parse_request( $request ) {
-		return bboss_ps_parse_request( $request );
-	}
-}
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_ps_set_hidden_field' ) && ! function_exists( 'bp_ps_set_hidden_field' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_ps_set_hidden_field()}.
@@ -459,6 +472,19 @@ if ( function_exists( 'bboss_ps_set_hidden_field' ) && ! function_exists( 'bp_ps
 		return bboss_ps_set_hidden_field( $name, $value );
 	}
 }
+// @bbwt-com-end compat-layer
+
+
+/**
+ * Sort BuddyBoss profile search fields.
+ *
+ * @since BuddyBoss 1.0.0
+ */
+function bboss_ps_sort_fields( $a, $b ) {
+	return ( $a->order <= $b->order ) ? -1 : 1;
+}
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_ps_sort_fields' ) && ! function_exists( 'bp_ps_sort_fields' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_ps_sort_fields()}.
@@ -470,3 +496,4 @@ if ( function_exists( 'bboss_ps_sort_fields' ) && ! function_exists( 'bp_ps_sort
 	}
 }
 // @bbwt-com-end compat-layer
+

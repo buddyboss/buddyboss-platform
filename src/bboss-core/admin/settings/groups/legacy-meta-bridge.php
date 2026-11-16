@@ -105,6 +105,21 @@ function &bboss_legacy_groups_bridge_state() {
 	}
 	return $state;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_legacy_groups_bridge_state' ) && ! function_exists( 'bb_legacy_groups_bridge_state' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_legacy_groups_bridge_state()}.
+	 *
+	 * @deprecated Use bboss_legacy_groups_bridge_state() instead.
+	 */
+	function &bb_legacy_groups_bridge_state() {
+		$bb_ref = &bboss_legacy_groups_bridge_state();
+		return $bb_ref;
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Register bridge fields late, after core/Pro fields have registered.
@@ -145,6 +160,20 @@ function bboss_legacy_groups_meta_bridge_register( $registry, $component ) {
 		$in_bridge = false;
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_legacy_groups_meta_bridge_register' ) && ! function_exists( 'bb_legacy_groups_meta_bridge_register' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_legacy_groups_meta_bridge_register()}.
+	 *
+	 * @deprecated Use bboss_legacy_groups_meta_bridge_register() instead.
+	 */
+	function bb_legacy_groups_meta_bridge_register( $registry, $component ) {
+		return bboss_legacy_groups_meta_bridge_register( $registry, $component );
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'bb_register_groups_meta_fields', 'bb_legacy_groups_meta_bridge_register', 999, 2 );
 
 /**
@@ -255,6 +284,20 @@ function bboss_legacy_groups_meta_bridge_register_inner( $registry, $component )
 		}
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_legacy_groups_meta_bridge_register_inner' ) && ! function_exists( 'bb_legacy_groups_meta_bridge_register_inner' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_legacy_groups_meta_bridge_register_inner()}.
+	 *
+	 * @deprecated Use bboss_legacy_groups_meta_bridge_register_inner() instead.
+	 */
+	function bb_legacy_groups_meta_bridge_register_inner( $registry, $component ) {
+		return bboss_legacy_groups_meta_bridge_register_inner( $registry, $component );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Capture, parse, and register one metabox's inputs.
@@ -393,6 +436,20 @@ function bboss_legacy_groups_bridge_box( $registry, $component, $box, &$order ) 
 		$registry->register( $component, $field_id, $args );
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_legacy_groups_bridge_box' ) && ! function_exists( 'bb_legacy_groups_bridge_box' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_legacy_groups_bridge_box()}.
+	 *
+	 * @deprecated Use bboss_legacy_groups_bridge_box() instead.
+	 */
+	function bb_legacy_groups_bridge_box( $registry, $component, $box, &$order ) {
+		return bboss_legacy_groups_bridge_box( $registry, $component, $box, $order );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Capture metabox callback HTML safely.
@@ -478,6 +535,20 @@ function bboss_legacy_capture_box_html( $box, $group ) {
 	$state['html_cache'][ $cache_key ] = $result;
 	return $result;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_legacy_capture_box_html' ) && ! function_exists( 'bb_legacy_capture_box_html' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_legacy_capture_box_html()}.
+	 *
+	 * @deprecated Use bboss_legacy_capture_box_html() instead.
+	 */
+	function bb_legacy_capture_box_html( $box, $group ) {
+		return bboss_legacy_capture_box_html( $box, $group );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Build a get_value closure that re-renders the metabox with the real group
@@ -499,6 +570,20 @@ function bboss_legacy_make_get_value( $box, $name, $type ) {
 		return bboss_legacy_extract_input_value( $html, $name, $type );
 	};
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_legacy_make_get_value' ) && ! function_exists( 'bb_legacy_make_get_value' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_legacy_make_get_value()}.
+	 *
+	 * @deprecated Use bboss_legacy_make_get_value() instead.
+	 */
+	function bb_legacy_make_get_value( $box, $name, $type ) {
+		return bboss_legacy_make_get_value( $box, $name, $type );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * After the React save populates $_POST via the registry, manually call each
@@ -575,6 +660,20 @@ function bboss_legacy_groups_run_extension_saves( $group_id, $group ) { // phpcs
 		}
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_legacy_groups_run_extension_saves' ) && ! function_exists( 'bb_legacy_groups_run_extension_saves' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_legacy_groups_run_extension_saves()}.
+	 *
+	 * @deprecated Use bboss_legacy_groups_run_extension_saves() instead.
+	 */
+	function bb_legacy_groups_run_extension_saves( $group_id, $group ) {
+		return bboss_legacy_groups_run_extension_saves( $group_id, $group );
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'bb_admin_after_save_group', 'bb_legacy_groups_run_extension_saves', 5, 2 );
 
 /**
@@ -612,6 +711,20 @@ function bboss_legacy_get_registered_group_extensions() {
 
 	return $out;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_legacy_get_registered_group_extensions' ) && ! function_exists( 'bb_legacy_get_registered_group_extensions' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_legacy_get_registered_group_extensions()}.
+	 *
+	 * @deprecated Use bboss_legacy_get_registered_group_extensions() instead.
+	 */
+	function bb_legacy_get_registered_group_extensions() {
+		return bboss_legacy_get_registered_group_extensions();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Clear all bb_legacy_box_inputs_* transients on plugin lifecycle events
@@ -665,6 +778,20 @@ function bboss_legacy_groups_clear_bridge_cache() {
 	);
 	// phpcs:enable
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_legacy_groups_clear_bridge_cache' ) && ! function_exists( 'bb_legacy_groups_clear_bridge_cache' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_legacy_groups_clear_bridge_cache()}.
+	 *
+	 * @deprecated Use bboss_legacy_groups_clear_bridge_cache() instead.
+	 */
+	function bb_legacy_groups_clear_bridge_cache() {
+		return bboss_legacy_groups_clear_bridge_cache();
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'activated_plugin', 'bb_legacy_groups_clear_bridge_cache' );
 add_action( 'deactivated_plugin', 'bb_legacy_groups_clear_bridge_cache' );
 add_action( 'upgrader_process_complete', 'bb_legacy_groups_clear_bridge_cache' );
@@ -799,31 +926,8 @@ function bboss_legacy_groups_auto_enqueue_widget_scripts() {
 		}
 	}
 }
-add_action( 'admin_enqueue_scripts', 'bb_legacy_groups_auto_enqueue_widget_scripts', 99 );
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
-if ( function_exists( 'bboss_legacy_capture_box_html' ) && ! function_exists( 'bb_legacy_capture_box_html' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_legacy_capture_box_html()}.
-	 *
-	 * @deprecated Use bboss_legacy_capture_box_html() instead.
-	 */
-	function bb_legacy_capture_box_html( $box, $group ) {
-		return bboss_legacy_capture_box_html( $box, $group );
-	}
-}
-if ( function_exists( 'bboss_legacy_get_registered_group_extensions' ) && ! function_exists( 'bb_legacy_get_registered_group_extensions' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_legacy_get_registered_group_extensions()}.
-	 *
-	 * @deprecated Use bboss_legacy_get_registered_group_extensions() instead.
-	 */
-	function bb_legacy_get_registered_group_extensions() {
-		return bboss_legacy_get_registered_group_extensions();
-	}
-}
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_legacy_groups_auto_enqueue_widget_scripts' ) && ! function_exists( 'bb_legacy_groups_auto_enqueue_widget_scripts' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_legacy_groups_auto_enqueue_widget_scripts()}.
@@ -834,75 +938,6 @@ if ( function_exists( 'bboss_legacy_groups_auto_enqueue_widget_scripts' ) && ! f
 		return bboss_legacy_groups_auto_enqueue_widget_scripts();
 	}
 }
-if ( function_exists( 'bboss_legacy_groups_bridge_box' ) && ! function_exists( 'bb_legacy_groups_bridge_box' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_legacy_groups_bridge_box()}.
-	 *
-	 * @deprecated Use bboss_legacy_groups_bridge_box() instead.
-	 */
-	function bb_legacy_groups_bridge_box( $registry, $component, $box, &$order ) {
-		return bboss_legacy_groups_bridge_box( $registry, $component, $box, $order );
-	}
-}
-if ( function_exists( 'bboss_legacy_groups_bridge_state' ) && ! function_exists( 'bb_legacy_groups_bridge_state' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_legacy_groups_bridge_state()}.
-	 *
-	 * @deprecated Use bboss_legacy_groups_bridge_state() instead.
-	 */
-	function &bb_legacy_groups_bridge_state() {
-		$bb_ref = &bboss_legacy_groups_bridge_state();
-		return $bb_ref;
-	}
-}
-if ( function_exists( 'bboss_legacy_groups_clear_bridge_cache' ) && ! function_exists( 'bb_legacy_groups_clear_bridge_cache' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_legacy_groups_clear_bridge_cache()}.
-	 *
-	 * @deprecated Use bboss_legacy_groups_clear_bridge_cache() instead.
-	 */
-	function bb_legacy_groups_clear_bridge_cache() {
-		return bboss_legacy_groups_clear_bridge_cache();
-	}
-}
-if ( function_exists( 'bboss_legacy_groups_meta_bridge_register' ) && ! function_exists( 'bb_legacy_groups_meta_bridge_register' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_legacy_groups_meta_bridge_register()}.
-	 *
-	 * @deprecated Use bboss_legacy_groups_meta_bridge_register() instead.
-	 */
-	function bb_legacy_groups_meta_bridge_register( $registry, $component ) {
-		return bboss_legacy_groups_meta_bridge_register( $registry, $component );
-	}
-}
-if ( function_exists( 'bboss_legacy_groups_meta_bridge_register_inner' ) && ! function_exists( 'bb_legacy_groups_meta_bridge_register_inner' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_legacy_groups_meta_bridge_register_inner()}.
-	 *
-	 * @deprecated Use bboss_legacy_groups_meta_bridge_register_inner() instead.
-	 */
-	function bb_legacy_groups_meta_bridge_register_inner( $registry, $component ) {
-		return bboss_legacy_groups_meta_bridge_register_inner( $registry, $component );
-	}
-}
-if ( function_exists( 'bboss_legacy_groups_run_extension_saves' ) && ! function_exists( 'bb_legacy_groups_run_extension_saves' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_legacy_groups_run_extension_saves()}.
-	 *
-	 * @deprecated Use bboss_legacy_groups_run_extension_saves() instead.
-	 */
-	function bb_legacy_groups_run_extension_saves( $group_id, $group ) {
-		return bboss_legacy_groups_run_extension_saves( $group_id, $group );
-	}
-}
-if ( function_exists( 'bboss_legacy_make_get_value' ) && ! function_exists( 'bb_legacy_make_get_value' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_legacy_make_get_value()}.
-	 *
-	 * @deprecated Use bboss_legacy_make_get_value() instead.
-	 */
-	function bb_legacy_make_get_value( $box, $name, $type ) {
-		return bboss_legacy_make_get_value( $box, $name, $type );
-	}
-}
 // @bbwt-com-end compat-layer
+
+add_action( 'admin_enqueue_scripts', 'bb_legacy_groups_auto_enqueue_widget_scripts', 99 );

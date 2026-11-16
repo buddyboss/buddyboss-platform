@@ -34,6 +34,20 @@ function bboss_xprofile_get_non_cached_field_ids( $user_id = 0, $field_ids = arr
 
 	return $uncached_fields;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_xprofile_get_non_cached_field_ids' ) && ! function_exists( 'bp_xprofile_get_non_cached_field_ids' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_xprofile_get_non_cached_field_ids()}.
+	 *
+	 * @deprecated Use bboss_xprofile_get_non_cached_field_ids() instead.
+	 */
+	function bp_xprofile_get_non_cached_field_ids( $user_id = 0, $field_ids = array() ) {
+		return bboss_xprofile_get_non_cached_field_ids( $user_id, $field_ids );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Slurp up xprofilemeta for a specified set of profile objects.
@@ -181,6 +195,20 @@ function bboss_xprofile_update_meta_cache( $object_ids = array() ) {
 		}
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_xprofile_update_meta_cache' ) && ! function_exists( 'bp_xprofile_update_meta_cache' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_xprofile_update_meta_cache()}.
+	 *
+	 * @deprecated Use bboss_xprofile_update_meta_cache() instead.
+	 */
+	function bp_xprofile_update_meta_cache( $object_ids = array() ) {
+		return bboss_xprofile_update_meta_cache( $object_ids );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Clear cached XProfile field group data.
@@ -196,6 +224,20 @@ function bboss_xprofile_clear_profile_groups_object_cache( $group_obj ) {
 	wp_cache_delete( 'last_changed', 'bp_xprofile_groups' );
 	wp_cache_delete( 'bp_xprofile_delete_for_group_' . $group_obj->id, 'bp_xprofile' );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_xprofile_clear_profile_groups_object_cache' ) && ! function_exists( 'xprofile_clear_profile_groups_object_cache' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_xprofile_clear_profile_groups_object_cache()}.
+	 *
+	 * @deprecated Use bboss_xprofile_clear_profile_groups_object_cache() instead.
+	 */
+	function xprofile_clear_profile_groups_object_cache( $group_obj ) {
+		return bboss_xprofile_clear_profile_groups_object_cache( $group_obj );
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'xprofile_group_after_delete', 'xprofile_clear_profile_groups_object_cache' );
 add_action( 'xprofile_group_after_save', 'xprofile_clear_profile_groups_object_cache' );
 
@@ -222,6 +264,20 @@ function bboss_xprofile_clear_profile_field_object_cache( $field_obj ) {
 	wp_cache_delete( 'bp_xprofile_is_valid_field_' . $field_obj->id, 'bp_xprofile' );
 	wp_cache_delete( 'bp_xprofile_delete_for_group_' . $field_obj->group_id, 'bp_xprofile' );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_xprofile_clear_profile_field_object_cache' ) && ! function_exists( 'xprofile_clear_profile_field_object_cache' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_xprofile_clear_profile_field_object_cache()}.
+	 *
+	 * @deprecated Use bboss_xprofile_clear_profile_field_object_cache() instead.
+	 */
+	function xprofile_clear_profile_field_object_cache( $field_obj ) {
+		return bboss_xprofile_clear_profile_field_object_cache( $field_obj );
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'xprofile_fields_saved_field', 'xprofile_clear_profile_field_object_cache' );
 add_action( 'xprofile_fields_deleted_field', 'xprofile_clear_profile_field_object_cache' );
 
@@ -237,6 +293,20 @@ function bboss_xprofile_clear_member_type_cache() {
 	// Which fields each profile type sees has changed.
 	wp_cache_delete( 'last_changed', 'bp_xprofile_groups' );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_xprofile_clear_member_type_cache' ) && ! function_exists( 'bp_xprofile_clear_member_type_cache' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_xprofile_clear_member_type_cache()}.
+	 *
+	 * @deprecated Use bboss_xprofile_clear_member_type_cache() instead.
+	 */
+	function bp_xprofile_clear_member_type_cache() {
+		return bboss_xprofile_clear_member_type_cache();
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'bp_xprofile_field_set_member_type', 'bp_xprofile_clear_member_type_cache' );
 
 /**
@@ -252,6 +322,20 @@ function bboss_xprofile_clear_profiledata_object_cache( $data_obj ) {
 	wp_cache_delete( 'bp_xprofile_is_valid_field_' . $data_obj->field_id, 'bp_xprofile' );
 	wp_cache_delete( 'bp_get_last_updated_' . $data_obj->user_id, 'bp_xprofile' );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_xprofile_clear_profiledata_object_cache' ) && ! function_exists( 'xprofile_clear_profiledata_object_cache' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_xprofile_clear_profiledata_object_cache()}.
+	 *
+	 * @deprecated Use bboss_xprofile_clear_profiledata_object_cache() instead.
+	 */
+	function xprofile_clear_profiledata_object_cache( $data_obj ) {
+		return bboss_xprofile_clear_profiledata_object_cache( $data_obj );
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'xprofile_data_after_save', 'xprofile_clear_profiledata_object_cache' );
 add_action( 'xprofile_data_after_delete', 'xprofile_clear_profiledata_object_cache' );
 
@@ -273,6 +357,20 @@ add_action( 'xprofile_data_after_delete', 'xprofile_clear_profiledata_object_cac
 function bboss_xprofile_clear_fullname_field_id_cache() {
 	wp_cache_delete( 'fullname_field_id', 'bp_xprofile' );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_xprofile_clear_fullname_field_id_cache' ) && ! function_exists( 'xprofile_clear_fullname_field_id_cache' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_xprofile_clear_fullname_field_id_cache()}.
+	 *
+	 * @deprecated Use bboss_xprofile_clear_fullname_field_id_cache() instead.
+	 */
+	function xprofile_clear_fullname_field_id_cache() {
+		return bboss_xprofile_clear_fullname_field_id_cache();
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'update_option_bp-xprofile-fullname-field-name', 'xprofile_clear_fullname_field_id_cache' );
 
 /**
@@ -306,6 +404,20 @@ function bboss_xprofile_clear_field_cache( $field ) {
 	// Invalidates every cached bp_profile_get_field_groups() key ('all' and per profile type).
 	wp_cache_delete( 'last_changed', 'bp_xprofile_groups' );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_xprofile_clear_field_cache' ) && ! function_exists( 'bp_xprofile_clear_field_cache' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_xprofile_clear_field_cache()}.
+	 *
+	 * @deprecated Use bboss_xprofile_clear_field_cache() instead.
+	 */
+	function bp_xprofile_clear_field_cache( $field ) {
+		return bboss_xprofile_clear_field_cache( $field );
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'xprofile_field_after_save', 'bp_xprofile_clear_field_cache' );
 add_action( 'xprofile_field_after_delete', 'bp_xprofile_clear_field_cache' );
 
@@ -317,44 +429,8 @@ add_action( 'xprofile_field_after_delete', 'bp_xprofile_clear_field_cache' );
 function bboss_xprofile_reset_fields_by_name_cache_incrementor() {
 	bboss_core_reset_incrementor( 'bp_xprofile_fields_by_name' );
 }
-add_action( 'xprofile_field_before_save', 'bp_xprofile_reset_fields_by_name_cache_incrementor' );
-
-// List actions to clear super cached pages on, if super cache is installed.
-add_action( 'xprofile_updated_profile', 'bp_core_clear_cache' );
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
-if ( function_exists( 'bboss_xprofile_clear_field_cache' ) && ! function_exists( 'bp_xprofile_clear_field_cache' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_xprofile_clear_field_cache()}.
-	 *
-	 * @deprecated Use bboss_xprofile_clear_field_cache() instead.
-	 */
-	function bp_xprofile_clear_field_cache( $field ) {
-		return bboss_xprofile_clear_field_cache( $field );
-	}
-}
-if ( function_exists( 'bboss_xprofile_clear_member_type_cache' ) && ! function_exists( 'bp_xprofile_clear_member_type_cache' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_xprofile_clear_member_type_cache()}.
-	 *
-	 * @deprecated Use bboss_xprofile_clear_member_type_cache() instead.
-	 */
-	function bp_xprofile_clear_member_type_cache() {
-		return bboss_xprofile_clear_member_type_cache();
-	}
-}
-if ( function_exists( 'bboss_xprofile_get_non_cached_field_ids' ) && ! function_exists( 'bp_xprofile_get_non_cached_field_ids' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_xprofile_get_non_cached_field_ids()}.
-	 *
-	 * @deprecated Use bboss_xprofile_get_non_cached_field_ids() instead.
-	 */
-	function bp_xprofile_get_non_cached_field_ids( $user_id = 0, $field_ids = array() ) {
-		return bboss_xprofile_get_non_cached_field_ids( $user_id, $field_ids );
-	}
-}
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_xprofile_reset_fields_by_name_cache_incrementor' ) && ! function_exists( 'bp_xprofile_reset_fields_by_name_cache_incrementor' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_xprofile_reset_fields_by_name_cache_incrementor()}.
@@ -365,54 +441,9 @@ if ( function_exists( 'bboss_xprofile_reset_fields_by_name_cache_incrementor' ) 
 		return bboss_xprofile_reset_fields_by_name_cache_incrementor();
 	}
 }
-if ( function_exists( 'bboss_xprofile_update_meta_cache' ) && ! function_exists( 'bp_xprofile_update_meta_cache' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_xprofile_update_meta_cache()}.
-	 *
-	 * @deprecated Use bboss_xprofile_update_meta_cache() instead.
-	 */
-	function bp_xprofile_update_meta_cache( $object_ids = array() ) {
-		return bboss_xprofile_update_meta_cache( $object_ids );
-	}
-}
-if ( function_exists( 'bboss_xprofile_clear_fullname_field_id_cache' ) && ! function_exists( 'xprofile_clear_fullname_field_id_cache' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_xprofile_clear_fullname_field_id_cache()}.
-	 *
-	 * @deprecated Use bboss_xprofile_clear_fullname_field_id_cache() instead.
-	 */
-	function xprofile_clear_fullname_field_id_cache() {
-		return bboss_xprofile_clear_fullname_field_id_cache();
-	}
-}
-if ( function_exists( 'bboss_xprofile_clear_profile_field_object_cache' ) && ! function_exists( 'xprofile_clear_profile_field_object_cache' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_xprofile_clear_profile_field_object_cache()}.
-	 *
-	 * @deprecated Use bboss_xprofile_clear_profile_field_object_cache() instead.
-	 */
-	function xprofile_clear_profile_field_object_cache( $field_obj ) {
-		return bboss_xprofile_clear_profile_field_object_cache( $field_obj );
-	}
-}
-if ( function_exists( 'bboss_xprofile_clear_profile_groups_object_cache' ) && ! function_exists( 'xprofile_clear_profile_groups_object_cache' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_xprofile_clear_profile_groups_object_cache()}.
-	 *
-	 * @deprecated Use bboss_xprofile_clear_profile_groups_object_cache() instead.
-	 */
-	function xprofile_clear_profile_groups_object_cache( $group_obj ) {
-		return bboss_xprofile_clear_profile_groups_object_cache( $group_obj );
-	}
-}
-if ( function_exists( 'bboss_xprofile_clear_profiledata_object_cache' ) && ! function_exists( 'xprofile_clear_profiledata_object_cache' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_xprofile_clear_profiledata_object_cache()}.
-	 *
-	 * @deprecated Use bboss_xprofile_clear_profiledata_object_cache() instead.
-	 */
-	function xprofile_clear_profiledata_object_cache( $data_obj ) {
-		return bboss_xprofile_clear_profiledata_object_cache( $data_obj );
-	}
-}
 // @bbwt-com-end compat-layer
+
+add_action( 'xprofile_field_before_save', 'bp_xprofile_reset_fields_by_name_cache_incrementor' );
+
+// List actions to clear super cached pages on, if super cache is installed.
+add_action( 'xprofile_updated_profile', 'bp_core_clear_cache' );

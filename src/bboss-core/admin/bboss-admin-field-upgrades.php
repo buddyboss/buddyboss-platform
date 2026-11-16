@@ -43,6 +43,20 @@ function bboss_field_upgrades_transient_key() {
 	$version = defined( 'BBOSS_PLATFORM_VERSION' ) ? BBOSS_PLATFORM_VERSION : '0';
 	return 'bb_field_upgrades_data_v_' . md5( $version );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_field_upgrades_transient_key' ) && ! function_exists( 'bb_field_upgrades_transient_key' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_field_upgrades_transient_key()}.
+	 *
+	 * @deprecated Use bboss_field_upgrades_transient_key() instead.
+	 */
+	function bb_field_upgrades_transient_key() {
+		return bboss_field_upgrades_transient_key();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get the field upgrades catalog from the cache.
@@ -78,6 +92,20 @@ function bboss_get_field_upgrades_data() {
 	// subsequent requests stay fast via the transient + stale path above.
 	return bboss_refresh_field_upgrades_data();
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_field_upgrades_data' ) && ! function_exists( 'bb_get_field_upgrades_data' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_field_upgrades_data()}.
+	 *
+	 * @deprecated Use bboss_get_field_upgrades_data() instead.
+	 */
+	function bb_get_field_upgrades_data() {
+		return bboss_get_field_upgrades_data();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Schedule a single-event background refresh of the field upgrades catalog.
@@ -101,6 +129,20 @@ function bboss_schedule_field_upgrades_refresh() {
 		wp_schedule_single_event( time() + 5, 'bb_refresh_field_upgrades_cron' );
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_schedule_field_upgrades_refresh' ) && ! function_exists( 'bb_schedule_field_upgrades_refresh' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_schedule_field_upgrades_refresh()}.
+	 *
+	 * @deprecated Use bboss_schedule_field_upgrades_refresh() instead.
+	 */
+	function bb_schedule_field_upgrades_refresh() {
+		return bboss_schedule_field_upgrades_refresh();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Perform the actual remote fetch and populate the catalog cache.
@@ -145,6 +187,20 @@ function bboss_refresh_field_upgrades_data() {
 
 	return $parsed;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_refresh_field_upgrades_data' ) && ! function_exists( 'bb_refresh_field_upgrades_data' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_refresh_field_upgrades_data()}.
+	 *
+	 * @deprecated Use bboss_refresh_field_upgrades_data() instead.
+	 */
+	function bb_refresh_field_upgrades_data() {
+		return bboss_refresh_field_upgrades_data();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 // Cron handlers — single-event (on-demand refresh) and recurring (daily safety net).
 add_action( 'bb_refresh_field_upgrades_cron', 'bb_refresh_field_upgrades_data' );
@@ -160,6 +216,20 @@ function bboss_schedule_field_upgrades_daily_refresh() {
 		wp_schedule_event( time() + HOUR_IN_SECONDS, 'daily', 'bb_field_upgrades_daily_refresh' );
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_schedule_field_upgrades_daily_refresh' ) && ! function_exists( 'bb_schedule_field_upgrades_daily_refresh' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_schedule_field_upgrades_daily_refresh()}.
+	 *
+	 * @deprecated Use bboss_schedule_field_upgrades_daily_refresh() instead.
+	 */
+	function bb_schedule_field_upgrades_daily_refresh() {
+		return bboss_schedule_field_upgrades_daily_refresh();
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'admin_init', 'bb_schedule_field_upgrades_daily_refresh' );
 
 /**
@@ -293,6 +363,20 @@ function bboss_get_field_upgrade_for( $feature_id, $panel_id = '', $section_id =
 
 	return null;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_field_upgrade_for' ) && ! function_exists( 'bb_get_field_upgrade_for' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_field_upgrade_for()}.
+	 *
+	 * @deprecated Use bboss_get_field_upgrade_for() instead.
+	 */
+	function bb_get_field_upgrade_for( $feature_id, $panel_id = '', $section_id = '', $field_name = '' ) {
+		return bboss_get_field_upgrade_for( $feature_id, $panel_id, $section_id, $field_name );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Detect the media provider for a given URL and return a normalized embed payload.
@@ -380,6 +464,20 @@ function bboss_detect_upgrade_video_provider( $url ) {
 
 	return null;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_detect_upgrade_video_provider' ) && ! function_exists( 'bb_detect_upgrade_video_provider' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_detect_upgrade_video_provider()}.
+	 *
+	 * @deprecated Use bboss_detect_upgrade_video_provider() instead.
+	 */
+	function bb_detect_upgrade_video_provider( $url ) {
+		return bboss_detect_upgrade_video_provider( $url );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Build a normalized media payload for an upgrade modal.
@@ -427,6 +525,20 @@ function bboss_admin_build_upgrade_media( $video_url, $image_url ) {
 		'poster' => '',
 	);
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_admin_build_upgrade_media' ) && ! function_exists( 'bb_admin_build_upgrade_media' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_admin_build_upgrade_media()}.
+	 *
+	 * @deprecated Use bboss_admin_build_upgrade_media() instead.
+	 */
+	function bb_admin_build_upgrade_media( $video_url, $image_url ) {
+		return bboss_admin_build_upgrade_media( $video_url, $image_url );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Build a serializable `pro_notice.modal` payload from a catalog entry.
@@ -482,6 +594,20 @@ function bboss_field_upgrade_to_modal_payload( $entry, $fallback_label = '' ) {
 		'url'         => esc_url_raw( $entry['upgrade_url'] ?? $entry['url'] ?? $fallback_url ),
 	);
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_field_upgrade_to_modal_payload' ) && ! function_exists( 'bb_field_upgrade_to_modal_payload' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_field_upgrade_to_modal_payload()}.
+	 *
+	 * @deprecated Use bboss_field_upgrade_to_modal_payload() instead.
+	 */
+	function bb_field_upgrade_to_modal_payload( $entry, $fallback_label = '' ) {
+		return bboss_field_upgrade_to_modal_payload( $entry, $fallback_label );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Reset the in-memory resolver index.
@@ -501,6 +627,20 @@ function bboss_reset_field_upgrades_index() {
 	// boundary (admin AJAX requests are short-lived).
 	delete_transient( bboss_field_upgrades_transient_key() );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_reset_field_upgrades_index' ) && ! function_exists( 'bb_reset_field_upgrades_index' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_reset_field_upgrades_index()}.
+	 *
+	 * @deprecated Use bboss_reset_field_upgrades_index() instead.
+	 */
+	function bb_reset_field_upgrades_index() {
+		return bboss_reset_field_upgrades_index();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Clear the field upgrades cache (transient only).
@@ -528,6 +668,20 @@ function bboss_flush_field_upgrades_cache() {
 	delete_transient( bboss_field_upgrades_transient_key() );
 	bboss_schedule_field_upgrades_refresh();
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_flush_field_upgrades_cache' ) && ! function_exists( 'bb_flush_field_upgrades_cache' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_flush_field_upgrades_cache()}.
+	 *
+	 * @deprecated Use bboss_flush_field_upgrades_cache() instead.
+	 */
+	function bb_flush_field_upgrades_cache() {
+		return bboss_flush_field_upgrades_cache();
+	}
+}
+// @bbwt-com-end compat-layer
+
 // Hook into the canonical Settings 2.0 cache flusher so every existing
 // trigger (plugin activation, manual `?bb_clear_placeholder_cache=1`,
 // license status change) drops the live transient.
@@ -548,6 +702,20 @@ function bboss_flush_field_upgrades_cache_full() {
 	delete_option( 'bb_field_upgrades_data_stale' );
 	bboss_schedule_field_upgrades_refresh();
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_flush_field_upgrades_cache_full' ) && ! function_exists( 'bb_flush_field_upgrades_cache_full' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_flush_field_upgrades_cache_full()}.
+	 *
+	 * @deprecated Use bboss_flush_field_upgrades_cache_full() instead.
+	 */
+	function bb_flush_field_upgrades_cache_full() {
+		return bboss_flush_field_upgrades_cache_full();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Clear the field upgrades cache when the license status changes.
@@ -577,101 +745,8 @@ function bboss_register_field_upgrades_license_hooks() {
 		add_action( $plugin_id . '_license_status_changed', 'bb_flush_field_upgrades_cache_full' );
 	}
 }
-add_action( 'admin_init', 'bb_register_field_upgrades_license_hooks' );
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
-if ( function_exists( 'bboss_admin_build_upgrade_media' ) && ! function_exists( 'bb_admin_build_upgrade_media' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_admin_build_upgrade_media()}.
-	 *
-	 * @deprecated Use bboss_admin_build_upgrade_media() instead.
-	 */
-	function bb_admin_build_upgrade_media( $video_url, $image_url ) {
-		return bboss_admin_build_upgrade_media( $video_url, $image_url );
-	}
-}
-if ( function_exists( 'bboss_detect_upgrade_video_provider' ) && ! function_exists( 'bb_detect_upgrade_video_provider' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_detect_upgrade_video_provider()}.
-	 *
-	 * @deprecated Use bboss_detect_upgrade_video_provider() instead.
-	 */
-	function bb_detect_upgrade_video_provider( $url ) {
-		return bboss_detect_upgrade_video_provider( $url );
-	}
-}
-if ( function_exists( 'bboss_field_upgrade_to_modal_payload' ) && ! function_exists( 'bb_field_upgrade_to_modal_payload' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_field_upgrade_to_modal_payload()}.
-	 *
-	 * @deprecated Use bboss_field_upgrade_to_modal_payload() instead.
-	 */
-	function bb_field_upgrade_to_modal_payload( $entry, $fallback_label = '' ) {
-		return bboss_field_upgrade_to_modal_payload( $entry, $fallback_label );
-	}
-}
-if ( function_exists( 'bboss_field_upgrades_transient_key' ) && ! function_exists( 'bb_field_upgrades_transient_key' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_field_upgrades_transient_key()}.
-	 *
-	 * @deprecated Use bboss_field_upgrades_transient_key() instead.
-	 */
-	function bb_field_upgrades_transient_key() {
-		return bboss_field_upgrades_transient_key();
-	}
-}
-if ( function_exists( 'bboss_flush_field_upgrades_cache' ) && ! function_exists( 'bb_flush_field_upgrades_cache' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_flush_field_upgrades_cache()}.
-	 *
-	 * @deprecated Use bboss_flush_field_upgrades_cache() instead.
-	 */
-	function bb_flush_field_upgrades_cache() {
-		return bboss_flush_field_upgrades_cache();
-	}
-}
-if ( function_exists( 'bboss_flush_field_upgrades_cache_full' ) && ! function_exists( 'bb_flush_field_upgrades_cache_full' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_flush_field_upgrades_cache_full()}.
-	 *
-	 * @deprecated Use bboss_flush_field_upgrades_cache_full() instead.
-	 */
-	function bb_flush_field_upgrades_cache_full() {
-		return bboss_flush_field_upgrades_cache_full();
-	}
-}
-if ( function_exists( 'bboss_get_field_upgrade_for' ) && ! function_exists( 'bb_get_field_upgrade_for' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_field_upgrade_for()}.
-	 *
-	 * @deprecated Use bboss_get_field_upgrade_for() instead.
-	 */
-	function bb_get_field_upgrade_for( $feature_id, $panel_id = '', $section_id = '', $field_name = '' ) {
-		return bboss_get_field_upgrade_for( $feature_id, $panel_id, $section_id, $field_name );
-	}
-}
-if ( function_exists( 'bboss_get_field_upgrades_data' ) && ! function_exists( 'bb_get_field_upgrades_data' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_field_upgrades_data()}.
-	 *
-	 * @deprecated Use bboss_get_field_upgrades_data() instead.
-	 */
-	function bb_get_field_upgrades_data() {
-		return bboss_get_field_upgrades_data();
-	}
-}
-if ( function_exists( 'bboss_refresh_field_upgrades_data' ) && ! function_exists( 'bb_refresh_field_upgrades_data' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_refresh_field_upgrades_data()}.
-	 *
-	 * @deprecated Use bboss_refresh_field_upgrades_data() instead.
-	 */
-	function bb_refresh_field_upgrades_data() {
-		return bboss_refresh_field_upgrades_data();
-	}
-}
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_register_field_upgrades_license_hooks' ) && ! function_exists( 'bb_register_field_upgrades_license_hooks' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_register_field_upgrades_license_hooks()}.
@@ -682,34 +757,6 @@ if ( function_exists( 'bboss_register_field_upgrades_license_hooks' ) && ! funct
 		return bboss_register_field_upgrades_license_hooks();
 	}
 }
-if ( function_exists( 'bboss_reset_field_upgrades_index' ) && ! function_exists( 'bb_reset_field_upgrades_index' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_reset_field_upgrades_index()}.
-	 *
-	 * @deprecated Use bboss_reset_field_upgrades_index() instead.
-	 */
-	function bb_reset_field_upgrades_index() {
-		return bboss_reset_field_upgrades_index();
-	}
-}
-if ( function_exists( 'bboss_schedule_field_upgrades_daily_refresh' ) && ! function_exists( 'bb_schedule_field_upgrades_daily_refresh' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_schedule_field_upgrades_daily_refresh()}.
-	 *
-	 * @deprecated Use bboss_schedule_field_upgrades_daily_refresh() instead.
-	 */
-	function bb_schedule_field_upgrades_daily_refresh() {
-		return bboss_schedule_field_upgrades_daily_refresh();
-	}
-}
-if ( function_exists( 'bboss_schedule_field_upgrades_refresh' ) && ! function_exists( 'bb_schedule_field_upgrades_refresh' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_schedule_field_upgrades_refresh()}.
-	 *
-	 * @deprecated Use bboss_schedule_field_upgrades_refresh() instead.
-	 */
-	function bb_schedule_field_upgrades_refresh() {
-		return bboss_schedule_field_upgrades_refresh();
-	}
-}
 // @bbwt-com-end compat-layer
+
+add_action( 'admin_init', 'bb_register_field_upgrades_license_hooks' );

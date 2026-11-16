@@ -43,6 +43,20 @@ function bboss_admin_bar_my_account_root() {
 		);
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_admin_bar_my_account_root' ) && ! function_exists( 'bp_admin_bar_my_account_root' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_admin_bar_my_account_root()}.
+	 *
+	 * @deprecated Use bboss_admin_bar_my_account_root() instead.
+	 */
+	function bp_admin_bar_my_account_root() {
+		return bboss_admin_bar_my_account_root();
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'admin_bar_menu', 'bp_admin_bar_my_account_root', 100 );
 
 /**
@@ -81,6 +95,20 @@ function bboss_core_load_admin_bar() {
 		add_action( 'admin_footer', 'bp_core_admin_bar' );
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_core_load_admin_bar' ) && ! function_exists( 'bp_core_load_admin_bar' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_load_admin_bar()}.
+	 *
+	 * @deprecated Use bboss_core_load_admin_bar() instead.
+	 */
+	function bp_core_load_admin_bar() {
+		return bboss_core_load_admin_bar();
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'init', 'bp_core_load_admin_bar', 9 );
 
 /**
@@ -96,6 +124,20 @@ function bboss_core_load_admin_bar_css() {
 	add_action( 'bp_enqueue_scripts', 'bp_core_enqueue_admin_bar_css', 1 );
 	add_action( 'bp_admin_enqueue_scripts', 'bp_core_enqueue_admin_bar_css', 1 );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_core_load_admin_bar_css' ) && ! function_exists( 'bp_core_load_admin_bar_css' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_load_admin_bar_css()}.
+	 *
+	 * @deprecated Use bboss_core_load_admin_bar_css() instead.
+	 */
+	function bp_core_load_admin_bar_css() {
+		return bboss_core_load_admin_bar_css();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Enqueue supplemental WordPress Toolbar styling.
@@ -116,6 +158,20 @@ function bboss_core_enqueue_admin_bar_css() {
 	// Enqueue the additional adminbar css.
 	wp_enqueue_style( 'bp-admin-bar' );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_core_enqueue_admin_bar_css' ) && ! function_exists( 'bp_core_enqueue_admin_bar_css' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_enqueue_admin_bar_css()}.
+	 *
+	 * @deprecated Use bboss_core_enqueue_admin_bar_css() instead.
+	 */
+	function bp_core_enqueue_admin_bar_css() {
+		return bboss_core_enqueue_admin_bar_css();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Add the "My Account" submenu items.
@@ -222,54 +278,8 @@ function bboss_wp_admin_bar_my_account_menu( $wp_admin_bar ) {
 		)
 	);
 }
-// User related, aligned right.
-remove_action( 'admin_bar_menu', 'wp_admin_bar_my_account_menu', 0 );
-// User related, aligned right.
-add_action( 'admin_bar_menu', 'bp_wp_admin_bar_my_account_menu', 99999999 );
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
-if ( function_exists( 'bboss_admin_bar_my_account_root' ) && ! function_exists( 'bp_admin_bar_my_account_root' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_admin_bar_my_account_root()}.
-	 *
-	 * @deprecated Use bboss_admin_bar_my_account_root() instead.
-	 */
-	function bp_admin_bar_my_account_root() {
-		return bboss_admin_bar_my_account_root();
-	}
-}
-if ( function_exists( 'bboss_core_enqueue_admin_bar_css' ) && ! function_exists( 'bp_core_enqueue_admin_bar_css' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_core_enqueue_admin_bar_css()}.
-	 *
-	 * @deprecated Use bboss_core_enqueue_admin_bar_css() instead.
-	 */
-	function bp_core_enqueue_admin_bar_css() {
-		return bboss_core_enqueue_admin_bar_css();
-	}
-}
-if ( function_exists( 'bboss_core_load_admin_bar' ) && ! function_exists( 'bp_core_load_admin_bar' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_core_load_admin_bar()}.
-	 *
-	 * @deprecated Use bboss_core_load_admin_bar() instead.
-	 */
-	function bp_core_load_admin_bar() {
-		return bboss_core_load_admin_bar();
-	}
-}
-if ( function_exists( 'bboss_core_load_admin_bar_css' ) && ! function_exists( 'bp_core_load_admin_bar_css' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_core_load_admin_bar_css()}.
-	 *
-	 * @deprecated Use bboss_core_load_admin_bar_css() instead.
-	 */
-	function bp_core_load_admin_bar_css() {
-		return bboss_core_load_admin_bar_css();
-	}
-}
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_wp_admin_bar_my_account_menu' ) && ! function_exists( 'bp_wp_admin_bar_my_account_menu' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_wp_admin_bar_my_account_menu()}.
@@ -281,3 +291,8 @@ if ( function_exists( 'bboss_wp_admin_bar_my_account_menu' ) && ! function_exist
 	}
 }
 // @bbwt-com-end compat-layer
+
+// User related, aligned right.
+remove_action( 'admin_bar_menu', 'wp_admin_bar_my_account_menu', 0 );
+// User related, aligned right.
+add_action( 'admin_bar_menu', 'bp_wp_admin_bar_my_account_menu', 99999999 );

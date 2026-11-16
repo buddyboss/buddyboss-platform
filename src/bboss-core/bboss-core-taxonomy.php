@@ -48,6 +48,20 @@ function bboss_register_default_taxonomies() {
 		)
 	);
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_register_default_taxonomies' ) && ! function_exists( 'bp_register_default_taxonomies' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_register_default_taxonomies()}.
+	 *
+	 * @deprecated Use bboss_register_default_taxonomies() instead.
+	 */
+	function bp_register_default_taxonomies() {
+		return bboss_register_default_taxonomies();
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'bp_register_taxonomies', 'bp_register_default_taxonomies' );
 
 /**
@@ -73,6 +87,20 @@ function bboss_get_taxonomy_term_site_id( $taxonomy = '' ) {
 	 */
 	return (int) apply_filters( 'bp_get_taxonomy_term_site_id', $site_id, $taxonomy );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_taxonomy_term_site_id' ) && ! function_exists( 'bp_get_taxonomy_term_site_id' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_taxonomy_term_site_id()}.
+	 *
+	 * @deprecated Use bboss_get_taxonomy_term_site_id() instead.
+	 */
+	function bp_get_taxonomy_term_site_id( $taxonomy = '' ) {
+		return bboss_get_taxonomy_term_site_id( $taxonomy );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Set taxonomy terms on a BuddyPress object.
@@ -117,6 +145,20 @@ function bboss_set_object_terms( $object_id, $terms, $taxonomy, $append = false 
 
 	return $tt_ids;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_set_object_terms' ) && ! function_exists( 'bp_set_object_terms' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_set_object_terms()}.
+	 *
+	 * @deprecated Use bboss_set_object_terms() instead.
+	 */
+	function bp_set_object_terms( $object_id, $terms, $taxonomy, $append = false ) {
+		return bboss_set_object_terms( $object_id, $terms, $taxonomy, $append );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get taxonomy terms for a BuddyPress object.
@@ -159,6 +201,20 @@ function bboss_get_object_terms( $object_ids, $taxonomies, $args = array() ) {
 
 	return $retval;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_object_terms' ) && ! function_exists( 'bp_get_object_terms' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_object_terms()}.
+	 *
+	 * @deprecated Use bboss_get_object_terms() instead.
+	 */
+	function bp_get_object_terms( $object_ids, $taxonomies, $args = array() ) {
+		return bboss_get_object_terms( $object_ids, $taxonomies, $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Remove taxonomy terms on a BuddyPress object.
@@ -201,6 +257,20 @@ function bboss_remove_object_terms( $object_id, $terms, $taxonomy ) {
 
 	return $retval;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_remove_object_terms' ) && ! function_exists( 'bp_remove_object_terms' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_remove_object_terms()}.
+	 *
+	 * @deprecated Use bboss_remove_object_terms() instead.
+	 */
+	function bp_remove_object_terms( $object_id, $terms, $taxonomy ) {
+		return bboss_remove_object_terms( $object_id, $terms, $taxonomy );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Retrieve IDs of objects in valid taxonomies and terms for BuddyPress-related taxonomies.
@@ -247,6 +317,20 @@ function bboss_get_objects_in_term( $term_ids, $taxonomies, $args = array() ) {
 
 	return $retval;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_objects_in_term' ) && ! function_exists( 'bp_get_objects_in_term' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_objects_in_term()}.
+	 *
+	 * @deprecated Use bboss_get_objects_in_term() instead.
+	 */
+	function bp_get_objects_in_term( $term_ids, $taxonomies, $args = array() ) {
+		return bboss_get_objects_in_term( $term_ids, $taxonomies, $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get term data for terms in BuddyPress taxonomies.
@@ -285,40 +369,8 @@ function bboss_get_term_by( $field, $value, $taxonomy = '', $output = OBJECT, $f
 
 	return $term;
 }
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
-if ( function_exists( 'bboss_get_object_terms' ) && ! function_exists( 'bp_get_object_terms' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_object_terms()}.
-	 *
-	 * @deprecated Use bboss_get_object_terms() instead.
-	 */
-	function bp_get_object_terms( $object_ids, $taxonomies, $args = array() ) {
-		return bboss_get_object_terms( $object_ids, $taxonomies, $args );
-	}
-}
-if ( function_exists( 'bboss_get_objects_in_term' ) && ! function_exists( 'bp_get_objects_in_term' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_objects_in_term()}.
-	 *
-	 * @deprecated Use bboss_get_objects_in_term() instead.
-	 */
-	function bp_get_objects_in_term( $term_ids, $taxonomies, $args = array() ) {
-		return bboss_get_objects_in_term( $term_ids, $taxonomies, $args );
-	}
-}
-if ( function_exists( 'bboss_get_taxonomy_term_site_id' ) && ! function_exists( 'bp_get_taxonomy_term_site_id' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_taxonomy_term_site_id()}.
-	 *
-	 * @deprecated Use bboss_get_taxonomy_term_site_id() instead.
-	 */
-	function bp_get_taxonomy_term_site_id( $taxonomy = '' ) {
-		return bboss_get_taxonomy_term_site_id( $taxonomy );
-	}
-}
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_get_term_by' ) && ! function_exists( 'bp_get_term_by' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_get_term_by()}.
@@ -329,34 +381,5 @@ if ( function_exists( 'bboss_get_term_by' ) && ! function_exists( 'bp_get_term_b
 		return bboss_get_term_by( $field, $value, $taxonomy, $output, $filter );
 	}
 }
-if ( function_exists( 'bboss_register_default_taxonomies' ) && ! function_exists( 'bp_register_default_taxonomies' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_register_default_taxonomies()}.
-	 *
-	 * @deprecated Use bboss_register_default_taxonomies() instead.
-	 */
-	function bp_register_default_taxonomies() {
-		return bboss_register_default_taxonomies();
-	}
-}
-if ( function_exists( 'bboss_remove_object_terms' ) && ! function_exists( 'bp_remove_object_terms' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_remove_object_terms()}.
-	 *
-	 * @deprecated Use bboss_remove_object_terms() instead.
-	 */
-	function bp_remove_object_terms( $object_id, $terms, $taxonomy ) {
-		return bboss_remove_object_terms( $object_id, $terms, $taxonomy );
-	}
-}
-if ( function_exists( 'bboss_set_object_terms' ) && ! function_exists( 'bp_set_object_terms' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_set_object_terms()}.
-	 *
-	 * @deprecated Use bboss_set_object_terms() instead.
-	 */
-	function bp_set_object_terms( $object_id, $terms, $taxonomy, $append = false ) {
-		return bboss_set_object_terms( $object_id, $terms, $taxonomy, $append );
-	}
-}
 // @bbwt-com-end compat-layer
+

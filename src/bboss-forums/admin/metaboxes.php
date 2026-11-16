@@ -258,6 +258,20 @@ function bboss_bbp_dashboard_widget_right_now() {
 
 	do_action( 'bbp_dashboard_widget_right_now_end' );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_dashboard_widget_right_now' ) && ! function_exists( 'bbp_dashboard_widget_right_now' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_dashboard_widget_right_now()}.
+	 *
+	 * @deprecated Use bboss_bbp_dashboard_widget_right_now() instead.
+	 */
+	function bbp_dashboard_widget_right_now() {
+		return bboss_bbp_dashboard_widget_right_now();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Filter the Dashboard "at a glance" items and append bbPress elements to it.
@@ -364,20 +378,8 @@ function bboss_bbp_filter_dashboard_glance_items( $elements = array() ) {
 	// Filter & return.
 	return apply_filters( 'bbp_dashboard_at_a_glance', $elements, $r );
 }
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
-if ( function_exists( 'bboss_bbp_dashboard_widget_right_now' ) && ! function_exists( 'bbp_dashboard_widget_right_now' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_dashboard_widget_right_now()}.
-	 *
-	 * @deprecated Use bboss_bbp_dashboard_widget_right_now() instead.
-	 */
-	function bbp_dashboard_widget_right_now() {
-		return bboss_bbp_dashboard_widget_right_now();
-	}
-}
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_bbp_filter_dashboard_glance_items' ) && ! function_exists( 'bbp_filter_dashboard_glance_items' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_bbp_filter_dashboard_glance_items()}.
@@ -389,3 +391,4 @@ if ( function_exists( 'bboss_bbp_filter_dashboard_glance_items' ) && ! function_
 	}
 }
 // @bbwt-com-end compat-layer
+

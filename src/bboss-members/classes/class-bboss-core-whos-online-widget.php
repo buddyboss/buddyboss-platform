@@ -341,6 +341,20 @@ if ( ! function_exists( 'bboss_get_total_online_member_count' ) ) {
 		$members_template = $old_members_template;
 		return $total;
 	}
+	// @bbwt-com-start compat-layer
+	// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+	if ( function_exists( 'bboss_get_total_online_member_count' ) && ! function_exists( 'bp_get_total_online_member_count' ) ) {
+		/**
+		 * Backward-compatible alias of {@see bboss_get_total_online_member_count()}.
+		 *
+		 * @deprecated Use bboss_get_total_online_member_count() instead.
+		 */
+		function bp_get_total_online_member_count() {
+			return bboss_get_total_online_member_count();
+		}
+	}
+	// @bbwt-com-end compat-layer
+
 }
 
 /**
@@ -491,18 +505,3 @@ function buddyboss_theme_whos_online_widget_heartbeat( $response = array(), $dat
 
 add_filter( 'heartbeat_received', 'buddyboss_theme_whos_online_widget_heartbeat', 10, 2 );
 add_filter( 'heartbeat_nopriv_received', 'buddyboss_theme_whos_online_widget_heartbeat', 10, 2 );
-
-// @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
-if ( function_exists( 'bboss_get_total_online_member_count' ) && ! function_exists( 'bp_get_total_online_member_count' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_total_online_member_count()}.
-	 *
-	 * @deprecated Use bboss_get_total_online_member_count() instead.
-	 */
-	function bp_get_total_online_member_count() {
-		return bboss_get_total_online_member_count();
-	}
-}
-// @bbwt-com-end compat-layer

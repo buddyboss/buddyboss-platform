@@ -56,6 +56,20 @@ function bboss_friends_record_activity( $args = '' ) {
 
 	return bboss_activity_add( $r );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_friends_record_activity' ) && ! function_exists( 'friends_record_activity' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_friends_record_activity()}.
+	 *
+	 * @deprecated Use bboss_friends_record_activity() instead.
+	 */
+	function friends_record_activity( $args = '' ) {
+		return bboss_friends_record_activity( $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Delete an activity item related to the Connections component.
@@ -87,6 +101,20 @@ function bboss_friends_delete_activity( $args ) {
 		)
 	);
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_friends_delete_activity' ) && ! function_exists( 'friends_delete_activity' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_friends_delete_activity()}.
+	 *
+	 * @deprecated Use bboss_friends_delete_activity() instead.
+	 */
+	function friends_delete_activity( $args ) {
+		return bboss_friends_delete_activity( $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Register the activity actions for bp-friends.
@@ -130,6 +158,20 @@ function bboss_friends_register_activity_actions() {
 	 */
 	do_action( 'friends_register_activity_actions' );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_friends_register_activity_actions' ) && ! function_exists( 'friends_register_activity_actions' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_friends_register_activity_actions()}.
+	 *
+	 * @deprecated Use bboss_friends_register_activity_actions() instead.
+	 */
+	function friends_register_activity_actions() {
+		return bboss_friends_register_activity_actions();
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'bp_register_activity_actions', 'friends_register_activity_actions' );
 
 /**
@@ -166,6 +208,20 @@ function bboss_friends_format_activity_action_friendship_accepted( $action, $act
 	 */
 	return apply_filters( 'bp_friends_format_activity_action_friendship_accepted', $action, $activity );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_friends_format_activity_action_friendship_accepted' ) && ! function_exists( 'bp_friends_format_activity_action_friendship_accepted' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_friends_format_activity_action_friendship_accepted()}.
+	 *
+	 * @deprecated Use bboss_friends_format_activity_action_friendship_accepted() instead.
+	 */
+	function bp_friends_format_activity_action_friendship_accepted( $action, $activity ) {
+		return bboss_friends_format_activity_action_friendship_accepted( $action, $activity );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Format 'friendship_created' activity actions.
@@ -201,6 +257,20 @@ function bboss_friends_format_activity_action_friendship_created( $action, $acti
 	 */
 	return apply_filters( 'bp_friends_format_activity_action_friendship_created', $action, $activity );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_friends_format_activity_action_friendship_created' ) && ! function_exists( 'bp_friends_format_activity_action_friendship_created' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_friends_format_activity_action_friendship_created()}.
+	 *
+	 * @deprecated Use bboss_friends_format_activity_action_friendship_created() instead.
+	 */
+	function bp_friends_format_activity_action_friendship_created( $action, $activity ) {
+		return bboss_friends_format_activity_action_friendship_created( $action, $activity );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Fetch data related to friended users at the beginning of an activity loop.
@@ -244,6 +314,20 @@ function bboss_friends_prefetch_activity_object_data( $activities ) {
 
 	return $activities;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_friends_prefetch_activity_object_data' ) && ! function_exists( 'bp_friends_prefetch_activity_object_data' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_friends_prefetch_activity_object_data()}.
+	 *
+	 * @deprecated Use bboss_friends_prefetch_activity_object_data() instead.
+	 */
+	function bp_friends_prefetch_activity_object_data( $activities ) {
+		return bboss_friends_prefetch_activity_object_data( $activities );
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_filter( 'bp_activity_prefetch_object_data', 'bp_friends_prefetch_activity_object_data' );
 
 /**
@@ -343,6 +427,20 @@ function bboss_friends_filter_activity_scope( $retval = array(), $filter = array
 
 	return $retval;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_friends_filter_activity_scope' ) && ! function_exists( 'bp_friends_filter_activity_scope' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_friends_filter_activity_scope()}.
+	 *
+	 * @deprecated Use bboss_friends_filter_activity_scope() instead.
+	 */
+	function bp_friends_filter_activity_scope( $retval = array(), $filter = array() ) {
+		return bboss_friends_filter_activity_scope( $retval, $filter );
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_filter( 'bp_activity_set_friends_scope_args', 'bp_friends_filter_activity_scope', 10, 2 );
 
 /**
@@ -420,6 +518,20 @@ function bboss_friends_filter_activity_just_me_scope( $retval = array(), $filter
 
 	return $retval;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_friends_filter_activity_just_me_scope' ) && ! function_exists( 'bp_friends_filter_activity_just_me_scope' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_friends_filter_activity_just_me_scope()}.
+	 *
+	 * @deprecated Use bboss_friends_filter_activity_just_me_scope() instead.
+	 */
+	function bp_friends_filter_activity_just_me_scope( $retval = array(), $filter = array() ) {
+		return bboss_friends_filter_activity_just_me_scope( $retval, $filter );
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_filter( 'bp_activity_set_just-me_scope_args', 'bp_friends_filter_activity_just_me_scope', 20, 2 );
 
 /**
@@ -448,6 +560,20 @@ function bboss_friends_friendship_accepted_activity( $friendship_id, $initiator_
 		)
 	);
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_friends_friendship_accepted_activity' ) && ! function_exists( 'bp_friends_friendship_accepted_activity' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_friends_friendship_accepted_activity()}.
+	 *
+	 * @deprecated Use bboss_friends_friendship_accepted_activity() instead.
+	 */
+	function bp_friends_friendship_accepted_activity( $friendship_id, $initiator_user_id, $friend_user_id, $friendship = false ) {
+		return bboss_friends_friendship_accepted_activity( $friendship_id, $initiator_user_id, $friend_user_id, $friendship );
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'friends_friendship_accepted', 'bp_friends_friendship_accepted_activity', 10, 4 );
 
 /**
@@ -470,6 +596,20 @@ function bboss_friends_delete_activity_on_user_delete( $user_id = 0 ) {
 		)
 	);
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_friends_delete_activity_on_user_delete' ) && ! function_exists( 'bp_friends_delete_activity_on_user_delete' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_friends_delete_activity_on_user_delete()}.
+	 *
+	 * @deprecated Use bboss_friends_delete_activity_on_user_delete() instead.
+	 */
+	function bp_friends_delete_activity_on_user_delete( $user_id = 0 ) {
+		return bboss_friends_delete_activity_on_user_delete( $user_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'friends_remove_data', 'bp_friends_delete_activity_on_user_delete' );
 
 /**
@@ -488,6 +628,20 @@ function bboss_friends_delete_activity_on_friendship_delete( $friendship_id ) {
 		)
 	);
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_friends_delete_activity_on_friendship_delete' ) && ! function_exists( 'bp_friends_delete_activity_on_friendship_delete' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_friends_delete_activity_on_friendship_delete()}.
+	 *
+	 * @deprecated Use bboss_friends_delete_activity_on_friendship_delete() instead.
+	 */
+	function bp_friends_delete_activity_on_friendship_delete( $friendship_id ) {
+		return bboss_friends_delete_activity_on_friendship_delete( $friendship_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'friends_friendship_deleted', 'bp_friends_delete_activity_on_friendship_delete' );
 
 /**
@@ -517,11 +671,8 @@ function bboss_friends_activity_at_name_do_notifications( $send, $usernames, $us
 
 	return false;
 }
-add_filter( 'bp_activity_at_name_do_notifications', 'bp_friends_activity_at_name_do_notifications', 10, 4 );
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_friends_activity_at_name_do_notifications' ) && ! function_exists( 'bp_friends_activity_at_name_do_notifications' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_friends_activity_at_name_do_notifications()}.
@@ -532,114 +683,6 @@ if ( function_exists( 'bboss_friends_activity_at_name_do_notifications' ) && ! f
 		return bboss_friends_activity_at_name_do_notifications( $send, $usernames, $user_id, $activity );
 	}
 }
-if ( function_exists( 'bboss_friends_delete_activity_on_friendship_delete' ) && ! function_exists( 'bp_friends_delete_activity_on_friendship_delete' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_friends_delete_activity_on_friendship_delete()}.
-	 *
-	 * @deprecated Use bboss_friends_delete_activity_on_friendship_delete() instead.
-	 */
-	function bp_friends_delete_activity_on_friendship_delete( $friendship_id ) {
-		return bboss_friends_delete_activity_on_friendship_delete( $friendship_id );
-	}
-}
-if ( function_exists( 'bboss_friends_delete_activity_on_user_delete' ) && ! function_exists( 'bp_friends_delete_activity_on_user_delete' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_friends_delete_activity_on_user_delete()}.
-	 *
-	 * @deprecated Use bboss_friends_delete_activity_on_user_delete() instead.
-	 */
-	function bp_friends_delete_activity_on_user_delete( $user_id = 0 ) {
-		return bboss_friends_delete_activity_on_user_delete( $user_id );
-	}
-}
-if ( function_exists( 'bboss_friends_filter_activity_just_me_scope' ) && ! function_exists( 'bp_friends_filter_activity_just_me_scope' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_friends_filter_activity_just_me_scope()}.
-	 *
-	 * @deprecated Use bboss_friends_filter_activity_just_me_scope() instead.
-	 */
-	function bp_friends_filter_activity_just_me_scope( $retval = array(), $filter = array() ) {
-		return bboss_friends_filter_activity_just_me_scope( $retval, $filter );
-	}
-}
-if ( function_exists( 'bboss_friends_filter_activity_scope' ) && ! function_exists( 'bp_friends_filter_activity_scope' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_friends_filter_activity_scope()}.
-	 *
-	 * @deprecated Use bboss_friends_filter_activity_scope() instead.
-	 */
-	function bp_friends_filter_activity_scope( $retval = array(), $filter = array() ) {
-		return bboss_friends_filter_activity_scope( $retval, $filter );
-	}
-}
-if ( function_exists( 'bboss_friends_format_activity_action_friendship_accepted' ) && ! function_exists( 'bp_friends_format_activity_action_friendship_accepted' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_friends_format_activity_action_friendship_accepted()}.
-	 *
-	 * @deprecated Use bboss_friends_format_activity_action_friendship_accepted() instead.
-	 */
-	function bp_friends_format_activity_action_friendship_accepted( $action, $activity ) {
-		return bboss_friends_format_activity_action_friendship_accepted( $action, $activity );
-	}
-}
-if ( function_exists( 'bboss_friends_format_activity_action_friendship_created' ) && ! function_exists( 'bp_friends_format_activity_action_friendship_created' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_friends_format_activity_action_friendship_created()}.
-	 *
-	 * @deprecated Use bboss_friends_format_activity_action_friendship_created() instead.
-	 */
-	function bp_friends_format_activity_action_friendship_created( $action, $activity ) {
-		return bboss_friends_format_activity_action_friendship_created( $action, $activity );
-	}
-}
-if ( function_exists( 'bboss_friends_friendship_accepted_activity' ) && ! function_exists( 'bp_friends_friendship_accepted_activity' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_friends_friendship_accepted_activity()}.
-	 *
-	 * @deprecated Use bboss_friends_friendship_accepted_activity() instead.
-	 */
-	function bp_friends_friendship_accepted_activity( $friendship_id, $initiator_user_id, $friend_user_id, $friendship = false ) {
-		return bboss_friends_friendship_accepted_activity( $friendship_id, $initiator_user_id, $friend_user_id, $friendship );
-	}
-}
-if ( function_exists( 'bboss_friends_prefetch_activity_object_data' ) && ! function_exists( 'bp_friends_prefetch_activity_object_data' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_friends_prefetch_activity_object_data()}.
-	 *
-	 * @deprecated Use bboss_friends_prefetch_activity_object_data() instead.
-	 */
-	function bp_friends_prefetch_activity_object_data( $activities ) {
-		return bboss_friends_prefetch_activity_object_data( $activities );
-	}
-}
-if ( function_exists( 'bboss_friends_delete_activity' ) && ! function_exists( 'friends_delete_activity' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_friends_delete_activity()}.
-	 *
-	 * @deprecated Use bboss_friends_delete_activity() instead.
-	 */
-	function friends_delete_activity( $args ) {
-		return bboss_friends_delete_activity( $args );
-	}
-}
-if ( function_exists( 'bboss_friends_record_activity' ) && ! function_exists( 'friends_record_activity' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_friends_record_activity()}.
-	 *
-	 * @deprecated Use bboss_friends_record_activity() instead.
-	 */
-	function friends_record_activity( $args = '' ) {
-		return bboss_friends_record_activity( $args );
-	}
-}
-if ( function_exists( 'bboss_friends_register_activity_actions' ) && ! function_exists( 'friends_register_activity_actions' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_friends_register_activity_actions()}.
-	 *
-	 * @deprecated Use bboss_friends_register_activity_actions() instead.
-	 */
-	function friends_register_activity_actions() {
-		return bboss_friends_register_activity_actions();
-	}
-}
 // @bbwt-com-end compat-layer
+
+add_filter( 'bp_activity_at_name_do_notifications', 'bp_friends_activity_at_name_do_notifications', 10, 4 );

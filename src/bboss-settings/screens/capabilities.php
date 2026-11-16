@@ -30,10 +30,8 @@ function bboss_settings_screen_capabilities() {
 	 */
 	bboss_core_load_template( apply_filters( 'bp_settings_screen_capabilities', 'members/single/settings/capabilities' ) );
 }
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_settings_screen_capabilities' ) && ! function_exists( 'bp_settings_screen_capabilities' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_settings_screen_capabilities()}.
@@ -45,3 +43,4 @@ if ( function_exists( 'bboss_settings_screen_capabilities' ) && ! function_exist
 	}
 }
 // @bbwt-com-end compat-layer
+

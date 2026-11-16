@@ -29,6 +29,20 @@ function bboss_bbp_get_default_user_options() {
 		)
 	);
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_default_user_options' ) && ! function_exists( 'bbp_get_default_user_options' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_default_user_options()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_default_user_options() instead.
+	 */
+	function bbp_get_default_user_options() {
+		return bboss_bbp_get_default_user_options();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Add default user options
@@ -56,6 +70,20 @@ function bboss_bbp_add_user_options( $user_id = 0 ) {
 	// Allow previously activated plugins to append their own user options.
 	do_action( 'bbp_add_user_options', $user_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_add_user_options' ) && ! function_exists( 'bbp_add_user_options' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_add_user_options()}.
+	 *
+	 * @deprecated Use bboss_bbp_add_user_options() instead.
+	 */
+	function bbp_add_user_options( $user_id = 0 ) {
+		return bboss_bbp_add_user_options( $user_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Delete default user options
@@ -84,6 +112,20 @@ function bboss_bbp_delete_user_options( $user_id = 0 ) {
 	// Allow previously activated plugins to append their own options.
 	do_action( 'bbp_delete_user_options', $user_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_delete_user_options' ) && ! function_exists( 'bbp_delete_user_options' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_delete_user_options()}.
+	 *
+	 * @deprecated Use bboss_bbp_delete_user_options() instead.
+	 */
+	function bbp_delete_user_options( $user_id = 0 ) {
+		return bboss_bbp_delete_user_options( $user_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Add filters to each Forums option and allow them to be overloaded from
@@ -104,6 +146,20 @@ function bboss_bbp_setup_user_option_filters() {
 	// Allow previously activated plugins to append their own options.
 	do_action( 'bbp_setup_user_option_filters' );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_setup_user_option_filters' ) && ! function_exists( 'bbp_setup_user_option_filters' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_setup_user_option_filters()}.
+	 *
+	 * @deprecated Use bboss_bbp_setup_user_option_filters() instead.
+	 */
+	function bbp_setup_user_option_filters() {
+		return bboss_bbp_setup_user_option_filters();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Filter default options and allow them to be overloaded from inside the
@@ -124,6 +180,20 @@ function bboss_bbp_filter_get_user_option( $value = false, $option = '', $user =
 	// Always return a value, even if false
 	return $value;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_filter_get_user_option' ) && ! function_exists( 'bbp_filter_get_user_option' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_filter_get_user_option()}.
+	 *
+	 * @deprecated Use bboss_bbp_filter_get_user_option() instead.
+	 */
+	function bbp_filter_get_user_option( $value = false, $option = '', $user = 0 ) {
+		return bboss_bbp_filter_get_user_option( $value, $option, $user );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /** Post Counts ***************************************************************/
 
@@ -140,6 +210,20 @@ function bboss_bbp_filter_get_user_option( $value = false, $option = '', $user =
 function bboss_bbp_user_topic_count( $user_id = 0, $integer = false ) {
 	echo esc_html( bboss_bbp_get_user_topic_count( $user_id, $integer ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_user_topic_count' ) && ! function_exists( 'bbp_user_topic_count' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_user_topic_count()}.
+	 *
+	 * @deprecated Use bboss_bbp_user_topic_count() instead.
+	 */
+	function bbp_user_topic_count( $user_id = 0, $integer = false ) {
+		return bboss_bbp_user_topic_count( $user_id, $integer );
+	}
+}
+// @bbwt-com-end compat-layer
+
 	/**
 	 * Return a users reply count
 	 *
@@ -165,6 +249,20 @@ function bboss_bbp_get_user_topic_count( $user_id = 0, $integer = false ) {
 
 	return apply_filters( $filter, $count, $user_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_user_topic_count' ) && ! function_exists( 'bbp_get_user_topic_count' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_user_topic_count()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_user_topic_count() instead.
+	 */
+	function bbp_get_user_topic_count( $user_id = 0, $integer = false ) {
+		return bboss_bbp_get_user_topic_count( $user_id, $integer );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output a users reply count
@@ -179,6 +277,20 @@ function bboss_bbp_get_user_topic_count( $user_id = 0, $integer = false ) {
 function bboss_bbp_user_reply_count( $user_id = 0, $integer = false ) {
 	echo esc_html( bboss_bbp_get_user_reply_count( $user_id, $integer ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_user_reply_count' ) && ! function_exists( 'bbp_user_reply_count' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_user_reply_count()}.
+	 *
+	 * @deprecated Use bboss_bbp_user_reply_count() instead.
+	 */
+	function bbp_user_reply_count( $user_id = 0, $integer = false ) {
+		return bboss_bbp_user_reply_count( $user_id, $integer );
+	}
+}
+// @bbwt-com-end compat-layer
+
 	/**
 	 * Return a users reply count
 	 *
@@ -204,6 +316,20 @@ function bboss_bbp_get_user_reply_count( $user_id = 0, $integer = false ) {
 
 	return apply_filters( $filter, $count, $user_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_user_reply_count' ) && ! function_exists( 'bbp_get_user_reply_count' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_user_reply_count()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_user_reply_count() instead.
+	 */
+	function bbp_get_user_reply_count( $user_id = 0, $integer = false ) {
+		return bboss_bbp_get_user_reply_count( $user_id, $integer );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output a users total post count
@@ -218,6 +344,20 @@ function bboss_bbp_get_user_reply_count( $user_id = 0, $integer = false ) {
 function bboss_bbp_user_post_count( $user_id = 0, $integer = false ) {
 	echo esc_html( bboss_bbp_get_user_post_count( $user_id, $integer ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_user_post_count' ) && ! function_exists( 'bbp_user_post_count' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_user_post_count()}.
+	 *
+	 * @deprecated Use bboss_bbp_user_post_count() instead.
+	 */
+	function bbp_user_post_count( $user_id = 0, $integer = false ) {
+		return bboss_bbp_user_post_count( $user_id, $integer );
+	}
+}
+// @bbwt-com-end compat-layer
+
 	/**
 	 * Return a users total post count
 	 *
@@ -245,6 +385,20 @@ function bboss_bbp_get_user_post_count( $user_id = 0, $integer = false ) {
 
 	return apply_filters( $filter, $count, $user_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_user_post_count' ) && ! function_exists( 'bbp_get_user_post_count' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_user_post_count()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_user_post_count() instead.
+	 */
+	function bbp_get_user_post_count( $user_id = 0, $integer = false ) {
+		return bboss_bbp_get_user_post_count( $user_id, $integer );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /** Last Posted ***************************************************************/
 
@@ -271,6 +425,20 @@ function bboss_bbp_update_user_last_posted( $user_id = 0, $time = 0 ) {
 
 	return update_user_option( $user_id, '_bbp_last_posted', $time );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_update_user_last_posted' ) && ! function_exists( 'bbp_update_user_last_posted' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_update_user_last_posted()}.
+	 *
+	 * @deprecated Use bboss_bbp_update_user_last_posted() instead.
+	 */
+	function bbp_update_user_last_posted( $user_id = 0, $time = 0 ) {
+		return bboss_bbp_update_user_last_posted( $user_id, $time );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output the raw value of the last posted time.
@@ -282,6 +450,20 @@ function bboss_bbp_update_user_last_posted( $user_id = 0, $time = 0 ) {
 function bboss_bbp_user_last_posted( $user_id = 0 ) {
 	echo esc_html( bboss_bbp_get_user_last_posted( $user_id ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_user_last_posted' ) && ! function_exists( 'bbp_user_last_posted' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_user_last_posted()}.
+	 *
+	 * @deprecated Use bboss_bbp_user_last_posted() instead.
+	 */
+	function bbp_user_last_posted( $user_id = 0 ) {
+		return bboss_bbp_user_last_posted( $user_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 	/**
 	 * Return the raw value of teh last posted time.
@@ -302,50 +484,8 @@ function bboss_bbp_get_user_last_posted( $user_id = 0 ) {
 
 	return apply_filters( 'bbp_get_user_last_posted', $time, $user_id );
 }
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
-if ( function_exists( 'bboss_bbp_add_user_options' ) && ! function_exists( 'bbp_add_user_options' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_add_user_options()}.
-	 *
-	 * @deprecated Use bboss_bbp_add_user_options() instead.
-	 */
-	function bbp_add_user_options( $user_id = 0 ) {
-		return bboss_bbp_add_user_options( $user_id );
-	}
-}
-if ( function_exists( 'bboss_bbp_delete_user_options' ) && ! function_exists( 'bbp_delete_user_options' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_delete_user_options()}.
-	 *
-	 * @deprecated Use bboss_bbp_delete_user_options() instead.
-	 */
-	function bbp_delete_user_options( $user_id = 0 ) {
-		return bboss_bbp_delete_user_options( $user_id );
-	}
-}
-if ( function_exists( 'bboss_bbp_filter_get_user_option' ) && ! function_exists( 'bbp_filter_get_user_option' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_filter_get_user_option()}.
-	 *
-	 * @deprecated Use bboss_bbp_filter_get_user_option() instead.
-	 */
-	function bbp_filter_get_user_option( $value = false, $option = '', $user = 0 ) {
-		return bboss_bbp_filter_get_user_option( $value, $option, $user );
-	}
-}
-if ( function_exists( 'bboss_bbp_get_default_user_options' ) && ! function_exists( 'bbp_get_default_user_options' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_default_user_options()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_default_user_options() instead.
-	 */
-	function bbp_get_default_user_options() {
-		return bboss_bbp_get_default_user_options();
-	}
-}
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_bbp_get_user_last_posted' ) && ! function_exists( 'bbp_get_user_last_posted' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_bbp_get_user_last_posted()}.
@@ -356,94 +496,5 @@ if ( function_exists( 'bboss_bbp_get_user_last_posted' ) && ! function_exists( '
 		return bboss_bbp_get_user_last_posted( $user_id );
 	}
 }
-if ( function_exists( 'bboss_bbp_get_user_post_count' ) && ! function_exists( 'bbp_get_user_post_count' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_user_post_count()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_user_post_count() instead.
-	 */
-	function bbp_get_user_post_count( $user_id = 0, $integer = false ) {
-		return bboss_bbp_get_user_post_count( $user_id, $integer );
-	}
-}
-if ( function_exists( 'bboss_bbp_get_user_reply_count' ) && ! function_exists( 'bbp_get_user_reply_count' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_user_reply_count()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_user_reply_count() instead.
-	 */
-	function bbp_get_user_reply_count( $user_id = 0, $integer = false ) {
-		return bboss_bbp_get_user_reply_count( $user_id, $integer );
-	}
-}
-if ( function_exists( 'bboss_bbp_get_user_topic_count' ) && ! function_exists( 'bbp_get_user_topic_count' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_user_topic_count()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_user_topic_count() instead.
-	 */
-	function bbp_get_user_topic_count( $user_id = 0, $integer = false ) {
-		return bboss_bbp_get_user_topic_count( $user_id, $integer );
-	}
-}
-if ( function_exists( 'bboss_bbp_setup_user_option_filters' ) && ! function_exists( 'bbp_setup_user_option_filters' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_setup_user_option_filters()}.
-	 *
-	 * @deprecated Use bboss_bbp_setup_user_option_filters() instead.
-	 */
-	function bbp_setup_user_option_filters() {
-		return bboss_bbp_setup_user_option_filters();
-	}
-}
-if ( function_exists( 'bboss_bbp_update_user_last_posted' ) && ! function_exists( 'bbp_update_user_last_posted' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_update_user_last_posted()}.
-	 *
-	 * @deprecated Use bboss_bbp_update_user_last_posted() instead.
-	 */
-	function bbp_update_user_last_posted( $user_id = 0, $time = 0 ) {
-		return bboss_bbp_update_user_last_posted( $user_id, $time );
-	}
-}
-if ( function_exists( 'bboss_bbp_user_last_posted' ) && ! function_exists( 'bbp_user_last_posted' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_user_last_posted()}.
-	 *
-	 * @deprecated Use bboss_bbp_user_last_posted() instead.
-	 */
-	function bbp_user_last_posted( $user_id = 0 ) {
-		return bboss_bbp_user_last_posted( $user_id );
-	}
-}
-if ( function_exists( 'bboss_bbp_user_post_count' ) && ! function_exists( 'bbp_user_post_count' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_user_post_count()}.
-	 *
-	 * @deprecated Use bboss_bbp_user_post_count() instead.
-	 */
-	function bbp_user_post_count( $user_id = 0, $integer = false ) {
-		return bboss_bbp_user_post_count( $user_id, $integer );
-	}
-}
-if ( function_exists( 'bboss_bbp_user_reply_count' ) && ! function_exists( 'bbp_user_reply_count' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_user_reply_count()}.
-	 *
-	 * @deprecated Use bboss_bbp_user_reply_count() instead.
-	 */
-	function bbp_user_reply_count( $user_id = 0, $integer = false ) {
-		return bboss_bbp_user_reply_count( $user_id, $integer );
-	}
-}
-if ( function_exists( 'bboss_bbp_user_topic_count' ) && ! function_exists( 'bbp_user_topic_count' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_user_topic_count()}.
-	 *
-	 * @deprecated Use bboss_bbp_user_topic_count() instead.
-	 */
-	function bbp_user_topic_count( $user_id = 0, $integer = false ) {
-		return bboss_bbp_user_topic_count( $user_id, $integer );
-	}
-}
 // @bbwt-com-end compat-layer
+

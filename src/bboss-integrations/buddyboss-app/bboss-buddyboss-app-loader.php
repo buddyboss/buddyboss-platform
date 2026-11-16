@@ -18,11 +18,8 @@ function bboss_register_buddyboss_app_integration() {
 	require_once dirname( __FILE__ ) . '/bboss-buddyboss-app-integration.php';
 	bboss()->integrations['buddyboss-app'] = new BBoss_App_Integration();
 }
-add_action( 'bp_setup_integrations', 'bp_register_buddyboss_app_integration' );
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_register_buddyboss_app_integration' ) && ! function_exists( 'bp_register_buddyboss_app_integration' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_register_buddyboss_app_integration()}.
@@ -34,3 +31,5 @@ if ( function_exists( 'bboss_register_buddyboss_app_integration' ) && ! function
 	}
 }
 // @bbwt-com-end compat-layer
+
+add_action( 'bp_setup_integrations', 'bp_register_buddyboss_app_integration' );

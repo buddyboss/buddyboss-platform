@@ -31,6 +31,20 @@ function bboss_friends_clear_friend_object_cache( $friendship_id ) {
 	wp_cache_delete( 'bp_friends_user_query_' . $friendship->initiator_user_id, 'bp' );
 	wp_cache_delete( 'bp_friends_user_query_' . $friendship->friend_user_id, 'bp' );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_friends_clear_friend_object_cache' ) && ! function_exists( 'friends_clear_friend_object_cache' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_friends_clear_friend_object_cache()}.
+	 *
+	 * @deprecated Use bboss_friends_clear_friend_object_cache() instead.
+	 */
+	function friends_clear_friend_object_cache( $friendship_id ) {
+		return bboss_friends_clear_friend_object_cache( $friendship_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 // List actions to clear object caches on.
 add_action( 'friends_friendship_accepted', 'friends_clear_friend_object_cache' );
@@ -63,6 +77,20 @@ function bboss_friends_clear_bp_friends_friendships_cache( $friendship_id, $init
 	wp_cache_delete( 'get_friendship_ids_for_user_' . $initiator_user_id, 'bp_friends_friendships_for_user' );
 	wp_cache_delete( 'get_friendship_ids_for_user_' . $friend_user_id, 'bp_friends_friendships_for_user' );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_friends_clear_bp_friends_friendships_cache' ) && ! function_exists( 'bp_friends_clear_bp_friends_friendships_cache' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_friends_clear_bp_friends_friendships_cache()}.
+	 *
+	 * @deprecated Use bboss_friends_clear_bp_friends_friendships_cache() instead.
+	 */
+	function bp_friends_clear_bp_friends_friendships_cache( $friendship_id, $initiator_user_id, $friend_user_id ) {
+		return bboss_friends_clear_bp_friends_friendships_cache( $friendship_id, $initiator_user_id, $friend_user_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'friends_friendship_requested', 'bp_friends_clear_bp_friends_friendships_cache', 10, 3 );
 add_action( 'friends_friendship_accepted', 'bp_friends_clear_bp_friends_friendships_cache', 10, 3 );
 add_action( 'friends_friendship_deleted', 'bp_friends_clear_bp_friends_friendships_cache', 10, 3 );
@@ -89,6 +117,20 @@ function bboss_friends_clear_bp_friends_friendships_cache_remove( $friendship_id
 	wp_cache_delete( 'get_friendship_ids_for_user_' . $friendship->initiator_user_id, 'bp_friends_friendships_for_user' );
 	wp_cache_delete( 'get_friendship_ids_for_user_' . $friendship->friend_user_id, 'bp_friends_friendships_for_user' );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_friends_clear_bp_friends_friendships_cache_remove' ) && ! function_exists( 'bp_friends_clear_bp_friends_friendships_cache_remove' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_friends_clear_bp_friends_friendships_cache_remove()}.
+	 *
+	 * @deprecated Use bboss_friends_clear_bp_friends_friendships_cache_remove() instead.
+	 */
+	function bp_friends_clear_bp_friends_friendships_cache_remove( $friendship_id, BBoss_Friends_Friendship $friendship ) {
+		return bboss_friends_clear_bp_friends_friendships_cache_remove( $friendship_id, $friendship );
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'friends_friendship_withdrawn', 'bp_friends_clear_bp_friends_friendships_cache_remove', 10, 2 );
 add_action( 'friends_friendship_rejected', 'bp_friends_clear_bp_friends_friendships_cache_remove', 10, 2 );
 
@@ -102,6 +144,20 @@ add_action( 'friends_friendship_rejected', 'bp_friends_clear_bp_friends_friendsh
 function bboss_friends_clear_request_cache( $friend_user_id ) {
 	wp_cache_delete( $friend_user_id, 'bp_friends_requests' );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_friends_clear_request_cache' ) && ! function_exists( 'bp_friends_clear_request_cache' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_friends_clear_request_cache()}.
+	 *
+	 * @deprecated Use bboss_friends_clear_request_cache() instead.
+	 */
+	function bp_friends_clear_request_cache( $friend_user_id ) {
+		return bboss_friends_clear_request_cache( $friend_user_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Clear the friend request cache when a friendship is saved.
@@ -117,6 +173,20 @@ function bboss_friends_clear_request_cache( $friend_user_id ) {
 function bboss_friends_clear_request_cache_on_save( $friendship_id, $initiator_user_id, $friend_user_id ) {
 	bboss_friends_clear_request_cache( $friend_user_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_friends_clear_request_cache_on_save' ) && ! function_exists( 'bp_friends_clear_request_cache_on_save' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_friends_clear_request_cache_on_save()}.
+	 *
+	 * @deprecated Use bboss_friends_clear_request_cache_on_save() instead.
+	 */
+	function bp_friends_clear_request_cache_on_save( $friendship_id, $initiator_user_id, $friend_user_id ) {
+		return bboss_friends_clear_request_cache_on_save( $friendship_id, $initiator_user_id, $friend_user_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'friends_friendship_requested', 'bp_friends_clear_request_cache_on_save', 10, 3 );
 add_action( 'friends_friendship_accepted', 'bp_friends_clear_request_cache_on_save', 10, 3 );
 
@@ -133,6 +203,20 @@ add_action( 'friends_friendship_accepted', 'bp_friends_clear_request_cache_on_sa
 function bboss_friends_clear_request_cache_on_remove( $friendship_id, BBoss_Friends_Friendship $friendship ) {
 	bboss_friends_clear_request_cache( $friendship->friend_user_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_friends_clear_request_cache_on_remove' ) && ! function_exists( 'bp_friends_clear_request_cache_on_remove' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_friends_clear_request_cache_on_remove()}.
+	 *
+	 * @deprecated Use bboss_friends_clear_request_cache_on_remove() instead.
+	 */
+	function bp_friends_clear_request_cache_on_remove( $friendship_id, BBoss_Friends_Friendship $friendship ) {
+		return bboss_friends_clear_request_cache_on_remove( $friendship_id, $friendship );
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'friends_friendship_withdrawn', 'bp_friends_clear_request_cache_on_remove', 10, 2 );
 add_action( 'friends_friendship_rejected', 'bp_friends_clear_request_cache_on_remove', 10, 2 );
 
@@ -147,67 +231,8 @@ function bboss_friends_delete_cached_friendships_on_friendship_save( $friendship
 	bboss_core_delete_incremented_cache( $friendship->friend_user_id . ':' . $friendship->initiator_user_id, 'bp_friends' );
 	bboss_core_delete_incremented_cache( $friendship->initiator_user_id . ':' . $friendship->friend_user_id, 'bp_friends' );
 }
-add_action( 'friends_friendship_after_save', 'bp_friends_delete_cached_friendships_on_friendship_save' );
-
-// List actions to clear super cached pages on, if super cache is installed.
-add_action( 'friends_friendship_rejected', 'bp_core_clear_cache' );
-add_action( 'friends_friendship_accepted', 'bp_core_clear_cache' );
-add_action( 'friends_friendship_deleted', 'bp_core_clear_cache' );
-add_action( 'friends_friendship_requested', 'bp_core_clear_cache' );
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
-if ( function_exists( 'bboss_friends_clear_bp_friends_friendships_cache' ) && ! function_exists( 'bp_friends_clear_bp_friends_friendships_cache' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_friends_clear_bp_friends_friendships_cache()}.
-	 *
-	 * @deprecated Use bboss_friends_clear_bp_friends_friendships_cache() instead.
-	 */
-	function bp_friends_clear_bp_friends_friendships_cache( $friendship_id, $initiator_user_id, $friend_user_id ) {
-		return bboss_friends_clear_bp_friends_friendships_cache( $friendship_id, $initiator_user_id, $friend_user_id );
-	}
-}
-if ( function_exists( 'bboss_friends_clear_bp_friends_friendships_cache_remove' ) && ! function_exists( 'bp_friends_clear_bp_friends_friendships_cache_remove' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_friends_clear_bp_friends_friendships_cache_remove()}.
-	 *
-	 * @deprecated Use bboss_friends_clear_bp_friends_friendships_cache_remove() instead.
-	 */
-	function bp_friends_clear_bp_friends_friendships_cache_remove( $friendship_id, BBoss_Friends_Friendship $friendship ) {
-		return bboss_friends_clear_bp_friends_friendships_cache_remove( $friendship_id, $friendship );
-	}
-}
-if ( function_exists( 'bboss_friends_clear_request_cache' ) && ! function_exists( 'bp_friends_clear_request_cache' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_friends_clear_request_cache()}.
-	 *
-	 * @deprecated Use bboss_friends_clear_request_cache() instead.
-	 */
-	function bp_friends_clear_request_cache( $friend_user_id ) {
-		return bboss_friends_clear_request_cache( $friend_user_id );
-	}
-}
-if ( function_exists( 'bboss_friends_clear_request_cache_on_remove' ) && ! function_exists( 'bp_friends_clear_request_cache_on_remove' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_friends_clear_request_cache_on_remove()}.
-	 *
-	 * @deprecated Use bboss_friends_clear_request_cache_on_remove() instead.
-	 */
-	function bp_friends_clear_request_cache_on_remove( $friendship_id, BBoss_Friends_Friendship $friendship ) {
-		return bboss_friends_clear_request_cache_on_remove( $friendship_id, $friendship );
-	}
-}
-if ( function_exists( 'bboss_friends_clear_request_cache_on_save' ) && ! function_exists( 'bp_friends_clear_request_cache_on_save' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_friends_clear_request_cache_on_save()}.
-	 *
-	 * @deprecated Use bboss_friends_clear_request_cache_on_save() instead.
-	 */
-	function bp_friends_clear_request_cache_on_save( $friendship_id, $initiator_user_id, $friend_user_id ) {
-		return bboss_friends_clear_request_cache_on_save( $friendship_id, $initiator_user_id, $friend_user_id );
-	}
-}
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_friends_delete_cached_friendships_on_friendship_save' ) && ! function_exists( 'bp_friends_delete_cached_friendships_on_friendship_save' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_friends_delete_cached_friendships_on_friendship_save()}.
@@ -218,14 +243,12 @@ if ( function_exists( 'bboss_friends_delete_cached_friendships_on_friendship_sav
 		return bboss_friends_delete_cached_friendships_on_friendship_save( $friendship );
 	}
 }
-if ( function_exists( 'bboss_friends_clear_friend_object_cache' ) && ! function_exists( 'friends_clear_friend_object_cache' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_friends_clear_friend_object_cache()}.
-	 *
-	 * @deprecated Use bboss_friends_clear_friend_object_cache() instead.
-	 */
-	function friends_clear_friend_object_cache( $friendship_id ) {
-		return bboss_friends_clear_friend_object_cache( $friendship_id );
-	}
-}
 // @bbwt-com-end compat-layer
+
+add_action( 'friends_friendship_after_save', 'bp_friends_delete_cached_friendships_on_friendship_save' );
+
+// List actions to clear super cached pages on, if super cache is installed.
+add_action( 'friends_friendship_rejected', 'bp_core_clear_cache' );
+add_action( 'friends_friendship_accepted', 'bp_core_clear_cache' );
+add_action( 'friends_friendship_deleted', 'bp_core_clear_cache' );
+add_action( 'friends_friendship_requested', 'bp_core_clear_cache' );

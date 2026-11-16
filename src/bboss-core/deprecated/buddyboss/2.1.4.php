@@ -26,10 +26,8 @@ function bboss_current_user_status( $user_id ) {
 
 	}
 }
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_current_user_status' ) && ! function_exists( 'bb_current_user_status' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_current_user_status()}.
@@ -41,3 +39,4 @@ if ( function_exists( 'bboss_current_user_status' ) && ! function_exists( 'bb_cu
 	}
 }
 // @bbwt-com-end compat-layer
+

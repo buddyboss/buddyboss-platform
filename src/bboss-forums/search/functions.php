@@ -35,6 +35,20 @@ function bboss_bbp_search_query( $new_args = array() ) {
 
 	return bboss_bbp_has_search_results( $query_args );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_search_query' ) && ! function_exists( 'bbp_search_query' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_search_query()}.
+	 *
+	 * @deprecated Use bboss_bbp_search_query() instead.
+	 */
+	function bbp_search_query( $new_args = array() ) {
+		return bboss_bbp_search_query( $new_args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return the search's query args
@@ -52,6 +66,20 @@ function bboss_bbp_get_search_query_args() {
 
 	return apply_filters( 'bbp_get_search_query_args', $retval );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_search_query_args' ) && ! function_exists( 'bbp_get_search_query_args' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_search_query_args()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_search_query_args() instead.
+	 */
+	function bbp_get_search_query_args() {
+		return bboss_bbp_get_search_query_args();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Redirect to search results page if needed
@@ -80,6 +108,20 @@ function bboss_bbp_search_results_redirect() {
 	// Redirect and bail
 	bboss_bbp_redirect( $redirect_to );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_search_results_redirect' ) && ! function_exists( 'bbp_search_results_redirect' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_search_results_redirect()}.
+	 *
+	 * @deprecated Use bboss_bbp_search_results_redirect() instead.
+	 */
+	function bbp_search_results_redirect() {
+		return bboss_bbp_search_results_redirect();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 
 /**
@@ -92,6 +134,20 @@ function bboss_bbp_search_results_redirect() {
 function bboss_bbp_get_search_type_ids() {
 	return apply_filters( 'bbp_get_search_types', array( 's', 'fs', 'ts', 'rs' ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_search_type_ids' ) && ! function_exists( 'bbp_get_search_type_ids' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_search_type_ids()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_search_type_ids() instead.
+	 */
+	function bbp_get_search_type_ids() {
+		return bboss_bbp_get_search_type_ids();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Sanitize a query argument used to pass some search terms.
@@ -135,30 +191,8 @@ function bboss_bbp_sanitize_search_request( $query_arg = 's' ) {
 	// Filter & return
 	return apply_filters( 'bbp_sanitize_search_request', $retval, $query_arg );
 }
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
-if ( function_exists( 'bboss_bbp_get_search_query_args' ) && ! function_exists( 'bbp_get_search_query_args' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_search_query_args()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_search_query_args() instead.
-	 */
-	function bbp_get_search_query_args() {
-		return bboss_bbp_get_search_query_args();
-	}
-}
-if ( function_exists( 'bboss_bbp_get_search_type_ids' ) && ! function_exists( 'bbp_get_search_type_ids' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_search_type_ids()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_search_type_ids() instead.
-	 */
-	function bbp_get_search_type_ids() {
-		return bboss_bbp_get_search_type_ids();
-	}
-}
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_bbp_sanitize_search_request' ) && ! function_exists( 'bbp_sanitize_search_request' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_bbp_sanitize_search_request()}.
@@ -169,24 +203,5 @@ if ( function_exists( 'bboss_bbp_sanitize_search_request' ) && ! function_exists
 		return bboss_bbp_sanitize_search_request( $query_arg );
 	}
 }
-if ( function_exists( 'bboss_bbp_search_query' ) && ! function_exists( 'bbp_search_query' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_search_query()}.
-	 *
-	 * @deprecated Use bboss_bbp_search_query() instead.
-	 */
-	function bbp_search_query( $new_args = array() ) {
-		return bboss_bbp_search_query( $new_args );
-	}
-}
-if ( function_exists( 'bboss_bbp_search_results_redirect' ) && ! function_exists( 'bbp_search_results_redirect' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_search_results_redirect()}.
-	 *
-	 * @deprecated Use bboss_bbp_search_results_redirect() instead.
-	 */
-	function bbp_search_results_redirect() {
-		return bboss_bbp_search_results_redirect();
-	}
-}
 // @bbwt-com-end compat-layer
+

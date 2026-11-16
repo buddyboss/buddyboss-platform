@@ -26,6 +26,20 @@ function bboss_messages_star_screen() {
 
 	bboss_core_load_template( 'members/single/plugins' );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_messages_star_screen' ) && ! function_exists( 'bp_messages_star_screen' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_messages_star_screen()}.
+	 *
+	 * @deprecated Use bboss_messages_star_screen() instead.
+	 */
+	function bp_messages_star_screen() {
+		return bboss_messages_star_screen();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Screen content callback to display a user's "Starred" messages page.
@@ -42,10 +56,8 @@ function bboss_messages_star_content() {
 	// Remove our filter.
 	remove_filter( 'bp_after_has_message_threads_parse_args', 'bp_messages_filter_starred_message_threads' );
 }
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_messages_star_content' ) && ! function_exists( 'bp_messages_star_content' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_messages_star_content()}.
@@ -56,14 +68,5 @@ if ( function_exists( 'bboss_messages_star_content' ) && ! function_exists( 'bp_
 		return bboss_messages_star_content();
 	}
 }
-if ( function_exists( 'bboss_messages_star_screen' ) && ! function_exists( 'bp_messages_star_screen' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_messages_star_screen()}.
-	 *
-	 * @deprecated Use bboss_messages_star_screen() instead.
-	 */
-	function bp_messages_star_screen() {
-		return bboss_messages_star_screen();
-	}
-}
 // @bbwt-com-end compat-layer
+

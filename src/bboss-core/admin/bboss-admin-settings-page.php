@@ -41,6 +41,20 @@ function bboss_admin_settings_get_addon_ajax_actions() {
 		'deactivate' => $plugin_id . '_addon_deactivate',
 	);
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_admin_settings_get_addon_ajax_actions' ) && ! function_exists( 'bb_admin_settings_get_addon_ajax_actions' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_admin_settings_get_addon_ajax_actions()}.
+	 *
+	 * @deprecated Use bboss_admin_settings_get_addon_ajax_actions() instead.
+	 */
+	function bb_admin_settings_get_addon_ajax_actions() {
+		return bboss_admin_settings_get_addon_ajax_actions();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 
 /**
@@ -705,20 +719,8 @@ function bboss_admin_settings_page() {
 	</div>
 	<?php
 }
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
-if ( function_exists( 'bboss_admin_settings_get_addon_ajax_actions' ) && ! function_exists( 'bb_admin_settings_get_addon_ajax_actions' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_admin_settings_get_addon_ajax_actions()}.
-	 *
-	 * @deprecated Use bboss_admin_settings_get_addon_ajax_actions() instead.
-	 */
-	function bb_admin_settings_get_addon_ajax_actions() {
-		return bboss_admin_settings_get_addon_ajax_actions();
-	}
-}
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_admin_settings_page' ) && ! function_exists( 'bb_admin_settings_page' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_admin_settings_page()}.
@@ -730,3 +732,4 @@ if ( function_exists( 'bboss_admin_settings_page' ) && ! function_exists( 'bb_ad
 	}
 }
 // @bbwt-com-end compat-layer
+

@@ -101,6 +101,20 @@ function bboss_subscriptions_migrate_users_forum_topic( $is_background = false, 
 		}
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_subscriptions_migrate_users_forum_topic' ) && ! function_exists( 'bb_subscriptions_migrate_users_forum_topic' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_subscriptions_migrate_users_forum_topic()}.
+	 *
+	 * @deprecated Use bboss_subscriptions_migrate_users_forum_topic() instead.
+	 */
+	function bb_subscriptions_migrate_users_forum_topic( $is_background = false, $is_updater = false ) {
+		return bboss_subscriptions_migrate_users_forum_topic( $is_background, $is_updater );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Callback function to migrate BuddyBoss forums and topics subscriptions to new system.
@@ -264,6 +278,20 @@ function bboss_migrate_users_forum_topic_subscriptions( $subscription_users, $of
 		);
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_migrate_users_forum_topic_subscriptions' ) && ! function_exists( 'bb_migrate_users_forum_topic_subscriptions' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_migrate_users_forum_topic_subscriptions()}.
+	 *
+	 * @deprecated Use bboss_migrate_users_forum_topic_subscriptions() instead.
+	 */
+	function bb_migrate_users_forum_topic_subscriptions( $subscription_users, $offset = 0, $is_background = true ) {
+		return bboss_migrate_users_forum_topic_subscriptions( $subscription_users, $offset, $is_background );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Migration bbpress forums and topics subscriptions with background/non-background to new system.
@@ -318,6 +346,20 @@ function bboss_subscriptions_migrate_bbpress_users_forum_topic( $is_background =
 		return $response;
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_subscriptions_migrate_bbpress_users_forum_topic' ) && ! function_exists( 'bb_subscriptions_migrate_bbpress_users_forum_topic' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_subscriptions_migrate_bbpress_users_forum_topic()}.
+	 *
+	 * @deprecated Use bboss_subscriptions_migrate_bbpress_users_forum_topic() instead.
+	 */
+	function bb_subscriptions_migrate_bbpress_users_forum_topic( $is_background = false, $blog_id = 0 ) {
+		return bboss_subscriptions_migrate_bbpress_users_forum_topic( $is_background, $blog_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Processing to migration bbpress forums and topics subscriptions with background/non-background to new system.
@@ -399,6 +441,20 @@ function bboss_subscriptions_migrating_bbpress_users_subscriptions( $is_backgrou
 	}
 
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_subscriptions_migrating_bbpress_users_subscriptions' ) && ! function_exists( 'bb_subscriptions_migrating_bbpress_users_subscriptions' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_subscriptions_migrating_bbpress_users_subscriptions()}.
+	 *
+	 * @deprecated Use bboss_subscriptions_migrating_bbpress_users_subscriptions() instead.
+	 */
+	function bb_subscriptions_migrating_bbpress_users_subscriptions( $is_background = false, $blog_id = 0 ) {
+		return bboss_subscriptions_migrating_bbpress_users_subscriptions( $is_background, $blog_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Callback function to migrate bbpress forums and topics subscriptions to new system.
@@ -570,6 +626,20 @@ function bboss_migrate_bbpress_users_post_subscriptions( $subscription_posts, $b
 		);
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_migrate_bbpress_users_post_subscriptions' ) && ! function_exists( 'bb_migrate_bbpress_users_post_subscriptions' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_migrate_bbpress_users_post_subscriptions()}.
+	 *
+	 * @deprecated Use bboss_migrate_bbpress_users_post_subscriptions() instead.
+	 */
+	function bb_migrate_bbpress_users_post_subscriptions( $subscription_posts, $blog_id = 0, $offset = 0, $is_background = true ) {
+		return bboss_migrate_bbpress_users_post_subscriptions( $subscription_posts, $blog_id, $offset, $is_background );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Functions to get all registered subscription types.
@@ -590,6 +660,20 @@ function bboss_register_subscriptions_types( $type = '' ) {
 
 	return $subscription_type;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_register_subscriptions_types' ) && ! function_exists( 'bb_register_subscriptions_types' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_register_subscriptions_types()}.
+	 *
+	 * @deprecated Use bboss_register_subscriptions_types() instead.
+	 */
+	function bb_register_subscriptions_types( $type = '' ) {
+		return bboss_register_subscriptions_types( $type );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Retrieve all registered subscription types.
@@ -621,6 +705,20 @@ function bboss_get_subscriptions_types( $singular = false ) {
 
 	return $types;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_subscriptions_types' ) && ! function_exists( 'bb_get_subscriptions_types' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_subscriptions_types()}.
+	 *
+	 * @deprecated Use bboss_get_subscriptions_types() instead.
+	 */
+	function bb_get_subscriptions_types( $singular = false ) {
+		return bboss_get_subscriptions_types( $singular );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Create user subscription.
@@ -751,6 +849,20 @@ function bboss_create_subscription( $args = array() ) {
 
 	return $new_subscription_created;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_create_subscription' ) && ! function_exists( 'bb_create_subscription' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_create_subscription()}.
+	 *
+	 * @deprecated Use bboss_create_subscription() instead.
+	 */
+	function bb_create_subscription( $args = array() ) {
+		return bboss_create_subscription( $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Retrieve user subscription by type.
@@ -808,6 +920,20 @@ function bboss_get_subscriptions( $args = array(), $force_cache = false ) {
 
 	return $subscriptions;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_subscriptions' ) && ! function_exists( 'bb_get_subscriptions' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_subscriptions()}.
+	 *
+	 * @deprecated Use bboss_get_subscriptions() instead.
+	 */
+	function bb_get_subscriptions( $args = array(), $force_cache = false ) {
+		return bboss_get_subscriptions( $args, $force_cache );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Retrieve all users by subscription type and item id.
@@ -865,6 +991,20 @@ function bboss_get_subscription_users( $args = array(), $force_cache = false ) {
 
 	return $subscriptions;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_subscription_users' ) && ! function_exists( 'bb_get_subscription_users' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_subscription_users()}.
+	 *
+	 * @deprecated Use bboss_get_subscription_users() instead.
+	 */
+	function bb_get_subscription_users( $args = array(), $force_cache = false ) {
+		return bboss_get_subscription_users( $args, $force_cache );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Fetch a single subscription object.
@@ -904,6 +1044,20 @@ function bboss_subscriptions_get_subscription( $subscription_id ) {
 	 */
 	return apply_filters( 'bb_subscriptions_get_subscription', $subscription );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_subscriptions_get_subscription' ) && ! function_exists( 'bb_subscriptions_get_subscription' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_subscriptions_get_subscription()}.
+	 *
+	 * @deprecated Use bboss_subscriptions_get_subscription() instead.
+	 */
+	function bb_subscriptions_get_subscription( $subscription_id ) {
+		return bboss_subscriptions_get_subscription( $subscription_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Update the subscription item.
@@ -920,6 +1074,20 @@ function bboss_subscriptions_get_subscription( $subscription_id ) {
 function bboss_subscriptions_update_subscriptions_status( $type, $item_id, $status, $blog_id = 0 ) {
 	return BBoss_Subscriptions::update_status( $type, $item_id, $status, $blog_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_subscriptions_update_subscriptions_status' ) && ! function_exists( 'bb_subscriptions_update_subscriptions_status' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_subscriptions_update_subscriptions_status()}.
+	 *
+	 * @deprecated Use bboss_subscriptions_update_subscriptions_status() instead.
+	 */
+	function bb_subscriptions_update_subscriptions_status( $type, $item_id, $status, $blog_id = 0 ) {
+		return bboss_subscriptions_update_subscriptions_status( $type, $item_id, $status, $blog_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Delete a subscription.
@@ -960,6 +1128,20 @@ function bboss_delete_subscription( $subscription_id ) {
 
 	return true;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_delete_subscription' ) && ! function_exists( 'bb_delete_subscription' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_delete_subscription()}.
+	 *
+	 * @deprecated Use bboss_delete_subscription() instead.
+	 */
+	function bb_delete_subscription( $subscription_id ) {
+		return bboss_delete_subscription( $subscription_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Delete user subscriptions by item ID and type.
@@ -1023,6 +1205,20 @@ function bboss_delete_subscriptions_by_item( $type, $item_id, $blog_id = 0 ) {
 
 	return true;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_delete_subscriptions_by_item' ) && ! function_exists( 'bb_delete_subscriptions_by_item' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_delete_subscriptions_by_item()}.
+	 *
+	 * @deprecated Use bboss_delete_subscriptions_by_item() instead.
+	 */
+	function bb_delete_subscriptions_by_item( $type, $item_id, $blog_id = 0 ) {
+		return bboss_delete_subscriptions_by_item( $type, $item_id, $blog_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Check the particular subscription is enabled or not for modern or legacy.
@@ -1062,6 +1258,20 @@ function bboss_is_enabled_subscription( $type, $notification_type = '' ) {
 
 	return (bool) apply_filters( 'bb_is_enabled_subscription', $is_enabled, $type, $notification_type );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_enabled_subscription' ) && ! function_exists( 'bb_is_enabled_subscription' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_enabled_subscription()}.
+	 *
+	 * @deprecated Use bboss_is_enabled_subscription() instead.
+	 */
+	function bb_is_enabled_subscription( $type, $notification_type = '' ) {
+		return bboss_is_enabled_subscription( $type, $notification_type );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Trigger subscription notifications.
@@ -1352,6 +1562,20 @@ function bboss_send_notifications_to_subscribers( $args ) {
 	}
 
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_send_notifications_to_subscribers' ) && ! function_exists( 'bb_send_notifications_to_subscribers' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_send_notifications_to_subscribers()}.
+	 *
+	 * @deprecated Use bboss_send_notifications_to_subscribers() instead.
+	 */
+	function bb_send_notifications_to_subscribers( $args ) {
+		return bboss_send_notifications_to_subscribers( $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Remove forum and topic subscriptions that assign to the group.
@@ -1410,6 +1634,20 @@ function bboss_delete_group_forum_topic_subscriptions( $group_id ) {
 		}
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_delete_group_forum_topic_subscriptions' ) && ! function_exists( 'bb_delete_group_forum_topic_subscriptions' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_delete_group_forum_topic_subscriptions()}.
+	 *
+	 * @deprecated Use bboss_delete_group_forum_topic_subscriptions() instead.
+	 */
+	function bb_delete_group_forum_topic_subscriptions( $group_id ) {
+		return bboss_delete_group_forum_topic_subscriptions( $group_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Background worker: fan out subscription notifications for one page of subscribers.
@@ -1791,6 +2029,20 @@ function bboss_send_notifications_to_subscribers_batch( $args ) {
 
 	return false;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_send_notifications_to_subscribers_batch' ) && ! function_exists( 'bb_send_notifications_to_subscribers_batch' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_send_notifications_to_subscribers_batch()}.
+	 *
+	 * @deprecated Use bboss_send_notifications_to_subscribers_batch() instead.
+	 */
+	function bb_send_notifications_to_subscribers_batch( $args ) {
+		return bboss_send_notifications_to_subscribers_batch( $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Compact a subscription notification payload for the background queue.
@@ -1837,6 +2089,20 @@ function bboss_subscriptions_compact_notification_data( $data ) {
 
 	return $data;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_subscriptions_compact_notification_data' ) && ! function_exists( 'bb_subscriptions_compact_notification_data' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_subscriptions_compact_notification_data()}.
+	 *
+	 * @deprecated Use bboss_subscriptions_compact_notification_data() instead.
+	 */
+	function bb_subscriptions_compact_notification_data( $data ) {
+		return bboss_subscriptions_compact_notification_data( $data );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Restore the activity object a compacted subscription payload dropped.
@@ -1880,6 +2146,20 @@ function bboss_subscriptions_rehydrate_notification_data( $data ) {
 
 	return $data;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_subscriptions_rehydrate_notification_data' ) && ! function_exists( 'bb_subscriptions_rehydrate_notification_data' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_subscriptions_rehydrate_notification_data()}.
+	 *
+	 * @deprecated Use bboss_subscriptions_rehydrate_notification_data() instead.
+	 */
+	function bb_subscriptions_rehydrate_notification_data( $data ) {
+		return bboss_subscriptions_rehydrate_notification_data( $data );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Run one queued subscription notification chunk.
@@ -1919,6 +2199,20 @@ function bboss_subscriptions_send_notification_chunk( $args ) {
 
 	return call_user_func( $type_data['send_callback'], $args );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_subscriptions_send_notification_chunk' ) && ! function_exists( 'bb_subscriptions_send_notification_chunk' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_subscriptions_send_notification_chunk()}.
+	 *
+	 * @deprecated Use bboss_subscriptions_send_notification_chunk() instead.
+	 */
+	function bb_subscriptions_send_notification_chunk( $args ) {
+		return bboss_subscriptions_send_notification_chunk( $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Build the cache-key hash that identifies one notification chunk.
@@ -1961,6 +2255,20 @@ function bboss_subscriptions_get_notification_chunk_key( $args ) {
 		)
 	);
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_subscriptions_get_notification_chunk_key' ) && ! function_exists( 'bb_subscriptions_get_notification_chunk_key' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_subscriptions_get_notification_chunk_key()}.
+	 *
+	 * @deprecated Use bboss_subscriptions_get_notification_chunk_key() instead.
+	 */
+	function bb_subscriptions_get_notification_chunk_key( $args ) {
+		return bboss_subscriptions_get_notification_chunk_key( $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get the lifetime of a notification chunk claim.
@@ -1989,6 +2297,20 @@ function bboss_subscriptions_get_notification_chunk_claim_ttl( $args ) {
 
 	return max( 1, $claim_ttl );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_subscriptions_get_notification_chunk_claim_ttl' ) && ! function_exists( 'bb_subscriptions_get_notification_chunk_claim_ttl' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_subscriptions_get_notification_chunk_claim_ttl()}.
+	 *
+	 * @deprecated Use bboss_subscriptions_get_notification_chunk_claim_ttl() instead.
+	 */
+	function bb_subscriptions_get_notification_chunk_claim_ttl( $args ) {
+		return bboss_subscriptions_get_notification_chunk_claim_ttl( $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Atomically claim a subscription notification chunk before sending it.
@@ -2083,6 +2405,20 @@ function bboss_subscriptions_claim_notification_chunk( $args, $chunk_key = '' ) 
 
 	return false === wp_cache_get( $claim_key, 'bb_subscriptions_claims' );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_subscriptions_claim_notification_chunk' ) && ! function_exists( 'bb_subscriptions_claim_notification_chunk' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_subscriptions_claim_notification_chunk()}.
+	 *
+	 * @deprecated Use bboss_subscriptions_claim_notification_chunk() instead.
+	 */
+	function bb_subscriptions_claim_notification_chunk( $args, $chunk_key = '' ) {
+		return bboss_subscriptions_claim_notification_chunk( $args, $chunk_key );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Refresh the claim on a notification chunk that is still being sent.
@@ -2110,6 +2446,20 @@ function bboss_subscriptions_touch_notification_chunk_claim( $args, $chunk_key =
 
 	wp_cache_set( 'bb_sub_chunk_claim_' . $chunk_key, microtime( true ), 'bb_subscriptions_claims', bboss_subscriptions_get_notification_chunk_claim_ttl( $args ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_subscriptions_touch_notification_chunk_claim' ) && ! function_exists( 'bb_subscriptions_touch_notification_chunk_claim' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_subscriptions_touch_notification_chunk_claim()}.
+	 *
+	 * @deprecated Use bboss_subscriptions_touch_notification_chunk_claim() instead.
+	 */
+	function bb_subscriptions_touch_notification_chunk_claim( $args, $chunk_key = '' ) {
+		return bboss_subscriptions_touch_notification_chunk_claim( $args, $chunk_key );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Release the claim on a notification chunk that will not be sent.
@@ -2139,6 +2489,20 @@ function bboss_subscriptions_release_notification_chunk_claim( $args, $chunk_key
 
 	wp_cache_delete( 'bb_sub_chunk_claim_' . $chunk_key, 'bb_subscriptions_claims' );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_subscriptions_release_notification_chunk_claim' ) && ! function_exists( 'bb_subscriptions_release_notification_chunk_claim' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_subscriptions_release_notification_chunk_claim()}.
+	 *
+	 * @deprecated Use bboss_subscriptions_release_notification_chunk_claim() instead.
+	 */
+	function bb_subscriptions_release_notification_chunk_claim( $args, $chunk_key = '' ) {
+		return bboss_subscriptions_release_notification_chunk_claim( $args, $chunk_key );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Mark a notification chunk as fully sent.
@@ -2182,6 +2546,20 @@ function bboss_subscriptions_complete_notification_chunk( $args, $chunk_key = ''
 	wp_cache_set( 'bb_sub_chunk_done_' . $chunk_key, time(), 'bb_subscriptions_claims', max( 1, $done_ttl ) );
 	wp_cache_delete( 'bb_sub_chunk_claim_' . $chunk_key, 'bb_subscriptions_claims' );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_subscriptions_complete_notification_chunk' ) && ! function_exists( 'bb_subscriptions_complete_notification_chunk' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_subscriptions_complete_notification_chunk()}.
+	 *
+	 * @deprecated Use bboss_subscriptions_complete_notification_chunk() instead.
+	 */
+	function bb_subscriptions_complete_notification_chunk( $args, $chunk_key = '' ) {
+		return bboss_subscriptions_complete_notification_chunk( $args, $chunk_key );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Read the last processed subscription id out of a stored fan-out cursor.
@@ -2202,6 +2580,20 @@ function bboss_subscriptions_get_fanout_cursor_last_id( $cursor ) {
 
 	return (int) $cursor;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_subscriptions_get_fanout_cursor_last_id' ) && ! function_exists( 'bb_subscriptions_get_fanout_cursor_last_id' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_subscriptions_get_fanout_cursor_last_id()}.
+	 *
+	 * @deprecated Use bboss_subscriptions_get_fanout_cursor_last_id() instead.
+	 */
+	function bb_subscriptions_get_fanout_cursor_last_id( $cursor ) {
+		return bboss_subscriptions_get_fanout_cursor_last_id( $cursor );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Delete fan-out page cursors left behind by chains that never ended normally.
@@ -2298,270 +2690,8 @@ function bboss_subscriptions_sweep_stale_fanout_cursors() {
 
 	return $deleted;
 }
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
-if ( function_exists( 'bboss_create_subscription' ) && ! function_exists( 'bb_create_subscription' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_create_subscription()}.
-	 *
-	 * @deprecated Use bboss_create_subscription() instead.
-	 */
-	function bb_create_subscription( $args = array() ) {
-		return bboss_create_subscription( $args );
-	}
-}
-if ( function_exists( 'bboss_delete_group_forum_topic_subscriptions' ) && ! function_exists( 'bb_delete_group_forum_topic_subscriptions' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_delete_group_forum_topic_subscriptions()}.
-	 *
-	 * @deprecated Use bboss_delete_group_forum_topic_subscriptions() instead.
-	 */
-	function bb_delete_group_forum_topic_subscriptions( $group_id ) {
-		return bboss_delete_group_forum_topic_subscriptions( $group_id );
-	}
-}
-if ( function_exists( 'bboss_delete_subscription' ) && ! function_exists( 'bb_delete_subscription' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_delete_subscription()}.
-	 *
-	 * @deprecated Use bboss_delete_subscription() instead.
-	 */
-	function bb_delete_subscription( $subscription_id ) {
-		return bboss_delete_subscription( $subscription_id );
-	}
-}
-if ( function_exists( 'bboss_delete_subscriptions_by_item' ) && ! function_exists( 'bb_delete_subscriptions_by_item' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_delete_subscriptions_by_item()}.
-	 *
-	 * @deprecated Use bboss_delete_subscriptions_by_item() instead.
-	 */
-	function bb_delete_subscriptions_by_item( $type, $item_id, $blog_id = 0 ) {
-		return bboss_delete_subscriptions_by_item( $type, $item_id, $blog_id );
-	}
-}
-if ( function_exists( 'bboss_get_subscription_users' ) && ! function_exists( 'bb_get_subscription_users' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_subscription_users()}.
-	 *
-	 * @deprecated Use bboss_get_subscription_users() instead.
-	 */
-	function bb_get_subscription_users( $args = array(), $force_cache = false ) {
-		return bboss_get_subscription_users( $args, $force_cache );
-	}
-}
-if ( function_exists( 'bboss_get_subscriptions' ) && ! function_exists( 'bb_get_subscriptions' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_subscriptions()}.
-	 *
-	 * @deprecated Use bboss_get_subscriptions() instead.
-	 */
-	function bb_get_subscriptions( $args = array(), $force_cache = false ) {
-		return bboss_get_subscriptions( $args, $force_cache );
-	}
-}
-if ( function_exists( 'bboss_get_subscriptions_types' ) && ! function_exists( 'bb_get_subscriptions_types' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_subscriptions_types()}.
-	 *
-	 * @deprecated Use bboss_get_subscriptions_types() instead.
-	 */
-	function bb_get_subscriptions_types( $singular = false ) {
-		return bboss_get_subscriptions_types( $singular );
-	}
-}
-if ( function_exists( 'bboss_is_enabled_subscription' ) && ! function_exists( 'bb_is_enabled_subscription' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_enabled_subscription()}.
-	 *
-	 * @deprecated Use bboss_is_enabled_subscription() instead.
-	 */
-	function bb_is_enabled_subscription( $type, $notification_type = '' ) {
-		return bboss_is_enabled_subscription( $type, $notification_type );
-	}
-}
-if ( function_exists( 'bboss_migrate_bbpress_users_post_subscriptions' ) && ! function_exists( 'bb_migrate_bbpress_users_post_subscriptions' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_migrate_bbpress_users_post_subscriptions()}.
-	 *
-	 * @deprecated Use bboss_migrate_bbpress_users_post_subscriptions() instead.
-	 */
-	function bb_migrate_bbpress_users_post_subscriptions( $subscription_posts, $blog_id = 0, $offset = 0, $is_background = true ) {
-		return bboss_migrate_bbpress_users_post_subscriptions( $subscription_posts, $blog_id, $offset, $is_background );
-	}
-}
-if ( function_exists( 'bboss_migrate_users_forum_topic_subscriptions' ) && ! function_exists( 'bb_migrate_users_forum_topic_subscriptions' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_migrate_users_forum_topic_subscriptions()}.
-	 *
-	 * @deprecated Use bboss_migrate_users_forum_topic_subscriptions() instead.
-	 */
-	function bb_migrate_users_forum_topic_subscriptions( $subscription_users, $offset = 0, $is_background = true ) {
-		return bboss_migrate_users_forum_topic_subscriptions( $subscription_users, $offset, $is_background );
-	}
-}
-if ( function_exists( 'bboss_register_subscriptions_types' ) && ! function_exists( 'bb_register_subscriptions_types' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_register_subscriptions_types()}.
-	 *
-	 * @deprecated Use bboss_register_subscriptions_types() instead.
-	 */
-	function bb_register_subscriptions_types( $type = '' ) {
-		return bboss_register_subscriptions_types( $type );
-	}
-}
-if ( function_exists( 'bboss_send_notifications_to_subscribers' ) && ! function_exists( 'bb_send_notifications_to_subscribers' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_send_notifications_to_subscribers()}.
-	 *
-	 * @deprecated Use bboss_send_notifications_to_subscribers() instead.
-	 */
-	function bb_send_notifications_to_subscribers( $args ) {
-		return bboss_send_notifications_to_subscribers( $args );
-	}
-}
-if ( function_exists( 'bboss_send_notifications_to_subscribers_batch' ) && ! function_exists( 'bb_send_notifications_to_subscribers_batch' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_send_notifications_to_subscribers_batch()}.
-	 *
-	 * @deprecated Use bboss_send_notifications_to_subscribers_batch() instead.
-	 */
-	function bb_send_notifications_to_subscribers_batch( $args ) {
-		return bboss_send_notifications_to_subscribers_batch( $args );
-	}
-}
-if ( function_exists( 'bboss_subscriptions_claim_notification_chunk' ) && ! function_exists( 'bb_subscriptions_claim_notification_chunk' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_subscriptions_claim_notification_chunk()}.
-	 *
-	 * @deprecated Use bboss_subscriptions_claim_notification_chunk() instead.
-	 */
-	function bb_subscriptions_claim_notification_chunk( $args, $chunk_key = '' ) {
-		return bboss_subscriptions_claim_notification_chunk( $args, $chunk_key );
-	}
-}
-if ( function_exists( 'bboss_subscriptions_compact_notification_data' ) && ! function_exists( 'bb_subscriptions_compact_notification_data' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_subscriptions_compact_notification_data()}.
-	 *
-	 * @deprecated Use bboss_subscriptions_compact_notification_data() instead.
-	 */
-	function bb_subscriptions_compact_notification_data( $data ) {
-		return bboss_subscriptions_compact_notification_data( $data );
-	}
-}
-if ( function_exists( 'bboss_subscriptions_complete_notification_chunk' ) && ! function_exists( 'bb_subscriptions_complete_notification_chunk' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_subscriptions_complete_notification_chunk()}.
-	 *
-	 * @deprecated Use bboss_subscriptions_complete_notification_chunk() instead.
-	 */
-	function bb_subscriptions_complete_notification_chunk( $args, $chunk_key = '' ) {
-		return bboss_subscriptions_complete_notification_chunk( $args, $chunk_key );
-	}
-}
-if ( function_exists( 'bboss_subscriptions_get_fanout_cursor_last_id' ) && ! function_exists( 'bb_subscriptions_get_fanout_cursor_last_id' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_subscriptions_get_fanout_cursor_last_id()}.
-	 *
-	 * @deprecated Use bboss_subscriptions_get_fanout_cursor_last_id() instead.
-	 */
-	function bb_subscriptions_get_fanout_cursor_last_id( $cursor ) {
-		return bboss_subscriptions_get_fanout_cursor_last_id( $cursor );
-	}
-}
-if ( function_exists( 'bboss_subscriptions_get_notification_chunk_claim_ttl' ) && ! function_exists( 'bb_subscriptions_get_notification_chunk_claim_ttl' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_subscriptions_get_notification_chunk_claim_ttl()}.
-	 *
-	 * @deprecated Use bboss_subscriptions_get_notification_chunk_claim_ttl() instead.
-	 */
-	function bb_subscriptions_get_notification_chunk_claim_ttl( $args ) {
-		return bboss_subscriptions_get_notification_chunk_claim_ttl( $args );
-	}
-}
-if ( function_exists( 'bboss_subscriptions_get_notification_chunk_key' ) && ! function_exists( 'bb_subscriptions_get_notification_chunk_key' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_subscriptions_get_notification_chunk_key()}.
-	 *
-	 * @deprecated Use bboss_subscriptions_get_notification_chunk_key() instead.
-	 */
-	function bb_subscriptions_get_notification_chunk_key( $args ) {
-		return bboss_subscriptions_get_notification_chunk_key( $args );
-	}
-}
-if ( function_exists( 'bboss_subscriptions_get_subscription' ) && ! function_exists( 'bb_subscriptions_get_subscription' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_subscriptions_get_subscription()}.
-	 *
-	 * @deprecated Use bboss_subscriptions_get_subscription() instead.
-	 */
-	function bb_subscriptions_get_subscription( $subscription_id ) {
-		return bboss_subscriptions_get_subscription( $subscription_id );
-	}
-}
-if ( function_exists( 'bboss_subscriptions_migrate_bbpress_users_forum_topic' ) && ! function_exists( 'bb_subscriptions_migrate_bbpress_users_forum_topic' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_subscriptions_migrate_bbpress_users_forum_topic()}.
-	 *
-	 * @deprecated Use bboss_subscriptions_migrate_bbpress_users_forum_topic() instead.
-	 */
-	function bb_subscriptions_migrate_bbpress_users_forum_topic( $is_background = false, $blog_id = 0 ) {
-		return bboss_subscriptions_migrate_bbpress_users_forum_topic( $is_background, $blog_id );
-	}
-}
-if ( function_exists( 'bboss_subscriptions_migrate_users_forum_topic' ) && ! function_exists( 'bb_subscriptions_migrate_users_forum_topic' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_subscriptions_migrate_users_forum_topic()}.
-	 *
-	 * @deprecated Use bboss_subscriptions_migrate_users_forum_topic() instead.
-	 */
-	function bb_subscriptions_migrate_users_forum_topic( $is_background = false, $is_updater = false ) {
-		return bboss_subscriptions_migrate_users_forum_topic( $is_background, $is_updater );
-	}
-}
-if ( function_exists( 'bboss_subscriptions_migrating_bbpress_users_subscriptions' ) && ! function_exists( 'bb_subscriptions_migrating_bbpress_users_subscriptions' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_subscriptions_migrating_bbpress_users_subscriptions()}.
-	 *
-	 * @deprecated Use bboss_subscriptions_migrating_bbpress_users_subscriptions() instead.
-	 */
-	function bb_subscriptions_migrating_bbpress_users_subscriptions( $is_background = false, $blog_id = 0 ) {
-		return bboss_subscriptions_migrating_bbpress_users_subscriptions( $is_background, $blog_id );
-	}
-}
-if ( function_exists( 'bboss_subscriptions_rehydrate_notification_data' ) && ! function_exists( 'bb_subscriptions_rehydrate_notification_data' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_subscriptions_rehydrate_notification_data()}.
-	 *
-	 * @deprecated Use bboss_subscriptions_rehydrate_notification_data() instead.
-	 */
-	function bb_subscriptions_rehydrate_notification_data( $data ) {
-		return bboss_subscriptions_rehydrate_notification_data( $data );
-	}
-}
-if ( function_exists( 'bboss_subscriptions_release_notification_chunk_claim' ) && ! function_exists( 'bb_subscriptions_release_notification_chunk_claim' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_subscriptions_release_notification_chunk_claim()}.
-	 *
-	 * @deprecated Use bboss_subscriptions_release_notification_chunk_claim() instead.
-	 */
-	function bb_subscriptions_release_notification_chunk_claim( $args, $chunk_key = '' ) {
-		return bboss_subscriptions_release_notification_chunk_claim( $args, $chunk_key );
-	}
-}
-if ( function_exists( 'bboss_subscriptions_send_notification_chunk' ) && ! function_exists( 'bb_subscriptions_send_notification_chunk' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_subscriptions_send_notification_chunk()}.
-	 *
-	 * @deprecated Use bboss_subscriptions_send_notification_chunk() instead.
-	 */
-	function bb_subscriptions_send_notification_chunk( $args ) {
-		return bboss_subscriptions_send_notification_chunk( $args );
-	}
-}
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_subscriptions_sweep_stale_fanout_cursors' ) && ! function_exists( 'bb_subscriptions_sweep_stale_fanout_cursors' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_subscriptions_sweep_stale_fanout_cursors()}.
@@ -2572,24 +2702,5 @@ if ( function_exists( 'bboss_subscriptions_sweep_stale_fanout_cursors' ) && ! fu
 		return bboss_subscriptions_sweep_stale_fanout_cursors();
 	}
 }
-if ( function_exists( 'bboss_subscriptions_touch_notification_chunk_claim' ) && ! function_exists( 'bb_subscriptions_touch_notification_chunk_claim' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_subscriptions_touch_notification_chunk_claim()}.
-	 *
-	 * @deprecated Use bboss_subscriptions_touch_notification_chunk_claim() instead.
-	 */
-	function bb_subscriptions_touch_notification_chunk_claim( $args, $chunk_key = '' ) {
-		return bboss_subscriptions_touch_notification_chunk_claim( $args, $chunk_key );
-	}
-}
-if ( function_exists( 'bboss_subscriptions_update_subscriptions_status' ) && ! function_exists( 'bb_subscriptions_update_subscriptions_status' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_subscriptions_update_subscriptions_status()}.
-	 *
-	 * @deprecated Use bboss_subscriptions_update_subscriptions_status() instead.
-	 */
-	function bb_subscriptions_update_subscriptions_status( $type, $item_id, $status, $blog_id = 0 ) {
-		return bboss_subscriptions_update_subscriptions_status( $type, $item_id, $status, $blog_id );
-	}
-}
 // @bbwt-com-end compat-layer
+

@@ -104,7 +104,7 @@ class BBoss_Pusher_Integration extends BBoss_Integration {
 }
 
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// bbwt-rename:compat-aliases — the pre-rename names of this file's classes (decision 0013): declared
 // here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
 if ( ( class_exists( 'BBoss_Pusher_Integration', false ) || interface_exists( 'BBoss_Pusher_Integration', false ) || trait_exists( 'BBoss_Pusher_Integration', false ) ) && ! class_exists( 'BB_Pusher_Integration', false ) && ! interface_exists( 'BB_Pusher_Integration', false ) ) {
 	class_alias( 'BBoss_Pusher_Integration', 'BB_Pusher_Integration' ); // Backward-compatible name (also declared by another BuddyBoss product).

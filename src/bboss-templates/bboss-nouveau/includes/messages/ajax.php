@@ -441,6 +441,20 @@ function bboss_nouveau_ajax_messages_send_message() {
 		wp_send_json_error( $response );
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_ajax_messages_send_message' ) && ! function_exists( 'bp_nouveau_ajax_messages_send_message' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_ajax_messages_send_message()}.
+	 *
+	 * @deprecated Use bboss_nouveau_ajax_messages_send_message() instead.
+	 */
+	function bp_nouveau_ajax_messages_send_message() {
+		return bboss_nouveau_ajax_messages_send_message();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * AJAX send message reply and display error.
@@ -646,6 +660,20 @@ function bboss_nouveau_ajax_messages_send_reply() {
 	wp_send_json_success( $response );
 
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_ajax_messages_send_reply' ) && ! function_exists( 'bp_nouveau_ajax_messages_send_reply' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_ajax_messages_send_reply()}.
+	 *
+	 * @deprecated Use bboss_nouveau_ajax_messages_send_reply() instead.
+	 */
+	function bp_nouveau_ajax_messages_send_reply() {
+		return bboss_nouveau_ajax_messages_send_reply();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * AJAX get all user message threads.
@@ -1155,6 +1183,20 @@ function bboss_nouveau_ajax_get_user_message_threads() {
 	// Return the successful reply.
 	wp_send_json_success( $threads );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_ajax_get_user_message_threads' ) && ! function_exists( 'bp_nouveau_ajax_get_user_message_threads' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_ajax_get_user_message_threads()}.
+	 *
+	 * @deprecated Use bboss_nouveau_ajax_get_user_message_threads() instead.
+	 */
+	function bp_nouveau_ajax_get_user_message_threads() {
+		return bboss_nouveau_ajax_get_user_message_threads();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * AJAX mark message as read.
@@ -1189,6 +1231,20 @@ function bboss_nouveau_ajax_messages_thread_read() {
 
 	wp_send_json_success();
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_ajax_messages_thread_read' ) && ! function_exists( 'bp_nouveau_ajax_messages_thread_read' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_ajax_messages_thread_read()}.
+	 *
+	 * @deprecated Use bboss_nouveau_ajax_messages_thread_read() instead.
+	 */
+	function bp_nouveau_ajax_messages_thread_read() {
+		return bboss_nouveau_ajax_messages_thread_read();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * AJAX get messages for each thread.
@@ -1253,6 +1309,20 @@ function bboss_nouveau_ajax_get_thread_messages() {
 
 	wp_send_json_success( $thread );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_ajax_get_thread_messages' ) && ! function_exists( 'bp_nouveau_ajax_get_thread_messages' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_ajax_get_thread_messages()}.
+	 *
+	 * @deprecated Use bboss_nouveau_ajax_get_thread_messages() instead.
+	 */
+	function bp_nouveau_ajax_get_thread_messages() {
+		return bboss_nouveau_ajax_get_thread_messages();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * AJAX delete logged in user entire messages of given thread.
@@ -1302,6 +1372,20 @@ function bboss_nouveau_ajax_delete_thread_messages() {
 	);
 
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_ajax_delete_thread_messages' ) && ! function_exists( 'bp_nouveau_ajax_delete_thread_messages' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_ajax_delete_thread_messages()}.
+	 *
+	 * @deprecated Use bboss_nouveau_ajax_delete_thread_messages() instead.
+	 */
+	function bp_nouveau_ajax_delete_thread_messages() {
+		return bboss_nouveau_ajax_delete_thread_messages();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * AJAX delete entire thread.
@@ -1448,6 +1532,20 @@ function bboss_nouveau_ajax_delete_thread() {
 	);
 
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_ajax_delete_thread' ) && ! function_exists( 'bp_nouveau_ajax_delete_thread' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_ajax_delete_thread()}.
+	 *
+	 * @deprecated Use bboss_nouveau_ajax_delete_thread() instead.
+	 */
+	function bp_nouveau_ajax_delete_thread() {
+		return bboss_nouveau_ajax_delete_thread();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * AJAX mark message with star.
@@ -1561,6 +1659,20 @@ function bboss_nouveau_ajax_star_thread_messages() {
 		)
 	);
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_ajax_star_thread_messages' ) && ! function_exists( 'bp_nouveau_ajax_star_thread_messages' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_ajax_star_thread_messages()}.
+	 *
+	 * @deprecated Use bboss_nouveau_ajax_star_thread_messages() instead.
+	 */
+	function bp_nouveau_ajax_star_thread_messages() {
+		return bboss_nouveau_ajax_star_thread_messages();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * AJAX mark message as read/unread
@@ -1627,6 +1739,20 @@ function bboss_nouveau_ajax_readunread_thread_messages() {
 
 	wp_send_json_success( $response );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_ajax_readunread_thread_messages' ) && ! function_exists( 'bp_nouveau_ajax_readunread_thread_messages' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_ajax_readunread_thread_messages()}.
+	 *
+	 * @deprecated Use bboss_nouveau_ajax_readunread_thread_messages() instead.
+	 */
+	function bp_nouveau_ajax_readunread_thread_messages() {
+		return bboss_nouveau_ajax_readunread_thread_messages();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * AJAX dismiss sitewide notice.
@@ -1687,6 +1813,20 @@ function bboss_nouveau_ajax_dismiss_sitewide_notice() {
 		);
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_ajax_dismiss_sitewide_notice' ) && ! function_exists( 'bp_nouveau_ajax_dismiss_sitewide_notice' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_ajax_dismiss_sitewide_notice()}.
+	 *
+	 * @deprecated Use bboss_nouveau_ajax_dismiss_sitewide_notice() instead.
+	 */
+	function bp_nouveau_ajax_dismiss_sitewide_notice() {
+		return bboss_nouveau_ajax_dismiss_sitewide_notice();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * AJAX load recipient list.
@@ -1771,6 +1911,20 @@ function bboss_nouveau_ajax_dsearch_recipients() {
 		)
 	);
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_ajax_dsearch_recipients' ) && ! function_exists( 'bp_nouveau_ajax_dsearch_recipients' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_ajax_dsearch_recipients()}.
+	 *
+	 * @deprecated Use bboss_nouveau_ajax_dsearch_recipients() instead.
+	 */
+	function bp_nouveau_ajax_dsearch_recipients() {
+		return bboss_nouveau_ajax_dsearch_recipients();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Exclude logged in member from recipients list.
@@ -1791,6 +1945,20 @@ function bboss_nouveau_ajax_search_recipients_exclude_current( $user_query ) {
 
 	return $user_query;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_ajax_search_recipients_exclude_current' ) && ! function_exists( 'bp_nouveau_ajax_search_recipients_exclude_current' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_ajax_search_recipients_exclude_current()}.
+	 *
+	 * @deprecated Use bboss_nouveau_ajax_search_recipients_exclude_current() instead.
+	 */
+	function bp_nouveau_ajax_search_recipients_exclude_current( $user_query ) {
+		return bboss_nouveau_ajax_search_recipients_exclude_current( $user_query );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Messages for each thread.
@@ -2936,6 +3104,20 @@ function bboss_nouveau_get_thread_messages( $thread_id, $post ) {
 
 	return $thread;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_get_thread_messages' ) && ! function_exists( 'bp_nouveau_get_thread_messages' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_get_thread_messages()}.
+	 *
+	 * @deprecated Use bboss_nouveau_get_thread_messages() instead.
+	 */
+	function bp_nouveau_get_thread_messages( $thread_id, $post ) {
+		return bboss_nouveau_get_thread_messages( $thread_id, $post );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 function bboss_nouveau_ajax_hide_thread() {
 
@@ -3057,6 +3239,20 @@ function bboss_nouveau_ajax_hide_thread() {
 		)
 	);
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_ajax_hide_thread' ) && ! function_exists( 'bp_nouveau_ajax_hide_thread' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_ajax_hide_thread()}.
+	 *
+	 * @deprecated Use bboss_nouveau_ajax_hide_thread() instead.
+	 */
+	function bp_nouveau_ajax_hide_thread() {
+		return bboss_nouveau_ajax_hide_thread();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Check that the current user may list the recipients of a thread over AJAX.
@@ -3077,6 +3273,20 @@ function bboss_nouveau_ajax_can_list_thread_recipients( $thread_id ) {
 	// One recipient row instead of messages_check_thread_access(), which loads every recipient of the thread.
 	return $thread_id > 0 && ( bboss_current_user_can( 'bp_moderate' ) || bboss_messages_is_active_thread_recipient( $thread_id ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_ajax_can_list_thread_recipients' ) && ! function_exists( 'bb_nouveau_ajax_can_list_thread_recipients' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_ajax_can_list_thread_recipients()}.
+	 *
+	 * @deprecated Use bboss_nouveau_ajax_can_list_thread_recipients() instead.
+	 */
+	function bb_nouveau_ajax_can_list_thread_recipients( $thread_id ) {
+		return bboss_nouveau_ajax_can_list_thread_recipients( $thread_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Function which get next recipients list for block member in message section and message header.
@@ -3189,6 +3399,20 @@ function bboss_nouveau_ajax_recipient_list_for_blocks() {
 		)
 	);
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_ajax_recipient_list_for_blocks' ) && ! function_exists( 'bb_nouveau_ajax_recipient_list_for_blocks' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_ajax_recipient_list_for_blocks()}.
+	 *
+	 * @deprecated Use bboss_nouveau_ajax_recipient_list_for_blocks() instead.
+	 */
+	function bb_nouveau_ajax_recipient_list_for_blocks() {
+		return bboss_nouveau_ajax_recipient_list_for_blocks();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Function which get moderated recipients list when click on block a member in the message screen.
@@ -3408,6 +3632,20 @@ function bboss_nouveau_ajax_moderated_recipient_list() {
 		)
 	);
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_ajax_moderated_recipient_list' ) && ! function_exists( 'bb_nouveau_ajax_moderated_recipient_list' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_ajax_moderated_recipient_list()}.
+	 *
+	 * @deprecated Use bboss_nouveau_ajax_moderated_recipient_list() instead.
+	 */
+	function bb_nouveau_ajax_moderated_recipient_list() {
+		return bboss_nouveau_ajax_moderated_recipient_list();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Function which get left/join members list.
@@ -3483,6 +3721,20 @@ function bboss_nouveau_ajax_left_join_members_list() {
 		)
 	);
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_ajax_left_join_members_list' ) && ! function_exists( 'bb_nouveau_ajax_left_join_members_list' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_ajax_left_join_members_list()}.
+	 *
+	 * @deprecated Use bboss_nouveau_ajax_left_join_members_list() instead.
+	 */
+	function bb_nouveau_ajax_left_join_members_list() {
+		return bboss_nouveau_ajax_left_join_members_list();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return the while fetching members thread.
@@ -3494,6 +3746,20 @@ function bboss_nouveau_ajax_left_join_members_list() {
 function bboss_get_user_message_recipients() {
 	return 5;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_user_message_recipients' ) && ! function_exists( 'bb_get_user_message_recipients' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_user_message_recipients()}.
+	 *
+	 * @deprecated Use bboss_get_user_message_recipients() instead.
+	 */
+	function bb_get_user_message_recipients() {
+		return bboss_get_user_message_recipients();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Unhide the conversation.
@@ -3593,190 +3859,8 @@ function bboss_nouveau_ajax_unhide_thread() {
 		)
 	);
 }
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
-if ( function_exists( 'bboss_get_user_message_recipients' ) && ! function_exists( 'bb_get_user_message_recipients' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_user_message_recipients()}.
-	 *
-	 * @deprecated Use bboss_get_user_message_recipients() instead.
-	 */
-	function bb_get_user_message_recipients() {
-		return bboss_get_user_message_recipients();
-	}
-}
-if ( function_exists( 'bboss_nouveau_ajax_can_list_thread_recipients' ) && ! function_exists( 'bb_nouveau_ajax_can_list_thread_recipients' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_ajax_can_list_thread_recipients()}.
-	 *
-	 * @deprecated Use bboss_nouveau_ajax_can_list_thread_recipients() instead.
-	 */
-	function bb_nouveau_ajax_can_list_thread_recipients( $thread_id ) {
-		return bboss_nouveau_ajax_can_list_thread_recipients( $thread_id );
-	}
-}
-if ( function_exists( 'bboss_nouveau_ajax_left_join_members_list' ) && ! function_exists( 'bb_nouveau_ajax_left_join_members_list' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_ajax_left_join_members_list()}.
-	 *
-	 * @deprecated Use bboss_nouveau_ajax_left_join_members_list() instead.
-	 */
-	function bb_nouveau_ajax_left_join_members_list() {
-		return bboss_nouveau_ajax_left_join_members_list();
-	}
-}
-if ( function_exists( 'bboss_nouveau_ajax_moderated_recipient_list' ) && ! function_exists( 'bb_nouveau_ajax_moderated_recipient_list' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_ajax_moderated_recipient_list()}.
-	 *
-	 * @deprecated Use bboss_nouveau_ajax_moderated_recipient_list() instead.
-	 */
-	function bb_nouveau_ajax_moderated_recipient_list() {
-		return bboss_nouveau_ajax_moderated_recipient_list();
-	}
-}
-if ( function_exists( 'bboss_nouveau_ajax_recipient_list_for_blocks' ) && ! function_exists( 'bb_nouveau_ajax_recipient_list_for_blocks' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_ajax_recipient_list_for_blocks()}.
-	 *
-	 * @deprecated Use bboss_nouveau_ajax_recipient_list_for_blocks() instead.
-	 */
-	function bb_nouveau_ajax_recipient_list_for_blocks() {
-		return bboss_nouveau_ajax_recipient_list_for_blocks();
-	}
-}
-if ( function_exists( 'bboss_nouveau_ajax_delete_thread' ) && ! function_exists( 'bp_nouveau_ajax_delete_thread' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_ajax_delete_thread()}.
-	 *
-	 * @deprecated Use bboss_nouveau_ajax_delete_thread() instead.
-	 */
-	function bp_nouveau_ajax_delete_thread() {
-		return bboss_nouveau_ajax_delete_thread();
-	}
-}
-if ( function_exists( 'bboss_nouveau_ajax_delete_thread_messages' ) && ! function_exists( 'bp_nouveau_ajax_delete_thread_messages' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_ajax_delete_thread_messages()}.
-	 *
-	 * @deprecated Use bboss_nouveau_ajax_delete_thread_messages() instead.
-	 */
-	function bp_nouveau_ajax_delete_thread_messages() {
-		return bboss_nouveau_ajax_delete_thread_messages();
-	}
-}
-if ( function_exists( 'bboss_nouveau_ajax_dismiss_sitewide_notice' ) && ! function_exists( 'bp_nouveau_ajax_dismiss_sitewide_notice' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_ajax_dismiss_sitewide_notice()}.
-	 *
-	 * @deprecated Use bboss_nouveau_ajax_dismiss_sitewide_notice() instead.
-	 */
-	function bp_nouveau_ajax_dismiss_sitewide_notice() {
-		return bboss_nouveau_ajax_dismiss_sitewide_notice();
-	}
-}
-if ( function_exists( 'bboss_nouveau_ajax_dsearch_recipients' ) && ! function_exists( 'bp_nouveau_ajax_dsearch_recipients' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_ajax_dsearch_recipients()}.
-	 *
-	 * @deprecated Use bboss_nouveau_ajax_dsearch_recipients() instead.
-	 */
-	function bp_nouveau_ajax_dsearch_recipients() {
-		return bboss_nouveau_ajax_dsearch_recipients();
-	}
-}
-if ( function_exists( 'bboss_nouveau_ajax_get_thread_messages' ) && ! function_exists( 'bp_nouveau_ajax_get_thread_messages' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_ajax_get_thread_messages()}.
-	 *
-	 * @deprecated Use bboss_nouveau_ajax_get_thread_messages() instead.
-	 */
-	function bp_nouveau_ajax_get_thread_messages() {
-		return bboss_nouveau_ajax_get_thread_messages();
-	}
-}
-if ( function_exists( 'bboss_nouveau_ajax_get_user_message_threads' ) && ! function_exists( 'bp_nouveau_ajax_get_user_message_threads' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_ajax_get_user_message_threads()}.
-	 *
-	 * @deprecated Use bboss_nouveau_ajax_get_user_message_threads() instead.
-	 */
-	function bp_nouveau_ajax_get_user_message_threads() {
-		return bboss_nouveau_ajax_get_user_message_threads();
-	}
-}
-if ( function_exists( 'bboss_nouveau_ajax_hide_thread' ) && ! function_exists( 'bp_nouveau_ajax_hide_thread' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_ajax_hide_thread()}.
-	 *
-	 * @deprecated Use bboss_nouveau_ajax_hide_thread() instead.
-	 */
-	function bp_nouveau_ajax_hide_thread() {
-		return bboss_nouveau_ajax_hide_thread();
-	}
-}
-if ( function_exists( 'bboss_nouveau_ajax_messages_send_message' ) && ! function_exists( 'bp_nouveau_ajax_messages_send_message' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_ajax_messages_send_message()}.
-	 *
-	 * @deprecated Use bboss_nouveau_ajax_messages_send_message() instead.
-	 */
-	function bp_nouveau_ajax_messages_send_message() {
-		return bboss_nouveau_ajax_messages_send_message();
-	}
-}
-if ( function_exists( 'bboss_nouveau_ajax_messages_send_reply' ) && ! function_exists( 'bp_nouveau_ajax_messages_send_reply' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_ajax_messages_send_reply()}.
-	 *
-	 * @deprecated Use bboss_nouveau_ajax_messages_send_reply() instead.
-	 */
-	function bp_nouveau_ajax_messages_send_reply() {
-		return bboss_nouveau_ajax_messages_send_reply();
-	}
-}
-if ( function_exists( 'bboss_nouveau_ajax_messages_thread_read' ) && ! function_exists( 'bp_nouveau_ajax_messages_thread_read' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_ajax_messages_thread_read()}.
-	 *
-	 * @deprecated Use bboss_nouveau_ajax_messages_thread_read() instead.
-	 */
-	function bp_nouveau_ajax_messages_thread_read() {
-		return bboss_nouveau_ajax_messages_thread_read();
-	}
-}
-if ( function_exists( 'bboss_nouveau_ajax_readunread_thread_messages' ) && ! function_exists( 'bp_nouveau_ajax_readunread_thread_messages' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_ajax_readunread_thread_messages()}.
-	 *
-	 * @deprecated Use bboss_nouveau_ajax_readunread_thread_messages() instead.
-	 */
-	function bp_nouveau_ajax_readunread_thread_messages() {
-		return bboss_nouveau_ajax_readunread_thread_messages();
-	}
-}
-if ( function_exists( 'bboss_nouveau_ajax_search_recipients_exclude_current' ) && ! function_exists( 'bp_nouveau_ajax_search_recipients_exclude_current' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_ajax_search_recipients_exclude_current()}.
-	 *
-	 * @deprecated Use bboss_nouveau_ajax_search_recipients_exclude_current() instead.
-	 */
-	function bp_nouveau_ajax_search_recipients_exclude_current( $user_query ) {
-		return bboss_nouveau_ajax_search_recipients_exclude_current( $user_query );
-	}
-}
-if ( function_exists( 'bboss_nouveau_ajax_star_thread_messages' ) && ! function_exists( 'bp_nouveau_ajax_star_thread_messages' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_ajax_star_thread_messages()}.
-	 *
-	 * @deprecated Use bboss_nouveau_ajax_star_thread_messages() instead.
-	 */
-	function bp_nouveau_ajax_star_thread_messages() {
-		return bboss_nouveau_ajax_star_thread_messages();
-	}
-}
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_nouveau_ajax_unhide_thread' ) && ! function_exists( 'bp_nouveau_ajax_unhide_thread' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_nouveau_ajax_unhide_thread()}.
@@ -3787,14 +3871,6 @@ if ( function_exists( 'bboss_nouveau_ajax_unhide_thread' ) && ! function_exists(
 		return bboss_nouveau_ajax_unhide_thread();
 	}
 }
-if ( function_exists( 'bboss_nouveau_get_thread_messages' ) && ! function_exists( 'bp_nouveau_get_thread_messages' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_get_thread_messages()}.
-	 *
-	 * @deprecated Use bboss_nouveau_get_thread_messages() instead.
-	 */
-	function bp_nouveau_get_thread_messages( $thread_id, $post ) {
-		return bboss_nouveau_get_thread_messages( $thread_id, $post );
-	}
-}
 // @bbwt-com-end compat-layer
+
+

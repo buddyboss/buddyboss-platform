@@ -55,11 +55,8 @@ function bboss_register_admin_common_assets() {
 		);
 	}
 }
-add_action( 'admin_enqueue_scripts', 'bb_register_admin_common_assets', 1 );
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_register_admin_common_assets' ) && ! function_exists( 'bb_register_admin_common_assets' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_register_admin_common_assets()}.
@@ -71,3 +68,5 @@ if ( function_exists( 'bboss_register_admin_common_assets' ) && ! function_exist
 	}
 }
 // @bbwt-com-end compat-layer
+
+add_action( 'admin_enqueue_scripts', 'bb_register_admin_common_assets', 1 );

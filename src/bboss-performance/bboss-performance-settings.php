@@ -28,6 +28,20 @@ function bboss_performance_get_settings_sections() {
 
 	return (array) apply_filters( 'bp_performance_get_settings_sections', $settings );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_performance_get_settings_sections' ) && ! function_exists( 'bp_performance_get_settings_sections' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_performance_get_settings_sections()}.
+	 *
+	 * @deprecated Use bboss_performance_get_settings_sections() instead.
+	 */
+	function bp_performance_get_settings_sections() {
+		return bboss_performance_get_settings_sections();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get all of the settings fields.
@@ -42,6 +56,20 @@ function bboss_performance_get_settings_fields() {
 
 	return (array) apply_filters( 'bp_performance_get_settings_fields', $fields );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_performance_get_settings_fields' ) && ! function_exists( 'bp_performance_get_settings_fields' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_performance_get_settings_fields()}.
+	 *
+	 * @deprecated Use bboss_performance_get_settings_fields() instead.
+	 */
+	function bp_performance_get_settings_fields() {
+		return bboss_performance_get_settings_fields();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get settings fields by section.
@@ -64,20 +92,8 @@ function bboss_performance_get_settings_fields_for_section( $section_id = '' ) {
 
 	return (array) apply_filters( 'bp_performance_get_settings_fields_for_section', $retval, $section_id );
 }
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
-if ( function_exists( 'bboss_performance_get_settings_fields' ) && ! function_exists( 'bp_performance_get_settings_fields' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_performance_get_settings_fields()}.
-	 *
-	 * @deprecated Use bboss_performance_get_settings_fields() instead.
-	 */
-	function bp_performance_get_settings_fields() {
-		return bboss_performance_get_settings_fields();
-	}
-}
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_performance_get_settings_fields_for_section' ) && ! function_exists( 'bp_performance_get_settings_fields_for_section' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_performance_get_settings_fields_for_section()}.
@@ -88,14 +104,5 @@ if ( function_exists( 'bboss_performance_get_settings_fields_for_section' ) && !
 		return bboss_performance_get_settings_fields_for_section( $section_id );
 	}
 }
-if ( function_exists( 'bboss_performance_get_settings_sections' ) && ! function_exists( 'bp_performance_get_settings_sections' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_performance_get_settings_sections()}.
-	 *
-	 * @deprecated Use bboss_performance_get_settings_sections() instead.
-	 */
-	function bp_performance_get_settings_sections() {
-		return bboss_performance_get_settings_sections();
-	}
-}
 // @bbwt-com-end compat-layer
+

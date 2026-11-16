@@ -88,6 +88,20 @@ function bboss_appearance_seed_default_sidebars() {
 		);
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_appearance_seed_default_sidebars' ) && ! function_exists( 'bb_appearance_seed_default_sidebars' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_appearance_seed_default_sidebars()}.
+	 *
+	 * @deprecated Use bboss_appearance_seed_default_sidebars() instead.
+	 */
+	function bb_appearance_seed_default_sidebars() {
+		return bboss_appearance_seed_default_sidebars();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Apply ReadyLaunch configuration side-effects.
@@ -336,6 +350,20 @@ function bboss_appearance_apply_configuration( $settings ) {
 	 */
 	do_action( 'bb_rl_configuration_applied', $settings );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_appearance_apply_configuration' ) && ! function_exists( 'bb_appearance_apply_configuration' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_appearance_apply_configuration()}.
+	 *
+	 * @deprecated Use bboss_appearance_apply_configuration() instead.
+	 */
+	function bb_appearance_apply_configuration( $settings ) {
+		return bboss_appearance_apply_configuration( $settings );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Invoke the Appearance configuration side-effects after a Settings 2.0 save.
@@ -395,6 +423,20 @@ function bboss_appearance_on_settings_saved( $feature_id, $settings, $saved ) {
 
 	bboss_appearance_apply_configuration( is_array( $saved ) ? $saved : array() );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_appearance_on_settings_saved' ) && ! function_exists( 'bb_appearance_on_settings_saved' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_appearance_on_settings_saved()}.
+	 *
+	 * @deprecated Use bboss_appearance_on_settings_saved() instead.
+	 */
+	function bb_appearance_on_settings_saved( $feature_id, $settings, $saved ) {
+		return bboss_appearance_on_settings_saved( $feature_id, $settings, $saved );
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'bb_admin_save_feature_settings_after', 'bb_appearance_on_settings_saved', 10, 3 );
 
 /**
@@ -499,6 +541,20 @@ function bboss_appearance_ajax_activate_buddyboss_theme() {
 		)
 	);
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_appearance_ajax_activate_buddyboss_theme' ) && ! function_exists( 'bb_appearance_ajax_activate_buddyboss_theme' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_appearance_ajax_activate_buddyboss_theme()}.
+	 *
+	 * @deprecated Use bboss_appearance_ajax_activate_buddyboss_theme() instead.
+	 */
+	function bb_appearance_ajax_activate_buddyboss_theme() {
+		return bboss_appearance_ajax_activate_buddyboss_theme();
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'wp_ajax_bb_admin_activate_buddyboss_theme', 'bb_appearance_ajax_activate_buddyboss_theme' );
 
 /**
@@ -571,6 +627,20 @@ function bboss_appearance_normalize_field_data( $field_data, $field, $feature_id
 
 	return $field_data;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_appearance_normalize_field_data' ) && ! function_exists( 'bb_appearance_normalize_field_data' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_appearance_normalize_field_data()}.
+	 *
+	 * @deprecated Use bboss_appearance_normalize_field_data() instead.
+	 */
+	function bb_appearance_normalize_field_data( $field_data, $field, $feature_id ) {
+		return bboss_appearance_normalize_field_data( $field_data, $field, $feature_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_filter( 'bb_admin_settings_format_field_data', 'bb_appearance_normalize_field_data', 10, 3 );
 
 /**
@@ -629,6 +699,20 @@ function bboss_appearance_resolve_sidebar_url( $field_name, $current_user_id ) {
 
 	return '';
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_appearance_resolve_sidebar_url' ) && ! function_exists( 'bb_appearance_resolve_sidebar_url' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_appearance_resolve_sidebar_url()}.
+	 *
+	 * @deprecated Use bboss_appearance_resolve_sidebar_url() instead.
+	 */
+	function bb_appearance_resolve_sidebar_url( $field_name, $current_user_id ) {
+		return bboss_appearance_resolve_sidebar_url( $field_name, $current_user_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get the translatable sprintf template for one of the three sidebar-widget
@@ -667,6 +751,20 @@ function bboss_appearance_get_sidebar_description_template( $field_name ) {
 
 	return '';
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_appearance_get_sidebar_description_template' ) && ! function_exists( 'bb_appearance_get_sidebar_description_template' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_appearance_get_sidebar_description_template()}.
+	 *
+	 * @deprecated Use bboss_appearance_get_sidebar_description_template() instead.
+	 */
+	function bb_appearance_get_sidebar_description_template( $field_name ) {
+		return bboss_appearance_get_sidebar_description_template( $field_name );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Render the sidebar-widget description with optional inline link.
@@ -687,6 +785,20 @@ function bboss_appearance_render_sidebar_description( $field_name, $open = '', $
 	$template = bboss_appearance_get_sidebar_description_template( $field_name );
 	return '' === $template ? '' : sprintf( $template, $open, $close );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_appearance_render_sidebar_description' ) && ! function_exists( 'bb_appearance_render_sidebar_description' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_appearance_render_sidebar_description()}.
+	 *
+	 * @deprecated Use bboss_appearance_render_sidebar_description() instead.
+	 */
+	function bb_appearance_render_sidebar_description( $field_name, $open = '', $close = '' ) {
+		return bboss_appearance_render_sidebar_description( $field_name, $open, $close );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Build the linked `label_description` for a sidebar-widget field, or '' to
@@ -709,6 +821,20 @@ function bboss_appearance_build_sidebar_description( $field_name ) {
 		'</a>'
 	);
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_appearance_build_sidebar_description' ) && ! function_exists( 'bb_appearance_build_sidebar_description' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_appearance_build_sidebar_description()}.
+	 *
+	 * @deprecated Use bboss_appearance_build_sidebar_description() instead.
+	 */
+	function bb_appearance_build_sidebar_description( $field_name ) {
+		return bboss_appearance_build_sidebar_description( $field_name );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Coerce `bb_rl_enabled` in the save-response payload to the dropdown string shape.
@@ -745,61 +871,8 @@ function bboss_appearance_normalize_save_response( $response_data, $feature_id, 
 
 	return $response_data;
 }
-add_filter( 'bb_admin_save_feature_settings_response', 'bb_appearance_normalize_save_response', 10, 4 );
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
-if ( function_exists( 'bboss_appearance_ajax_activate_buddyboss_theme' ) && ! function_exists( 'bb_appearance_ajax_activate_buddyboss_theme' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_appearance_ajax_activate_buddyboss_theme()}.
-	 *
-	 * @deprecated Use bboss_appearance_ajax_activate_buddyboss_theme() instead.
-	 */
-	function bb_appearance_ajax_activate_buddyboss_theme() {
-		return bboss_appearance_ajax_activate_buddyboss_theme();
-	}
-}
-if ( function_exists( 'bboss_appearance_apply_configuration' ) && ! function_exists( 'bb_appearance_apply_configuration' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_appearance_apply_configuration()}.
-	 *
-	 * @deprecated Use bboss_appearance_apply_configuration() instead.
-	 */
-	function bb_appearance_apply_configuration( $settings ) {
-		return bboss_appearance_apply_configuration( $settings );
-	}
-}
-if ( function_exists( 'bboss_appearance_build_sidebar_description' ) && ! function_exists( 'bb_appearance_build_sidebar_description' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_appearance_build_sidebar_description()}.
-	 *
-	 * @deprecated Use bboss_appearance_build_sidebar_description() instead.
-	 */
-	function bb_appearance_build_sidebar_description( $field_name ) {
-		return bboss_appearance_build_sidebar_description( $field_name );
-	}
-}
-if ( function_exists( 'bboss_appearance_get_sidebar_description_template' ) && ! function_exists( 'bb_appearance_get_sidebar_description_template' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_appearance_get_sidebar_description_template()}.
-	 *
-	 * @deprecated Use bboss_appearance_get_sidebar_description_template() instead.
-	 */
-	function bb_appearance_get_sidebar_description_template( $field_name ) {
-		return bboss_appearance_get_sidebar_description_template( $field_name );
-	}
-}
-if ( function_exists( 'bboss_appearance_normalize_field_data' ) && ! function_exists( 'bb_appearance_normalize_field_data' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_appearance_normalize_field_data()}.
-	 *
-	 * @deprecated Use bboss_appearance_normalize_field_data() instead.
-	 */
-	function bb_appearance_normalize_field_data( $field_data, $field, $feature_id ) {
-		return bboss_appearance_normalize_field_data( $field_data, $field, $feature_id );
-	}
-}
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_appearance_normalize_save_response' ) && ! function_exists( 'bb_appearance_normalize_save_response' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_appearance_normalize_save_response()}.
@@ -810,44 +883,6 @@ if ( function_exists( 'bboss_appearance_normalize_save_response' ) && ! function
 		return bboss_appearance_normalize_save_response( $response_data, $feature_id, $settings, $saved );
 	}
 }
-if ( function_exists( 'bboss_appearance_on_settings_saved' ) && ! function_exists( 'bb_appearance_on_settings_saved' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_appearance_on_settings_saved()}.
-	 *
-	 * @deprecated Use bboss_appearance_on_settings_saved() instead.
-	 */
-	function bb_appearance_on_settings_saved( $feature_id, $settings, $saved ) {
-		return bboss_appearance_on_settings_saved( $feature_id, $settings, $saved );
-	}
-}
-if ( function_exists( 'bboss_appearance_render_sidebar_description' ) && ! function_exists( 'bb_appearance_render_sidebar_description' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_appearance_render_sidebar_description()}.
-	 *
-	 * @deprecated Use bboss_appearance_render_sidebar_description() instead.
-	 */
-	function bb_appearance_render_sidebar_description( $field_name, $open = '', $close = '' ) {
-		return bboss_appearance_render_sidebar_description( $field_name, $open, $close );
-	}
-}
-if ( function_exists( 'bboss_appearance_resolve_sidebar_url' ) && ! function_exists( 'bb_appearance_resolve_sidebar_url' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_appearance_resolve_sidebar_url()}.
-	 *
-	 * @deprecated Use bboss_appearance_resolve_sidebar_url() instead.
-	 */
-	function bb_appearance_resolve_sidebar_url( $field_name, $current_user_id ) {
-		return bboss_appearance_resolve_sidebar_url( $field_name, $current_user_id );
-	}
-}
-if ( function_exists( 'bboss_appearance_seed_default_sidebars' ) && ! function_exists( 'bb_appearance_seed_default_sidebars' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_appearance_seed_default_sidebars()}.
-	 *
-	 * @deprecated Use bboss_appearance_seed_default_sidebars() instead.
-	 */
-	function bb_appearance_seed_default_sidebars() {
-		return bboss_appearance_seed_default_sidebars();
-	}
-}
 // @bbwt-com-end compat-layer
+
+add_filter( 'bb_admin_save_feature_settings_response', 'bb_appearance_normalize_save_response', 10, 4 );

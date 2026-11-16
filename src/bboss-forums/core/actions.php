@@ -324,6 +324,20 @@ function bboss_load_forums_notifications() {
 		BBoss_Forums_Notification::instance();
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_load_forums_notifications' ) && ! function_exists( 'bb_load_forums_notifications' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_load_forums_notifications()}.
+	 *
+	 * @deprecated Use bboss_load_forums_notifications() instead.
+	 */
+	function bb_load_forums_notifications() {
+		return bboss_load_forums_notifications();
+	}
+}
+// @bbwt-com-end compat-layer
+
 // Load Forums Notifications.
 add_action( 'bp_forums_includes', 'bb_load_forums_notifications' );
 
@@ -411,6 +425,20 @@ function bboss_forums_notification_settings() {
 
 	<?php
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_forums_notification_settings' ) && ! function_exists( 'forums_notification_settings' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_forums_notification_settings()}.
+	 *
+	 * @deprecated Use bboss_forums_notification_settings() instead.
+	 */
+	function forums_notification_settings() {
+		return bboss_forums_notification_settings();
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'bp_notification_settings', 'forums_notification_settings', 11 );
 
 /**
@@ -1630,6 +1658,20 @@ function bboss_post_topic_reply_draft() {
 		)
 	);
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_post_topic_reply_draft' ) && ! function_exists( 'bb_post_topic_reply_draft' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_post_topic_reply_draft()}.
+	 *
+	 * @deprecated Use bboss_post_topic_reply_draft() instead.
+	 */
+	function bb_post_topic_reply_draft() {
+		return bboss_post_topic_reply_draft();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Fetch the logged-in member's stored topic/reply drafts.
@@ -1752,6 +1794,20 @@ function bboss_get_topic_reply_drafts() {
 		)
 	);
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_topic_reply_drafts' ) && ! function_exists( 'bb_get_topic_reply_drafts' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_topic_reply_drafts()}.
+	 *
+	 * @deprecated Use bboss_get_topic_reply_drafts() instead.
+	 */
+	function bb_get_topic_reply_drafts() {
+		return bboss_get_topic_reply_drafts();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Function add pop up for single page forum content.
@@ -1795,6 +1851,20 @@ function bboss_forum_add_content_popup() {
 
 	unset( $template_forum_ids );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_forum_add_content_popup' ) && ! function_exists( 'bb_forum_add_content_popup' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_forum_add_content_popup()}.
+	 *
+	 * @deprecated Use bboss_forum_add_content_popup() instead.
+	 */
+	function bb_forum_add_content_popup() {
+		return bboss_forum_add_content_popup();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Save link preview data into topic/reply meta key "_link_preview_data"
@@ -1909,6 +1979,20 @@ function bboss_forums_save_link_preview_data( $post_id ) {
 
 	update_post_meta( $post_id, '_link_preview_data', $preview_data );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_forums_save_link_preview_data' ) && ! function_exists( 'bb_forums_save_link_preview_data' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_forums_save_link_preview_data()}.
+	 *
+	 * @deprecated Use bboss_forums_save_link_preview_data() instead.
+	 */
+	function bb_forums_save_link_preview_data( $post_id ) {
+		return bboss_forums_save_link_preview_data( $post_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Send forum subscription notifications when scheduled topics are published.
@@ -1961,6 +2045,20 @@ function bboss_forums_notify_on_scheduled_topic_publish( $new_status, $old_statu
 		update_post_meta( $topic_id, '_bbp_scheduled_notification_sent', true );
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_forums_notify_on_scheduled_topic_publish' ) && ! function_exists( 'bb_forums_notify_on_scheduled_topic_publish' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_forums_notify_on_scheduled_topic_publish()}.
+	 *
+	 * @deprecated Use bboss_forums_notify_on_scheduled_topic_publish() instead.
+	 */
+	function bb_forums_notify_on_scheduled_topic_publish( $new_status, $old_status, $post ) {
+		return bboss_forums_notify_on_scheduled_topic_publish( $new_status, $old_status, $post );
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'transition_post_status', 'bb_forums_notify_on_scheduled_topic_publish', 10, 3 );
 
 /**
@@ -2017,21 +2115,8 @@ function bboss_forums_notify_on_scheduled_reply_publish( $new_status, $old_statu
 		update_post_meta( $reply_id, '_bbp_scheduled_notification_sent', true );
 	}
 }
-add_action( 'transition_post_status', 'bb_forums_notify_on_scheduled_reply_publish', 10, 3 );
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
-if ( function_exists( 'bboss_forum_add_content_popup' ) && ! function_exists( 'bb_forum_add_content_popup' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_forum_add_content_popup()}.
-	 *
-	 * @deprecated Use bboss_forum_add_content_popup() instead.
-	 */
-	function bb_forum_add_content_popup() {
-		return bboss_forum_add_content_popup();
-	}
-}
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_forums_notify_on_scheduled_reply_publish' ) && ! function_exists( 'bb_forums_notify_on_scheduled_reply_publish' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_forums_notify_on_scheduled_reply_publish()}.
@@ -2042,64 +2127,6 @@ if ( function_exists( 'bboss_forums_notify_on_scheduled_reply_publish' ) && ! fu
 		return bboss_forums_notify_on_scheduled_reply_publish( $new_status, $old_status, $post );
 	}
 }
-if ( function_exists( 'bboss_forums_notify_on_scheduled_topic_publish' ) && ! function_exists( 'bb_forums_notify_on_scheduled_topic_publish' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_forums_notify_on_scheduled_topic_publish()}.
-	 *
-	 * @deprecated Use bboss_forums_notify_on_scheduled_topic_publish() instead.
-	 */
-	function bb_forums_notify_on_scheduled_topic_publish( $new_status, $old_status, $post ) {
-		return bboss_forums_notify_on_scheduled_topic_publish( $new_status, $old_status, $post );
-	}
-}
-if ( function_exists( 'bboss_forums_save_link_preview_data' ) && ! function_exists( 'bb_forums_save_link_preview_data' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_forums_save_link_preview_data()}.
-	 *
-	 * @deprecated Use bboss_forums_save_link_preview_data() instead.
-	 */
-	function bb_forums_save_link_preview_data( $post_id ) {
-		return bboss_forums_save_link_preview_data( $post_id );
-	}
-}
-if ( function_exists( 'bboss_get_topic_reply_drafts' ) && ! function_exists( 'bb_get_topic_reply_drafts' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_topic_reply_drafts()}.
-	 *
-	 * @deprecated Use bboss_get_topic_reply_drafts() instead.
-	 */
-	function bb_get_topic_reply_drafts() {
-		return bboss_get_topic_reply_drafts();
-	}
-}
-if ( function_exists( 'bboss_load_forums_notifications' ) && ! function_exists( 'bb_load_forums_notifications' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_load_forums_notifications()}.
-	 *
-	 * @deprecated Use bboss_load_forums_notifications() instead.
-	 */
-	function bb_load_forums_notifications() {
-		return bboss_load_forums_notifications();
-	}
-}
-if ( function_exists( 'bboss_post_topic_reply_draft' ) && ! function_exists( 'bb_post_topic_reply_draft' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_post_topic_reply_draft()}.
-	 *
-	 * @deprecated Use bboss_post_topic_reply_draft() instead.
-	 */
-	function bb_post_topic_reply_draft() {
-		return bboss_post_topic_reply_draft();
-	}
-}
-if ( function_exists( 'bboss_forums_notification_settings' ) && ! function_exists( 'forums_notification_settings' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_forums_notification_settings()}.
-	 *
-	 * @deprecated Use bboss_forums_notification_settings() instead.
-	 */
-	function forums_notification_settings() {
-		return bboss_forums_notification_settings();
-	}
-}
 // @bbwt-com-end compat-layer
+
+add_action( 'transition_post_status', 'bb_forums_notify_on_scheduled_reply_publish', 10, 3 );

@@ -37,6 +37,20 @@ function bboss_moderation_get_setting( $option, $default = '' ) {
 	// Allow plugins to further filter the output.
 	return apply_filters( 'bp_moderation_get_setting', $value, $option );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_moderation_get_setting' ) && ! function_exists( 'bp_moderation_get_setting' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_moderation_get_setting()}.
+	 *
+	 * @deprecated Use bboss_moderation_get_setting() instead.
+	 */
+	function bp_moderation_get_setting( $option, $default = '' ) {
+		return bboss_moderation_get_setting( $option, $default );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output Moderation settings API option
@@ -49,20 +63,8 @@ function bboss_moderation_get_setting( $option, $default = '' ) {
 function bboss_moderation_setting( $option, $default = '' ) {
 	echo esc_attr( bboss_moderation_get_setting( $option, $default ) );
 }
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
-if ( function_exists( 'bboss_moderation_get_setting' ) && ! function_exists( 'bp_moderation_get_setting' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_moderation_get_setting()}.
-	 *
-	 * @deprecated Use bboss_moderation_get_setting() instead.
-	 */
-	function bp_moderation_get_setting( $option, $default = '' ) {
-		return bboss_moderation_get_setting( $option, $default );
-	}
-}
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_moderation_setting' ) && ! function_exists( 'bp_moderation_setting' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_moderation_setting()}.
@@ -74,3 +76,4 @@ if ( function_exists( 'bboss_moderation_setting' ) && ! function_exists( 'bp_mod
 	}
 }
 // @bbwt-com-end compat-layer
+

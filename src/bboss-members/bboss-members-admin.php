@@ -77,6 +77,20 @@ function bboss_get_profile_header_elements() {
 	 */
 	return apply_filters( 'bb_get_profile_header_elements', $elements );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_profile_header_elements' ) && ! function_exists( 'bb_get_profile_header_elements' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_profile_header_elements()}.
+	 *
+	 * @deprecated Use bboss_get_profile_header_elements() instead.
+	 */
+	function bb_get_profile_header_elements() {
+		return bboss_get_profile_header_elements();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get element list for member directory.
@@ -124,6 +138,20 @@ function bboss_get_member_directory_elements() {
 	 */
 	return apply_filters( 'bb_get_member_directory_elements', $elements );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_member_directory_elements' ) && ! function_exists( 'bb_get_member_directory_elements' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_member_directory_elements()}.
+	 *
+	 * @deprecated Use bboss_get_member_directory_elements() instead.
+	 */
+	function bb_get_member_directory_elements() {
+		return bboss_get_member_directory_elements();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get profile actions for member directory.
@@ -170,20 +198,8 @@ function bboss_get_member_directory_profile_actions() {
 	 */
 	return apply_filters( 'bb_get_member_directory_profile_actions', $profile_actions );
 }
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
-if ( function_exists( 'bboss_get_member_directory_elements' ) && ! function_exists( 'bb_get_member_directory_elements' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_member_directory_elements()}.
-	 *
-	 * @deprecated Use bboss_get_member_directory_elements() instead.
-	 */
-	function bb_get_member_directory_elements() {
-		return bboss_get_member_directory_elements();
-	}
-}
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_get_member_directory_profile_actions' ) && ! function_exists( 'bb_get_member_directory_profile_actions' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_get_member_directory_profile_actions()}.
@@ -194,14 +210,5 @@ if ( function_exists( 'bboss_get_member_directory_profile_actions' ) && ! functi
 		return bboss_get_member_directory_profile_actions();
 	}
 }
-if ( function_exists( 'bboss_get_profile_header_elements' ) && ! function_exists( 'bb_get_profile_header_elements' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_profile_header_elements()}.
-	 *
-	 * @deprecated Use bboss_get_profile_header_elements() instead.
-	 */
-	function bb_get_profile_header_elements() {
-		return bboss_get_profile_header_elements();
-	}
-}
 // @bbwt-com-end compat-layer
+

@@ -77,6 +77,20 @@ function bboss_activity_register_visibility_panel_fields() {
 		)
 	);
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_activity_register_visibility_panel_fields' ) && ! function_exists( 'bb_activity_register_visibility_panel_fields' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_activity_register_visibility_panel_fields()}.
+	 *
+	 * @deprecated Use bboss_activity_register_visibility_panel_fields() instead.
+	 */
+	function bb_activity_register_visibility_panel_fields() {
+		return bboss_activity_register_visibility_panel_fields();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Register post type fields for Posts Visibility panel (late-binding).
@@ -265,22 +279,8 @@ function bboss_activity_register_visibility_post_type_fields( $feature_id ) {
 		);
 	}
 }
-
-add_action( 'bb_admin_settings_before_get_feature', 'bb_activity_register_visibility_post_type_fields' );
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
-if ( function_exists( 'bboss_activity_register_visibility_panel_fields' ) && ! function_exists( 'bb_activity_register_visibility_panel_fields' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_activity_register_visibility_panel_fields()}.
-	 *
-	 * @deprecated Use bboss_activity_register_visibility_panel_fields() instead.
-	 */
-	function bb_activity_register_visibility_panel_fields() {
-		return bboss_activity_register_visibility_panel_fields();
-	}
-}
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_activity_register_visibility_post_type_fields' ) && ! function_exists( 'bb_activity_register_visibility_post_type_fields' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_activity_register_visibility_post_type_fields()}.
@@ -292,3 +292,6 @@ if ( function_exists( 'bboss_activity_register_visibility_post_type_fields' ) &&
 	}
 }
 // @bbwt-com-end compat-layer
+
+
+add_action( 'bb_admin_settings_before_get_feature', 'bb_activity_register_visibility_post_type_fields' );

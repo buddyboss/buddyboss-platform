@@ -24,38 +24,8 @@ defined( 'ABSPATH' ) || exit;
  */
 function bboss_messages_add_autocomplete_js() {
 }
-
-/**
- * Formerly enqueued the legacy autocomplete CSS for composing a message.
- *
- * @since BuddyPress 1.0.0
- * @deprecated BuddyBoss 3.0.0 The legacy autocomplete libraries were removed; BP Nouveau uses jQuery UI autocomplete.
- */
-function bboss_messages_add_autocomplete_css() {
-}
-
-/**
- * Formerly attached the inline JS that initialised the legacy autocomplete.
- *
- * @since BuddyPress 1.0.0
- * @deprecated BuddyBoss 3.0.0 The legacy autocomplete libraries were removed; BP Nouveau uses jQuery UI autocomplete.
- */
-function bboss_messages_autocomplete_init_jsblock() {
-}
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
-if ( function_exists( 'bboss_messages_add_autocomplete_css' ) && ! function_exists( 'messages_add_autocomplete_css' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_messages_add_autocomplete_css()}.
-	 *
-	 * @deprecated Use bboss_messages_add_autocomplete_css() instead.
-	 */
-	function messages_add_autocomplete_css() {
-		return bboss_messages_add_autocomplete_css();
-	}
-}
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_messages_add_autocomplete_js' ) && ! function_exists( 'messages_add_autocomplete_js' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_messages_add_autocomplete_js()}.
@@ -66,6 +36,42 @@ if ( function_exists( 'bboss_messages_add_autocomplete_js' ) && ! function_exist
 		return bboss_messages_add_autocomplete_js();
 	}
 }
+// @bbwt-com-end compat-layer
+
+
+/**
+ * Formerly enqueued the legacy autocomplete CSS for composing a message.
+ *
+ * @since BuddyPress 1.0.0
+ * @deprecated BuddyBoss 3.0.0 The legacy autocomplete libraries were removed; BP Nouveau uses jQuery UI autocomplete.
+ */
+function bboss_messages_add_autocomplete_css() {
+}
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_messages_add_autocomplete_css' ) && ! function_exists( 'messages_add_autocomplete_css' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_messages_add_autocomplete_css()}.
+	 *
+	 * @deprecated Use bboss_messages_add_autocomplete_css() instead.
+	 */
+	function messages_add_autocomplete_css() {
+		return bboss_messages_add_autocomplete_css();
+	}
+}
+// @bbwt-com-end compat-layer
+
+
+/**
+ * Formerly attached the inline JS that initialised the legacy autocomplete.
+ *
+ * @since BuddyPress 1.0.0
+ * @deprecated BuddyBoss 3.0.0 The legacy autocomplete libraries were removed; BP Nouveau uses jQuery UI autocomplete.
+ */
+function bboss_messages_autocomplete_init_jsblock() {
+}
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_messages_autocomplete_init_jsblock' ) && ! function_exists( 'messages_autocomplete_init_jsblock' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_messages_autocomplete_init_jsblock()}.
@@ -77,3 +83,4 @@ if ( function_exists( 'bboss_messages_autocomplete_init_jsblock' ) && ! function
 	}
 }
 // @bbwt-com-end compat-layer
+

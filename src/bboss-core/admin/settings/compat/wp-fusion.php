@@ -182,6 +182,20 @@ function bboss_legacy_wpf_register_ajax_resolvers( $resolvers ) {
 
 	return $resolvers;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_legacy_wpf_register_ajax_resolvers' ) && ! function_exists( 'bb_legacy_wpf_register_ajax_resolvers' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_legacy_wpf_register_ajax_resolvers()}.
+	 *
+	 * @deprecated Use bboss_legacy_wpf_register_ajax_resolvers() instead.
+	 */
+	function bb_legacy_wpf_register_ajax_resolvers( $resolvers ) {
+		return bboss_legacy_wpf_register_ajax_resolvers( $resolvers );
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_filter( 'bb_legacy_ajax_select_resolvers', 'bb_legacy_wpf_register_ajax_resolvers' );
 
 /**
@@ -270,6 +284,20 @@ function bboss_legacy_wpf_field_overrides( $overrides, $box_id, $post_type ) {
 
 	return $overrides;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_legacy_wpf_field_overrides' ) && ! function_exists( 'bb_legacy_wpf_field_overrides' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_legacy_wpf_field_overrides()}.
+	 *
+	 * @deprecated Use bboss_legacy_wpf_field_overrides() instead.
+	 */
+	function bb_legacy_wpf_field_overrides( $overrides, $box_id, $post_type ) {
+		return bboss_legacy_wpf_field_overrides( $overrides, $box_id, $post_type );
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_filter( 'bb_legacy_field_overrides', 'bb_legacy_wpf_field_overrides', 10, 3 );
 
 /**
@@ -290,6 +318,20 @@ function bboss_legacy_wpf_crm_supports_tag_create() {
 	$supports = isset( wp_fusion()->crm->supports ) ? (array) wp_fusion()->crm->supports : array();
 	return in_array( 'add_tags', $supports, true ) || in_array( 'add_tags_api', $supports, true );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_legacy_wpf_crm_supports_tag_create' ) && ! function_exists( 'bb_legacy_wpf_crm_supports_tag_create' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_legacy_wpf_crm_supports_tag_create()}.
+	 *
+	 * @deprecated Use bboss_legacy_wpf_crm_supports_tag_create() instead.
+	 */
+	function bb_legacy_wpf_crm_supports_tag_create() {
+		return bboss_legacy_wpf_crm_supports_tag_create();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * AJAX: create a new WP Fusion tag from a typed name and return its {value,label}.
@@ -373,6 +415,20 @@ function bboss_legacy_wpf_create_tag() {
 		)
 	);
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_legacy_wpf_create_tag' ) && ! function_exists( 'bb_legacy_wpf_create_tag' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_legacy_wpf_create_tag()}.
+	 *
+	 * @deprecated Use bboss_legacy_wpf_create_tag() instead.
+	 */
+	function bb_legacy_wpf_create_tag() {
+		return bboss_legacy_wpf_create_tag();
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'wp_ajax_bb_legacy_wpf_create_tag', 'bb_legacy_wpf_create_tag' );
 
 /**
@@ -395,6 +451,20 @@ function bboss_legacy_wpf_skip_group_auto_bridge( $skip ) {
 	$skip[] = 'wpf-buddypress-meta';
 	return $skip;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_legacy_wpf_skip_group_auto_bridge' ) && ! function_exists( 'bb_legacy_wpf_skip_group_auto_bridge' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_legacy_wpf_skip_group_auto_bridge()}.
+	 *
+	 * @deprecated Use bboss_legacy_wpf_skip_group_auto_bridge() instead.
+	 */
+	function bb_legacy_wpf_skip_group_auto_bridge( $skip ) {
+		return bboss_legacy_wpf_skip_group_auto_bridge( $skip );
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_filter( 'bb_legacy_meta_box_bridge_skip_groups', 'bb_legacy_wpf_skip_group_auto_bridge' );
 
 /**
@@ -437,6 +507,20 @@ function bboss_legacy_wpf_group_settings( $group_id ) {
 
 	return $settings;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_legacy_wpf_group_settings' ) && ! function_exists( 'bb_legacy_wpf_group_settings' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_legacy_wpf_group_settings()}.
+	 *
+	 * @deprecated Use bboss_legacy_wpf_group_settings() instead.
+	 */
+	function bb_legacy_wpf_group_settings( $group_id ) {
+		return bboss_legacy_wpf_group_settings( $group_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Stage one leaf of the WP Fusion group settings for this save request.
@@ -474,6 +558,20 @@ function bboss_legacy_wpf_save_group_setting( $group_id, $key = null, $value = a
 
 	return array();
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_legacy_wpf_save_group_setting' ) && ! function_exists( 'bb_legacy_wpf_save_group_setting' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_legacy_wpf_save_group_setting()}.
+	 *
+	 * @deprecated Use bboss_legacy_wpf_save_group_setting() instead.
+	 */
+	function bb_legacy_wpf_save_group_setting( $group_id, $key = null, $value = array() ) {
+		return bboss_legacy_wpf_save_group_setting( $group_id, $key, $value );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get WP Fusion's BuddyPress integration when it is loaded and enabled.
@@ -506,6 +604,20 @@ function bboss_legacy_wpf_buddypress_integration() {
 
 	return $integration;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_legacy_wpf_buddypress_integration' ) && ! function_exists( 'bb_legacy_wpf_buddypress_integration' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_legacy_wpf_buddypress_integration()}.
+	 *
+	 * @deprecated Use bboss_legacy_wpf_buddypress_integration() instead.
+	 */
+	function bb_legacy_wpf_buddypress_integration() {
+		return bboss_legacy_wpf_buddypress_integration();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Replay WP Fusion's group save from the values staged by the 3 fields.
@@ -583,6 +695,20 @@ function bboss_legacy_wpf_replay_group_save( $group_id, $group ) {
 		$_POST = $post_backup; // phpcs:ignore WordPress.Security.NonceVerification.Missing
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_legacy_wpf_replay_group_save' ) && ! function_exists( 'bb_legacy_wpf_replay_group_save' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_legacy_wpf_replay_group_save()}.
+	 *
+	 * @deprecated Use bboss_legacy_wpf_replay_group_save() instead.
+	 */
+	function bb_legacy_wpf_replay_group_save( $group_id, $group ) {
+		return bboss_legacy_wpf_replay_group_save( $group_id, $group );
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'bb_admin_after_save_group', 'bb_legacy_wpf_replay_group_save', 50, 2 );
 
 /**
@@ -639,6 +765,20 @@ function bboss_legacy_wpf_sanitize_group_tag_ids( $raw, $max = null ) {
 
 	return $out;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_legacy_wpf_sanitize_group_tag_ids' ) && ! function_exists( 'bb_legacy_wpf_sanitize_group_tag_ids' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_legacy_wpf_sanitize_group_tag_ids()}.
+	 *
+	 * @deprecated Use bboss_legacy_wpf_sanitize_group_tag_ids() instead.
+	 */
+	function bb_legacy_wpf_sanitize_group_tag_ids( $raw, $max = null ) {
+		return bboss_legacy_wpf_sanitize_group_tag_ids( $raw, $max );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Build the `get_extra_data` payload shared by all three tag-picker fields —
@@ -692,6 +832,20 @@ function bboss_legacy_wpf_group_tag_extra_data( $saved, $max = null ) {
 
 	return $extra;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_legacy_wpf_group_tag_extra_data' ) && ! function_exists( 'bb_legacy_wpf_group_tag_extra_data' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_legacy_wpf_group_tag_extra_data()}.
+	 *
+	 * @deprecated Use bboss_legacy_wpf_group_tag_extra_data() instead.
+	 */
+	function bb_legacy_wpf_group_tag_extra_data( $saved, $max = null ) {
+		return bboss_legacy_wpf_group_tag_extra_data( $saved, $max );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Register the 3 WP Fusion group fields directly on the registry.
@@ -813,81 +967,8 @@ function bboss_legacy_wpf_register_group_fields( $registry, $component ) {
 		)
 	);
 }
-add_action( 'bb_register_groups_meta_fields', 'bb_legacy_wpf_register_group_fields', 1000, 2 );
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
-if ( function_exists( 'bboss_legacy_wpf_buddypress_integration' ) && ! function_exists( 'bb_legacy_wpf_buddypress_integration' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_legacy_wpf_buddypress_integration()}.
-	 *
-	 * @deprecated Use bboss_legacy_wpf_buddypress_integration() instead.
-	 */
-	function bb_legacy_wpf_buddypress_integration() {
-		return bboss_legacy_wpf_buddypress_integration();
-	}
-}
-if ( function_exists( 'bboss_legacy_wpf_create_tag' ) && ! function_exists( 'bb_legacy_wpf_create_tag' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_legacy_wpf_create_tag()}.
-	 *
-	 * @deprecated Use bboss_legacy_wpf_create_tag() instead.
-	 */
-	function bb_legacy_wpf_create_tag() {
-		return bboss_legacy_wpf_create_tag();
-	}
-}
-if ( function_exists( 'bboss_legacy_wpf_crm_supports_tag_create' ) && ! function_exists( 'bb_legacy_wpf_crm_supports_tag_create' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_legacy_wpf_crm_supports_tag_create()}.
-	 *
-	 * @deprecated Use bboss_legacy_wpf_crm_supports_tag_create() instead.
-	 */
-	function bb_legacy_wpf_crm_supports_tag_create() {
-		return bboss_legacy_wpf_crm_supports_tag_create();
-	}
-}
-if ( function_exists( 'bboss_legacy_wpf_field_overrides' ) && ! function_exists( 'bb_legacy_wpf_field_overrides' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_legacy_wpf_field_overrides()}.
-	 *
-	 * @deprecated Use bboss_legacy_wpf_field_overrides() instead.
-	 */
-	function bb_legacy_wpf_field_overrides( $overrides, $box_id, $post_type ) {
-		return bboss_legacy_wpf_field_overrides( $overrides, $box_id, $post_type );
-	}
-}
-if ( function_exists( 'bboss_legacy_wpf_group_settings' ) && ! function_exists( 'bb_legacy_wpf_group_settings' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_legacy_wpf_group_settings()}.
-	 *
-	 * @deprecated Use bboss_legacy_wpf_group_settings() instead.
-	 */
-	function bb_legacy_wpf_group_settings( $group_id ) {
-		return bboss_legacy_wpf_group_settings( $group_id );
-	}
-}
-if ( function_exists( 'bboss_legacy_wpf_group_tag_extra_data' ) && ! function_exists( 'bb_legacy_wpf_group_tag_extra_data' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_legacy_wpf_group_tag_extra_data()}.
-	 *
-	 * @deprecated Use bboss_legacy_wpf_group_tag_extra_data() instead.
-	 */
-	function bb_legacy_wpf_group_tag_extra_data( $saved, $max = null ) {
-		return bboss_legacy_wpf_group_tag_extra_data( $saved, $max );
-	}
-}
-if ( function_exists( 'bboss_legacy_wpf_register_ajax_resolvers' ) && ! function_exists( 'bb_legacy_wpf_register_ajax_resolvers' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_legacy_wpf_register_ajax_resolvers()}.
-	 *
-	 * @deprecated Use bboss_legacy_wpf_register_ajax_resolvers() instead.
-	 */
-	function bb_legacy_wpf_register_ajax_resolvers( $resolvers ) {
-		return bboss_legacy_wpf_register_ajax_resolvers( $resolvers );
-	}
-}
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_legacy_wpf_register_group_fields' ) && ! function_exists( 'bb_legacy_wpf_register_group_fields' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_legacy_wpf_register_group_fields()}.
@@ -898,44 +979,6 @@ if ( function_exists( 'bboss_legacy_wpf_register_group_fields' ) && ! function_e
 		return bboss_legacy_wpf_register_group_fields( $registry, $component );
 	}
 }
-if ( function_exists( 'bboss_legacy_wpf_replay_group_save' ) && ! function_exists( 'bb_legacy_wpf_replay_group_save' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_legacy_wpf_replay_group_save()}.
-	 *
-	 * @deprecated Use bboss_legacy_wpf_replay_group_save() instead.
-	 */
-	function bb_legacy_wpf_replay_group_save( $group_id, $group ) {
-		return bboss_legacy_wpf_replay_group_save( $group_id, $group );
-	}
-}
-if ( function_exists( 'bboss_legacy_wpf_sanitize_group_tag_ids' ) && ! function_exists( 'bb_legacy_wpf_sanitize_group_tag_ids' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_legacy_wpf_sanitize_group_tag_ids()}.
-	 *
-	 * @deprecated Use bboss_legacy_wpf_sanitize_group_tag_ids() instead.
-	 */
-	function bb_legacy_wpf_sanitize_group_tag_ids( $raw, $max = null ) {
-		return bboss_legacy_wpf_sanitize_group_tag_ids( $raw, $max );
-	}
-}
-if ( function_exists( 'bboss_legacy_wpf_save_group_setting' ) && ! function_exists( 'bb_legacy_wpf_save_group_setting' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_legacy_wpf_save_group_setting()}.
-	 *
-	 * @deprecated Use bboss_legacy_wpf_save_group_setting() instead.
-	 */
-	function bb_legacy_wpf_save_group_setting( $group_id, $key = null, $value = array() ) {
-		return bboss_legacy_wpf_save_group_setting( $group_id, $key, $value );
-	}
-}
-if ( function_exists( 'bboss_legacy_wpf_skip_group_auto_bridge' ) && ! function_exists( 'bb_legacy_wpf_skip_group_auto_bridge' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_legacy_wpf_skip_group_auto_bridge()}.
-	 *
-	 * @deprecated Use bboss_legacy_wpf_skip_group_auto_bridge() instead.
-	 */
-	function bb_legacy_wpf_skip_group_auto_bridge( $skip ) {
-		return bboss_legacy_wpf_skip_group_auto_bridge( $skip );
-	}
-}
 // @bbwt-com-end compat-layer
+
+add_action( 'bb_register_groups_meta_fields', 'bb_legacy_wpf_register_group_fields', 1000, 2 );

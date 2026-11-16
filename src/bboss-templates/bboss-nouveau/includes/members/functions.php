@@ -89,6 +89,20 @@ function bboss_nouveau_get_members_directory_nav_items() {
 	 */
 	return apply_filters( 'bp_nouveau_get_members_directory_nav_items', $nav_items );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_get_members_directory_nav_items' ) && ! function_exists( 'bp_nouveau_get_members_directory_nav_items' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_get_members_directory_nav_items()}.
+	 *
+	 * @deprecated Use bboss_nouveau_get_members_directory_nav_items() instead.
+	 */
+	function bp_nouveau_get_members_directory_nav_items() {
+		return bboss_nouveau_get_members_directory_nav_items();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get Dropdown filters for the members component
@@ -141,6 +155,20 @@ function bboss_nouveau_get_members_filters( $context = '' ) {
 
 	return bboss_nouveau_parse_hooked_options( $action, $filters );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_get_members_filters' ) && ! function_exists( 'bp_nouveau_get_members_filters' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_get_members_filters()}.
+	 *
+	 * @deprecated Use bboss_nouveau_get_members_filters() instead.
+	 */
+	function bp_nouveau_get_members_filters( $context = '' ) {
+		return bboss_nouveau_get_members_filters( $context );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Catch the arguments for buttons
@@ -161,6 +189,20 @@ function bboss_nouveau_members_catch_button_args( $button = array() ) {
 	// return an empty array to stop the button creation process
 	return array();
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_members_catch_button_args' ) && ! function_exists( 'bp_nouveau_members_catch_button_args' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_members_catch_button_args()}.
+	 *
+	 * @deprecated Use bboss_nouveau_members_catch_button_args() instead.
+	 */
+	function bp_nouveau_members_catch_button_args( $button = array() ) {
+		return bboss_nouveau_members_catch_button_args( $button );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Catch the content hooked to the do_action hooks in single member header
@@ -202,6 +244,20 @@ function bboss_nouveau_get_hooked_member_meta() {
 
 	return false;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_get_hooked_member_meta' ) && ! function_exists( 'bp_nouveau_get_hooked_member_meta' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_get_hooked_member_meta()}.
+	 *
+	 * @deprecated Use bboss_nouveau_get_hooked_member_meta() instead.
+	 */
+	function bp_nouveau_get_hooked_member_meta() {
+		return bboss_nouveau_get_hooked_member_meta();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Adds a 'Dashbaord' link in admin bar.
@@ -254,6 +310,20 @@ function bboss_nouveau_admin_bar_member_dashboard ( $wp_admin_nav = array() ) {
 		}
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_admin_bar_member_dashboard' ) && ! function_exists( 'bp_nouveau_admin_bar_member_dashboard' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_admin_bar_member_dashboard()}.
+	 *
+	 * @deprecated Use bboss_nouveau_admin_bar_member_dashboard() instead.
+	 */
+	function bp_nouveau_admin_bar_member_dashboard( $wp_admin_nav = array() ) {
+		return bboss_nouveau_admin_bar_member_dashboard( $wp_admin_nav );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Locate a single member template into a specific hierarchy.
@@ -314,6 +384,20 @@ function bboss_nouveau_member_locate_template_part( $template = '' ) {
 	 */
 	return bboss_locate_template( apply_filters( 'bp_nouveau_member_locate_template_part', $templates ), false, true );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_member_locate_template_part' ) && ! function_exists( 'bp_nouveau_member_locate_template_part' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_member_locate_template_part()}.
+	 *
+	 * @deprecated Use bboss_nouveau_member_locate_template_part() instead.
+	 */
+	function bp_nouveau_member_locate_template_part( $template = '' ) {
+		return bboss_nouveau_member_locate_template_part( $template );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Load a single member template part
@@ -346,6 +430,20 @@ function bboss_nouveau_member_get_template_part( $template = '' ) {
 
 	return $located;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_member_get_template_part' ) && ! function_exists( 'bp_nouveau_member_get_template_part' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_member_get_template_part()}.
+	 *
+	 * @deprecated Use bboss_nouveau_member_get_template_part() instead.
+	 */
+	function bp_nouveau_member_get_template_part( $template = '' ) {
+		return bboss_nouveau_member_get_template_part( $template );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Are we inside the Current user's default front page sidebar?
@@ -357,6 +455,20 @@ function bboss_nouveau_member_get_template_part( $template = '' ) {
 function bboss_nouveau_member_is_home_widgets() {
 	return ( true === bboss_nouveau()->members->is_user_home_sidebar );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_member_is_home_widgets' ) && ! function_exists( 'bp_nouveau_member_is_home_widgets' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_member_is_home_widgets()}.
+	 *
+	 * @deprecated Use bboss_nouveau_member_is_home_widgets() instead.
+	 */
+	function bp_nouveau_member_is_home_widgets() {
+		return bboss_nouveau_member_is_home_widgets();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Filter the Latest activities Widget to only keep the one of displayed user
@@ -372,6 +484,20 @@ function bboss_nouveau_member_activity_widget_overrides( $args = array() ) {
 		'user_id' => bboss_displayed_user_id(),
 	) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_member_activity_widget_overrides' ) && ! function_exists( 'bp_nouveau_member_activity_widget_overrides' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_member_activity_widget_overrides()}.
+	 *
+	 * @deprecated Use bboss_nouveau_member_activity_widget_overrides() instead.
+	 */
+	function bp_nouveau_member_activity_widget_overrides( $args = array() ) {
+		return bboss_nouveau_member_activity_widget_overrides( $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Filter the Groups widget to only keep the groups the displayed user is a member of.
@@ -387,6 +513,20 @@ function bboss_nouveau_member_groups_widget_overrides( $args = array() ) {
 		'user_id' => bboss_displayed_user_id(),
 	) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_member_groups_widget_overrides' ) && ! function_exists( 'bp_nouveau_member_groups_widget_overrides' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_member_groups_widget_overrides()}.
+	 *
+	 * @deprecated Use bboss_nouveau_member_groups_widget_overrides() instead.
+	 */
+	function bp_nouveau_member_groups_widget_overrides( $args = array() ) {
+		return bboss_nouveau_member_groups_widget_overrides( $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Filter the Members widgets to only keep members of the displayed group.
@@ -407,6 +547,20 @@ function bboss_nouveau_member_members_widget_overrides( $args = array() ) {
 		'include' => bboss_displayed_user_id(),
 	) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_member_members_widget_overrides' ) && ! function_exists( 'bp_nouveau_member_members_widget_overrides' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_member_members_widget_overrides()}.
+	 *
+	 * @deprecated Use bboss_nouveau_member_members_widget_overrides() instead.
+	 */
+	function bp_nouveau_member_members_widget_overrides( $args = array() ) {
+		return bboss_nouveau_member_members_widget_overrides( $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Init the Member's default front page filters as we're in the sidebar
@@ -425,6 +579,20 @@ function bboss_nouveau_members_add_home_widget_filters() {
 	 */
 	do_action( 'bp_nouveau_members_add_home_widget_filters' );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_members_add_home_widget_filters' ) && ! function_exists( 'bp_nouveau_members_add_home_widget_filters' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_members_add_home_widget_filters()}.
+	 *
+	 * @deprecated Use bboss_nouveau_members_add_home_widget_filters() instead.
+	 */
+	function bp_nouveau_members_add_home_widget_filters() {
+		return bboss_nouveau_members_add_home_widget_filters();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Remove the Member's default front page filters as we're no more in the sidebar
@@ -443,6 +611,20 @@ function bboss_nouveau_members_remove_home_widget_filters() {
 	 */
 	do_action( 'bp_nouveau_members_remove_home_widget_filters' );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_members_remove_home_widget_filters' ) && ! function_exists( 'bp_nouveau_members_remove_home_widget_filters' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_members_remove_home_widget_filters()}.
+	 *
+	 * @deprecated Use bboss_nouveau_members_remove_home_widget_filters() instead.
+	 */
+	function bp_nouveau_members_remove_home_widget_filters() {
+		return bboss_nouveau_members_remove_home_widget_filters();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get the WP Profile fields for all or a specific user
@@ -474,6 +656,20 @@ function bboss_nouveau_get_wp_profile_fields( $user = null ) {
 
 	return array_merge( $wp_fields, $contact_methods );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_get_wp_profile_fields' ) && ! function_exists( 'bp_nouveau_get_wp_profile_fields' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_get_wp_profile_fields()}.
+	 *
+	 * @deprecated Use bboss_nouveau_get_wp_profile_fields() instead.
+	 */
+	function bp_nouveau_get_wp_profile_fields( $user = null ) {
+		return bboss_nouveau_get_wp_profile_fields( $user );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Build the Member's nav for the our customizer control.
@@ -491,6 +687,20 @@ function bboss_nouveau_member_customizer_nav() {
 
 	return $nav->get_primary();
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_member_customizer_nav' ) && ! function_exists( 'bp_nouveau_member_customizer_nav' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_member_customizer_nav()}.
+	 *
+	 * @deprecated Use bboss_nouveau_member_customizer_nav() instead.
+	 */
+	function bp_nouveau_member_customizer_nav() {
+		return bboss_nouveau_member_customizer_nav();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Enqueue the members scripts
@@ -526,6 +736,20 @@ function bboss_nouveau_member_enqueue_scripts() {
 		}
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_member_enqueue_scripts' ) && ! function_exists( 'bp_nouveau_member_enqueue_scripts' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_member_enqueue_scripts()}.
+	 *
+	 * @deprecated Use bboss_nouveau_member_enqueue_scripts() instead.
+	 */
+	function bp_nouveau_member_enqueue_scripts() {
+		return bboss_nouveau_member_enqueue_scripts();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Register Scripts for the Member component
@@ -552,6 +776,20 @@ function bboss_nouveau_member_register_scripts( $scripts = array() ) {
 		)
 	);
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_member_register_scripts' ) && ! function_exists( 'bp_nouveau_member_register_scripts' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_member_register_scripts()}.
+	 *
+	 * @deprecated Use bboss_nouveau_member_register_scripts() instead.
+	 */
+	function bp_nouveau_member_register_scripts( $scripts = array() ) {
+		return bboss_nouveau_member_register_scripts( $scripts );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Localize the strings needed for the Member UI
@@ -590,120 +828,8 @@ function bboss_nouveau_member_localize_scripts( $params = array() ) {
 
 	return $params;
 }
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
-if ( function_exists( 'bboss_nouveau_admin_bar_member_dashboard' ) && ! function_exists( 'bp_nouveau_admin_bar_member_dashboard' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_admin_bar_member_dashboard()}.
-	 *
-	 * @deprecated Use bboss_nouveau_admin_bar_member_dashboard() instead.
-	 */
-	function bp_nouveau_admin_bar_member_dashboard( $wp_admin_nav = array() ) {
-		return bboss_nouveau_admin_bar_member_dashboard( $wp_admin_nav );
-	}
-}
-if ( function_exists( 'bboss_nouveau_get_hooked_member_meta' ) && ! function_exists( 'bp_nouveau_get_hooked_member_meta' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_get_hooked_member_meta()}.
-	 *
-	 * @deprecated Use bboss_nouveau_get_hooked_member_meta() instead.
-	 */
-	function bp_nouveau_get_hooked_member_meta() {
-		return bboss_nouveau_get_hooked_member_meta();
-	}
-}
-if ( function_exists( 'bboss_nouveau_get_members_directory_nav_items' ) && ! function_exists( 'bp_nouveau_get_members_directory_nav_items' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_get_members_directory_nav_items()}.
-	 *
-	 * @deprecated Use bboss_nouveau_get_members_directory_nav_items() instead.
-	 */
-	function bp_nouveau_get_members_directory_nav_items() {
-		return bboss_nouveau_get_members_directory_nav_items();
-	}
-}
-if ( function_exists( 'bboss_nouveau_get_members_filters' ) && ! function_exists( 'bp_nouveau_get_members_filters' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_get_members_filters()}.
-	 *
-	 * @deprecated Use bboss_nouveau_get_members_filters() instead.
-	 */
-	function bp_nouveau_get_members_filters( $context = '' ) {
-		return bboss_nouveau_get_members_filters( $context );
-	}
-}
-if ( function_exists( 'bboss_nouveau_get_wp_profile_fields' ) && ! function_exists( 'bp_nouveau_get_wp_profile_fields' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_get_wp_profile_fields()}.
-	 *
-	 * @deprecated Use bboss_nouveau_get_wp_profile_fields() instead.
-	 */
-	function bp_nouveau_get_wp_profile_fields( $user = null ) {
-		return bboss_nouveau_get_wp_profile_fields( $user );
-	}
-}
-if ( function_exists( 'bboss_nouveau_member_activity_widget_overrides' ) && ! function_exists( 'bp_nouveau_member_activity_widget_overrides' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_member_activity_widget_overrides()}.
-	 *
-	 * @deprecated Use bboss_nouveau_member_activity_widget_overrides() instead.
-	 */
-	function bp_nouveau_member_activity_widget_overrides( $args = array() ) {
-		return bboss_nouveau_member_activity_widget_overrides( $args );
-	}
-}
-if ( function_exists( 'bboss_nouveau_member_customizer_nav' ) && ! function_exists( 'bp_nouveau_member_customizer_nav' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_member_customizer_nav()}.
-	 *
-	 * @deprecated Use bboss_nouveau_member_customizer_nav() instead.
-	 */
-	function bp_nouveau_member_customizer_nav() {
-		return bboss_nouveau_member_customizer_nav();
-	}
-}
-if ( function_exists( 'bboss_nouveau_member_enqueue_scripts' ) && ! function_exists( 'bp_nouveau_member_enqueue_scripts' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_member_enqueue_scripts()}.
-	 *
-	 * @deprecated Use bboss_nouveau_member_enqueue_scripts() instead.
-	 */
-	function bp_nouveau_member_enqueue_scripts() {
-		return bboss_nouveau_member_enqueue_scripts();
-	}
-}
-if ( function_exists( 'bboss_nouveau_member_get_template_part' ) && ! function_exists( 'bp_nouveau_member_get_template_part' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_member_get_template_part()}.
-	 *
-	 * @deprecated Use bboss_nouveau_member_get_template_part() instead.
-	 */
-	function bp_nouveau_member_get_template_part( $template = '' ) {
-		return bboss_nouveau_member_get_template_part( $template );
-	}
-}
-if ( function_exists( 'bboss_nouveau_member_groups_widget_overrides' ) && ! function_exists( 'bp_nouveau_member_groups_widget_overrides' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_member_groups_widget_overrides()}.
-	 *
-	 * @deprecated Use bboss_nouveau_member_groups_widget_overrides() instead.
-	 */
-	function bp_nouveau_member_groups_widget_overrides( $args = array() ) {
-		return bboss_nouveau_member_groups_widget_overrides( $args );
-	}
-}
-if ( function_exists( 'bboss_nouveau_member_is_home_widgets' ) && ! function_exists( 'bp_nouveau_member_is_home_widgets' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_member_is_home_widgets()}.
-	 *
-	 * @deprecated Use bboss_nouveau_member_is_home_widgets() instead.
-	 */
-	function bp_nouveau_member_is_home_widgets() {
-		return bboss_nouveau_member_is_home_widgets();
-	}
-}
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_nouveau_member_localize_scripts' ) && ! function_exists( 'bp_nouveau_member_localize_scripts' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_nouveau_member_localize_scripts()}.
@@ -714,64 +840,5 @@ if ( function_exists( 'bboss_nouveau_member_localize_scripts' ) && ! function_ex
 		return bboss_nouveau_member_localize_scripts( $params );
 	}
 }
-if ( function_exists( 'bboss_nouveau_member_locate_template_part' ) && ! function_exists( 'bp_nouveau_member_locate_template_part' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_member_locate_template_part()}.
-	 *
-	 * @deprecated Use bboss_nouveau_member_locate_template_part() instead.
-	 */
-	function bp_nouveau_member_locate_template_part( $template = '' ) {
-		return bboss_nouveau_member_locate_template_part( $template );
-	}
-}
-if ( function_exists( 'bboss_nouveau_member_members_widget_overrides' ) && ! function_exists( 'bp_nouveau_member_members_widget_overrides' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_member_members_widget_overrides()}.
-	 *
-	 * @deprecated Use bboss_nouveau_member_members_widget_overrides() instead.
-	 */
-	function bp_nouveau_member_members_widget_overrides( $args = array() ) {
-		return bboss_nouveau_member_members_widget_overrides( $args );
-	}
-}
-if ( function_exists( 'bboss_nouveau_member_register_scripts' ) && ! function_exists( 'bp_nouveau_member_register_scripts' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_member_register_scripts()}.
-	 *
-	 * @deprecated Use bboss_nouveau_member_register_scripts() instead.
-	 */
-	function bp_nouveau_member_register_scripts( $scripts = array() ) {
-		return bboss_nouveau_member_register_scripts( $scripts );
-	}
-}
-if ( function_exists( 'bboss_nouveau_members_add_home_widget_filters' ) && ! function_exists( 'bp_nouveau_members_add_home_widget_filters' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_members_add_home_widget_filters()}.
-	 *
-	 * @deprecated Use bboss_nouveau_members_add_home_widget_filters() instead.
-	 */
-	function bp_nouveau_members_add_home_widget_filters() {
-		return bboss_nouveau_members_add_home_widget_filters();
-	}
-}
-if ( function_exists( 'bboss_nouveau_members_catch_button_args' ) && ! function_exists( 'bp_nouveau_members_catch_button_args' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_members_catch_button_args()}.
-	 *
-	 * @deprecated Use bboss_nouveau_members_catch_button_args() instead.
-	 */
-	function bp_nouveau_members_catch_button_args( $button = array() ) {
-		return bboss_nouveau_members_catch_button_args( $button );
-	}
-}
-if ( function_exists( 'bboss_nouveau_members_remove_home_widget_filters' ) && ! function_exists( 'bp_nouveau_members_remove_home_widget_filters' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_members_remove_home_widget_filters()}.
-	 *
-	 * @deprecated Use bboss_nouveau_members_remove_home_widget_filters() instead.
-	 */
-	function bp_nouveau_members_remove_home_widget_filters() {
-		return bboss_nouveau_members_remove_home_widget_filters();
-	}
-}
 // @bbwt-com-end compat-layer
+

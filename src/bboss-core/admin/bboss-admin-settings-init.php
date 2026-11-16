@@ -297,6 +297,20 @@ function bboss_admin_settings_init() {
 		// @bbwt-com-end in-product-notifications
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_admin_settings_init' ) && ! function_exists( 'bb_admin_settings_init' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_admin_settings_init()}.
+	 *
+	 * @deprecated Use bboss_admin_settings_init() instead.
+	 */
+	function bb_admin_settings_init() {
+		return bboss_admin_settings_init();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 add_action( 'bp_loaded', 'bb_admin_settings_init', 4 );
 
@@ -329,6 +343,20 @@ function bboss_register_help_content_rest_route() {
 	}
 	( new BBoss_REST_Help_Content_Endpoint() )->register_routes();
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_register_help_content_rest_route' ) && ! function_exists( 'bb_register_help_content_rest_route' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_register_help_content_rest_route()}.
+	 *
+	 * @deprecated Use bboss_register_help_content_rest_route() instead.
+	 */
+	function bb_register_help_content_rest_route() {
+		return bboss_register_help_content_rest_route();
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'rest_api_init', 'bb_register_help_content_rest_route' );
 
 /**
@@ -354,6 +382,20 @@ function bboss_register_integrations_rest_route() {
 	}
 	( new BBoss_REST_Integrations_Endpoint() )->register_routes();
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_register_integrations_rest_route' ) && ! function_exists( 'bb_register_integrations_rest_route' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_register_integrations_rest_route()}.
+	 *
+	 * @deprecated Use bboss_register_integrations_rest_route() instead.
+	 */
+	function bb_register_integrations_rest_route() {
+		return bboss_register_integrations_rest_route();
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'rest_api_init', 'bb_register_integrations_rest_route' );
 
 /**
@@ -383,6 +425,20 @@ function bboss_integration_bridge_early_init() {
 	 */
 	do_action( 'bb_integration_bridge_init' );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_integration_bridge_early_init' ) && ! function_exists( 'bb_integration_bridge_early_init' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_integration_bridge_early_init()}.
+	 *
+	 * @deprecated Use bboss_integration_bridge_early_init() instead.
+	 */
+	function bb_integration_bridge_early_init() {
+		return bboss_integration_bridge_early_init();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 add_action( 'bp_loaded', 'bb_integration_bridge_early_init', 2 );
 
@@ -449,6 +505,20 @@ function bboss_flush_feature_caches_on_plugin_change() {
 	 */
 	do_action( 'bb_feature_caches_flushed' );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_flush_feature_caches_on_plugin_change' ) && ! function_exists( 'bb_flush_feature_caches_on_plugin_change' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_flush_feature_caches_on_plugin_change()}.
+	 *
+	 * @deprecated Use bboss_flush_feature_caches_on_plugin_change() instead.
+	 */
+	function bb_flush_feature_caches_on_plugin_change() {
+		return bboss_flush_feature_caches_on_plugin_change();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 // Plugin lifecycle: activate / deactivate / install / update / delete all
 // reshape the set of features and placeholder states. Each hook runs a full
@@ -499,6 +569,20 @@ function bboss_purge_json_catalogs_on_upgrade( $upgrader, $options ) {
 		delete_option( 'bb_placeholder_features_data_stale' );
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_purge_json_catalogs_on_upgrade' ) && ! function_exists( 'bb_purge_json_catalogs_on_upgrade' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_purge_json_catalogs_on_upgrade()}.
+	 *
+	 * @deprecated Use bboss_purge_json_catalogs_on_upgrade() instead.
+	 */
+	function bb_purge_json_catalogs_on_upgrade( $upgrader, $options ) {
+		return bboss_purge_json_catalogs_on_upgrade( $upgrader, $options );
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'upgrader_process_complete', 'bb_purge_json_catalogs_on_upgrade', 10, 2 );
 
 // Network-admin (multisite) plugin lifecycle hooks.
@@ -609,6 +693,20 @@ function bboss_reverse_sync_components_to_features( $old_value, $new_value ) {
 
 	$syncing = false;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_reverse_sync_components_to_features' ) && ! function_exists( 'bb_reverse_sync_components_to_features' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_reverse_sync_components_to_features()}.
+	 *
+	 * @deprecated Use bboss_reverse_sync_components_to_features() instead.
+	 */
+	function bb_reverse_sync_components_to_features( $old_value, $new_value ) {
+		return bboss_reverse_sync_components_to_features( $old_value, $new_value );
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'update_option_bp-active-components', 'bb_reverse_sync_components_to_features', 10, 2 );
 
 // Also hook into add_option for first-time creation of bp-active-components (fresh install).
@@ -670,80 +768,8 @@ function bboss_sanitize_access_control_fallback( $value ) {
 
 	return $sanitized;
 }
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
-if ( function_exists( 'bboss_admin_settings_init' ) && ! function_exists( 'bb_admin_settings_init' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_admin_settings_init()}.
-	 *
-	 * @deprecated Use bboss_admin_settings_init() instead.
-	 */
-	function bb_admin_settings_init() {
-		return bboss_admin_settings_init();
-	}
-}
-if ( function_exists( 'bboss_flush_feature_caches_on_plugin_change' ) && ! function_exists( 'bb_flush_feature_caches_on_plugin_change' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_flush_feature_caches_on_plugin_change()}.
-	 *
-	 * @deprecated Use bboss_flush_feature_caches_on_plugin_change() instead.
-	 */
-	function bb_flush_feature_caches_on_plugin_change() {
-		return bboss_flush_feature_caches_on_plugin_change();
-	}
-}
-if ( function_exists( 'bboss_integration_bridge_early_init' ) && ! function_exists( 'bb_integration_bridge_early_init' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_integration_bridge_early_init()}.
-	 *
-	 * @deprecated Use bboss_integration_bridge_early_init() instead.
-	 */
-	function bb_integration_bridge_early_init() {
-		return bboss_integration_bridge_early_init();
-	}
-}
-if ( function_exists( 'bboss_purge_json_catalogs_on_upgrade' ) && ! function_exists( 'bb_purge_json_catalogs_on_upgrade' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_purge_json_catalogs_on_upgrade()}.
-	 *
-	 * @deprecated Use bboss_purge_json_catalogs_on_upgrade() instead.
-	 */
-	function bb_purge_json_catalogs_on_upgrade( $upgrader, $options ) {
-		return bboss_purge_json_catalogs_on_upgrade( $upgrader, $options );
-	}
-}
-if ( function_exists( 'bboss_register_help_content_rest_route' ) && ! function_exists( 'bb_register_help_content_rest_route' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_register_help_content_rest_route()}.
-	 *
-	 * @deprecated Use bboss_register_help_content_rest_route() instead.
-	 */
-	function bb_register_help_content_rest_route() {
-		return bboss_register_help_content_rest_route();
-	}
-}
-if ( function_exists( 'bboss_register_integrations_rest_route' ) && ! function_exists( 'bb_register_integrations_rest_route' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_register_integrations_rest_route()}.
-	 *
-	 * @deprecated Use bboss_register_integrations_rest_route() instead.
-	 */
-	function bb_register_integrations_rest_route() {
-		return bboss_register_integrations_rest_route();
-	}
-}
-if ( function_exists( 'bboss_reverse_sync_components_to_features' ) && ! function_exists( 'bb_reverse_sync_components_to_features' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_reverse_sync_components_to_features()}.
-	 *
-	 * @deprecated Use bboss_reverse_sync_components_to_features() instead.
-	 */
-	function bb_reverse_sync_components_to_features( $old_value, $new_value ) {
-		return bboss_reverse_sync_components_to_features( $old_value, $new_value );
-	}
-}
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_sanitize_access_control_fallback' ) && ! function_exists( 'bb_sanitize_access_control_fallback' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_sanitize_access_control_fallback()}.
@@ -755,3 +781,4 @@ if ( function_exists( 'bboss_sanitize_access_control_fallback' ) && ! function_e
 	}
 }
 // @bbwt-com-end compat-layer
+

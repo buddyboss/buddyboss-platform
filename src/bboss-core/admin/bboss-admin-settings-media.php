@@ -257,6 +257,20 @@ function bboss_admin_settings_register_media_feature() {
 	 */
 	do_action( 'bb_media_after_register_settings_fields' );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_admin_settings_register_media_feature' ) && ! function_exists( 'bb_admin_settings_register_media_feature' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_admin_settings_register_media_feature()}.
+	 *
+	 * @deprecated Use bboss_admin_settings_register_media_feature() instead.
+	 */
+	function bb_admin_settings_register_media_feature() {
+		return bboss_admin_settings_register_media_feature();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 add_action( 'bb_register_features', 'bb_admin_settings_register_media_feature', 20 );
 
@@ -337,6 +351,20 @@ function bboss_media_register_addons_upsell_panel( $panel_id, $title, $icon_clas
 		)
 	);
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_media_register_addons_upsell_panel' ) && ! function_exists( 'bb_media_register_addons_upsell_panel' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_media_register_addons_upsell_panel()}.
+	 *
+	 * @deprecated Use bboss_media_register_addons_upsell_panel() instead.
+	 */
+	function bb_media_register_addons_upsell_panel( $panel_id, $title, $icon_class, $description, $order, $button_label = '' ) {
+		return bboss_media_register_addons_upsell_panel( $panel_id, $title, $icon_class, $description, $order, $button_label );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get the pricing URL for a Media settings upsell panel.
@@ -372,6 +400,20 @@ function bboss_media_get_addons_upgrade_url( $panel_id ) {
 	/** This filter is documented in bboss-core/admin/bboss-admin-moved-media-features-notice.php */
 	return (string) apply_filters( 'bb_moved_media_features_upgrade_url', $url, $content );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_media_get_addons_upgrade_url' ) && ! function_exists( 'bb_media_get_addons_upgrade_url' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_media_get_addons_upgrade_url()}.
+	 *
+	 * @deprecated Use bboss_media_get_addons_upgrade_url() instead.
+	 */
+	function bb_media_get_addons_upgrade_url( $panel_id ) {
+		return bboss_media_get_addons_upgrade_url( $panel_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get the BuddyBoss Add-ons module that provides a Media upsell panel's feature.
@@ -391,6 +433,20 @@ function bboss_media_get_addons_module_for_panel( $panel_id ) {
 
 	return isset( $modules[ $panel_id ] ) ? $modules[ $panel_id ] : '';
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_media_get_addons_module_for_panel' ) && ! function_exists( 'bb_media_get_addons_module_for_panel' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_media_get_addons_module_for_panel()}.
+	 *
+	 * @deprecated Use bboss_media_get_addons_module_for_panel() instead.
+	 */
+	function bb_media_get_addons_module_for_panel( $panel_id ) {
+		return bboss_media_get_addons_module_for_panel( $panel_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get the component behind a Media upsell panel.
@@ -409,6 +465,20 @@ function bboss_media_get_addons_component_for_panel( $panel_id ) {
 
 	return isset( $components[ $panel_id ] ) ? $components[ $panel_id ] : '';
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_media_get_addons_component_for_panel' ) && ! function_exists( 'bb_media_get_addons_component_for_panel' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_media_get_addons_component_for_panel()}.
+	 *
+	 * @deprecated Use bboss_media_get_addons_component_for_panel() instead.
+	 */
+	function bb_media_get_addons_component_for_panel( $panel_id ) {
+		return bboss_media_get_addons_component_for_panel( $panel_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Resolve what a Media upsell panel should offer.
@@ -487,6 +557,20 @@ function bboss_media_get_addons_panel_state( $panel_id ) {
 
 	return $states[ $panel_id ];
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_media_get_addons_panel_state' ) && ! function_exists( 'bb_media_get_addons_panel_state' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_media_get_addons_panel_state()}.
+	 *
+	 * @deprecated Use bboss_media_get_addons_panel_state() instead.
+	 */
+	function bb_media_get_addons_panel_state( $panel_id ) {
+		return bboss_media_get_addons_panel_state( $panel_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Whether a newer BuddyBoss Add-ons build than the installed one is available to the license.
@@ -522,6 +606,20 @@ function bboss_media_addons_update_available() {
 	 */
 	return (bool) apply_filters( 'bb_media_addons_update_available', $available, $installed, $latest );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_media_addons_update_available' ) && ! function_exists( 'bb_media_addons_update_available' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_media_addons_update_available()}.
+	 *
+	 * @deprecated Use bboss_media_addons_update_available() instead.
+	 */
+	function bb_media_addons_update_available() {
+		return bboss_media_addons_update_available();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Swap a Media upsell card for the step an entitled site needs.
@@ -655,6 +753,20 @@ function bboss_media_format_addons_upsell_field( $field_data, $field, $feature_i
 
 	return array_merge( $field_data, $card );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_media_format_addons_upsell_field' ) && ! function_exists( 'bb_media_format_addons_upsell_field' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_media_format_addons_upsell_field()}.
+	 *
+	 * @deprecated Use bboss_media_format_addons_upsell_field() instead.
+	 */
+	function bb_media_format_addons_upsell_field( $field_data, $field, $feature_id ) {
+		return bboss_media_format_addons_upsell_field( $field_data, $field, $feature_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_filter( 'bb_admin_settings_format_field_data', 'bb_media_format_addons_upsell_field', 10, 3 );
 
 /**
@@ -686,6 +798,20 @@ function bboss_media_format_addons_upsell_section( $section_data, $section, $fea
 
 	return $section_data;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_media_format_addons_upsell_section' ) && ! function_exists( 'bb_media_format_addons_upsell_section' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_media_format_addons_upsell_section()}.
+	 *
+	 * @deprecated Use bboss_media_format_addons_upsell_section() instead.
+	 */
+	function bb_media_format_addons_upsell_section( $section_data, $section, $feature_id, $side_panel_id, $section_id = '' ) {
+		return bboss_media_format_addons_upsell_section( $section_data, $section, $feature_id, $side_panel_id, $section_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_filter( 'bb_admin_settings_format_section_data', 'bb_media_format_addons_upsell_section', 10, 5 );
 
 /**
@@ -735,6 +861,20 @@ function bboss_media_ajax_enable_component() {
 
 	wp_send_json_success();
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_media_ajax_enable_component' ) && ! function_exists( 'bb_media_ajax_enable_component' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_media_ajax_enable_component()}.
+	 *
+	 * @deprecated Use bboss_media_ajax_enable_component() instead.
+	 */
+	function bb_media_ajax_enable_component() {
+		return bboss_media_ajax_enable_component();
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'wp_ajax_bb_media_enable_component', 'bb_media_ajax_enable_component' );
 // @bbwt-com-start installers
 
@@ -780,42 +920,8 @@ function bboss_media_ajax_update_addons() {
 
 	wp_send_json_success();
 }
-add_action( 'wp_ajax_bb_media_update_addons', 'bb_media_ajax_update_addons' );
-// @bbwt-com-end installers
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
-if ( function_exists( 'bboss_admin_settings_register_media_feature' ) && ! function_exists( 'bb_admin_settings_register_media_feature' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_admin_settings_register_media_feature()}.
-	 *
-	 * @deprecated Use bboss_admin_settings_register_media_feature() instead.
-	 */
-	function bb_admin_settings_register_media_feature() {
-		return bboss_admin_settings_register_media_feature();
-	}
-}
-if ( function_exists( 'bboss_media_addons_update_available' ) && ! function_exists( 'bb_media_addons_update_available' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_media_addons_update_available()}.
-	 *
-	 * @deprecated Use bboss_media_addons_update_available() instead.
-	 */
-	function bb_media_addons_update_available() {
-		return bboss_media_addons_update_available();
-	}
-}
-if ( function_exists( 'bboss_media_ajax_enable_component' ) && ! function_exists( 'bb_media_ajax_enable_component' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_media_ajax_enable_component()}.
-	 *
-	 * @deprecated Use bboss_media_ajax_enable_component() instead.
-	 */
-	function bb_media_ajax_enable_component() {
-		return bboss_media_ajax_enable_component();
-	}
-}
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_media_ajax_update_addons' ) && ! function_exists( 'bb_media_ajax_update_addons' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_media_ajax_update_addons()}.
@@ -826,74 +932,7 @@ if ( function_exists( 'bboss_media_ajax_update_addons' ) && ! function_exists( '
 		return bboss_media_ajax_update_addons();
 	}
 }
-if ( function_exists( 'bboss_media_format_addons_upsell_field' ) && ! function_exists( 'bb_media_format_addons_upsell_field' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_media_format_addons_upsell_field()}.
-	 *
-	 * @deprecated Use bboss_media_format_addons_upsell_field() instead.
-	 */
-	function bb_media_format_addons_upsell_field( $field_data, $field, $feature_id ) {
-		return bboss_media_format_addons_upsell_field( $field_data, $field, $feature_id );
-	}
-}
-if ( function_exists( 'bboss_media_format_addons_upsell_section' ) && ! function_exists( 'bb_media_format_addons_upsell_section' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_media_format_addons_upsell_section()}.
-	 *
-	 * @deprecated Use bboss_media_format_addons_upsell_section() instead.
-	 */
-	function bb_media_format_addons_upsell_section( $section_data, $section, $feature_id, $side_panel_id, $section_id = '' ) {
-		return bboss_media_format_addons_upsell_section( $section_data, $section, $feature_id, $side_panel_id, $section_id );
-	}
-}
-if ( function_exists( 'bboss_media_get_addons_component_for_panel' ) && ! function_exists( 'bb_media_get_addons_component_for_panel' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_media_get_addons_component_for_panel()}.
-	 *
-	 * @deprecated Use bboss_media_get_addons_component_for_panel() instead.
-	 */
-	function bb_media_get_addons_component_for_panel( $panel_id ) {
-		return bboss_media_get_addons_component_for_panel( $panel_id );
-	}
-}
-if ( function_exists( 'bboss_media_get_addons_module_for_panel' ) && ! function_exists( 'bb_media_get_addons_module_for_panel' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_media_get_addons_module_for_panel()}.
-	 *
-	 * @deprecated Use bboss_media_get_addons_module_for_panel() instead.
-	 */
-	function bb_media_get_addons_module_for_panel( $panel_id ) {
-		return bboss_media_get_addons_module_for_panel( $panel_id );
-	}
-}
-if ( function_exists( 'bboss_media_get_addons_panel_state' ) && ! function_exists( 'bb_media_get_addons_panel_state' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_media_get_addons_panel_state()}.
-	 *
-	 * @deprecated Use bboss_media_get_addons_panel_state() instead.
-	 */
-	function bb_media_get_addons_panel_state( $panel_id ) {
-		return bboss_media_get_addons_panel_state( $panel_id );
-	}
-}
-if ( function_exists( 'bboss_media_get_addons_upgrade_url' ) && ! function_exists( 'bb_media_get_addons_upgrade_url' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_media_get_addons_upgrade_url()}.
-	 *
-	 * @deprecated Use bboss_media_get_addons_upgrade_url() instead.
-	 */
-	function bb_media_get_addons_upgrade_url( $panel_id ) {
-		return bboss_media_get_addons_upgrade_url( $panel_id );
-	}
-}
-if ( function_exists( 'bboss_media_register_addons_upsell_panel' ) && ! function_exists( 'bb_media_register_addons_upsell_panel' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_media_register_addons_upsell_panel()}.
-	 *
-	 * @deprecated Use bboss_media_register_addons_upsell_panel() instead.
-	 */
-	function bb_media_register_addons_upsell_panel( $panel_id, $title, $icon_class, $description, $order, $button_label = '' ) {
-		return bboss_media_register_addons_upsell_panel( $panel_id, $title, $icon_class, $description, $order, $button_label );
-	}
-}
 // @bbwt-com-end compat-layer
+
+add_action( 'wp_ajax_bb_media_update_addons', 'bb_media_ajax_update_addons' );
+// @bbwt-com-end installers

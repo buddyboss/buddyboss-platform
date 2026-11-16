@@ -29,6 +29,20 @@ defined( 'ABSPATH' ) || exit;
 function bboss_sanitize_topic_list_noop( $value ) {
 	return bboss_get_option( 'bb_activity_topics', array() );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_sanitize_topic_list_noop' ) && ! function_exists( 'bb_sanitize_topic_list_noop' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_sanitize_topic_list_noop()}.
+	 *
+	 * @deprecated Use bboss_sanitize_topic_list_noop() instead.
+	 */
+	function bb_sanitize_topic_list_noop( $value ) {
+		return bboss_sanitize_topic_list_noop( $value );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Sanitize activity edit time setting.
@@ -46,6 +60,20 @@ function bboss_activity_sanitize_edit_time( $value ) {
 	// Shared with the read path so both sides resolve an out-of-range duration identically.
 	return bboss_activity_normalize_edit_time( $value );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_activity_sanitize_edit_time' ) && ! function_exists( 'bb_activity_sanitize_edit_time' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_activity_sanitize_edit_time()}.
+	 *
+	 * @deprecated Use bboss_activity_sanitize_edit_time() instead.
+	 */
+	function bb_activity_sanitize_edit_time( $value ) {
+		return bboss_activity_sanitize_edit_time( $value );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Sanitize activity comment edit time setting.
@@ -62,6 +90,20 @@ function bboss_activity_sanitize_edit_time( $value ) {
 function bboss_activity_sanitize_comment_edit_time( $value ) {
 	return bboss_activity_sanitize_edit_time( $value );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_activity_sanitize_comment_edit_time' ) && ! function_exists( 'bb_activity_sanitize_comment_edit_time' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_activity_sanitize_comment_edit_time()}.
+	 *
+	 * @deprecated Use bboss_activity_sanitize_comment_edit_time() instead.
+	 */
+	function bb_activity_sanitize_comment_edit_time( $value ) {
+		return bboss_activity_sanitize_comment_edit_time( $value );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Sanitize sharing platforms checkbox_list.
@@ -90,6 +132,20 @@ function bboss_sanitize_sharing_platforms( $value ) {
 	// Save as indexed array (legacy format) so both legacy and Settings 2.0 can read it.
 	return $enabled;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_sanitize_sharing_platforms' ) && ! function_exists( 'bb_sanitize_sharing_platforms' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_sanitize_sharing_platforms()}.
+	 *
+	 * @deprecated Use bboss_sanitize_sharing_platforms() instead.
+	 */
+	function bb_sanitize_sharing_platforms( $value ) {
+		return bboss_sanitize_sharing_platforms( $value );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Sanitize comment visibility setting.
@@ -111,6 +167,20 @@ function bboss_activity_sanitize_comment_visibility( $value ) {
 
 	return $value;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_activity_sanitize_comment_visibility' ) && ! function_exists( 'bb_activity_sanitize_comment_visibility' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_activity_sanitize_comment_visibility()}.
+	 *
+	 * @deprecated Use bboss_activity_sanitize_comment_visibility() instead.
+	 */
+	function bb_activity_sanitize_comment_visibility( $value ) {
+		return bboss_activity_sanitize_comment_visibility( $value );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Sanitize comment threading depth setting.
@@ -128,6 +198,20 @@ function bboss_activity_sanitize_comment_threading_depth( $value ) {
 	// Shared with the read path so both sides resolve an out-of-range depth identically.
 	return bboss_activity_normalize_comment_threading_depth( $value );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_activity_sanitize_comment_threading_depth' ) && ! function_exists( 'bb_activity_sanitize_comment_threading_depth' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_activity_sanitize_comment_threading_depth()}.
+	 *
+	 * @deprecated Use bboss_activity_sanitize_comment_threading_depth() instead.
+	 */
+	function bb_activity_sanitize_comment_threading_depth( $value ) {
+		return bboss_activity_sanitize_comment_threading_depth( $value );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Sanitize comment loading setting.
@@ -159,6 +243,20 @@ function bboss_activity_sanitize_comment_loading( $value ) {
 
 	return $value;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_activity_sanitize_comment_loading' ) && ! function_exists( 'bb_activity_sanitize_comment_loading' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_activity_sanitize_comment_loading()}.
+	 *
+	 * @deprecated Use bboss_activity_sanitize_comment_loading() instead.
+	 */
+	function bb_activity_sanitize_comment_loading( $value ) {
+		return bboss_activity_sanitize_comment_loading( $value );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Sanitize platform activity types toggle list.
@@ -183,6 +281,20 @@ function bboss_activity_sanitize_platform_activity_types( $value ) {
 
 	return $sanitized;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_activity_sanitize_platform_activity_types' ) && ! function_exists( 'bb_activity_sanitize_platform_activity_types' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_activity_sanitize_platform_activity_types()}.
+	 *
+	 * @deprecated Use bboss_activity_sanitize_platform_activity_types() instead.
+	 */
+	function bb_activity_sanitize_platform_activity_types( $value ) {
+		return bboss_activity_sanitize_platform_activity_types( $value );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Sync blogs component activation after activity CPT feed settings are saved.
@@ -219,6 +331,20 @@ function bboss_activity_sync_blogs_component_after_save( $feature_id, $settings,
 		}
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_activity_sync_blogs_component_after_save' ) && ! function_exists( 'bb_activity_sync_blogs_component_after_save' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_activity_sync_blogs_component_after_save()}.
+	 *
+	 * @deprecated Use bboss_activity_sync_blogs_component_after_save() instead.
+	 */
+	function bb_activity_sync_blogs_component_after_save( $feature_id, $settings, $saved ) {
+		return bboss_activity_sync_blogs_component_after_save( $feature_id, $settings, $saved );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 add_action( 'bb_admin_save_feature_settings_after', 'bb_activity_sync_blogs_component_after_save', 10, 3 );
 
@@ -246,80 +372,8 @@ function bboss_sanitize_checkbox_list( $value ) {
 
 	return $sanitized;
 }
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
-if ( function_exists( 'bboss_activity_sanitize_comment_edit_time' ) && ! function_exists( 'bb_activity_sanitize_comment_edit_time' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_activity_sanitize_comment_edit_time()}.
-	 *
-	 * @deprecated Use bboss_activity_sanitize_comment_edit_time() instead.
-	 */
-	function bb_activity_sanitize_comment_edit_time( $value ) {
-		return bboss_activity_sanitize_comment_edit_time( $value );
-	}
-}
-if ( function_exists( 'bboss_activity_sanitize_comment_loading' ) && ! function_exists( 'bb_activity_sanitize_comment_loading' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_activity_sanitize_comment_loading()}.
-	 *
-	 * @deprecated Use bboss_activity_sanitize_comment_loading() instead.
-	 */
-	function bb_activity_sanitize_comment_loading( $value ) {
-		return bboss_activity_sanitize_comment_loading( $value );
-	}
-}
-if ( function_exists( 'bboss_activity_sanitize_comment_threading_depth' ) && ! function_exists( 'bb_activity_sanitize_comment_threading_depth' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_activity_sanitize_comment_threading_depth()}.
-	 *
-	 * @deprecated Use bboss_activity_sanitize_comment_threading_depth() instead.
-	 */
-	function bb_activity_sanitize_comment_threading_depth( $value ) {
-		return bboss_activity_sanitize_comment_threading_depth( $value );
-	}
-}
-if ( function_exists( 'bboss_activity_sanitize_comment_visibility' ) && ! function_exists( 'bb_activity_sanitize_comment_visibility' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_activity_sanitize_comment_visibility()}.
-	 *
-	 * @deprecated Use bboss_activity_sanitize_comment_visibility() instead.
-	 */
-	function bb_activity_sanitize_comment_visibility( $value ) {
-		return bboss_activity_sanitize_comment_visibility( $value );
-	}
-}
-if ( function_exists( 'bboss_activity_sanitize_edit_time' ) && ! function_exists( 'bb_activity_sanitize_edit_time' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_activity_sanitize_edit_time()}.
-	 *
-	 * @deprecated Use bboss_activity_sanitize_edit_time() instead.
-	 */
-	function bb_activity_sanitize_edit_time( $value ) {
-		return bboss_activity_sanitize_edit_time( $value );
-	}
-}
-if ( function_exists( 'bboss_activity_sanitize_platform_activity_types' ) && ! function_exists( 'bb_activity_sanitize_platform_activity_types' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_activity_sanitize_platform_activity_types()}.
-	 *
-	 * @deprecated Use bboss_activity_sanitize_platform_activity_types() instead.
-	 */
-	function bb_activity_sanitize_platform_activity_types( $value ) {
-		return bboss_activity_sanitize_platform_activity_types( $value );
-	}
-}
-if ( function_exists( 'bboss_activity_sync_blogs_component_after_save' ) && ! function_exists( 'bb_activity_sync_blogs_component_after_save' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_activity_sync_blogs_component_after_save()}.
-	 *
-	 * @deprecated Use bboss_activity_sync_blogs_component_after_save() instead.
-	 */
-	function bb_activity_sync_blogs_component_after_save( $feature_id, $settings, $saved ) {
-		return bboss_activity_sync_blogs_component_after_save( $feature_id, $settings, $saved );
-	}
-}
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_sanitize_checkbox_list' ) && ! function_exists( 'bb_sanitize_checkbox_list' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_sanitize_checkbox_list()}.
@@ -330,24 +384,5 @@ if ( function_exists( 'bboss_sanitize_checkbox_list' ) && ! function_exists( 'bb
 		return bboss_sanitize_checkbox_list( $value );
 	}
 }
-if ( function_exists( 'bboss_sanitize_sharing_platforms' ) && ! function_exists( 'bb_sanitize_sharing_platforms' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_sanitize_sharing_platforms()}.
-	 *
-	 * @deprecated Use bboss_sanitize_sharing_platforms() instead.
-	 */
-	function bb_sanitize_sharing_platforms( $value ) {
-		return bboss_sanitize_sharing_platforms( $value );
-	}
-}
-if ( function_exists( 'bboss_sanitize_topic_list_noop' ) && ! function_exists( 'bb_sanitize_topic_list_noop' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_sanitize_topic_list_noop()}.
-	 *
-	 * @deprecated Use bboss_sanitize_topic_list_noop() instead.
-	 */
-	function bb_sanitize_topic_list_noop( $value ) {
-		return bboss_sanitize_topic_list_noop( $value );
-	}
-}
 // @bbwt-com-end compat-layer
+

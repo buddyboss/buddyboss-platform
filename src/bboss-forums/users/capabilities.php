@@ -44,6 +44,20 @@ function bboss_bbp_map_primary_meta_caps( $caps = array(), $cap = '', $user_id =
 
 	return apply_filters( 'bbp_map_primary_meta_caps', $caps, $cap, $user_id, $args );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_map_primary_meta_caps' ) && ! function_exists( 'bbp_map_primary_meta_caps' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_map_primary_meta_caps()}.
+	 *
+	 * @deprecated Use bboss_bbp_map_primary_meta_caps() instead.
+	 */
+	function bbp_map_primary_meta_caps( $caps = array(), $cap = '', $user_id = 0, $args = array() ) {
+		return bboss_bbp_map_primary_meta_caps( $caps, $cap, $user_id, $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return a user's main role
@@ -97,6 +111,20 @@ function bboss_bbp_set_user_role( $user_id = 0, $new_role = '' ) {
 
 	return apply_filters( 'bbp_set_user_role', $new_role, $user_id, $user );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_set_user_role' ) && ! function_exists( 'bbp_set_user_role' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_set_user_role()}.
+	 *
+	 * @deprecated Use bboss_bbp_set_user_role() instead.
+	 */
+	function bbp_set_user_role( $user_id = 0, $new_role = '' ) {
+		return bboss_bbp_set_user_role( $user_id, $new_role );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return a user's forums role
@@ -135,6 +163,20 @@ function bboss_bbp_get_user_role( $user_id = 0 ) {
 
 	return apply_filters( 'bbp_get_user_role', $role, $user_id, $user );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_user_role' ) && ! function_exists( 'bbp_get_user_role' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_user_role()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_user_role() instead.
+	 */
+	function bbp_get_user_role( $user_id = 0 ) {
+		return bboss_bbp_get_user_role( $user_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return a user's blog role
@@ -176,6 +218,20 @@ function bboss_bbp_get_user_blog_role( $user_id = 0 ) {
 
 	return apply_filters( 'bbp_get_user_blog_role', $role, $user_id, $user );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_user_blog_role' ) && ! function_exists( 'bbp_get_user_blog_role' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_user_blog_role()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_user_blog_role() instead.
+	 */
+	function bbp_get_user_blog_role( $user_id = 0 ) {
+		return bboss_bbp_get_user_blog_role( $user_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Helper function hooked to 'bbp_profile_update' action to save or
@@ -221,6 +277,20 @@ function bboss_bbp_profile_update_role( $user_id = 0 ) {
 	// Set the new forums role
 	bboss_bbp_set_user_role( $user_id, $new_role );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_profile_update_role' ) && ! function_exists( 'bbp_profile_update_role' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_profile_update_role()}.
+	 *
+	 * @deprecated Use bboss_bbp_profile_update_role() instead.
+	 */
+	function bbp_profile_update_role( $user_id = 0 ) {
+		return bboss_bbp_profile_update_role( $user_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Add the default role to the current user if needed
@@ -313,6 +383,20 @@ function bboss_bbp_set_current_user_default_role() {
 		$bbp->current_user->get_role_caps();
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_set_current_user_default_role' ) && ! function_exists( 'bbp_set_current_user_default_role' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_set_current_user_default_role()}.
+	 *
+	 * @deprecated Use bboss_bbp_set_current_user_default_role() instead.
+	 */
+	function bbp_set_current_user_default_role() {
+		return bboss_bbp_set_current_user_default_role();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return a map of WordPress roles to Forums roles. Used to automatically grant
@@ -340,6 +424,20 @@ function bboss_bbp_get_user_role_map() {
 		)
 	);
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_user_role_map' ) && ! function_exists( 'bbp_get_user_role_map' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_user_role_map()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_user_role_map() instead.
+	 */
+	function bbp_get_user_role_map() {
+		return bboss_bbp_get_user_role_map();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /** User Status ***************************************************************/
 
@@ -380,6 +478,20 @@ function bboss_bbp_is_user_spammer( $user_id = 0 ) {
 
 	return (bool) apply_filters( 'bbp_core_is_user_spammer', $is_spammer );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_is_user_spammer' ) && ! function_exists( 'bbp_is_user_spammer' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_is_user_spammer()}.
+	 *
+	 * @deprecated Use bboss_bbp_is_user_spammer() instead.
+	 */
+	function bbp_is_user_spammer( $user_id = 0 ) {
+		return bboss_bbp_is_user_spammer( $user_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Mark a users topics and replies as spam when the user is marked as spam
@@ -471,6 +583,20 @@ function bboss_bbp_make_spam_user( $user_id = 0 ) {
 	// Success
 	return true;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_make_spam_user' ) && ! function_exists( 'bbp_make_spam_user' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_make_spam_user()}.
+	 *
+	 * @deprecated Use bboss_bbp_make_spam_user() instead.
+	 */
+	function bbp_make_spam_user( $user_id = 0 ) {
+		return bboss_bbp_make_spam_user( $user_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Mark a users topics and replies as spam when the user is marked as spam
@@ -561,6 +687,20 @@ function bboss_bbp_make_ham_user( $user_id = 0 ) {
 	// Success
 	return true;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_make_ham_user' ) && ! function_exists( 'bbp_make_ham_user' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_make_ham_user()}.
+	 *
+	 * @deprecated Use bboss_bbp_make_ham_user() instead.
+	 */
+	function bbp_make_ham_user( $user_id = 0 ) {
+		return bboss_bbp_make_ham_user( $user_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Checks if the user has been marked as deleted.
@@ -599,6 +739,20 @@ function bboss_bbp_is_user_deleted( $user_id = 0 ) {
 
 	return (bool) apply_filters( 'bbp_core_is_user_deleted', $is_deleted );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_is_user_deleted' ) && ! function_exists( 'bbp_is_user_deleted' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_is_user_deleted()}.
+	 *
+	 * @deprecated Use bboss_bbp_is_user_deleted() instead.
+	 */
+	function bbp_is_user_deleted( $user_id = 0 ) {
+		return bboss_bbp_is_user_deleted( $user_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Checks if user is active
@@ -638,6 +792,20 @@ function bboss_bbp_is_user_active( $user_id = 0 ) {
 	// Assume true if not spam or deleted
 	return true;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_is_user_active' ) && ! function_exists( 'bbp_is_user_active' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_is_user_active()}.
+	 *
+	 * @deprecated Use bboss_bbp_is_user_active() instead.
+	 */
+	function bbp_is_user_active( $user_id = 0 ) {
+		return bboss_bbp_is_user_active( $user_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Checks if user is not active.
@@ -666,6 +834,20 @@ function bboss_bbp_is_user_inactive( $user_id = 0 ) {
 	// Return the inverse of active
 	return ! bboss_bbp_is_user_active( $user_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_is_user_inactive' ) && ! function_exists( 'bbp_is_user_inactive' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_is_user_inactive()}.
+	 *
+	 * @deprecated Use bboss_bbp_is_user_inactive() instead.
+	 */
+	function bbp_is_user_inactive( $user_id = 0 ) {
+		return bboss_bbp_is_user_inactive( $user_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Checks if user is a keymaster
@@ -683,6 +865,20 @@ function bboss_bbp_is_user_keymaster( $user_id = 0 ) {
 	// Filter and return
 	return (bool) apply_filters( 'bbp_is_user_keymaster', user_can( $_user_id, 'keep_gate' ), $_user_id, $user_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_is_user_keymaster' ) && ! function_exists( 'bbp_is_user_keymaster' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_is_user_keymaster()}.
+	 *
+	 * @deprecated Use bboss_bbp_is_user_keymaster() instead.
+	 */
+	function bbp_is_user_keymaster( $user_id = 0 ) {
+		return bboss_bbp_is_user_keymaster( $user_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Does a user have a profile for the current site
@@ -723,6 +919,20 @@ function bboss_bbp_user_has_profile( $user_id = 0 ) {
 	// Filter and return
 	return (bool) apply_filters( 'bbp_show_user_profile', $retval, $user_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_user_has_profile' ) && ! function_exists( 'bbp_user_has_profile' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_user_has_profile()}.
+	 *
+	 * @deprecated Use bboss_bbp_user_has_profile() instead.
+	 */
+	function bbp_user_has_profile( $user_id = 0 ) {
+		return bboss_bbp_user_has_profile( $user_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Check if a role ID is valid
@@ -762,90 +972,8 @@ function bboss_bbp_is_valid_role( $role = '' ) {
 	// Filter & return
 	return (bool) apply_filters( 'bbp_is_valid_role', $retval, $role );
 }
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
-if ( function_exists( 'bboss_bbp_get_user_blog_role' ) && ! function_exists( 'bbp_get_user_blog_role' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_user_blog_role()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_user_blog_role() instead.
-	 */
-	function bbp_get_user_blog_role( $user_id = 0 ) {
-		return bboss_bbp_get_user_blog_role( $user_id );
-	}
-}
-if ( function_exists( 'bboss_bbp_get_user_role' ) && ! function_exists( 'bbp_get_user_role' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_user_role()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_user_role() instead.
-	 */
-	function bbp_get_user_role( $user_id = 0 ) {
-		return bboss_bbp_get_user_role( $user_id );
-	}
-}
-if ( function_exists( 'bboss_bbp_get_user_role_map' ) && ! function_exists( 'bbp_get_user_role_map' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_user_role_map()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_user_role_map() instead.
-	 */
-	function bbp_get_user_role_map() {
-		return bboss_bbp_get_user_role_map();
-	}
-}
-if ( function_exists( 'bboss_bbp_is_user_active' ) && ! function_exists( 'bbp_is_user_active' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_is_user_active()}.
-	 *
-	 * @deprecated Use bboss_bbp_is_user_active() instead.
-	 */
-	function bbp_is_user_active( $user_id = 0 ) {
-		return bboss_bbp_is_user_active( $user_id );
-	}
-}
-if ( function_exists( 'bboss_bbp_is_user_deleted' ) && ! function_exists( 'bbp_is_user_deleted' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_is_user_deleted()}.
-	 *
-	 * @deprecated Use bboss_bbp_is_user_deleted() instead.
-	 */
-	function bbp_is_user_deleted( $user_id = 0 ) {
-		return bboss_bbp_is_user_deleted( $user_id );
-	}
-}
-if ( function_exists( 'bboss_bbp_is_user_inactive' ) && ! function_exists( 'bbp_is_user_inactive' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_is_user_inactive()}.
-	 *
-	 * @deprecated Use bboss_bbp_is_user_inactive() instead.
-	 */
-	function bbp_is_user_inactive( $user_id = 0 ) {
-		return bboss_bbp_is_user_inactive( $user_id );
-	}
-}
-if ( function_exists( 'bboss_bbp_is_user_keymaster' ) && ! function_exists( 'bbp_is_user_keymaster' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_is_user_keymaster()}.
-	 *
-	 * @deprecated Use bboss_bbp_is_user_keymaster() instead.
-	 */
-	function bbp_is_user_keymaster( $user_id = 0 ) {
-		return bboss_bbp_is_user_keymaster( $user_id );
-	}
-}
-if ( function_exists( 'bboss_bbp_is_user_spammer' ) && ! function_exists( 'bbp_is_user_spammer' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_is_user_spammer()}.
-	 *
-	 * @deprecated Use bboss_bbp_is_user_spammer() instead.
-	 */
-	function bbp_is_user_spammer( $user_id = 0 ) {
-		return bboss_bbp_is_user_spammer( $user_id );
-	}
-}
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_bbp_is_valid_role' ) && ! function_exists( 'bbp_is_valid_role' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_bbp_is_valid_role()}.
@@ -856,74 +984,5 @@ if ( function_exists( 'bboss_bbp_is_valid_role' ) && ! function_exists( 'bbp_is_
 		return bboss_bbp_is_valid_role( $role );
 	}
 }
-if ( function_exists( 'bboss_bbp_make_ham_user' ) && ! function_exists( 'bbp_make_ham_user' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_make_ham_user()}.
-	 *
-	 * @deprecated Use bboss_bbp_make_ham_user() instead.
-	 */
-	function bbp_make_ham_user( $user_id = 0 ) {
-		return bboss_bbp_make_ham_user( $user_id );
-	}
-}
-if ( function_exists( 'bboss_bbp_make_spam_user' ) && ! function_exists( 'bbp_make_spam_user' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_make_spam_user()}.
-	 *
-	 * @deprecated Use bboss_bbp_make_spam_user() instead.
-	 */
-	function bbp_make_spam_user( $user_id = 0 ) {
-		return bboss_bbp_make_spam_user( $user_id );
-	}
-}
-if ( function_exists( 'bboss_bbp_map_primary_meta_caps' ) && ! function_exists( 'bbp_map_primary_meta_caps' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_map_primary_meta_caps()}.
-	 *
-	 * @deprecated Use bboss_bbp_map_primary_meta_caps() instead.
-	 */
-	function bbp_map_primary_meta_caps( $caps = array(), $cap = '', $user_id = 0, $args = array() ) {
-		return bboss_bbp_map_primary_meta_caps( $caps, $cap, $user_id, $args );
-	}
-}
-if ( function_exists( 'bboss_bbp_profile_update_role' ) && ! function_exists( 'bbp_profile_update_role' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_profile_update_role()}.
-	 *
-	 * @deprecated Use bboss_bbp_profile_update_role() instead.
-	 */
-	function bbp_profile_update_role( $user_id = 0 ) {
-		return bboss_bbp_profile_update_role( $user_id );
-	}
-}
-if ( function_exists( 'bboss_bbp_set_current_user_default_role' ) && ! function_exists( 'bbp_set_current_user_default_role' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_set_current_user_default_role()}.
-	 *
-	 * @deprecated Use bboss_bbp_set_current_user_default_role() instead.
-	 */
-	function bbp_set_current_user_default_role() {
-		return bboss_bbp_set_current_user_default_role();
-	}
-}
-if ( function_exists( 'bboss_bbp_set_user_role' ) && ! function_exists( 'bbp_set_user_role' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_set_user_role()}.
-	 *
-	 * @deprecated Use bboss_bbp_set_user_role() instead.
-	 */
-	function bbp_set_user_role( $user_id = 0, $new_role = '' ) {
-		return bboss_bbp_set_user_role( $user_id, $new_role );
-	}
-}
-if ( function_exists( 'bboss_bbp_user_has_profile' ) && ! function_exists( 'bbp_user_has_profile' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_user_has_profile()}.
-	 *
-	 * @deprecated Use bboss_bbp_user_has_profile() instead.
-	 */
-	function bbp_user_has_profile( $user_id = 0 ) {
-		return bboss_bbp_user_has_profile( $user_id );
-	}
-}
 // @bbwt-com-end compat-layer
+

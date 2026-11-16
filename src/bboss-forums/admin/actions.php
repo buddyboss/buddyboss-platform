@@ -113,6 +113,20 @@ function bboss_bbp_new_site( $blog_id, $user_id, $domain, $path, $site_id, $meta
 	// restore original blog
 	restore_current_blog();
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_new_site' ) && ! function_exists( 'bbp_new_site' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_new_site()}.
+	 *
+	 * @deprecated Use bboss_bbp_new_site() instead.
+	 */
+	function bbp_new_site( $blog_id, $user_id, $domain, $path, $site_id, $meta ) {
+		return bboss_bbp_new_site( $blog_id, $user_id, $domain, $path, $site_id, $meta );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Filter sample permalinks so that certain languages display properly.
@@ -139,6 +153,20 @@ function bboss_bbp_filter_sample_permalink( $post_link, $_post, $leavename = fal
 	// Return post link
 	return $post_link;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_filter_sample_permalink' ) && ! function_exists( 'bbp_filter_sample_permalink' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_filter_sample_permalink()}.
+	 *
+	 * @deprecated Use bboss_bbp_filter_sample_permalink() instead.
+	 */
+	function bbp_filter_sample_permalink( $post_link, $_post, $leavename = false, $sample = false ) {
+		return bboss_bbp_filter_sample_permalink( $post_link, $_post, $leavename, $sample );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /** Sub-Actions ***************************************************************/
 
@@ -151,89 +179,8 @@ function bboss_bbp_filter_sample_permalink( $post_link, $_post, $leavename = fal
 function bboss_bbp_admin_init() {
 	do_action( 'bbp_admin_init' );
 }
-
-/**
- * Piggy back admin_menu action
- *
- * @since bbPress (r3766)
- * @uses do_action() Calls 'bbp_admin_menu'
- */
-function bboss_bbp_admin_menu() {
-	do_action( 'bbp_admin_menu' );
-}
-
-/**
- * Piggy back admin_head action
- *
- * @since bbPress (r3766)
- * @uses do_action() Calls 'bbp_admin_head'
- */
-function bboss_bbp_admin_head() {
-	do_action( 'bbp_admin_head' );
-}
-
-/**
- * Piggy back admin_notices action
- *
- * @since bbPress (r3766)
- * @uses do_action() Calls 'bbp_admin_notices'
- */
-function bboss_bbp_admin_notices() {
-	do_action( 'bbp_admin_notices' );
-}
-
-/**
- * Dedicated action to register Forums importers
- *
- * @since bbPress (r3766)
- * @uses do_action() Calls 'bbp_admin_notices'
- */
-function bboss_bbp_register_importers() {
-	do_action( 'bbp_register_importers' );
-}
-
-/**
- * Dedicated action to register admin styles
- *
- * @since bbPress (r3766)
- * @uses do_action() Calls 'bbp_admin_notices'
- */
-function bboss_bbp_register_admin_style() {
-	do_action( 'bbp_register_admin_style' );
-}
-
-/**
- * Dedicated action to register admin scripts
- *
- * @since 2.6.0 bbPress (r6912)
- */
-function bboss_bbp_register_admin_scripts() {
-	do_action( 'bbp_register_admin_scripts' );
-}
-
-/**
- * Dedicated action to register admin settings
- *
- * @since bbPress (r3766)
- * @uses do_action() Calls 'bbp_register_admin_settings'
- */
-function bboss_bbp_register_admin_settings() {
-	do_action( 'bbp_register_admin_settings' );
-}
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
-if ( function_exists( 'bboss_bbp_admin_head' ) && ! function_exists( 'bbp_admin_head' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_admin_head()}.
-	 *
-	 * @deprecated Use bboss_bbp_admin_head() instead.
-	 */
-	function bbp_admin_head() {
-		return bboss_bbp_admin_head();
-	}
-}
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_bbp_admin_init' ) && ! function_exists( 'bbp_admin_init' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_bbp_admin_init()}.
@@ -244,6 +191,20 @@ if ( function_exists( 'bboss_bbp_admin_init' ) && ! function_exists( 'bbp_admin_
 		return bboss_bbp_admin_init();
 	}
 }
+// @bbwt-com-end compat-layer
+
+
+/**
+ * Piggy back admin_menu action
+ *
+ * @since bbPress (r3766)
+ * @uses do_action() Calls 'bbp_admin_menu'
+ */
+function bboss_bbp_admin_menu() {
+	do_action( 'bbp_admin_menu' );
+}
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_bbp_admin_menu' ) && ! function_exists( 'bbp_admin_menu' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_bbp_admin_menu()}.
@@ -254,6 +215,44 @@ if ( function_exists( 'bboss_bbp_admin_menu' ) && ! function_exists( 'bbp_admin_
 		return bboss_bbp_admin_menu();
 	}
 }
+// @bbwt-com-end compat-layer
+
+
+/**
+ * Piggy back admin_head action
+ *
+ * @since bbPress (r3766)
+ * @uses do_action() Calls 'bbp_admin_head'
+ */
+function bboss_bbp_admin_head() {
+	do_action( 'bbp_admin_head' );
+}
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_admin_head' ) && ! function_exists( 'bbp_admin_head' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_admin_head()}.
+	 *
+	 * @deprecated Use bboss_bbp_admin_head() instead.
+	 */
+	function bbp_admin_head() {
+		return bboss_bbp_admin_head();
+	}
+}
+// @bbwt-com-end compat-layer
+
+
+/**
+ * Piggy back admin_notices action
+ *
+ * @since bbPress (r3766)
+ * @uses do_action() Calls 'bbp_admin_notices'
+ */
+function bboss_bbp_admin_notices() {
+	do_action( 'bbp_admin_notices' );
+}
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_bbp_admin_notices' ) && ! function_exists( 'bbp_admin_notices' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_bbp_admin_notices()}.
@@ -264,56 +263,20 @@ if ( function_exists( 'bboss_bbp_admin_notices' ) && ! function_exists( 'bbp_adm
 		return bboss_bbp_admin_notices();
 	}
 }
-if ( function_exists( 'bboss_bbp_filter_sample_permalink' ) && ! function_exists( 'bbp_filter_sample_permalink' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_filter_sample_permalink()}.
-	 *
-	 * @deprecated Use bboss_bbp_filter_sample_permalink() instead.
-	 */
-	function bbp_filter_sample_permalink( $post_link, $_post, $leavename = false, $sample = false ) {
-		return bboss_bbp_filter_sample_permalink( $post_link, $_post, $leavename, $sample );
-	}
+// @bbwt-com-end compat-layer
+
+
+/**
+ * Dedicated action to register Forums importers
+ *
+ * @since bbPress (r3766)
+ * @uses do_action() Calls 'bbp_admin_notices'
+ */
+function bboss_bbp_register_importers() {
+	do_action( 'bbp_register_importers' );
 }
-if ( function_exists( 'bboss_bbp_new_site' ) && ! function_exists( 'bbp_new_site' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_new_site()}.
-	 *
-	 * @deprecated Use bboss_bbp_new_site() instead.
-	 */
-	function bbp_new_site( $blog_id, $user_id, $domain, $path, $site_id, $meta ) {
-		return bboss_bbp_new_site( $blog_id, $user_id, $domain, $path, $site_id, $meta );
-	}
-}
-if ( function_exists( 'bboss_bbp_register_admin_scripts' ) && ! function_exists( 'bbp_register_admin_scripts' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_register_admin_scripts()}.
-	 *
-	 * @deprecated Use bboss_bbp_register_admin_scripts() instead.
-	 */
-	function bbp_register_admin_scripts() {
-		return bboss_bbp_register_admin_scripts();
-	}
-}
-if ( function_exists( 'bboss_bbp_register_admin_settings' ) && ! function_exists( 'bbp_register_admin_settings' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_register_admin_settings()}.
-	 *
-	 * @deprecated Use bboss_bbp_register_admin_settings() instead.
-	 */
-	function bbp_register_admin_settings() {
-		return bboss_bbp_register_admin_settings();
-	}
-}
-if ( function_exists( 'bboss_bbp_register_admin_style' ) && ! function_exists( 'bbp_register_admin_style' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_register_admin_style()}.
-	 *
-	 * @deprecated Use bboss_bbp_register_admin_style() instead.
-	 */
-	function bbp_register_admin_style() {
-		return bboss_bbp_register_admin_style();
-	}
-}
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_bbp_register_importers' ) && ! function_exists( 'bbp_register_importers' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_bbp_register_importers()}.
@@ -325,3 +288,75 @@ if ( function_exists( 'bboss_bbp_register_importers' ) && ! function_exists( 'bb
 	}
 }
 // @bbwt-com-end compat-layer
+
+
+/**
+ * Dedicated action to register admin styles
+ *
+ * @since bbPress (r3766)
+ * @uses do_action() Calls 'bbp_admin_notices'
+ */
+function bboss_bbp_register_admin_style() {
+	do_action( 'bbp_register_admin_style' );
+}
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_register_admin_style' ) && ! function_exists( 'bbp_register_admin_style' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_register_admin_style()}.
+	 *
+	 * @deprecated Use bboss_bbp_register_admin_style() instead.
+	 */
+	function bbp_register_admin_style() {
+		return bboss_bbp_register_admin_style();
+	}
+}
+// @bbwt-com-end compat-layer
+
+
+/**
+ * Dedicated action to register admin scripts
+ *
+ * @since 2.6.0 bbPress (r6912)
+ */
+function bboss_bbp_register_admin_scripts() {
+	do_action( 'bbp_register_admin_scripts' );
+}
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_register_admin_scripts' ) && ! function_exists( 'bbp_register_admin_scripts' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_register_admin_scripts()}.
+	 *
+	 * @deprecated Use bboss_bbp_register_admin_scripts() instead.
+	 */
+	function bbp_register_admin_scripts() {
+		return bboss_bbp_register_admin_scripts();
+	}
+}
+// @bbwt-com-end compat-layer
+
+
+/**
+ * Dedicated action to register admin settings
+ *
+ * @since bbPress (r3766)
+ * @uses do_action() Calls 'bbp_register_admin_settings'
+ */
+function bboss_bbp_register_admin_settings() {
+	do_action( 'bbp_register_admin_settings' );
+}
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_register_admin_settings' ) && ! function_exists( 'bbp_register_admin_settings' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_register_admin_settings()}.
+	 *
+	 * @deprecated Use bboss_bbp_register_admin_settings() instead.
+	 */
+	function bbp_register_admin_settings() {
+		return bboss_bbp_register_admin_settings();
+	}
+}
+// @bbwt-com-end compat-layer
+

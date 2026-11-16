@@ -45,6 +45,20 @@ function bboss_search_override_wp_native_results( $template ) {
 
 	return $template;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_search_override_wp_native_results' ) && ! function_exists( 'bp_search_override_wp_native_results' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_search_override_wp_native_results()}.
+	 *
+	 * @deprecated Use bboss_search_override_wp_native_results() instead.
+	 */
+	function bp_search_override_wp_native_results( $template ) {
+		return bboss_search_override_wp_native_results( $template );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 
 add_filter( 'template_include', 'bp_search_result_page_dummy_post_load', 999 ); // don't leave any chance!.
@@ -107,6 +121,20 @@ function bboss_search_result_page_dummy_post_load( $template ) {
 
 	return $template;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_search_result_page_dummy_post_load' ) && ! function_exists( 'bp_search_result_page_dummy_post_load' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_search_result_page_dummy_post_load()}.
+	 *
+	 * @deprecated Use bboss_search_result_page_dummy_post_load() instead.
+	 */
+	function bp_search_result_page_dummy_post_load( $template ) {
+		return bboss_search_result_page_dummy_post_load( $template );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 
 add_filter( 'pre_get_posts', 'bp_search_clear_native_search_query' );
@@ -129,6 +157,20 @@ function bboss_search_clear_native_search_query( $query ) {
 
 	return $query;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_search_clear_native_search_query' ) && ! function_exists( 'bp_search_clear_native_search_query' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_search_clear_native_search_query()}.
+	 *
+	 * @deprecated Use bboss_search_clear_native_search_query() instead.
+	 */
+	function bp_search_clear_native_search_query( $query ) {
+		return bboss_search_clear_native_search_query( $query );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Before searching groups parse type to be blank.
@@ -147,22 +189,8 @@ function bboss_search_filter_bp_before_has_groups_parse_args( $args ) {
 
 	return $args;
 }
-
-add_filter( 'bp_before_has_groups_parse_args', 'bp_search_filter_bp_before_has_groups_parse_args', 10, 1 );
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
-if ( function_exists( 'bboss_search_clear_native_search_query' ) && ! function_exists( 'bp_search_clear_native_search_query' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_search_clear_native_search_query()}.
-	 *
-	 * @deprecated Use bboss_search_clear_native_search_query() instead.
-	 */
-	function bp_search_clear_native_search_query( $query ) {
-		return bboss_search_clear_native_search_query( $query );
-	}
-}
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_search_filter_bp_before_has_groups_parse_args' ) && ! function_exists( 'bp_search_filter_bp_before_has_groups_parse_args' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_search_filter_bp_before_has_groups_parse_args()}.
@@ -173,24 +201,7 @@ if ( function_exists( 'bboss_search_filter_bp_before_has_groups_parse_args' ) &&
 		return bboss_search_filter_bp_before_has_groups_parse_args( $args );
 	}
 }
-if ( function_exists( 'bboss_search_override_wp_native_results' ) && ! function_exists( 'bp_search_override_wp_native_results' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_search_override_wp_native_results()}.
-	 *
-	 * @deprecated Use bboss_search_override_wp_native_results() instead.
-	 */
-	function bp_search_override_wp_native_results( $template ) {
-		return bboss_search_override_wp_native_results( $template );
-	}
-}
-if ( function_exists( 'bboss_search_result_page_dummy_post_load' ) && ! function_exists( 'bp_search_result_page_dummy_post_load' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_search_result_page_dummy_post_load()}.
-	 *
-	 * @deprecated Use bboss_search_result_page_dummy_post_load() instead.
-	 */
-	function bp_search_result_page_dummy_post_load( $template ) {
-		return bboss_search_result_page_dummy_post_load( $template );
-	}
-}
 // @bbwt-com-end compat-layer
+
+
+add_filter( 'bp_before_has_groups_parse_args', 'bp_search_filter_bp_before_has_groups_parse_args', 10, 1 );

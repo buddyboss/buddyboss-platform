@@ -39,6 +39,20 @@ function bboss_drm_autoloader( $class_name ) {
 		require_once $file;
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_drm_autoloader' ) && ! function_exists( 'bb_drm_autoloader' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_drm_autoloader()}.
+	 *
+	 * @deprecated Use bboss_drm_autoloader() instead.
+	 */
+	function bb_drm_autoloader( $class_name ) {
+		return bboss_drm_autoloader( $class_name );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 // Register the autoloader.
 spl_autoload_register( 'bboss_drm_autoloader' );
@@ -54,18 +68,3 @@ require_once __DIR__ . '/class-bb-drm-addon.php';
 require_once __DIR__ . '/class-bb-drm-registry.php';
 require_once __DIR__ . '/class-bb-drm-controller.php';
 require_once __DIR__ . '/class-bb-notifications.php';
-
-// @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
-if ( function_exists( 'bboss_drm_autoloader' ) && ! function_exists( 'bb_drm_autoloader' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_drm_autoloader()}.
-	 *
-	 * @deprecated Use bboss_drm_autoloader() instead.
-	 */
-	function bb_drm_autoloader( $class_name ) {
-		return bboss_drm_autoloader( $class_name );
-	}
-}
-// @bbwt-com-end compat-layer

@@ -50,6 +50,20 @@ function bboss_members_prefetch_member_type( BBoss_User_Query $bp_user_query ) {
 		wp_cache_set( $no_type_id, '', 'bp_member_member_type' );
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_members_prefetch_member_type' ) && ! function_exists( 'bp_members_prefetch_member_type' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_members_prefetch_member_type()}.
+	 *
+	 * @deprecated Use bboss_members_prefetch_member_type() instead.
+	 */
+	function bp_members_prefetch_member_type( BBoss_User_Query $bp_user_query ) {
+		return bboss_members_prefetch_member_type( $bp_user_query );
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'bp_user_query_populate_extras', 'bp_members_prefetch_member_type' );
 
 /**
@@ -78,6 +92,20 @@ function bboss_members_clear_member_type_cache( $user_id ) {
 	// Clear user data from BP_User_Query.
 	wp_cache_delete( $user_id, 'bb_user' );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_members_clear_member_type_cache' ) && ! function_exists( 'bp_members_clear_member_type_cache' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_members_clear_member_type_cache()}.
+	 *
+	 * @deprecated Use bboss_members_clear_member_type_cache() instead.
+	 */
+	function bp_members_clear_member_type_cache( $user_id ) {
+		return bboss_members_clear_member_type_cache( $user_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'wpmu_delete_user', 'bp_members_clear_member_type_cache' );
 add_action( 'delete_user', 'bp_members_clear_member_type_cache' );
 add_action( 'profile_update', 'bp_members_clear_member_type_cache' );
@@ -92,6 +120,20 @@ add_action( 'profile_update', 'bp_members_clear_member_type_cache' );
 function bboss_members_reset_activity_cache_incrementor() {
 	return bboss_core_reset_incrementor( 'bp_activity_with_last_activity' );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_members_reset_activity_cache_incrementor' ) && ! function_exists( 'bp_members_reset_activity_cache_incrementor' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_members_reset_activity_cache_incrementor()}.
+	 *
+	 * @deprecated Use bboss_members_reset_activity_cache_incrementor() instead.
+	 */
+	function bp_members_reset_activity_cache_incrementor() {
+		return bboss_members_reset_activity_cache_incrementor();
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'bp_core_user_updated_last_activity', 'bp_members_reset_activity_cache_incrementor' );
 
 /**
@@ -132,6 +174,20 @@ function bboss_members_clear_member_type_cache_on_update( $post_id ) {
 		wp_cache_delete( 'bb-member-type-label-color-' . $bp_member_type_key, 'bp_member_member_type' );
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_members_clear_member_type_cache_on_update' ) && ! function_exists( 'bb_members_clear_member_type_cache_on_update' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_members_clear_member_type_cache_on_update()}.
+	 *
+	 * @deprecated Use bboss_members_clear_member_type_cache_on_update() instead.
+	 */
+	function bb_members_clear_member_type_cache_on_update( $post_id ) {
+		return bboss_members_clear_member_type_cache_on_update( $post_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 add_action( 'save_post', 'bb_members_clear_member_type_cache_on_update' );
 
@@ -162,12 +218,8 @@ function bboss_members_clear_member_type_cache_before_delete( $post_id ) {
 		wp_cache_delete( 'bb-member-type-label-color-' . $bp_member_type_key, 'bp_member_member_type' );
 	}
 }
-
-add_action( 'before_delete_post', 'bb_members_clear_member_type_cache_before_delete' );
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_members_clear_member_type_cache_before_delete' ) && ! function_exists( 'bb_members_clear_member_type_cache_before_delete' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_members_clear_member_type_cache_before_delete()}.
@@ -178,44 +230,7 @@ if ( function_exists( 'bboss_members_clear_member_type_cache_before_delete' ) &&
 		return bboss_members_clear_member_type_cache_before_delete( $post_id );
 	}
 }
-if ( function_exists( 'bboss_members_clear_member_type_cache_on_update' ) && ! function_exists( 'bb_members_clear_member_type_cache_on_update' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_members_clear_member_type_cache_on_update()}.
-	 *
-	 * @deprecated Use bboss_members_clear_member_type_cache_on_update() instead.
-	 */
-	function bb_members_clear_member_type_cache_on_update( $post_id ) {
-		return bboss_members_clear_member_type_cache_on_update( $post_id );
-	}
-}
-if ( function_exists( 'bboss_members_clear_member_type_cache' ) && ! function_exists( 'bp_members_clear_member_type_cache' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_members_clear_member_type_cache()}.
-	 *
-	 * @deprecated Use bboss_members_clear_member_type_cache() instead.
-	 */
-	function bp_members_clear_member_type_cache( $user_id ) {
-		return bboss_members_clear_member_type_cache( $user_id );
-	}
-}
-if ( function_exists( 'bboss_members_prefetch_member_type' ) && ! function_exists( 'bp_members_prefetch_member_type' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_members_prefetch_member_type()}.
-	 *
-	 * @deprecated Use bboss_members_prefetch_member_type() instead.
-	 */
-	function bp_members_prefetch_member_type( BBoss_User_Query $bp_user_query ) {
-		return bboss_members_prefetch_member_type( $bp_user_query );
-	}
-}
-if ( function_exists( 'bboss_members_reset_activity_cache_incrementor' ) && ! function_exists( 'bp_members_reset_activity_cache_incrementor' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_members_reset_activity_cache_incrementor()}.
-	 *
-	 * @deprecated Use bboss_members_reset_activity_cache_incrementor() instead.
-	 */
-	function bp_members_reset_activity_cache_incrementor() {
-		return bboss_members_reset_activity_cache_incrementor();
-	}
-}
 // @bbwt-com-end compat-layer
+
+
+add_action( 'before_delete_post', 'bb_members_clear_member_type_cache_before_delete' );

@@ -70,6 +70,20 @@ defined( 'ABSPATH' ) || exit;
 function bboss_email_digest_addon_plugin_file() {
 	return 'buddyboss-addons/buddyboss-addons.php';
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_email_digest_addon_plugin_file' ) && ! function_exists( 'bb_email_digest_addon_plugin_file' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_email_digest_addon_plugin_file()}.
+	 *
+	 * @deprecated Use bboss_email_digest_addon_plugin_file() instead.
+	 */
+	function bb_email_digest_addon_plugin_file() {
+		return bboss_email_digest_addon_plugin_file();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Add-on slug, as the BuddyBoss add-on server knows it.
@@ -85,6 +99,20 @@ function bboss_email_digest_addon_plugin_file() {
 function bboss_email_digest_addon_plugin_slug() {
 	return 'buddyboss-addons';
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_email_digest_addon_plugin_slug' ) && ! function_exists( 'bb_email_digest_addon_plugin_slug' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_email_digest_addon_plugin_slug()}.
+	 *
+	 * @deprecated Use bboss_email_digest_addon_plugin_slug() instead.
+	 */
+	function bb_email_digest_addon_plugin_slug() {
+		return bboss_email_digest_addon_plugin_slug();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Plan SKU prefixes whose licence includes the Email Digest.
@@ -146,6 +174,20 @@ function bboss_email_digest_required_plans() {
 	 */
 	return (array) apply_filters( 'bb_email_digest_required_plans', $plans );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_email_digest_required_plans' ) && ! function_exists( 'bb_email_digest_required_plans' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_email_digest_required_plans()}.
+	 *
+	 * @deprecated Use bboss_email_digest_required_plans() instead.
+	 */
+	function bb_email_digest_required_plans() {
+		return bboss_email_digest_required_plans();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Whether the BuddyBoss license is currently activated.
@@ -180,6 +222,20 @@ function bboss_email_digest_is_license_active() {
 	 */
 	return (bool) apply_filters( 'bb_email_digest_is_license_active', $active );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_email_digest_is_license_active' ) && ! function_exists( 'bb_email_digest_is_license_active' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_email_digest_is_license_active()}.
+	 *
+	 * @deprecated Use bboss_email_digest_is_license_active() instead.
+	 */
+	function bb_email_digest_is_license_active() {
+		return bboss_email_digest_is_license_active();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * The plan SKU the activated licence carries.
@@ -209,6 +265,20 @@ function bboss_email_digest_licensed_plan_sku() {
 	 */
 	return (string) apply_filters( 'bb_email_digest_licensed_plan_sku', $sku );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_email_digest_licensed_plan_sku' ) && ! function_exists( 'bb_email_digest_licensed_plan_sku' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_email_digest_licensed_plan_sku()}.
+	 *
+	 * @deprecated Use bboss_email_digest_licensed_plan_sku() instead.
+	 */
+	function bb_email_digest_licensed_plan_sku() {
+		return bboss_email_digest_licensed_plan_sku();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Resolve which of the three stand-in states applies.
@@ -274,6 +344,20 @@ function bboss_email_digest_get_placeholder_state() {
 	// its own and a card that offers the update instead.
 	return 'addon_outdated';
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_email_digest_get_placeholder_state' ) && ! function_exists( 'bb_email_digest_get_placeholder_state' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_email_digest_get_placeholder_state()}.
+	 *
+	 * @deprecated Use bboss_email_digest_get_placeholder_state() instead.
+	 */
+	function bb_email_digest_get_placeholder_state() {
+		return bboss_email_digest_get_placeholder_state();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Version of the add-on currently on disk.
@@ -299,6 +383,20 @@ function bboss_email_digest_addon_installed_version() {
 
 	return isset( $data['Version'] ) ? (string) $data['Version'] : '';
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_email_digest_addon_installed_version' ) && ! function_exists( 'bb_email_digest_addon_installed_version' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_email_digest_addon_installed_version()}.
+	 *
+	 * @deprecated Use bboss_email_digest_addon_installed_version() instead.
+	 */
+	function bb_email_digest_addon_installed_version() {
+		return bboss_email_digest_addon_installed_version();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * The newest add-on release the licence can reach, and where to get it.
@@ -345,6 +443,20 @@ function bboss_email_digest_addon_latest_release() {
 		'url'     => isset( $release->url ) ? (string) $release->url : '',
 	);
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_email_digest_addon_latest_release' ) && ! function_exists( 'bb_email_digest_addon_latest_release' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_email_digest_addon_latest_release()}.
+	 *
+	 * @deprecated Use bboss_email_digest_addon_latest_release() instead.
+	 */
+	function bb_email_digest_addon_latest_release() {
+		return bboss_email_digest_addon_latest_release();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Whether a newer add-on build than the one on disk is available to this licence.
@@ -381,6 +493,20 @@ function bboss_email_digest_addon_update_available() {
 	 */
 	return (bool) apply_filters( 'bb_email_digest_addon_update_available', $available, $installed, $latest );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_email_digest_addon_update_available' ) && ! function_exists( 'bb_email_digest_addon_update_available' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_email_digest_addon_update_available()}.
+	 *
+	 * @deprecated Use bboss_email_digest_addon_update_available() instead.
+	 */
+	function bb_email_digest_addon_update_available() {
+		return bboss_email_digest_addon_update_available();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Filterable wrapper around the resolved placeholder state.
@@ -405,6 +531,20 @@ function bboss_email_digest_placeholder_state() {
 	 */
 	return apply_filters( 'bb_email_digest_placeholder_state', bboss_email_digest_get_placeholder_state() );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_email_digest_placeholder_state' ) && ! function_exists( 'bb_email_digest_placeholder_state' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_email_digest_placeholder_state()}.
+	 *
+	 * @deprecated Use bboss_email_digest_placeholder_state() instead.
+	 */
+	function bb_email_digest_placeholder_state() {
+		return bboss_email_digest_placeholder_state();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Register the stand-in Email Digest panel.
@@ -476,6 +616,20 @@ function bboss_admin_settings_register_email_digest_placeholder() {
 
 	bboss_admin_settings_register_email_digest_card( $state );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_admin_settings_register_email_digest_placeholder' ) && ! function_exists( 'bb_admin_settings_register_email_digest_placeholder' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_admin_settings_register_email_digest_placeholder()}.
+	 *
+	 * @deprecated Use bboss_admin_settings_register_email_digest_placeholder() instead.
+	 */
+	function bb_admin_settings_register_email_digest_placeholder() {
+		return bboss_admin_settings_register_email_digest_placeholder();
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'bb_register_features', 'bb_admin_settings_register_email_digest_placeholder', 35 );
 
 /**
@@ -604,6 +758,20 @@ function bboss_admin_settings_register_email_digest_card( $state ) {
 		)
 	);
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_admin_settings_register_email_digest_card' ) && ! function_exists( 'bb_admin_settings_register_email_digest_card' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_admin_settings_register_email_digest_card()}.
+	 *
+	 * @deprecated Use bboss_admin_settings_register_email_digest_card() instead.
+	 */
+	function bb_admin_settings_register_email_digest_card( $state ) {
+		return bboss_admin_settings_register_email_digest_card( $state );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Register the Notifications-tab signpost pointing at the Email Digest panel.
@@ -641,6 +809,20 @@ function bboss_admin_settings_register_email_digest_signpost() {
 		)
 	);
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_admin_settings_register_email_digest_signpost' ) && ! function_exists( 'bb_admin_settings_register_email_digest_signpost' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_admin_settings_register_email_digest_signpost()}.
+	 *
+	 * @deprecated Use bboss_admin_settings_register_email_digest_signpost() instead.
+	 */
+	function bb_admin_settings_register_email_digest_signpost() {
+		return bboss_admin_settings_register_email_digest_signpost();
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'bb_notifications_after_register_settings_fields', 'bb_admin_settings_register_email_digest_signpost' );
 
 // @bbwt-com-start installers
@@ -695,6 +877,20 @@ function bboss_email_digest_soften_stale_update_card( $field_data, $field, $feat
 
 	return $field_data;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_email_digest_soften_stale_update_card' ) && ! function_exists( 'bb_email_digest_soften_stale_update_card' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_email_digest_soften_stale_update_card()}.
+	 *
+	 * @deprecated Use bboss_email_digest_soften_stale_update_card() instead.
+	 */
+	function bb_email_digest_soften_stale_update_card( $field_data, $field, $feature_id ) {
+		return bboss_email_digest_soften_stale_update_card( $field_data, $field, $feature_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_filter( 'bb_admin_settings_format_field_data', 'bb_email_digest_soften_stale_update_card', 10, 3 );
 
 /**
@@ -800,6 +996,20 @@ function bboss_email_digest_ajax_update_addon() {
 
 	wp_send_json_success();
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_email_digest_ajax_update_addon' ) && ! function_exists( 'bb_email_digest_ajax_update_addon' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_email_digest_ajax_update_addon()}.
+	 *
+	 * @deprecated Use bboss_email_digest_ajax_update_addon() instead.
+	 */
+	function bb_email_digest_ajax_update_addon() {
+		return bboss_email_digest_ajax_update_addon();
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'wp_ajax_bb_email_digest_update_addon', 'bb_email_digest_ajax_update_addon' );
 // @bbwt-com-end installers
 
@@ -1032,20 +1242,8 @@ function bboss_admin_settings_register_email_digest_locked_form() {
 		)
 	);
 }
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
-if ( function_exists( 'bboss_admin_settings_register_email_digest_card' ) && ! function_exists( 'bb_admin_settings_register_email_digest_card' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_admin_settings_register_email_digest_card()}.
-	 *
-	 * @deprecated Use bboss_admin_settings_register_email_digest_card() instead.
-	 */
-	function bb_admin_settings_register_email_digest_card( $state ) {
-		return bboss_admin_settings_register_email_digest_card( $state );
-	}
-}
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_admin_settings_register_email_digest_locked_form' ) && ! function_exists( 'bb_admin_settings_register_email_digest_locked_form' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_admin_settings_register_email_digest_locked_form()}.
@@ -1056,144 +1254,5 @@ if ( function_exists( 'bboss_admin_settings_register_email_digest_locked_form' )
 		return bboss_admin_settings_register_email_digest_locked_form();
 	}
 }
-if ( function_exists( 'bboss_admin_settings_register_email_digest_placeholder' ) && ! function_exists( 'bb_admin_settings_register_email_digest_placeholder' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_admin_settings_register_email_digest_placeholder()}.
-	 *
-	 * @deprecated Use bboss_admin_settings_register_email_digest_placeholder() instead.
-	 */
-	function bb_admin_settings_register_email_digest_placeholder() {
-		return bboss_admin_settings_register_email_digest_placeholder();
-	}
-}
-if ( function_exists( 'bboss_admin_settings_register_email_digest_signpost' ) && ! function_exists( 'bb_admin_settings_register_email_digest_signpost' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_admin_settings_register_email_digest_signpost()}.
-	 *
-	 * @deprecated Use bboss_admin_settings_register_email_digest_signpost() instead.
-	 */
-	function bb_admin_settings_register_email_digest_signpost() {
-		return bboss_admin_settings_register_email_digest_signpost();
-	}
-}
-if ( function_exists( 'bboss_email_digest_addon_installed_version' ) && ! function_exists( 'bb_email_digest_addon_installed_version' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_email_digest_addon_installed_version()}.
-	 *
-	 * @deprecated Use bboss_email_digest_addon_installed_version() instead.
-	 */
-	function bb_email_digest_addon_installed_version() {
-		return bboss_email_digest_addon_installed_version();
-	}
-}
-if ( function_exists( 'bboss_email_digest_addon_latest_release' ) && ! function_exists( 'bb_email_digest_addon_latest_release' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_email_digest_addon_latest_release()}.
-	 *
-	 * @deprecated Use bboss_email_digest_addon_latest_release() instead.
-	 */
-	function bb_email_digest_addon_latest_release() {
-		return bboss_email_digest_addon_latest_release();
-	}
-}
-if ( function_exists( 'bboss_email_digest_addon_plugin_file' ) && ! function_exists( 'bb_email_digest_addon_plugin_file' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_email_digest_addon_plugin_file()}.
-	 *
-	 * @deprecated Use bboss_email_digest_addon_plugin_file() instead.
-	 */
-	function bb_email_digest_addon_plugin_file() {
-		return bboss_email_digest_addon_plugin_file();
-	}
-}
-if ( function_exists( 'bboss_email_digest_addon_plugin_slug' ) && ! function_exists( 'bb_email_digest_addon_plugin_slug' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_email_digest_addon_plugin_slug()}.
-	 *
-	 * @deprecated Use bboss_email_digest_addon_plugin_slug() instead.
-	 */
-	function bb_email_digest_addon_plugin_slug() {
-		return bboss_email_digest_addon_plugin_slug();
-	}
-}
-if ( function_exists( 'bboss_email_digest_addon_update_available' ) && ! function_exists( 'bb_email_digest_addon_update_available' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_email_digest_addon_update_available()}.
-	 *
-	 * @deprecated Use bboss_email_digest_addon_update_available() instead.
-	 */
-	function bb_email_digest_addon_update_available() {
-		return bboss_email_digest_addon_update_available();
-	}
-}
-if ( function_exists( 'bboss_email_digest_ajax_update_addon' ) && ! function_exists( 'bb_email_digest_ajax_update_addon' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_email_digest_ajax_update_addon()}.
-	 *
-	 * @deprecated Use bboss_email_digest_ajax_update_addon() instead.
-	 */
-	function bb_email_digest_ajax_update_addon() {
-		return bboss_email_digest_ajax_update_addon();
-	}
-}
-if ( function_exists( 'bboss_email_digest_get_placeholder_state' ) && ! function_exists( 'bb_email_digest_get_placeholder_state' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_email_digest_get_placeholder_state()}.
-	 *
-	 * @deprecated Use bboss_email_digest_get_placeholder_state() instead.
-	 */
-	function bb_email_digest_get_placeholder_state() {
-		return bboss_email_digest_get_placeholder_state();
-	}
-}
-if ( function_exists( 'bboss_email_digest_is_license_active' ) && ! function_exists( 'bb_email_digest_is_license_active' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_email_digest_is_license_active()}.
-	 *
-	 * @deprecated Use bboss_email_digest_is_license_active() instead.
-	 */
-	function bb_email_digest_is_license_active() {
-		return bboss_email_digest_is_license_active();
-	}
-}
-if ( function_exists( 'bboss_email_digest_licensed_plan_sku' ) && ! function_exists( 'bb_email_digest_licensed_plan_sku' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_email_digest_licensed_plan_sku()}.
-	 *
-	 * @deprecated Use bboss_email_digest_licensed_plan_sku() instead.
-	 */
-	function bb_email_digest_licensed_plan_sku() {
-		return bboss_email_digest_licensed_plan_sku();
-	}
-}
-if ( function_exists( 'bboss_email_digest_placeholder_state' ) && ! function_exists( 'bb_email_digest_placeholder_state' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_email_digest_placeholder_state()}.
-	 *
-	 * @deprecated Use bboss_email_digest_placeholder_state() instead.
-	 */
-	function bb_email_digest_placeholder_state() {
-		return bboss_email_digest_placeholder_state();
-	}
-}
-if ( function_exists( 'bboss_email_digest_required_plans' ) && ! function_exists( 'bb_email_digest_required_plans' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_email_digest_required_plans()}.
-	 *
-	 * @deprecated Use bboss_email_digest_required_plans() instead.
-	 */
-	function bb_email_digest_required_plans() {
-		return bboss_email_digest_required_plans();
-	}
-}
-if ( function_exists( 'bboss_email_digest_soften_stale_update_card' ) && ! function_exists( 'bb_email_digest_soften_stale_update_card' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_email_digest_soften_stale_update_card()}.
-	 *
-	 * @deprecated Use bboss_email_digest_soften_stale_update_card() instead.
-	 */
-	function bb_email_digest_soften_stale_update_card( $field_data, $field, $feature_id ) {
-		return bboss_email_digest_soften_stale_update_card( $field_data, $field, $feature_id );
-	}
-}
 // @bbwt-com-end compat-layer
+

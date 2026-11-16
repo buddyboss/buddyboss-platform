@@ -25,6 +25,20 @@ function bboss_profile_search_show_form() {
 	$template = bboss_locate_template( 'common/search/profile-search.php', false, false );
 	include $template;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_profile_search_show_form' ) && ! function_exists( 'bp_profile_search_show_form' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_profile_search_show_form()}.
+	 *
+	 * @deprecated Use bboss_profile_search_show_form() instead.
+	 */
+	function bp_profile_search_show_form() {
+		return bboss_profile_search_show_form();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Escape BuddyBoss Profile Search Form data.
@@ -214,10 +228,8 @@ function bboss_profile_search_escaped_form_data( $form = false ) {
 
 	return $F;
 }
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_profile_search_escaped_form_data' ) && ! function_exists( 'bp_profile_search_escaped_form_data' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_profile_search_escaped_form_data()}.
@@ -228,14 +240,5 @@ if ( function_exists( 'bboss_profile_search_escaped_form_data' ) && ! function_e
 		return bboss_profile_search_escaped_form_data( $form );
 	}
 }
-if ( function_exists( 'bboss_profile_search_show_form' ) && ! function_exists( 'bp_profile_search_show_form' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_profile_search_show_form()}.
-	 *
-	 * @deprecated Use bboss_profile_search_show_form() instead.
-	 */
-	function bp_profile_search_show_form() {
-		return bboss_profile_search_show_form();
-	}
-}
 // @bbwt-com-end compat-layer
+

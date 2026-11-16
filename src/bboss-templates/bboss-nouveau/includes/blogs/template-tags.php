@@ -44,6 +44,20 @@ function bboss_nouveau_before_blogs_directory_content() {
 	 */
 	do_action( 'bp_before_directory_blogs_tabs' );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_before_blogs_directory_content' ) && ! function_exists( 'bp_nouveau_before_blogs_directory_content' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_before_blogs_directory_content()}.
+	 *
+	 * @deprecated Use bboss_nouveau_before_blogs_directory_content() instead.
+	 */
+	function bp_nouveau_before_blogs_directory_content() {
+		return bboss_nouveau_before_blogs_directory_content();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Template tag to wrap all Legacy actions that was used after the blogs directory content
@@ -79,6 +93,20 @@ function bboss_nouveau_after_blogs_directory_content() {
 	 */
 	do_action( 'bp_after_directory_blogs_page' );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_after_blogs_directory_content' ) && ! function_exists( 'bp_nouveau_after_blogs_directory_content' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_after_blogs_directory_content()}.
+	 *
+	 * @deprecated Use bboss_nouveau_after_blogs_directory_content() instead.
+	 */
+	function bp_nouveau_after_blogs_directory_content() {
+		return bboss_nouveau_after_blogs_directory_content();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Fire specific hooks into the blogs create template
@@ -104,6 +132,20 @@ function bboss_nouveau_blogs_create_hook( $when = '', $suffix = '' ) {
 
 	bboss_nouveau_hook( $hook );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_blogs_create_hook' ) && ! function_exists( 'bp_nouveau_blogs_create_hook' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_blogs_create_hook()}.
+	 *
+	 * @deprecated Use bboss_nouveau_blogs_create_hook() instead.
+	 */
+	function bp_nouveau_blogs_create_hook( $when = '', $suffix = '' ) {
+		return bboss_nouveau_blogs_create_hook( $when, $suffix );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Fire an isolated hook inside the blogs loop
@@ -118,6 +160,20 @@ function bboss_nouveau_blogs_loop_item() {
 	 */
 	do_action( 'bp_directory_blogs_item' );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_blogs_loop_item' ) && ! function_exists( 'bp_nouveau_blogs_loop_item' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_blogs_loop_item()}.
+	 *
+	 * @deprecated Use bboss_nouveau_blogs_loop_item() instead.
+	 */
+	function bp_nouveau_blogs_loop_item() {
+		return bboss_nouveau_blogs_loop_item();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output the action buttons inside the blogs loop.
@@ -150,6 +206,20 @@ function bboss_nouveau_blogs_loop_buttons( $args = array() ) {
 
 	bboss_nouveau_wrapper( array_merge( $args, array( 'output' => $output ) ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_blogs_loop_buttons' ) && ! function_exists( 'bp_nouveau_blogs_loop_buttons' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_blogs_loop_buttons()}.
+	 *
+	 * @deprecated Use bboss_nouveau_blogs_loop_buttons() instead.
+	 */
+	function bp_nouveau_blogs_loop_buttons( $args = array() ) {
+		return bboss_nouveau_blogs_loop_buttons( $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 	/**
 	 * Get the action buttons for the current blog in the loop.
@@ -298,6 +368,20 @@ function bboss_nouveau_blogs_loop_buttons( $args = array() ) {
 
 		return $return;
 	}
+	// @bbwt-com-start compat-layer
+	// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+	if ( function_exists( 'bboss_nouveau_get_blogs_buttons' ) && ! function_exists( 'bp_nouveau_get_blogs_buttons' ) ) {
+		/**
+		 * Backward-compatible alias of {@see bboss_nouveau_get_blogs_buttons()}.
+		 *
+		 * @deprecated Use bboss_nouveau_get_blogs_buttons() instead.
+		 */
+		function bp_nouveau_get_blogs_buttons( $args ) {
+			return bboss_nouveau_get_blogs_buttons( $args );
+		}
+	}
+	// @bbwt-com-end compat-layer
+
 
 /**
  * Check if the Sites has a latest post
@@ -309,30 +393,8 @@ function bboss_nouveau_blogs_loop_buttons( $args = array() ) {
 function bboss_nouveau_blog_has_latest_post() {
 	return (bool) bboss_get_blog_latest_post_title();
 }
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
-if ( function_exists( 'bboss_nouveau_after_blogs_directory_content' ) && ! function_exists( 'bp_nouveau_after_blogs_directory_content' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_after_blogs_directory_content()}.
-	 *
-	 * @deprecated Use bboss_nouveau_after_blogs_directory_content() instead.
-	 */
-	function bp_nouveau_after_blogs_directory_content() {
-		return bboss_nouveau_after_blogs_directory_content();
-	}
-}
-if ( function_exists( 'bboss_nouveau_before_blogs_directory_content' ) && ! function_exists( 'bp_nouveau_before_blogs_directory_content' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_before_blogs_directory_content()}.
-	 *
-	 * @deprecated Use bboss_nouveau_before_blogs_directory_content() instead.
-	 */
-	function bp_nouveau_before_blogs_directory_content() {
-		return bboss_nouveau_before_blogs_directory_content();
-	}
-}
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_nouveau_blog_has_latest_post' ) && ! function_exists( 'bp_nouveau_blog_has_latest_post' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_nouveau_blog_has_latest_post()}.
@@ -343,44 +405,5 @@ if ( function_exists( 'bboss_nouveau_blog_has_latest_post' ) && ! function_exist
 		return bboss_nouveau_blog_has_latest_post();
 	}
 }
-if ( function_exists( 'bboss_nouveau_blogs_create_hook' ) && ! function_exists( 'bp_nouveau_blogs_create_hook' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_blogs_create_hook()}.
-	 *
-	 * @deprecated Use bboss_nouveau_blogs_create_hook() instead.
-	 */
-	function bp_nouveau_blogs_create_hook( $when = '', $suffix = '' ) {
-		return bboss_nouveau_blogs_create_hook( $when, $suffix );
-	}
-}
-if ( function_exists( 'bboss_nouveau_blogs_loop_buttons' ) && ! function_exists( 'bp_nouveau_blogs_loop_buttons' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_blogs_loop_buttons()}.
-	 *
-	 * @deprecated Use bboss_nouveau_blogs_loop_buttons() instead.
-	 */
-	function bp_nouveau_blogs_loop_buttons( $args = array() ) {
-		return bboss_nouveau_blogs_loop_buttons( $args );
-	}
-}
-if ( function_exists( 'bboss_nouveau_blogs_loop_item' ) && ! function_exists( 'bp_nouveau_blogs_loop_item' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_blogs_loop_item()}.
-	 *
-	 * @deprecated Use bboss_nouveau_blogs_loop_item() instead.
-	 */
-	function bp_nouveau_blogs_loop_item() {
-		return bboss_nouveau_blogs_loop_item();
-	}
-}
-if ( function_exists( 'bboss_nouveau_get_blogs_buttons' ) && ! function_exists( 'bp_nouveau_get_blogs_buttons' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_get_blogs_buttons()}.
-	 *
-	 * @deprecated Use bboss_nouveau_get_blogs_buttons() instead.
-	 */
-	function bp_nouveau_get_blogs_buttons( $args ) {
-		return bboss_nouveau_get_blogs_buttons( $args );
-	}
-}
 // @bbwt-com-end compat-layer
+

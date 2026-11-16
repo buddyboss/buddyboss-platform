@@ -61,6 +61,20 @@ function bboss_moderation_register_content_reporting_fields() {
 		)
 	);
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_moderation_register_content_reporting_fields' ) && ! function_exists( 'bb_moderation_register_content_reporting_fields' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_moderation_register_content_reporting_fields()}.
+	 *
+	 * @deprecated Use bboss_moderation_register_content_reporting_fields() instead.
+	 */
+	function bb_moderation_register_content_reporting_fields() {
+		return bboss_moderation_register_content_reporting_fields();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Lazily register per-content-type reporting fields.
@@ -149,11 +163,8 @@ function bboss_moderation_lazy_register_content_type_fields( $feature_id ) {
 		$field_order += 10;
 	}
 }
-add_action( 'bb_admin_settings_before_get_feature', 'bb_moderation_lazy_register_content_type_fields' );
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_moderation_lazy_register_content_type_fields' ) && ! function_exists( 'bb_moderation_lazy_register_content_type_fields' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_moderation_lazy_register_content_type_fields()}.
@@ -164,14 +175,6 @@ if ( function_exists( 'bboss_moderation_lazy_register_content_type_fields' ) && 
 		return bboss_moderation_lazy_register_content_type_fields( $feature_id );
 	}
 }
-if ( function_exists( 'bboss_moderation_register_content_reporting_fields' ) && ! function_exists( 'bb_moderation_register_content_reporting_fields' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_moderation_register_content_reporting_fields()}.
-	 *
-	 * @deprecated Use bboss_moderation_register_content_reporting_fields() instead.
-	 */
-	function bb_moderation_register_content_reporting_fields() {
-		return bboss_moderation_register_content_reporting_fields();
-	}
-}
 // @bbwt-com-end compat-layer
+
+add_action( 'bb_admin_settings_before_get_feature', 'bb_moderation_lazy_register_content_type_fields' );

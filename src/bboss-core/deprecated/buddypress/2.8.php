@@ -22,6 +22,20 @@ function bboss_core_admin_is_running_php53_or_greater() {
 	_deprecated_function( __FUNCTION__, '2.8' );
 	return version_compare( PHP_VERSION, '5.3', '>=' );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_core_admin_is_running_php53_or_greater' ) && ! function_exists( 'bp_core_admin_is_running_php53_or_greater' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_admin_is_running_php53_or_greater()}.
+	 *
+	 * @deprecated Use bboss_core_admin_is_running_php53_or_greater() instead.
+	 */
+	function bp_core_admin_is_running_php53_or_greater() {
+		return bboss_core_admin_is_running_php53_or_greater();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Replaces WP's default update notice on plugins.php with an error message, when site is not running PHP 5.3 or greater.
@@ -41,6 +55,20 @@ function bboss_core_admin_maybe_disable_update_row_for_php53_requirement() {
 	remove_action( "after_plugin_row_{$loader}", 'wp_plugin_update_row', 10 );
 	add_action( "after_plugin_row_{$loader}", 'bp_core_admin_php52_plugin_row', 10, 2 );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_core_admin_maybe_disable_update_row_for_php53_requirement' ) && ! function_exists( 'bp_core_admin_maybe_disable_update_row_for_php53_requirement' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_admin_maybe_disable_update_row_for_php53_requirement()}.
+	 *
+	 * @deprecated Use bboss_core_admin_maybe_disable_update_row_for_php53_requirement() instead.
+	 */
+	function bp_core_admin_maybe_disable_update_row_for_php53_requirement() {
+		return bboss_core_admin_maybe_disable_update_row_for_php53_requirement();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * On the "Dashboard > Updates" page, remove BuddyPress from plugins list if PHP < 5.3.
@@ -60,6 +88,20 @@ function bboss_core_admin_maybe_remove_from_update_core() {
 	add_filter( 'site_transient_update_plugins', 'bp_core_admin_remove_buddypress_from_update_transient' );
 	// @bbwt-com-end mothership-hub
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_core_admin_maybe_remove_from_update_core' ) && ! function_exists( 'bp_core_admin_maybe_remove_from_update_core' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_admin_maybe_remove_from_update_core()}.
+	 *
+	 * @deprecated Use bboss_core_admin_maybe_remove_from_update_core() instead.
+	 */
+	function bp_core_admin_maybe_remove_from_update_core() {
+		return bboss_core_admin_maybe_remove_from_update_core();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 // @bbwt-com-start mothership-hub
 /**
@@ -85,6 +127,20 @@ function bboss_core_admin_remove_buddypress_from_update_transient( $retval ) {
 
 	return $retval;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_core_admin_remove_buddypress_from_update_transient' ) && ! function_exists( 'bp_core_admin_remove_buddypress_from_update_transient' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_admin_remove_buddypress_from_update_transient()}.
+	 *
+	 * @deprecated Use bboss_core_admin_remove_buddypress_from_update_transient() instead.
+	 */
+	function bp_core_admin_remove_buddypress_from_update_transient( $retval ) {
+		return bboss_core_admin_remove_buddypress_from_update_transient( $retval );
+	}
+}
+// @bbwt-com-end compat-layer
+
 // @bbwt-com-end mothership-hub
 
 /**
@@ -164,6 +220,20 @@ function bboss_core_admin_php52_plugin_row( $file, $plugin_data ) {
 	$checkbox_id = 'checkbox_' . md5( $plugin_data['Name'] );
 	echo "<script type='text/javascript'>document.getElementById('" . esc_js( $checkbox_id ) . "').disabled = true;</script>";
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_core_admin_php52_plugin_row' ) && ! function_exists( 'bp_core_admin_php52_plugin_row' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_admin_php52_plugin_row()}.
+	 *
+	 * @deprecated Use bboss_core_admin_php52_plugin_row() instead.
+	 */
+	function bp_core_admin_php52_plugin_row( $file, $plugin_data ) {
+		return bboss_core_admin_php52_plugin_row( $file, $plugin_data );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Add an admin notice to installations that are not running PHP 5.3+.
@@ -225,50 +295,8 @@ function bboss_core_admin_php53_admin_notice() {
 	</div>
 	<?php
 }
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
-if ( function_exists( 'bboss_core_admin_is_running_php53_or_greater' ) && ! function_exists( 'bp_core_admin_is_running_php53_or_greater' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_core_admin_is_running_php53_or_greater()}.
-	 *
-	 * @deprecated Use bboss_core_admin_is_running_php53_or_greater() instead.
-	 */
-	function bp_core_admin_is_running_php53_or_greater() {
-		return bboss_core_admin_is_running_php53_or_greater();
-	}
-}
-if ( function_exists( 'bboss_core_admin_maybe_disable_update_row_for_php53_requirement' ) && ! function_exists( 'bp_core_admin_maybe_disable_update_row_for_php53_requirement' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_core_admin_maybe_disable_update_row_for_php53_requirement()}.
-	 *
-	 * @deprecated Use bboss_core_admin_maybe_disable_update_row_for_php53_requirement() instead.
-	 */
-	function bp_core_admin_maybe_disable_update_row_for_php53_requirement() {
-		return bboss_core_admin_maybe_disable_update_row_for_php53_requirement();
-	}
-}
-if ( function_exists( 'bboss_core_admin_maybe_remove_from_update_core' ) && ! function_exists( 'bp_core_admin_maybe_remove_from_update_core' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_core_admin_maybe_remove_from_update_core()}.
-	 *
-	 * @deprecated Use bboss_core_admin_maybe_remove_from_update_core() instead.
-	 */
-	function bp_core_admin_maybe_remove_from_update_core() {
-		return bboss_core_admin_maybe_remove_from_update_core();
-	}
-}
-if ( function_exists( 'bboss_core_admin_php52_plugin_row' ) && ! function_exists( 'bp_core_admin_php52_plugin_row' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_core_admin_php52_plugin_row()}.
-	 *
-	 * @deprecated Use bboss_core_admin_php52_plugin_row() instead.
-	 */
-	function bp_core_admin_php52_plugin_row( $file, $plugin_data ) {
-		return bboss_core_admin_php52_plugin_row( $file, $plugin_data );
-	}
-}
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_core_admin_php53_admin_notice' ) && ! function_exists( 'bp_core_admin_php53_admin_notice' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_core_admin_php53_admin_notice()}.
@@ -279,14 +307,6 @@ if ( function_exists( 'bboss_core_admin_php53_admin_notice' ) && ! function_exis
 		return bboss_core_admin_php53_admin_notice();
 	}
 }
-if ( function_exists( 'bboss_core_admin_remove_buddypress_from_update_transient' ) && ! function_exists( 'bp_core_admin_remove_buddypress_from_update_transient' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_core_admin_remove_buddypress_from_update_transient()}.
-	 *
-	 * @deprecated Use bboss_core_admin_remove_buddypress_from_update_transient() instead.
-	 */
-	function bp_core_admin_remove_buddypress_from_update_transient( $retval ) {
-		return bboss_core_admin_remove_buddypress_from_update_transient( $retval );
-	}
-}
 // @bbwt-com-end compat-layer
+
+

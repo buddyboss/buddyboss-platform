@@ -130,6 +130,20 @@ function bboss_groups_notification_group_updated( $group_id = 0, $old_group = nu
 	 */
 	do_action( 'bp_groups_sent_updated_email', $user_ids, '', '', $group_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_groups_notification_group_updated' ) && ! function_exists( 'groups_notification_group_updated' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_notification_group_updated()}.
+	 *
+	 * @deprecated Use bboss_groups_notification_group_updated() instead.
+	 */
+	function groups_notification_group_updated( $group_id = 0, $old_group = null ) {
+		return bboss_groups_notification_group_updated( $group_id, $old_group );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Notify group admin about new membership request.
@@ -211,6 +225,20 @@ function bboss_groups_notification_new_membership_request( $requesting_user_id =
 	);
 	bboss_send_email( 'groups-membership-request', (int) $admin_id, $args );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_groups_notification_new_membership_request' ) && ! function_exists( 'groups_notification_new_membership_request' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_notification_new_membership_request()}.
+	 *
+	 * @deprecated Use bboss_groups_notification_new_membership_request() instead.
+	 */
+	function groups_notification_new_membership_request( $requesting_user_id = 0, $admin_id = 0, $group_id = 0, $membership_id = 0 ) {
+		return bboss_groups_notification_new_membership_request( $requesting_user_id, $admin_id, $group_id, $membership_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Notify member about their group membership request.
@@ -290,6 +318,20 @@ function bboss_groups_notification_membership_request_completed( $requesting_use
 		bboss_send_email( 'groups-membership-request-rejected', (int) $requesting_user_id, $args );
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_groups_notification_membership_request_completed' ) && ! function_exists( 'groups_notification_membership_request_completed' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_notification_membership_request_completed()}.
+	 *
+	 * @deprecated Use bboss_groups_notification_membership_request_completed() instead.
+	 */
+	function groups_notification_membership_request_completed( $requesting_user_id = 0, $group_id = 0, $accepted = true ) {
+		return bboss_groups_notification_membership_request_completed( $requesting_user_id, $group_id, $accepted );
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'groups_membership_accepted', 'groups_notification_membership_request_completed', 10, 3 );
 add_action( 'groups_membership_rejected', 'groups_notification_membership_request_completed', 10, 3 );
 
@@ -362,6 +404,20 @@ function bboss_groups_notification_promoted_member( $user_id = 0, $group_id = 0 
 	);
 	bboss_send_email( 'groups-member-promoted', (int) $user_id, $args );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_groups_notification_promoted_member' ) && ! function_exists( 'groups_notification_promoted_member' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_notification_promoted_member()}.
+	 *
+	 * @deprecated Use bboss_groups_notification_promoted_member() instead.
+	 */
+	function groups_notification_promoted_member( $user_id = 0, $group_id = 0 ) {
+		return bboss_groups_notification_promoted_member( $user_id, $group_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'groups_promoted_member', 'groups_notification_promoted_member', 10, 2 );
 
 /**
@@ -461,6 +517,20 @@ function bboss_groups_notification_group_invites( &$group, &$member, $inviter_us
 	);
 	bboss_send_email( 'groups-invitation', (int) $invited_user_id, $args );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_groups_notification_group_invites' ) && ! function_exists( 'groups_notification_group_invites' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_notification_group_invites()}.
+	 *
+	 * @deprecated Use bboss_groups_notification_group_invites() instead.
+	 */
+	function groups_notification_group_invites( &$group, &$member, $inviter_user_id ) {
+		return bboss_groups_notification_group_invites( $group, $member, $inviter_user_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /** Notifications *************************************************************/
 
@@ -1153,6 +1223,20 @@ function bboss_groups_format_notifications( $action, $item_id, $secondary_item_i
 
 	return false;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_groups_format_notifications' ) && ! function_exists( 'groups_format_notifications' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_format_notifications()}.
+	 *
+	 * @deprecated Use bboss_groups_format_notifications() instead.
+	 */
+	function groups_format_notifications( $action, $item_id, $secondary_item_id, $total_items, $format = 'string', $notification_id = 0, $screen = 'web' ) {
+		return bboss_groups_format_notifications( $action, $item_id, $secondary_item_id, $total_items, $format, $notification_id, $screen );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Remove all notifications for any member belonging to a specific group.
@@ -1166,6 +1250,20 @@ function bboss_groups_delete_group_delete_all_notifications( $group_id ) {
 		bboss_notifications_delete_all_notifications_by_type( $group_id, bboss()->groups->id );
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_groups_delete_group_delete_all_notifications' ) && ! function_exists( 'bp_groups_delete_group_delete_all_notifications' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_delete_group_delete_all_notifications()}.
+	 *
+	 * @deprecated Use bboss_groups_delete_group_delete_all_notifications() instead.
+	 */
+	function bp_groups_delete_group_delete_all_notifications( $group_id ) {
+		return bboss_groups_delete_group_delete_all_notifications( $group_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'groups_delete_group', 'bp_groups_delete_group_delete_all_notifications', 10 );
 
 /**
@@ -1185,6 +1283,20 @@ function bboss_groups_uninvite_user_delete_group_invite_notification( $group_id 
 	bboss_notifications_delete_notifications_by_item_id( $user_id, $group_id, bboss()->groups->id, 'group_invite' );
 	bboss_notifications_delete_notifications_by_item_id( $user_id, $group_id, bboss()->groups->id, 'bb_groups_new_invite' );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_groups_uninvite_user_delete_group_invite_notification' ) && ! function_exists( 'bp_groups_uninvite_user_delete_group_invite_notification' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_uninvite_user_delete_group_invite_notification()}.
+	 *
+	 * @deprecated Use bboss_groups_uninvite_user_delete_group_invite_notification() instead.
+	 */
+	function bp_groups_uninvite_user_delete_group_invite_notification( $group_id = 0, $user_id = 0 ) {
+		return bboss_groups_uninvite_user_delete_group_invite_notification( $group_id, $user_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'groups_uninvite_user', 'bp_groups_uninvite_user_delete_group_invite_notification', 10, 2 );
 
 /**
@@ -1201,6 +1313,20 @@ function bboss_groups_delete_promotion_notifications( $user_id = 0, $group_id = 
 		bboss_notifications_delete_notifications_by_item_id( $user_id, $group_id, bboss()->groups->id, 'member_promoted_to_mod' );
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_groups_delete_promotion_notifications' ) && ! function_exists( 'bp_groups_delete_promotion_notifications' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_delete_promotion_notifications()}.
+	 *
+	 * @deprecated Use bboss_groups_delete_promotion_notifications() instead.
+	 */
+	function bp_groups_delete_promotion_notifications( $user_id = 0, $group_id = 0 ) {
+		return bboss_groups_delete_promotion_notifications( $user_id, $group_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'groups_demoted_member', 'bp_groups_delete_promotion_notifications', 10, 2 );
 
 /**
@@ -1217,6 +1343,20 @@ function bboss_groups_accept_invite_mark_notifications( $user_id, $group_id ) {
 		bboss_notifications_mark_notifications_by_item_id( $user_id, $group_id, bboss()->groups->id, 'bb_groups_new_invite' );
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_groups_accept_invite_mark_notifications' ) && ! function_exists( 'bp_groups_accept_invite_mark_notifications' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_accept_invite_mark_notifications()}.
+	 *
+	 * @deprecated Use bboss_groups_accept_invite_mark_notifications() instead.
+	 */
+	function bp_groups_accept_invite_mark_notifications( $user_id, $group_id ) {
+		return bboss_groups_accept_invite_mark_notifications( $user_id, $group_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'groups_accept_invite', 'bp_groups_accept_invite_mark_notifications', 10, 2 );
 add_action( 'groups_reject_invite', 'bp_groups_accept_invite_mark_notifications', 10, 2 );
 add_action( 'groups_delete_invite', 'bp_groups_accept_invite_mark_notifications', 10, 2 );
@@ -1236,6 +1376,20 @@ function bboss_groups_accept_request_mark_notifications( $user_id, $group_id ) {
 		bboss_notifications_mark_notifications_by_item_id( null, $group_id, bboss()->groups->id, 'bb_groups_new_request', $user_id );
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_groups_accept_request_mark_notifications' ) && ! function_exists( 'bp_groups_accept_request_mark_notifications' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_accept_request_mark_notifications()}.
+	 *
+	 * @deprecated Use bboss_groups_accept_request_mark_notifications() instead.
+	 */
+	function bp_groups_accept_request_mark_notifications( $user_id, $group_id ) {
+		return bboss_groups_accept_request_mark_notifications( $user_id, $group_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'groups_membership_accepted', 'bp_groups_accept_request_mark_notifications', 10, 2 );
 add_action( 'groups_membership_rejected', 'bp_groups_accept_request_mark_notifications', 10, 2 );
 
@@ -1262,6 +1416,20 @@ function bboss_groups_screen_my_groups_mark_notifications() {
 		bboss_notifications_mark_notifications_by_type( $user_id, $group_id, 'bb_groups_request_rejected' );
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_groups_screen_my_groups_mark_notifications' ) && ! function_exists( 'bp_groups_screen_my_groups_mark_notifications' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_screen_my_groups_mark_notifications()}.
+	 *
+	 * @deprecated Use bboss_groups_screen_my_groups_mark_notifications() instead.
+	 */
+	function bp_groups_screen_my_groups_mark_notifications() {
+		return bboss_groups_screen_my_groups_mark_notifications();
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'groups_screen_my_groups', 'bp_groups_screen_my_groups_mark_notifications', 10 );
 add_action( 'groups_screen_group_home', 'bp_groups_screen_my_groups_mark_notifications', 10 );
 
@@ -1281,6 +1449,20 @@ function bboss_groups_screen_invites_mark_notifications() {
 		bboss_notifications_mark_notifications_by_type( bboss_loggedin_user_id(), bboss()->groups->id, 'bb_groups_new_invite' );
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_groups_screen_invites_mark_notifications' ) && ! function_exists( 'bp_groups_screen_invites_mark_notifications' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_screen_invites_mark_notifications()}.
+	 *
+	 * @deprecated Use bboss_groups_screen_invites_mark_notifications() instead.
+	 */
+	function bp_groups_screen_invites_mark_notifications() {
+		return bboss_groups_screen_invites_mark_notifications();
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'groups_screen_group_invites', 'bp_groups_screen_invites_mark_notifications', 10 );
 
 /**
@@ -1295,6 +1477,20 @@ function bboss_groups_screen_group_admin_requests_mark_notifications( $group_id 
 		bboss_notifications_mark_notifications_by_item_id( bboss_loggedin_user_id(), $group_id, bboss()->groups->id, 'bb_groups_new_request' );
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_groups_screen_group_admin_requests_mark_notifications' ) && ! function_exists( 'bp_groups_screen_group_admin_requests_mark_notifications' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_screen_group_admin_requests_mark_notifications()}.
+	 *
+	 * @deprecated Use bboss_groups_screen_group_admin_requests_mark_notifications() instead.
+	 */
+	function bp_groups_screen_group_admin_requests_mark_notifications( $group_id ) {
+		return bboss_groups_screen_group_admin_requests_mark_notifications( $group_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'groups_screen_group_admin_requests', 'bp_groups_screen_group_admin_requests_mark_notifications', 10 );
 
 /**
@@ -1310,6 +1506,20 @@ function bboss_groups_remove_data_for_user_notifications( $user_id ) {
 		bboss_notifications_delete_notifications_from_user( $user_id, bboss()->groups->id, 'bb_groups_new_request' );
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_groups_remove_data_for_user_notifications' ) && ! function_exists( 'bp_groups_remove_data_for_user_notifications' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_remove_data_for_user_notifications()}.
+	 *
+	 * @deprecated Use bboss_groups_remove_data_for_user_notifications() instead.
+	 */
+	function bp_groups_remove_data_for_user_notifications( $user_id ) {
+		return bboss_groups_remove_data_for_user_notifications( $user_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'groups_remove_data_for_user', 'bp_groups_remove_data_for_user_notifications', 10 );
 
 /**
@@ -1482,6 +1692,20 @@ function bboss_groups_screen_notification_settings() {
 	<?php
 
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_groups_screen_notification_settings' ) && ! function_exists( 'groups_screen_notification_settings' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_screen_notification_settings()}.
+	 *
+	 * @deprecated Use bboss_groups_screen_notification_settings() instead.
+	 */
+	function groups_screen_notification_settings() {
+		return bboss_groups_screen_notification_settings();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 add_action( 'bp_notification_settings', 'groups_screen_notification_settings' );
 
@@ -1566,6 +1790,20 @@ function bboss_groups_notification_groups_updated( $group_id = 0 ) {
 		}
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_groups_notification_groups_updated' ) && ! function_exists( 'bb_groups_notification_groups_updated' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_notification_groups_updated()}.
+	 *
+	 * @deprecated Use bboss_groups_notification_groups_updated() instead.
+	 */
+	function bb_groups_notification_groups_updated( $group_id = 0 ) {
+		return bboss_groups_notification_groups_updated( $group_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Mark group detail update notifications as read when a member views their group.
@@ -1584,6 +1822,20 @@ function bboss_groups_group_details_update_mark_notifications() {
 		bboss_notifications_mark_notifications_by_item_id( $user_id, $group_id, bboss()->groups->id, 'bb_groups_promoted' );
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_groups_group_details_update_mark_notifications' ) && ! function_exists( 'bb_groups_group_details_update_mark_notifications' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_group_details_update_mark_notifications()}.
+	 *
+	 * @deprecated Use bboss_groups_group_details_update_mark_notifications() instead.
+	 */
+	function bb_groups_group_details_update_mark_notifications() {
+		return bboss_groups_group_details_update_mark_notifications();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 add_action( 'bp_template_redirect', 'bb_groups_group_details_update_mark_notifications' );
 
@@ -1617,10 +1869,8 @@ function bboss_groups_add_notification_metas( $notification ) {
 
 	bboss_notifications_update_meta( $notification->id, 'promoted_to', $promoted_to );
 }
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_groups_add_notification_metas' ) && ! function_exists( 'bb_groups_add_notification_metas' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_groups_add_notification_metas()}.
@@ -1631,184 +1881,5 @@ if ( function_exists( 'bboss_groups_add_notification_metas' ) && ! function_exis
 		return bboss_groups_add_notification_metas( $notification );
 	}
 }
-if ( function_exists( 'bboss_groups_group_details_update_mark_notifications' ) && ! function_exists( 'bb_groups_group_details_update_mark_notifications' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_groups_group_details_update_mark_notifications()}.
-	 *
-	 * @deprecated Use bboss_groups_group_details_update_mark_notifications() instead.
-	 */
-	function bb_groups_group_details_update_mark_notifications() {
-		return bboss_groups_group_details_update_mark_notifications();
-	}
-}
-if ( function_exists( 'bboss_groups_notification_groups_updated' ) && ! function_exists( 'bb_groups_notification_groups_updated' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_groups_notification_groups_updated()}.
-	 *
-	 * @deprecated Use bboss_groups_notification_groups_updated() instead.
-	 */
-	function bb_groups_notification_groups_updated( $group_id = 0 ) {
-		return bboss_groups_notification_groups_updated( $group_id );
-	}
-}
-if ( function_exists( 'bboss_groups_accept_invite_mark_notifications' ) && ! function_exists( 'bp_groups_accept_invite_mark_notifications' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_groups_accept_invite_mark_notifications()}.
-	 *
-	 * @deprecated Use bboss_groups_accept_invite_mark_notifications() instead.
-	 */
-	function bp_groups_accept_invite_mark_notifications( $user_id, $group_id ) {
-		return bboss_groups_accept_invite_mark_notifications( $user_id, $group_id );
-	}
-}
-if ( function_exists( 'bboss_groups_accept_request_mark_notifications' ) && ! function_exists( 'bp_groups_accept_request_mark_notifications' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_groups_accept_request_mark_notifications()}.
-	 *
-	 * @deprecated Use bboss_groups_accept_request_mark_notifications() instead.
-	 */
-	function bp_groups_accept_request_mark_notifications( $user_id, $group_id ) {
-		return bboss_groups_accept_request_mark_notifications( $user_id, $group_id );
-	}
-}
-if ( function_exists( 'bboss_groups_delete_group_delete_all_notifications' ) && ! function_exists( 'bp_groups_delete_group_delete_all_notifications' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_groups_delete_group_delete_all_notifications()}.
-	 *
-	 * @deprecated Use bboss_groups_delete_group_delete_all_notifications() instead.
-	 */
-	function bp_groups_delete_group_delete_all_notifications( $group_id ) {
-		return bboss_groups_delete_group_delete_all_notifications( $group_id );
-	}
-}
-if ( function_exists( 'bboss_groups_delete_promotion_notifications' ) && ! function_exists( 'bp_groups_delete_promotion_notifications' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_groups_delete_promotion_notifications()}.
-	 *
-	 * @deprecated Use bboss_groups_delete_promotion_notifications() instead.
-	 */
-	function bp_groups_delete_promotion_notifications( $user_id = 0, $group_id = 0 ) {
-		return bboss_groups_delete_promotion_notifications( $user_id, $group_id );
-	}
-}
-if ( function_exists( 'bboss_groups_remove_data_for_user_notifications' ) && ! function_exists( 'bp_groups_remove_data_for_user_notifications' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_groups_remove_data_for_user_notifications()}.
-	 *
-	 * @deprecated Use bboss_groups_remove_data_for_user_notifications() instead.
-	 */
-	function bp_groups_remove_data_for_user_notifications( $user_id ) {
-		return bboss_groups_remove_data_for_user_notifications( $user_id );
-	}
-}
-if ( function_exists( 'bboss_groups_screen_group_admin_requests_mark_notifications' ) && ! function_exists( 'bp_groups_screen_group_admin_requests_mark_notifications' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_groups_screen_group_admin_requests_mark_notifications()}.
-	 *
-	 * @deprecated Use bboss_groups_screen_group_admin_requests_mark_notifications() instead.
-	 */
-	function bp_groups_screen_group_admin_requests_mark_notifications( $group_id ) {
-		return bboss_groups_screen_group_admin_requests_mark_notifications( $group_id );
-	}
-}
-if ( function_exists( 'bboss_groups_screen_invites_mark_notifications' ) && ! function_exists( 'bp_groups_screen_invites_mark_notifications' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_groups_screen_invites_mark_notifications()}.
-	 *
-	 * @deprecated Use bboss_groups_screen_invites_mark_notifications() instead.
-	 */
-	function bp_groups_screen_invites_mark_notifications() {
-		return bboss_groups_screen_invites_mark_notifications();
-	}
-}
-if ( function_exists( 'bboss_groups_screen_my_groups_mark_notifications' ) && ! function_exists( 'bp_groups_screen_my_groups_mark_notifications' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_groups_screen_my_groups_mark_notifications()}.
-	 *
-	 * @deprecated Use bboss_groups_screen_my_groups_mark_notifications() instead.
-	 */
-	function bp_groups_screen_my_groups_mark_notifications() {
-		return bboss_groups_screen_my_groups_mark_notifications();
-	}
-}
-if ( function_exists( 'bboss_groups_uninvite_user_delete_group_invite_notification' ) && ! function_exists( 'bp_groups_uninvite_user_delete_group_invite_notification' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_groups_uninvite_user_delete_group_invite_notification()}.
-	 *
-	 * @deprecated Use bboss_groups_uninvite_user_delete_group_invite_notification() instead.
-	 */
-	function bp_groups_uninvite_user_delete_group_invite_notification( $group_id = 0, $user_id = 0 ) {
-		return bboss_groups_uninvite_user_delete_group_invite_notification( $group_id, $user_id );
-	}
-}
-if ( function_exists( 'bboss_groups_format_notifications' ) && ! function_exists( 'groups_format_notifications' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_groups_format_notifications()}.
-	 *
-	 * @deprecated Use bboss_groups_format_notifications() instead.
-	 */
-	function groups_format_notifications( $action, $item_id, $secondary_item_id, $total_items, $format = 'string', $notification_id = 0, $screen = 'web' ) {
-		return bboss_groups_format_notifications( $action, $item_id, $secondary_item_id, $total_items, $format, $notification_id, $screen );
-	}
-}
-if ( function_exists( 'bboss_groups_notification_group_invites' ) && ! function_exists( 'groups_notification_group_invites' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_groups_notification_group_invites()}.
-	 *
-	 * @deprecated Use bboss_groups_notification_group_invites() instead.
-	 */
-	function groups_notification_group_invites( &$group, &$member, $inviter_user_id ) {
-		return bboss_groups_notification_group_invites( $group, $member, $inviter_user_id );
-	}
-}
-if ( function_exists( 'bboss_groups_notification_group_updated' ) && ! function_exists( 'groups_notification_group_updated' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_groups_notification_group_updated()}.
-	 *
-	 * @deprecated Use bboss_groups_notification_group_updated() instead.
-	 */
-	function groups_notification_group_updated( $group_id = 0, $old_group = null ) {
-		return bboss_groups_notification_group_updated( $group_id, $old_group );
-	}
-}
-if ( function_exists( 'bboss_groups_notification_membership_request_completed' ) && ! function_exists( 'groups_notification_membership_request_completed' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_groups_notification_membership_request_completed()}.
-	 *
-	 * @deprecated Use bboss_groups_notification_membership_request_completed() instead.
-	 */
-	function groups_notification_membership_request_completed( $requesting_user_id = 0, $group_id = 0, $accepted = true ) {
-		return bboss_groups_notification_membership_request_completed( $requesting_user_id, $group_id, $accepted );
-	}
-}
-if ( function_exists( 'bboss_groups_notification_new_membership_request' ) && ! function_exists( 'groups_notification_new_membership_request' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_groups_notification_new_membership_request()}.
-	 *
-	 * @deprecated Use bboss_groups_notification_new_membership_request() instead.
-	 */
-	function groups_notification_new_membership_request( $requesting_user_id = 0, $admin_id = 0, $group_id = 0, $membership_id = 0 ) {
-		return bboss_groups_notification_new_membership_request( $requesting_user_id, $admin_id, $group_id, $membership_id );
-	}
-}
-if ( function_exists( 'bboss_groups_notification_promoted_member' ) && ! function_exists( 'groups_notification_promoted_member' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_groups_notification_promoted_member()}.
-	 *
-	 * @deprecated Use bboss_groups_notification_promoted_member() instead.
-	 */
-	function groups_notification_promoted_member( $user_id = 0, $group_id = 0 ) {
-		return bboss_groups_notification_promoted_member( $user_id, $group_id );
-	}
-}
-if ( function_exists( 'bboss_groups_screen_notification_settings' ) && ! function_exists( 'groups_screen_notification_settings' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_groups_screen_notification_settings()}.
-	 *
-	 * @deprecated Use bboss_groups_screen_notification_settings() instead.
-	 */
-	function groups_screen_notification_settings() {
-		return bboss_groups_screen_notification_settings();
-	}
-}
 // @bbwt-com-end compat-layer
+

@@ -57,11 +57,8 @@ function bboss_settings_action_delete_account() {
 		bboss_core_redirect( bboss_get_root_domain() );
 	}
 }
-add_action( 'bp_actions', 'bp_settings_action_delete_account' );
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_settings_action_delete_account' ) && ! function_exists( 'bp_settings_action_delete_account' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_settings_action_delete_account()}.
@@ -73,3 +70,5 @@ if ( function_exists( 'bboss_settings_action_delete_account' ) && ! function_exi
 	}
 }
 // @bbwt-com-end compat-layer
+
+add_action( 'bp_actions', 'bp_settings_action_delete_account' );

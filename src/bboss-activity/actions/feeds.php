@@ -37,6 +37,20 @@ function bboss_activity_action_sitewide_feed() {
 		)
 	);
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_activity_action_sitewide_feed' ) && ! function_exists( 'bp_activity_action_sitewide_feed' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_activity_action_sitewide_feed()}.
+	 *
+	 * @deprecated Use bboss_activity_action_sitewide_feed() instead.
+	 */
+	function bp_activity_action_sitewide_feed() {
+		return bboss_activity_action_sitewide_feed();
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'bp_actions', 'bp_activity_action_sitewide_feed' );
 
 /**
@@ -68,6 +82,20 @@ function bboss_activity_action_personal_feed() {
 		)
 	);
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_activity_action_personal_feed' ) && ! function_exists( 'bp_activity_action_personal_feed' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_activity_action_personal_feed()}.
+	 *
+	 * @deprecated Use bboss_activity_action_personal_feed() instead.
+	 */
+	function bp_activity_action_personal_feed() {
+		return bboss_activity_action_personal_feed();
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'bp_actions', 'bp_activity_action_personal_feed' );
 
 /**
@@ -99,6 +127,20 @@ function bboss_activity_action_friends_feed() {
 		)
 	);
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_activity_action_friends_feed' ) && ! function_exists( 'bp_activity_action_friends_feed' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_activity_action_friends_feed()}.
+	 *
+	 * @deprecated Use bboss_activity_action_friends_feed() instead.
+	 */
+	function bp_activity_action_friends_feed() {
+		return bboss_activity_action_friends_feed();
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'bp_actions', 'bp_activity_action_friends_feed' );
 
 /**
@@ -139,6 +181,20 @@ function bboss_activity_action_my_groups_feed() {
 		)
 	);
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_activity_action_my_groups_feed' ) && ! function_exists( 'bp_activity_action_my_groups_feed' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_activity_action_my_groups_feed()}.
+	 *
+	 * @deprecated Use bboss_activity_action_my_groups_feed() instead.
+	 */
+	function bp_activity_action_my_groups_feed() {
+		return bboss_activity_action_my_groups_feed();
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'bp_actions', 'bp_activity_action_my_groups_feed' );
 
 /**
@@ -177,6 +233,20 @@ function bboss_activity_action_mentions_feed() {
 		)
 	);
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_activity_action_mentions_feed' ) && ! function_exists( 'bp_activity_action_mentions_feed' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_activity_action_mentions_feed()}.
+	 *
+	 * @deprecated Use bboss_activity_action_mentions_feed() instead.
+	 */
+	function bp_activity_action_mentions_feed() {
+		return bboss_activity_action_mentions_feed();
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'bp_actions', 'bp_activity_action_mentions_feed' );
 
 /**
@@ -213,11 +283,8 @@ function bboss_activity_action_favorites_feed() {
 		)
 	);
 }
-add_action( 'bp_actions', 'bp_activity_action_favorites_feed' );
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_activity_action_favorites_feed' ) && ! function_exists( 'bp_activity_action_favorites_feed' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_activity_action_favorites_feed()}.
@@ -228,54 +295,6 @@ if ( function_exists( 'bboss_activity_action_favorites_feed' ) && ! function_exi
 		return bboss_activity_action_favorites_feed();
 	}
 }
-if ( function_exists( 'bboss_activity_action_friends_feed' ) && ! function_exists( 'bp_activity_action_friends_feed' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_activity_action_friends_feed()}.
-	 *
-	 * @deprecated Use bboss_activity_action_friends_feed() instead.
-	 */
-	function bp_activity_action_friends_feed() {
-		return bboss_activity_action_friends_feed();
-	}
-}
-if ( function_exists( 'bboss_activity_action_mentions_feed' ) && ! function_exists( 'bp_activity_action_mentions_feed' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_activity_action_mentions_feed()}.
-	 *
-	 * @deprecated Use bboss_activity_action_mentions_feed() instead.
-	 */
-	function bp_activity_action_mentions_feed() {
-		return bboss_activity_action_mentions_feed();
-	}
-}
-if ( function_exists( 'bboss_activity_action_my_groups_feed' ) && ! function_exists( 'bp_activity_action_my_groups_feed' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_activity_action_my_groups_feed()}.
-	 *
-	 * @deprecated Use bboss_activity_action_my_groups_feed() instead.
-	 */
-	function bp_activity_action_my_groups_feed() {
-		return bboss_activity_action_my_groups_feed();
-	}
-}
-if ( function_exists( 'bboss_activity_action_personal_feed' ) && ! function_exists( 'bp_activity_action_personal_feed' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_activity_action_personal_feed()}.
-	 *
-	 * @deprecated Use bboss_activity_action_personal_feed() instead.
-	 */
-	function bp_activity_action_personal_feed() {
-		return bboss_activity_action_personal_feed();
-	}
-}
-if ( function_exists( 'bboss_activity_action_sitewide_feed' ) && ! function_exists( 'bp_activity_action_sitewide_feed' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_activity_action_sitewide_feed()}.
-	 *
-	 * @deprecated Use bboss_activity_action_sitewide_feed() instead.
-	 */
-	function bp_activity_action_sitewide_feed() {
-		return bboss_activity_action_sitewide_feed();
-	}
-}
 // @bbwt-com-end compat-layer
+
+add_action( 'bp_actions', 'bp_activity_action_favorites_feed' );

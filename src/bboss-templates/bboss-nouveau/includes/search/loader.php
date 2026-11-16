@@ -87,12 +87,8 @@ function bboss_nouveau_search( $bp_nouveau = null ) {
 
 	$bp_nouveau->search = new BBoss_Nouveau_Search();
 }
-
-add_action( 'bp_nouveau_includes', 'bp_nouveau_search', 10, 1 );
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_nouveau_search' ) && ! function_exists( 'bp_nouveau_search' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_nouveau_search()}.
@@ -104,3 +100,6 @@ if ( function_exists( 'bboss_nouveau_search' ) && ! function_exists( 'bp_nouveau
 	}
 }
 // @bbwt-com-end compat-layer
+
+
+add_action( 'bp_nouveau_includes', 'bp_nouveau_search', 10, 1 );

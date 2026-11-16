@@ -24,11 +24,8 @@ function bboss_setup_core() {
 		require_once bboss()->plugin_dir . 'bboss-core/admin/bboss-admin-settings-init.php';
 	}
 }
-add_action( 'bp_loaded', 'bp_setup_core', 0 );
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_setup_core' ) && ! function_exists( 'bp_setup_core' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_setup_core()}.
@@ -40,3 +37,5 @@ if ( function_exists( 'bboss_setup_core' ) && ! function_exists( 'bp_setup_core'
 	}
 }
 // @bbwt-com-end compat-layer
+
+add_action( 'bp_loaded', 'bp_setup_core', 0 );

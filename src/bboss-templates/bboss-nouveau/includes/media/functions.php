@@ -33,6 +33,20 @@ function bboss_nouveau_media_register_scripts( $scripts = array() ) {
 		)
 	);
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_media_register_scripts' ) && ! function_exists( 'bp_nouveau_media_register_scripts' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_media_register_scripts()}.
+	 *
+	 * @deprecated Use bboss_nouveau_media_register_scripts() instead.
+	 */
+	function bp_nouveau_media_register_scripts( $scripts = array() ) {
+		return bboss_nouveau_media_register_scripts( $scripts );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Enqueue the media scripts
@@ -80,6 +94,20 @@ function bboss_nouveau_media_enqueue_scripts() {
 	}
 
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_media_enqueue_scripts' ) && ! function_exists( 'bp_nouveau_media_enqueue_scripts' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_media_enqueue_scripts()}.
+	 *
+	 * @deprecated Use bboss_nouveau_media_enqueue_scripts() instead.
+	 */
+	function bp_nouveau_media_enqueue_scripts() {
+		return bboss_nouveau_media_enqueue_scripts();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Localize the strings needed for the messages UI
@@ -227,6 +255,20 @@ function bboss_nouveau_media_localize_scripts( $params = array() ) {
 
 	return $params;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_media_localize_scripts' ) && ! function_exists( 'bp_nouveau_media_localize_scripts' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_media_localize_scripts()}.
+	 *
+	 * @deprecated Use bboss_nouveau_media_localize_scripts() instead.
+	 */
+	function bp_nouveau_media_localize_scripts( $params = array() ) {
+		return bboss_nouveau_media_localize_scripts( $params );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get the nav items for the Media directory
@@ -281,6 +323,20 @@ function bboss_nouveau_get_media_directory_nav_items() {
 	 */
 	return apply_filters( 'bp_nouveau_get_media_directory_nav_items', $nav_items );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_get_media_directory_nav_items' ) && ! function_exists( 'bp_nouveau_get_media_directory_nav_items' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_get_media_directory_nav_items()}.
+	 *
+	 * @deprecated Use bboss_nouveau_get_media_directory_nav_items() instead.
+	 */
+	function bp_nouveau_get_media_directory_nav_items() {
+		return bboss_nouveau_get_media_directory_nav_items();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Edit button alter when media activity other than activity page.
@@ -320,6 +376,20 @@ function bboss_nouveau_media_activity_edit_button( $buttons, $activity_id ) {
 
 	return $buttons;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_media_activity_edit_button' ) && ! function_exists( 'bp_nouveau_media_activity_edit_button' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_media_activity_edit_button()}.
+	 *
+	 * @deprecated Use bboss_nouveau_media_activity_edit_button() instead.
+	 */
+	function bp_nouveau_media_activity_edit_button( $buttons, $activity_id ) {
+		return bboss_nouveau_media_activity_edit_button( $buttons, $activity_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get the album-scoped "no media" empty-state markup for the active theme.
@@ -357,10 +427,8 @@ function bboss_nouveau_media_get_album_empty_state() {
 	 */
 	return apply_filters( 'bb_nouveau_media_album_empty_state', ob_get_clean() );
 }
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_nouveau_media_get_album_empty_state' ) && ! function_exists( 'bb_nouveau_media_get_album_empty_state' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_nouveau_media_get_album_empty_state()}.
@@ -371,54 +439,5 @@ if ( function_exists( 'bboss_nouveau_media_get_album_empty_state' ) && ! functio
 		return bboss_nouveau_media_get_album_empty_state();
 	}
 }
-if ( function_exists( 'bboss_nouveau_get_media_directory_nav_items' ) && ! function_exists( 'bp_nouveau_get_media_directory_nav_items' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_get_media_directory_nav_items()}.
-	 *
-	 * @deprecated Use bboss_nouveau_get_media_directory_nav_items() instead.
-	 */
-	function bp_nouveau_get_media_directory_nav_items() {
-		return bboss_nouveau_get_media_directory_nav_items();
-	}
-}
-if ( function_exists( 'bboss_nouveau_media_activity_edit_button' ) && ! function_exists( 'bp_nouveau_media_activity_edit_button' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_media_activity_edit_button()}.
-	 *
-	 * @deprecated Use bboss_nouveau_media_activity_edit_button() instead.
-	 */
-	function bp_nouveau_media_activity_edit_button( $buttons, $activity_id ) {
-		return bboss_nouveau_media_activity_edit_button( $buttons, $activity_id );
-	}
-}
-if ( function_exists( 'bboss_nouveau_media_enqueue_scripts' ) && ! function_exists( 'bp_nouveau_media_enqueue_scripts' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_media_enqueue_scripts()}.
-	 *
-	 * @deprecated Use bboss_nouveau_media_enqueue_scripts() instead.
-	 */
-	function bp_nouveau_media_enqueue_scripts() {
-		return bboss_nouveau_media_enqueue_scripts();
-	}
-}
-if ( function_exists( 'bboss_nouveau_media_localize_scripts' ) && ! function_exists( 'bp_nouveau_media_localize_scripts' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_media_localize_scripts()}.
-	 *
-	 * @deprecated Use bboss_nouveau_media_localize_scripts() instead.
-	 */
-	function bp_nouveau_media_localize_scripts( $params = array() ) {
-		return bboss_nouveau_media_localize_scripts( $params );
-	}
-}
-if ( function_exists( 'bboss_nouveau_media_register_scripts' ) && ! function_exists( 'bp_nouveau_media_register_scripts' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_media_register_scripts()}.
-	 *
-	 * @deprecated Use bboss_nouveau_media_register_scripts() instead.
-	 */
-	function bp_nouveau_media_register_scripts( $scripts = array() ) {
-		return bboss_nouveau_media_register_scripts( $scripts );
-	}
-}
 // @bbwt-com-end compat-layer
+

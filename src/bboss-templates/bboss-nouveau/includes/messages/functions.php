@@ -34,6 +34,20 @@ function bboss_nouveau_messages_enqueue_styles( $styles = array() ) {
 		)
 	);
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_messages_enqueue_styles' ) && ! function_exists( 'bp_nouveau_messages_enqueue_styles' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_messages_enqueue_styles()}.
+	 *
+	 * @deprecated Use bboss_nouveau_messages_enqueue_styles() instead.
+	 */
+	function bp_nouveau_messages_enqueue_styles( $styles = array() ) {
+		return bboss_nouveau_messages_enqueue_styles( $styles );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Register Scripts for the Messages component
@@ -66,6 +80,20 @@ function bboss_nouveau_messages_register_scripts( $scripts = array() ) {
 		)
 	);
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_messages_register_scripts' ) && ! function_exists( 'bp_nouveau_messages_register_scripts' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_messages_register_scripts()}.
+	 *
+	 * @deprecated Use bboss_nouveau_messages_register_scripts() instead.
+	 */
+	function bp_nouveau_messages_register_scripts( $scripts = array() ) {
+		return bboss_nouveau_messages_register_scripts( $scripts );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Enqueue the messages scripts
@@ -130,6 +158,20 @@ function bboss_nouveau_messages_enqueue_scripts() {
 	// Add The tiny MCE init specific function.
 	add_filter( 'tiny_mce_before_init', 'bp_nouveau_messages_at_on_tinymce_init', 10, 2 );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_messages_enqueue_scripts' ) && ! function_exists( 'bp_nouveau_messages_enqueue_scripts' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_messages_enqueue_scripts()}.
+	 *
+	 * @deprecated Use bboss_nouveau_messages_enqueue_scripts() instead.
+	 */
+	function bp_nouveau_messages_enqueue_scripts() {
+		return bboss_nouveau_messages_enqueue_scripts();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Localize the strings needed for the messages UI
@@ -227,6 +269,20 @@ function bboss_nouveau_messages_localize_scripts( $params = array() ) {
 
 	return $params;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_messages_localize_scripts' ) && ! function_exists( 'bp_nouveau_messages_localize_scripts' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_messages_localize_scripts()}.
+	 *
+	 * @deprecated Use bboss_nouveau_messages_localize_scripts() instead.
+	 */
+	function bp_nouveau_messages_localize_scripts( $params = array() ) {
+		return bboss_nouveau_messages_localize_scripts( $params );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Adjust message navigation for notices and composing.
@@ -260,6 +316,20 @@ function bboss_nouveau_messages_adjust_nav() {
 		}
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_messages_adjust_nav' ) && ! function_exists( 'bp_nouveau_messages_adjust_nav' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_messages_adjust_nav()}.
+	 *
+	 * @deprecated Use bboss_nouveau_messages_adjust_nav() instead.
+	 */
+	function bp_nouveau_messages_adjust_nav() {
+		return bboss_nouveau_messages_adjust_nav();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Adjust admin message navigation for notices.
@@ -290,6 +360,20 @@ function bboss_nouveau_messages_adjust_admin_nav( $admin_nav ) {
 
 	return $admin_nav;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_messages_adjust_admin_nav' ) && ! function_exists( 'bp_nouveau_messages_adjust_admin_nav' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_messages_adjust_admin_nav()}.
+	 *
+	 * @deprecated Use bboss_nouveau_messages_adjust_admin_nav() instead.
+	 */
+	function bp_nouveau_messages_adjust_admin_nav( $admin_nav ) {
+		return bboss_nouveau_messages_adjust_admin_nav( $admin_nav );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Add notice notification for member.
@@ -327,6 +411,20 @@ function bboss_nouveau_add_notice_notification_for_user( $notifications, $user_i
 
 	return array_merge( $notifications, array( $notice_notification ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_add_notice_notification_for_user' ) && ! function_exists( 'bp_nouveau_add_notice_notification_for_user' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_add_notice_notification_for_user()}.
+	 *
+	 * @deprecated Use bboss_nouveau_add_notice_notification_for_user() instead.
+	 */
+	function bp_nouveau_add_notice_notification_for_user( $notifications, $user_id ) {
+		return bboss_nouveau_add_notice_notification_for_user( $notifications, $user_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Format for notice notifications.
@@ -343,6 +441,20 @@ function bboss_nouveau_format_notice_notification_for_user( $array ) {
 		'link' => bboss_loggedin_user_domain(),
 	);
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_format_notice_notification_for_user' ) && ! function_exists( 'bp_nouveau_format_notice_notification_for_user' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_format_notice_notification_for_user()}.
+	 *
+	 * @deprecated Use bboss_nouveau_format_notice_notification_for_user() instead.
+	 */
+	function bp_nouveau_format_notice_notification_for_user( $array ) {
+		return bboss_nouveau_format_notice_notification_for_user( $array );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Unregister BBoss_Messages_Sitewide_Notices_Widget.
@@ -352,6 +464,20 @@ function bboss_nouveau_format_notice_notification_for_user( $array ) {
 function bboss_nouveau_unregister_notices_widget() {
 	unregister_widget( 'BBoss_Messages_Sitewide_Notices_Widget' );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_unregister_notices_widget' ) && ! function_exists( 'bp_nouveau_unregister_notices_widget' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_unregister_notices_widget()}.
+	 *
+	 * @deprecated Use bboss_nouveau_unregister_notices_widget() instead.
+	 */
+	function bp_nouveau_unregister_notices_widget() {
+		return bboss_nouveau_unregister_notices_widget();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Add active sitewide notices to the BP template_message global.
@@ -396,6 +522,20 @@ function bboss_nouveau_push_sitewide_notices() {
 		}
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_push_sitewide_notices' ) && ! function_exists( 'bp_nouveau_push_sitewide_notices' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_push_sitewide_notices()}.
+	 *
+	 * @deprecated Use bboss_nouveau_push_sitewide_notices() instead.
+	 */
+	function bp_nouveau_push_sitewide_notices() {
+		return bboss_nouveau_push_sitewide_notices();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Disable the WP Editor buttons not allowed in invites content.
@@ -426,6 +566,20 @@ function bboss_nouveau_invites_mce_buttons( $buttons = array() ) {
 
 	return $buttons;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_invites_mce_buttons' ) && ! function_exists( 'bp_nouveau_invites_mce_buttons' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_invites_mce_buttons()}.
+	 *
+	 * @deprecated Use bboss_nouveau_invites_mce_buttons() instead.
+	 */
+	function bp_nouveau_invites_mce_buttons( $buttons = array() ) {
+		return bboss_nouveau_invites_mce_buttons( $buttons );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Disable the WP Editor buttons not allowed in messages content.
@@ -455,6 +609,20 @@ function bboss_nouveau_messages_mce_buttons( $buttons = array() ) {
 
 	return $buttons;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_messages_mce_buttons' ) && ! function_exists( 'bp_nouveau_messages_mce_buttons' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_messages_mce_buttons()}.
+	 *
+	 * @deprecated Use bboss_nouveau_messages_mce_buttons() instead.
+	 */
+	function bp_nouveau_messages_mce_buttons( $buttons = array() ) {
+		return bboss_nouveau_messages_mce_buttons( $buttons );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Display tinyMCE editor when editing messages in Dashboard.
@@ -469,6 +637,20 @@ function bboss_nouveau_messages_at_on_tinymce_init( $settings, $editor_id ) {
 
 	return $settings;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_messages_at_on_tinymce_init' ) && ! function_exists( 'bp_nouveau_messages_at_on_tinymce_init' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_messages_at_on_tinymce_init()}.
+	 *
+	 * @deprecated Use bboss_nouveau_messages_at_on_tinymce_init() instead.
+	 */
+	function bp_nouveau_messages_at_on_tinymce_init( $settings, $editor_id ) {
+		return bboss_nouveau_messages_at_on_tinymce_init( $settings, $editor_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get message date.
@@ -528,6 +710,20 @@ function bboss_nouveau_get_message_date( $date, $date_format = '' ) {
 	 */
 	return apply_filters( 'bp_nouveau_get_message_date', date_i18n( $date_format, $calculated_time, true ), $calculated_time, $date, $date_format );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_get_message_date' ) && ! function_exists( 'bp_nouveau_get_message_date' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_get_message_date()}.
+	 *
+	 * @deprecated Use bboss_nouveau_get_message_date() instead.
+	 */
+	function bp_nouveau_get_message_date( $date, $date_format = '' ) {
+		return bboss_nouveau_get_message_date( $date, $date_format );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output bulk actions for messages.
@@ -560,6 +756,20 @@ function bboss_nouveau_messages_get_bulk_actions() {
 
 	return $bulk_actions;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_messages_get_bulk_actions' ) && ! function_exists( 'bp_nouveau_messages_get_bulk_actions' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_messages_get_bulk_actions()}.
+	 *
+	 * @deprecated Use bboss_nouveau_messages_get_bulk_actions() instead.
+	 */
+	function bp_nouveau_messages_get_bulk_actions() {
+		return bboss_nouveau_messages_get_bulk_actions();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Register notifications filters for the messages component.
@@ -580,6 +790,20 @@ function bboss_nouveau_messages_notification_filters() {
 		)
 	);
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_messages_notification_filters' ) && ! function_exists( 'bp_nouveau_messages_notification_filters' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_messages_notification_filters()}.
+	 *
+	 * @deprecated Use bboss_nouveau_messages_notification_filters() instead.
+	 */
+	function bp_nouveau_messages_notification_filters() {
+		return bboss_nouveau_messages_notification_filters();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Fires Messages Legacy hooks to catch the content and add them
@@ -612,80 +836,8 @@ function bboss_nouveau_messages_catch_hook_content( $hooks = array() ) {
 
 	return $content;
 }
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
-if ( function_exists( 'bboss_nouveau_add_notice_notification_for_user' ) && ! function_exists( 'bp_nouveau_add_notice_notification_for_user' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_add_notice_notification_for_user()}.
-	 *
-	 * @deprecated Use bboss_nouveau_add_notice_notification_for_user() instead.
-	 */
-	function bp_nouveau_add_notice_notification_for_user( $notifications, $user_id ) {
-		return bboss_nouveau_add_notice_notification_for_user( $notifications, $user_id );
-	}
-}
-if ( function_exists( 'bboss_nouveau_format_notice_notification_for_user' ) && ! function_exists( 'bp_nouveau_format_notice_notification_for_user' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_format_notice_notification_for_user()}.
-	 *
-	 * @deprecated Use bboss_nouveau_format_notice_notification_for_user() instead.
-	 */
-	function bp_nouveau_format_notice_notification_for_user( $array ) {
-		return bboss_nouveau_format_notice_notification_for_user( $array );
-	}
-}
-if ( function_exists( 'bboss_nouveau_get_message_date' ) && ! function_exists( 'bp_nouveau_get_message_date' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_get_message_date()}.
-	 *
-	 * @deprecated Use bboss_nouveau_get_message_date() instead.
-	 */
-	function bp_nouveau_get_message_date( $date, $date_format = '' ) {
-		return bboss_nouveau_get_message_date( $date, $date_format );
-	}
-}
-if ( function_exists( 'bboss_nouveau_invites_mce_buttons' ) && ! function_exists( 'bp_nouveau_invites_mce_buttons' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_invites_mce_buttons()}.
-	 *
-	 * @deprecated Use bboss_nouveau_invites_mce_buttons() instead.
-	 */
-	function bp_nouveau_invites_mce_buttons( $buttons = array() ) {
-		return bboss_nouveau_invites_mce_buttons( $buttons );
-	}
-}
-if ( function_exists( 'bboss_nouveau_messages_adjust_admin_nav' ) && ! function_exists( 'bp_nouveau_messages_adjust_admin_nav' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_messages_adjust_admin_nav()}.
-	 *
-	 * @deprecated Use bboss_nouveau_messages_adjust_admin_nav() instead.
-	 */
-	function bp_nouveau_messages_adjust_admin_nav( $admin_nav ) {
-		return bboss_nouveau_messages_adjust_admin_nav( $admin_nav );
-	}
-}
-if ( function_exists( 'bboss_nouveau_messages_adjust_nav' ) && ! function_exists( 'bp_nouveau_messages_adjust_nav' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_messages_adjust_nav()}.
-	 *
-	 * @deprecated Use bboss_nouveau_messages_adjust_nav() instead.
-	 */
-	function bp_nouveau_messages_adjust_nav() {
-		return bboss_nouveau_messages_adjust_nav();
-	}
-}
-if ( function_exists( 'bboss_nouveau_messages_at_on_tinymce_init' ) && ! function_exists( 'bp_nouveau_messages_at_on_tinymce_init' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_messages_at_on_tinymce_init()}.
-	 *
-	 * @deprecated Use bboss_nouveau_messages_at_on_tinymce_init() instead.
-	 */
-	function bp_nouveau_messages_at_on_tinymce_init( $settings, $editor_id ) {
-		return bboss_nouveau_messages_at_on_tinymce_init( $settings, $editor_id );
-	}
-}
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_nouveau_messages_catch_hook_content' ) && ! function_exists( 'bp_nouveau_messages_catch_hook_content' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_nouveau_messages_catch_hook_content()}.
@@ -696,94 +848,5 @@ if ( function_exists( 'bboss_nouveau_messages_catch_hook_content' ) && ! functio
 		return bboss_nouveau_messages_catch_hook_content( $hooks );
 	}
 }
-if ( function_exists( 'bboss_nouveau_messages_enqueue_scripts' ) && ! function_exists( 'bp_nouveau_messages_enqueue_scripts' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_messages_enqueue_scripts()}.
-	 *
-	 * @deprecated Use bboss_nouveau_messages_enqueue_scripts() instead.
-	 */
-	function bp_nouveau_messages_enqueue_scripts() {
-		return bboss_nouveau_messages_enqueue_scripts();
-	}
-}
-if ( function_exists( 'bboss_nouveau_messages_enqueue_styles' ) && ! function_exists( 'bp_nouveau_messages_enqueue_styles' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_messages_enqueue_styles()}.
-	 *
-	 * @deprecated Use bboss_nouveau_messages_enqueue_styles() instead.
-	 */
-	function bp_nouveau_messages_enqueue_styles( $styles = array() ) {
-		return bboss_nouveau_messages_enqueue_styles( $styles );
-	}
-}
-if ( function_exists( 'bboss_nouveau_messages_get_bulk_actions' ) && ! function_exists( 'bp_nouveau_messages_get_bulk_actions' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_messages_get_bulk_actions()}.
-	 *
-	 * @deprecated Use bboss_nouveau_messages_get_bulk_actions() instead.
-	 */
-	function bp_nouveau_messages_get_bulk_actions() {
-		return bboss_nouveau_messages_get_bulk_actions();
-	}
-}
-if ( function_exists( 'bboss_nouveau_messages_localize_scripts' ) && ! function_exists( 'bp_nouveau_messages_localize_scripts' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_messages_localize_scripts()}.
-	 *
-	 * @deprecated Use bboss_nouveau_messages_localize_scripts() instead.
-	 */
-	function bp_nouveau_messages_localize_scripts( $params = array() ) {
-		return bboss_nouveau_messages_localize_scripts( $params );
-	}
-}
-if ( function_exists( 'bboss_nouveau_messages_mce_buttons' ) && ! function_exists( 'bp_nouveau_messages_mce_buttons' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_messages_mce_buttons()}.
-	 *
-	 * @deprecated Use bboss_nouveau_messages_mce_buttons() instead.
-	 */
-	function bp_nouveau_messages_mce_buttons( $buttons = array() ) {
-		return bboss_nouveau_messages_mce_buttons( $buttons );
-	}
-}
-if ( function_exists( 'bboss_nouveau_messages_notification_filters' ) && ! function_exists( 'bp_nouveau_messages_notification_filters' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_messages_notification_filters()}.
-	 *
-	 * @deprecated Use bboss_nouveau_messages_notification_filters() instead.
-	 */
-	function bp_nouveau_messages_notification_filters() {
-		return bboss_nouveau_messages_notification_filters();
-	}
-}
-if ( function_exists( 'bboss_nouveau_messages_register_scripts' ) && ! function_exists( 'bp_nouveau_messages_register_scripts' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_messages_register_scripts()}.
-	 *
-	 * @deprecated Use bboss_nouveau_messages_register_scripts() instead.
-	 */
-	function bp_nouveau_messages_register_scripts( $scripts = array() ) {
-		return bboss_nouveau_messages_register_scripts( $scripts );
-	}
-}
-if ( function_exists( 'bboss_nouveau_push_sitewide_notices' ) && ! function_exists( 'bp_nouveau_push_sitewide_notices' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_push_sitewide_notices()}.
-	 *
-	 * @deprecated Use bboss_nouveau_push_sitewide_notices() instead.
-	 */
-	function bp_nouveau_push_sitewide_notices() {
-		return bboss_nouveau_push_sitewide_notices();
-	}
-}
-if ( function_exists( 'bboss_nouveau_unregister_notices_widget' ) && ! function_exists( 'bp_nouveau_unregister_notices_widget' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_unregister_notices_widget()}.
-	 *
-	 * @deprecated Use bboss_nouveau_unregister_notices_widget() instead.
-	 */
-	function bp_nouveau_unregister_notices_widget() {
-		return bboss_nouveau_unregister_notices_widget();
-	}
-}
 // @bbwt-com-end compat-layer
+

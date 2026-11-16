@@ -1970,7 +1970,7 @@ class BBoss_BB_REST_Topics_Endpoint extends WP_REST_Controller {
 }
 
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// bbwt-rename:compat-aliases — the pre-rename names of this file's classes (decision 0013): declared
 // here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
 if ( ( class_exists( 'BBoss_BB_REST_Topics_Endpoint', false ) || interface_exists( 'BBoss_BB_REST_Topics_Endpoint', false ) || trait_exists( 'BBoss_BB_REST_Topics_Endpoint', false ) ) && ! class_exists( 'BB_REST_Topics_Endpoint', false ) && ! interface_exists( 'BB_REST_Topics_Endpoint', false ) ) {
 	class_alias( 'BBoss_BB_REST_Topics_Endpoint', 'BB_REST_Topics_Endpoint' ); // Backward-compatible name (also declared by another BuddyBoss product).

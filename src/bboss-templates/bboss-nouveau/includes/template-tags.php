@@ -35,6 +35,20 @@ function bboss_nouveau_hook( $pieces = array() ) {
 	 */
 	do_action( $hook );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_hook' ) && ! function_exists( 'bp_nouveau_hook' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_hook()}.
+	 *
+	 * @deprecated Use bboss_nouveau_hook() instead.
+	 */
+	function bp_nouveau_hook( $pieces = array() ) {
+		return bboss_nouveau_hook( $pieces );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Fire plugin hooks in the plugins.php template (Groups and Members single items)
@@ -56,6 +70,20 @@ function bboss_nouveau_plugin_hook( $suffix = '' ) {
 		)
 	);
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_plugin_hook' ) && ! function_exists( 'bp_nouveau_plugin_hook' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_plugin_hook()}.
+	 *
+	 * @deprecated Use bboss_nouveau_plugin_hook() instead.
+	 */
+	function bp_nouveau_plugin_hook( $suffix = '' ) {
+		return bboss_nouveau_plugin_hook( $suffix );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Fire friend hooks
@@ -80,6 +108,20 @@ function bboss_nouveau_friend_hook( $suffix = '' ) {
 		)
 	);
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_friend_hook' ) && ! function_exists( 'bp_nouveau_friend_hook' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_friend_hook()}.
+	 *
+	 * @deprecated Use bboss_nouveau_friend_hook() instead.
+	 */
+	function bp_nouveau_friend_hook( $suffix = '' ) {
+		return bboss_nouveau_friend_hook( $suffix );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Add classes to style the template notice/feedback message
@@ -96,6 +138,20 @@ function bboss_nouveau_template_message_classes() {
 	$classes[] = bboss_nouveau_get_template_message_type();
 	echo join( ' ', array_map( 'sanitize_html_class', $classes ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_template_message_classes' ) && ! function_exists( 'bp_nouveau_template_message_classes' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_template_message_classes()}.
+	 *
+	 * @deprecated Use bboss_nouveau_template_message_classes() instead.
+	 */
+	function bp_nouveau_template_message_classes() {
+		return bboss_nouveau_template_message_classes();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 	/**
 	 * Get the template notice/feedback message type
@@ -116,6 +172,20 @@ function bboss_nouveau_get_template_message_type() {
 
 	return $type;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_get_template_message_type' ) && ! function_exists( 'bp_nouveau_get_template_message_type' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_get_template_message_type()}.
+	 *
+	 * @deprecated Use bboss_nouveau_get_template_message_type() instead.
+	 */
+	function bp_nouveau_get_template_message_type() {
+		return bboss_nouveau_get_template_message_type();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Checks if a template notice/feedback message is set
@@ -133,6 +203,20 @@ function bboss_nouveau_has_template_message() {
 
 	return true;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_has_template_message' ) && ! function_exists( 'bp_nouveau_has_template_message' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_has_template_message()}.
+	 *
+	 * @deprecated Use bboss_nouveau_has_template_message() instead.
+	 */
+	function bp_nouveau_has_template_message() {
+		return bboss_nouveau_has_template_message();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Checks if the template notice/feedback message needs a dismiss button
@@ -159,6 +243,20 @@ function bboss_nouveau_has_dismiss_button() {
 
 	return false;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_has_dismiss_button' ) && ! function_exists( 'bp_nouveau_has_dismiss_button' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_has_dismiss_button()}.
+	 *
+	 * @deprecated Use bboss_nouveau_has_dismiss_button() instead.
+	 */
+	function bp_nouveau_has_dismiss_button() {
+		return bboss_nouveau_has_dismiss_button();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output the dismiss type.
@@ -179,6 +277,20 @@ function bboss_nouveau_dismiss_button_type() {
 
 	echo esc_attr( $type );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_dismiss_button_type' ) && ! function_exists( 'bp_nouveau_dismiss_button_type' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_dismiss_button_type()}.
+	 *
+	 * @deprecated Use bboss_nouveau_dismiss_button_type() instead.
+	 */
+	function bp_nouveau_dismiss_button_type() {
+		return bboss_nouveau_dismiss_button_type();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Displays a template notice/feedback message.
@@ -188,6 +300,20 @@ function bboss_nouveau_dismiss_button_type() {
 function bboss_nouveau_template_message() {
 	echo wp_kses_post( bboss_nouveau_get_template_message() );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_template_message' ) && ! function_exists( 'bp_nouveau_template_message' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_template_message()}.
+	 *
+	 * @deprecated Use bboss_nouveau_template_message() instead.
+	 */
+	function bp_nouveau_template_message() {
+		return bboss_nouveau_template_message();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 	/**
 	 * Get the template notice/feedback message and make sure core filter is applied.
@@ -222,6 +348,20 @@ function bboss_nouveau_get_template_message() {
 		return apply_filters( 'bp_core_render_message_content', $bp_nouveau->template_message['message'], bboss_nouveau_get_template_message_type() );
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_get_template_message' ) && ! function_exists( 'bp_nouveau_get_template_message' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_get_template_message()}.
+	 *
+	 * @deprecated Use bboss_nouveau_get_template_message() instead.
+	 */
+	function bp_nouveau_get_template_message() {
+		return bboss_nouveau_get_template_message();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Template tag to display feedback notices to users, if there are to display
@@ -270,6 +410,20 @@ function bboss_nouveau_template_notices() {
 	 */
 	do_action( 'template_notices' );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_template_notices' ) && ! function_exists( 'bp_nouveau_template_notices' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_template_notices()}.
+	 *
+	 * @deprecated Use bboss_nouveau_template_notices() instead.
+	 */
+	function bp_nouveau_template_notices() {
+		return bboss_nouveau_template_notices();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Displays a feedback message to the user.
@@ -330,6 +484,20 @@ function bboss_nouveau_user_feedback( $feedback_id = '' ) {
 	// Reset the feedback message.
 	$bp_nouveau->user_feedback = array();
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_user_feedback' ) && ! function_exists( 'bp_nouveau_user_feedback' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_user_feedback()}.
+	 *
+	 * @deprecated Use bboss_nouveau_user_feedback() instead.
+	 */
+	function bp_nouveau_user_feedback( $feedback_id = '' ) {
+		return bboss_nouveau_user_feedback( $feedback_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Template tag to wrap the before component loop
@@ -352,6 +520,20 @@ function bboss_nouveau_before_loop() {
 	 */
 	do_action( "bp_before_{$component}_loop" );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_before_loop' ) && ! function_exists( 'bp_nouveau_before_loop' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_before_loop()}.
+	 *
+	 * @deprecated Use bboss_nouveau_before_loop() instead.
+	 */
+	function bp_nouveau_before_loop() {
+		return bboss_nouveau_before_loop();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Template tag to wrap the after component loop
@@ -374,6 +556,20 @@ function bboss_nouveau_after_loop() {
 	 */
 	do_action( "bp_after_{$component}_loop" );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_after_loop' ) && ! function_exists( 'bp_nouveau_after_loop' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_after_loop()}.
+	 *
+	 * @deprecated Use bboss_nouveau_after_loop() instead.
+	 */
+	function bp_nouveau_after_loop() {
+		return bboss_nouveau_after_loop();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Pagination for loops
@@ -505,6 +701,20 @@ function bboss_nouveau_pagination( $position ) {
 		do_action( $top_hook );
 	};
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_pagination' ) && ! function_exists( 'bp_nouveau_pagination' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_pagination()}.
+	 *
+	 * @deprecated Use bboss_nouveau_pagination() instead.
+	 */
+	function bp_nouveau_pagination( $position ) {
+		return bboss_nouveau_pagination( $position );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Display the component's loop classes
@@ -516,6 +726,20 @@ function bboss_nouveau_pagination( $position ) {
 function bboss_nouveau_loop_classes() {
 	echo esc_attr( bboss_nouveau_get_loop_classes() );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_loop_classes' ) && ! function_exists( 'bp_nouveau_loop_classes' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_loop_classes()}.
+	 *
+	 * @deprecated Use bboss_nouveau_loop_classes() instead.
+	 */
+	function bp_nouveau_loop_classes() {
+		return bboss_nouveau_loop_classes();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get the component's loop classes
@@ -640,6 +864,20 @@ function bboss_nouveau_get_loop_classes() {
 
 	return join( ' ', array_map( 'sanitize_html_class', $class_list ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_get_loop_classes' ) && ! function_exists( 'bp_nouveau_get_loop_classes' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_get_loop_classes()}.
+	 *
+	 * @deprecated Use bboss_nouveau_get_loop_classes() instead.
+	 */
+	function bp_nouveau_get_loop_classes() {
+		return bboss_nouveau_get_loop_classes();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 
 /**
@@ -655,6 +893,20 @@ function bboss_nouveau_loop_is_grid() {
 
 	return ! empty( $bp_nouveau->{$component}->loop_layout ) && $bp_nouveau->{$component}->loop_layout > 1;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_loop_is_grid' ) && ! function_exists( 'bp_nouveau_loop_is_grid' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_loop_is_grid()}.
+	 *
+	 * @deprecated Use bboss_nouveau_loop_is_grid() instead.
+	 */
+	function bp_nouveau_loop_is_grid() {
+		return bboss_nouveau_loop_is_grid();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Returns the number of columns of the layout preferences.
@@ -682,6 +934,20 @@ function bboss_nouveau_loop_get_grid_columns() {
 	 */
 	return (int) apply_filters( 'bp_nouveau_loop_get_grid_columns', $columns );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_loop_get_grid_columns' ) && ! function_exists( 'bp_nouveau_loop_get_grid_columns' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_loop_get_grid_columns()}.
+	 *
+	 * @deprecated Use bboss_nouveau_loop_get_grid_columns() instead.
+	 */
+	function bp_nouveau_loop_get_grid_columns() {
+		return bboss_nouveau_loop_get_grid_columns();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return a bool check for component directory layout.
@@ -698,6 +964,20 @@ function bboss_dir_is_vert_layout() {
 
 	return (bool) $bp_nouveau->{$component}->directory_vertical_layout;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_dir_is_vert_layout' ) && ! function_exists( 'bp_dir_is_vert_layout' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_dir_is_vert_layout()}.
+	 *
+	 * @deprecated Use bboss_dir_is_vert_layout() instead.
+	 */
+	function bp_dir_is_vert_layout() {
+		return bboss_dir_is_vert_layout();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get the full size avatar args.
@@ -727,6 +1007,20 @@ function bboss_nouveau_avatar_args() {
 		)
 	);
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_avatar_args' ) && ! function_exists( 'bp_nouveau_avatar_args' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_avatar_args()}.
+	 *
+	 * @deprecated Use bboss_nouveau_avatar_args() instead.
+	 */
+	function bp_nouveau_avatar_args() {
+		return bboss_nouveau_avatar_args();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 
 /** Template Tags for BuddyPress navigations **********************************/
@@ -875,6 +1169,20 @@ function bboss_nouveau_has_nav( $args = array() ) {
 	$bp_nouveau->current_nav_index = 0;
 	return true;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_has_nav' ) && ! function_exists( 'bp_nouveau_has_nav' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_has_nav()}.
+	 *
+	 * @deprecated Use bboss_nouveau_has_nav() instead.
+	 */
+	function bp_nouveau_has_nav( $args = array() ) {
+		return bboss_nouveau_has_nav( $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Checks there are still nav items to display.
@@ -895,6 +1203,20 @@ function bboss_nouveau_nav_items() {
 
 	return false;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_nav_items' ) && ! function_exists( 'bp_nouveau_nav_items' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_nav_items()}.
+	 *
+	 * @deprecated Use bboss_nouveau_nav_items() instead.
+	 */
+	function bp_nouveau_nav_items() {
+		return bboss_nouveau_nav_items();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Sets the current nav item and prepare the navigation loop to iterate to next one.
@@ -907,6 +1229,20 @@ function bboss_nouveau_nav_item() {
 	$bp_nouveau->current_nav_item   = $bp_nouveau->sorted_nav[ $bp_nouveau->current_nav_index ];
 	$bp_nouveau->current_nav_index += 1;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_nav_item' ) && ! function_exists( 'bp_nouveau_nav_item' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_nav_item()}.
+	 *
+	 * @deprecated Use bboss_nouveau_nav_item() instead.
+	 */
+	function bp_nouveau_nav_item() {
+		return bboss_nouveau_nav_item();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Displays the nav item ID.
@@ -916,6 +1252,20 @@ function bboss_nouveau_nav_item() {
 function bboss_nouveau_nav_id() {
 	echo esc_attr( bboss_nouveau_get_nav_id() );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_nav_id' ) && ! function_exists( 'bp_nouveau_nav_id' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_nav_id()}.
+	 *
+	 * @deprecated Use bboss_nouveau_nav_id() instead.
+	 */
+	function bp_nouveau_nav_id() {
+		return bboss_nouveau_nav_id();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 	/**
 	 * Retrieve the ID attribute of the current nav item.
@@ -947,6 +1297,20 @@ function bboss_nouveau_get_nav_id() {
 	 */
 	return apply_filters( 'bp_nouveau_get_nav_id', $id, $nav_item, $bp_nouveau->displayed_nav );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_get_nav_id' ) && ! function_exists( 'bp_nouveau_get_nav_id' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_get_nav_id()}.
+	 *
+	 * @deprecated Use bboss_nouveau_get_nav_id() instead.
+	 */
+	function bp_nouveau_get_nav_id() {
+		return bboss_nouveau_get_nav_id();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Displays the nav item classes.
@@ -956,6 +1320,20 @@ function bboss_nouveau_get_nav_id() {
 function bboss_nouveau_nav_classes() {
 	echo esc_attr( bboss_nouveau_get_nav_classes() );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_nav_classes' ) && ! function_exists( 'bp_nouveau_nav_classes' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_nav_classes()}.
+	 *
+	 * @deprecated Use bboss_nouveau_nav_classes() instead.
+	 */
+	function bp_nouveau_nav_classes() {
+		return bboss_nouveau_nav_classes();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 	/**
 	 * Retrieve a space separated list of classes for the current nav item.
@@ -1032,6 +1410,20 @@ function bboss_nouveau_get_nav_classes() {
 
 	return $classes_list;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_get_nav_classes' ) && ! function_exists( 'bp_nouveau_get_nav_classes' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_get_nav_classes()}.
+	 *
+	 * @deprecated Use bboss_nouveau_get_nav_classes() instead.
+	 */
+	function bp_nouveau_get_nav_classes() {
+		return bboss_nouveau_get_nav_classes();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Displays the nav item scope.
@@ -1041,6 +1433,20 @@ function bboss_nouveau_get_nav_classes() {
 function bboss_nouveau_nav_scope() {
 	echo bboss_nouveau_get_nav_scope();  // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Output is escaped attribute markup built by bp_get_form_field_attributes().
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_nav_scope' ) && ! function_exists( 'bp_nouveau_nav_scope' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_nav_scope()}.
+	 *
+	 * @deprecated Use bboss_nouveau_nav_scope() instead.
+	 */
+	function bp_nouveau_nav_scope() {
+		return bboss_nouveau_nav_scope();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 	/**
 	 * Retrieve the specific scope for the current nav item.
@@ -1079,6 +1485,20 @@ function bboss_nouveau_get_nav_scope() {
 
 	return bboss_get_form_field_attributes( 'scope', $scope );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_get_nav_scope' ) && ! function_exists( 'bp_nouveau_get_nav_scope' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_get_nav_scope()}.
+	 *
+	 * @deprecated Use bboss_nouveau_get_nav_scope() instead.
+	 */
+	function bp_nouveau_get_nav_scope() {
+		return bboss_nouveau_get_nav_scope();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Displays the nav item URL.
@@ -1088,6 +1508,20 @@ function bboss_nouveau_get_nav_scope() {
 function bboss_nouveau_nav_link() {
 	echo esc_url( bboss_nouveau_get_nav_link() );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_nav_link' ) && ! function_exists( 'bp_nouveau_nav_link' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_nav_link()}.
+	 *
+	 * @deprecated Use bboss_nouveau_nav_link() instead.
+	 */
+	function bp_nouveau_nav_link() {
+		return bboss_nouveau_nav_link();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 	/**
 	 * Retrieve the URL for the current nav item.
@@ -1124,6 +1558,20 @@ function bboss_nouveau_get_nav_link() {
 	 */
 	return apply_filters( 'bp_nouveau_get_nav_link', $link, $nav_item, $bp_nouveau->displayed_nav );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_get_nav_link' ) && ! function_exists( 'bp_nouveau_get_nav_link' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_get_nav_link()}.
+	 *
+	 * @deprecated Use bboss_nouveau_get_nav_link() instead.
+	 */
+	function bp_nouveau_get_nav_link() {
+		return bboss_nouveau_get_nav_link();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Displays the nav item link ID.
@@ -1133,6 +1581,20 @@ function bboss_nouveau_get_nav_link() {
 function bboss_nouveau_nav_link_id() {
 	echo esc_attr( bboss_nouveau_get_nav_link_id() );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_nav_link_id' ) && ! function_exists( 'bp_nouveau_nav_link_id' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_nav_link_id()}.
+	 *
+	 * @deprecated Use bboss_nouveau_nav_link_id() instead.
+	 */
+	function bp_nouveau_nav_link_id() {
+		return bboss_nouveau_nav_link_id();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 	/**
 	 * Retrieve the id attribute of the link for the current nav item.
@@ -1167,6 +1629,20 @@ function bboss_nouveau_get_nav_link_id() {
 	 */
 	return apply_filters( 'bp_nouveau_get_nav_link_id', $link_id, $nav_item, $bp_nouveau->displayed_nav );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_get_nav_link_id' ) && ! function_exists( 'bp_nouveau_get_nav_link_id' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_get_nav_link_id()}.
+	 *
+	 * @deprecated Use bboss_nouveau_get_nav_link_id() instead.
+	 */
+	function bp_nouveau_get_nav_link_id() {
+		return bboss_nouveau_get_nav_link_id();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Displays the nav item link title.
@@ -1176,6 +1652,20 @@ function bboss_nouveau_get_nav_link_id() {
 function bboss_nouveau_nav_link_title() {
 	echo esc_attr( bboss_nouveau_get_nav_link_title() );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_nav_link_title' ) && ! function_exists( 'bp_nouveau_nav_link_title' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_nav_link_title()}.
+	 *
+	 * @deprecated Use bboss_nouveau_nav_link_title() instead.
+	 */
+	function bp_nouveau_nav_link_title() {
+		return bboss_nouveau_nav_link_title();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 	/**
 	 * Retrieve the title attribute of the link for the current nav item.
@@ -1211,6 +1701,20 @@ function bboss_nouveau_get_nav_link_title() {
 	 */
 	return apply_filters( 'bp_nouveau_get_nav_link_title', $title, $nav_item, $bp_nouveau->displayed_nav );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_get_nav_link_title' ) && ! function_exists( 'bp_nouveau_get_nav_link_title' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_get_nav_link_title()}.
+	 *
+	 * @deprecated Use bboss_nouveau_get_nav_link_title() instead.
+	 */
+	function bp_nouveau_get_nav_link_title() {
+		return bboss_nouveau_get_nav_link_title();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Displays the nav item link html text.
@@ -1220,6 +1724,20 @@ function bboss_nouveau_get_nav_link_title() {
 function bboss_nouveau_nav_link_text() {
 	echo esc_html( bboss_nouveau_get_nav_link_text() );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_nav_link_text' ) && ! function_exists( 'bp_nouveau_nav_link_text' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_nav_link_text()}.
+	 *
+	 * @deprecated Use bboss_nouveau_nav_link_text() instead.
+	 */
+	function bp_nouveau_nav_link_text() {
+		return bboss_nouveau_nav_link_text();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 	/**
 	 * Retrieve the html text of the link for the current nav item.
@@ -1255,6 +1773,20 @@ function bboss_nouveau_get_nav_link_text() {
 	 */
 	return apply_filters( 'bp_nouveau_get_nav_link_text', $link_text, $nav_item, $bp_nouveau->displayed_nav );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_get_nav_link_text' ) && ! function_exists( 'bp_nouveau_get_nav_link_text' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_get_nav_link_text()}.
+	 *
+	 * @deprecated Use bboss_nouveau_get_nav_link_text() instead.
+	 */
+	function bp_nouveau_get_nav_link_text() {
+		return bboss_nouveau_get_nav_link_text();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Checks if the nav item has a count attribute.
@@ -1334,6 +1866,20 @@ function bboss_nouveau_nav_has_count() {
 	 */
 	return (bool) apply_filters( 'bp_nouveau_nav_has_count', false !== $count, $nav_item, $bp_nouveau->displayed_nav );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_nav_has_count' ) && ! function_exists( 'bp_nouveau_nav_has_count' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_nav_has_count()}.
+	 *
+	 * @deprecated Use bboss_nouveau_nav_has_count() instead.
+	 */
+	function bp_nouveau_nav_has_count() {
+		return bboss_nouveau_nav_has_count();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Displays the nav item count attribute.
@@ -1343,6 +1889,20 @@ function bboss_nouveau_nav_has_count() {
 function bboss_nouveau_nav_count() {
 	echo esc_html( bboss_core_number_format( bboss_nouveau_get_nav_count() ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_nav_count' ) && ! function_exists( 'bp_nouveau_nav_count' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_nav_count()}.
+	 *
+	 * @deprecated Use bboss_nouveau_nav_count() instead.
+	 */
+	function bp_nouveau_nav_count() {
+		return bboss_nouveau_nav_count();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 	/**
 	 * Retrieve the count attribute for the current nav item.
@@ -1439,6 +1999,20 @@ function bboss_nouveau_get_nav_count() {
 	 */
 	return (int) apply_filters( 'bp_nouveau_get_nav_count', $count, $nav_item, $bp_nouveau->displayed_nav );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_get_nav_count' ) && ! function_exists( 'bp_nouveau_get_nav_count' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_get_nav_count()}.
+	 *
+	 * @deprecated Use bboss_nouveau_get_nav_count() instead.
+	 */
+	function bp_nouveau_get_nav_count() {
+		return bboss_nouveau_get_nav_count();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /** Template tags specific to the Directory navs ******************************/
 
@@ -1450,6 +2024,20 @@ function bboss_nouveau_get_nav_count() {
 function bboss_nouveau_directory_type_navs_class() {
 	echo esc_attr( bboss_nouveau_get_directory_type_navs_class() );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_directory_type_navs_class' ) && ! function_exists( 'bp_nouveau_directory_type_navs_class' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_directory_type_navs_class()}.
+	 *
+	 * @deprecated Use bboss_nouveau_directory_type_navs_class() instead.
+	 */
+	function bp_nouveau_directory_type_navs_class() {
+		return bboss_nouveau_directory_type_navs_class();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 	/**
 	 * Provides default nav wrapper classes.
@@ -1498,6 +2086,20 @@ function bboss_nouveau_get_directory_type_navs_class() {
 
 	return join( ' ', array_map( 'sanitize_html_class', $nav_wrapper_classes ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_get_directory_type_navs_class' ) && ! function_exists( 'bp_nouveau_get_directory_type_navs_class' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_get_directory_type_navs_class()}.
+	 *
+	 * @deprecated Use bboss_nouveau_get_directory_type_navs_class() instead.
+	 */
+	function bp_nouveau_get_directory_type_navs_class() {
+		return bboss_nouveau_get_directory_type_navs_class();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Displays the directory nav item list class.
@@ -1507,6 +2109,20 @@ function bboss_nouveau_get_directory_type_navs_class() {
 function bboss_nouveau_directory_list_class() {
 	echo esc_attr( bboss_nouveau_get_directory_list_class() );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_directory_list_class' ) && ! function_exists( 'bp_nouveau_directory_list_class' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_directory_list_class()}.
+	 *
+	 * @deprecated Use bboss_nouveau_directory_list_class() instead.
+	 */
+	function bp_nouveau_directory_list_class() {
+		return bboss_nouveau_directory_list_class();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 	/**
 	 * Gets the directory nav item list class.
@@ -1518,6 +2134,20 @@ function bboss_nouveau_directory_list_class() {
 function bboss_nouveau_get_directory_list_class() {
 	return sanitize_html_class( sprintf( '%s-nav', bboss_current_component() ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_get_directory_list_class' ) && ! function_exists( 'bp_nouveau_get_directory_list_class' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_get_directory_list_class()}.
+	 *
+	 * @deprecated Use bboss_nouveau_get_directory_list_class() instead.
+	 */
+	function bp_nouveau_get_directory_list_class() {
+		return bboss_nouveau_get_directory_list_class();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Displays the directory nav item object (data-bp attribute).
@@ -1531,6 +2161,20 @@ function bboss_nouveau_directory_nav_object() {
 		echo esc_attr( $obj );
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_directory_nav_object' ) && ! function_exists( 'bp_nouveau_directory_nav_object' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_directory_nav_object()}.
+	 *
+	 * @deprecated Use bboss_nouveau_directory_nav_object() instead.
+	 */
+	function bp_nouveau_directory_nav_object() {
+		return bboss_nouveau_directory_nav_object();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 	/**
 	 * Gets the directory nav item object.
@@ -1550,6 +2194,20 @@ function bboss_nouveau_get_directory_nav_object() {
 
 	return $nav_item->component;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_get_directory_nav_object' ) && ! function_exists( 'bp_nouveau_get_directory_nav_object' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_get_directory_nav_object()}.
+	 *
+	 * @deprecated Use bboss_nouveau_get_directory_nav_object() instead.
+	 */
+	function bp_nouveau_get_directory_nav_object() {
+		return bboss_nouveau_get_directory_nav_object();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 
 // Template tags for the single item navs.
@@ -1564,6 +2222,20 @@ function bboss_nouveau_get_directory_nav_object() {
 function bboss_nouveau_container_classes() {
 	echo esc_attr( bboss_nouveau_get_container_classes() );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_container_classes' ) && ! function_exists( 'bp_nouveau_container_classes' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_container_classes()}.
+	 *
+	 * @deprecated Use bboss_nouveau_container_classes() instead.
+	 */
+	function bp_nouveau_container_classes() {
+		return bboss_nouveau_container_classes();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 	/**
 	 * Returns the main BuddyPress container classes.
@@ -1669,6 +2341,20 @@ function bboss_nouveau_get_container_classes() {
 	 */
 	return apply_filters( 'bp_nouveau_get_container_classes', join( ' ', $class ), $classes );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_get_container_classes' ) && ! function_exists( 'bp_nouveau_get_container_classes' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_get_container_classes()}.
+	 *
+	 * @deprecated Use bboss_nouveau_get_container_classes() instead.
+	 */
+	function bp_nouveau_get_container_classes() {
+		return bboss_nouveau_get_container_classes();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output single item nav container classes
@@ -1680,6 +2366,20 @@ function bboss_nouveau_get_container_classes() {
 function bboss_nouveau_single_item_nav_classes() {
 	echo esc_attr( bboss_nouveau_get_single_item_nav_classes() );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_single_item_nav_classes' ) && ! function_exists( 'bp_nouveau_single_item_nav_classes' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_single_item_nav_classes()}.
+	 *
+	 * @deprecated Use bboss_nouveau_single_item_nav_classes() instead.
+	 */
+	function bp_nouveau_single_item_nav_classes() {
+		return bboss_nouveau_single_item_nav_classes();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 	/**
 	 * Returns the single item nav container classes
@@ -1731,6 +2431,20 @@ function bboss_nouveau_get_single_item_nav_classes() {
 	 */
 	return apply_filters( 'bp_nouveau_get_single_item_nav_classes', join( ' ', $class ), $classes );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_get_single_item_nav_classes' ) && ! function_exists( 'bp_nouveau_get_single_item_nav_classes' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_get_single_item_nav_classes()}.
+	 *
+	 * @deprecated Use bboss_nouveau_get_single_item_nav_classes() instead.
+	 */
+	function bp_nouveau_get_single_item_nav_classes() {
+		return bboss_nouveau_get_single_item_nav_classes();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output single item subnav container classes.
@@ -1742,6 +2456,20 @@ function bboss_nouveau_get_single_item_nav_classes() {
 function bboss_nouveau_single_item_subnav_classes() {
 	echo esc_attr( bboss_nouveau_get_single_item_subnav_classes() );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_single_item_subnav_classes' ) && ! function_exists( 'bp_nouveau_single_item_subnav_classes' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_single_item_subnav_classes()}.
+	 *
+	 * @deprecated Use bboss_nouveau_single_item_subnav_classes() instead.
+	 */
+	function bp_nouveau_single_item_subnav_classes() {
+		return bboss_nouveau_single_item_subnav_classes();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 	/**
 	 * Returns the single item subnav container classes.
@@ -1792,6 +2520,20 @@ function bboss_nouveau_get_single_item_subnav_classes() {
 	 */
 	return apply_filters( 'bp_nouveau_get_single_item_subnav_classes', join( ' ', $class ), $classes );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_get_single_item_subnav_classes' ) && ! function_exists( 'bp_nouveau_get_single_item_subnav_classes' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_get_single_item_subnav_classes()}.
+	 *
+	 * @deprecated Use bboss_nouveau_get_single_item_subnav_classes() instead.
+	 */
+	function bp_nouveau_get_single_item_subnav_classes() {
+		return bboss_nouveau_get_single_item_subnav_classes();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output the groups create steps classes.
@@ -1803,6 +2545,20 @@ function bboss_nouveau_get_single_item_subnav_classes() {
 function bboss_nouveau_groups_create_steps_classes() {
 	echo esc_attr( bboss_nouveau_get_group_create_steps_classes() );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_groups_create_steps_classes' ) && ! function_exists( 'bp_nouveau_groups_create_steps_classes' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_groups_create_steps_classes()}.
+	 *
+	 * @deprecated Use bboss_nouveau_groups_create_steps_classes() instead.
+	 */
+	function bp_nouveau_groups_create_steps_classes() {
+		return bboss_nouveau_groups_create_steps_classes();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 	/**
 	 * Returns the groups create steps customizer option choice class.
@@ -1828,6 +2584,20 @@ function bboss_nouveau_get_group_create_steps_classes() {
 	 */
 	return apply_filters( 'bp_nouveau_get_group_create_steps_classes', join( ' ', $class ), $classes );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_get_group_create_steps_classes' ) && ! function_exists( 'bp_nouveau_get_group_create_steps_classes' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_get_group_create_steps_classes()}.
+	 *
+	 * @deprecated Use bboss_nouveau_get_group_create_steps_classes() instead.
+	 */
+	function bp_nouveau_get_group_create_steps_classes() {
+		return bboss_nouveau_get_group_create_steps_classes();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 
 /** Template tags for the object search **************************************/
@@ -1862,6 +2632,20 @@ function bboss_nouveau_get_search_primary_object( $object = '' ) {
 
 	return $object;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_get_search_primary_object' ) && ! function_exists( 'bp_nouveau_get_search_primary_object' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_get_search_primary_object()}.
+	 *
+	 * @deprecated Use bboss_nouveau_get_search_primary_object() instead.
+	 */
+	function bp_nouveau_get_search_primary_object( $object = '' ) {
+		return bboss_nouveau_get_search_primary_object( $object );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get The list of search objects (primary + secondary).
@@ -1900,6 +2684,20 @@ function bboss_nouveau_get_search_objects( $objects = array() ) {
 
 	return $objects;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_get_search_objects' ) && ! function_exists( 'bp_nouveau_get_search_objects' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_get_search_objects()}.
+	 *
+	 * @deprecated Use bboss_nouveau_get_search_objects() instead.
+	 */
+	function bp_nouveau_get_search_objects( $objects = array() ) {
+		return bboss_nouveau_get_search_objects( $objects );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output the search form container classes.
@@ -1912,6 +2710,20 @@ function bboss_nouveau_search_container_class() {
 
 	echo esc_attr( $class );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_search_container_class' ) && ! function_exists( 'bp_nouveau_search_container_class' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_search_container_class()}.
+	 *
+	 * @deprecated Use bboss_nouveau_search_container_class() instead.
+	 */
+	function bp_nouveau_search_container_class() {
+		return bboss_nouveau_search_container_class();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output the search form data-bp attribute.
@@ -1938,6 +2750,20 @@ function bboss_nouveau_search_object_data_attr( $attr = '' ) {
 
 	echo esc_attr( $attr );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_search_object_data_attr' ) && ! function_exists( 'bp_nouveau_search_object_data_attr' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_search_object_data_attr()}.
+	 *
+	 * @deprecated Use bboss_nouveau_search_object_data_attr() instead.
+	 */
+	function bp_nouveau_search_object_data_attr( $attr = '' ) {
+		return bboss_nouveau_search_object_data_attr( $attr );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output a selector ID.
@@ -1953,6 +2779,20 @@ function bboss_nouveau_search_selector_id( $suffix = '', $sep = '-' ) {
 	$id = join( $sep, array_merge( bboss_nouveau_get_search_objects(), (array) $suffix ) );
 	echo esc_attr( $id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_search_selector_id' ) && ! function_exists( 'bp_nouveau_search_selector_id' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_search_selector_id()}.
+	 *
+	 * @deprecated Use bboss_nouveau_search_selector_id() instead.
+	 */
+	function bp_nouveau_search_selector_id( $suffix = '', $sep = '-' ) {
+		return bboss_nouveau_search_selector_id( $suffix, $sep );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output the name attribute of a selector.
@@ -1975,6 +2815,20 @@ function bboss_nouveau_search_selector_name( $suffix = '', $sep = '_' ) {
 
 	echo esc_attr( $name );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_search_selector_name' ) && ! function_exists( 'bp_nouveau_search_selector_name' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_search_selector_name()}.
+	 *
+	 * @deprecated Use bboss_nouveau_search_selector_name() instead.
+	 */
+	function bp_nouveau_search_selector_name( $suffix = '', $sep = '_' ) {
+		return bboss_nouveau_search_selector_name( $suffix, $sep );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output the default search text for the search object
@@ -2002,6 +2856,20 @@ function bboss_nouveau_search_default_text( $text = '', $is_attr = true ) {
 		echo esc_html( $text );
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_search_default_text' ) && ! function_exists( 'bp_nouveau_search_default_text' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_search_default_text()}.
+	 *
+	 * @deprecated Use bboss_nouveau_search_default_text() instead.
+	 */
+	function bp_nouveau_search_default_text( $text = '', $is_attr = true ) {
+		return bboss_nouveau_search_default_text( $text, $is_attr );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get the search form template part and fire some do_actions if needed.
@@ -2119,6 +2987,20 @@ function bboss_nouveau_search_form() {
 		do_action( 'bp_activity_syndication_options' );
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_search_form' ) && ! function_exists( 'bp_nouveau_search_form' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_search_form()}.
+	 *
+	 * @deprecated Use bboss_nouveau_search_form() instead.
+	 */
+	function bp_nouveau_search_form() {
+		return bboss_nouveau_search_form();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 
 // Template tags for the directory & user/group screen filters.
@@ -2157,6 +3039,20 @@ function bboss_nouveau_current_object() {
 
 	return $component;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_current_object' ) && ! function_exists( 'bp_nouveau_current_object' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_current_object()}.
+	 *
+	 * @deprecated Use bboss_nouveau_current_object() instead.
+	 */
+	function bp_nouveau_current_object() {
+		return bboss_nouveau_current_object();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output data filter container's ID attribute value.
@@ -2166,6 +3062,20 @@ function bboss_nouveau_current_object() {
 function bboss_nouveau_filter_container_id() {
 	echo esc_attr( bboss_nouveau_get_filter_container_id() );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_filter_container_id' ) && ! function_exists( 'bp_nouveau_filter_container_id' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_filter_container_id()}.
+	 *
+	 * @deprecated Use bboss_nouveau_filter_container_id() instead.
+	 */
+	function bp_nouveau_filter_container_id() {
+		return bboss_nouveau_filter_container_id();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 	/**
 	 * Get data filter container's ID attribute value.
@@ -2200,6 +3110,20 @@ function bboss_nouveau_get_filter_container_id() {
 
 	return '';
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_get_filter_container_id' ) && ! function_exists( 'bp_nouveau_get_filter_container_id' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_get_filter_container_id()}.
+	 *
+	 * @deprecated Use bboss_nouveau_get_filter_container_id() instead.
+	 */
+	function bp_nouveau_get_filter_container_id() {
+		return bboss_nouveau_get_filter_container_id();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output data filter's ID attribute value.
@@ -2209,6 +3133,20 @@ function bboss_nouveau_get_filter_container_id() {
 function bboss_nouveau_filter_id() {
 	echo esc_attr( bboss_nouveau_get_filter_id() );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_filter_id' ) && ! function_exists( 'bp_nouveau_filter_id' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_filter_id()}.
+	 *
+	 * @deprecated Use bboss_nouveau_filter_id() instead.
+	 */
+	function bp_nouveau_filter_id() {
+		return bboss_nouveau_filter_id();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 	/**
 	 * Get data filter's ID attribute value.
@@ -2243,6 +3181,20 @@ function bboss_nouveau_get_filter_id() {
 
 	return '';
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_get_filter_id' ) && ! function_exists( 'bp_nouveau_get_filter_id' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_get_filter_id()}.
+	 *
+	 * @deprecated Use bboss_nouveau_get_filter_id() instead.
+	 */
+	function bp_nouveau_get_filter_id() {
+		return bboss_nouveau_get_filter_id();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output data filter's label.
@@ -2252,6 +3204,20 @@ function bboss_nouveau_get_filter_id() {
 function bboss_nouveau_filter_label() {
 	echo esc_html( bboss_nouveau_get_filter_label() );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_filter_label' ) && ! function_exists( 'bp_nouveau_filter_label' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_filter_label()}.
+	 *
+	 * @deprecated Use bboss_nouveau_filter_label() instead.
+	 */
+	function bp_nouveau_filter_label() {
+		return bboss_nouveau_filter_label();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 	/**
 	 * Get data filter's label.
@@ -2278,6 +3244,20 @@ function bboss_nouveau_get_filter_label() {
 	 */
 	return apply_filters( 'bp_nouveau_get_filter_label', $label, $component );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_get_filter_label' ) && ! function_exists( 'bp_nouveau_get_filter_label' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_get_filter_label()}.
+	 *
+	 * @deprecated Use bboss_nouveau_get_filter_label() instead.
+	 */
+	function bp_nouveau_get_filter_label() {
+		return bboss_nouveau_get_filter_label();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output data filter's data-bp-filter attribute value.
@@ -2288,6 +3268,20 @@ function bboss_nouveau_filter_component() {
 	$component = bboss_nouveau_current_object();
 	echo esc_attr( $component['data_filter'] );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_filter_component' ) && ! function_exists( 'bp_nouveau_filter_component' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_filter_component()}.
+	 *
+	 * @deprecated Use bboss_nouveau_filter_component() instead.
+	 */
+	function bp_nouveau_filter_component() {
+		return bboss_nouveau_filter_component();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output the <option> of the data filter's <select> element.
@@ -2297,6 +3291,20 @@ function bboss_nouveau_filter_component() {
 function bboss_nouveau_filter_options() {
 	echo bboss_nouveau_get_filter_options();  // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Returns <option> markup with each value escaped via esc_attr()/esc_html(); wp_kses_post would strip the <option> tags.
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_filter_options' ) && ! function_exists( 'bp_nouveau_filter_options' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_filter_options()}.
+	 *
+	 * @deprecated Use bboss_nouveau_filter_options() instead.
+	 */
+	function bp_nouveau_filter_options() {
+		return bboss_nouveau_filter_options();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 	/**
 	 * Get the <option> of the data filter's <select> element.
@@ -2326,6 +3334,20 @@ function bboss_nouveau_get_filter_options() {
 
 	return $output;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_get_filter_options' ) && ! function_exists( 'bp_nouveau_get_filter_options' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_get_filter_options()}.
+	 *
+	 * @deprecated Use bboss_nouveau_get_filter_options() instead.
+	 */
+	function bp_nouveau_get_filter_options() {
+		return bboss_nouveau_get_filter_options();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 
 /** Template tags for the Customizer ******************************************/
@@ -2395,6 +3417,20 @@ function bboss_nouveau_get_customizer_link( $args = array() ) {
 
 	return sprintf( '<a href="%1$s">%2$s</a>', esc_url( $customizer_link ), esc_html( $r['text'] ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_get_customizer_link' ) && ! function_exists( 'bp_nouveau_get_customizer_link' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_get_customizer_link()}.
+	 *
+	 * @deprecated Use bboss_nouveau_get_customizer_link() instead.
+	 */
+	function bp_nouveau_get_customizer_link( $args = array() ) {
+		return bboss_nouveau_get_customizer_link( $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /** Template tags for signup forms *******************************************/
 
@@ -2429,6 +3465,20 @@ function bboss_nouveau_signup_hook( $when = '', $prefix = '' ) {
 
 	bboss_nouveau_hook( $hook );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_signup_hook' ) && ! function_exists( 'bp_nouveau_signup_hook' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_signup_hook()}.
+	 *
+	 * @deprecated Use bboss_nouveau_signup_hook() instead.
+	 */
+	function bp_nouveau_signup_hook( $when = '', $prefix = '' ) {
+		return bboss_nouveau_signup_hook( $when, $prefix );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Fire specific hooks into the activate template
@@ -2457,6 +3507,20 @@ function bboss_nouveau_activation_hook( $when = '', $suffix = '' ) {
 
 	bboss_nouveau_hook( $hook );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_activation_hook' ) && ! function_exists( 'bp_nouveau_activation_hook' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_activation_hook()}.
+	 *
+	 * @deprecated Use bboss_nouveau_activation_hook() instead.
+	 */
+	function bp_nouveau_activation_hook( $when = '', $suffix = '' ) {
+		return bboss_nouveau_activation_hook( $when, $suffix );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output the signup form for the requested section
@@ -2669,6 +3733,20 @@ function bboss_nouveau_signup_form( $section = 'account_details' ) {
 	 */
 	do_action( "bp_{$section}_fields" );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_signup_form' ) && ! function_exists( 'bp_nouveau_signup_form' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_signup_form()}.
+	 *
+	 * @deprecated Use bboss_nouveau_signup_form() instead.
+	 */
+	function bp_nouveau_signup_form( $section = 'account_details' ) {
+		return bboss_nouveau_signup_form( $section );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output a terms of service and privacy policy pages if activated
@@ -2785,6 +3863,20 @@ function bboss_nouveau_signup_terms_privacy() {
 		do_action( 'bp_legal_agreement_errors' );
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_signup_terms_privacy' ) && ! function_exists( 'bp_nouveau_signup_terms_privacy' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_signup_terms_privacy()}.
+	 *
+	 * @deprecated Use bboss_nouveau_signup_terms_privacy() instead.
+	 */
+	function bp_nouveau_signup_terms_privacy() {
+		return bboss_nouveau_signup_terms_privacy();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output a submit button and the nonce for the requested action.
@@ -2844,6 +3936,20 @@ function bboss_nouveau_submit_button( $action ) {
 		do_action( $submit_data['after'] );
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_submit_button' ) && ! function_exists( 'bp_nouveau_submit_button' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_submit_button()}.
+	 *
+	 * @deprecated Use bboss_nouveau_submit_button() instead.
+	 */
+	function bp_nouveau_submit_button( $action ) {
+		return bboss_nouveau_submit_button( $action );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Display supplemental error or feedback messages.
@@ -2871,6 +3977,20 @@ function bboss_nouveau_error_template( $message = '', $type = '' ) {
 
 	<?php
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_error_template' ) && ! function_exists( 'nouveau_error_template' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_error_template()}.
+	 *
+	 * @deprecated Use bboss_nouveau_error_template() instead.
+	 */
+	function nouveau_error_template( $message = '', $type = '' ) {
+		return bboss_nouveau_error_template( $message, $type );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Displays the nav item link class.
@@ -2880,6 +4000,20 @@ function bboss_nouveau_error_template( $message = '', $type = '' ) {
 function bboss_nouveau_nav_link_class() {
 	echo esc_attr( bboss_nouveau_get_nav_link_class() );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_nav_link_class' ) && ! function_exists( 'bp_nouveau_nav_link_class' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_nav_link_class()}.
+	 *
+	 * @deprecated Use bboss_nouveau_nav_link_class() instead.
+	 */
+	function bp_nouveau_nav_link_class() {
+		return bboss_nouveau_nav_link_class();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Retrieve the class attribute of the link for the current nav item.
@@ -2908,330 +4042,8 @@ function bboss_nouveau_get_nav_link_class() {
 	 */
 	return apply_filters( 'bp_nouveau_get_nav_link_class', $link_class, $nav_item, $bp_nouveau->displayed_nav );
 }
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
-if ( function_exists( 'bboss_dir_is_vert_layout' ) && ! function_exists( 'bp_dir_is_vert_layout' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_dir_is_vert_layout()}.
-	 *
-	 * @deprecated Use bboss_dir_is_vert_layout() instead.
-	 */
-	function bp_dir_is_vert_layout() {
-		return bboss_dir_is_vert_layout();
-	}
-}
-if ( function_exists( 'bboss_nouveau_activation_hook' ) && ! function_exists( 'bp_nouveau_activation_hook' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_activation_hook()}.
-	 *
-	 * @deprecated Use bboss_nouveau_activation_hook() instead.
-	 */
-	function bp_nouveau_activation_hook( $when = '', $suffix = '' ) {
-		return bboss_nouveau_activation_hook( $when, $suffix );
-	}
-}
-if ( function_exists( 'bboss_nouveau_after_loop' ) && ! function_exists( 'bp_nouveau_after_loop' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_after_loop()}.
-	 *
-	 * @deprecated Use bboss_nouveau_after_loop() instead.
-	 */
-	function bp_nouveau_after_loop() {
-		return bboss_nouveau_after_loop();
-	}
-}
-if ( function_exists( 'bboss_nouveau_avatar_args' ) && ! function_exists( 'bp_nouveau_avatar_args' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_avatar_args()}.
-	 *
-	 * @deprecated Use bboss_nouveau_avatar_args() instead.
-	 */
-	function bp_nouveau_avatar_args() {
-		return bboss_nouveau_avatar_args();
-	}
-}
-if ( function_exists( 'bboss_nouveau_before_loop' ) && ! function_exists( 'bp_nouveau_before_loop' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_before_loop()}.
-	 *
-	 * @deprecated Use bboss_nouveau_before_loop() instead.
-	 */
-	function bp_nouveau_before_loop() {
-		return bboss_nouveau_before_loop();
-	}
-}
-if ( function_exists( 'bboss_nouveau_container_classes' ) && ! function_exists( 'bp_nouveau_container_classes' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_container_classes()}.
-	 *
-	 * @deprecated Use bboss_nouveau_container_classes() instead.
-	 */
-	function bp_nouveau_container_classes() {
-		return bboss_nouveau_container_classes();
-	}
-}
-if ( function_exists( 'bboss_nouveau_current_object' ) && ! function_exists( 'bp_nouveau_current_object' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_current_object()}.
-	 *
-	 * @deprecated Use bboss_nouveau_current_object() instead.
-	 */
-	function bp_nouveau_current_object() {
-		return bboss_nouveau_current_object();
-	}
-}
-if ( function_exists( 'bboss_nouveau_directory_list_class' ) && ! function_exists( 'bp_nouveau_directory_list_class' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_directory_list_class()}.
-	 *
-	 * @deprecated Use bboss_nouveau_directory_list_class() instead.
-	 */
-	function bp_nouveau_directory_list_class() {
-		return bboss_nouveau_directory_list_class();
-	}
-}
-if ( function_exists( 'bboss_nouveau_directory_nav_object' ) && ! function_exists( 'bp_nouveau_directory_nav_object' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_directory_nav_object()}.
-	 *
-	 * @deprecated Use bboss_nouveau_directory_nav_object() instead.
-	 */
-	function bp_nouveau_directory_nav_object() {
-		return bboss_nouveau_directory_nav_object();
-	}
-}
-if ( function_exists( 'bboss_nouveau_directory_type_navs_class' ) && ! function_exists( 'bp_nouveau_directory_type_navs_class' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_directory_type_navs_class()}.
-	 *
-	 * @deprecated Use bboss_nouveau_directory_type_navs_class() instead.
-	 */
-	function bp_nouveau_directory_type_navs_class() {
-		return bboss_nouveau_directory_type_navs_class();
-	}
-}
-if ( function_exists( 'bboss_nouveau_dismiss_button_type' ) && ! function_exists( 'bp_nouveau_dismiss_button_type' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_dismiss_button_type()}.
-	 *
-	 * @deprecated Use bboss_nouveau_dismiss_button_type() instead.
-	 */
-	function bp_nouveau_dismiss_button_type() {
-		return bboss_nouveau_dismiss_button_type();
-	}
-}
-if ( function_exists( 'bboss_nouveau_filter_component' ) && ! function_exists( 'bp_nouveau_filter_component' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_filter_component()}.
-	 *
-	 * @deprecated Use bboss_nouveau_filter_component() instead.
-	 */
-	function bp_nouveau_filter_component() {
-		return bboss_nouveau_filter_component();
-	}
-}
-if ( function_exists( 'bboss_nouveau_filter_container_id' ) && ! function_exists( 'bp_nouveau_filter_container_id' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_filter_container_id()}.
-	 *
-	 * @deprecated Use bboss_nouveau_filter_container_id() instead.
-	 */
-	function bp_nouveau_filter_container_id() {
-		return bboss_nouveau_filter_container_id();
-	}
-}
-if ( function_exists( 'bboss_nouveau_filter_id' ) && ! function_exists( 'bp_nouveau_filter_id' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_filter_id()}.
-	 *
-	 * @deprecated Use bboss_nouveau_filter_id() instead.
-	 */
-	function bp_nouveau_filter_id() {
-		return bboss_nouveau_filter_id();
-	}
-}
-if ( function_exists( 'bboss_nouveau_filter_label' ) && ! function_exists( 'bp_nouveau_filter_label' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_filter_label()}.
-	 *
-	 * @deprecated Use bboss_nouveau_filter_label() instead.
-	 */
-	function bp_nouveau_filter_label() {
-		return bboss_nouveau_filter_label();
-	}
-}
-if ( function_exists( 'bboss_nouveau_filter_options' ) && ! function_exists( 'bp_nouveau_filter_options' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_filter_options()}.
-	 *
-	 * @deprecated Use bboss_nouveau_filter_options() instead.
-	 */
-	function bp_nouveau_filter_options() {
-		return bboss_nouveau_filter_options();
-	}
-}
-if ( function_exists( 'bboss_nouveau_friend_hook' ) && ! function_exists( 'bp_nouveau_friend_hook' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_friend_hook()}.
-	 *
-	 * @deprecated Use bboss_nouveau_friend_hook() instead.
-	 */
-	function bp_nouveau_friend_hook( $suffix = '' ) {
-		return bboss_nouveau_friend_hook( $suffix );
-	}
-}
-if ( function_exists( 'bboss_nouveau_get_container_classes' ) && ! function_exists( 'bp_nouveau_get_container_classes' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_get_container_classes()}.
-	 *
-	 * @deprecated Use bboss_nouveau_get_container_classes() instead.
-	 */
-	function bp_nouveau_get_container_classes() {
-		return bboss_nouveau_get_container_classes();
-	}
-}
-if ( function_exists( 'bboss_nouveau_get_customizer_link' ) && ! function_exists( 'bp_nouveau_get_customizer_link' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_get_customizer_link()}.
-	 *
-	 * @deprecated Use bboss_nouveau_get_customizer_link() instead.
-	 */
-	function bp_nouveau_get_customizer_link( $args = array() ) {
-		return bboss_nouveau_get_customizer_link( $args );
-	}
-}
-if ( function_exists( 'bboss_nouveau_get_directory_list_class' ) && ! function_exists( 'bp_nouveau_get_directory_list_class' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_get_directory_list_class()}.
-	 *
-	 * @deprecated Use bboss_nouveau_get_directory_list_class() instead.
-	 */
-	function bp_nouveau_get_directory_list_class() {
-		return bboss_nouveau_get_directory_list_class();
-	}
-}
-if ( function_exists( 'bboss_nouveau_get_directory_nav_object' ) && ! function_exists( 'bp_nouveau_get_directory_nav_object' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_get_directory_nav_object()}.
-	 *
-	 * @deprecated Use bboss_nouveau_get_directory_nav_object() instead.
-	 */
-	function bp_nouveau_get_directory_nav_object() {
-		return bboss_nouveau_get_directory_nav_object();
-	}
-}
-if ( function_exists( 'bboss_nouveau_get_directory_type_navs_class' ) && ! function_exists( 'bp_nouveau_get_directory_type_navs_class' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_get_directory_type_navs_class()}.
-	 *
-	 * @deprecated Use bboss_nouveau_get_directory_type_navs_class() instead.
-	 */
-	function bp_nouveau_get_directory_type_navs_class() {
-		return bboss_nouveau_get_directory_type_navs_class();
-	}
-}
-if ( function_exists( 'bboss_nouveau_get_filter_container_id' ) && ! function_exists( 'bp_nouveau_get_filter_container_id' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_get_filter_container_id()}.
-	 *
-	 * @deprecated Use bboss_nouveau_get_filter_container_id() instead.
-	 */
-	function bp_nouveau_get_filter_container_id() {
-		return bboss_nouveau_get_filter_container_id();
-	}
-}
-if ( function_exists( 'bboss_nouveau_get_filter_id' ) && ! function_exists( 'bp_nouveau_get_filter_id' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_get_filter_id()}.
-	 *
-	 * @deprecated Use bboss_nouveau_get_filter_id() instead.
-	 */
-	function bp_nouveau_get_filter_id() {
-		return bboss_nouveau_get_filter_id();
-	}
-}
-if ( function_exists( 'bboss_nouveau_get_filter_label' ) && ! function_exists( 'bp_nouveau_get_filter_label' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_get_filter_label()}.
-	 *
-	 * @deprecated Use bboss_nouveau_get_filter_label() instead.
-	 */
-	function bp_nouveau_get_filter_label() {
-		return bboss_nouveau_get_filter_label();
-	}
-}
-if ( function_exists( 'bboss_nouveau_get_filter_options' ) && ! function_exists( 'bp_nouveau_get_filter_options' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_get_filter_options()}.
-	 *
-	 * @deprecated Use bboss_nouveau_get_filter_options() instead.
-	 */
-	function bp_nouveau_get_filter_options() {
-		return bboss_nouveau_get_filter_options();
-	}
-}
-if ( function_exists( 'bboss_nouveau_get_group_create_steps_classes' ) && ! function_exists( 'bp_nouveau_get_group_create_steps_classes' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_get_group_create_steps_classes()}.
-	 *
-	 * @deprecated Use bboss_nouveau_get_group_create_steps_classes() instead.
-	 */
-	function bp_nouveau_get_group_create_steps_classes() {
-		return bboss_nouveau_get_group_create_steps_classes();
-	}
-}
-if ( function_exists( 'bboss_nouveau_get_loop_classes' ) && ! function_exists( 'bp_nouveau_get_loop_classes' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_get_loop_classes()}.
-	 *
-	 * @deprecated Use bboss_nouveau_get_loop_classes() instead.
-	 */
-	function bp_nouveau_get_loop_classes() {
-		return bboss_nouveau_get_loop_classes();
-	}
-}
-if ( function_exists( 'bboss_nouveau_get_nav_classes' ) && ! function_exists( 'bp_nouveau_get_nav_classes' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_get_nav_classes()}.
-	 *
-	 * @deprecated Use bboss_nouveau_get_nav_classes() instead.
-	 */
-	function bp_nouveau_get_nav_classes() {
-		return bboss_nouveau_get_nav_classes();
-	}
-}
-if ( function_exists( 'bboss_nouveau_get_nav_count' ) && ! function_exists( 'bp_nouveau_get_nav_count' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_get_nav_count()}.
-	 *
-	 * @deprecated Use bboss_nouveau_get_nav_count() instead.
-	 */
-	function bp_nouveau_get_nav_count() {
-		return bboss_nouveau_get_nav_count();
-	}
-}
-if ( function_exists( 'bboss_nouveau_get_nav_id' ) && ! function_exists( 'bp_nouveau_get_nav_id' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_get_nav_id()}.
-	 *
-	 * @deprecated Use bboss_nouveau_get_nav_id() instead.
-	 */
-	function bp_nouveau_get_nav_id() {
-		return bboss_nouveau_get_nav_id();
-	}
-}
-if ( function_exists( 'bboss_nouveau_get_nav_link' ) && ! function_exists( 'bp_nouveau_get_nav_link' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_get_nav_link()}.
-	 *
-	 * @deprecated Use bboss_nouveau_get_nav_link() instead.
-	 */
-	function bp_nouveau_get_nav_link() {
-		return bboss_nouveau_get_nav_link();
-	}
-}
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_nouveau_get_nav_link_class' ) && ! function_exists( 'bp_nouveau_get_nav_link_class' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_nouveau_get_nav_link_class()}.
@@ -3242,494 +4054,5 @@ if ( function_exists( 'bboss_nouveau_get_nav_link_class' ) && ! function_exists(
 		return bboss_nouveau_get_nav_link_class();
 	}
 }
-if ( function_exists( 'bboss_nouveau_get_nav_link_id' ) && ! function_exists( 'bp_nouveau_get_nav_link_id' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_get_nav_link_id()}.
-	 *
-	 * @deprecated Use bboss_nouveau_get_nav_link_id() instead.
-	 */
-	function bp_nouveau_get_nav_link_id() {
-		return bboss_nouveau_get_nav_link_id();
-	}
-}
-if ( function_exists( 'bboss_nouveau_get_nav_link_text' ) && ! function_exists( 'bp_nouveau_get_nav_link_text' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_get_nav_link_text()}.
-	 *
-	 * @deprecated Use bboss_nouveau_get_nav_link_text() instead.
-	 */
-	function bp_nouveau_get_nav_link_text() {
-		return bboss_nouveau_get_nav_link_text();
-	}
-}
-if ( function_exists( 'bboss_nouveau_get_nav_link_title' ) && ! function_exists( 'bp_nouveau_get_nav_link_title' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_get_nav_link_title()}.
-	 *
-	 * @deprecated Use bboss_nouveau_get_nav_link_title() instead.
-	 */
-	function bp_nouveau_get_nav_link_title() {
-		return bboss_nouveau_get_nav_link_title();
-	}
-}
-if ( function_exists( 'bboss_nouveau_get_nav_scope' ) && ! function_exists( 'bp_nouveau_get_nav_scope' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_get_nav_scope()}.
-	 *
-	 * @deprecated Use bboss_nouveau_get_nav_scope() instead.
-	 */
-	function bp_nouveau_get_nav_scope() {
-		return bboss_nouveau_get_nav_scope();
-	}
-}
-if ( function_exists( 'bboss_nouveau_get_search_objects' ) && ! function_exists( 'bp_nouveau_get_search_objects' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_get_search_objects()}.
-	 *
-	 * @deprecated Use bboss_nouveau_get_search_objects() instead.
-	 */
-	function bp_nouveau_get_search_objects( $objects = array() ) {
-		return bboss_nouveau_get_search_objects( $objects );
-	}
-}
-if ( function_exists( 'bboss_nouveau_get_search_primary_object' ) && ! function_exists( 'bp_nouveau_get_search_primary_object' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_get_search_primary_object()}.
-	 *
-	 * @deprecated Use bboss_nouveau_get_search_primary_object() instead.
-	 */
-	function bp_nouveau_get_search_primary_object( $object = '' ) {
-		return bboss_nouveau_get_search_primary_object( $object );
-	}
-}
-if ( function_exists( 'bboss_nouveau_get_single_item_nav_classes' ) && ! function_exists( 'bp_nouveau_get_single_item_nav_classes' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_get_single_item_nav_classes()}.
-	 *
-	 * @deprecated Use bboss_nouveau_get_single_item_nav_classes() instead.
-	 */
-	function bp_nouveau_get_single_item_nav_classes() {
-		return bboss_nouveau_get_single_item_nav_classes();
-	}
-}
-if ( function_exists( 'bboss_nouveau_get_single_item_subnav_classes' ) && ! function_exists( 'bp_nouveau_get_single_item_subnav_classes' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_get_single_item_subnav_classes()}.
-	 *
-	 * @deprecated Use bboss_nouveau_get_single_item_subnav_classes() instead.
-	 */
-	function bp_nouveau_get_single_item_subnav_classes() {
-		return bboss_nouveau_get_single_item_subnav_classes();
-	}
-}
-if ( function_exists( 'bboss_nouveau_get_template_message' ) && ! function_exists( 'bp_nouveau_get_template_message' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_get_template_message()}.
-	 *
-	 * @deprecated Use bboss_nouveau_get_template_message() instead.
-	 */
-	function bp_nouveau_get_template_message() {
-		return bboss_nouveau_get_template_message();
-	}
-}
-if ( function_exists( 'bboss_nouveau_get_template_message_type' ) && ! function_exists( 'bp_nouveau_get_template_message_type' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_get_template_message_type()}.
-	 *
-	 * @deprecated Use bboss_nouveau_get_template_message_type() instead.
-	 */
-	function bp_nouveau_get_template_message_type() {
-		return bboss_nouveau_get_template_message_type();
-	}
-}
-if ( function_exists( 'bboss_nouveau_groups_create_steps_classes' ) && ! function_exists( 'bp_nouveau_groups_create_steps_classes' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_groups_create_steps_classes()}.
-	 *
-	 * @deprecated Use bboss_nouveau_groups_create_steps_classes() instead.
-	 */
-	function bp_nouveau_groups_create_steps_classes() {
-		return bboss_nouveau_groups_create_steps_classes();
-	}
-}
-if ( function_exists( 'bboss_nouveau_has_dismiss_button' ) && ! function_exists( 'bp_nouveau_has_dismiss_button' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_has_dismiss_button()}.
-	 *
-	 * @deprecated Use bboss_nouveau_has_dismiss_button() instead.
-	 */
-	function bp_nouveau_has_dismiss_button() {
-		return bboss_nouveau_has_dismiss_button();
-	}
-}
-if ( function_exists( 'bboss_nouveau_has_nav' ) && ! function_exists( 'bp_nouveau_has_nav' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_has_nav()}.
-	 *
-	 * @deprecated Use bboss_nouveau_has_nav() instead.
-	 */
-	function bp_nouveau_has_nav( $args = array() ) {
-		return bboss_nouveau_has_nav( $args );
-	}
-}
-if ( function_exists( 'bboss_nouveau_has_template_message' ) && ! function_exists( 'bp_nouveau_has_template_message' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_has_template_message()}.
-	 *
-	 * @deprecated Use bboss_nouveau_has_template_message() instead.
-	 */
-	function bp_nouveau_has_template_message() {
-		return bboss_nouveau_has_template_message();
-	}
-}
-if ( function_exists( 'bboss_nouveau_hook' ) && ! function_exists( 'bp_nouveau_hook' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_hook()}.
-	 *
-	 * @deprecated Use bboss_nouveau_hook() instead.
-	 */
-	function bp_nouveau_hook( $pieces = array() ) {
-		return bboss_nouveau_hook( $pieces );
-	}
-}
-if ( function_exists( 'bboss_nouveau_loop_classes' ) && ! function_exists( 'bp_nouveau_loop_classes' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_loop_classes()}.
-	 *
-	 * @deprecated Use bboss_nouveau_loop_classes() instead.
-	 */
-	function bp_nouveau_loop_classes() {
-		return bboss_nouveau_loop_classes();
-	}
-}
-if ( function_exists( 'bboss_nouveau_loop_get_grid_columns' ) && ! function_exists( 'bp_nouveau_loop_get_grid_columns' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_loop_get_grid_columns()}.
-	 *
-	 * @deprecated Use bboss_nouveau_loop_get_grid_columns() instead.
-	 */
-	function bp_nouveau_loop_get_grid_columns() {
-		return bboss_nouveau_loop_get_grid_columns();
-	}
-}
-if ( function_exists( 'bboss_nouveau_loop_is_grid' ) && ! function_exists( 'bp_nouveau_loop_is_grid' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_loop_is_grid()}.
-	 *
-	 * @deprecated Use bboss_nouveau_loop_is_grid() instead.
-	 */
-	function bp_nouveau_loop_is_grid() {
-		return bboss_nouveau_loop_is_grid();
-	}
-}
-if ( function_exists( 'bboss_nouveau_nav_classes' ) && ! function_exists( 'bp_nouveau_nav_classes' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_nav_classes()}.
-	 *
-	 * @deprecated Use bboss_nouveau_nav_classes() instead.
-	 */
-	function bp_nouveau_nav_classes() {
-		return bboss_nouveau_nav_classes();
-	}
-}
-if ( function_exists( 'bboss_nouveau_nav_count' ) && ! function_exists( 'bp_nouveau_nav_count' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_nav_count()}.
-	 *
-	 * @deprecated Use bboss_nouveau_nav_count() instead.
-	 */
-	function bp_nouveau_nav_count() {
-		return bboss_nouveau_nav_count();
-	}
-}
-if ( function_exists( 'bboss_nouveau_nav_has_count' ) && ! function_exists( 'bp_nouveau_nav_has_count' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_nav_has_count()}.
-	 *
-	 * @deprecated Use bboss_nouveau_nav_has_count() instead.
-	 */
-	function bp_nouveau_nav_has_count() {
-		return bboss_nouveau_nav_has_count();
-	}
-}
-if ( function_exists( 'bboss_nouveau_nav_id' ) && ! function_exists( 'bp_nouveau_nav_id' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_nav_id()}.
-	 *
-	 * @deprecated Use bboss_nouveau_nav_id() instead.
-	 */
-	function bp_nouveau_nav_id() {
-		return bboss_nouveau_nav_id();
-	}
-}
-if ( function_exists( 'bboss_nouveau_nav_item' ) && ! function_exists( 'bp_nouveau_nav_item' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_nav_item()}.
-	 *
-	 * @deprecated Use bboss_nouveau_nav_item() instead.
-	 */
-	function bp_nouveau_nav_item() {
-		return bboss_nouveau_nav_item();
-	}
-}
-if ( function_exists( 'bboss_nouveau_nav_items' ) && ! function_exists( 'bp_nouveau_nav_items' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_nav_items()}.
-	 *
-	 * @deprecated Use bboss_nouveau_nav_items() instead.
-	 */
-	function bp_nouveau_nav_items() {
-		return bboss_nouveau_nav_items();
-	}
-}
-if ( function_exists( 'bboss_nouveau_nav_link' ) && ! function_exists( 'bp_nouveau_nav_link' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_nav_link()}.
-	 *
-	 * @deprecated Use bboss_nouveau_nav_link() instead.
-	 */
-	function bp_nouveau_nav_link() {
-		return bboss_nouveau_nav_link();
-	}
-}
-if ( function_exists( 'bboss_nouveau_nav_link_class' ) && ! function_exists( 'bp_nouveau_nav_link_class' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_nav_link_class()}.
-	 *
-	 * @deprecated Use bboss_nouveau_nav_link_class() instead.
-	 */
-	function bp_nouveau_nav_link_class() {
-		return bboss_nouveau_nav_link_class();
-	}
-}
-if ( function_exists( 'bboss_nouveau_nav_link_id' ) && ! function_exists( 'bp_nouveau_nav_link_id' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_nav_link_id()}.
-	 *
-	 * @deprecated Use bboss_nouveau_nav_link_id() instead.
-	 */
-	function bp_nouveau_nav_link_id() {
-		return bboss_nouveau_nav_link_id();
-	}
-}
-if ( function_exists( 'bboss_nouveau_nav_link_text' ) && ! function_exists( 'bp_nouveau_nav_link_text' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_nav_link_text()}.
-	 *
-	 * @deprecated Use bboss_nouveau_nav_link_text() instead.
-	 */
-	function bp_nouveau_nav_link_text() {
-		return bboss_nouveau_nav_link_text();
-	}
-}
-if ( function_exists( 'bboss_nouveau_nav_link_title' ) && ! function_exists( 'bp_nouveau_nav_link_title' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_nav_link_title()}.
-	 *
-	 * @deprecated Use bboss_nouveau_nav_link_title() instead.
-	 */
-	function bp_nouveau_nav_link_title() {
-		return bboss_nouveau_nav_link_title();
-	}
-}
-if ( function_exists( 'bboss_nouveau_nav_scope' ) && ! function_exists( 'bp_nouveau_nav_scope' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_nav_scope()}.
-	 *
-	 * @deprecated Use bboss_nouveau_nav_scope() instead.
-	 */
-	function bp_nouveau_nav_scope() {
-		return bboss_nouveau_nav_scope();
-	}
-}
-if ( function_exists( 'bboss_nouveau_pagination' ) && ! function_exists( 'bp_nouveau_pagination' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_pagination()}.
-	 *
-	 * @deprecated Use bboss_nouveau_pagination() instead.
-	 */
-	function bp_nouveau_pagination( $position ) {
-		return bboss_nouveau_pagination( $position );
-	}
-}
-if ( function_exists( 'bboss_nouveau_plugin_hook' ) && ! function_exists( 'bp_nouveau_plugin_hook' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_plugin_hook()}.
-	 *
-	 * @deprecated Use bboss_nouveau_plugin_hook() instead.
-	 */
-	function bp_nouveau_plugin_hook( $suffix = '' ) {
-		return bboss_nouveau_plugin_hook( $suffix );
-	}
-}
-if ( function_exists( 'bboss_nouveau_search_container_class' ) && ! function_exists( 'bp_nouveau_search_container_class' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_search_container_class()}.
-	 *
-	 * @deprecated Use bboss_nouveau_search_container_class() instead.
-	 */
-	function bp_nouveau_search_container_class() {
-		return bboss_nouveau_search_container_class();
-	}
-}
-if ( function_exists( 'bboss_nouveau_search_default_text' ) && ! function_exists( 'bp_nouveau_search_default_text' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_search_default_text()}.
-	 *
-	 * @deprecated Use bboss_nouveau_search_default_text() instead.
-	 */
-	function bp_nouveau_search_default_text( $text = '', $is_attr = true ) {
-		return bboss_nouveau_search_default_text( $text, $is_attr );
-	}
-}
-if ( function_exists( 'bboss_nouveau_search_form' ) && ! function_exists( 'bp_nouveau_search_form' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_search_form()}.
-	 *
-	 * @deprecated Use bboss_nouveau_search_form() instead.
-	 */
-	function bp_nouveau_search_form() {
-		return bboss_nouveau_search_form();
-	}
-}
-if ( function_exists( 'bboss_nouveau_search_object_data_attr' ) && ! function_exists( 'bp_nouveau_search_object_data_attr' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_search_object_data_attr()}.
-	 *
-	 * @deprecated Use bboss_nouveau_search_object_data_attr() instead.
-	 */
-	function bp_nouveau_search_object_data_attr( $attr = '' ) {
-		return bboss_nouveau_search_object_data_attr( $attr );
-	}
-}
-if ( function_exists( 'bboss_nouveau_search_selector_id' ) && ! function_exists( 'bp_nouveau_search_selector_id' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_search_selector_id()}.
-	 *
-	 * @deprecated Use bboss_nouveau_search_selector_id() instead.
-	 */
-	function bp_nouveau_search_selector_id( $suffix = '', $sep = '-' ) {
-		return bboss_nouveau_search_selector_id( $suffix, $sep );
-	}
-}
-if ( function_exists( 'bboss_nouveau_search_selector_name' ) && ! function_exists( 'bp_nouveau_search_selector_name' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_search_selector_name()}.
-	 *
-	 * @deprecated Use bboss_nouveau_search_selector_name() instead.
-	 */
-	function bp_nouveau_search_selector_name( $suffix = '', $sep = '_' ) {
-		return bboss_nouveau_search_selector_name( $suffix, $sep );
-	}
-}
-if ( function_exists( 'bboss_nouveau_signup_form' ) && ! function_exists( 'bp_nouveau_signup_form' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_signup_form()}.
-	 *
-	 * @deprecated Use bboss_nouveau_signup_form() instead.
-	 */
-	function bp_nouveau_signup_form( $section = 'account_details' ) {
-		return bboss_nouveau_signup_form( $section );
-	}
-}
-if ( function_exists( 'bboss_nouveau_signup_hook' ) && ! function_exists( 'bp_nouveau_signup_hook' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_signup_hook()}.
-	 *
-	 * @deprecated Use bboss_nouveau_signup_hook() instead.
-	 */
-	function bp_nouveau_signup_hook( $when = '', $prefix = '' ) {
-		return bboss_nouveau_signup_hook( $when, $prefix );
-	}
-}
-if ( function_exists( 'bboss_nouveau_signup_terms_privacy' ) && ! function_exists( 'bp_nouveau_signup_terms_privacy' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_signup_terms_privacy()}.
-	 *
-	 * @deprecated Use bboss_nouveau_signup_terms_privacy() instead.
-	 */
-	function bp_nouveau_signup_terms_privacy() {
-		return bboss_nouveau_signup_terms_privacy();
-	}
-}
-if ( function_exists( 'bboss_nouveau_single_item_nav_classes' ) && ! function_exists( 'bp_nouveau_single_item_nav_classes' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_single_item_nav_classes()}.
-	 *
-	 * @deprecated Use bboss_nouveau_single_item_nav_classes() instead.
-	 */
-	function bp_nouveau_single_item_nav_classes() {
-		return bboss_nouveau_single_item_nav_classes();
-	}
-}
-if ( function_exists( 'bboss_nouveau_single_item_subnav_classes' ) && ! function_exists( 'bp_nouveau_single_item_subnav_classes' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_single_item_subnav_classes()}.
-	 *
-	 * @deprecated Use bboss_nouveau_single_item_subnav_classes() instead.
-	 */
-	function bp_nouveau_single_item_subnav_classes() {
-		return bboss_nouveau_single_item_subnav_classes();
-	}
-}
-if ( function_exists( 'bboss_nouveau_submit_button' ) && ! function_exists( 'bp_nouveau_submit_button' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_submit_button()}.
-	 *
-	 * @deprecated Use bboss_nouveau_submit_button() instead.
-	 */
-	function bp_nouveau_submit_button( $action ) {
-		return bboss_nouveau_submit_button( $action );
-	}
-}
-if ( function_exists( 'bboss_nouveau_template_message' ) && ! function_exists( 'bp_nouveau_template_message' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_template_message()}.
-	 *
-	 * @deprecated Use bboss_nouveau_template_message() instead.
-	 */
-	function bp_nouveau_template_message() {
-		return bboss_nouveau_template_message();
-	}
-}
-if ( function_exists( 'bboss_nouveau_template_message_classes' ) && ! function_exists( 'bp_nouveau_template_message_classes' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_template_message_classes()}.
-	 *
-	 * @deprecated Use bboss_nouveau_template_message_classes() instead.
-	 */
-	function bp_nouveau_template_message_classes() {
-		return bboss_nouveau_template_message_classes();
-	}
-}
-if ( function_exists( 'bboss_nouveau_template_notices' ) && ! function_exists( 'bp_nouveau_template_notices' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_template_notices()}.
-	 *
-	 * @deprecated Use bboss_nouveau_template_notices() instead.
-	 */
-	function bp_nouveau_template_notices() {
-		return bboss_nouveau_template_notices();
-	}
-}
-if ( function_exists( 'bboss_nouveau_user_feedback' ) && ! function_exists( 'bp_nouveau_user_feedback' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_user_feedback()}.
-	 *
-	 * @deprecated Use bboss_nouveau_user_feedback() instead.
-	 */
-	function bp_nouveau_user_feedback( $feedback_id = '' ) {
-		return bboss_nouveau_user_feedback( $feedback_id );
-	}
-}
-if ( function_exists( 'bboss_nouveau_error_template' ) && ! function_exists( 'nouveau_error_template' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_error_template()}.
-	 *
-	 * @deprecated Use bboss_nouveau_error_template() instead.
-	 */
-	function nouveau_error_template( $message = '', $type = '' ) {
-		return bboss_nouveau_error_template( $message, $type );
-	}
-}
 // @bbwt-com-end compat-layer
+

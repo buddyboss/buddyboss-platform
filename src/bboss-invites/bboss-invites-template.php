@@ -17,6 +17,20 @@ defined( 'ABSPATH' ) || exit;
 function bboss_invites_slug() {
 	echo esc_attr( bboss_get_invites_slug() );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_invites_slug' ) && ! function_exists( 'bp_invites_slug' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_invites_slug()}.
+	 *
+	 * @deprecated Use bboss_invites_slug() instead.
+	 */
+	function bp_invites_slug() {
+		return bboss_invites_slug();
+	}
+}
+// @bbwt-com-end compat-layer
+
 	/**
 	 * Return the invites component slug.
 	 *
@@ -35,6 +49,20 @@ function bboss_get_invites_slug() {
 	 */
 	return apply_filters( 'bp_get_invites_slug', bboss()->invites->slug );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_invites_slug' ) && ! function_exists( 'bp_get_invites_slug' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_invites_slug()}.
+	 *
+	 * @deprecated Use bboss_get_invites_slug() instead.
+	 */
+	function bp_get_invites_slug() {
+		return bboss_get_invites_slug();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output the invites component root slug.
@@ -44,6 +72,20 @@ function bboss_get_invites_slug() {
 function bboss_invites_root_slug() {
 	echo esc_attr( bboss_get_invites_root_slug() );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_invites_root_slug' ) && ! function_exists( 'bp_invites_root_slug' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_invites_root_slug()}.
+	 *
+	 * @deprecated Use bboss_invites_root_slug() instead.
+	 */
+	function bp_invites_root_slug() {
+		return bboss_invites_root_slug();
+	}
+}
+// @bbwt-com-end compat-layer
+
 	/**
 	 * Return the invites component root slug.
 	 *
@@ -62,10 +104,8 @@ function bboss_get_invites_root_slug() {
 	 */
 	return apply_filters( 'bp_get_invites_root_slug', bboss()->invites->root_slug );
 }
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_get_invites_root_slug' ) && ! function_exists( 'bp_get_invites_root_slug' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_get_invites_root_slug()}.
@@ -76,34 +116,6 @@ if ( function_exists( 'bboss_get_invites_root_slug' ) && ! function_exists( 'bp_
 		return bboss_get_invites_root_slug();
 	}
 }
-if ( function_exists( 'bboss_get_invites_slug' ) && ! function_exists( 'bp_get_invites_slug' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_invites_slug()}.
-	 *
-	 * @deprecated Use bboss_get_invites_slug() instead.
-	 */
-	function bp_get_invites_slug() {
-		return bboss_get_invites_slug();
-	}
-}
-if ( function_exists( 'bboss_invites_root_slug' ) && ! function_exists( 'bp_invites_root_slug' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_invites_root_slug()}.
-	 *
-	 * @deprecated Use bboss_invites_root_slug() instead.
-	 */
-	function bp_invites_root_slug() {
-		return bboss_invites_root_slug();
-	}
-}
-if ( function_exists( 'bboss_invites_slug' ) && ! function_exists( 'bp_invites_slug' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_invites_slug()}.
-	 *
-	 * @deprecated Use bboss_invites_slug() instead.
-	 */
-	function bp_invites_slug() {
-		return bboss_invites_slug();
-	}
-}
 // @bbwt-com-end compat-layer
+
+

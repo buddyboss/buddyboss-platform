@@ -77,6 +77,20 @@ function bboss_bbp_insert_reply( $reply_data = array(), $reply_meta = array() ) 
 	// Return new reply ID
 	return $reply_id;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_insert_reply' ) && ! function_exists( 'bbp_insert_reply' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_insert_reply()}.
+	 *
+	 * @deprecated Use bboss_bbp_insert_reply() instead.
+	 */
+	function bbp_insert_reply( $reply_data = array(), $reply_meta = array() ) {
+		return bboss_bbp_insert_reply( $reply_data, $reply_meta );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /** Post Form Handlers ********************************************************/
 
@@ -549,6 +563,20 @@ function bboss_bbp_new_reply_handler( $action = '' ) {
 	}
 
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_new_reply_handler' ) && ! function_exists( 'bbp_new_reply_handler' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_new_reply_handler()}.
+	 *
+	 * @deprecated Use bboss_bbp_new_reply_handler() instead.
+	 */
+	function bbp_new_reply_handler( $action = '' ) {
+		return bboss_bbp_new_reply_handler( $action );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Handles the front end edit reply submission
@@ -882,6 +910,20 @@ function bboss_bbp_edit_reply_handler( $action = '' ) {
 		bboss_bbp_add_error( 'bbp_reply_error', sprintf( /* translators: %s: additional error details (may be empty). */ __( '<strong>ERROR</strong>: The following problem(s) have been found with your reply:%sPlease try again.', 'buddyboss' ), $append_error ) );
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_edit_reply_handler' ) && ! function_exists( 'bbp_edit_reply_handler' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_edit_reply_handler()}.
+	 *
+	 * @deprecated Use bboss_bbp_edit_reply_handler() instead.
+	 */
+	function bbp_edit_reply_handler( $action = '' ) {
+		return bboss_bbp_edit_reply_handler( $action );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Handle all the extra meta stuff from posting a new reply or editing a reply
@@ -1016,6 +1058,20 @@ function bboss_bbp_update_reply( $reply_id = 0, $topic_id = 0, $forum_id = 0, $a
 		bboss_bbp_update_reply_walker( $reply_id, $last_active_time, $forum_id, $topic_id, false );
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_update_reply' ) && ! function_exists( 'bbp_update_reply' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_update_reply()}.
+	 *
+	 * @deprecated Use bboss_bbp_update_reply() instead.
+	 */
+	function bbp_update_reply( $reply_id = 0, $topic_id = 0, $forum_id = 0, $anonymous_data = false, $author_id = 0, $is_edit = false, $reply_to = 0 ) {
+		return bboss_bbp_update_reply( $reply_id, $topic_id, $forum_id, $anonymous_data, $author_id, $is_edit, $reply_to );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Walk up the ancestor tree from the current reply, and update all the counts
@@ -1140,6 +1196,20 @@ function bboss_bbp_update_reply_walker( $reply_id, $last_active_time = '', $foru
 		}
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_update_reply_walker' ) && ! function_exists( 'bbp_update_reply_walker' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_update_reply_walker()}.
+	 *
+	 * @deprecated Use bboss_bbp_update_reply_walker() instead.
+	 */
+	function bbp_update_reply_walker( $reply_id, $last_active_time = '', $forum_id = 0, $topic_id = 0, $refresh = true ) {
+		return bboss_bbp_update_reply_walker( $reply_id, $last_active_time, $forum_id, $topic_id, $refresh );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /** Reply Updaters ************************************************************/
 
@@ -1193,6 +1263,20 @@ function bboss_bbp_update_reply_forum_id( $reply_id = 0, $forum_id = 0 ) {
 
 	return apply_filters( 'bbp_update_reply_forum_id', (int) $forum_id, $reply_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_update_reply_forum_id' ) && ! function_exists( 'bbp_update_reply_forum_id' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_update_reply_forum_id()}.
+	 *
+	 * @deprecated Use bboss_bbp_update_reply_forum_id() instead.
+	 */
+	function bbp_update_reply_forum_id( $reply_id = 0, $forum_id = 0 ) {
+		return bboss_bbp_update_reply_forum_id( $reply_id, $forum_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Update the reply with its topic id it is in
@@ -1244,6 +1328,20 @@ function bboss_bbp_update_reply_topic_id( $reply_id = 0, $topic_id = 0 ) {
 
 	return apply_filters( 'bbp_update_reply_topic_id', (int) $topic_id, $reply_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_update_reply_topic_id' ) && ! function_exists( 'bbp_update_reply_topic_id' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_update_reply_topic_id()}.
+	 *
+	 * @deprecated Use bboss_bbp_update_reply_topic_id() instead.
+	 */
+	function bbp_update_reply_topic_id( $reply_id = 0, $topic_id = 0 ) {
+		return bboss_bbp_update_reply_topic_id( $reply_id, $topic_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Update the reply's meta data with its reply to id
@@ -1280,6 +1378,20 @@ function bboss_bbp_update_reply_to( $reply_id = 0, $reply_to = 0 ) {
 
 	return (int) apply_filters( 'bbp_update_reply_to', (int) $reply_to, $reply_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_update_reply_to' ) && ! function_exists( 'bbp_update_reply_to' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_update_reply_to()}.
+	 *
+	 * @deprecated Use bboss_bbp_update_reply_to() instead.
+	 */
+	function bbp_update_reply_to( $reply_id = 0, $reply_to = 0 ) {
+		return bboss_bbp_update_reply_to( $reply_id, $reply_to );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Update the revision log of the reply
@@ -1329,6 +1441,20 @@ function bboss_bbp_update_reply_revision_log( $args = '' ) {
 
 	return apply_filters( 'bbp_update_reply_revision_log', $revision_log, $r['reply_id'] );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_update_reply_revision_log' ) && ! function_exists( 'bbp_update_reply_revision_log' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_update_reply_revision_log()}.
+	 *
+	 * @deprecated Use bboss_bbp_update_reply_revision_log() instead.
+	 */
+	function bbp_update_reply_revision_log( $args = '' ) {
+		return bboss_bbp_update_reply_revision_log( $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Move reply handler
@@ -1592,6 +1718,20 @@ function bboss_bbp_move_reply_handler( $action = '' ) {
 	// Redirect back to the topic.
 	bboss_bbp_redirect( bboss_bbp_get_topic_permalink( $destination_topic->ID ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_move_reply_handler' ) && ! function_exists( 'bbp_move_reply_handler' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_move_reply_handler()}.
+	 *
+	 * @deprecated Use bboss_bbp_move_reply_handler() instead.
+	 */
+	function bbp_move_reply_handler( $action = '' ) {
+		return bboss_bbp_move_reply_handler( $action );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Fix counts on reply move
@@ -1636,6 +1776,20 @@ function bboss_bbp_move_reply_count( $move_reply_id, $source_topic_id, $destinat
 
 	do_action( 'bbp_move_reply_count', $move_reply_id, $source_topic_id, $destination_topic_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_move_reply_count' ) && ! function_exists( 'bbp_move_reply_count' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_move_reply_count()}.
+	 *
+	 * @deprecated Use bboss_bbp_move_reply_count() instead.
+	 */
+	function bbp_move_reply_count( $move_reply_id, $source_topic_id, $destination_topic_id ) {
+		return bboss_bbp_move_reply_count( $move_reply_id, $source_topic_id, $destination_topic_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /** Reply Actions *************************************************************/
 
@@ -1794,6 +1948,20 @@ function bboss_bbp_toggle_reply_handler( $action = '' ) {
 		bboss_bbp_add_error( 'bbp_toggle_reply', $failure );
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_toggle_reply_handler' ) && ! function_exists( 'bbp_toggle_reply_handler' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_toggle_reply_handler()}.
+	 *
+	 * @deprecated Use bboss_bbp_toggle_reply_handler() instead.
+	 */
+	function bbp_toggle_reply_handler( $action = '' ) {
+		return bboss_bbp_toggle_reply_handler( $action );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /** Reply Actions *************************************************************/
 
@@ -1845,6 +2013,20 @@ function bboss_bbp_spam_reply( $reply_id = 0 ) {
 	// Return reply_id.
 	return $reply_id;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_spam_reply' ) && ! function_exists( 'bbp_spam_reply' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_spam_reply()}.
+	 *
+	 * @deprecated Use bboss_bbp_spam_reply() instead.
+	 */
+	function bbp_spam_reply( $reply_id = 0 ) {
+		return bboss_bbp_spam_reply( $reply_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Unspams a reply
@@ -1901,6 +2083,20 @@ function bboss_bbp_unspam_reply( $reply_id = 0 ) {
 	// Return reply_id.
 	return $reply_id;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_unspam_reply' ) && ! function_exists( 'bbp_unspam_reply' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_unspam_reply()}.
+	 *
+	 * @deprecated Use bboss_bbp_unspam_reply() instead.
+	 */
+	function bbp_unspam_reply( $reply_id = 0 ) {
+		return bboss_bbp_unspam_reply( $reply_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /** Before Delete/Trash/Untrash ***********************************************/
 
@@ -1920,6 +2116,20 @@ function bboss_bbp_delete_reply( $reply_id = 0 ) {
 
 	do_action( 'bbp_delete_reply', $reply_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_delete_reply' ) && ! function_exists( 'bbp_delete_reply' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_delete_reply()}.
+	 *
+	 * @deprecated Use bboss_bbp_delete_reply() instead.
+	 */
+	function bbp_delete_reply( $reply_id = 0 ) {
+		return bboss_bbp_delete_reply( $reply_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Called before trashing a reply
@@ -1939,6 +2149,20 @@ function bboss_bbp_trash_reply( $reply_id = 0 ) {
 
 	do_action( 'bbp_trash_reply', $reply_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_trash_reply' ) && ! function_exists( 'bbp_trash_reply' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_trash_reply()}.
+	 *
+	 * @deprecated Use bboss_bbp_trash_reply() instead.
+	 */
+	function bbp_trash_reply( $reply_id = 0 ) {
+		return bboss_bbp_trash_reply( $reply_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Called before untrashing (restoring) a reply.
@@ -1958,6 +2182,20 @@ function bboss_bbp_untrash_reply( $reply_id = 0 ) {
 
 	do_action( 'bbp_untrash_reply', $reply_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_untrash_reply' ) && ! function_exists( 'bbp_untrash_reply' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_untrash_reply()}.
+	 *
+	 * @deprecated Use bboss_bbp_untrash_reply() instead.
+	 */
+	function bbp_untrash_reply( $reply_id = 0 ) {
+		return bboss_bbp_untrash_reply( $reply_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /** After Delete/Trash/Untrash ************************************************/
 
@@ -1979,6 +2217,20 @@ function bboss_bbp_deleted_reply( $reply_id = 0 ) {
 
 	do_action( 'bbp_deleted_reply', $reply_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_deleted_reply' ) && ! function_exists( 'bbp_deleted_reply' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_deleted_reply()}.
+	 *
+	 * @deprecated Use bboss_bbp_deleted_reply() instead.
+	 */
+	function bbp_deleted_reply( $reply_id = 0 ) {
+		return bboss_bbp_deleted_reply( $reply_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Called after trashing a reply
@@ -1998,6 +2250,20 @@ function bboss_bbp_trashed_reply( $reply_id = 0 ) {
 
 	do_action( 'bbp_trashed_reply', $reply_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_trashed_reply' ) && ! function_exists( 'bbp_trashed_reply' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_trashed_reply()}.
+	 *
+	 * @deprecated Use bboss_bbp_trashed_reply() instead.
+	 */
+	function bbp_trashed_reply( $reply_id = 0 ) {
+		return bboss_bbp_trashed_reply( $reply_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Called after untrashing (restoring) a reply
@@ -2024,6 +2290,20 @@ function bboss_bbp_untrashed_reply( $reply_id = 0, $previous_status = '' ) {
 
 	do_action( 'bbp_untrashed_reply', $reply_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_untrashed_reply' ) && ! function_exists( 'bbp_untrashed_reply' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_untrashed_reply()}.
+	 *
+	 * @deprecated Use bboss_bbp_untrashed_reply() instead.
+	 */
+	function bbp_untrashed_reply( $reply_id = 0, $previous_status = '' ) {
+		return bboss_bbp_untrashed_reply( $reply_id, $previous_status );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /** Settings ******************************************************************/
 
@@ -2051,6 +2331,20 @@ function bboss_bbp_get_replies_per_page( $default = 15 ) {
 	// Filter and return.
 	return (int) apply_filters( 'bbp_get_replies_per_page', $retval, $default );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_replies_per_page' ) && ! function_exists( 'bbp_get_replies_per_page' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_replies_per_page()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_replies_per_page() instead.
+	 */
+	function bbp_get_replies_per_page( $default = 15 ) {
+		return bboss_bbp_get_replies_per_page( $default );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return the replies per RSS page setting
@@ -2076,6 +2370,20 @@ function bboss_bbp_get_replies_per_rss_page( $default = 25 ) {
 	// Filter and return.
 	return (int) apply_filters( 'bbp_get_replies_per_rss_page', $retval, $default );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_replies_per_rss_page' ) && ! function_exists( 'bbp_get_replies_per_rss_page' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_replies_per_rss_page()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_replies_per_rss_page() instead.
+	 */
+	function bbp_get_replies_per_rss_page( $default = 25 ) {
+		return bboss_bbp_get_replies_per_rss_page( $default );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /** Autoembed *****************************************************************/
 
@@ -2093,6 +2401,20 @@ function bboss_bbp_reply_content_autoembed() {
 		add_filter( 'bbp_get_reply_content', 'bbp_reply_content_autoembed_paragraph', 99999, 1 );
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_reply_content_autoembed' ) && ! function_exists( 'bbp_reply_content_autoembed' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_reply_content_autoembed()}.
+	 *
+	 * @deprecated Use bboss_bbp_reply_content_autoembed() instead.
+	 */
+	function bbp_reply_content_autoembed() {
+		return bboss_bbp_reply_content_autoembed();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Validate is the embed url or not.
@@ -2116,6 +2438,20 @@ function bboss_validate_reply_embed( $content ) {
 
 	return $content;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_validate_reply_embed' ) && ! function_exists( 'bb_validate_reply_embed' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_validate_reply_embed()}.
+	 *
+	 * @deprecated Use bboss_validate_reply_embed() instead.
+	 */
+	function bb_validate_reply_embed( $content ) {
+		return bboss_validate_reply_embed( $content );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Add oembed to forum reply.
@@ -2198,6 +2534,20 @@ function bboss_bbp_reply_content_autoembed_paragraph( $content, $reply_id = 0 ) 
 
 	return $content;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_reply_content_autoembed_paragraph' ) && ! function_exists( 'bbp_reply_content_autoembed_paragraph' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_reply_content_autoembed_paragraph()}.
+	 *
+	 * @deprecated Use bboss_bbp_reply_content_autoembed_paragraph() instead.
+	 */
+	function bbp_reply_content_autoembed_paragraph( $content, $reply_id = 0 ) {
+		return bboss_bbp_reply_content_autoembed_paragraph( $content, $reply_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /** Filters *******************************************************************/
 
@@ -2270,6 +2620,20 @@ function bboss__bbp_has_replies_where( $where = '', $query = false ) {
 
 	return $where;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss__bbp_has_replies_where' ) && ! function_exists( '_bbp_has_replies_where' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss__bbp_has_replies_where()}.
+	 *
+	 * @deprecated Use bboss__bbp_has_replies_where() instead.
+	 */
+	function _bbp_has_replies_where( $where = '', $query = false ) {
+		return bboss__bbp_has_replies_where( $where, $query );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /** Feeds *********************************************************************/
 
@@ -2417,6 +2781,20 @@ function bboss_bbp_display_replies_feed_rss2( $replies_query = array() ) {
 	// We're done here
 	exit();
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_display_replies_feed_rss2' ) && ! function_exists( 'bbp_display_replies_feed_rss2' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_display_replies_feed_rss2()}.
+	 *
+	 * @deprecated Use bboss_bbp_display_replies_feed_rss2() instead.
+	 */
+	function bbp_display_replies_feed_rss2( $replies_query = array() ) {
+		return bboss_bbp_display_replies_feed_rss2( $replies_query );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /** Permissions ***************************************************************/
 
@@ -2443,6 +2821,20 @@ function bboss_bbp_check_reply_edit() {
 		bboss_bbp_redirect( bboss_bbp_get_reply_url() );
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_check_reply_edit' ) && ! function_exists( 'bbp_check_reply_edit' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_check_reply_edit()}.
+	 *
+	 * @deprecated Use bboss_bbp_check_reply_edit() instead.
+	 */
+	function bbp_check_reply_edit() {
+		return bboss_bbp_check_reply_edit();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /** Reply Position ************************************************************/
 
@@ -2504,6 +2896,20 @@ function bboss_bbp_update_reply_position( $reply_id = 0, $reply_position = 0 ) {
 
 	return (int) $reply_position;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_update_reply_position' ) && ! function_exists( 'bbp_update_reply_position' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_update_reply_position()}.
+	 *
+	 * @deprecated Use bboss_bbp_update_reply_position() instead.
+	 */
+	function bbp_update_reply_position( $reply_id = 0, $reply_position = 0 ) {
+		return bboss_bbp_update_reply_position( $reply_id, $reply_position );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get the position of a reply by querying the DB directly for the replies
@@ -2544,6 +2950,20 @@ function bboss_bbp_get_reply_position_raw( $reply_id = 0, $topic_id = 0 ) {
 
 	return (int) $reply_position;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_reply_position_raw' ) && ! function_exists( 'bbp_get_reply_position_raw' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_reply_position_raw()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_reply_position_raw() instead.
+	 */
+	function bbp_get_reply_position_raw( $reply_id = 0, $topic_id = 0 ) {
+		return bboss_bbp_get_reply_position_raw( $reply_id, $topic_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /** Hierarchical Replies ******************************************************/
 
@@ -2618,6 +3038,20 @@ function bboss_bbp_list_replies( $args = array() ) {
 	bboss_forums()->reply_query->total_items_per_page = $walker->total_items_per_page;
 
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_list_replies' ) && ! function_exists( 'bbp_list_replies' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_list_replies()}.
+	 *
+	 * @deprecated Use bboss_bbp_list_replies() instead.
+	 */
+	function bbp_list_replies( $args = array() ) {
+		return bboss_bbp_list_replies( $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Validate a `reply_to` field for hierarchical replies
@@ -2647,6 +3081,20 @@ function bboss_bbp_validate_reply_to( $reply_to = 0, $reply_id = 0 ) {
 
 	return (int) $reply_to;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_validate_reply_to' ) && ! function_exists( 'bbp_validate_reply_to' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_validate_reply_to()}.
+	 *
+	 * @deprecated Use bboss_bbp_validate_reply_to() instead.
+	 */
+	function bbp_validate_reply_to( $reply_to = 0, $reply_id = 0 ) {
+		return bboss_bbp_validate_reply_to( $reply_to, $reply_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Change forum role labels to conform to BuddyBoss Platform naming conventions
@@ -2702,6 +3150,20 @@ function bboss_bbp_adjust_forum_role_labels( $author_role, $args ) {
 		$args['after']
 	);
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_adjust_forum_role_labels' ) && ! function_exists( 'bbp_adjust_forum_role_labels' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_adjust_forum_role_labels()}.
+	 *
+	 * @deprecated Use bboss_bbp_adjust_forum_role_labels() instead.
+	 */
+	function bbp_adjust_forum_role_labels( $author_role, $args ) {
+		return bboss_bbp_adjust_forum_role_labels( $author_role, $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Allow group members to have advanced privileges in group forum topics.
@@ -2782,6 +3244,20 @@ function bboss_map_group_forum_reply_meta_caps( $caps = array(), $cap = '', $use
 
 	return apply_filters( 'bb_map_group_forum_reply_meta_caps', $caps, $cap, $user_id, $args );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_map_group_forum_reply_meta_caps' ) && ! function_exists( 'bb_map_group_forum_reply_meta_caps' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_map_group_forum_reply_meta_caps()}.
+	 *
+	 * @deprecated Use bboss_map_group_forum_reply_meta_caps() instead.
+	 */
+	function bb_map_group_forum_reply_meta_caps( $caps = array(), $cap = '', $user_id = 0, $args = array() ) {
+		return bboss_map_group_forum_reply_meta_caps( $caps, $cap, $user_id, $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get the total count of all replies upto possible depth.
@@ -2813,6 +3289,20 @@ function bboss_bbp_replies_count_walk( $posts, $top_reply_ids, $count ) {
 
 	return $count;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_replies_count_walk' ) && ! function_exists( 'bbp_replies_count_walk' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_replies_count_walk()}.
+	 *
+	 * @deprecated Use bboss_bbp_replies_count_walk() instead.
+	 */
+	function bbp_replies_count_walk( $posts, $top_reply_ids, $count ) {
+		return bboss_bbp_replies_count_walk( $posts, $top_reply_ids, $count );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return array of public reply statuses.
@@ -2830,6 +3320,20 @@ function bboss_bbp_get_public_reply_statuses() {
 	// Filter & return.
 	return (array) apply_filters( 'bbp_get_public_reply_statuses', $statuses );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_public_reply_statuses' ) && ! function_exists( 'bbp_get_public_reply_statuses' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_public_reply_statuses()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_public_reply_statuses() instead.
+	 */
+	function bbp_get_public_reply_statuses() {
+		return bboss_bbp_get_public_reply_statuses();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return array of non-public reply statuses.
@@ -2849,100 +3353,8 @@ function bboss_bbp_get_non_public_reply_statuses() {
 	// Filter & return.
 	return (array) apply_filters( 'bbp_get_non_public_reply_statuses', $statuses );
 }
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
-if ( function_exists( 'bboss__bbp_has_replies_where' ) && ! function_exists( '_bbp_has_replies_where' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss__bbp_has_replies_where()}.
-	 *
-	 * @deprecated Use bboss__bbp_has_replies_where() instead.
-	 */
-	function _bbp_has_replies_where( $where = '', $query = false ) {
-		return bboss__bbp_has_replies_where( $where, $query );
-	}
-}
-if ( function_exists( 'bboss_map_group_forum_reply_meta_caps' ) && ! function_exists( 'bb_map_group_forum_reply_meta_caps' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_map_group_forum_reply_meta_caps()}.
-	 *
-	 * @deprecated Use bboss_map_group_forum_reply_meta_caps() instead.
-	 */
-	function bb_map_group_forum_reply_meta_caps( $caps = array(), $cap = '', $user_id = 0, $args = array() ) {
-		return bboss_map_group_forum_reply_meta_caps( $caps, $cap, $user_id, $args );
-	}
-}
-if ( function_exists( 'bboss_validate_reply_embed' ) && ! function_exists( 'bb_validate_reply_embed' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_validate_reply_embed()}.
-	 *
-	 * @deprecated Use bboss_validate_reply_embed() instead.
-	 */
-	function bb_validate_reply_embed( $content ) {
-		return bboss_validate_reply_embed( $content );
-	}
-}
-if ( function_exists( 'bboss_bbp_adjust_forum_role_labels' ) && ! function_exists( 'bbp_adjust_forum_role_labels' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_adjust_forum_role_labels()}.
-	 *
-	 * @deprecated Use bboss_bbp_adjust_forum_role_labels() instead.
-	 */
-	function bbp_adjust_forum_role_labels( $author_role, $args ) {
-		return bboss_bbp_adjust_forum_role_labels( $author_role, $args );
-	}
-}
-if ( function_exists( 'bboss_bbp_check_reply_edit' ) && ! function_exists( 'bbp_check_reply_edit' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_check_reply_edit()}.
-	 *
-	 * @deprecated Use bboss_bbp_check_reply_edit() instead.
-	 */
-	function bbp_check_reply_edit() {
-		return bboss_bbp_check_reply_edit();
-	}
-}
-if ( function_exists( 'bboss_bbp_delete_reply' ) && ! function_exists( 'bbp_delete_reply' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_delete_reply()}.
-	 *
-	 * @deprecated Use bboss_bbp_delete_reply() instead.
-	 */
-	function bbp_delete_reply( $reply_id = 0 ) {
-		return bboss_bbp_delete_reply( $reply_id );
-	}
-}
-if ( function_exists( 'bboss_bbp_deleted_reply' ) && ! function_exists( 'bbp_deleted_reply' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_deleted_reply()}.
-	 *
-	 * @deprecated Use bboss_bbp_deleted_reply() instead.
-	 */
-	function bbp_deleted_reply( $reply_id = 0 ) {
-		return bboss_bbp_deleted_reply( $reply_id );
-	}
-}
-if ( function_exists( 'bboss_bbp_display_replies_feed_rss2' ) && ! function_exists( 'bbp_display_replies_feed_rss2' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_display_replies_feed_rss2()}.
-	 *
-	 * @deprecated Use bboss_bbp_display_replies_feed_rss2() instead.
-	 */
-	function bbp_display_replies_feed_rss2( $replies_query = array() ) {
-		return bboss_bbp_display_replies_feed_rss2( $replies_query );
-	}
-}
-if ( function_exists( 'bboss_bbp_edit_reply_handler' ) && ! function_exists( 'bbp_edit_reply_handler' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_edit_reply_handler()}.
-	 *
-	 * @deprecated Use bboss_bbp_edit_reply_handler() instead.
-	 */
-	function bbp_edit_reply_handler( $action = '' ) {
-		return bboss_bbp_edit_reply_handler( $action );
-	}
-}
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_bbp_get_non_public_reply_statuses' ) && ! function_exists( 'bbp_get_non_public_reply_statuses' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_bbp_get_non_public_reply_statuses()}.
@@ -2953,274 +3365,5 @@ if ( function_exists( 'bboss_bbp_get_non_public_reply_statuses' ) && ! function_
 		return bboss_bbp_get_non_public_reply_statuses();
 	}
 }
-if ( function_exists( 'bboss_bbp_get_public_reply_statuses' ) && ! function_exists( 'bbp_get_public_reply_statuses' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_public_reply_statuses()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_public_reply_statuses() instead.
-	 */
-	function bbp_get_public_reply_statuses() {
-		return bboss_bbp_get_public_reply_statuses();
-	}
-}
-if ( function_exists( 'bboss_bbp_get_replies_per_page' ) && ! function_exists( 'bbp_get_replies_per_page' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_replies_per_page()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_replies_per_page() instead.
-	 */
-	function bbp_get_replies_per_page( $default = 15 ) {
-		return bboss_bbp_get_replies_per_page( $default );
-	}
-}
-if ( function_exists( 'bboss_bbp_get_replies_per_rss_page' ) && ! function_exists( 'bbp_get_replies_per_rss_page' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_replies_per_rss_page()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_replies_per_rss_page() instead.
-	 */
-	function bbp_get_replies_per_rss_page( $default = 25 ) {
-		return bboss_bbp_get_replies_per_rss_page( $default );
-	}
-}
-if ( function_exists( 'bboss_bbp_get_reply_position_raw' ) && ! function_exists( 'bbp_get_reply_position_raw' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_reply_position_raw()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_reply_position_raw() instead.
-	 */
-	function bbp_get_reply_position_raw( $reply_id = 0, $topic_id = 0 ) {
-		return bboss_bbp_get_reply_position_raw( $reply_id, $topic_id );
-	}
-}
-if ( function_exists( 'bboss_bbp_insert_reply' ) && ! function_exists( 'bbp_insert_reply' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_insert_reply()}.
-	 *
-	 * @deprecated Use bboss_bbp_insert_reply() instead.
-	 */
-	function bbp_insert_reply( $reply_data = array(), $reply_meta = array() ) {
-		return bboss_bbp_insert_reply( $reply_data, $reply_meta );
-	}
-}
-if ( function_exists( 'bboss_bbp_list_replies' ) && ! function_exists( 'bbp_list_replies' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_list_replies()}.
-	 *
-	 * @deprecated Use bboss_bbp_list_replies() instead.
-	 */
-	function bbp_list_replies( $args = array() ) {
-		return bboss_bbp_list_replies( $args );
-	}
-}
-if ( function_exists( 'bboss_bbp_move_reply_count' ) && ! function_exists( 'bbp_move_reply_count' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_move_reply_count()}.
-	 *
-	 * @deprecated Use bboss_bbp_move_reply_count() instead.
-	 */
-	function bbp_move_reply_count( $move_reply_id, $source_topic_id, $destination_topic_id ) {
-		return bboss_bbp_move_reply_count( $move_reply_id, $source_topic_id, $destination_topic_id );
-	}
-}
-if ( function_exists( 'bboss_bbp_move_reply_handler' ) && ! function_exists( 'bbp_move_reply_handler' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_move_reply_handler()}.
-	 *
-	 * @deprecated Use bboss_bbp_move_reply_handler() instead.
-	 */
-	function bbp_move_reply_handler( $action = '' ) {
-		return bboss_bbp_move_reply_handler( $action );
-	}
-}
-if ( function_exists( 'bboss_bbp_new_reply_handler' ) && ! function_exists( 'bbp_new_reply_handler' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_new_reply_handler()}.
-	 *
-	 * @deprecated Use bboss_bbp_new_reply_handler() instead.
-	 */
-	function bbp_new_reply_handler( $action = '' ) {
-		return bboss_bbp_new_reply_handler( $action );
-	}
-}
-if ( function_exists( 'bboss_bbp_replies_count_walk' ) && ! function_exists( 'bbp_replies_count_walk' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_replies_count_walk()}.
-	 *
-	 * @deprecated Use bboss_bbp_replies_count_walk() instead.
-	 */
-	function bbp_replies_count_walk( $posts, $top_reply_ids, $count ) {
-		return bboss_bbp_replies_count_walk( $posts, $top_reply_ids, $count );
-	}
-}
-if ( function_exists( 'bboss_bbp_reply_content_autoembed' ) && ! function_exists( 'bbp_reply_content_autoembed' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_reply_content_autoembed()}.
-	 *
-	 * @deprecated Use bboss_bbp_reply_content_autoembed() instead.
-	 */
-	function bbp_reply_content_autoembed() {
-		return bboss_bbp_reply_content_autoembed();
-	}
-}
-if ( function_exists( 'bboss_bbp_reply_content_autoembed_paragraph' ) && ! function_exists( 'bbp_reply_content_autoembed_paragraph' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_reply_content_autoembed_paragraph()}.
-	 *
-	 * @deprecated Use bboss_bbp_reply_content_autoembed_paragraph() instead.
-	 */
-	function bbp_reply_content_autoembed_paragraph( $content, $reply_id = 0 ) {
-		return bboss_bbp_reply_content_autoembed_paragraph( $content, $reply_id );
-	}
-}
-if ( function_exists( 'bboss_bbp_spam_reply' ) && ! function_exists( 'bbp_spam_reply' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_spam_reply()}.
-	 *
-	 * @deprecated Use bboss_bbp_spam_reply() instead.
-	 */
-	function bbp_spam_reply( $reply_id = 0 ) {
-		return bboss_bbp_spam_reply( $reply_id );
-	}
-}
-if ( function_exists( 'bboss_bbp_toggle_reply_handler' ) && ! function_exists( 'bbp_toggle_reply_handler' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_toggle_reply_handler()}.
-	 *
-	 * @deprecated Use bboss_bbp_toggle_reply_handler() instead.
-	 */
-	function bbp_toggle_reply_handler( $action = '' ) {
-		return bboss_bbp_toggle_reply_handler( $action );
-	}
-}
-if ( function_exists( 'bboss_bbp_trash_reply' ) && ! function_exists( 'bbp_trash_reply' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_trash_reply()}.
-	 *
-	 * @deprecated Use bboss_bbp_trash_reply() instead.
-	 */
-	function bbp_trash_reply( $reply_id = 0 ) {
-		return bboss_bbp_trash_reply( $reply_id );
-	}
-}
-if ( function_exists( 'bboss_bbp_trashed_reply' ) && ! function_exists( 'bbp_trashed_reply' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_trashed_reply()}.
-	 *
-	 * @deprecated Use bboss_bbp_trashed_reply() instead.
-	 */
-	function bbp_trashed_reply( $reply_id = 0 ) {
-		return bboss_bbp_trashed_reply( $reply_id );
-	}
-}
-if ( function_exists( 'bboss_bbp_unspam_reply' ) && ! function_exists( 'bbp_unspam_reply' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_unspam_reply()}.
-	 *
-	 * @deprecated Use bboss_bbp_unspam_reply() instead.
-	 */
-	function bbp_unspam_reply( $reply_id = 0 ) {
-		return bboss_bbp_unspam_reply( $reply_id );
-	}
-}
-if ( function_exists( 'bboss_bbp_untrash_reply' ) && ! function_exists( 'bbp_untrash_reply' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_untrash_reply()}.
-	 *
-	 * @deprecated Use bboss_bbp_untrash_reply() instead.
-	 */
-	function bbp_untrash_reply( $reply_id = 0 ) {
-		return bboss_bbp_untrash_reply( $reply_id );
-	}
-}
-if ( function_exists( 'bboss_bbp_untrashed_reply' ) && ! function_exists( 'bbp_untrashed_reply' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_untrashed_reply()}.
-	 *
-	 * @deprecated Use bboss_bbp_untrashed_reply() instead.
-	 */
-	function bbp_untrashed_reply( $reply_id = 0, $previous_status = '' ) {
-		return bboss_bbp_untrashed_reply( $reply_id, $previous_status );
-	}
-}
-if ( function_exists( 'bboss_bbp_update_reply' ) && ! function_exists( 'bbp_update_reply' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_update_reply()}.
-	 *
-	 * @deprecated Use bboss_bbp_update_reply() instead.
-	 */
-	function bbp_update_reply( $reply_id = 0, $topic_id = 0, $forum_id = 0, $anonymous_data = false, $author_id = 0, $is_edit = false, $reply_to = 0 ) {
-		return bboss_bbp_update_reply( $reply_id, $topic_id, $forum_id, $anonymous_data, $author_id, $is_edit, $reply_to );
-	}
-}
-if ( function_exists( 'bboss_bbp_update_reply_forum_id' ) && ! function_exists( 'bbp_update_reply_forum_id' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_update_reply_forum_id()}.
-	 *
-	 * @deprecated Use bboss_bbp_update_reply_forum_id() instead.
-	 */
-	function bbp_update_reply_forum_id( $reply_id = 0, $forum_id = 0 ) {
-		return bboss_bbp_update_reply_forum_id( $reply_id, $forum_id );
-	}
-}
-if ( function_exists( 'bboss_bbp_update_reply_position' ) && ! function_exists( 'bbp_update_reply_position' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_update_reply_position()}.
-	 *
-	 * @deprecated Use bboss_bbp_update_reply_position() instead.
-	 */
-	function bbp_update_reply_position( $reply_id = 0, $reply_position = 0 ) {
-		return bboss_bbp_update_reply_position( $reply_id, $reply_position );
-	}
-}
-if ( function_exists( 'bboss_bbp_update_reply_revision_log' ) && ! function_exists( 'bbp_update_reply_revision_log' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_update_reply_revision_log()}.
-	 *
-	 * @deprecated Use bboss_bbp_update_reply_revision_log() instead.
-	 */
-	function bbp_update_reply_revision_log( $args = '' ) {
-		return bboss_bbp_update_reply_revision_log( $args );
-	}
-}
-if ( function_exists( 'bboss_bbp_update_reply_to' ) && ! function_exists( 'bbp_update_reply_to' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_update_reply_to()}.
-	 *
-	 * @deprecated Use bboss_bbp_update_reply_to() instead.
-	 */
-	function bbp_update_reply_to( $reply_id = 0, $reply_to = 0 ) {
-		return bboss_bbp_update_reply_to( $reply_id, $reply_to );
-	}
-}
-if ( function_exists( 'bboss_bbp_update_reply_topic_id' ) && ! function_exists( 'bbp_update_reply_topic_id' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_update_reply_topic_id()}.
-	 *
-	 * @deprecated Use bboss_bbp_update_reply_topic_id() instead.
-	 */
-	function bbp_update_reply_topic_id( $reply_id = 0, $topic_id = 0 ) {
-		return bboss_bbp_update_reply_topic_id( $reply_id, $topic_id );
-	}
-}
-if ( function_exists( 'bboss_bbp_update_reply_walker' ) && ! function_exists( 'bbp_update_reply_walker' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_update_reply_walker()}.
-	 *
-	 * @deprecated Use bboss_bbp_update_reply_walker() instead.
-	 */
-	function bbp_update_reply_walker( $reply_id, $last_active_time = '', $forum_id = 0, $topic_id = 0, $refresh = true ) {
-		return bboss_bbp_update_reply_walker( $reply_id, $last_active_time, $forum_id, $topic_id, $refresh );
-	}
-}
-if ( function_exists( 'bboss_bbp_validate_reply_to' ) && ! function_exists( 'bbp_validate_reply_to' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_validate_reply_to()}.
-	 *
-	 * @deprecated Use bboss_bbp_validate_reply_to() instead.
-	 */
-	function bbp_validate_reply_to( $reply_to = 0, $reply_id = 0 ) {
-		return bboss_bbp_validate_reply_to( $reply_to, $reply_id );
-	}
-}
 // @bbwt-com-end compat-layer
+

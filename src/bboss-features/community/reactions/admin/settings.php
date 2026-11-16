@@ -286,12 +286,8 @@ function bboss_admin_settings_register_reactions_settings() {
 	 */
 	do_action( 'bb_reactions_after_register_settings_fields' );
 }
-
-add_action( 'bb_register_features', 'bb_admin_settings_register_reactions_settings', 20 );
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_admin_settings_register_reactions_settings' ) && ! function_exists( 'bb_admin_settings_register_reactions_settings' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_admin_settings_register_reactions_settings()}.
@@ -303,3 +299,6 @@ if ( function_exists( 'bboss_admin_settings_register_reactions_settings' ) && ! 
 	}
 }
 // @bbwt-com-end compat-layer
+
+
+add_action( 'bb_register_features', 'bb_admin_settings_register_reactions_settings', 20 );

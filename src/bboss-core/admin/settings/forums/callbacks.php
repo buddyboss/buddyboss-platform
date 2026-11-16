@@ -60,12 +60,8 @@ function bboss_forums_after_save_settings( $feature_id, $settings, $saved ) {
 	 */
 	do_action( 'bb_forums_after_save_settings' );
 }
-
-add_action( 'bb_admin_save_feature_settings_after', 'bb_forums_after_save_settings', 10, 3 );
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_forums_after_save_settings' ) && ! function_exists( 'bb_forums_after_save_settings' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_forums_after_save_settings()}.
@@ -77,3 +73,6 @@ if ( function_exists( 'bboss_forums_after_save_settings' ) && ! function_exists(
 	}
 }
 // @bbwt-com-end compat-layer
+
+
+add_action( 'bb_admin_save_feature_settings_after', 'bb_forums_after_save_settings', 10, 3 );

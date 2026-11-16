@@ -29,6 +29,20 @@ function bboss_advanced_sanitize_telemetry_reporting( $value ) {
 
 	return in_array( $value, $allowed, true ) ? $value : 'disable';
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_advanced_sanitize_telemetry_reporting' ) && ! function_exists( 'bb_advanced_sanitize_telemetry_reporting' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_advanced_sanitize_telemetry_reporting()}.
+	 *
+	 * @deprecated Use bboss_advanced_sanitize_telemetry_reporting() instead.
+	 */
+	function bb_advanced_sanitize_telemetry_reporting( $value ) {
+		return bboss_advanced_sanitize_telemetry_reporting( $value );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Sanitize the activity load type value.
@@ -55,6 +69,20 @@ function bboss_advanced_sanitize_activity_load_type( $value ) {
 
 	return in_array( $value, $allowed, true ) ? $value : 'infinite';
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_advanced_sanitize_activity_load_type' ) && ! function_exists( 'bb_advanced_sanitize_activity_load_type' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_advanced_sanitize_activity_load_type()}.
+	 *
+	 * @deprecated Use bboss_advanced_sanitize_activity_load_type() instead.
+	 */
+	function bb_advanced_sanitize_activity_load_type( $value ) {
+		return bboss_advanced_sanitize_activity_load_type( $value );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Capture telemetry value before save for change detection.
@@ -80,6 +108,20 @@ function bboss_advanced_capture_telemetry_before_save( $feature_id, $settings ) 
 	// Capture old value before the save loop overwrites it.
 	bboss_advanced_get_pre_save_telemetry( bboss_get_option( 'bb_advanced_telemetry_reporting', 'disable' ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_advanced_capture_telemetry_before_save' ) && ! function_exists( 'bb_advanced_capture_telemetry_before_save' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_advanced_capture_telemetry_before_save()}.
+	 *
+	 * @deprecated Use bboss_advanced_capture_telemetry_before_save() instead.
+	 */
+	function bb_advanced_capture_telemetry_before_save( $feature_id, $settings ) {
+		return bboss_advanced_capture_telemetry_before_save( $feature_id, $settings );
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'bb_admin_settings_before_save_feature', 'bb_advanced_capture_telemetry_before_save', 10, 2 );
 
 /**
@@ -111,6 +153,20 @@ function bboss_advanced_get_pre_save_telemetry( $set_value = null ) {
 
 	return $old_value;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_advanced_get_pre_save_telemetry' ) && ! function_exists( 'bb_advanced_get_pre_save_telemetry' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_advanced_get_pre_save_telemetry()}.
+	 *
+	 * @deprecated Use bboss_advanced_get_pre_save_telemetry() instead.
+	 */
+	function bb_advanced_get_pre_save_telemetry( $set_value = null ) {
+		return bboss_advanced_get_pre_save_telemetry( $set_value );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Handle telemetry mode change after save.
@@ -168,6 +224,20 @@ function bboss_advanced_handle_telemetry_save( $feature_id, $settings, $saved ) 
 	}
 	// @bbwt-com-end telemetry-complete
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_advanced_handle_telemetry_save' ) && ! function_exists( 'bb_advanced_handle_telemetry_save' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_advanced_handle_telemetry_save()}.
+	 *
+	 * @deprecated Use bboss_advanced_handle_telemetry_save() instead.
+	 */
+	function bb_advanced_handle_telemetry_save( $feature_id, $settings, $saved ) {
+		return bboss_advanced_handle_telemetry_save( $feature_id, $settings, $saved );
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'bb_admin_save_feature_settings_after', 'bb_advanced_handle_telemetry_save', 10, 3 );
 
 /**
@@ -184,50 +254,8 @@ add_action( 'bb_admin_save_feature_settings_after', 'bb_advanced_handle_telemetr
 function bboss_advanced_sanitize_public_content( $value ) {
 	return wp_strip_all_tags( stripslashes( $value ) );
 }
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
-if ( function_exists( 'bboss_advanced_capture_telemetry_before_save' ) && ! function_exists( 'bb_advanced_capture_telemetry_before_save' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_advanced_capture_telemetry_before_save()}.
-	 *
-	 * @deprecated Use bboss_advanced_capture_telemetry_before_save() instead.
-	 */
-	function bb_advanced_capture_telemetry_before_save( $feature_id, $settings ) {
-		return bboss_advanced_capture_telemetry_before_save( $feature_id, $settings );
-	}
-}
-if ( function_exists( 'bboss_advanced_get_pre_save_telemetry' ) && ! function_exists( 'bb_advanced_get_pre_save_telemetry' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_advanced_get_pre_save_telemetry()}.
-	 *
-	 * @deprecated Use bboss_advanced_get_pre_save_telemetry() instead.
-	 */
-	function bb_advanced_get_pre_save_telemetry( $set_value = null ) {
-		return bboss_advanced_get_pre_save_telemetry( $set_value );
-	}
-}
-if ( function_exists( 'bboss_advanced_handle_telemetry_save' ) && ! function_exists( 'bb_advanced_handle_telemetry_save' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_advanced_handle_telemetry_save()}.
-	 *
-	 * @deprecated Use bboss_advanced_handle_telemetry_save() instead.
-	 */
-	function bb_advanced_handle_telemetry_save( $feature_id, $settings, $saved ) {
-		return bboss_advanced_handle_telemetry_save( $feature_id, $settings, $saved );
-	}
-}
-if ( function_exists( 'bboss_advanced_sanitize_activity_load_type' ) && ! function_exists( 'bb_advanced_sanitize_activity_load_type' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_advanced_sanitize_activity_load_type()}.
-	 *
-	 * @deprecated Use bboss_advanced_sanitize_activity_load_type() instead.
-	 */
-	function bb_advanced_sanitize_activity_load_type( $value ) {
-		return bboss_advanced_sanitize_activity_load_type( $value );
-	}
-}
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_advanced_sanitize_public_content' ) && ! function_exists( 'bb_advanced_sanitize_public_content' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_advanced_sanitize_public_content()}.
@@ -238,14 +266,5 @@ if ( function_exists( 'bboss_advanced_sanitize_public_content' ) && ! function_e
 		return bboss_advanced_sanitize_public_content( $value );
 	}
 }
-if ( function_exists( 'bboss_advanced_sanitize_telemetry_reporting' ) && ! function_exists( 'bb_advanced_sanitize_telemetry_reporting' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_advanced_sanitize_telemetry_reporting()}.
-	 *
-	 * @deprecated Use bboss_advanced_sanitize_telemetry_reporting() instead.
-	 */
-	function bb_advanced_sanitize_telemetry_reporting( $value ) {
-		return bboss_advanced_sanitize_telemetry_reporting( $value );
-	}
-}
 // @bbwt-com-end compat-layer
+

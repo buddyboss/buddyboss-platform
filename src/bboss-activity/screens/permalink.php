@@ -97,6 +97,20 @@ function bboss_activity_action_permalink_router() {
 	// Redirect to the actual activity permalink page.
 	bboss_core_redirect( $redirect );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_activity_action_permalink_router' ) && ! function_exists( 'bp_activity_action_permalink_router' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_activity_action_permalink_router()}.
+	 *
+	 * @deprecated Use bboss_activity_action_permalink_router() instead.
+	 */
+	function bp_activity_action_permalink_router() {
+		return bboss_activity_action_permalink_router();
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'bp_actions', 'bp_activity_action_permalink_router' );
 
 /**
@@ -183,21 +197,8 @@ function bboss_activity_screen_single_activity_permalink() {
 	// Load the template.
 	bboss_core_load_template( $template );
 }
-add_action( 'bp_screens', 'bp_activity_screen_single_activity_permalink' );
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
-if ( function_exists( 'bboss_activity_action_permalink_router' ) && ! function_exists( 'bp_activity_action_permalink_router' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_activity_action_permalink_router()}.
-	 *
-	 * @deprecated Use bboss_activity_action_permalink_router() instead.
-	 */
-	function bp_activity_action_permalink_router() {
-		return bboss_activity_action_permalink_router();
-	}
-}
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_activity_screen_single_activity_permalink' ) && ! function_exists( 'bp_activity_screen_single_activity_permalink' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_activity_screen_single_activity_permalink()}.
@@ -209,3 +210,5 @@ if ( function_exists( 'bboss_activity_screen_single_activity_permalink' ) && ! f
 	}
 }
 // @bbwt-com-end compat-layer
+
+add_action( 'bp_screens', 'bp_activity_screen_single_activity_permalink' );

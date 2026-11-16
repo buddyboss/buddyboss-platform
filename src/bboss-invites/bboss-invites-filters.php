@@ -49,6 +49,20 @@ function bboss_sent_invite_email_avatar_default_avatar( $avatar = '' ) {
 
 	return $avatar;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_sent_invite_email_avatar_default_avatar' ) && ! function_exists( 'bb_sent_invite_email_avatar_default_avatar' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_sent_invite_email_avatar_default_avatar()}.
+	 *
+	 * @deprecated Use bboss_sent_invite_email_avatar_default_avatar() instead.
+	 */
+	function bb_sent_invite_email_avatar_default_avatar( $avatar = '' ) {
+		return bboss_sent_invite_email_avatar_default_avatar( $avatar );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Function to add invitation field to use later after submission of form.
@@ -68,6 +82,20 @@ function bboss_invites_add_invite_fields_after_wp_registration_fields() {
 		<?php
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_invites_add_invite_fields_after_wp_registration_fields' ) && ! function_exists( 'bb_invites_add_invite_fields_after_wp_registration_fields' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_invites_add_invite_fields_after_wp_registration_fields()}.
+	 *
+	 * @deprecated Use bboss_invites_add_invite_fields_after_wp_registration_fields() instead.
+	 */
+	function bb_invites_add_invite_fields_after_wp_registration_fields() {
+		return bboss_invites_add_invite_fields_after_wp_registration_fields();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Function to validate the invitation.
@@ -111,6 +139,20 @@ function bboss_invites_validate_invitation_before_registration( $email, $inviter
 
 	return true;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_invites_validate_invitation_before_registration' ) && ! function_exists( 'bb_invites_validate_invitation_before_registration' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_invites_validate_invitation_before_registration()}.
+	 *
+	 * @deprecated Use bboss_invites_validate_invitation_before_registration() instead.
+	 */
+	function bb_invites_validate_invitation_before_registration( $email, $inviter ) {
+		return bboss_invites_validate_invitation_before_registration( $email, $inviter );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Function to validate the invitation before a new signup for buddyboss registration.
@@ -131,6 +173,20 @@ function bboss_invites_validate_invitation_before_bb_registration() {
 		}
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_invites_validate_invitation_before_bb_registration' ) && ! function_exists( 'bb_invites_validate_invitation_before_bb_registration' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_invites_validate_invitation_before_bb_registration()}.
+	 *
+	 * @deprecated Use bboss_invites_validate_invitation_before_bb_registration() instead.
+	 */
+	function bb_invites_validate_invitation_before_bb_registration() {
+		return bboss_invites_validate_invitation_before_bb_registration();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Validates invitation and appends any errors to prevent new user registration.
@@ -156,6 +212,20 @@ function bboss_invites_validate_invitation_before_wp_registration( $errors, $san
 
 	return $errors;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_invites_validate_invitation_before_wp_registration' ) && ! function_exists( 'bb_invites_validate_invitation_before_wp_registration' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_invites_validate_invitation_before_wp_registration()}.
+	 *
+	 * @deprecated Use bboss_invites_validate_invitation_before_wp_registration() instead.
+	 */
+	function bb_invites_validate_invitation_before_wp_registration( $errors, $sanitized_user_login, $user_email ) {
+		return bboss_invites_validate_invitation_before_wp_registration( $errors, $sanitized_user_login, $user_email );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Register the Email Invites nav item for Settings 2.0 profile navigation order.
@@ -173,6 +243,20 @@ function bboss_invites_register_profile_nav_item( $items ) {
 
 	return $items;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_invites_register_profile_nav_item' ) && ! function_exists( 'bb_invites_register_profile_nav_item' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_invites_register_profile_nav_item()}.
+	 *
+	 * @deprecated Use bboss_invites_register_profile_nav_item() instead.
+	 */
+	function bb_invites_register_profile_nav_item( $items ) {
+		return bboss_invites_register_profile_nav_item( $items );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Mark the invites nav slug as inactive when the invites component is off.
@@ -189,20 +273,8 @@ function bboss_invites_register_inactive_nav_slug( $inactive ) {
 
 	return $inactive;
 }
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
-if ( function_exists( 'bboss_invites_add_invite_fields_after_wp_registration_fields' ) && ! function_exists( 'bb_invites_add_invite_fields_after_wp_registration_fields' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_invites_add_invite_fields_after_wp_registration_fields()}.
-	 *
-	 * @deprecated Use bboss_invites_add_invite_fields_after_wp_registration_fields() instead.
-	 */
-	function bb_invites_add_invite_fields_after_wp_registration_fields() {
-		return bboss_invites_add_invite_fields_after_wp_registration_fields();
-	}
-}
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_invites_register_inactive_nav_slug' ) && ! function_exists( 'bb_invites_register_inactive_nav_slug' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_invites_register_inactive_nav_slug()}.
@@ -213,54 +285,5 @@ if ( function_exists( 'bboss_invites_register_inactive_nav_slug' ) && ! function
 		return bboss_invites_register_inactive_nav_slug( $inactive );
 	}
 }
-if ( function_exists( 'bboss_invites_register_profile_nav_item' ) && ! function_exists( 'bb_invites_register_profile_nav_item' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_invites_register_profile_nav_item()}.
-	 *
-	 * @deprecated Use bboss_invites_register_profile_nav_item() instead.
-	 */
-	function bb_invites_register_profile_nav_item( $items ) {
-		return bboss_invites_register_profile_nav_item( $items );
-	}
-}
-if ( function_exists( 'bboss_invites_validate_invitation_before_bb_registration' ) && ! function_exists( 'bb_invites_validate_invitation_before_bb_registration' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_invites_validate_invitation_before_bb_registration()}.
-	 *
-	 * @deprecated Use bboss_invites_validate_invitation_before_bb_registration() instead.
-	 */
-	function bb_invites_validate_invitation_before_bb_registration() {
-		return bboss_invites_validate_invitation_before_bb_registration();
-	}
-}
-if ( function_exists( 'bboss_invites_validate_invitation_before_registration' ) && ! function_exists( 'bb_invites_validate_invitation_before_registration' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_invites_validate_invitation_before_registration()}.
-	 *
-	 * @deprecated Use bboss_invites_validate_invitation_before_registration() instead.
-	 */
-	function bb_invites_validate_invitation_before_registration( $email, $inviter ) {
-		return bboss_invites_validate_invitation_before_registration( $email, $inviter );
-	}
-}
-if ( function_exists( 'bboss_invites_validate_invitation_before_wp_registration' ) && ! function_exists( 'bb_invites_validate_invitation_before_wp_registration' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_invites_validate_invitation_before_wp_registration()}.
-	 *
-	 * @deprecated Use bboss_invites_validate_invitation_before_wp_registration() instead.
-	 */
-	function bb_invites_validate_invitation_before_wp_registration( $errors, $sanitized_user_login, $user_email ) {
-		return bboss_invites_validate_invitation_before_wp_registration( $errors, $sanitized_user_login, $user_email );
-	}
-}
-if ( function_exists( 'bboss_sent_invite_email_avatar_default_avatar' ) && ! function_exists( 'bb_sent_invite_email_avatar_default_avatar' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_sent_invite_email_avatar_default_avatar()}.
-	 *
-	 * @deprecated Use bboss_sent_invite_email_avatar_default_avatar() instead.
-	 */
-	function bb_sent_invite_email_avatar_default_avatar( $avatar = '' ) {
-		return bboss_sent_invite_email_avatar_default_avatar( $avatar );
-	}
-}
 // @bbwt-com-end compat-layer
+

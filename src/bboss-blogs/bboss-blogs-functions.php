@@ -21,6 +21,20 @@ function bboss_blogs_has_directory() {
 
 	return (bool) ! empty( $bp->pages->blogs->id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_blogs_has_directory' ) && ! function_exists( 'bp_blogs_has_directory' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_blogs_has_directory()}.
+	 *
+	 * @deprecated Use bboss_blogs_has_directory() instead.
+	 */
+	function bp_blogs_has_directory() {
+		return bboss_blogs_has_directory();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Retrieve a set of blogs.
@@ -79,6 +93,20 @@ function bboss_blogs_get_blogs( $args = '' ) {
 	 */
 	return apply_filters( 'bp_blogs_get_blogs', $blogs, $r );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_blogs_get_blogs' ) && ! function_exists( 'bp_blogs_get_blogs' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_blogs_get_blogs()}.
+	 *
+	 * @deprecated Use bboss_blogs_get_blogs() instead.
+	 */
+	function bp_blogs_get_blogs( $args = '' ) {
+		return bboss_blogs_get_blogs( $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Populate the BP blogs table with existing blogs.
@@ -250,6 +278,20 @@ function bboss_blogs_record_existing_blogs( $args = array() ) {
 	// No errors.
 	return true;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_blogs_record_existing_blogs' ) && ! function_exists( 'bp_blogs_record_existing_blogs' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_blogs_record_existing_blogs()}.
+	 *
+	 * @deprecated Use bboss_blogs_record_existing_blogs() instead.
+	 */
+	function bp_blogs_record_existing_blogs( $args = array() ) {
+		return bboss_blogs_record_existing_blogs( $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Check whether a given blog should be recorded in activity feeds.
@@ -296,6 +338,20 @@ function bboss_blogs_is_blog_recordable( $blog_id, $user_id = 0 ) {
 
 	return $recordable_globally;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_blogs_is_blog_recordable' ) && ! function_exists( 'bp_blogs_is_blog_recordable' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_blogs_is_blog_recordable()}.
+	 *
+	 * @deprecated Use bboss_blogs_is_blog_recordable() instead.
+	 */
+	function bp_blogs_is_blog_recordable( $blog_id, $user_id = 0 ) {
+		return bboss_blogs_is_blog_recordable( $blog_id, $user_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Check whether a given blog should be tracked by the Blogs component.
@@ -343,6 +399,20 @@ function bboss_blogs_is_blog_trackable( $blog_id, $user_id = 0 ) {
 
 	return $trackable_globally;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_blogs_is_blog_trackable' ) && ! function_exists( 'bp_blogs_is_blog_trackable' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_blogs_is_blog_trackable()}.
+	 *
+	 * @deprecated Use bboss_blogs_is_blog_trackable() instead.
+	 */
+	function bp_blogs_is_blog_trackable( $blog_id, $user_id = 0 ) {
+		return bboss_blogs_is_blog_trackable( $blog_id, $user_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Make BuddyPress aware of a new site so that it can track its activity.
@@ -425,6 +495,20 @@ function bboss_blogs_record_blog( $blog_id, $user_id, $no_activity = false ) {
 	 */
 	do_action_ref_array( 'bp_blogs_new_blog', array( &$recorded_blog, $is_private, $is_recorded, $no_activity ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_blogs_record_blog' ) && ! function_exists( 'bp_blogs_record_blog' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_blogs_record_blog()}.
+	 *
+	 * @deprecated Use bboss_blogs_record_blog() instead.
+	 */
+	function bp_blogs_record_blog( $blog_id, $user_id, $no_activity = false ) {
+		return bboss_blogs_record_blog( $blog_id, $user_id, $no_activity );
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'wpmu_new_blog', 'bp_blogs_record_blog', 10, 2 );
 
 /**
@@ -441,6 +525,20 @@ function bboss_blogs_update_option_blogname( $oldvalue, $newvalue ) {
 
 	bboss_blogs_update_blogmeta( $wpdb->blogid, 'name', $newvalue );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_blogs_update_option_blogname' ) && ! function_exists( 'bp_blogs_update_option_blogname' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_blogs_update_option_blogname()}.
+	 *
+	 * @deprecated Use bboss_blogs_update_option_blogname() instead.
+	 */
+	function bp_blogs_update_option_blogname( $oldvalue, $newvalue ) {
+		return bboss_blogs_update_option_blogname( $oldvalue, $newvalue );
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'update_option_blogname', 'bp_blogs_update_option_blogname', 10, 2 );
 
 /**
@@ -457,6 +555,20 @@ function bboss_blogs_update_option_blogdescription( $oldvalue, $newvalue ) {
 
 	bboss_blogs_update_blogmeta( $wpdb->blogid, 'description', $newvalue );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_blogs_update_option_blogdescription' ) && ! function_exists( 'bp_blogs_update_option_blogdescription' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_blogs_update_option_blogdescription()}.
+	 *
+	 * @deprecated Use bboss_blogs_update_option_blogdescription() instead.
+	 */
+	function bp_blogs_update_option_blogdescription( $oldvalue, $newvalue ) {
+		return bboss_blogs_update_option_blogdescription( $oldvalue, $newvalue );
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'update_option_blogdescription', 'bp_blogs_update_option_blogdescription', 10, 2 );
 
 /**
@@ -475,6 +587,20 @@ function bboss_blogs_update_option_close_comments_for_old_posts( $oldvalue, $new
 
 	bboss_blogs_update_blogmeta( $wpdb->blogid, 'close_comments_for_old_posts', $newvalue );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_blogs_update_option_close_comments_for_old_posts' ) && ! function_exists( 'bp_blogs_update_option_close_comments_for_old_posts' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_blogs_update_option_close_comments_for_old_posts()}.
+	 *
+	 * @deprecated Use bboss_blogs_update_option_close_comments_for_old_posts() instead.
+	 */
+	function bp_blogs_update_option_close_comments_for_old_posts( $oldvalue, $newvalue ) {
+		return bboss_blogs_update_option_close_comments_for_old_posts( $oldvalue, $newvalue );
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'update_option_close_comments_for_old_posts', 'bp_blogs_update_option_close_comments_for_old_posts', 10, 2 );
 
 /**
@@ -493,6 +619,20 @@ function bboss_blogs_update_option_close_comments_days_old( $oldvalue, $newvalue
 
 	bboss_blogs_update_blogmeta( $wpdb->blogid, 'close_comments_days_old', $newvalue );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_blogs_update_option_close_comments_days_old' ) && ! function_exists( 'bp_blogs_update_option_close_comments_days_old' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_blogs_update_option_close_comments_days_old()}.
+	 *
+	 * @deprecated Use bboss_blogs_update_option_close_comments_days_old() instead.
+	 */
+	function bp_blogs_update_option_close_comments_days_old( $oldvalue, $newvalue ) {
+		return bboss_blogs_update_option_close_comments_days_old( $oldvalue, $newvalue );
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'update_option_close_comments_days_old', 'bp_blogs_update_option_close_comments_days_old', 10, 2 );
 
 /**
@@ -517,6 +657,20 @@ function bboss_blogs_update_option_thread_comments( $oldvalue, $newvalue ) {
 
 	bboss_blogs_update_blogmeta( $wpdb->blogid, 'thread_comments_depth', $thread_depth );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_blogs_update_option_thread_comments' ) && ! function_exists( 'bp_blogs_update_option_thread_comments' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_blogs_update_option_thread_comments()}.
+	 *
+	 * @deprecated Use bboss_blogs_update_option_thread_comments() instead.
+	 */
+	function bp_blogs_update_option_thread_comments( $oldvalue, $newvalue ) {
+		return bboss_blogs_update_option_thread_comments( $oldvalue, $newvalue );
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'update_option_thread_comments', 'bp_blogs_update_option_thread_comments', 10, 2 );
 
 /**
@@ -539,6 +693,20 @@ function bboss_blogs_update_option_thread_comments_depth( $oldvalue, $newvalue )
 		bboss_blogs_update_blogmeta( $wpdb->blogid, 'thread_comments_depth', $newvalue );
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_blogs_update_option_thread_comments_depth' ) && ! function_exists( 'bp_blogs_update_option_thread_comments_depth' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_blogs_update_option_thread_comments_depth()}.
+	 *
+	 * @deprecated Use bboss_blogs_update_option_thread_comments_depth() instead.
+	 */
+	function bp_blogs_update_option_thread_comments_depth( $oldvalue, $newvalue ) {
+		return bboss_blogs_update_option_thread_comments_depth( $oldvalue, $newvalue );
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'update_option_thread_comments_depth', 'bp_blogs_update_option_thread_comments_depth', 10, 2 );
 
 /**
@@ -552,6 +720,20 @@ add_action( 'update_option_thread_comments_depth', 'bp_blogs_update_option_threa
 function bboss_blogs_update_option_comment_moderation( $oldvalue, $newvalue ) {
 	bboss_blogs_update_blogmeta( $GLOBALS['wpdb']->blogid, 'comment_moderation', $newvalue );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_blogs_update_option_comment_moderation' ) && ! function_exists( 'bp_blogs_update_option_comment_moderation' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_blogs_update_option_comment_moderation()}.
+	 *
+	 * @deprecated Use bboss_blogs_update_option_comment_moderation() instead.
+	 */
+	function bp_blogs_update_option_comment_moderation( $oldvalue, $newvalue ) {
+		return bboss_blogs_update_option_comment_moderation( $oldvalue, $newvalue );
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'update_option_comment_moderation', 'bp_blogs_update_option_comment_moderation', 10, 2 );
 
 /**
@@ -572,6 +754,20 @@ function bboss_blogs_update_option_site_icon( $old_value, $new_value ) {
 		bboss_blogs_update_blogmeta( get_current_blog_id(), 'site_icon_url_full', get_site_icon_url( bboss_core_avatar_full_width() ) );
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_blogs_update_option_site_icon' ) && ! function_exists( 'bp_blogs_update_option_site_icon' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_blogs_update_option_site_icon()}.
+	 *
+	 * @deprecated Use bboss_blogs_update_option_site_icon() instead.
+	 */
+	function bp_blogs_update_option_site_icon( $old_value, $new_value ) {
+		return bboss_blogs_update_option_site_icon( $old_value, $new_value );
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'update_option_site_icon', 'bp_blogs_update_option_site_icon', 10, 2 );
 
 /**
@@ -588,6 +784,20 @@ add_action( 'update_option_site_icon', 'bp_blogs_update_option_site_icon', 10, 2
 function bboss_blogs_delete_url_blogmeta( $site_id = 0 ) {
 	bboss_blogs_delete_blogmeta( (int) $site_id, 'url' );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_blogs_delete_url_blogmeta' ) && ! function_exists( 'bp_blogs_delete_url_blogmeta' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_blogs_delete_url_blogmeta()}.
+	 *
+	 * @deprecated Use bboss_blogs_delete_url_blogmeta() instead.
+	 */
+	function bp_blogs_delete_url_blogmeta( $site_id = 0 ) {
+		return bboss_blogs_delete_url_blogmeta( $site_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 if ( function_exists( 'wp_switch_roles_and_user' ) ) {
 	add_action( 'clean_site_cache', 'bp_blogs_delete_url_blogmeta' );
@@ -648,6 +858,20 @@ function bboss_blogs_publish_post_activity_meta( $activity_id, $post, $args ) {
 	 */
 	do_action( 'bp_blogs_new_blog_post', $post->ID, $post, $args['user_id'] );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_blogs_publish_post_activity_meta' ) && ! function_exists( 'bp_blogs_publish_post_activity_meta' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_blogs_publish_post_activity_meta()}.
+	 *
+	 * @deprecated Use bboss_blogs_publish_post_activity_meta() instead.
+	 */
+	function bp_blogs_publish_post_activity_meta( $activity_id, $post, $args ) {
+		return bboss_blogs_publish_post_activity_meta( $activity_id, $post, $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'bp_activity_post_type_published', 'bp_blogs_publish_post_activity_meta', 10, 3 );
 
 /**
@@ -736,6 +960,20 @@ function bboss_blogs_update_post_activity_meta( $post, $activity, $activity_post
 		bboss_activity_delete_meta( $activity->id, 'post_comment_status' );
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_blogs_update_post_activity_meta' ) && ! function_exists( 'bp_blogs_update_post_activity_meta' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_blogs_update_post_activity_meta()}.
+	 *
+	 * @deprecated Use bboss_blogs_update_post_activity_meta() instead.
+	 */
+	function bp_blogs_update_post_activity_meta( $post, $activity, $activity_post_object ) {
+		return bboss_blogs_update_post_activity_meta( $post, $activity, $activity_post_object );
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'bp_activity_post_type_updated', 'bp_blogs_update_post_activity_meta', 10, 3 );
 
 /**
@@ -892,6 +1130,20 @@ function bboss_blogs_comment_sync_activity_comment( &$activity_id, $comment = nu
 
 	return $activity_id;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_blogs_comment_sync_activity_comment' ) && ! function_exists( 'bp_blogs_comment_sync_activity_comment' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_blogs_comment_sync_activity_comment()}.
+	 *
+	 * @deprecated Use bboss_blogs_comment_sync_activity_comment() instead.
+	 */
+	function bp_blogs_comment_sync_activity_comment( &$activity_id, $comment = null, $activity_args = array(), $activity_post_object = null ) {
+		return bboss_blogs_comment_sync_activity_comment( $activity_id, $comment, $activity_args, $activity_post_object );
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'bp_activity_post_type_comment', 'bp_blogs_comment_sync_activity_comment', 10, 4 );
 
 /**
@@ -952,6 +1204,20 @@ function bboss_blogs_add_user_to_blog( $user_id, $role = false, $blog_id = 0 ) {
 	// Record the blog activity for this user being added to this blog.
 	bboss_blogs_record_blog( $blog_id, $user_id, true );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_blogs_add_user_to_blog' ) && ! function_exists( 'bp_blogs_add_user_to_blog' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_blogs_add_user_to_blog()}.
+	 *
+	 * @deprecated Use bboss_blogs_add_user_to_blog() instead.
+	 */
+	function bp_blogs_add_user_to_blog( $user_id, $role = false, $blog_id = 0 ) {
+		return bboss_blogs_add_user_to_blog( $user_id, $role, $blog_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'add_user_to_blog', 'bp_blogs_add_user_to_blog', 10, 3 );
 add_action( 'profile_update', 'bp_blogs_add_user_to_blog' );
 add_action( 'user_register', 'bp_blogs_add_user_to_blog' );
@@ -978,6 +1244,20 @@ function bboss_blogs_get_allowed_roles() {
 	 */
 	return apply_filters( 'bp_blogs_get_allowed_roles', array( 'contributor', 'author', 'editor', 'administrator' ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_blogs_get_allowed_roles' ) && ! function_exists( 'bp_blogs_get_allowed_roles' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_blogs_get_allowed_roles()}.
+	 *
+	 * @deprecated Use bboss_blogs_get_allowed_roles() instead.
+	 */
+	function bp_blogs_get_allowed_roles() {
+		return bboss_blogs_get_allowed_roles();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Remove a blog-user pair from BP's blog tracker.
@@ -994,6 +1274,20 @@ function bboss_blogs_remove_user_from_blog( $user_id, $blog_id = 0 ) {
 
 	bboss_blogs_remove_blog_for_user( $user_id, $blog_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_blogs_remove_user_from_blog' ) && ! function_exists( 'bp_blogs_remove_user_from_blog' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_blogs_remove_user_from_blog()}.
+	 *
+	 * @deprecated Use bboss_blogs_remove_user_from_blog() instead.
+	 */
+	function bp_blogs_remove_user_from_blog( $user_id, $blog_id = 0 ) {
+		return bboss_blogs_remove_user_from_blog( $user_id, $blog_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'remove_user_from_blog', 'bp_blogs_remove_user_from_blog', 10, 2 );
 
 /**
@@ -1014,6 +1308,20 @@ function bboss_blogs_maybe_add_user_to_blog() {
 	remove_action( 'init', 'maybe_add_existing_user_to_blog' );
 	add_action( 'init', 'maybe_add_existing_user_to_blog', 20 );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_blogs_maybe_add_user_to_blog' ) && ! function_exists( 'bp_blogs_maybe_add_user_to_blog' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_blogs_maybe_add_user_to_blog()}.
+	 *
+	 * @deprecated Use bboss_blogs_maybe_add_user_to_blog() instead.
+	 */
+	function bp_blogs_maybe_add_user_to_blog() {
+		return bboss_blogs_maybe_add_user_to_blog();
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'init', 'bp_blogs_maybe_add_user_to_blog', 1 );
 
 /**
@@ -1047,6 +1355,20 @@ function bboss_blogs_remove_blog( $blog_id ) {
 	 */
 	do_action( 'bp_blogs_remove_blog', $blog_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_blogs_remove_blog' ) && ! function_exists( 'bp_blogs_remove_blog' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_blogs_remove_blog()}.
+	 *
+	 * @deprecated Use bboss_blogs_remove_blog() instead.
+	 */
+	function bp_blogs_remove_blog( $blog_id ) {
+		return bboss_blogs_remove_blog( $blog_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'delete_blog', 'bp_blogs_remove_blog' );
 
 /**
@@ -1082,6 +1404,20 @@ function bboss_blogs_remove_blog_for_user( $user_id, $blog_id ) {
 	 */
 	do_action( 'bp_blogs_remove_blog_for_user', $blog_id, $user_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_blogs_remove_blog_for_user' ) && ! function_exists( 'bp_blogs_remove_blog_for_user' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_blogs_remove_blog_for_user()}.
+	 *
+	 * @deprecated Use bboss_blogs_remove_blog_for_user() instead.
+	 */
+	function bp_blogs_remove_blog_for_user( $user_id, $blog_id ) {
+		return bboss_blogs_remove_blog_for_user( $user_id, $blog_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'remove_user_from_blog', 'bp_blogs_remove_blog_for_user', 10, 2 );
 
 /**
@@ -1158,6 +1494,20 @@ function bboss_blogs_post_type_remove_comment( $deleted, $comment_id, $activity_
 
 	return $deleted;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_blogs_post_type_remove_comment' ) && ! function_exists( 'bp_blogs_post_type_remove_comment' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_blogs_post_type_remove_comment()}.
+	 *
+	 * @deprecated Use bboss_blogs_post_type_remove_comment() instead.
+	 */
+	function bp_blogs_post_type_remove_comment( $deleted, $comment_id, $activity_post_object, $activity_type = '' ) {
+		return bboss_blogs_post_type_remove_comment( $deleted, $comment_id, $activity_post_object, $activity_type );
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'bp_activity_post_type_remove_comment', 'bp_blogs_post_type_remove_comment', 10, 4 );
 
 /**
@@ -1200,6 +1550,20 @@ function bboss_blogs_remove_associated_blog_comments( $activity_ids = array(), $
 		}
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_blogs_remove_associated_blog_comments' ) && ! function_exists( 'bp_blogs_remove_associated_blog_comments' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_blogs_remove_associated_blog_comments()}.
+	 *
+	 * @deprecated Use bboss_blogs_remove_associated_blog_comments() instead.
+	 */
+	function bp_blogs_remove_associated_blog_comments( $activity_ids = array(), $force_delete = true ) {
+		return bboss_blogs_remove_associated_blog_comments( $activity_ids, $force_delete );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get the total number of blogs being tracked by BuddyPress.
@@ -1216,6 +1580,20 @@ function bboss_blogs_total_blogs() {
 	}
 	return $count;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_blogs_total_blogs' ) && ! function_exists( 'bp_blogs_total_blogs' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_blogs_total_blogs()}.
+	 *
+	 * @deprecated Use bboss_blogs_total_blogs() instead.
+	 */
+	function bp_blogs_total_blogs() {
+		return bboss_blogs_total_blogs();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get the total number of blogs being tracked by BP for a specific user.
@@ -1244,6 +1622,20 @@ function bboss_blogs_total_blogs_for_user( $user_id = 0 ) {
 
 	return $count;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_blogs_total_blogs_for_user' ) && ! function_exists( 'bp_blogs_total_blogs_for_user' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_blogs_total_blogs_for_user()}.
+	 *
+	 * @deprecated Use bboss_blogs_total_blogs_for_user() instead.
+	 */
+	function bp_blogs_total_blogs_for_user( $user_id = 0 ) {
+		return bboss_blogs_total_blogs_for_user( $user_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Remove the all data related to a given blog from the BP blogs tracker and activity feed.
@@ -1275,6 +1667,20 @@ function bboss_blogs_remove_data_for_blog( $blog_id ) {
 	 */
 	do_action( 'bp_blogs_remove_data_for_blog', $blog_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_blogs_remove_data_for_blog' ) && ! function_exists( 'bp_blogs_remove_data_for_blog' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_blogs_remove_data_for_blog()}.
+	 *
+	 * @deprecated Use bboss_blogs_remove_data_for_blog() instead.
+	 */
+	function bp_blogs_remove_data_for_blog( $blog_id ) {
+		return bboss_blogs_remove_data_for_blog( $blog_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'delete_blog', 'bp_blogs_remove_data_for_blog', 1 );
 
 /**
@@ -1290,6 +1696,20 @@ add_action( 'delete_blog', 'bp_blogs_remove_data_for_blog', 1 );
 function bboss_blogs_get_blogs_for_user( $user_id, $show_hidden = false ) {
 	return BBoss_Blogs_Blog::get_blogs_for_user( $user_id, $show_hidden );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_blogs_get_blogs_for_user' ) && ! function_exists( 'bp_blogs_get_blogs_for_user' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_blogs_get_blogs_for_user()}.
+	 *
+	 * @deprecated Use bboss_blogs_get_blogs_for_user() instead.
+	 */
+	function bp_blogs_get_blogs_for_user( $user_id, $show_hidden = false ) {
+		return bboss_blogs_get_blogs_for_user( $user_id, $show_hidden );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Retrieve a list of all blogs.
@@ -1303,6 +1723,20 @@ function bboss_blogs_get_blogs_for_user( $user_id, $show_hidden = false ) {
 function bboss_blogs_get_all_blogs( $limit = null, $page = null ) {
 	return BBoss_Blogs_Blog::get_all( $limit, $page );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_blogs_get_all_blogs' ) && ! function_exists( 'bp_blogs_get_all_blogs' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_blogs_get_all_blogs()}.
+	 *
+	 * @deprecated Use bboss_blogs_get_all_blogs() instead.
+	 */
+	function bp_blogs_get_all_blogs( $limit = null, $page = null ) {
+		return bboss_blogs_get_all_blogs( $limit, $page );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Retrieve a random list of blogs.
@@ -1322,6 +1756,20 @@ function bboss_blogs_get_random_blogs( $limit = null, $page = null ) {
 		)
 	);
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_blogs_get_random_blogs' ) && ! function_exists( 'bp_blogs_get_random_blogs' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_blogs_get_random_blogs()}.
+	 *
+	 * @deprecated Use bboss_blogs_get_random_blogs() instead.
+	 */
+	function bp_blogs_get_random_blogs( $limit = null, $page = null ) {
+		return bboss_blogs_get_random_blogs( $limit, $page );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Check whether a given blog is hidden.
@@ -1334,6 +1782,20 @@ function bboss_blogs_get_random_blogs( $limit = null, $page = null ) {
 function bboss_blogs_is_blog_hidden( $blog_id ) {
 	return BBoss_Blogs_Blog::is_hidden( $blog_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_blogs_is_blog_hidden' ) && ! function_exists( 'bp_blogs_is_blog_hidden' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_blogs_is_blog_hidden()}.
+	 *
+	 * @deprecated Use bboss_blogs_is_blog_hidden() instead.
+	 */
+	function bp_blogs_is_blog_hidden( $blog_id ) {
+		return bboss_blogs_is_blog_hidden( $blog_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /*
  * Blog meta functions
@@ -1388,6 +1850,20 @@ function bboss_blogs_delete_blogmeta( $blog_id, $meta_key = false, $meta_value =
 
 	return $retval;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_blogs_delete_blogmeta' ) && ! function_exists( 'bp_blogs_delete_blogmeta' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_blogs_delete_blogmeta()}.
+	 *
+	 * @deprecated Use bboss_blogs_delete_blogmeta() instead.
+	 */
+	function bp_blogs_delete_blogmeta( $blog_id, $meta_key = false, $meta_value = false, $delete_all = false ) {
+		return bboss_blogs_delete_blogmeta( $blog_id, $meta_key, $meta_value, $delete_all );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get metadata for a given blog.
@@ -1414,6 +1890,20 @@ function bboss_blogs_get_blogmeta( $blog_id, $meta_key = '', $single = true ) {
 
 	return $retval;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_blogs_get_blogmeta' ) && ! function_exists( 'bp_blogs_get_blogmeta' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_blogs_get_blogmeta()}.
+	 *
+	 * @deprecated Use bboss_blogs_get_blogmeta() instead.
+	 */
+	function bp_blogs_get_blogmeta( $blog_id, $meta_key = '', $single = true ) {
+		return bboss_blogs_get_blogmeta( $blog_id, $meta_key, $single );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Update a piece of blog meta.
@@ -1439,6 +1929,20 @@ function bboss_blogs_update_blogmeta( $blog_id, $meta_key, $meta_value, $prev_va
 
 	return $retval;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_blogs_update_blogmeta' ) && ! function_exists( 'bp_blogs_update_blogmeta' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_blogs_update_blogmeta()}.
+	 *
+	 * @deprecated Use bboss_blogs_update_blogmeta() instead.
+	 */
+	function bp_blogs_update_blogmeta( $blog_id, $meta_key, $meta_value, $prev_value = '' ) {
+		return bboss_blogs_update_blogmeta( $blog_id, $meta_key, $meta_value, $prev_value );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Add a piece of blog metadata.
@@ -1462,6 +1966,20 @@ function bboss_blogs_add_blogmeta( $blog_id, $meta_key, $meta_value, $unique = f
 
 	return $retval;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_blogs_add_blogmeta' ) && ! function_exists( 'bp_blogs_add_blogmeta' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_blogs_add_blogmeta()}.
+	 *
+	 * @deprecated Use bboss_blogs_add_blogmeta() instead.
+	 */
+	function bp_blogs_add_blogmeta( $blog_id, $meta_key, $meta_value, $unique = false ) {
+		return bboss_blogs_add_blogmeta( $blog_id, $meta_key, $meta_value, $unique );
+	}
+}
+// @bbwt-com-end compat-layer
+
 /**
  * Remove all blog associations for a given user.
  *
@@ -1494,6 +2012,20 @@ function bboss_blogs_remove_data( $user_id ) {
 	 */
 	do_action( 'bp_blogs_remove_data', $user_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_blogs_remove_data' ) && ! function_exists( 'bp_blogs_remove_data' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_blogs_remove_data()}.
+	 *
+	 * @deprecated Use bboss_blogs_remove_data() instead.
+	 */
+	function bp_blogs_remove_data( $user_id ) {
+		return bboss_blogs_remove_data( $user_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'wpmu_delete_user', 'bp_blogs_remove_data' );
 add_action( 'delete_user', 'bp_blogs_remove_data' );
 add_action( 'bp_make_spam_user', 'bp_blogs_remove_data' );
@@ -1522,6 +2054,20 @@ function bboss_blogs_restore_data( $user_id = 0 ) {
 		bboss_blogs_add_user_to_blog( $user_id, false, $blog_id );
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_blogs_restore_data' ) && ! function_exists( 'bp_blogs_restore_data' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_blogs_restore_data()}.
+	 *
+	 * @deprecated Use bboss_blogs_restore_data() instead.
+	 */
+	function bp_blogs_restore_data( $user_id = 0 ) {
+		return bboss_blogs_restore_data( $user_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'bp_make_ham_user', 'bp_blogs_restore_data', 10, 1 );
 
 /**
@@ -1535,6 +2081,20 @@ function bboss_core_admin_get_active_custom_post_type_feed() {
 
 	bboss_update_option( 'bp_core_admin_get_active_custom_post_type_feed', $post_types );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_core_admin_get_active_custom_post_type_feed' ) && ! function_exists( 'bp_core_admin_get_active_custom_post_type_feed' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_admin_get_active_custom_post_type_feed()}.
+	 *
+	 * @deprecated Use bboss_core_admin_get_active_custom_post_type_feed() instead.
+	 */
+	function bp_core_admin_get_active_custom_post_type_feed() {
+		return bboss_core_admin_get_active_custom_post_type_feed();
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'init', 'bp_core_admin_get_active_custom_post_type_feed' );
 
 /**
@@ -1549,10 +2109,8 @@ function bboss_activity_empty_post_comment_content( $content ) {
 
 	return '';
 }
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_activity_empty_post_comment_content' ) && ! function_exists( 'bp_activity_empty_post_comment_content' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_activity_empty_post_comment_content()}.
@@ -1563,404 +2121,5 @@ if ( function_exists( 'bboss_activity_empty_post_comment_content' ) && ! functio
 		return bboss_activity_empty_post_comment_content( $content );
 	}
 }
-if ( function_exists( 'bboss_blogs_add_blogmeta' ) && ! function_exists( 'bp_blogs_add_blogmeta' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_blogs_add_blogmeta()}.
-	 *
-	 * @deprecated Use bboss_blogs_add_blogmeta() instead.
-	 */
-	function bp_blogs_add_blogmeta( $blog_id, $meta_key, $meta_value, $unique = false ) {
-		return bboss_blogs_add_blogmeta( $blog_id, $meta_key, $meta_value, $unique );
-	}
-}
-if ( function_exists( 'bboss_blogs_add_user_to_blog' ) && ! function_exists( 'bp_blogs_add_user_to_blog' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_blogs_add_user_to_blog()}.
-	 *
-	 * @deprecated Use bboss_blogs_add_user_to_blog() instead.
-	 */
-	function bp_blogs_add_user_to_blog( $user_id, $role = false, $blog_id = 0 ) {
-		return bboss_blogs_add_user_to_blog( $user_id, $role, $blog_id );
-	}
-}
-if ( function_exists( 'bboss_blogs_comment_sync_activity_comment' ) && ! function_exists( 'bp_blogs_comment_sync_activity_comment' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_blogs_comment_sync_activity_comment()}.
-	 *
-	 * @deprecated Use bboss_blogs_comment_sync_activity_comment() instead.
-	 */
-	function bp_blogs_comment_sync_activity_comment( &$activity_id, $comment = null, $activity_args = array(), $activity_post_object = null ) {
-		return bboss_blogs_comment_sync_activity_comment( $activity_id, $comment, $activity_args, $activity_post_object );
-	}
-}
-if ( function_exists( 'bboss_blogs_delete_blogmeta' ) && ! function_exists( 'bp_blogs_delete_blogmeta' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_blogs_delete_blogmeta()}.
-	 *
-	 * @deprecated Use bboss_blogs_delete_blogmeta() instead.
-	 */
-	function bp_blogs_delete_blogmeta( $blog_id, $meta_key = false, $meta_value = false, $delete_all = false ) {
-		return bboss_blogs_delete_blogmeta( $blog_id, $meta_key, $meta_value, $delete_all );
-	}
-}
-if ( function_exists( 'bboss_blogs_delete_url_blogmeta' ) && ! function_exists( 'bp_blogs_delete_url_blogmeta' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_blogs_delete_url_blogmeta()}.
-	 *
-	 * @deprecated Use bboss_blogs_delete_url_blogmeta() instead.
-	 */
-	function bp_blogs_delete_url_blogmeta( $site_id = 0 ) {
-		return bboss_blogs_delete_url_blogmeta( $site_id );
-	}
-}
-if ( function_exists( 'bboss_blogs_get_all_blogs' ) && ! function_exists( 'bp_blogs_get_all_blogs' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_blogs_get_all_blogs()}.
-	 *
-	 * @deprecated Use bboss_blogs_get_all_blogs() instead.
-	 */
-	function bp_blogs_get_all_blogs( $limit = null, $page = null ) {
-		return bboss_blogs_get_all_blogs( $limit, $page );
-	}
-}
-if ( function_exists( 'bboss_blogs_get_allowed_roles' ) && ! function_exists( 'bp_blogs_get_allowed_roles' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_blogs_get_allowed_roles()}.
-	 *
-	 * @deprecated Use bboss_blogs_get_allowed_roles() instead.
-	 */
-	function bp_blogs_get_allowed_roles() {
-		return bboss_blogs_get_allowed_roles();
-	}
-}
-if ( function_exists( 'bboss_blogs_get_blogmeta' ) && ! function_exists( 'bp_blogs_get_blogmeta' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_blogs_get_blogmeta()}.
-	 *
-	 * @deprecated Use bboss_blogs_get_blogmeta() instead.
-	 */
-	function bp_blogs_get_blogmeta( $blog_id, $meta_key = '', $single = true ) {
-		return bboss_blogs_get_blogmeta( $blog_id, $meta_key, $single );
-	}
-}
-if ( function_exists( 'bboss_blogs_get_blogs' ) && ! function_exists( 'bp_blogs_get_blogs' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_blogs_get_blogs()}.
-	 *
-	 * @deprecated Use bboss_blogs_get_blogs() instead.
-	 */
-	function bp_blogs_get_blogs( $args = '' ) {
-		return bboss_blogs_get_blogs( $args );
-	}
-}
-if ( function_exists( 'bboss_blogs_get_blogs_for_user' ) && ! function_exists( 'bp_blogs_get_blogs_for_user' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_blogs_get_blogs_for_user()}.
-	 *
-	 * @deprecated Use bboss_blogs_get_blogs_for_user() instead.
-	 */
-	function bp_blogs_get_blogs_for_user( $user_id, $show_hidden = false ) {
-		return bboss_blogs_get_blogs_for_user( $user_id, $show_hidden );
-	}
-}
-if ( function_exists( 'bboss_blogs_get_random_blogs' ) && ! function_exists( 'bp_blogs_get_random_blogs' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_blogs_get_random_blogs()}.
-	 *
-	 * @deprecated Use bboss_blogs_get_random_blogs() instead.
-	 */
-	function bp_blogs_get_random_blogs( $limit = null, $page = null ) {
-		return bboss_blogs_get_random_blogs( $limit, $page );
-	}
-}
-if ( function_exists( 'bboss_blogs_has_directory' ) && ! function_exists( 'bp_blogs_has_directory' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_blogs_has_directory()}.
-	 *
-	 * @deprecated Use bboss_blogs_has_directory() instead.
-	 */
-	function bp_blogs_has_directory() {
-		return bboss_blogs_has_directory();
-	}
-}
-if ( function_exists( 'bboss_blogs_is_blog_hidden' ) && ! function_exists( 'bp_blogs_is_blog_hidden' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_blogs_is_blog_hidden()}.
-	 *
-	 * @deprecated Use bboss_blogs_is_blog_hidden() instead.
-	 */
-	function bp_blogs_is_blog_hidden( $blog_id ) {
-		return bboss_blogs_is_blog_hidden( $blog_id );
-	}
-}
-if ( function_exists( 'bboss_blogs_is_blog_recordable' ) && ! function_exists( 'bp_blogs_is_blog_recordable' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_blogs_is_blog_recordable()}.
-	 *
-	 * @deprecated Use bboss_blogs_is_blog_recordable() instead.
-	 */
-	function bp_blogs_is_blog_recordable( $blog_id, $user_id = 0 ) {
-		return bboss_blogs_is_blog_recordable( $blog_id, $user_id );
-	}
-}
-if ( function_exists( 'bboss_blogs_is_blog_trackable' ) && ! function_exists( 'bp_blogs_is_blog_trackable' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_blogs_is_blog_trackable()}.
-	 *
-	 * @deprecated Use bboss_blogs_is_blog_trackable() instead.
-	 */
-	function bp_blogs_is_blog_trackable( $blog_id, $user_id = 0 ) {
-		return bboss_blogs_is_blog_trackable( $blog_id, $user_id );
-	}
-}
-if ( function_exists( 'bboss_blogs_maybe_add_user_to_blog' ) && ! function_exists( 'bp_blogs_maybe_add_user_to_blog' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_blogs_maybe_add_user_to_blog()}.
-	 *
-	 * @deprecated Use bboss_blogs_maybe_add_user_to_blog() instead.
-	 */
-	function bp_blogs_maybe_add_user_to_blog() {
-		return bboss_blogs_maybe_add_user_to_blog();
-	}
-}
-if ( function_exists( 'bboss_blogs_post_type_remove_comment' ) && ! function_exists( 'bp_blogs_post_type_remove_comment' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_blogs_post_type_remove_comment()}.
-	 *
-	 * @deprecated Use bboss_blogs_post_type_remove_comment() instead.
-	 */
-	function bp_blogs_post_type_remove_comment( $deleted, $comment_id, $activity_post_object, $activity_type = '' ) {
-		return bboss_blogs_post_type_remove_comment( $deleted, $comment_id, $activity_post_object, $activity_type );
-	}
-}
-if ( function_exists( 'bboss_blogs_publish_post_activity_meta' ) && ! function_exists( 'bp_blogs_publish_post_activity_meta' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_blogs_publish_post_activity_meta()}.
-	 *
-	 * @deprecated Use bboss_blogs_publish_post_activity_meta() instead.
-	 */
-	function bp_blogs_publish_post_activity_meta( $activity_id, $post, $args ) {
-		return bboss_blogs_publish_post_activity_meta( $activity_id, $post, $args );
-	}
-}
-if ( function_exists( 'bboss_blogs_record_blog' ) && ! function_exists( 'bp_blogs_record_blog' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_blogs_record_blog()}.
-	 *
-	 * @deprecated Use bboss_blogs_record_blog() instead.
-	 */
-	function bp_blogs_record_blog( $blog_id, $user_id, $no_activity = false ) {
-		return bboss_blogs_record_blog( $blog_id, $user_id, $no_activity );
-	}
-}
-if ( function_exists( 'bboss_blogs_record_existing_blogs' ) && ! function_exists( 'bp_blogs_record_existing_blogs' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_blogs_record_existing_blogs()}.
-	 *
-	 * @deprecated Use bboss_blogs_record_existing_blogs() instead.
-	 */
-	function bp_blogs_record_existing_blogs( $args = array() ) {
-		return bboss_blogs_record_existing_blogs( $args );
-	}
-}
-if ( function_exists( 'bboss_blogs_remove_associated_blog_comments' ) && ! function_exists( 'bp_blogs_remove_associated_blog_comments' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_blogs_remove_associated_blog_comments()}.
-	 *
-	 * @deprecated Use bboss_blogs_remove_associated_blog_comments() instead.
-	 */
-	function bp_blogs_remove_associated_blog_comments( $activity_ids = array(), $force_delete = true ) {
-		return bboss_blogs_remove_associated_blog_comments( $activity_ids, $force_delete );
-	}
-}
-if ( function_exists( 'bboss_blogs_remove_blog' ) && ! function_exists( 'bp_blogs_remove_blog' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_blogs_remove_blog()}.
-	 *
-	 * @deprecated Use bboss_blogs_remove_blog() instead.
-	 */
-	function bp_blogs_remove_blog( $blog_id ) {
-		return bboss_blogs_remove_blog( $blog_id );
-	}
-}
-if ( function_exists( 'bboss_blogs_remove_blog_for_user' ) && ! function_exists( 'bp_blogs_remove_blog_for_user' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_blogs_remove_blog_for_user()}.
-	 *
-	 * @deprecated Use bboss_blogs_remove_blog_for_user() instead.
-	 */
-	function bp_blogs_remove_blog_for_user( $user_id, $blog_id ) {
-		return bboss_blogs_remove_blog_for_user( $user_id, $blog_id );
-	}
-}
-if ( function_exists( 'bboss_blogs_remove_data' ) && ! function_exists( 'bp_blogs_remove_data' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_blogs_remove_data()}.
-	 *
-	 * @deprecated Use bboss_blogs_remove_data() instead.
-	 */
-	function bp_blogs_remove_data( $user_id ) {
-		return bboss_blogs_remove_data( $user_id );
-	}
-}
-if ( function_exists( 'bboss_blogs_remove_data_for_blog' ) && ! function_exists( 'bp_blogs_remove_data_for_blog' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_blogs_remove_data_for_blog()}.
-	 *
-	 * @deprecated Use bboss_blogs_remove_data_for_blog() instead.
-	 */
-	function bp_blogs_remove_data_for_blog( $blog_id ) {
-		return bboss_blogs_remove_data_for_blog( $blog_id );
-	}
-}
-if ( function_exists( 'bboss_blogs_remove_user_from_blog' ) && ! function_exists( 'bp_blogs_remove_user_from_blog' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_blogs_remove_user_from_blog()}.
-	 *
-	 * @deprecated Use bboss_blogs_remove_user_from_blog() instead.
-	 */
-	function bp_blogs_remove_user_from_blog( $user_id, $blog_id = 0 ) {
-		return bboss_blogs_remove_user_from_blog( $user_id, $blog_id );
-	}
-}
-if ( function_exists( 'bboss_blogs_restore_data' ) && ! function_exists( 'bp_blogs_restore_data' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_blogs_restore_data()}.
-	 *
-	 * @deprecated Use bboss_blogs_restore_data() instead.
-	 */
-	function bp_blogs_restore_data( $user_id = 0 ) {
-		return bboss_blogs_restore_data( $user_id );
-	}
-}
-if ( function_exists( 'bboss_blogs_total_blogs' ) && ! function_exists( 'bp_blogs_total_blogs' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_blogs_total_blogs()}.
-	 *
-	 * @deprecated Use bboss_blogs_total_blogs() instead.
-	 */
-	function bp_blogs_total_blogs() {
-		return bboss_blogs_total_blogs();
-	}
-}
-if ( function_exists( 'bboss_blogs_total_blogs_for_user' ) && ! function_exists( 'bp_blogs_total_blogs_for_user' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_blogs_total_blogs_for_user()}.
-	 *
-	 * @deprecated Use bboss_blogs_total_blogs_for_user() instead.
-	 */
-	function bp_blogs_total_blogs_for_user( $user_id = 0 ) {
-		return bboss_blogs_total_blogs_for_user( $user_id );
-	}
-}
-if ( function_exists( 'bboss_blogs_update_blogmeta' ) && ! function_exists( 'bp_blogs_update_blogmeta' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_blogs_update_blogmeta()}.
-	 *
-	 * @deprecated Use bboss_blogs_update_blogmeta() instead.
-	 */
-	function bp_blogs_update_blogmeta( $blog_id, $meta_key, $meta_value, $prev_value = '' ) {
-		return bboss_blogs_update_blogmeta( $blog_id, $meta_key, $meta_value, $prev_value );
-	}
-}
-if ( function_exists( 'bboss_blogs_update_option_blogdescription' ) && ! function_exists( 'bp_blogs_update_option_blogdescription' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_blogs_update_option_blogdescription()}.
-	 *
-	 * @deprecated Use bboss_blogs_update_option_blogdescription() instead.
-	 */
-	function bp_blogs_update_option_blogdescription( $oldvalue, $newvalue ) {
-		return bboss_blogs_update_option_blogdescription( $oldvalue, $newvalue );
-	}
-}
-if ( function_exists( 'bboss_blogs_update_option_blogname' ) && ! function_exists( 'bp_blogs_update_option_blogname' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_blogs_update_option_blogname()}.
-	 *
-	 * @deprecated Use bboss_blogs_update_option_blogname() instead.
-	 */
-	function bp_blogs_update_option_blogname( $oldvalue, $newvalue ) {
-		return bboss_blogs_update_option_blogname( $oldvalue, $newvalue );
-	}
-}
-if ( function_exists( 'bboss_blogs_update_option_close_comments_days_old' ) && ! function_exists( 'bp_blogs_update_option_close_comments_days_old' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_blogs_update_option_close_comments_days_old()}.
-	 *
-	 * @deprecated Use bboss_blogs_update_option_close_comments_days_old() instead.
-	 */
-	function bp_blogs_update_option_close_comments_days_old( $oldvalue, $newvalue ) {
-		return bboss_blogs_update_option_close_comments_days_old( $oldvalue, $newvalue );
-	}
-}
-if ( function_exists( 'bboss_blogs_update_option_close_comments_for_old_posts' ) && ! function_exists( 'bp_blogs_update_option_close_comments_for_old_posts' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_blogs_update_option_close_comments_for_old_posts()}.
-	 *
-	 * @deprecated Use bboss_blogs_update_option_close_comments_for_old_posts() instead.
-	 */
-	function bp_blogs_update_option_close_comments_for_old_posts( $oldvalue, $newvalue ) {
-		return bboss_blogs_update_option_close_comments_for_old_posts( $oldvalue, $newvalue );
-	}
-}
-if ( function_exists( 'bboss_blogs_update_option_comment_moderation' ) && ! function_exists( 'bp_blogs_update_option_comment_moderation' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_blogs_update_option_comment_moderation()}.
-	 *
-	 * @deprecated Use bboss_blogs_update_option_comment_moderation() instead.
-	 */
-	function bp_blogs_update_option_comment_moderation( $oldvalue, $newvalue ) {
-		return bboss_blogs_update_option_comment_moderation( $oldvalue, $newvalue );
-	}
-}
-if ( function_exists( 'bboss_blogs_update_option_site_icon' ) && ! function_exists( 'bp_blogs_update_option_site_icon' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_blogs_update_option_site_icon()}.
-	 *
-	 * @deprecated Use bboss_blogs_update_option_site_icon() instead.
-	 */
-	function bp_blogs_update_option_site_icon( $old_value, $new_value ) {
-		return bboss_blogs_update_option_site_icon( $old_value, $new_value );
-	}
-}
-if ( function_exists( 'bboss_blogs_update_option_thread_comments' ) && ! function_exists( 'bp_blogs_update_option_thread_comments' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_blogs_update_option_thread_comments()}.
-	 *
-	 * @deprecated Use bboss_blogs_update_option_thread_comments() instead.
-	 */
-	function bp_blogs_update_option_thread_comments( $oldvalue, $newvalue ) {
-		return bboss_blogs_update_option_thread_comments( $oldvalue, $newvalue );
-	}
-}
-if ( function_exists( 'bboss_blogs_update_option_thread_comments_depth' ) && ! function_exists( 'bp_blogs_update_option_thread_comments_depth' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_blogs_update_option_thread_comments_depth()}.
-	 *
-	 * @deprecated Use bboss_blogs_update_option_thread_comments_depth() instead.
-	 */
-	function bp_blogs_update_option_thread_comments_depth( $oldvalue, $newvalue ) {
-		return bboss_blogs_update_option_thread_comments_depth( $oldvalue, $newvalue );
-	}
-}
-if ( function_exists( 'bboss_blogs_update_post_activity_meta' ) && ! function_exists( 'bp_blogs_update_post_activity_meta' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_blogs_update_post_activity_meta()}.
-	 *
-	 * @deprecated Use bboss_blogs_update_post_activity_meta() instead.
-	 */
-	function bp_blogs_update_post_activity_meta( $post, $activity, $activity_post_object ) {
-		return bboss_blogs_update_post_activity_meta( $post, $activity, $activity_post_object );
-	}
-}
-if ( function_exists( 'bboss_core_admin_get_active_custom_post_type_feed' ) && ! function_exists( 'bp_core_admin_get_active_custom_post_type_feed' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_core_admin_get_active_custom_post_type_feed()}.
-	 *
-	 * @deprecated Use bboss_core_admin_get_active_custom_post_type_feed() instead.
-	 */
-	function bp_core_admin_get_active_custom_post_type_feed() {
-		return bboss_core_admin_get_active_custom_post_type_feed();
-	}
-}
 // @bbwt-com-end compat-layer
+

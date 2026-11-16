@@ -213,6 +213,20 @@ function bboss_messages_format_notifications( $action, $item_id, $secondary_item
 
 	return $return;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_messages_format_notifications' ) && ! function_exists( 'messages_format_notifications' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_messages_format_notifications()}.
+	 *
+	 * @deprecated Use bboss_messages_format_notifications() instead.
+	 */
+	function messages_format_notifications( $action, $item_id, $secondary_item_id, $total_items, $format = 'string', $notification_id = 0, $screen = 'web' ) {
+		return bboss_messages_format_notifications( $action, $item_id, $secondary_item_id, $total_items, $format, $notification_id, $screen );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Send notifications to message recipients.
@@ -302,6 +316,20 @@ function bboss_messages_message_sent_add_notification( $message ) {
 		}
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_messages_message_sent_add_notification' ) && ! function_exists( 'bp_messages_message_sent_add_notification' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_messages_message_sent_add_notification()}.
+	 *
+	 * @deprecated Use bboss_messages_message_sent_add_notification() instead.
+	 */
+	function bp_messages_message_sent_add_notification( $message ) {
+		return bboss_messages_message_sent_add_notification( $message );
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'messages_message_sent', 'bp_messages_message_sent_add_notification', 10 );
 
 /**
@@ -346,6 +374,20 @@ function bboss_messages_screen_conversation_mark_notifications() {
 		bboss_notifications_mark_notifications_by_item_id( bboss_loggedin_user_id(), (int) $message_id, bboss()->messages->id, 'bb_groups_new_message' );
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_messages_screen_conversation_mark_notifications' ) && ! function_exists( 'bp_messages_screen_conversation_mark_notifications' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_messages_screen_conversation_mark_notifications()}.
+	 *
+	 * @deprecated Use bboss_messages_screen_conversation_mark_notifications() instead.
+	 */
+	function bp_messages_screen_conversation_mark_notifications() {
+		return bboss_messages_screen_conversation_mark_notifications();
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'thread_loop_start', 'bp_messages_screen_conversation_mark_notifications', 10 );
 
 /**
@@ -366,6 +408,20 @@ function bboss_messages_mark_notification_on_mark_thread( $thread_id ) {
 		bboss_notifications_mark_notifications_by_item_id( bboss_loggedin_user_id(), $thread_message->id, bboss()->messages->id, 'bb_groups_new_message' );
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_messages_mark_notification_on_mark_thread' ) && ! function_exists( 'bp_messages_mark_notification_on_mark_thread' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_messages_mark_notification_on_mark_thread()}.
+	 *
+	 * @deprecated Use bboss_messages_mark_notification_on_mark_thread() instead.
+	 */
+	function bp_messages_mark_notification_on_mark_thread( $thread_id ) {
+		return bboss_messages_mark_notification_on_mark_thread( $thread_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'messages_thread_mark_as_read', 'bp_messages_mark_notification_on_mark_thread' );
 
 /**
@@ -387,21 +443,8 @@ function bboss_messages_message_delete_notifications( $thread_id, $message_ids )
 		}
 	}
 }
-add_action( 'bp_messages_thread_after_delete', 'bp_messages_message_delete_notifications', 10, 2 );
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
-if ( function_exists( 'bboss_messages_mark_notification_on_mark_thread' ) && ! function_exists( 'bp_messages_mark_notification_on_mark_thread' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_messages_mark_notification_on_mark_thread()}.
-	 *
-	 * @deprecated Use bboss_messages_mark_notification_on_mark_thread() instead.
-	 */
-	function bp_messages_mark_notification_on_mark_thread( $thread_id ) {
-		return bboss_messages_mark_notification_on_mark_thread( $thread_id );
-	}
-}
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_messages_message_delete_notifications' ) && ! function_exists( 'bp_messages_message_delete_notifications' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_messages_message_delete_notifications()}.
@@ -412,34 +455,8 @@ if ( function_exists( 'bboss_messages_message_delete_notifications' ) && ! funct
 		return bboss_messages_message_delete_notifications( $thread_id, $message_ids );
 	}
 }
-if ( function_exists( 'bboss_messages_message_sent_add_notification' ) && ! function_exists( 'bp_messages_message_sent_add_notification' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_messages_message_sent_add_notification()}.
-	 *
-	 * @deprecated Use bboss_messages_message_sent_add_notification() instead.
-	 */
-	function bp_messages_message_sent_add_notification( $message ) {
-		return bboss_messages_message_sent_add_notification( $message );
-	}
-}
-if ( function_exists( 'bboss_messages_screen_conversation_mark_notifications' ) && ! function_exists( 'bp_messages_screen_conversation_mark_notifications' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_messages_screen_conversation_mark_notifications()}.
-	 *
-	 * @deprecated Use bboss_messages_screen_conversation_mark_notifications() instead.
-	 */
-	function bp_messages_screen_conversation_mark_notifications() {
-		return bboss_messages_screen_conversation_mark_notifications();
-	}
-}
-if ( function_exists( 'bboss_messages_format_notifications' ) && ! function_exists( 'messages_format_notifications' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_messages_format_notifications()}.
-	 *
-	 * @deprecated Use bboss_messages_format_notifications() instead.
-	 */
-	function messages_format_notifications( $action, $item_id, $secondary_item_id, $total_items, $format = 'string', $notification_id = 0, $screen = 'web' ) {
-		return bboss_messages_format_notifications( $action, $item_id, $secondary_item_id, $total_items, $format, $notification_id, $screen );
-	}
-}
 // @bbwt-com-end compat-layer
+
+add_action( 'bp_messages_thread_after_delete', 'bp_messages_message_delete_notifications', 10, 2 );
+
+

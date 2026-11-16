@@ -322,6 +322,20 @@ function bboss_settings_action_general() {
 	// Redirect to prevent issues with browser back button.
 	bboss_core_redirect( trailingslashit( bboss_displayed_user_domain() . bboss_get_settings_slug() . '/general' ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_settings_action_general' ) && ! function_exists( 'bp_settings_action_general' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_settings_action_general()}.
+	 *
+	 * @deprecated Use bboss_settings_action_general() instead.
+	 */
+	function bp_settings_action_general() {
+		return bboss_settings_action_general();
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'bp_actions', 'bp_settings_action_general' );
 
 /**
@@ -384,21 +398,8 @@ function bboss_settings_verify_email_change() {
 		die();
 	}
 }
-add_action( 'bp_actions', 'bp_settings_verify_email_change' );
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
-if ( function_exists( 'bboss_settings_action_general' ) && ! function_exists( 'bp_settings_action_general' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_settings_action_general()}.
-	 *
-	 * @deprecated Use bboss_settings_action_general() instead.
-	 */
-	function bp_settings_action_general() {
-		return bboss_settings_action_general();
-	}
-}
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_settings_verify_email_change' ) && ! function_exists( 'bp_settings_verify_email_change' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_settings_verify_email_change()}.
@@ -410,3 +411,5 @@ if ( function_exists( 'bboss_settings_verify_email_change' ) && ! function_exist
 	}
 }
 // @bbwt-com-end compat-layer
+
+add_action( 'bp_actions', 'bp_settings_verify_email_change' );

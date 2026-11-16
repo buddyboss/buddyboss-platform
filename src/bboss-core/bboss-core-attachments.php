@@ -24,6 +24,20 @@ defined( 'ABSPATH' ) || exit;
 function bboss_attachments_is_wp_version_supported() {
 	return true;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_attachments_is_wp_version_supported' ) && ! function_exists( 'bp_attachments_is_wp_version_supported' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_attachments_is_wp_version_supported()}.
+	 *
+	 * @deprecated Use bboss_attachments_is_wp_version_supported() instead.
+	 */
+	function bp_attachments_is_wp_version_supported() {
+		return bboss_attachments_is_wp_version_supported();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get the Attachments Uploads dir data.
@@ -82,6 +96,20 @@ function bboss_attachments_uploads_dir_get( $data = '' ) {
 	 */
 	return apply_filters( 'bp_attachments_uploads_dir_get', $retval, $data );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_attachments_uploads_dir_get' ) && ! function_exists( 'bp_attachments_uploads_dir_get' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_attachments_uploads_dir_get()}.
+	 *
+	 * @deprecated Use bboss_attachments_uploads_dir_get() instead.
+	 */
+	function bp_attachments_uploads_dir_get( $data = '' ) {
+		return bboss_attachments_uploads_dir_get( $data );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Gets the upload dir array for cover photos.
@@ -151,6 +179,20 @@ function bboss_attachments_cover_image_upload_dir( $args = array() ) {
 		$upload_dir
 	);
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_attachments_cover_image_upload_dir' ) && ! function_exists( 'bp_attachments_cover_image_upload_dir' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_attachments_cover_image_upload_dir()}.
+	 *
+	 * @deprecated Use bboss_attachments_cover_image_upload_dir() instead.
+	 */
+	function bp_attachments_cover_image_upload_dir( $args = array() ) {
+		return bboss_attachments_cover_image_upload_dir( $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get the max upload file size for any attachment.
@@ -180,6 +222,20 @@ function bboss_attachments_get_max_upload_file_size( $type = '' ) {
 	 */
 	return apply_filters( 'bp_attachments_get_max_upload_file_size', $fileupload_maxk, $type );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_attachments_get_max_upload_file_size' ) && ! function_exists( 'bp_attachments_get_max_upload_file_size' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_attachments_get_max_upload_file_size()}.
+	 *
+	 * @deprecated Use bboss_attachments_get_max_upload_file_size() instead.
+	 */
+	function bp_attachments_get_max_upload_file_size( $type = '' ) {
+		return bboss_attachments_get_max_upload_file_size( $type );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get allowed types for any attachment.
@@ -246,6 +302,20 @@ function bboss_attachments_get_allowed_types( $type = 'avatar' ) {
 	 */
 	return apply_filters( 'bp_attachments_get_allowed_types', $exts, $type );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_attachments_get_allowed_types' ) && ! function_exists( 'bp_attachments_get_allowed_types' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_attachments_get_allowed_types()}.
+	 *
+	 * @deprecated Use bboss_attachments_get_allowed_types() instead.
+	 */
+	function bp_attachments_get_allowed_types( $type = 'avatar' ) {
+		return bboss_attachments_get_allowed_types( $type );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get allowed attachment mime types.
@@ -273,6 +343,20 @@ function bboss_attachments_get_allowed_mimes( $type = '', $allowed_types = array
 
 	return $allowed_mimes;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_attachments_get_allowed_mimes' ) && ! function_exists( 'bp_attachments_get_allowed_mimes' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_attachments_get_allowed_mimes()}.
+	 *
+	 * @deprecated Use bboss_attachments_get_allowed_mimes() instead.
+	 */
+	function bp_attachments_get_allowed_mimes( $type = '', $allowed_types = array() ) {
+		return bboss_attachments_get_allowed_mimes( $type, $allowed_types );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Check the uploaded attachment type is allowed.
@@ -294,6 +378,20 @@ function bboss_attachments_check_filetype( $file, $filename, $allowed_mimes ) {
 
 	return false;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_attachments_check_filetype' ) && ! function_exists( 'bp_attachments_check_filetype' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_attachments_check_filetype()}.
+	 *
+	 * @deprecated Use bboss_attachments_check_filetype() instead.
+	 */
+	function bp_attachments_check_filetype( $file, $filename, $allowed_mimes ) {
+		return bboss_attachments_check_filetype( $file, $filename, $allowed_mimes );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Use the absolute path to an image to set an attachment type for a given item.
@@ -465,6 +563,20 @@ function bboss_attachments_create_item_type( $type = 'avatar', $args = array() )
 	// Return the response.
 	return $created;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_attachments_create_item_type' ) && ! function_exists( 'bp_attachments_create_item_type' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_attachments_create_item_type()}.
+	 *
+	 * @deprecated Use bboss_attachments_create_item_type() instead.
+	 */
+	function bp_attachments_create_item_type( $type = 'avatar', $args = array() ) {
+		return bboss_attachments_create_item_type( $type, $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get the url or the path for a type of attachment.
@@ -595,6 +707,20 @@ function bboss_attachments_get_attachment( $data = 'url', $args = array() ) {
 
 	return $attachment_data;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_attachments_get_attachment' ) && ! function_exists( 'bp_attachments_get_attachment' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_attachments_get_attachment()}.
+	 *
+	 * @deprecated Use bboss_attachments_get_attachment() instead.
+	 */
+	function bp_attachments_get_attachment( $data = 'url', $args = array() ) {
+		return bboss_attachments_get_attachment( $data, $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Delete an attachment for the given arguments
@@ -716,6 +842,20 @@ function bboss_attachments_delete_file( $args = array() ) {
 	@wp_delete_file( $attachment_path );
 	return true;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_attachments_delete_file' ) && ! function_exists( 'bp_attachments_delete_file' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_attachments_delete_file()}.
+	 *
+	 * @deprecated Use bboss_attachments_delete_file() instead.
+	 */
+	function bp_attachments_delete_file( $args = array() ) {
+		return bboss_attachments_delete_file( $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get the BuddyPress Plupload settings.
@@ -775,6 +915,20 @@ function bboss_attachments_get_plupload_default_settings() {
 	 */
 	return apply_filters( 'bp_attachments_get_plupload_default_settings', $settings );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_attachments_get_plupload_default_settings' ) && ! function_exists( 'bp_attachments_get_plupload_default_settings' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_attachments_get_plupload_default_settings()}.
+	 *
+	 * @deprecated Use bboss_attachments_get_plupload_default_settings() instead.
+	 */
+	function bp_attachments_get_plupload_default_settings() {
+		return bboss_attachments_get_plupload_default_settings();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Builds localization strings for the BuddyPress Uploader scripts.
@@ -824,6 +978,20 @@ function bboss_attachments_get_plupload_l10n() {
 		)
 	);
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_attachments_get_plupload_l10n' ) && ! function_exists( 'bp_attachments_get_plupload_l10n' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_attachments_get_plupload_l10n()}.
+	 *
+	 * @deprecated Use bboss_attachments_get_plupload_l10n() instead.
+	 */
+	function bp_attachments_get_plupload_l10n() {
+		return bboss_attachments_get_plupload_l10n();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Enqueues the script needed for the Uploader UI.
@@ -1071,6 +1239,20 @@ function bboss_attachments_enqueue_scripts( $class = '' ) {
 	 */
 	do_action( 'bp_attachments_enqueue_scripts' );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_attachments_enqueue_scripts' ) && ! function_exists( 'bp_attachments_enqueue_scripts' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_attachments_enqueue_scripts()}.
+	 *
+	 * @deprecated Use bboss_attachments_enqueue_scripts() instead.
+	 */
+	function bp_attachments_enqueue_scripts( $class = '' ) {
+		return bboss_attachments_enqueue_scripts( $class );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Check the current user's capability to edit an avatar for a given object.
@@ -1115,6 +1297,20 @@ function bboss_attachments_current_user_can( $capability, $args = array() ) {
 
 	return apply_filters( 'bp_attachments_current_user_can', $can, $capability, $args );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_attachments_current_user_can' ) && ! function_exists( 'bp_attachments_current_user_can' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_attachments_current_user_can()}.
+	 *
+	 * @deprecated Use bboss_attachments_current_user_can() instead.
+	 */
+	function bp_attachments_current_user_can( $capability, $args = array() ) {
+		return bboss_attachments_current_user_can( $capability, $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Send a JSON response back to an Ajax upload request.
@@ -1147,6 +1343,20 @@ function bboss_attachments_json_response( $success, $is_html4 = false, $data = n
 		wp_die();
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_attachments_json_response' ) && ! function_exists( 'bp_attachments_json_response' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_attachments_json_response()}.
+	 *
+	 * @deprecated Use bboss_attachments_json_response() instead.
+	 */
+	function bp_attachments_json_response( $success, $is_html4 = false, $data = null ) {
+		return bboss_attachments_json_response( $success, $is_html4, $data );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get an Attachment template part.
@@ -1178,6 +1388,20 @@ function bboss_attachments_get_template_part( $slug ) {
 		bboss_setup_theme_compat( $current );
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_attachments_get_template_part' ) && ! function_exists( 'bp_attachments_get_template_part' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_attachments_get_template_part()}.
+	 *
+	 * @deprecated Use bboss_attachments_get_template_part() instead.
+	 */
+	function bp_attachments_get_template_part( $slug ) {
+		return bboss_attachments_get_template_part( $slug );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /** Cover Photo ***************************************************************/
 
@@ -1240,6 +1464,20 @@ function bboss_attachments_get_cover_image_settings( $component = 'xprofile' ) {
 	// Finally return the settings.
 	return $settings;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_attachments_get_cover_image_settings' ) && ! function_exists( 'bp_attachments_get_cover_image_settings' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_attachments_get_cover_image_settings()}.
+	 *
+	 * @deprecated Use bboss_attachments_get_cover_image_settings() instead.
+	 */
+	function bp_attachments_get_cover_image_settings( $component = 'xprofile' ) {
+		return bboss_attachments_get_cover_image_settings( $component );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get cover photo Width and Height.
@@ -1286,6 +1524,20 @@ function bboss_attachments_get_cover_image_dimensions( $component = 'xprofile' )
 	 */
 	return apply_filters( 'bp_attachments_get_cover_image_dimensions', $wh, $settings, $component );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_attachments_get_cover_image_dimensions' ) && ! function_exists( 'bp_attachments_get_cover_image_dimensions' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_attachments_get_cover_image_dimensions()}.
+	 *
+	 * @deprecated Use bboss_attachments_get_cover_image_dimensions() instead.
+	 */
+	function bp_attachments_get_cover_image_dimensions( $component = 'xprofile' ) {
+		return bboss_attachments_get_cover_image_dimensions( $component );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Are we on a page to edit a cover photo?
@@ -1317,6 +1569,20 @@ function bboss_attachments_cover_image_is_edit() {
 
 	return apply_filters( 'bp_attachments_cover_image_is_edit', $retval, $current_component );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_attachments_cover_image_is_edit' ) && ! function_exists( 'bp_attachments_cover_image_is_edit' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_attachments_cover_image_is_edit()}.
+	 *
+	 * @deprecated Use bboss_attachments_cover_image_is_edit() instead.
+	 */
+	function bp_attachments_cover_image_is_edit() {
+		return bboss_attachments_cover_image_is_edit();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Does the user has a cover photo?
@@ -1344,6 +1610,20 @@ function bboss_attachments_get_user_has_cover_image( $user_id = 0 ) {
 
 	return (bool) apply_filters( 'bp_attachments_get_user_has_cover_image', $cover_src, $user_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_attachments_get_user_has_cover_image' ) && ! function_exists( 'bp_attachments_get_user_has_cover_image' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_attachments_get_user_has_cover_image()}.
+	 *
+	 * @deprecated Use bboss_attachments_get_user_has_cover_image() instead.
+	 */
+	function bp_attachments_get_user_has_cover_image( $user_id = 0 ) {
+		return bboss_attachments_get_user_has_cover_image( $user_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Does the group has a cover photo?
@@ -1372,6 +1652,20 @@ function bboss_attachments_get_group_has_cover_image( $group_id = 0 ) {
 
 	return (bool) apply_filters( 'bp_attachments_get_group_has_cover_image', $cover_src, $group_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_attachments_get_group_has_cover_image' ) && ! function_exists( 'bp_attachments_get_group_has_cover_image' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_attachments_get_group_has_cover_image()}.
+	 *
+	 * @deprecated Use bboss_attachments_get_group_has_cover_image() instead.
+	 */
+	function bp_attachments_get_group_has_cover_image( $group_id = 0 ) {
+		return bboss_attachments_get_group_has_cover_image( $group_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Generate the cover photo file.
@@ -1460,6 +1754,20 @@ function bboss_attachments_cover_image_generate_file( $args = array(), $cover_im
 		'is_too_small'   => $is_too_small,
 	);
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_attachments_cover_image_generate_file' ) && ! function_exists( 'bp_attachments_cover_image_generate_file' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_attachments_cover_image_generate_file()}.
+	 *
+	 * @deprecated Use bboss_attachments_cover_image_generate_file() instead.
+	 */
+	function bp_attachments_cover_image_generate_file( $args = array(), $cover_image_class = null ) {
+		return bboss_attachments_cover_image_generate_file( $args, $cover_image_class );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Ajax Upload and set a cover photo
@@ -1772,6 +2080,20 @@ function bboss_attachments_cover_image_ajax_upload() {
 		)
 	);
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_attachments_cover_image_ajax_upload' ) && ! function_exists( 'bp_attachments_cover_image_ajax_upload' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_attachments_cover_image_ajax_upload()}.
+	 *
+	 * @deprecated Use bboss_attachments_cover_image_ajax_upload() instead.
+	 */
+	function bp_attachments_cover_image_ajax_upload() {
+		return bboss_attachments_cover_image_ajax_upload();
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'wp_ajax_bp_cover_image_upload', 'bp_attachments_cover_image_ajax_upload' );
 
 /**
@@ -1873,6 +2195,20 @@ function bboss_attachments_cover_image_ajax_delete() {
 		);
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_attachments_cover_image_ajax_delete' ) && ! function_exists( 'bp_attachments_cover_image_ajax_delete' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_attachments_cover_image_ajax_delete()}.
+	 *
+	 * @deprecated Use bboss_attachments_cover_image_ajax_delete() instead.
+	 */
+	function bp_attachments_cover_image_ajax_delete() {
+		return bboss_attachments_cover_image_ajax_delete();
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'wp_ajax_bp_cover_image_delete', 'bp_attachments_cover_image_ajax_delete' );
 
 /**
@@ -1925,10 +2261,8 @@ function bboss_attachment_get_cover_image_class( $item_id = 0, $item = 'user' ) 
 	 */
 	return apply_filters( 'bb_attachment_get_cover_image_class', $cover_image_class, $item_id, $item );
 }
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_attachment_get_cover_image_class' ) && ! function_exists( 'bb_attachment_get_cover_image_class' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_attachment_get_cover_image_class()}.
@@ -1939,244 +2273,5 @@ if ( function_exists( 'bboss_attachment_get_cover_image_class' ) && ! function_e
 		return bboss_attachment_get_cover_image_class( $item_id, $item );
 	}
 }
-if ( function_exists( 'bboss_attachments_check_filetype' ) && ! function_exists( 'bp_attachments_check_filetype' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_attachments_check_filetype()}.
-	 *
-	 * @deprecated Use bboss_attachments_check_filetype() instead.
-	 */
-	function bp_attachments_check_filetype( $file, $filename, $allowed_mimes ) {
-		return bboss_attachments_check_filetype( $file, $filename, $allowed_mimes );
-	}
-}
-if ( function_exists( 'bboss_attachments_cover_image_ajax_delete' ) && ! function_exists( 'bp_attachments_cover_image_ajax_delete' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_attachments_cover_image_ajax_delete()}.
-	 *
-	 * @deprecated Use bboss_attachments_cover_image_ajax_delete() instead.
-	 */
-	function bp_attachments_cover_image_ajax_delete() {
-		return bboss_attachments_cover_image_ajax_delete();
-	}
-}
-if ( function_exists( 'bboss_attachments_cover_image_ajax_upload' ) && ! function_exists( 'bp_attachments_cover_image_ajax_upload' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_attachments_cover_image_ajax_upload()}.
-	 *
-	 * @deprecated Use bboss_attachments_cover_image_ajax_upload() instead.
-	 */
-	function bp_attachments_cover_image_ajax_upload() {
-		return bboss_attachments_cover_image_ajax_upload();
-	}
-}
-if ( function_exists( 'bboss_attachments_cover_image_generate_file' ) && ! function_exists( 'bp_attachments_cover_image_generate_file' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_attachments_cover_image_generate_file()}.
-	 *
-	 * @deprecated Use bboss_attachments_cover_image_generate_file() instead.
-	 */
-	function bp_attachments_cover_image_generate_file( $args = array(), $cover_image_class = null ) {
-		return bboss_attachments_cover_image_generate_file( $args, $cover_image_class );
-	}
-}
-if ( function_exists( 'bboss_attachments_cover_image_is_edit' ) && ! function_exists( 'bp_attachments_cover_image_is_edit' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_attachments_cover_image_is_edit()}.
-	 *
-	 * @deprecated Use bboss_attachments_cover_image_is_edit() instead.
-	 */
-	function bp_attachments_cover_image_is_edit() {
-		return bboss_attachments_cover_image_is_edit();
-	}
-}
-if ( function_exists( 'bboss_attachments_cover_image_upload_dir' ) && ! function_exists( 'bp_attachments_cover_image_upload_dir' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_attachments_cover_image_upload_dir()}.
-	 *
-	 * @deprecated Use bboss_attachments_cover_image_upload_dir() instead.
-	 */
-	function bp_attachments_cover_image_upload_dir( $args = array() ) {
-		return bboss_attachments_cover_image_upload_dir( $args );
-	}
-}
-if ( function_exists( 'bboss_attachments_create_item_type' ) && ! function_exists( 'bp_attachments_create_item_type' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_attachments_create_item_type()}.
-	 *
-	 * @deprecated Use bboss_attachments_create_item_type() instead.
-	 */
-	function bp_attachments_create_item_type( $type = 'avatar', $args = array() ) {
-		return bboss_attachments_create_item_type( $type, $args );
-	}
-}
-if ( function_exists( 'bboss_attachments_current_user_can' ) && ! function_exists( 'bp_attachments_current_user_can' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_attachments_current_user_can()}.
-	 *
-	 * @deprecated Use bboss_attachments_current_user_can() instead.
-	 */
-	function bp_attachments_current_user_can( $capability, $args = array() ) {
-		return bboss_attachments_current_user_can( $capability, $args );
-	}
-}
-if ( function_exists( 'bboss_attachments_delete_file' ) && ! function_exists( 'bp_attachments_delete_file' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_attachments_delete_file()}.
-	 *
-	 * @deprecated Use bboss_attachments_delete_file() instead.
-	 */
-	function bp_attachments_delete_file( $args = array() ) {
-		return bboss_attachments_delete_file( $args );
-	}
-}
-if ( function_exists( 'bboss_attachments_enqueue_scripts' ) && ! function_exists( 'bp_attachments_enqueue_scripts' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_attachments_enqueue_scripts()}.
-	 *
-	 * @deprecated Use bboss_attachments_enqueue_scripts() instead.
-	 */
-	function bp_attachments_enqueue_scripts( $class = '' ) {
-		return bboss_attachments_enqueue_scripts( $class );
-	}
-}
-if ( function_exists( 'bboss_attachments_get_allowed_mimes' ) && ! function_exists( 'bp_attachments_get_allowed_mimes' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_attachments_get_allowed_mimes()}.
-	 *
-	 * @deprecated Use bboss_attachments_get_allowed_mimes() instead.
-	 */
-	function bp_attachments_get_allowed_mimes( $type = '', $allowed_types = array() ) {
-		return bboss_attachments_get_allowed_mimes( $type, $allowed_types );
-	}
-}
-if ( function_exists( 'bboss_attachments_get_allowed_types' ) && ! function_exists( 'bp_attachments_get_allowed_types' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_attachments_get_allowed_types()}.
-	 *
-	 * @deprecated Use bboss_attachments_get_allowed_types() instead.
-	 */
-	function bp_attachments_get_allowed_types( $type = 'avatar' ) {
-		return bboss_attachments_get_allowed_types( $type );
-	}
-}
-if ( function_exists( 'bboss_attachments_get_attachment' ) && ! function_exists( 'bp_attachments_get_attachment' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_attachments_get_attachment()}.
-	 *
-	 * @deprecated Use bboss_attachments_get_attachment() instead.
-	 */
-	function bp_attachments_get_attachment( $data = 'url', $args = array() ) {
-		return bboss_attachments_get_attachment( $data, $args );
-	}
-}
-if ( function_exists( 'bboss_attachments_get_cover_image_dimensions' ) && ! function_exists( 'bp_attachments_get_cover_image_dimensions' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_attachments_get_cover_image_dimensions()}.
-	 *
-	 * @deprecated Use bboss_attachments_get_cover_image_dimensions() instead.
-	 */
-	function bp_attachments_get_cover_image_dimensions( $component = 'xprofile' ) {
-		return bboss_attachments_get_cover_image_dimensions( $component );
-	}
-}
-if ( function_exists( 'bboss_attachments_get_cover_image_settings' ) && ! function_exists( 'bp_attachments_get_cover_image_settings' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_attachments_get_cover_image_settings()}.
-	 *
-	 * @deprecated Use bboss_attachments_get_cover_image_settings() instead.
-	 */
-	function bp_attachments_get_cover_image_settings( $component = 'xprofile' ) {
-		return bboss_attachments_get_cover_image_settings( $component );
-	}
-}
-if ( function_exists( 'bboss_attachments_get_group_has_cover_image' ) && ! function_exists( 'bp_attachments_get_group_has_cover_image' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_attachments_get_group_has_cover_image()}.
-	 *
-	 * @deprecated Use bboss_attachments_get_group_has_cover_image() instead.
-	 */
-	function bp_attachments_get_group_has_cover_image( $group_id = 0 ) {
-		return bboss_attachments_get_group_has_cover_image( $group_id );
-	}
-}
-if ( function_exists( 'bboss_attachments_get_max_upload_file_size' ) && ! function_exists( 'bp_attachments_get_max_upload_file_size' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_attachments_get_max_upload_file_size()}.
-	 *
-	 * @deprecated Use bboss_attachments_get_max_upload_file_size() instead.
-	 */
-	function bp_attachments_get_max_upload_file_size( $type = '' ) {
-		return bboss_attachments_get_max_upload_file_size( $type );
-	}
-}
-if ( function_exists( 'bboss_attachments_get_plupload_default_settings' ) && ! function_exists( 'bp_attachments_get_plupload_default_settings' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_attachments_get_plupload_default_settings()}.
-	 *
-	 * @deprecated Use bboss_attachments_get_plupload_default_settings() instead.
-	 */
-	function bp_attachments_get_plupload_default_settings() {
-		return bboss_attachments_get_plupload_default_settings();
-	}
-}
-if ( function_exists( 'bboss_attachments_get_plupload_l10n' ) && ! function_exists( 'bp_attachments_get_plupload_l10n' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_attachments_get_plupload_l10n()}.
-	 *
-	 * @deprecated Use bboss_attachments_get_plupload_l10n() instead.
-	 */
-	function bp_attachments_get_plupload_l10n() {
-		return bboss_attachments_get_plupload_l10n();
-	}
-}
-if ( function_exists( 'bboss_attachments_get_template_part' ) && ! function_exists( 'bp_attachments_get_template_part' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_attachments_get_template_part()}.
-	 *
-	 * @deprecated Use bboss_attachments_get_template_part() instead.
-	 */
-	function bp_attachments_get_template_part( $slug ) {
-		return bboss_attachments_get_template_part( $slug );
-	}
-}
-if ( function_exists( 'bboss_attachments_get_user_has_cover_image' ) && ! function_exists( 'bp_attachments_get_user_has_cover_image' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_attachments_get_user_has_cover_image()}.
-	 *
-	 * @deprecated Use bboss_attachments_get_user_has_cover_image() instead.
-	 */
-	function bp_attachments_get_user_has_cover_image( $user_id = 0 ) {
-		return bboss_attachments_get_user_has_cover_image( $user_id );
-	}
-}
-if ( function_exists( 'bboss_attachments_is_wp_version_supported' ) && ! function_exists( 'bp_attachments_is_wp_version_supported' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_attachments_is_wp_version_supported()}.
-	 *
-	 * @deprecated Use bboss_attachments_is_wp_version_supported() instead.
-	 */
-	function bp_attachments_is_wp_version_supported() {
-		return bboss_attachments_is_wp_version_supported();
-	}
-}
-if ( function_exists( 'bboss_attachments_json_response' ) && ! function_exists( 'bp_attachments_json_response' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_attachments_json_response()}.
-	 *
-	 * @deprecated Use bboss_attachments_json_response() instead.
-	 */
-	function bp_attachments_json_response( $success, $is_html4 = false, $data = null ) {
-		return bboss_attachments_json_response( $success, $is_html4, $data );
-	}
-}
-if ( function_exists( 'bboss_attachments_uploads_dir_get' ) && ! function_exists( 'bp_attachments_uploads_dir_get' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_attachments_uploads_dir_get()}.
-	 *
-	 * @deprecated Use bboss_attachments_uploads_dir_get() instead.
-	 */
-	function bp_attachments_uploads_dir_get( $data = '' ) {
-		return bboss_attachments_uploads_dir_get( $data );
-	}
-}
 // @bbwt-com-end compat-layer
+

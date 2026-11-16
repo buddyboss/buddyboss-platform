@@ -171,6 +171,20 @@ function bboss_nouveau_ajax_object_template_loader() {
 	// Locate the object template.
 	wp_send_json_success( $result );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_ajax_object_template_loader' ) && ! function_exists( 'bp_nouveau_ajax_object_template_loader' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_ajax_object_template_loader()}.
+	 *
+	 * @deprecated Use bboss_nouveau_ajax_object_template_loader() instead.
+	 */
+	function bp_nouveau_ajax_object_template_loader() {
+		return bboss_nouveau_ajax_object_template_loader();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 add_filter( 'bp_nouveau_object_template_result', 'bp_nouveau_object_template_results_members_tabs', 10, 2 );
 /**
@@ -216,6 +230,20 @@ function bboss_nouveau_object_template_results_members_tabs( $results, $object )
 
 	return $results;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_object_template_results_members_tabs' ) && ! function_exists( 'bp_nouveau_object_template_results_members_tabs' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_object_template_results_members_tabs()}.
+	 *
+	 * @deprecated Use bboss_nouveau_object_template_results_members_tabs() instead.
+	 */
+	function bp_nouveau_object_template_results_members_tabs( $results, $object ) {
+		return bboss_nouveau_object_template_results_members_tabs( $results, $object );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 add_filter( 'bp_nouveau_object_template_result', 'bp_nouveau_object_template_results_groups_tabs', 10, 2 );
 /**
@@ -246,6 +274,20 @@ function bboss_nouveau_object_template_results_groups_tabs( $results, $object ) 
 
 	return $results;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_object_template_results_groups_tabs' ) && ! function_exists( 'bp_nouveau_object_template_results_groups_tabs' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_object_template_results_groups_tabs()}.
+	 *
+	 * @deprecated Use bboss_nouveau_object_template_results_groups_tabs() instead.
+	 */
+	function bp_nouveau_object_template_results_groups_tabs( $results, $object ) {
+		return bboss_nouveau_object_template_results_groups_tabs( $results, $object );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Object template results members personal scope.
@@ -280,6 +322,20 @@ function bboss_nouveau_object_template_results_members_personal_scope( $querystr
 	$querystring['user_id']  = ( bboss_displayed_user_id() ) ? bboss_displayed_user_id() : bboss_loggedin_user_id();
 	return http_build_query( $querystring );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_object_template_results_members_personal_scope' ) && ! function_exists( 'bp_nouveau_object_template_results_members_personal_scope' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_object_template_results_members_personal_scope()}.
+	 *
+	 * @deprecated Use bboss_nouveau_object_template_results_members_personal_scope() instead.
+	 */
+	function bp_nouveau_object_template_results_members_personal_scope( $querystring, $object ) {
+		return bboss_nouveau_object_template_results_members_personal_scope( $querystring, $object );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Object template results members following scope.
@@ -307,6 +363,20 @@ function bboss_nouveau_object_template_results_members_following_scope( $queryst
 
 	return http_build_query( $querystring );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_object_template_results_members_following_scope' ) && ! function_exists( 'bp_nouveau_object_template_results_members_following_scope' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_object_template_results_members_following_scope()}.
+	 *
+	 * @deprecated Use bboss_nouveau_object_template_results_members_following_scope() instead.
+	 */
+	function bp_nouveau_object_template_results_members_following_scope( $querystring, $object ) {
+		return bboss_nouveau_object_template_results_members_following_scope( $querystring, $object );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Object template results members groups personal scope.
@@ -325,6 +395,20 @@ function bboss_nouveau_object_template_results_groups_personal_scope( $querystri
 	$querystring['user_id']  = ( bboss_displayed_user_id() ) ? bboss_displayed_user_id() : bboss_loggedin_user_id();
 	return http_build_query( $querystring );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_object_template_results_groups_personal_scope' ) && ! function_exists( 'bp_nouveau_object_template_results_groups_personal_scope' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_object_template_results_groups_personal_scope()}.
+	 *
+	 * @deprecated Use bboss_nouveau_object_template_results_groups_personal_scope() instead.
+	 */
+	function bp_nouveau_object_template_results_groups_personal_scope( $querystring, $object ) {
+		return bboss_nouveau_object_template_results_groups_personal_scope( $querystring, $object );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 add_action( 'wp_ajax_bb_save_cover_position', 'bp_nouveau_ajax_save_cover_position' );
 // Legacy action name, still registered for custom clients; it needs the same nonce.
@@ -404,6 +488,20 @@ function bboss_nouveau_ajax_save_cover_position() {
 
 	wp_send_json_success( $result );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_ajax_save_cover_position' ) && ! function_exists( 'bp_nouveau_ajax_save_cover_position' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_ajax_save_cover_position()}.
+	 *
+	 * @deprecated Use bboss_nouveau_ajax_save_cover_position() instead.
+	 */
+	function bp_nouveau_ajax_save_cover_position() {
+		return bboss_nouveau_ajax_save_cover_position();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Object template results members followers scope.
@@ -436,10 +534,8 @@ function bboss_nouveau_object_template_results_members_followers_scope( $queryst
 
 	return http_build_query( $querystring );
 }
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_nouveau_object_template_results_members_followers_scope' ) && ! function_exists( 'bb_nouveau_object_template_results_members_followers_scope' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_nouveau_object_template_results_members_followers_scope()}.
@@ -450,74 +546,5 @@ if ( function_exists( 'bboss_nouveau_object_template_results_members_followers_s
 		return bboss_nouveau_object_template_results_members_followers_scope( $querystring, $object );
 	}
 }
-if ( function_exists( 'bboss_nouveau_ajax_object_template_loader' ) && ! function_exists( 'bp_nouveau_ajax_object_template_loader' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_ajax_object_template_loader()}.
-	 *
-	 * @deprecated Use bboss_nouveau_ajax_object_template_loader() instead.
-	 */
-	function bp_nouveau_ajax_object_template_loader() {
-		return bboss_nouveau_ajax_object_template_loader();
-	}
-}
-if ( function_exists( 'bboss_nouveau_ajax_save_cover_position' ) && ! function_exists( 'bp_nouveau_ajax_save_cover_position' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_ajax_save_cover_position()}.
-	 *
-	 * @deprecated Use bboss_nouveau_ajax_save_cover_position() instead.
-	 */
-	function bp_nouveau_ajax_save_cover_position() {
-		return bboss_nouveau_ajax_save_cover_position();
-	}
-}
-if ( function_exists( 'bboss_nouveau_object_template_results_groups_personal_scope' ) && ! function_exists( 'bp_nouveau_object_template_results_groups_personal_scope' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_object_template_results_groups_personal_scope()}.
-	 *
-	 * @deprecated Use bboss_nouveau_object_template_results_groups_personal_scope() instead.
-	 */
-	function bp_nouveau_object_template_results_groups_personal_scope( $querystring, $object ) {
-		return bboss_nouveau_object_template_results_groups_personal_scope( $querystring, $object );
-	}
-}
-if ( function_exists( 'bboss_nouveau_object_template_results_groups_tabs' ) && ! function_exists( 'bp_nouveau_object_template_results_groups_tabs' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_object_template_results_groups_tabs()}.
-	 *
-	 * @deprecated Use bboss_nouveau_object_template_results_groups_tabs() instead.
-	 */
-	function bp_nouveau_object_template_results_groups_tabs( $results, $object ) {
-		return bboss_nouveau_object_template_results_groups_tabs( $results, $object );
-	}
-}
-if ( function_exists( 'bboss_nouveau_object_template_results_members_following_scope' ) && ! function_exists( 'bp_nouveau_object_template_results_members_following_scope' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_object_template_results_members_following_scope()}.
-	 *
-	 * @deprecated Use bboss_nouveau_object_template_results_members_following_scope() instead.
-	 */
-	function bp_nouveau_object_template_results_members_following_scope( $querystring, $object ) {
-		return bboss_nouveau_object_template_results_members_following_scope( $querystring, $object );
-	}
-}
-if ( function_exists( 'bboss_nouveau_object_template_results_members_personal_scope' ) && ! function_exists( 'bp_nouveau_object_template_results_members_personal_scope' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_object_template_results_members_personal_scope()}.
-	 *
-	 * @deprecated Use bboss_nouveau_object_template_results_members_personal_scope() instead.
-	 */
-	function bp_nouveau_object_template_results_members_personal_scope( $querystring, $object ) {
-		return bboss_nouveau_object_template_results_members_personal_scope( $querystring, $object );
-	}
-}
-if ( function_exists( 'bboss_nouveau_object_template_results_members_tabs' ) && ! function_exists( 'bp_nouveau_object_template_results_members_tabs' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_object_template_results_members_tabs()}.
-	 *
-	 * @deprecated Use bboss_nouveau_object_template_results_members_tabs() instead.
-	 */
-	function bp_nouveau_object_template_results_members_tabs( $results, $object ) {
-		return bboss_nouveau_object_template_results_members_tabs( $results, $object );
-	}
-}
 // @bbwt-com-end compat-layer
+

@@ -20,6 +20,20 @@ defined( 'ABSPATH' ) || exit;
 function bboss_rest_is_plugin_active() {
 	return (bool) has_action( 'bp_rest_api_init', 'bp_rest', 5 );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_rest_is_plugin_active' ) && ! function_exists( 'bp_rest_is_plugin_active' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_rest_is_plugin_active()}.
+	 *
+	 * @deprecated Use bboss_rest_is_plugin_active() instead.
+	 */
+	function bp_rest_is_plugin_active() {
+		return bboss_rest_is_plugin_active();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Should we use the REST Endpoints of built BuddyBoss?
@@ -34,6 +48,20 @@ function bboss_rest_is_plugin_active() {
 function bboss_rest_in_buddypress() {
 	return ! bboss_rest_is_plugin_active();
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_rest_in_buddypress' ) && ! function_exists( 'bp_rest_in_buddypress' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_rest_in_buddypress()}.
+	 *
+	 * @deprecated Use bboss_rest_in_buddypress() instead.
+	 */
+	function bp_rest_in_buddypress() {
+		return bboss_rest_in_buddypress();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Check the availability of the BP REST API.
@@ -54,6 +82,20 @@ function bboss_rest_api_is_available() {
 	 */
 	return apply_filters( 'bp_rest_api_is_available', function_exists( 'create_initial_rest_routes' ) && bboss_rest_in_buddypress() ) || bboss_rest_is_plugin_active();
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_rest_api_is_available' ) && ! function_exists( 'bp_rest_api_is_available' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_rest_api_is_available()}.
+	 *
+	 * @deprecated Use bboss_rest_api_is_available() instead.
+	 */
+	function bp_rest_api_is_available() {
+		return bboss_rest_api_is_available();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Register the jQuery.ajax wrapper for BP REST API requests.
@@ -90,6 +132,20 @@ function bboss_rest_api_register_request_script() {
 		)
 	);
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_rest_api_register_request_script' ) && ! function_exists( 'bp_rest_api_register_request_script' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_rest_api_register_request_script()}.
+	 *
+	 * @deprecated Use bboss_rest_api_register_request_script() instead.
+	 */
+	function bp_rest_api_register_request_script() {
+		return bboss_rest_api_register_request_script();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 add_action( 'bp_init', 'bp_rest_api_register_request_script' );
 
@@ -110,6 +166,20 @@ function bboss_rest_namespace() {
 	 */
 	return apply_filters( 'bp_rest_namespace', 'buddyboss' );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_rest_namespace' ) && ! function_exists( 'bp_rest_namespace' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_rest_namespace()}.
+	 *
+	 * @deprecated Use bboss_rest_namespace() instead.
+	 */
+	function bp_rest_namespace() {
+		return bboss_rest_namespace();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * BuddyBoss REST API version.
@@ -129,6 +199,20 @@ function bboss_rest_version() {
 	 */
 	return apply_filters( 'bp_rest_version', 'v1' );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_rest_version' ) && ! function_exists( 'bp_rest_version' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_rest_version()}.
+	 *
+	 * @deprecated Use bboss_rest_version() instead.
+	 */
+	function bp_rest_version() {
+		return bboss_rest_version();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get user URL.
@@ -155,6 +239,20 @@ function bboss_rest_get_user_url( $user_ids ) {
 		absint( $user_ids )
 	);
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_rest_get_user_url' ) && ! function_exists( 'bp_rest_get_user_url' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_rest_get_user_url()}.
+	 *
+	 * @deprecated Use bboss_rest_get_user_url() instead.
+	 */
+	function bp_rest_get_user_url( $user_ids ) {
+		return bboss_rest_get_user_url( $user_ids );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Set headers to let the Client Script be aware of the pagination.
@@ -179,6 +277,20 @@ function bboss_rest_response_add_total_headers( WP_REST_Response $response, $tot
 
 	return $response;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_rest_response_add_total_headers' ) && ! function_exists( 'bp_rest_response_add_total_headers' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_rest_response_add_total_headers()}.
+	 *
+	 * @deprecated Use bboss_rest_response_add_total_headers() instead.
+	 */
+	function bp_rest_response_add_total_headers( WP_REST_Response $response, $total = 0, $per_page = 0 ) {
+		return bboss_rest_response_add_total_headers( $response, $total, $per_page );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Convert the input date to RFC3339 format.
@@ -200,6 +312,20 @@ function bboss_rest_prepare_date_response( $date_gmt, $date = null ) {
 
 	return mysql_to_rfc3339( $date_gmt ); // phpcs:ignore WordPress.DB.RestrictedFunctions.mysql_to_rfc3339, PHPCompatibility.Extensions.RemovedExtensions.mysql_DeprecatedRemoved
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_rest_prepare_date_response' ) && ! function_exists( 'bp_rest_prepare_date_response' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_rest_prepare_date_response()}.
+	 *
+	 * @deprecated Use bboss_rest_prepare_date_response() instead.
+	 */
+	function bp_rest_prepare_date_response( $date_gmt, $date = null ) {
+		return bboss_rest_prepare_date_response( $date_gmt, $date );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Clean up member_type input.
@@ -221,6 +347,20 @@ function bboss_rest_sanitize_member_types( $value ) {
 
 	return ( ! empty( $valid_types ) ) ? $valid_types : null;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_rest_sanitize_member_types' ) && ! function_exists( 'bp_rest_sanitize_member_types' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_rest_sanitize_member_types()}.
+	 *
+	 * @deprecated Use bboss_rest_sanitize_member_types() instead.
+	 */
+	function bp_rest_sanitize_member_types( $value ) {
+		return bboss_rest_sanitize_member_types( $value );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Validate member_type input.
@@ -254,6 +394,20 @@ function bboss_rest_validate_member_types( $value ) {
 		}
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_rest_validate_member_types' ) && ! function_exists( 'bp_rest_validate_member_types' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_rest_validate_member_types()}.
+	 *
+	 * @deprecated Use bboss_rest_validate_member_types() instead.
+	 */
+	function bp_rest_validate_member_types( $value ) {
+		return bboss_rest_validate_member_types( $value );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Clean up group_type input.
@@ -273,6 +427,20 @@ function bboss_rest_sanitize_group_types( $value ) {
 
 	return empty( $valid_types ) ? null : $valid_types;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_rest_sanitize_group_types' ) && ! function_exists( 'bp_rest_sanitize_group_types' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_rest_sanitize_group_types()}.
+	 *
+	 * @deprecated Use bboss_rest_sanitize_group_types() instead.
+	 */
+	function bp_rest_sanitize_group_types( $value ) {
+		return bboss_rest_sanitize_group_types( $value );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Validate group_type input.
@@ -303,6 +471,20 @@ function bboss_rest_validate_group_types( $value ) {
 		}
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_rest_validate_group_types' ) && ! function_exists( 'bp_rest_validate_group_types' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_rest_validate_group_types()}.
+	 *
+	 * @deprecated Use bboss_rest_validate_group_types() instead.
+	 */
+	function bp_rest_validate_group_types( $value ) {
+		return bboss_rest_validate_group_types( $value );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Clean up an array, comma- or space-separated list of strings.
@@ -319,6 +501,20 @@ function bboss_rest_sanitize_string_list( $list ) {
 
 	return array_unique( array_map( 'sanitize_text_field', $list ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_rest_sanitize_string_list' ) && ! function_exists( 'bp_rest_sanitize_string_list' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_rest_sanitize_string_list()}.
+	 *
+	 * @deprecated Use bboss_rest_sanitize_string_list() instead.
+	 */
+	function bp_rest_sanitize_string_list( $list ) {
+		return bboss_rest_sanitize_string_list( $list );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get the user object, if the ID is valid.
@@ -340,6 +536,20 @@ function bboss_rest_get_user( $user_id ) {
 
 	return $user;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_rest_get_user' ) && ! function_exists( 'bp_rest_get_user' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_rest_get_user()}.
+	 *
+	 * @deprecated Use bboss_rest_get_user() instead.
+	 */
+	function bp_rest_get_user( $user_id ) {
+		return bboss_rest_get_user( $user_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Registers a new field on an existing BuddyBoss object.
@@ -398,6 +608,20 @@ function bboss_rest_register_field( $component_id, $attribute, $args = array(), 
 	// Check it has been registered.
 	return isset( $registered_fields[ $attribute ] );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_rest_register_field' ) && ! function_exists( 'bp_rest_register_field' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_rest_register_field()}.
+	 *
+	 * @deprecated Use bboss_rest_register_field() instead.
+	 */
+	function bp_rest_register_field( $component_id, $attribute, $args = array(), $object_type = '' ) {
+		return bboss_rest_register_field( $component_id, $attribute, $args, $object_type );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Function to check its BuddyBoss rest route or not.
@@ -409,6 +633,20 @@ function bboss_rest_register_field( $component_id, $attribute, $args = array(), 
 function bboss_is_rest() {
 	return ! empty( $GLOBALS['wp']->query_vars['rest_route'] );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_rest' ) && ! function_exists( 'bb_is_rest' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_rest()}.
+	 *
+	 * @deprecated Use bboss_is_rest() instead.
+	 */
+	function bb_is_rest() {
+		return bboss_is_rest();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Clean variables using sanitize_text_field. Arrays are cleaned recursively.
@@ -426,6 +664,20 @@ function bboss_input_clean( $var ) {
 		return is_scalar( $var ) ? sanitize_text_field( $var ) : $var;
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_input_clean' ) && ! function_exists( 'bb_input_clean' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_input_clean()}.
+	 *
+	 * @deprecated Use bboss_input_clean() instead.
+	 */
+	function bb_input_clean( $var ) {
+		return bboss_input_clean( $var );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Function to remove mentioned link for moderated and deleted members from content.
@@ -454,6 +706,20 @@ function bboss_rest_raw_content( $content ) {
 	 */
 	return apply_filters( 'bb_rest_raw_content', $content );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_rest_raw_content' ) && ! function_exists( 'bb_rest_raw_content' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_rest_raw_content()}.
+	 *
+	 * @deprecated Use bboss_rest_raw_content() instead.
+	 */
+	function bb_rest_raw_content( $content ) {
+		return bboss_rest_raw_content( $content );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Set the global variable for the REST request.
@@ -469,32 +735,8 @@ function bboss_rest_before_rest_request( $response, $handler, $request ) {
 
 	return $response;
 }
-
-add_filter( 'rest_request_before_callbacks', 'bb_rest_before_rest_request', 10, 3 );
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
-if ( function_exists( 'bboss_input_clean' ) && ! function_exists( 'bb_input_clean' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_input_clean()}.
-	 *
-	 * @deprecated Use bboss_input_clean() instead.
-	 */
-	function bb_input_clean( $var ) {
-		return bboss_input_clean( $var );
-	}
-}
-if ( function_exists( 'bboss_is_rest' ) && ! function_exists( 'bb_is_rest' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_rest()}.
-	 *
-	 * @deprecated Use bboss_is_rest() instead.
-	 */
-	function bb_is_rest() {
-		return bboss_is_rest();
-	}
-}
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_rest_before_rest_request' ) && ! function_exists( 'bb_rest_before_rest_request' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_rest_before_rest_request()}.
@@ -505,174 +747,7 @@ if ( function_exists( 'bboss_rest_before_rest_request' ) && ! function_exists( '
 		return bboss_rest_before_rest_request( $response, $handler, $request );
 	}
 }
-if ( function_exists( 'bboss_rest_raw_content' ) && ! function_exists( 'bb_rest_raw_content' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_rest_raw_content()}.
-	 *
-	 * @deprecated Use bboss_rest_raw_content() instead.
-	 */
-	function bb_rest_raw_content( $content ) {
-		return bboss_rest_raw_content( $content );
-	}
-}
-if ( function_exists( 'bboss_rest_api_is_available' ) && ! function_exists( 'bp_rest_api_is_available' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_rest_api_is_available()}.
-	 *
-	 * @deprecated Use bboss_rest_api_is_available() instead.
-	 */
-	function bp_rest_api_is_available() {
-		return bboss_rest_api_is_available();
-	}
-}
-if ( function_exists( 'bboss_rest_api_register_request_script' ) && ! function_exists( 'bp_rest_api_register_request_script' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_rest_api_register_request_script()}.
-	 *
-	 * @deprecated Use bboss_rest_api_register_request_script() instead.
-	 */
-	function bp_rest_api_register_request_script() {
-		return bboss_rest_api_register_request_script();
-	}
-}
-if ( function_exists( 'bboss_rest_get_user' ) && ! function_exists( 'bp_rest_get_user' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_rest_get_user()}.
-	 *
-	 * @deprecated Use bboss_rest_get_user() instead.
-	 */
-	function bp_rest_get_user( $user_id ) {
-		return bboss_rest_get_user( $user_id );
-	}
-}
-if ( function_exists( 'bboss_rest_get_user_url' ) && ! function_exists( 'bp_rest_get_user_url' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_rest_get_user_url()}.
-	 *
-	 * @deprecated Use bboss_rest_get_user_url() instead.
-	 */
-	function bp_rest_get_user_url( $user_ids ) {
-		return bboss_rest_get_user_url( $user_ids );
-	}
-}
-if ( function_exists( 'bboss_rest_in_buddypress' ) && ! function_exists( 'bp_rest_in_buddypress' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_rest_in_buddypress()}.
-	 *
-	 * @deprecated Use bboss_rest_in_buddypress() instead.
-	 */
-	function bp_rest_in_buddypress() {
-		return bboss_rest_in_buddypress();
-	}
-}
-if ( function_exists( 'bboss_rest_is_plugin_active' ) && ! function_exists( 'bp_rest_is_plugin_active' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_rest_is_plugin_active()}.
-	 *
-	 * @deprecated Use bboss_rest_is_plugin_active() instead.
-	 */
-	function bp_rest_is_plugin_active() {
-		return bboss_rest_is_plugin_active();
-	}
-}
-if ( function_exists( 'bboss_rest_namespace' ) && ! function_exists( 'bp_rest_namespace' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_rest_namespace()}.
-	 *
-	 * @deprecated Use bboss_rest_namespace() instead.
-	 */
-	function bp_rest_namespace() {
-		return bboss_rest_namespace();
-	}
-}
-if ( function_exists( 'bboss_rest_prepare_date_response' ) && ! function_exists( 'bp_rest_prepare_date_response' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_rest_prepare_date_response()}.
-	 *
-	 * @deprecated Use bboss_rest_prepare_date_response() instead.
-	 */
-	function bp_rest_prepare_date_response( $date_gmt, $date = null ) {
-		return bboss_rest_prepare_date_response( $date_gmt, $date );
-	}
-}
-if ( function_exists( 'bboss_rest_register_field' ) && ! function_exists( 'bp_rest_register_field' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_rest_register_field()}.
-	 *
-	 * @deprecated Use bboss_rest_register_field() instead.
-	 */
-	function bp_rest_register_field( $component_id, $attribute, $args = array(), $object_type = '' ) {
-		return bboss_rest_register_field( $component_id, $attribute, $args, $object_type );
-	}
-}
-if ( function_exists( 'bboss_rest_response_add_total_headers' ) && ! function_exists( 'bp_rest_response_add_total_headers' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_rest_response_add_total_headers()}.
-	 *
-	 * @deprecated Use bboss_rest_response_add_total_headers() instead.
-	 */
-	function bp_rest_response_add_total_headers( WP_REST_Response $response, $total = 0, $per_page = 0 ) {
-		return bboss_rest_response_add_total_headers( $response, $total, $per_page );
-	}
-}
-if ( function_exists( 'bboss_rest_sanitize_group_types' ) && ! function_exists( 'bp_rest_sanitize_group_types' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_rest_sanitize_group_types()}.
-	 *
-	 * @deprecated Use bboss_rest_sanitize_group_types() instead.
-	 */
-	function bp_rest_sanitize_group_types( $value ) {
-		return bboss_rest_sanitize_group_types( $value );
-	}
-}
-if ( function_exists( 'bboss_rest_sanitize_member_types' ) && ! function_exists( 'bp_rest_sanitize_member_types' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_rest_sanitize_member_types()}.
-	 *
-	 * @deprecated Use bboss_rest_sanitize_member_types() instead.
-	 */
-	function bp_rest_sanitize_member_types( $value ) {
-		return bboss_rest_sanitize_member_types( $value );
-	}
-}
-if ( function_exists( 'bboss_rest_sanitize_string_list' ) && ! function_exists( 'bp_rest_sanitize_string_list' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_rest_sanitize_string_list()}.
-	 *
-	 * @deprecated Use bboss_rest_sanitize_string_list() instead.
-	 */
-	function bp_rest_sanitize_string_list( $list ) {
-		return bboss_rest_sanitize_string_list( $list );
-	}
-}
-if ( function_exists( 'bboss_rest_validate_group_types' ) && ! function_exists( 'bp_rest_validate_group_types' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_rest_validate_group_types()}.
-	 *
-	 * @deprecated Use bboss_rest_validate_group_types() instead.
-	 */
-	function bp_rest_validate_group_types( $value ) {
-		return bboss_rest_validate_group_types( $value );
-	}
-}
-if ( function_exists( 'bboss_rest_validate_member_types' ) && ! function_exists( 'bp_rest_validate_member_types' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_rest_validate_member_types()}.
-	 *
-	 * @deprecated Use bboss_rest_validate_member_types() instead.
-	 */
-	function bp_rest_validate_member_types( $value ) {
-		return bboss_rest_validate_member_types( $value );
-	}
-}
-if ( function_exists( 'bboss_rest_version' ) && ! function_exists( 'bp_rest_version' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_rest_version()}.
-	 *
-	 * @deprecated Use bboss_rest_version() instead.
-	 */
-	function bp_rest_version() {
-		return bboss_rest_version();
-	}
-}
 // @bbwt-com-end compat-layer
+
+
+add_filter( 'rest_request_before_callbacks', 'bb_rest_before_rest_request', 10, 3 );

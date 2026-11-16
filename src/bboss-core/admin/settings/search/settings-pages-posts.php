@@ -100,6 +100,20 @@ function bboss_search_register_pages_posts_fields() {
 		$order += 100;
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_search_register_pages_posts_fields' ) && ! function_exists( 'bb_search_register_pages_posts_fields' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_search_register_pages_posts_fields()}.
+	 *
+	 * @deprecated Use bboss_search_register_pages_posts_fields() instead.
+	 */
+	function bb_search_register_pages_posts_fields() {
+		return bboss_search_register_pages_posts_fields();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Register taxonomy child fields for a post type.
@@ -155,6 +169,20 @@ function bboss_search_register_taxonomy_fields( $post_type, $base_order = 10 ) {
 
 	return count( $taxonomies );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_search_register_taxonomy_fields' ) && ! function_exists( 'bb_search_register_taxonomy_fields' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_search_register_taxonomy_fields()}.
+	 *
+	 * @deprecated Use bboss_search_register_taxonomy_fields() instead.
+	 */
+	function bb_search_register_taxonomy_fields( $post_type, $base_order = 10 ) {
+		return bboss_search_register_taxonomy_fields( $post_type, $base_order );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Register Meta Data child field for a post type.
@@ -184,6 +212,20 @@ function bboss_search_register_meta_field( $post_type, $base_order = 10, $taxono
 		)
 	);
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_search_register_meta_field' ) && ! function_exists( 'bb_search_register_meta_field' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_search_register_meta_field()}.
+	 *
+	 * @deprecated Use bboss_search_register_meta_field() instead.
+	 */
+	function bb_search_register_meta_field( $post_type, $base_order = 10, $taxonomy_count = 0 ) {
+		return bboss_search_register_meta_field( $post_type, $base_order, $taxonomy_count );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Lazily register Custom Post Type fields for Pages & Posts panel.
@@ -267,11 +309,8 @@ function bboss_search_lazy_register_cpt_fields( $feature_id ) {
 		$child_order += 10;
 	}
 }
-add_action( 'bb_admin_settings_before_get_feature', 'bb_search_lazy_register_cpt_fields' );
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_search_lazy_register_cpt_fields' ) && ! function_exists( 'bb_search_lazy_register_cpt_fields' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_search_lazy_register_cpt_fields()}.
@@ -282,34 +321,6 @@ if ( function_exists( 'bboss_search_lazy_register_cpt_fields' ) && ! function_ex
 		return bboss_search_lazy_register_cpt_fields( $feature_id );
 	}
 }
-if ( function_exists( 'bboss_search_register_meta_field' ) && ! function_exists( 'bb_search_register_meta_field' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_search_register_meta_field()}.
-	 *
-	 * @deprecated Use bboss_search_register_meta_field() instead.
-	 */
-	function bb_search_register_meta_field( $post_type, $base_order = 10, $taxonomy_count = 0 ) {
-		return bboss_search_register_meta_field( $post_type, $base_order, $taxonomy_count );
-	}
-}
-if ( function_exists( 'bboss_search_register_pages_posts_fields' ) && ! function_exists( 'bb_search_register_pages_posts_fields' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_search_register_pages_posts_fields()}.
-	 *
-	 * @deprecated Use bboss_search_register_pages_posts_fields() instead.
-	 */
-	function bb_search_register_pages_posts_fields() {
-		return bboss_search_register_pages_posts_fields();
-	}
-}
-if ( function_exists( 'bboss_search_register_taxonomy_fields' ) && ! function_exists( 'bb_search_register_taxonomy_fields' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_search_register_taxonomy_fields()}.
-	 *
-	 * @deprecated Use bboss_search_register_taxonomy_fields() instead.
-	 */
-	function bb_search_register_taxonomy_fields( $post_type, $base_order = 10 ) {
-		return bboss_search_register_taxonomy_fields( $post_type, $base_order );
-	}
-}
 // @bbwt-com-end compat-layer
+
+add_action( 'bb_admin_settings_before_get_feature', 'bb_search_lazy_register_cpt_fields' );

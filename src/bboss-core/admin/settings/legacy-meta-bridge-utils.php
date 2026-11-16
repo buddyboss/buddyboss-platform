@@ -74,6 +74,20 @@ function bboss_legacy_with_wp_die_safety( callable $callback ) {
 		remove_filter( 'wp_die_xmlrpc_handler', $installer, 9999 );
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_legacy_with_wp_die_safety' ) && ! function_exists( 'bb_legacy_with_wp_die_safety' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_legacy_with_wp_die_safety()}.
+	 *
+	 * @deprecated Use bboss_legacy_with_wp_die_safety() instead.
+	 */
+	function bb_legacy_with_wp_die_safety( callable $callback ) {
+		return bboss_legacy_with_wp_die_safety( $callback );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Build a memoized DOMXPath for an HTML string.
@@ -138,6 +152,20 @@ function bboss_legacy_get_xpath( $html ) {
 	$cache[ $key ] = $xpath;
 	return $xpath;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_legacy_get_xpath' ) && ! function_exists( 'bb_legacy_get_xpath' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_legacy_get_xpath()}.
+	 *
+	 * @deprecated Use bboss_legacy_get_xpath() instead.
+	 */
+	function bb_legacy_get_xpath( $html ) {
+		return bboss_legacy_get_xpath( $html );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Sanitize a string for safe interpolation into an XPath single-quoted
@@ -151,6 +179,20 @@ function bboss_legacy_get_xpath( $html ) {
 function bboss_legacy_xpath_safe( $value ) {
 	return preg_replace( '/[^A-Za-z0-9_\-:.]/', '', (string) $value );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_legacy_xpath_safe' ) && ! function_exists( 'bb_legacy_xpath_safe' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_legacy_xpath_safe()}.
+	 *
+	 * @deprecated Use bboss_legacy_xpath_safe() instead.
+	 */
+	function bb_legacy_xpath_safe( $value ) {
+		return bboss_legacy_xpath_safe( $value );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Sanitize an HTML input `name` for safe interpolation into an XPath
@@ -171,6 +213,20 @@ function bboss_legacy_xpath_safe( $value ) {
 function bboss_legacy_xpath_safe_name( $value ) {
 	return preg_replace( '/[^A-Za-z0-9_\-:.\[\]]/', '', (string) $value );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_legacy_xpath_safe_name' ) && ! function_exists( 'bb_legacy_xpath_safe_name' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_legacy_xpath_safe_name()}.
+	 *
+	 * @deprecated Use bboss_legacy_xpath_safe_name() instead.
+	 */
+	function bb_legacy_xpath_safe_name( $value ) {
+		return bboss_legacy_xpath_safe_name( $value );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Parse <input>/<select>/<textarea> tags out of captured HTML.
@@ -246,6 +302,20 @@ function bboss_legacy_parse_box_inputs( $html ) {
 
 	return $inputs;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_legacy_parse_box_inputs' ) && ! function_exists( 'bb_legacy_parse_box_inputs' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_legacy_parse_box_inputs()}.
+	 *
+	 * @deprecated Use bboss_legacy_parse_box_inputs() instead.
+	 */
+	function bb_legacy_parse_box_inputs( $html ) {
+		return bboss_legacy_parse_box_inputs( $html );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Detect whether an input is wrapped in a hidden ancestor (progressive
@@ -327,6 +397,20 @@ function bboss_legacy_detect_conditional( DOMElement $node, DOMXPath $xpath ) {
 		'value' => $value,
 	);
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_legacy_detect_conditional' ) && ! function_exists( 'bb_legacy_detect_conditional' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_legacy_detect_conditional()}.
+	 *
+	 * @deprecated Use bboss_legacy_detect_conditional() instead.
+	 */
+	function bb_legacy_detect_conditional( DOMElement $node, DOMXPath $xpath ) {
+		return bboss_legacy_detect_conditional( $node, $xpath );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Decide whether a DOM element is hidden — by class, inline style, or
@@ -364,6 +448,20 @@ function bboss_legacy_is_hidden_node( DOMElement $node ) {
 
 	return false;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_legacy_is_hidden_node' ) && ! function_exists( 'bb_legacy_is_hidden_node' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_legacy_is_hidden_node()}.
+	 *
+	 * @deprecated Use bboss_legacy_is_hidden_node() instead.
+	 */
+	function bb_legacy_is_hidden_node( DOMElement $node ) {
+		return bboss_legacy_is_hidden_node( $node );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Locate the trigger control for a hidden wrapper. Looks for a select,
@@ -425,6 +523,20 @@ function bboss_legacy_find_trigger( DOMElement $wrapper ) {
 
 	return null;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_legacy_find_trigger' ) && ! function_exists( 'bb_legacy_find_trigger' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_legacy_find_trigger()}.
+	 *
+	 * @deprecated Use bboss_legacy_find_trigger() instead.
+	 */
+	function bb_legacy_find_trigger( DOMElement $wrapper ) {
+		return bboss_legacy_find_trigger( $wrapper );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Classify a single DOM node as a trigger candidate.
@@ -454,6 +566,20 @@ function bboss_legacy_match_trigger_node( DOMElement $node ) {
 	}
 	return null;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_legacy_match_trigger_node' ) && ! function_exists( 'bb_legacy_match_trigger_node' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_legacy_match_trigger_node()}.
+	 *
+	 * @deprecated Use bboss_legacy_match_trigger_node() instead.
+	 */
+	function bb_legacy_match_trigger_node( DOMElement $node ) {
+		return bboss_legacy_match_trigger_node( $node );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Pick the value most likely to "unhide" a conditionally displayed
@@ -518,6 +644,20 @@ function bboss_legacy_pick_conditional_value( array $trigger, DOMXPath $xpath ) 
 
 	return null;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_legacy_pick_conditional_value' ) && ! function_exists( 'bb_legacy_pick_conditional_value' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_legacy_pick_conditional_value()}.
+	 *
+	 * @deprecated Use bboss_legacy_pick_conditional_value() instead.
+	 */
+	function bb_legacy_pick_conditional_value( array $trigger, DOMXPath $xpath ) {
+		return bboss_legacy_pick_conditional_value( $trigger, $xpath );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Detect a registry-compatible field type from a DOM input/select/textarea.
@@ -560,6 +700,20 @@ function bboss_legacy_detect_input_type( DOMElement $node ) {
 	);
 	return isset( $map[ $html_type ] ) ? $map[ $html_type ] : 'text';
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_legacy_detect_input_type' ) && ! function_exists( 'bb_legacy_detect_input_type' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_legacy_detect_input_type()}.
+	 *
+	 * @deprecated Use bboss_legacy_detect_input_type() instead.
+	 */
+	function bb_legacy_detect_input_type( DOMElement $node ) {
+		return bboss_legacy_detect_input_type( $node );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Extract the visible text of a <label>, stripping any trailing help-tip
@@ -602,6 +756,20 @@ function bboss_legacy_label_text_without_tip( DOMElement $label ) {
 	// phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase -- DOM API property.
 	return trim( $clone->textContent );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_legacy_label_text_without_tip' ) && ! function_exists( 'bb_legacy_label_text_without_tip' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_legacy_label_text_without_tip()}.
+	 *
+	 * @deprecated Use bboss_legacy_label_text_without_tip() instead.
+	 */
+	function bb_legacy_label_text_without_tip( DOMElement $label ) {
+		return bboss_legacy_label_text_without_tip( $label );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Find the label text for an input node.
@@ -732,6 +900,20 @@ function bboss_legacy_find_label( DOMElement $node, DOMXPath $xpath ) {
 
 	return '';
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_legacy_find_label' ) && ! function_exists( 'bb_legacy_find_label' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_legacy_find_label()}.
+	 *
+	 * @deprecated Use bboss_legacy_find_label() instead.
+	 */
+	function bb_legacy_find_label( DOMElement $node, DOMXPath $xpath ) {
+		return bboss_legacy_find_label( $node, $xpath );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Find the description text for an input node.
@@ -769,6 +951,20 @@ function bboss_legacy_find_description( DOMElement $node, DOMXPath $xpath ) {
 
 	return '';
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_legacy_find_description' ) && ! function_exists( 'bb_legacy_find_description' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_legacy_find_description()}.
+	 *
+	 * @deprecated Use bboss_legacy_find_description() instead.
+	 */
+	function bb_legacy_find_description( DOMElement $node, DOMXPath $xpath ) {
+		return bboss_legacy_find_description( $node, $xpath );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Check whether a candidate node sits inside a hidden ancestor that
@@ -804,6 +1000,20 @@ function bboss_legacy_node_has_hidden_ancestor( DOMElement $candidate, DOMElemen
 
 	return false;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_legacy_node_has_hidden_ancestor' ) && ! function_exists( 'bb_legacy_node_has_hidden_ancestor' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_legacy_node_has_hidden_ancestor()}.
+	 *
+	 * @deprecated Use bboss_legacy_node_has_hidden_ancestor() instead.
+	 */
+	function bb_legacy_node_has_hidden_ancestor( DOMElement $candidate, DOMElement $input ) {
+		return bboss_legacy_node_has_hidden_ancestor( $candidate, $input );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Whether `$node` lives inside `$ancestor` (PHP DOM has no native
@@ -827,6 +1037,20 @@ function bboss_legacy_is_descendant_of( DOMNode $node, DOMNode $ancestor ) {
 	}
 	return false;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_legacy_is_descendant_of' ) && ! function_exists( 'bb_legacy_is_descendant_of' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_legacy_is_descendant_of()}.
+	 *
+	 * @deprecated Use bboss_legacy_is_descendant_of() instead.
+	 */
+	function bb_legacy_is_descendant_of( DOMNode $node, DOMNode $ancestor ) {
+		return bboss_legacy_is_descendant_of( $node, $ancestor );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Extract every <input type="hidden"> name/value pair from captured
@@ -884,6 +1108,20 @@ function bboss_legacy_extract_hidden_inputs( $html ) {
 	}
 	return $out;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_legacy_extract_hidden_inputs' ) && ! function_exists( 'bb_legacy_extract_hidden_inputs' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_legacy_extract_hidden_inputs()}.
+	 *
+	 * @deprecated Use bboss_legacy_extract_hidden_inputs() instead.
+	 */
+	function bb_legacy_extract_hidden_inputs( $html ) {
+		return bboss_legacy_extract_hidden_inputs( $html );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Extract a single input's current value from re-rendered HTML.
@@ -934,6 +1172,20 @@ function bboss_legacy_extract_input_value( $html, $name, $type ) {
 
 	return '';
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_legacy_extract_input_value' ) && ! function_exists( 'bb_legacy_extract_input_value' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_legacy_extract_input_value()}.
+	 *
+	 * @deprecated Use bboss_legacy_extract_input_value() instead.
+	 */
+	function bb_legacy_extract_input_value( $html, $name, $type ) {
+		return bboss_legacy_extract_input_value( $html, $name, $type );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Extract the SELECTED values of a multi-select (`<select multiple>`) by name.
@@ -967,6 +1219,20 @@ function bboss_legacy_extract_multiselect_values( $html, $name ) {
 	}
 	return $out;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_legacy_extract_multiselect_values' ) && ! function_exists( 'bb_legacy_extract_multiselect_values' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_legacy_extract_multiselect_values()}.
+	 *
+	 * @deprecated Use bboss_legacy_extract_multiselect_values() instead.
+	 */
+	function bb_legacy_extract_multiselect_values( $html, $name ) {
+		return bboss_legacy_extract_multiselect_values( $html, $name );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Read a saved multi-select value straight from post meta by its input name.
@@ -1027,6 +1293,20 @@ function bboss_legacy_read_multiselect_meta( $post_id, $name ) {
 	}
 	return $out;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_legacy_read_multiselect_meta' ) && ! function_exists( 'bb_legacy_read_multiselect_meta' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_legacy_read_multiselect_meta()}.
+	 *
+	 * @deprecated Use bboss_legacy_read_multiselect_meta() instead.
+	 */
+	function bb_legacy_read_multiselect_meta( $post_id, $name ) {
+		return bboss_legacy_read_multiselect_meta( $post_id, $name );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Normalize a React field value into the shape the bridged legacy input
@@ -1069,6 +1349,20 @@ function bboss_legacy_normalize_save_value( $type, $parsed, $value ) {
 	}
 	return $value;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_legacy_normalize_save_value' ) && ! function_exists( 'bb_legacy_normalize_save_value' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_legacy_normalize_save_value()}.
+	 *
+	 * @deprecated Use bboss_legacy_normalize_save_value() instead.
+	 */
+	function bb_legacy_normalize_save_value( $type, $parsed, $value ) {
+		return bboss_legacy_normalize_save_value( $type, $parsed, $value );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Extract <option> list from a select.
@@ -1105,6 +1399,20 @@ function bboss_legacy_extract_select_options( $html, $name ) {
 	}
 	return $out;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_legacy_extract_select_options' ) && ! function_exists( 'bb_legacy_extract_select_options' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_legacy_extract_select_options()}.
+	 *
+	 * @deprecated Use bboss_legacy_extract_select_options() instead.
+	 */
+	function bb_legacy_extract_select_options( $html, $name ) {
+		return bboss_legacy_extract_select_options( $html, $name );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Extract radio button options from a name group.
@@ -1169,6 +1477,20 @@ function bboss_legacy_extract_radio_options( $html, $name ) {
 	}
 	return $out;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_legacy_extract_radio_options' ) && ! function_exists( 'bb_legacy_extract_radio_options' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_legacy_extract_radio_options()}.
+	 *
+	 * @deprecated Use bboss_legacy_extract_radio_options() instead.
+	 */
+	function bb_legacy_extract_radio_options( $html, $name ) {
+		return bboss_legacy_extract_radio_options( $html, $name );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Resolve the appropriate sanitize_callback string for a parsed input
@@ -1210,6 +1532,20 @@ function bboss_legacy_resolve_sanitize_callback( $type ) {
 			return 'sanitize_text_field';
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_legacy_resolve_sanitize_callback' ) && ! function_exists( 'bb_legacy_resolve_sanitize_callback' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_legacy_resolve_sanitize_callback()}.
+	 *
+	 * @deprecated Use bboss_legacy_resolve_sanitize_callback() instead.
+	 */
+	function bb_legacy_resolve_sanitize_callback( $type ) {
+		return bboss_legacy_resolve_sanitize_callback( $type );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Capture a metabox callback's HTML safely against a WP_Post item.
@@ -1346,6 +1682,20 @@ function bboss_legacy_capture_post_box_html( $box, $post, $request_param = 'post
 	$cache[ $cache_key ] = $result;
 	return $result;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_legacy_capture_post_box_html' ) && ! function_exists( 'bb_legacy_capture_post_box_html' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_legacy_capture_post_box_html()}.
+	 *
+	 * @deprecated Use bboss_legacy_capture_post_box_html() instead.
+	 */
+	function bb_legacy_capture_post_box_html( $box, $post, $request_param = 'post', $fallback_post_type = '' ) {
+		return bboss_legacy_capture_post_box_html( $box, $post, $request_param, $fallback_post_type );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Decompose an HTML input `name` into its base key and bracket path.
@@ -1422,6 +1772,20 @@ function bboss_legacy_parse_array_name( $name ) {
 		'is_array' => true,
 	);
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_legacy_parse_array_name' ) && ! function_exists( 'bb_legacy_parse_array_name' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_legacy_parse_array_name()}.
+	 *
+	 * @deprecated Use bboss_legacy_parse_array_name() instead.
+	 */
+	function bb_legacy_parse_array_name( $name ) {
+		return bboss_legacy_parse_array_name( $name );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Flatten a (possibly grouped) HTML input name into a stable id slug.
@@ -1452,6 +1816,20 @@ function bboss_legacy_flatten_input_name( $name ) {
 	}
 	return implode( '_', $parts );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_legacy_flatten_input_name' ) && ! function_exists( 'bb_legacy_flatten_input_name' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_legacy_flatten_input_name()}.
+	 *
+	 * @deprecated Use bboss_legacy_flatten_input_name() instead.
+	 */
+	function bb_legacy_flatten_input_name( $name ) {
+		return bboss_legacy_flatten_input_name( $name );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Inject a value into $_POST at the location described by an array-notation
@@ -1543,6 +1921,20 @@ function bboss_legacy_inject_post_value( $parsed, $value ) {
 		}
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_legacy_inject_post_value' ) && ! function_exists( 'bb_legacy_inject_post_value' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_legacy_inject_post_value()}.
+	 *
+	 * @deprecated Use bboss_legacy_inject_post_value() instead.
+	 */
+	function bb_legacy_inject_post_value( $parsed, $value ) {
+		return bboss_legacy_inject_post_value( $parsed, $value );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Allowlist-by-denylist for $_POST keys the CPT bridge is permitted to
@@ -1623,6 +2015,20 @@ function bboss_legacy_is_safe_cpt_post_key( $name, $canonical_keys = array() ) {
 
 	return true;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_legacy_is_safe_cpt_post_key' ) && ! function_exists( 'bb_legacy_is_safe_cpt_post_key' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_legacy_is_safe_cpt_post_key()}.
+	 *
+	 * @deprecated Use bboss_legacy_is_safe_cpt_post_key() instead.
+	 */
+	function bb_legacy_is_safe_cpt_post_key( $name, $canonical_keys = array() ) {
+		return bboss_legacy_is_safe_cpt_post_key( $name, $canonical_keys );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Register a legacy meta-box bridge for a custom post type.
@@ -1842,6 +2248,20 @@ function bboss_legacy_register_cpt_meta_bridge( $args ) {
 		3
 	);
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_legacy_register_cpt_meta_bridge' ) && ! function_exists( 'bb_legacy_register_cpt_meta_bridge' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_legacy_register_cpt_meta_bridge()}.
+	 *
+	 * @deprecated Use bboss_legacy_register_cpt_meta_bridge() instead.
+	 */
+	function bb_legacy_register_cpt_meta_bridge( $args ) {
+		return bboss_legacy_register_cpt_meta_bridge( $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Replay hidden inputs from every registered metabox on the configured
@@ -1980,6 +2400,20 @@ function bboss_legacy_replay_cpt_hidden_inputs( $args, $item ) {
 		}
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_legacy_replay_cpt_hidden_inputs' ) && ! function_exists( 'bb_legacy_replay_cpt_hidden_inputs' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_legacy_replay_cpt_hidden_inputs()}.
+	 *
+	 * @deprecated Use bboss_legacy_replay_cpt_hidden_inputs() instead.
+	 */
+	function bb_legacy_replay_cpt_hidden_inputs( $args, $item ) {
+		return bboss_legacy_replay_cpt_hidden_inputs( $args, $item );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Persist bridge field values to post meta directly. Runs in the
@@ -2094,6 +2528,20 @@ function bboss_legacy_persist_cpt_post_meta( $args, $item ) {
 		}
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_legacy_persist_cpt_post_meta' ) && ! function_exists( 'bb_legacy_persist_cpt_post_meta' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_legacy_persist_cpt_post_meta()}.
+	 *
+	 * @deprecated Use bboss_legacy_persist_cpt_post_meta() instead.
+	 */
+	function bb_legacy_persist_cpt_post_meta( $args, $item ) {
+		return bboss_legacy_persist_cpt_post_meta( $args, $item );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Inner implementation of the CPT bridge. Self-bootstraps the metabox
@@ -2247,6 +2695,20 @@ function bboss_legacy_run_cpt_bridge( $registry, $component, $args ) {
 		}
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_legacy_run_cpt_bridge' ) && ! function_exists( 'bb_legacy_run_cpt_bridge' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_legacy_run_cpt_bridge()}.
+	 *
+	 * @deprecated Use bboss_legacy_run_cpt_bridge() instead.
+	 */
+	function bb_legacy_run_cpt_bridge( $registry, $component, $args ) {
+		return bboss_legacy_run_cpt_bridge( $registry, $component, $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Capture / parse / register one CPT metabox's inputs.
@@ -2630,6 +3092,20 @@ function bboss_legacy_run_cpt_bridge_box( $registry, $component, $box, &$order, 
 		$registry->register( $component, $field_id, $args_field );
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_legacy_run_cpt_bridge_box' ) && ! function_exists( 'bb_legacy_run_cpt_bridge_box' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_legacy_run_cpt_bridge_box()}.
+	 *
+	 * @deprecated Use bboss_legacy_run_cpt_bridge_box() instead.
+	 */
+	function bb_legacy_run_cpt_bridge_box( $registry, $component, $box, &$order, $existing_ids, $args ) {
+		return bboss_legacy_run_cpt_bridge_box( $registry, $component, $box, $order, $existing_ids, $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Registry of AJAX-select resolvers for third-party metabox widgets.
@@ -2676,6 +3152,20 @@ function bboss_legacy_get_ajax_select_resolvers() {
 	 */
 	return (array) apply_filters( 'bb_legacy_ajax_select_resolvers', array() );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_legacy_get_ajax_select_resolvers' ) && ! function_exists( 'bb_legacy_get_ajax_select_resolvers' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_legacy_get_ajax_select_resolvers()}.
+	 *
+	 * @deprecated Use bboss_legacy_get_ajax_select_resolvers() instead.
+	 */
+	function bb_legacy_get_ajax_select_resolvers() {
+		return bboss_legacy_get_ajax_select_resolvers();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Find the resolver whose `match` substring appears in a widget's class.
@@ -2701,6 +3191,20 @@ function bboss_legacy_match_ajax_select_resolver( $class_attr ) {
 	}
 	return null;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_legacy_match_ajax_select_resolver' ) && ! function_exists( 'bb_legacy_match_ajax_select_resolver' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_legacy_match_ajax_select_resolver()}.
+	 *
+	 * @deprecated Use bboss_legacy_match_ajax_select_resolver() instead.
+	 */
+	function bb_legacy_match_ajax_select_resolver( $class_attr ) {
+		return bboss_legacy_match_ajax_select_resolver( $class_attr );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Resolve a saved value to its display label via a resolver's `resolve_label`.
@@ -2720,6 +3224,20 @@ function bboss_legacy_resolve_ajax_select_label( $resolver, $value ) {
 	}
 	return (string) $value;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_legacy_resolve_ajax_select_label' ) && ! function_exists( 'bb_legacy_resolve_ajax_select_label' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_legacy_resolve_ajax_select_label()}.
+	 *
+	 * @deprecated Use bboss_legacy_resolve_ajax_select_label() instead.
+	 */
+	function bb_legacy_resolve_ajax_select_label( $resolver, $value ) {
+		return bboss_legacy_resolve_ajax_select_label( $resolver, $value );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Generic AJAX search shim for resolver-backed bridged select widgets.
@@ -2849,6 +3367,20 @@ function bboss_legacy_ajax_select_search() {
 		)
 	);
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_legacy_ajax_select_search' ) && ! function_exists( 'bb_legacy_ajax_select_search' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_legacy_ajax_select_search()}.
+	 *
+	 * @deprecated Use bboss_legacy_ajax_select_search() instead.
+	 */
+	function bb_legacy_ajax_select_search() {
+		return bboss_legacy_ajax_select_search();
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'wp_ajax_bb_legacy_ajax_select_search', 'bb_legacy_ajax_select_search' );
 
 /**
@@ -2876,6 +3408,20 @@ function bboss_legacy_cpt_clear_bridge_cache() {
 	);
 	// phpcs:enable
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_legacy_cpt_clear_bridge_cache' ) && ! function_exists( 'bb_legacy_cpt_clear_bridge_cache' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_legacy_cpt_clear_bridge_cache()}.
+	 *
+	 * @deprecated Use bboss_legacy_cpt_clear_bridge_cache() instead.
+	 */
+	function bb_legacy_cpt_clear_bridge_cache() {
+		return bboss_legacy_cpt_clear_bridge_cache();
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'activated_plugin', 'bb_legacy_cpt_clear_bridge_cache' );
 add_action( 'deactivated_plugin', 'bb_legacy_cpt_clear_bridge_cache' );
 add_action( 'upgrader_process_complete', 'bb_legacy_cpt_clear_bridge_cache' );
@@ -2956,6 +3502,20 @@ function bboss_legacy_is_safe_post_key( $name ) {
 
 	return true;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_legacy_is_safe_post_key' ) && ! function_exists( 'bb_legacy_is_safe_post_key' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_legacy_is_safe_post_key()}.
+	 *
+	 * @deprecated Use bboss_legacy_is_safe_post_key() instead.
+	 */
+	function bb_legacy_is_safe_post_key( $name ) {
+		return bboss_legacy_is_safe_post_key( $name );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Build the list of $_POST keys Platform's canonical group save handler
@@ -3021,6 +3581,20 @@ function bboss_legacy_canonical_group_keys() {
 
 	return $keys;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_legacy_canonical_group_keys' ) && ! function_exists( 'bb_legacy_canonical_group_keys' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_legacy_canonical_group_keys()}.
+	 *
+	 * @deprecated Use bboss_legacy_canonical_group_keys() instead.
+	 */
+	function bb_legacy_canonical_group_keys() {
+		return bboss_legacy_canonical_group_keys();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 // Load per-plugin compatibility modules. Each registers its hooks via the
 // engine's filters (bb_legacy_ajax_select_resolvers, bb_legacy_field_overrides,
@@ -3040,418 +3614,3 @@ if ( defined( 'WP_FUSION_VERSION' ) || defined( 'WPF_VERSION' ) || function_exis
 if ( defined( 'BP_AUTO_GROUP_JOIN_PLUGIN_VERSION' ) ) {
 	require_once __DIR__ . '/compat/bboss-auto-group-join.php';
 }
-
-// @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
-if ( function_exists( 'bboss_legacy_ajax_select_search' ) && ! function_exists( 'bb_legacy_ajax_select_search' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_legacy_ajax_select_search()}.
-	 *
-	 * @deprecated Use bboss_legacy_ajax_select_search() instead.
-	 */
-	function bb_legacy_ajax_select_search() {
-		return bboss_legacy_ajax_select_search();
-	}
-}
-if ( function_exists( 'bboss_legacy_canonical_group_keys' ) && ! function_exists( 'bb_legacy_canonical_group_keys' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_legacy_canonical_group_keys()}.
-	 *
-	 * @deprecated Use bboss_legacy_canonical_group_keys() instead.
-	 */
-	function bb_legacy_canonical_group_keys() {
-		return bboss_legacy_canonical_group_keys();
-	}
-}
-if ( function_exists( 'bboss_legacy_capture_post_box_html' ) && ! function_exists( 'bb_legacy_capture_post_box_html' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_legacy_capture_post_box_html()}.
-	 *
-	 * @deprecated Use bboss_legacy_capture_post_box_html() instead.
-	 */
-	function bb_legacy_capture_post_box_html( $box, $post, $request_param = 'post', $fallback_post_type = '' ) {
-		return bboss_legacy_capture_post_box_html( $box, $post, $request_param, $fallback_post_type );
-	}
-}
-if ( function_exists( 'bboss_legacy_cpt_clear_bridge_cache' ) && ! function_exists( 'bb_legacy_cpt_clear_bridge_cache' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_legacy_cpt_clear_bridge_cache()}.
-	 *
-	 * @deprecated Use bboss_legacy_cpt_clear_bridge_cache() instead.
-	 */
-	function bb_legacy_cpt_clear_bridge_cache() {
-		return bboss_legacy_cpt_clear_bridge_cache();
-	}
-}
-if ( function_exists( 'bboss_legacy_detect_conditional' ) && ! function_exists( 'bb_legacy_detect_conditional' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_legacy_detect_conditional()}.
-	 *
-	 * @deprecated Use bboss_legacy_detect_conditional() instead.
-	 */
-	function bb_legacy_detect_conditional( DOMElement $node, DOMXPath $xpath ) {
-		return bboss_legacy_detect_conditional( $node, $xpath );
-	}
-}
-if ( function_exists( 'bboss_legacy_detect_input_type' ) && ! function_exists( 'bb_legacy_detect_input_type' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_legacy_detect_input_type()}.
-	 *
-	 * @deprecated Use bboss_legacy_detect_input_type() instead.
-	 */
-	function bb_legacy_detect_input_type( DOMElement $node ) {
-		return bboss_legacy_detect_input_type( $node );
-	}
-}
-if ( function_exists( 'bboss_legacy_extract_hidden_inputs' ) && ! function_exists( 'bb_legacy_extract_hidden_inputs' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_legacy_extract_hidden_inputs()}.
-	 *
-	 * @deprecated Use bboss_legacy_extract_hidden_inputs() instead.
-	 */
-	function bb_legacy_extract_hidden_inputs( $html ) {
-		return bboss_legacy_extract_hidden_inputs( $html );
-	}
-}
-if ( function_exists( 'bboss_legacy_extract_input_value' ) && ! function_exists( 'bb_legacy_extract_input_value' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_legacy_extract_input_value()}.
-	 *
-	 * @deprecated Use bboss_legacy_extract_input_value() instead.
-	 */
-	function bb_legacy_extract_input_value( $html, $name, $type ) {
-		return bboss_legacy_extract_input_value( $html, $name, $type );
-	}
-}
-if ( function_exists( 'bboss_legacy_extract_multiselect_values' ) && ! function_exists( 'bb_legacy_extract_multiselect_values' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_legacy_extract_multiselect_values()}.
-	 *
-	 * @deprecated Use bboss_legacy_extract_multiselect_values() instead.
-	 */
-	function bb_legacy_extract_multiselect_values( $html, $name ) {
-		return bboss_legacy_extract_multiselect_values( $html, $name );
-	}
-}
-if ( function_exists( 'bboss_legacy_extract_radio_options' ) && ! function_exists( 'bb_legacy_extract_radio_options' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_legacy_extract_radio_options()}.
-	 *
-	 * @deprecated Use bboss_legacy_extract_radio_options() instead.
-	 */
-	function bb_legacy_extract_radio_options( $html, $name ) {
-		return bboss_legacy_extract_radio_options( $html, $name );
-	}
-}
-if ( function_exists( 'bboss_legacy_extract_select_options' ) && ! function_exists( 'bb_legacy_extract_select_options' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_legacy_extract_select_options()}.
-	 *
-	 * @deprecated Use bboss_legacy_extract_select_options() instead.
-	 */
-	function bb_legacy_extract_select_options( $html, $name ) {
-		return bboss_legacy_extract_select_options( $html, $name );
-	}
-}
-if ( function_exists( 'bboss_legacy_find_description' ) && ! function_exists( 'bb_legacy_find_description' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_legacy_find_description()}.
-	 *
-	 * @deprecated Use bboss_legacy_find_description() instead.
-	 */
-	function bb_legacy_find_description( DOMElement $node, DOMXPath $xpath ) {
-		return bboss_legacy_find_description( $node, $xpath );
-	}
-}
-if ( function_exists( 'bboss_legacy_find_label' ) && ! function_exists( 'bb_legacy_find_label' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_legacy_find_label()}.
-	 *
-	 * @deprecated Use bboss_legacy_find_label() instead.
-	 */
-	function bb_legacy_find_label( DOMElement $node, DOMXPath $xpath ) {
-		return bboss_legacy_find_label( $node, $xpath );
-	}
-}
-if ( function_exists( 'bboss_legacy_find_trigger' ) && ! function_exists( 'bb_legacy_find_trigger' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_legacy_find_trigger()}.
-	 *
-	 * @deprecated Use bboss_legacy_find_trigger() instead.
-	 */
-	function bb_legacy_find_trigger( DOMElement $wrapper ) {
-		return bboss_legacy_find_trigger( $wrapper );
-	}
-}
-if ( function_exists( 'bboss_legacy_flatten_input_name' ) && ! function_exists( 'bb_legacy_flatten_input_name' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_legacy_flatten_input_name()}.
-	 *
-	 * @deprecated Use bboss_legacy_flatten_input_name() instead.
-	 */
-	function bb_legacy_flatten_input_name( $name ) {
-		return bboss_legacy_flatten_input_name( $name );
-	}
-}
-if ( function_exists( 'bboss_legacy_get_ajax_select_resolvers' ) && ! function_exists( 'bb_legacy_get_ajax_select_resolvers' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_legacy_get_ajax_select_resolvers()}.
-	 *
-	 * @deprecated Use bboss_legacy_get_ajax_select_resolvers() instead.
-	 */
-	function bb_legacy_get_ajax_select_resolvers() {
-		return bboss_legacy_get_ajax_select_resolvers();
-	}
-}
-if ( function_exists( 'bboss_legacy_get_xpath' ) && ! function_exists( 'bb_legacy_get_xpath' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_legacy_get_xpath()}.
-	 *
-	 * @deprecated Use bboss_legacy_get_xpath() instead.
-	 */
-	function bb_legacy_get_xpath( $html ) {
-		return bboss_legacy_get_xpath( $html );
-	}
-}
-if ( function_exists( 'bboss_legacy_inject_post_value' ) && ! function_exists( 'bb_legacy_inject_post_value' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_legacy_inject_post_value()}.
-	 *
-	 * @deprecated Use bboss_legacy_inject_post_value() instead.
-	 */
-	function bb_legacy_inject_post_value( $parsed, $value ) {
-		return bboss_legacy_inject_post_value( $parsed, $value );
-	}
-}
-if ( function_exists( 'bboss_legacy_is_descendant_of' ) && ! function_exists( 'bb_legacy_is_descendant_of' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_legacy_is_descendant_of()}.
-	 *
-	 * @deprecated Use bboss_legacy_is_descendant_of() instead.
-	 */
-	function bb_legacy_is_descendant_of( DOMNode $node, DOMNode $ancestor ) {
-		return bboss_legacy_is_descendant_of( $node, $ancestor );
-	}
-}
-if ( function_exists( 'bboss_legacy_is_hidden_node' ) && ! function_exists( 'bb_legacy_is_hidden_node' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_legacy_is_hidden_node()}.
-	 *
-	 * @deprecated Use bboss_legacy_is_hidden_node() instead.
-	 */
-	function bb_legacy_is_hidden_node( DOMElement $node ) {
-		return bboss_legacy_is_hidden_node( $node );
-	}
-}
-if ( function_exists( 'bboss_legacy_is_safe_cpt_post_key' ) && ! function_exists( 'bb_legacy_is_safe_cpt_post_key' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_legacy_is_safe_cpt_post_key()}.
-	 *
-	 * @deprecated Use bboss_legacy_is_safe_cpt_post_key() instead.
-	 */
-	function bb_legacy_is_safe_cpt_post_key( $name, $canonical_keys = array() ) {
-		return bboss_legacy_is_safe_cpt_post_key( $name, $canonical_keys );
-	}
-}
-if ( function_exists( 'bboss_legacy_is_safe_post_key' ) && ! function_exists( 'bb_legacy_is_safe_post_key' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_legacy_is_safe_post_key()}.
-	 *
-	 * @deprecated Use bboss_legacy_is_safe_post_key() instead.
-	 */
-	function bb_legacy_is_safe_post_key( $name ) {
-		return bboss_legacy_is_safe_post_key( $name );
-	}
-}
-if ( function_exists( 'bboss_legacy_label_text_without_tip' ) && ! function_exists( 'bb_legacy_label_text_without_tip' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_legacy_label_text_without_tip()}.
-	 *
-	 * @deprecated Use bboss_legacy_label_text_without_tip() instead.
-	 */
-	function bb_legacy_label_text_without_tip( DOMElement $label ) {
-		return bboss_legacy_label_text_without_tip( $label );
-	}
-}
-if ( function_exists( 'bboss_legacy_match_ajax_select_resolver' ) && ! function_exists( 'bb_legacy_match_ajax_select_resolver' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_legacy_match_ajax_select_resolver()}.
-	 *
-	 * @deprecated Use bboss_legacy_match_ajax_select_resolver() instead.
-	 */
-	function bb_legacy_match_ajax_select_resolver( $class_attr ) {
-		return bboss_legacy_match_ajax_select_resolver( $class_attr );
-	}
-}
-if ( function_exists( 'bboss_legacy_match_trigger_node' ) && ! function_exists( 'bb_legacy_match_trigger_node' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_legacy_match_trigger_node()}.
-	 *
-	 * @deprecated Use bboss_legacy_match_trigger_node() instead.
-	 */
-	function bb_legacy_match_trigger_node( DOMElement $node ) {
-		return bboss_legacy_match_trigger_node( $node );
-	}
-}
-if ( function_exists( 'bboss_legacy_node_has_hidden_ancestor' ) && ! function_exists( 'bb_legacy_node_has_hidden_ancestor' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_legacy_node_has_hidden_ancestor()}.
-	 *
-	 * @deprecated Use bboss_legacy_node_has_hidden_ancestor() instead.
-	 */
-	function bb_legacy_node_has_hidden_ancestor( DOMElement $candidate, DOMElement $input ) {
-		return bboss_legacy_node_has_hidden_ancestor( $candidate, $input );
-	}
-}
-if ( function_exists( 'bboss_legacy_normalize_save_value' ) && ! function_exists( 'bb_legacy_normalize_save_value' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_legacy_normalize_save_value()}.
-	 *
-	 * @deprecated Use bboss_legacy_normalize_save_value() instead.
-	 */
-	function bb_legacy_normalize_save_value( $type, $parsed, $value ) {
-		return bboss_legacy_normalize_save_value( $type, $parsed, $value );
-	}
-}
-if ( function_exists( 'bboss_legacy_parse_array_name' ) && ! function_exists( 'bb_legacy_parse_array_name' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_legacy_parse_array_name()}.
-	 *
-	 * @deprecated Use bboss_legacy_parse_array_name() instead.
-	 */
-	function bb_legacy_parse_array_name( $name ) {
-		return bboss_legacy_parse_array_name( $name );
-	}
-}
-if ( function_exists( 'bboss_legacy_parse_box_inputs' ) && ! function_exists( 'bb_legacy_parse_box_inputs' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_legacy_parse_box_inputs()}.
-	 *
-	 * @deprecated Use bboss_legacy_parse_box_inputs() instead.
-	 */
-	function bb_legacy_parse_box_inputs( $html ) {
-		return bboss_legacy_parse_box_inputs( $html );
-	}
-}
-if ( function_exists( 'bboss_legacy_persist_cpt_post_meta' ) && ! function_exists( 'bb_legacy_persist_cpt_post_meta' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_legacy_persist_cpt_post_meta()}.
-	 *
-	 * @deprecated Use bboss_legacy_persist_cpt_post_meta() instead.
-	 */
-	function bb_legacy_persist_cpt_post_meta( $args, $item ) {
-		return bboss_legacy_persist_cpt_post_meta( $args, $item );
-	}
-}
-if ( function_exists( 'bboss_legacy_pick_conditional_value' ) && ! function_exists( 'bb_legacy_pick_conditional_value' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_legacy_pick_conditional_value()}.
-	 *
-	 * @deprecated Use bboss_legacy_pick_conditional_value() instead.
-	 */
-	function bb_legacy_pick_conditional_value( array $trigger, DOMXPath $xpath ) {
-		return bboss_legacy_pick_conditional_value( $trigger, $xpath );
-	}
-}
-if ( function_exists( 'bboss_legacy_read_multiselect_meta' ) && ! function_exists( 'bb_legacy_read_multiselect_meta' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_legacy_read_multiselect_meta()}.
-	 *
-	 * @deprecated Use bboss_legacy_read_multiselect_meta() instead.
-	 */
-	function bb_legacy_read_multiselect_meta( $post_id, $name ) {
-		return bboss_legacy_read_multiselect_meta( $post_id, $name );
-	}
-}
-if ( function_exists( 'bboss_legacy_register_cpt_meta_bridge' ) && ! function_exists( 'bb_legacy_register_cpt_meta_bridge' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_legacy_register_cpt_meta_bridge()}.
-	 *
-	 * @deprecated Use bboss_legacy_register_cpt_meta_bridge() instead.
-	 */
-	function bb_legacy_register_cpt_meta_bridge( $args ) {
-		return bboss_legacy_register_cpt_meta_bridge( $args );
-	}
-}
-if ( function_exists( 'bboss_legacy_replay_cpt_hidden_inputs' ) && ! function_exists( 'bb_legacy_replay_cpt_hidden_inputs' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_legacy_replay_cpt_hidden_inputs()}.
-	 *
-	 * @deprecated Use bboss_legacy_replay_cpt_hidden_inputs() instead.
-	 */
-	function bb_legacy_replay_cpt_hidden_inputs( $args, $item ) {
-		return bboss_legacy_replay_cpt_hidden_inputs( $args, $item );
-	}
-}
-if ( function_exists( 'bboss_legacy_resolve_ajax_select_label' ) && ! function_exists( 'bb_legacy_resolve_ajax_select_label' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_legacy_resolve_ajax_select_label()}.
-	 *
-	 * @deprecated Use bboss_legacy_resolve_ajax_select_label() instead.
-	 */
-	function bb_legacy_resolve_ajax_select_label( $resolver, $value ) {
-		return bboss_legacy_resolve_ajax_select_label( $resolver, $value );
-	}
-}
-if ( function_exists( 'bboss_legacy_resolve_sanitize_callback' ) && ! function_exists( 'bb_legacy_resolve_sanitize_callback' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_legacy_resolve_sanitize_callback()}.
-	 *
-	 * @deprecated Use bboss_legacy_resolve_sanitize_callback() instead.
-	 */
-	function bb_legacy_resolve_sanitize_callback( $type ) {
-		return bboss_legacy_resolve_sanitize_callback( $type );
-	}
-}
-if ( function_exists( 'bboss_legacy_run_cpt_bridge' ) && ! function_exists( 'bb_legacy_run_cpt_bridge' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_legacy_run_cpt_bridge()}.
-	 *
-	 * @deprecated Use bboss_legacy_run_cpt_bridge() instead.
-	 */
-	function bb_legacy_run_cpt_bridge( $registry, $component, $args ) {
-		return bboss_legacy_run_cpt_bridge( $registry, $component, $args );
-	}
-}
-if ( function_exists( 'bboss_legacy_run_cpt_bridge_box' ) && ! function_exists( 'bb_legacy_run_cpt_bridge_box' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_legacy_run_cpt_bridge_box()}.
-	 *
-	 * @deprecated Use bboss_legacy_run_cpt_bridge_box() instead.
-	 */
-	function bb_legacy_run_cpt_bridge_box( $registry, $component, $box, &$order, $existing_ids, $args ) {
-		return bboss_legacy_run_cpt_bridge_box( $registry, $component, $box, $order, $existing_ids, $args );
-	}
-}
-if ( function_exists( 'bboss_legacy_with_wp_die_safety' ) && ! function_exists( 'bb_legacy_with_wp_die_safety' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_legacy_with_wp_die_safety()}.
-	 *
-	 * @deprecated Use bboss_legacy_with_wp_die_safety() instead.
-	 */
-	function bb_legacy_with_wp_die_safety( callable $callback ) {
-		return bboss_legacy_with_wp_die_safety( $callback );
-	}
-}
-if ( function_exists( 'bboss_legacy_xpath_safe' ) && ! function_exists( 'bb_legacy_xpath_safe' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_legacy_xpath_safe()}.
-	 *
-	 * @deprecated Use bboss_legacy_xpath_safe() instead.
-	 */
-	function bb_legacy_xpath_safe( $value ) {
-		return bboss_legacy_xpath_safe( $value );
-	}
-}
-if ( function_exists( 'bboss_legacy_xpath_safe_name' ) && ! function_exists( 'bb_legacy_xpath_safe_name' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_legacy_xpath_safe_name()}.
-	 *
-	 * @deprecated Use bboss_legacy_xpath_safe_name() instead.
-	 */
-	function bb_legacy_xpath_safe_name( $value ) {
-		return bboss_legacy_xpath_safe_name( $value );
-	}
-}
-// @bbwt-com-end compat-layer

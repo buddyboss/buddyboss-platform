@@ -48,6 +48,20 @@ function bboss_two_factor_settings_admin_nav( $wp_admin_nav ) {
 
 	return $wp_admin_nav;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_two_factor_settings_admin_nav' ) && ! function_exists( 'bb_two_factor_settings_admin_nav' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_two_factor_settings_admin_nav()}.
+	 *
+	 * @deprecated Use bboss_two_factor_settings_admin_nav() instead.
+	 */
+	function bb_two_factor_settings_admin_nav( $wp_admin_nav ) {
+		return bboss_two_factor_settings_admin_nav( $wp_admin_nav );
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_filter( 'bp_settings_admin_nav', 'bb_two_factor_settings_admin_nav', 15 );
 
 /**
@@ -73,6 +87,20 @@ function bboss_two_factor_submit_button( $buttons ) {
 
 	return $buttons;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_two_factor_submit_button' ) && ! function_exists( 'bb_two_factor_submit_button' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_two_factor_submit_button()}.
+	 *
+	 * @deprecated Use bboss_two_factor_submit_button() instead.
+	 */
+	function bb_two_factor_submit_button( $buttons ) {
+		return bboss_two_factor_submit_button( $buttons );
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_filter( 'bp_nouveau_get_submit_button', 'bb_two_factor_submit_button' );
 
 /**
@@ -101,11 +129,8 @@ function bboss_two_factor_hide_dummy_provider( $providers ) {
 
 	return $providers;
 }
-add_filter( 'two_factor_providers_for_user', 'bb_two_factor_hide_dummy_provider' );
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_two_factor_hide_dummy_provider' ) && ! function_exists( 'bb_two_factor_hide_dummy_provider' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_two_factor_hide_dummy_provider()}.
@@ -116,24 +141,6 @@ if ( function_exists( 'bboss_two_factor_hide_dummy_provider' ) && ! function_exi
 		return bboss_two_factor_hide_dummy_provider( $providers );
 	}
 }
-if ( function_exists( 'bboss_two_factor_settings_admin_nav' ) && ! function_exists( 'bb_two_factor_settings_admin_nav' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_two_factor_settings_admin_nav()}.
-	 *
-	 * @deprecated Use bboss_two_factor_settings_admin_nav() instead.
-	 */
-	function bb_two_factor_settings_admin_nav( $wp_admin_nav ) {
-		return bboss_two_factor_settings_admin_nav( $wp_admin_nav );
-	}
-}
-if ( function_exists( 'bboss_two_factor_submit_button' ) && ! function_exists( 'bb_two_factor_submit_button' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_two_factor_submit_button()}.
-	 *
-	 * @deprecated Use bboss_two_factor_submit_button() instead.
-	 */
-	function bb_two_factor_submit_button( $buttons ) {
-		return bboss_two_factor_submit_button( $buttons );
-	}
-}
 // @bbwt-com-end compat-layer
+
+add_filter( 'two_factor_providers_for_user', 'bb_two_factor_hide_dummy_provider' );

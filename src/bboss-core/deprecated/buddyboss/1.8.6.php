@@ -37,6 +37,20 @@ function bboss_remove_avatar_settings_from_options_discussion_page() {
 	}
 
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_remove_avatar_settings_from_options_discussion_page' ) && ! function_exists( 'bp_remove_avatar_settings_from_options_discussion_page' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_remove_avatar_settings_from_options_discussion_page()}.
+	 *
+	 * @deprecated Use bboss_remove_avatar_settings_from_options_discussion_page() instead.
+	 */
+	function bp_remove_avatar_settings_from_options_discussion_page() {
+		return bboss_remove_avatar_settings_from_options_discussion_page();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Use the mystery group avatar for groups.
@@ -54,6 +68,20 @@ function bboss_groups_default_avatar( $avatar, $params ) {
 	$params['object'] = 'group';
 	return bboss_attachments_get_default_profile_group_avatar_image( $params );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_groups_default_avatar' ) && ! function_exists( 'bp_groups_default_avatar' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_default_avatar()}.
+	 *
+	 * @deprecated Use bboss_groups_default_avatar() instead.
+	 */
+	function bp_groups_default_avatar( $avatar, $params ) {
+		return bboss_groups_default_avatar( $avatar, $params );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Used by the Activity component's @mentions to print a JSON list of the current user's friends.
@@ -70,10 +98,8 @@ function bboss_friends_prime_mentions_results() {
 
 	return bboss_core_prime_mentions_results();
 }
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_friends_prime_mentions_results' ) && ! function_exists( 'bp_friends_prime_mentions_results' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_friends_prime_mentions_results()}.
@@ -84,24 +110,5 @@ if ( function_exists( 'bboss_friends_prime_mentions_results' ) && ! function_exi
 		return bboss_friends_prime_mentions_results();
 	}
 }
-if ( function_exists( 'bboss_groups_default_avatar' ) && ! function_exists( 'bp_groups_default_avatar' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_groups_default_avatar()}.
-	 *
-	 * @deprecated Use bboss_groups_default_avatar() instead.
-	 */
-	function bp_groups_default_avatar( $avatar, $params ) {
-		return bboss_groups_default_avatar( $avatar, $params );
-	}
-}
-if ( function_exists( 'bboss_remove_avatar_settings_from_options_discussion_page' ) && ! function_exists( 'bp_remove_avatar_settings_from_options_discussion_page' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_remove_avatar_settings_from_options_discussion_page()}.
-	 *
-	 * @deprecated Use bboss_remove_avatar_settings_from_options_discussion_page() instead.
-	 */
-	function bp_remove_avatar_settings_from_options_discussion_page() {
-		return bboss_remove_avatar_settings_from_options_discussion_page();
-	}
-}
 // @bbwt-com-end compat-layer
+

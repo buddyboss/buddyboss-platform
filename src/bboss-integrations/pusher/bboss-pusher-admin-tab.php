@@ -313,7 +313,7 @@ class BBoss_Pusher_Admin_Integration_Tab extends BBoss_Admin_Integration_tab {
 }
 
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// bbwt-rename:compat-aliases — the pre-rename names of this file's classes (decision 0013): declared
 // here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
 if ( ( class_exists( 'BBoss_Pusher_Admin_Integration_Tab', false ) || interface_exists( 'BBoss_Pusher_Admin_Integration_Tab', false ) || trait_exists( 'BBoss_Pusher_Admin_Integration_Tab', false ) ) && ! class_exists( 'BB_Pusher_Admin_Integration_Tab', false ) && ! interface_exists( 'BB_Pusher_Admin_Integration_Tab', false ) ) {
 	class_alias( 'BBoss_Pusher_Admin_Integration_Tab', 'BB_Pusher_Admin_Integration_Tab' ); // Backward-compatible name (also declared by another BuddyBoss product).

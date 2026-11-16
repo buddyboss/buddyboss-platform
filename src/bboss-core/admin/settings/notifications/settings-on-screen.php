@@ -213,10 +213,8 @@ function bboss_notifications_register_on_screen_panel_fields() {
 	 */
 	do_action( 'bb_notifications_on_screen_after_settings_fields' );
 }
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_notifications_register_on_screen_panel_fields' ) && ! function_exists( 'bb_notifications_register_on_screen_panel_fields' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_notifications_register_on_screen_panel_fields()}.
@@ -228,3 +226,4 @@ if ( function_exists( 'bboss_notifications_register_on_screen_panel_fields' ) &&
 	}
 }
 // @bbwt-com-end compat-layer
+

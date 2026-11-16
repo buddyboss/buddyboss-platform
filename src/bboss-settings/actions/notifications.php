@@ -55,11 +55,8 @@ function bboss_settings_action_notifications() {
 
 	bboss_core_redirect( bboss_displayed_user_domain() . bboss_get_settings_slug() . '/notifications/' );
 }
-add_action( 'bp_actions', 'bp_settings_action_notifications' );
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_settings_action_notifications' ) && ! function_exists( 'bp_settings_action_notifications' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_settings_action_notifications()}.
@@ -71,3 +68,5 @@ if ( function_exists( 'bboss_settings_action_notifications' ) && ! function_exis
 	}
 }
 // @bbwt-com-end compat-layer
+
+add_action( 'bp_actions', 'bp_settings_action_notifications' );

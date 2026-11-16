@@ -31,6 +31,20 @@ function bboss_moderation_content_types() {
 	 */
 	return apply_filters( 'bp_moderation_content_types', array() );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_moderation_content_types' ) && ! function_exists( 'bp_moderation_content_types' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_moderation_content_types()}.
+	 *
+	 * @deprecated Use bboss_moderation_content_types() instead.
+	 */
+	function bp_moderation_content_types() {
+		return bboss_moderation_content_types();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Function to get specific moderation content type.
@@ -54,6 +68,20 @@ function bboss_moderation_get_content_type( $key ) {
 	 */
 	return apply_filters( 'bp_moderation_get_content_type', key_exists( $key, $content_types ) ? $content_types[ $key ] : '' );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_moderation_get_content_type' ) && ! function_exists( 'bp_moderation_get_content_type' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_moderation_get_content_type()}.
+	 *
+	 * @deprecated Use bboss_moderation_get_content_type() instead.
+	 */
+	function bp_moderation_get_content_type( $key ) {
+		return bboss_moderation_get_content_type( $key );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Retrieve an Moderation reports.
@@ -159,6 +187,20 @@ function bboss_moderation_get( $args = '' ) {
 		)
 	);
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_moderation_get' ) && ! function_exists( 'bp_moderation_get' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_moderation_get()}.
+	 *
+	 * @deprecated Use bboss_moderation_get() instead.
+	 */
+	function bp_moderation_get( $args = '' ) {
+		return bboss_moderation_get( $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Retrieve sitewide hidden items ids of particular item type.
@@ -205,6 +247,20 @@ function bboss_moderation_get_hidden_user_ids( $force_cache = false ) {
 
 	return $hidden_users_ids;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_moderation_get_hidden_user_ids' ) && ! function_exists( 'bp_moderation_get_hidden_user_ids' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_moderation_get_hidden_user_ids()}.
+	 *
+	 * @deprecated Use bboss_moderation_get_hidden_user_ids() instead.
+	 */
+	function bp_moderation_get_hidden_user_ids( $force_cache = false ) {
+		return bboss_moderation_get_hidden_user_ids( $force_cache );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Function to get Report button
@@ -329,6 +385,20 @@ function bboss_moderation_get_report_button( $args, $html = true ) {
 	 */
 	return apply_filters( 'bp_moderation_get_report_button', $button, $args, $html );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_moderation_get_report_button' ) && ! function_exists( 'bp_moderation_get_report_button' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_moderation_get_report_button()}.
+	 *
+	 * @deprecated Use bboss_moderation_get_report_button() instead.
+	 */
+	function bp_moderation_get_report_button( $args, $html = true ) {
+		return bboss_moderation_get_report_button( $args, $html );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Function to Check content Reported by current user or not.
@@ -354,6 +424,20 @@ function bboss_moderation_report_exist( $item_id, $item_type, $blocking_user_id 
 
 	return $response;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_moderation_report_exist' ) && ! function_exists( 'bp_moderation_report_exist' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_moderation_report_exist()}.
+	 *
+	 * @deprecated Use bboss_moderation_report_exist() instead.
+	 */
+	function bp_moderation_report_exist( $item_id, $item_type, $blocking_user_id = false ) {
+		return bboss_moderation_report_exist( $item_id, $item_type, $blocking_user_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Check whether a user has been marked as a blocked by current user.
@@ -372,6 +456,20 @@ function bboss_moderation_is_user_blocked( $user_id, $blocking_user_id = false )
 
 	return bboss_moderation_report_exist( $user_id, BBoss_Moderation_Members::$moderation_type, $blocking_user_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_moderation_is_user_blocked' ) && ! function_exists( 'bp_moderation_is_user_blocked' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_moderation_is_user_blocked()}.
+	 *
+	 * @deprecated Use bboss_moderation_is_user_blocked() instead.
+	 */
+	function bp_moderation_is_user_blocked( $user_id, $blocking_user_id = false ) {
+		return bboss_moderation_is_user_blocked( $user_id, $blocking_user_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Check user is suspended or not.
@@ -385,6 +483,20 @@ function bboss_moderation_is_user_blocked( $user_id, $blocking_user_id = false )
 function bboss_moderation_is_user_suspended( $user_id ) {
 	return BBoss_Core_Suspend::check_user_suspend( $user_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_moderation_is_user_suspended' ) && ! function_exists( 'bp_moderation_is_user_suspended' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_moderation_is_user_suspended()}.
+	 *
+	 * @deprecated Use bboss_moderation_is_user_suspended() instead.
+	 */
+	function bp_moderation_is_user_suspended( $user_id ) {
+		return bboss_moderation_is_user_suspended( $user_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Function to get sub items.
@@ -418,6 +530,20 @@ function bboss_moderation_get_sub_items( $item_id, $item_type ) {
 
 	return $sub_items;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_moderation_get_sub_items' ) && ! function_exists( 'bp_moderation_get_sub_items' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_moderation_get_sub_items()}.
+	 *
+	 * @deprecated Use bboss_moderation_get_sub_items() instead.
+	 */
+	function bp_moderation_get_sub_items( $item_id, $item_type ) {
+		return bboss_moderation_get_sub_items( $item_id, $item_type );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Check the user can moderate the current Item or Not.
@@ -488,6 +614,20 @@ function bboss_moderation_can_report( $item_id, $item_type, $bypass_validate = t
 
 	return true;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_moderation_can_report' ) && ! function_exists( 'bp_moderation_can_report' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_moderation_can_report()}.
+	 *
+	 * @deprecated Use bboss_moderation_can_report() instead.
+	 */
+	function bp_moderation_can_report( $item_id, $item_type, $bypass_validate = true ) {
+		return bboss_moderation_can_report( $item_id, $item_type, $bypass_validate );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Check the user can report the current Item or Not.
@@ -576,6 +716,20 @@ function bboss_moderation_user_can( $item_id, $item_type, $bypass_validate = tru
 
 	return true;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_moderation_user_can' ) && ! function_exists( 'bp_moderation_user_can' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_moderation_user_can()}.
+	 *
+	 * @deprecated Use bboss_moderation_user_can() instead.
+	 */
+	function bp_moderation_user_can( $item_id, $item_type, $bypass_validate = true ) {
+		return bboss_moderation_user_can( $item_id, $item_type, $bypass_validate );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Check the current content is hidden or not.
@@ -603,6 +757,20 @@ function bboss_moderation_is_content_hidden( $item_id, $item_type ) {
 
 	return (bool) BBoss_Core_Suspend::check_hidden_content( $item_id, $item_type );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_moderation_is_content_hidden' ) && ! function_exists( 'bp_moderation_is_content_hidden' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_moderation_is_content_hidden()}.
+	 *
+	 * @deprecated Use bboss_moderation_is_content_hidden() instead.
+	 */
+	function bp_moderation_is_content_hidden( $item_id, $item_type ) {
+		return bboss_moderation_is_content_hidden( $item_id, $item_type );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /** Moderation actions *******************************************************/
 
@@ -633,6 +801,20 @@ function bboss_moderation_add( $args = array() ) {
 
 	return $response;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_moderation_add' ) && ! function_exists( 'bp_moderation_add' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_moderation_add()}.
+	 *
+	 * @deprecated Use bboss_moderation_add() instead.
+	 */
+	function bp_moderation_add( $args = array() ) {
+		return bboss_moderation_add( $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Function to hide content.
@@ -656,6 +838,20 @@ function bboss_moderation_hide( $args = array() ) {
 
 	return $response;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_moderation_hide' ) && ! function_exists( 'bp_moderation_hide' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_moderation_hide()}.
+	 *
+	 * @deprecated Use bboss_moderation_hide() instead.
+	 */
+	function bp_moderation_hide( $args = array() ) {
+		return bboss_moderation_hide( $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Function to unhide content.
@@ -679,6 +875,20 @@ function bboss_moderation_unhide( $args = array() ) {
 
 	return $response;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_moderation_unhide' ) && ! function_exists( 'bp_moderation_unhide' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_moderation_unhide()}.
+	 *
+	 * @deprecated Use bboss_moderation_unhide() instead.
+	 */
+	function bp_moderation_unhide( $args = array() ) {
+		return bboss_moderation_unhide( $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Function to unhide content.
@@ -702,6 +912,20 @@ function bboss_moderation_delete( $args = array() ) {
 
 	return $response;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_moderation_delete' ) && ! function_exists( 'bp_moderation_delete' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_moderation_delete()}.
+	 *
+	 * @deprecated Use bboss_moderation_delete() instead.
+	 */
+	function bp_moderation_delete( $args = array() ) {
+		return bboss_moderation_delete( $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /** Meta *********************************************************************/
 
@@ -737,6 +961,20 @@ function bboss_moderation_get_meta( $moderation_id = 0, $meta_key = '', $single 
 	 */
 	return apply_filters( 'bp_moderation_get_meta', $retval, $moderation_id, $meta_key, $single );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_moderation_get_meta' ) && ! function_exists( 'bp_moderation_get_meta' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_moderation_get_meta()}.
+	 *
+	 * @deprecated Use bboss_moderation_get_meta() instead.
+	 */
+	function bp_moderation_get_meta( $moderation_id = 0, $meta_key = '', $single = true ) {
+		return bboss_moderation_get_meta( $moderation_id, $meta_key, $single );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Add a piece of moderation metadata.
@@ -759,6 +997,20 @@ function bboss_moderation_add_meta( $moderation_id, $meta_key, $meta_value, $uni
 
 	return $retval;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_moderation_add_meta' ) && ! function_exists( 'bp_moderation_add_meta' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_moderation_add_meta()}.
+	 *
+	 * @deprecated Use bboss_moderation_add_meta() instead.
+	 */
+	function bp_moderation_add_meta( $moderation_id, $meta_key, $meta_value, $unique = false ) {
+		return bboss_moderation_add_meta( $moderation_id, $meta_key, $meta_value, $unique );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Update a piece of moderation meta.
@@ -782,6 +1034,20 @@ function bboss_moderation_update_meta( $moderation_id, $meta_key, $meta_value, $
 
 	return $retval;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_moderation_update_meta' ) && ! function_exists( 'bp_moderation_update_meta' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_moderation_update_meta()}.
+	 *
+	 * @deprecated Use bboss_moderation_update_meta() instead.
+	 */
+	function bp_moderation_update_meta( $moderation_id, $meta_key, $meta_value, $prev_value = '' ) {
+		return bboss_moderation_update_meta( $moderation_id, $meta_key, $meta_value, $prev_value );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Delete a meta entry from the DB for an moderation item.
@@ -828,6 +1094,20 @@ function bboss_moderation_delete_meta( $moderation_id, $meta_key = '', $meta_val
 
 	return $retval;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_moderation_delete_meta' ) && ! function_exists( 'bp_moderation_delete_meta' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_moderation_delete_meta()}.
+	 *
+	 * @deprecated Use bboss_moderation_delete_meta() instead.
+	 */
+	function bp_moderation_delete_meta( $moderation_id, $meta_key = '', $meta_value = '', $delete_all = false ) {
+		return bboss_moderation_delete_meta( $moderation_id, $meta_key, $meta_value, $delete_all );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get metadata for a given suspend item.
@@ -861,6 +1141,20 @@ function bboss_suspend_get_meta( $suspend_id = 0, $meta_key = '', $single = true
 	 */
 	return apply_filters( 'bb_suspend_get_meta', $retval, $suspend_id, $meta_key, $single );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_suspend_get_meta' ) && ! function_exists( 'bb_suspend_get_meta' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_suspend_get_meta()}.
+	 *
+	 * @deprecated Use bboss_suspend_get_meta() instead.
+	 */
+	function bb_suspend_get_meta( $suspend_id = 0, $meta_key = '', $single = true ) {
+		return bboss_suspend_get_meta( $suspend_id, $meta_key, $single );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Add a piece of suspend metadata.
@@ -883,6 +1177,20 @@ function bboss_suspend_add_meta( $suspend_id, $meta_key, $meta_value, $unique = 
 
 	return $retval;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_suspend_add_meta' ) && ! function_exists( 'bb_suspend_add_meta' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_suspend_add_meta()}.
+	 *
+	 * @deprecated Use bboss_suspend_add_meta() instead.
+	 */
+	function bb_suspend_add_meta( $suspend_id, $meta_key, $meta_value, $unique = false ) {
+		return bboss_suspend_add_meta( $suspend_id, $meta_key, $meta_value, $unique );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Update a piece of suspend meta.
@@ -906,6 +1214,20 @@ function bboss_suspend_update_meta( $suspend_id, $meta_key, $meta_value, $prev_v
 
 	return $retval;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_suspend_update_meta' ) && ! function_exists( 'bb_suspend_update_meta' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_suspend_update_meta()}.
+	 *
+	 * @deprecated Use bboss_suspend_update_meta() instead.
+	 */
+	function bb_suspend_update_meta( $suspend_id, $meta_key, $meta_value, $prev_value = '' ) {
+		return bboss_suspend_update_meta( $suspend_id, $meta_key, $meta_value, $prev_value );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Delete a meta entry from the DB for a suspend item.
@@ -956,6 +1278,20 @@ function bboss_suspend_delete_meta( $suspend_id, $meta_key = '', $meta_value = '
 
 	return $retval;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_suspend_delete_meta' ) && ! function_exists( 'bb_suspend_delete_meta' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_suspend_delete_meta()}.
+	 *
+	 * @deprecated Use bboss_suspend_delete_meta() instead.
+	 */
+	function bb_suspend_delete_meta( $suspend_id, $meta_key = '', $meta_value = '', $delete_all = false ) {
+		return bboss_suspend_delete_meta( $suspend_id, $meta_key, $meta_value, $delete_all );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 
 /** Setting *********************************************************************/
@@ -973,6 +1309,20 @@ function bboss_suspend_delete_meta( $suspend_id, $meta_key = '', $meta_value = '
 function bboss_is_moderation_member_blocking_enable( $default = 0 ) {
 	return (bool) apply_filters( 'bp_is_moderation_member_blocking_enable', (bool) get_option( 'bpm_blocking_member_blocking', $default ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_moderation_member_blocking_enable' ) && ! function_exists( 'bp_is_moderation_member_blocking_enable' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_moderation_member_blocking_enable()}.
+	 *
+	 * @deprecated Use bboss_is_moderation_member_blocking_enable() instead.
+	 */
+	function bp_is_moderation_member_blocking_enable( $default = 0 ) {
+		return bboss_is_moderation_member_blocking_enable( $default );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Checks if Moderation Member auto suspend feature is enabled.
@@ -987,6 +1337,20 @@ function bboss_is_moderation_member_blocking_enable( $default = 0 ) {
 function bboss_is_moderation_auto_suspend_enable( $default = 0 ) {
 	return (bool) apply_filters( 'bp_is_moderation_auto_suspend_enable', (bool) get_option( 'bpm_blocking_auto_suspend', $default ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_moderation_auto_suspend_enable' ) && ! function_exists( 'bp_is_moderation_auto_suspend_enable' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_moderation_auto_suspend_enable()}.
+	 *
+	 * @deprecated Use bboss_is_moderation_auto_suspend_enable() instead.
+	 */
+	function bp_is_moderation_auto_suspend_enable( $default = 0 ) {
+		return bboss_is_moderation_auto_suspend_enable( $default );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Checks if Moderation Member auto suspend feature is enabled.
@@ -1002,6 +1366,20 @@ function bboss_moderation_auto_suspend_threshold( $default = 5 ) {
 
 	return apply_filters( 'bp_moderation_auto_suspend_threshold', (int) bboss_moderation_get_setting( 'bpm_blocking_auto_suspend_threshold', $default ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_moderation_auto_suspend_threshold' ) && ! function_exists( 'bp_moderation_auto_suspend_threshold' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_moderation_auto_suspend_threshold()}.
+	 *
+	 * @deprecated Use bboss_moderation_auto_suspend_threshold() instead.
+	 */
+	function bp_moderation_auto_suspend_threshold( $default = 5 ) {
+		return bboss_moderation_auto_suspend_threshold( $default );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Checks if Moderation Member reporting feature is enabled.
@@ -1016,6 +1394,20 @@ function bboss_moderation_auto_suspend_threshold( $default = 5 ) {
 function bboss_is_moderation_member_reporting_enable( $default = 0 ) {
 	return (bool) apply_filters( 'bb_is_moderation_member_reporting_enable', (bool) get_option( 'bb_blocking_member_reporting', $default ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_moderation_member_reporting_enable' ) && ! function_exists( 'bb_is_moderation_member_reporting_enable' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_moderation_member_reporting_enable()}.
+	 *
+	 * @deprecated Use bboss_is_moderation_member_reporting_enable() instead.
+	 */
+	function bb_is_moderation_member_reporting_enable( $default = 0 ) {
+		return bboss_is_moderation_member_reporting_enable( $default );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Checks if Moderation Member auto suspend report feature is enabled.
@@ -1030,6 +1422,20 @@ function bboss_is_moderation_member_reporting_enable( $default = 0 ) {
 function bboss_is_moderation_auto_suspend_report_enable( $default = 0 ) {
 	return (bool) apply_filters( 'bb_is_moderation_auto_suspend_report_enable', (bool) get_option( 'bb_reporting_auto_suspend', $default ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_moderation_auto_suspend_report_enable' ) && ! function_exists( 'bb_is_moderation_auto_suspend_report_enable' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_moderation_auto_suspend_report_enable()}.
+	 *
+	 * @deprecated Use bboss_is_moderation_auto_suspend_report_enable() instead.
+	 */
+	function bb_is_moderation_auto_suspend_report_enable( $default = 0 ) {
+		return bboss_is_moderation_auto_suspend_report_enable( $default );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Checks if Moderation Member auto suspend report feature is enabled.
@@ -1044,6 +1450,20 @@ function bboss_is_moderation_auto_suspend_report_enable( $default = 0 ) {
 function bboss_moderation_auto_suspend_report_threshold( $default = 5 ) {
 	return apply_filters( 'bb_moderation_auto_suspend_report_threshold', (int) bboss_moderation_get_setting( 'bb_reporting_auto_suspend_threshold', $default ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_moderation_auto_suspend_report_threshold' ) && ! function_exists( 'bb_moderation_auto_suspend_report_threshold' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_moderation_auto_suspend_report_threshold()}.
+	 *
+	 * @deprecated Use bboss_moderation_auto_suspend_report_threshold() instead.
+	 */
+	function bb_moderation_auto_suspend_report_threshold( $default = 5 ) {
+		return bboss_moderation_auto_suspend_report_threshold( $default );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Checks if Moderation Member auto suspend email notification feature is enabled.
@@ -1058,6 +1478,20 @@ function bboss_moderation_auto_suspend_report_threshold( $default = 5 ) {
 function bboss_is_moderation_blocking_email_notification_enable( $default = 0 ) {
 	return (bool) apply_filters( 'bp_is_moderation_blocking_email_notification_enable', (bool) get_option( 'bpm_blocking_email_notification', $default ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_moderation_blocking_email_notification_enable' ) && ! function_exists( 'bp_is_moderation_blocking_email_notification_enable' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_moderation_blocking_email_notification_enable()}.
+	 *
+	 * @deprecated Use bboss_is_moderation_blocking_email_notification_enable() instead.
+	 */
+	function bp_is_moderation_blocking_email_notification_enable( $default = 0 ) {
+		return bboss_is_moderation_blocking_email_notification_enable( $default );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Checks if Moderation content reporting feature is enabled.
@@ -1103,6 +1537,20 @@ function bboss_is_moderation_content_reporting_enable( $default = 0, $content_ty
 
 	return (bool) apply_filters( 'bp_is_moderation_content_reporting_enable', (bool) $settings[ $content_type ], $content_type );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_moderation_content_reporting_enable' ) && ! function_exists( 'bp_is_moderation_content_reporting_enable' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_moderation_content_reporting_enable()}.
+	 *
+	 * @deprecated Use bboss_is_moderation_content_reporting_enable() instead.
+	 */
+	function bp_is_moderation_content_reporting_enable( $default = 0, $content_type = '' ) {
+		return bboss_is_moderation_content_reporting_enable( $default, $content_type );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Checks if Moderation content auto hide feature is enabled.
@@ -1131,6 +1579,20 @@ function bboss_is_moderation_auto_hide_enable( $default = 0, $content_type = '' 
 
 	return (bool) apply_filters( 'bp_is_moderation_auto_hide_enable', (bool) $settings[ $content_type ], $content_type );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_moderation_auto_hide_enable' ) && ! function_exists( 'bp_is_moderation_auto_hide_enable' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_moderation_auto_hide_enable()}.
+	 *
+	 * @deprecated Use bboss_is_moderation_auto_hide_enable() instead.
+	 */
+	function bp_is_moderation_auto_hide_enable( $default = 0, $content_type = '' ) {
+		return bboss_is_moderation_auto_hide_enable( $default, $content_type );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get threshold velue for content reporting.
@@ -1156,6 +1618,20 @@ function bboss_moderation_reporting_auto_hide_threshold( $default = 5, $content_
 
 	return apply_filters( 'bp_moderation_reporting_auto_hide_threshold', (int) $settings[ $content_type ], $content_type );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_moderation_reporting_auto_hide_threshold' ) && ! function_exists( 'bp_moderation_reporting_auto_hide_threshold' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_moderation_reporting_auto_hide_threshold()}.
+	 *
+	 * @deprecated Use bboss_moderation_reporting_auto_hide_threshold() instead.
+	 */
+	function bp_moderation_reporting_auto_hide_threshold( $default = 5, $content_type = '' ) {
+		return bboss_moderation_reporting_auto_hide_threshold( $default, $content_type );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Checks if Moderation content auto hide email notification feature is enabled.
@@ -1170,6 +1646,20 @@ function bboss_moderation_reporting_auto_hide_threshold( $default = 5, $content_
 function bboss_is_moderation_reporting_email_notification_enable( $default = 0 ) {
 	return (bool) apply_filters( 'bp_is_moderation_reporting_email_notification_enable', (bool) get_option( 'bpm_reporting_email_notification', $default ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_moderation_reporting_email_notification_enable' ) && ! function_exists( 'bp_is_moderation_reporting_email_notification_enable' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_moderation_reporting_email_notification_enable()}.
+	 *
+	 * @deprecated Use bboss_is_moderation_reporting_email_notification_enable() instead.
+	 */
+	function bp_is_moderation_reporting_email_notification_enable( $default = 0 ) {
+		return bboss_is_moderation_reporting_email_notification_enable( $default );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /** Other *********************************************************************/
 
@@ -1194,6 +1684,20 @@ function bboss_moderation_get_content_owner_id( $moderation_item_id, $moderation
 
 	return is_array( $user_ids ) ? $user_ids : (int) $user_ids;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_moderation_get_content_owner_id' ) && ! function_exists( 'bp_moderation_get_content_owner_id' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_moderation_get_content_owner_id()}.
+	 *
+	 * @deprecated Use bboss_moderation_get_content_owner_id() instead.
+	 */
+	function bp_moderation_get_content_owner_id( $moderation_item_id, $moderation_item_type ) {
+		return bboss_moderation_get_content_owner_id( $moderation_item_id, $moderation_item_type );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Function to get the content based on type.
@@ -1216,6 +1720,20 @@ function bboss_moderation_get_permalink( $moderation_item_id, $moderation_item_t
 
 	return $link;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_moderation_get_permalink' ) && ! function_exists( 'bp_moderation_get_permalink' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_moderation_get_permalink()}.
+	 *
+	 * @deprecated Use bboss_moderation_get_permalink() instead.
+	 */
+	function bp_moderation_get_permalink( $moderation_item_id, $moderation_item_type ) {
+		return bboss_moderation_get_permalink( $moderation_item_id, $moderation_item_type );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Function to send member suspension email
@@ -1241,6 +1759,20 @@ function bboss_moderation_member_suspend_email( $email, $tokens ) {
 		)
 	);
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_moderation_member_suspend_email' ) && ! function_exists( 'bp_moderation_member_suspend_email' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_moderation_member_suspend_email()}.
+	 *
+	 * @deprecated Use bboss_moderation_member_suspend_email() instead.
+	 */
+	function bp_moderation_member_suspend_email( $email, $tokens ) {
+		return bboss_moderation_member_suspend_email( $email, $tokens );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Function to send email when content is auto hidden
@@ -1267,6 +1799,20 @@ function bboss_moderation_content_hide_email( $email, $tokens ) {
 		)
 	);
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_moderation_content_hide_email' ) && ! function_exists( 'bp_moderation_content_hide_email' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_moderation_content_hide_email()}.
+	 *
+	 * @deprecated Use bboss_moderation_content_hide_email() instead.
+	 */
+	function bp_moderation_content_hide_email( $email, $tokens ) {
+		return bboss_moderation_content_hide_email( $email, $tokens );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Function to get the moderation item count based on status.
@@ -1289,6 +1835,20 @@ function bboss_moderation_item_count( $args = array() ) {
 
 	return apply_filters( 'bp_moderation_item_count', ! empty( $result['total'] ) ? $result['total'] : 0 );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_moderation_item_count' ) && ! function_exists( 'bp_moderation_item_count' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_moderation_item_count()}.
+	 *
+	 * @deprecated Use bboss_moderation_item_count() instead.
+	 */
+	function bp_moderation_item_count( $args = array() ) {
+		return bboss_moderation_item_count( $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Function to get content report type.
@@ -1315,6 +1875,20 @@ function bboss_moderation_get_report_type( $item_type, $item_id ) {
 	 */
 	return apply_filters( "bp_moderation_{$item_type}_report_content_type", esc_html__( 'Post', 'buddyboss' ), $item_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_moderation_get_report_type' ) && ! function_exists( 'bp_moderation_get_report_type' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_moderation_get_report_type()}.
+	 *
+	 * @deprecated Use bboss_moderation_get_report_type() instead.
+	 */
+	function bp_moderation_get_report_type( $item_type, $item_id ) {
+		return bboss_moderation_get_report_type( $item_type, $item_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Function to get report button text.
@@ -1341,6 +1915,20 @@ function bboss_moderation_get_report_button_text( $item_type, $item_id ) {
 	 */
 	return apply_filters( "bb_moderation_{$item_type}_report_button_text", esc_html__( 'Report', 'buddyboss' ), $item_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_moderation_get_report_button_text' ) && ! function_exists( 'bp_moderation_get_report_button_text' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_moderation_get_report_button_text()}.
+	 *
+	 * @deprecated Use bboss_moderation_get_report_button_text() instead.
+	 */
+	function bp_moderation_get_report_button_text( $item_type, $item_id ) {
+		return bboss_moderation_get_report_button_text( $item_type, $item_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Function to get reported button text.
@@ -1367,6 +1955,20 @@ function bboss_moderation_get_reported_button_text( $item_type, $item_id ) {
 	 */
 	return apply_filters( "bb_moderation_{$item_type}_reported_button_text", esc_html__( 'Reported', 'buddyboss' ), $item_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_moderation_get_reported_button_text' ) && ! function_exists( 'bp_moderation_get_reported_button_text' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_moderation_get_reported_button_text()}.
+	 *
+	 * @deprecated Use bboss_moderation_get_reported_button_text() instead.
+	 */
+	function bp_moderation_get_reported_button_text( $item_type, $item_id ) {
+		return bboss_moderation_get_reported_button_text( $item_type, $item_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Function to get reporting categories show when fields array.
@@ -1392,6 +1994,20 @@ function bboss_moderation_get_reporting_category_fields_array() {
 	 */
 	return apply_filters( 'bb_moderation_get_reporting_category_fields_array', $result );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_moderation_get_reporting_category_fields_array' ) && ! function_exists( 'bb_moderation_get_reporting_category_fields_array' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_moderation_get_reporting_category_fields_array()}.
+	 *
+	 * @deprecated Use bboss_moderation_get_reporting_category_fields_array() instead.
+	 */
+	function bb_moderation_get_reporting_category_fields_array() {
+		return bboss_moderation_get_reporting_category_fields_array();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Fetch the user id by blocked by.
@@ -1423,6 +2039,20 @@ function bboss_moderation_get_blocked_by_user_ids( $user_id = 0, $force = false 
 
 	return $data;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_moderation_get_blocked_by_user_ids' ) && ! function_exists( 'bb_moderation_get_blocked_by_user_ids' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_moderation_get_blocked_by_user_ids()}.
+	 *
+	 * @deprecated Use bboss_moderation_get_blocked_by_user_ids() instead.
+	 */
+	function bb_moderation_get_blocked_by_user_ids( $user_id = 0, $force = false ) {
+		return bboss_moderation_get_blocked_by_user_ids( $user_id, $force );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return SQL to fetch the query for blocked by users.
@@ -1446,6 +2076,20 @@ function bboss_moderation_get_blocked_by_sql( $user_id = 0 ) {
 	// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 	return $wpdb->prepare( "SELECT DISTINCT m.user_id FROM {$bp->moderation->table_name} s LEFT JOIN {$bp->moderation->table_name_reports} m ON m.moderation_id = s.id WHERE s.item_type = %s AND s.item_id = %d AND s.reported != 0 AND m.user_report != 1", $type, $user_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_moderation_get_blocked_by_sql' ) && ! function_exists( 'bb_moderation_get_blocked_by_sql' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_moderation_get_blocked_by_sql()}.
+	 *
+	 * @deprecated Use bboss_moderation_get_blocked_by_sql() instead.
+	 */
+	function bb_moderation_get_blocked_by_sql( $user_id = 0 ) {
+		return bboss_moderation_get_blocked_by_sql( $user_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Check whether a user has been marked as a blocked by another user.
@@ -1465,6 +2109,20 @@ function bboss_moderation_is_user_blocked_by( $user_id ) {
 
 	return ( ! empty( $blocked_by_members ) && in_array( (int) $user_id, $blocked_by_members, true ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_moderation_is_user_blocked_by' ) && ! function_exists( 'bb_moderation_is_user_blocked_by' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_moderation_is_user_blocked_by()}.
+	 *
+	 * @deprecated Use bboss_moderation_is_user_blocked_by() instead.
+	 */
+	function bb_moderation_is_user_blocked_by( $user_id ) {
+		return bboss_moderation_is_user_blocked_by( $user_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Group organizers should be able to see the names/avatars of members in all places in their group,
@@ -1532,6 +2190,20 @@ function bboss_moderation_fetch_avatar_url_filter( $avatar_url, $old_avatar_url,
 
 	return $avatar_url;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_moderation_fetch_avatar_url_filter' ) && ! function_exists( 'bb_moderation_fetch_avatar_url_filter' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_moderation_fetch_avatar_url_filter()}.
+	 *
+	 * @deprecated Use bboss_moderation_fetch_avatar_url_filter() instead.
+	 */
+	function bb_moderation_fetch_avatar_url_filter( $avatar_url, $old_avatar_url, $params ) {
+		return bboss_moderation_fetch_avatar_url_filter( $avatar_url, $old_avatar_url, $params );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Function to fetch the blocked by user label.
@@ -1555,6 +2227,20 @@ function bboss_moderation_is_blocked_label( $value, $user_id = 0 ) {
 	 */
 	return apply_filters( 'bb_moderation_is_blocked_label', $value, $user_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_moderation_is_blocked_label' ) && ! function_exists( 'bb_moderation_is_blocked_label' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_moderation_is_blocked_label()}.
+	 *
+	 * @deprecated Use bboss_moderation_is_blocked_label() instead.
+	 */
+	function bb_moderation_is_blocked_label( $value, $user_id = 0 ) {
+		return bboss_moderation_is_blocked_label( $value, $user_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Function to fetch the blocked user label.
@@ -1578,6 +2264,20 @@ function bboss_moderation_has_blocked_label( $value, $user_id = 0 ) {
 	 */
 	return apply_filters( 'bb_moderation_has_blocked_label', $value, $user_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_moderation_has_blocked_label' ) && ! function_exists( 'bb_moderation_has_blocked_label' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_moderation_has_blocked_label()}.
+	 *
+	 * @deprecated Use bboss_moderation_has_blocked_label() instead.
+	 */
+	function bb_moderation_has_blocked_label( $value, $user_id = 0 ) {
+		return bboss_moderation_has_blocked_label( $value, $user_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Function to fetch the blocked by user avatar.
@@ -1602,6 +2302,20 @@ function bboss_moderation_is_blocked_avatar( $user_id, $args = array() ) {
 	 */
 	return apply_filters( 'bb_moderation_is_blocked_avatar', bboss_attachments_get_default_profile_group_avatar_image( array( 'object' => 'user' ) ), $user_id, $args );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_moderation_is_blocked_avatar' ) && ! function_exists( 'bb_moderation_is_blocked_avatar' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_moderation_is_blocked_avatar()}.
+	 *
+	 * @deprecated Use bboss_moderation_is_blocked_avatar() instead.
+	 */
+	function bb_moderation_is_blocked_avatar( $user_id, $args = array() ) {
+		return bboss_moderation_is_blocked_avatar( $user_id, $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Function to fetch the blocked user avatar.
@@ -1627,6 +2341,20 @@ function bboss_moderation_has_blocked_avatar( $avatar_url, $user_id, $args = arr
 	 */
 	return apply_filters( 'bb_moderation_has_blocked_avatar', $avatar_url, $user_id, $args );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_moderation_has_blocked_avatar' ) && ! function_exists( 'bb_moderation_has_blocked_avatar' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_moderation_has_blocked_avatar()}.
+	 *
+	 * @deprecated Use bboss_moderation_has_blocked_avatar() instead.
+	 */
+	function bb_moderation_has_blocked_avatar( $avatar_url, $user_id, $args = array() ) {
+		return bboss_moderation_has_blocked_avatar( $avatar_url, $user_id, $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Function to fetch the suspended by user label.
@@ -1649,6 +2377,20 @@ function bboss_moderation_is_suspended_label( $user_id = 0 ) {
 	 */
 	return apply_filters( 'bb_moderation_is_suspended_label', esc_html__( 'Unknown Member', 'buddyboss' ), $user_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_moderation_is_suspended_label' ) && ! function_exists( 'bb_moderation_is_suspended_label' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_moderation_is_suspended_label()}.
+	 *
+	 * @deprecated Use bboss_moderation_is_suspended_label() instead.
+	 */
+	function bb_moderation_is_suspended_label( $user_id = 0 ) {
+		return bboss_moderation_is_suspended_label( $user_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Function to fetch the suspended by user avatar.
@@ -1673,6 +2415,20 @@ function bboss_moderation_is_suspended_avatar( $user_id = 0, $args = array() ) {
 	 */
 	return apply_filters( 'bb_moderation_is_suspended_avatar', bboss_attachments_get_default_profile_group_avatar_image( array( 'object' => 'user' ) ), $user_id, $args );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_moderation_is_suspended_avatar' ) && ! function_exists( 'bb_moderation_is_suspended_avatar' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_moderation_is_suspended_avatar()}.
+	 *
+	 * @deprecated Use bboss_moderation_is_suspended_avatar() instead.
+	 */
+	function bb_moderation_is_suspended_avatar( $user_id = 0, $args = array() ) {
+		return bboss_moderation_is_suspended_avatar( $user_id, $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Function to fetch the delete user's label.
@@ -1692,6 +2448,20 @@ function bboss_moderation_is_deleted_label() {
 	 */
 	return apply_filters( 'bb_moderation_is_deleted_label', esc_html__( 'Unknown Member', 'buddyboss' ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_moderation_is_deleted_label' ) && ! function_exists( 'bb_moderation_is_deleted_label' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_moderation_is_deleted_label()}.
+	 *
+	 * @deprecated Use bboss_moderation_is_deleted_label() instead.
+	 */
+	function bb_moderation_is_deleted_label() {
+		return bboss_moderation_is_deleted_label();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Function to fetch the delete users avatar.
@@ -1711,6 +2481,20 @@ function bboss_moderation_is_deleted_avatar() {
 	 */
 	return apply_filters( 'bb_moderation_is_deleted_avatar', bboss_attachments_get_default_profile_group_avatar_image( array( 'object' => 'user' ) ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_moderation_is_deleted_avatar' ) && ! function_exists( 'bb_moderation_is_deleted_avatar' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_moderation_is_deleted_avatar()}.
+	 *
+	 * @deprecated Use bboss_moderation_is_deleted_avatar() instead.
+	 */
+	function bb_moderation_is_deleted_avatar() {
+		return bboss_moderation_is_deleted_avatar();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Function will return text when current user blocked to other user.
@@ -1737,6 +2521,20 @@ function bboss_moderation_has_blocked_message( $value, $item_type = '', $item_id
 
 	return apply_filters( 'bb_moderation_has_blocked_message', $value, $item_type, $item_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_moderation_has_blocked_message' ) && ! function_exists( 'bb_moderation_has_blocked_message' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_moderation_has_blocked_message()}.
+	 *
+	 * @deprecated Use bboss_moderation_has_blocked_message() instead.
+	 */
+	function bb_moderation_has_blocked_message( $value, $item_type = '', $item_id = 0 ) {
+		return bboss_moderation_has_blocked_message( $value, $item_type, $item_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Function will return text when current user blocked by other user.
@@ -1762,6 +2560,20 @@ function bboss_moderation_is_blocked_message( $value, $item_type = '', $item_id 
 	 */
 	return apply_filters( 'bb_moderation_is_blocked_message', $value, $item_type, $item_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_moderation_is_blocked_message' ) && ! function_exists( 'bb_moderation_is_blocked_message' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_moderation_is_blocked_message()}.
+	 *
+	 * @deprecated Use bboss_moderation_is_blocked_message() instead.
+	 */
+	function bb_moderation_is_blocked_message( $value, $item_type = '', $item_id = 0 ) {
+		return bboss_moderation_is_blocked_message( $value, $item_type, $item_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Function will return text when user is suspended.
@@ -1788,6 +2600,20 @@ function bboss_moderation_is_suspended_message( $value, $item_type = '', $item_i
 
 	return apply_filters( 'bb_moderation_is_suspended_message', $value, $item_type, $item_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_moderation_is_suspended_message' ) && ! function_exists( 'bb_moderation_is_suspended_message' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_moderation_is_suspended_message()}.
+	 *
+	 * @deprecated Use bboss_moderation_is_suspended_message() instead.
+	 */
+	function bb_moderation_is_suspended_message( $value, $item_type = '', $item_id = 0 ) {
+		return bboss_moderation_is_suspended_message( $value, $item_type, $item_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Function will remove mention link from content if mentioned member is blocked/blokedby/suspended.
@@ -1830,6 +2656,20 @@ function bboss_moderation_remove_mention_link( $content ) {
 
 	return $content;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_moderation_remove_mention_link' ) && ! function_exists( 'bb_moderation_remove_mention_link' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_moderation_remove_mention_link()}.
+	 *
+	 * @deprecated Use bboss_moderation_remove_mention_link() instead.
+	 */
+	function bb_moderation_remove_mention_link( $content ) {
+		return bboss_moderation_remove_mention_link( $content );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Fetch all suspended user_ids.
@@ -1856,6 +2696,20 @@ function bboss_moderation_get_suspended_user_ids( $force = false ) {
 
 	return $data;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_moderation_get_suspended_user_ids' ) && ! function_exists( 'bb_moderation_get_suspended_user_ids' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_moderation_get_suspended_user_ids()}.
+	 *
+	 * @deprecated Use bboss_moderation_get_suspended_user_ids() instead.
+	 */
+	function bb_moderation_get_suspended_user_ids( $force = false ) {
+		return bboss_moderation_get_suspended_user_ids( $force );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Fetch all moderated user or check the user is moderated or not.
@@ -1908,6 +2762,20 @@ function bboss_moderation_moderated_user_ids( $user_id = 0 ) {
 
 	return $retval;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_moderation_moderated_user_ids' ) && ! function_exists( 'bb_moderation_moderated_user_ids' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_moderation_moderated_user_ids()}.
+	 *
+	 * @deprecated Use bboss_moderation_moderated_user_ids() instead.
+	 */
+	function bb_moderation_moderated_user_ids( $user_id = 0 ) {
+		return bboss_moderation_moderated_user_ids( $user_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Function will allow to send specific email/notification.
@@ -2018,6 +2886,20 @@ function bboss_moderation_allowed_specific_notification( $args ) {
 
 	return $retval;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_moderation_allowed_specific_notification' ) && ! function_exists( 'bb_moderation_allowed_specific_notification' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_moderation_allowed_specific_notification()}.
+	 *
+	 * @deprecated Use bboss_moderation_allowed_specific_notification() instead.
+	 */
+	function bb_moderation_allowed_specific_notification( $args ) {
+		return bboss_moderation_allowed_specific_notification( $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * If the content has been changed by these filters bb_moderation_has_blocked_message,
@@ -2067,6 +2949,20 @@ function bboss_moderation_to_hide_forum_activity( $activity_id ) {
 
 	return $hide_activity;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_moderation_to_hide_forum_activity' ) && ! function_exists( 'bb_moderation_to_hide_forum_activity' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_moderation_to_hide_forum_activity()}.
+	 *
+	 * @deprecated Use bboss_moderation_to_hide_forum_activity() instead.
+	 */
+	function bb_moderation_to_hide_forum_activity( $activity_id ) {
+		return bboss_moderation_to_hide_forum_activity( $activity_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Run Migration related to the Moderation.
@@ -2221,6 +3117,20 @@ function bboss_moderation_migration_on_update() {
 		$wpdb->query( "CREATE INDEX suspend_conditions ON {$bp_prefix}bp_suspend(user_suspended, hide_parent, hide_sitewide)" ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.NoCaching
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_moderation_migration_on_update' ) && ! function_exists( 'bb_moderation_migration_on_update' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_moderation_migration_on_update()}.
+	 *
+	 * @deprecated Use bboss_moderation_migration_on_update() instead.
+	 */
+	function bb_moderation_migration_on_update() {
+		return bboss_moderation_migration_on_update();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Fetch all moderated user or check the user is moderated or not SQL.
@@ -2287,6 +3197,20 @@ function bboss_moderation_moderated_user_ids_sql( $user_id = 0 ) {
 
 	return $retval;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_moderation_moderated_user_ids_sql' ) && ! function_exists( 'bb_moderation_moderated_user_ids_sql' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_moderation_moderated_user_ids_sql()}.
+	 *
+	 * @deprecated Use bboss_moderation_moderated_user_ids_sql() instead.
+	 */
+	function bb_moderation_moderated_user_ids_sql( $user_id = 0 ) {
+		return bboss_moderation_moderated_user_ids_sql( $user_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Default reporting categories that ship with BuddyBoss Platform.
@@ -2326,6 +3250,20 @@ function bboss_moderation_get_default_report_categories() {
 		),
 	);
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_moderation_get_default_report_categories' ) && ! function_exists( 'bp_moderation_get_default_report_categories' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_moderation_get_default_report_categories()}.
+	 *
+	 * @deprecated Use bboss_moderation_get_default_report_categories() instead.
+	 */
+	function bp_moderation_get_default_report_categories() {
+		return bboss_moderation_get_default_report_categories();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Translate a default reporting-category term's name/description on the fly.
@@ -2368,620 +3306,8 @@ function bboss_moderation_maybe_translate_report_term( $term ) {
 
 	return $term;
 }
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
-if ( function_exists( 'bboss_is_moderation_auto_suspend_report_enable' ) && ! function_exists( 'bb_is_moderation_auto_suspend_report_enable' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_moderation_auto_suspend_report_enable()}.
-	 *
-	 * @deprecated Use bboss_is_moderation_auto_suspend_report_enable() instead.
-	 */
-	function bb_is_moderation_auto_suspend_report_enable( $default = 0 ) {
-		return bboss_is_moderation_auto_suspend_report_enable( $default );
-	}
-}
-if ( function_exists( 'bboss_is_moderation_member_reporting_enable' ) && ! function_exists( 'bb_is_moderation_member_reporting_enable' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_moderation_member_reporting_enable()}.
-	 *
-	 * @deprecated Use bboss_is_moderation_member_reporting_enable() instead.
-	 */
-	function bb_is_moderation_member_reporting_enable( $default = 0 ) {
-		return bboss_is_moderation_member_reporting_enable( $default );
-	}
-}
-if ( function_exists( 'bboss_moderation_allowed_specific_notification' ) && ! function_exists( 'bb_moderation_allowed_specific_notification' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_moderation_allowed_specific_notification()}.
-	 *
-	 * @deprecated Use bboss_moderation_allowed_specific_notification() instead.
-	 */
-	function bb_moderation_allowed_specific_notification( $args ) {
-		return bboss_moderation_allowed_specific_notification( $args );
-	}
-}
-if ( function_exists( 'bboss_moderation_auto_suspend_report_threshold' ) && ! function_exists( 'bb_moderation_auto_suspend_report_threshold' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_moderation_auto_suspend_report_threshold()}.
-	 *
-	 * @deprecated Use bboss_moderation_auto_suspend_report_threshold() instead.
-	 */
-	function bb_moderation_auto_suspend_report_threshold( $default = 5 ) {
-		return bboss_moderation_auto_suspend_report_threshold( $default );
-	}
-}
-if ( function_exists( 'bboss_moderation_fetch_avatar_url_filter' ) && ! function_exists( 'bb_moderation_fetch_avatar_url_filter' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_moderation_fetch_avatar_url_filter()}.
-	 *
-	 * @deprecated Use bboss_moderation_fetch_avatar_url_filter() instead.
-	 */
-	function bb_moderation_fetch_avatar_url_filter( $avatar_url, $old_avatar_url, $params ) {
-		return bboss_moderation_fetch_avatar_url_filter( $avatar_url, $old_avatar_url, $params );
-	}
-}
-if ( function_exists( 'bboss_moderation_get_blocked_by_sql' ) && ! function_exists( 'bb_moderation_get_blocked_by_sql' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_moderation_get_blocked_by_sql()}.
-	 *
-	 * @deprecated Use bboss_moderation_get_blocked_by_sql() instead.
-	 */
-	function bb_moderation_get_blocked_by_sql( $user_id = 0 ) {
-		return bboss_moderation_get_blocked_by_sql( $user_id );
-	}
-}
-if ( function_exists( 'bboss_moderation_get_blocked_by_user_ids' ) && ! function_exists( 'bb_moderation_get_blocked_by_user_ids' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_moderation_get_blocked_by_user_ids()}.
-	 *
-	 * @deprecated Use bboss_moderation_get_blocked_by_user_ids() instead.
-	 */
-	function bb_moderation_get_blocked_by_user_ids( $user_id = 0, $force = false ) {
-		return bboss_moderation_get_blocked_by_user_ids( $user_id, $force );
-	}
-}
-if ( function_exists( 'bboss_moderation_get_reporting_category_fields_array' ) && ! function_exists( 'bb_moderation_get_reporting_category_fields_array' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_moderation_get_reporting_category_fields_array()}.
-	 *
-	 * @deprecated Use bboss_moderation_get_reporting_category_fields_array() instead.
-	 */
-	function bb_moderation_get_reporting_category_fields_array() {
-		return bboss_moderation_get_reporting_category_fields_array();
-	}
-}
-if ( function_exists( 'bboss_moderation_get_suspended_user_ids' ) && ! function_exists( 'bb_moderation_get_suspended_user_ids' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_moderation_get_suspended_user_ids()}.
-	 *
-	 * @deprecated Use bboss_moderation_get_suspended_user_ids() instead.
-	 */
-	function bb_moderation_get_suspended_user_ids( $force = false ) {
-		return bboss_moderation_get_suspended_user_ids( $force );
-	}
-}
-if ( function_exists( 'bboss_moderation_has_blocked_avatar' ) && ! function_exists( 'bb_moderation_has_blocked_avatar' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_moderation_has_blocked_avatar()}.
-	 *
-	 * @deprecated Use bboss_moderation_has_blocked_avatar() instead.
-	 */
-	function bb_moderation_has_blocked_avatar( $avatar_url, $user_id, $args = array() ) {
-		return bboss_moderation_has_blocked_avatar( $avatar_url, $user_id, $args );
-	}
-}
-if ( function_exists( 'bboss_moderation_has_blocked_label' ) && ! function_exists( 'bb_moderation_has_blocked_label' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_moderation_has_blocked_label()}.
-	 *
-	 * @deprecated Use bboss_moderation_has_blocked_label() instead.
-	 */
-	function bb_moderation_has_blocked_label( $value, $user_id = 0 ) {
-		return bboss_moderation_has_blocked_label( $value, $user_id );
-	}
-}
-if ( function_exists( 'bboss_moderation_has_blocked_message' ) && ! function_exists( 'bb_moderation_has_blocked_message' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_moderation_has_blocked_message()}.
-	 *
-	 * @deprecated Use bboss_moderation_has_blocked_message() instead.
-	 */
-	function bb_moderation_has_blocked_message( $value, $item_type = '', $item_id = 0 ) {
-		return bboss_moderation_has_blocked_message( $value, $item_type, $item_id );
-	}
-}
-if ( function_exists( 'bboss_moderation_is_blocked_avatar' ) && ! function_exists( 'bb_moderation_is_blocked_avatar' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_moderation_is_blocked_avatar()}.
-	 *
-	 * @deprecated Use bboss_moderation_is_blocked_avatar() instead.
-	 */
-	function bb_moderation_is_blocked_avatar( $user_id, $args = array() ) {
-		return bboss_moderation_is_blocked_avatar( $user_id, $args );
-	}
-}
-if ( function_exists( 'bboss_moderation_is_blocked_label' ) && ! function_exists( 'bb_moderation_is_blocked_label' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_moderation_is_blocked_label()}.
-	 *
-	 * @deprecated Use bboss_moderation_is_blocked_label() instead.
-	 */
-	function bb_moderation_is_blocked_label( $value, $user_id = 0 ) {
-		return bboss_moderation_is_blocked_label( $value, $user_id );
-	}
-}
-if ( function_exists( 'bboss_moderation_is_blocked_message' ) && ! function_exists( 'bb_moderation_is_blocked_message' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_moderation_is_blocked_message()}.
-	 *
-	 * @deprecated Use bboss_moderation_is_blocked_message() instead.
-	 */
-	function bb_moderation_is_blocked_message( $value, $item_type = '', $item_id = 0 ) {
-		return bboss_moderation_is_blocked_message( $value, $item_type, $item_id );
-	}
-}
-if ( function_exists( 'bboss_moderation_is_deleted_avatar' ) && ! function_exists( 'bb_moderation_is_deleted_avatar' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_moderation_is_deleted_avatar()}.
-	 *
-	 * @deprecated Use bboss_moderation_is_deleted_avatar() instead.
-	 */
-	function bb_moderation_is_deleted_avatar() {
-		return bboss_moderation_is_deleted_avatar();
-	}
-}
-if ( function_exists( 'bboss_moderation_is_deleted_label' ) && ! function_exists( 'bb_moderation_is_deleted_label' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_moderation_is_deleted_label()}.
-	 *
-	 * @deprecated Use bboss_moderation_is_deleted_label() instead.
-	 */
-	function bb_moderation_is_deleted_label() {
-		return bboss_moderation_is_deleted_label();
-	}
-}
-if ( function_exists( 'bboss_moderation_is_suspended_avatar' ) && ! function_exists( 'bb_moderation_is_suspended_avatar' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_moderation_is_suspended_avatar()}.
-	 *
-	 * @deprecated Use bboss_moderation_is_suspended_avatar() instead.
-	 */
-	function bb_moderation_is_suspended_avatar( $user_id = 0, $args = array() ) {
-		return bboss_moderation_is_suspended_avatar( $user_id, $args );
-	}
-}
-if ( function_exists( 'bboss_moderation_is_suspended_label' ) && ! function_exists( 'bb_moderation_is_suspended_label' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_moderation_is_suspended_label()}.
-	 *
-	 * @deprecated Use bboss_moderation_is_suspended_label() instead.
-	 */
-	function bb_moderation_is_suspended_label( $user_id = 0 ) {
-		return bboss_moderation_is_suspended_label( $user_id );
-	}
-}
-if ( function_exists( 'bboss_moderation_is_suspended_message' ) && ! function_exists( 'bb_moderation_is_suspended_message' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_moderation_is_suspended_message()}.
-	 *
-	 * @deprecated Use bboss_moderation_is_suspended_message() instead.
-	 */
-	function bb_moderation_is_suspended_message( $value, $item_type = '', $item_id = 0 ) {
-		return bboss_moderation_is_suspended_message( $value, $item_type, $item_id );
-	}
-}
-if ( function_exists( 'bboss_moderation_is_user_blocked_by' ) && ! function_exists( 'bb_moderation_is_user_blocked_by' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_moderation_is_user_blocked_by()}.
-	 *
-	 * @deprecated Use bboss_moderation_is_user_blocked_by() instead.
-	 */
-	function bb_moderation_is_user_blocked_by( $user_id ) {
-		return bboss_moderation_is_user_blocked_by( $user_id );
-	}
-}
-if ( function_exists( 'bboss_moderation_migration_on_update' ) && ! function_exists( 'bb_moderation_migration_on_update' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_moderation_migration_on_update()}.
-	 *
-	 * @deprecated Use bboss_moderation_migration_on_update() instead.
-	 */
-	function bb_moderation_migration_on_update() {
-		return bboss_moderation_migration_on_update();
-	}
-}
-if ( function_exists( 'bboss_moderation_moderated_user_ids' ) && ! function_exists( 'bb_moderation_moderated_user_ids' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_moderation_moderated_user_ids()}.
-	 *
-	 * @deprecated Use bboss_moderation_moderated_user_ids() instead.
-	 */
-	function bb_moderation_moderated_user_ids( $user_id = 0 ) {
-		return bboss_moderation_moderated_user_ids( $user_id );
-	}
-}
-if ( function_exists( 'bboss_moderation_moderated_user_ids_sql' ) && ! function_exists( 'bb_moderation_moderated_user_ids_sql' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_moderation_moderated_user_ids_sql()}.
-	 *
-	 * @deprecated Use bboss_moderation_moderated_user_ids_sql() instead.
-	 */
-	function bb_moderation_moderated_user_ids_sql( $user_id = 0 ) {
-		return bboss_moderation_moderated_user_ids_sql( $user_id );
-	}
-}
-if ( function_exists( 'bboss_moderation_remove_mention_link' ) && ! function_exists( 'bb_moderation_remove_mention_link' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_moderation_remove_mention_link()}.
-	 *
-	 * @deprecated Use bboss_moderation_remove_mention_link() instead.
-	 */
-	function bb_moderation_remove_mention_link( $content ) {
-		return bboss_moderation_remove_mention_link( $content );
-	}
-}
-if ( function_exists( 'bboss_moderation_to_hide_forum_activity' ) && ! function_exists( 'bb_moderation_to_hide_forum_activity' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_moderation_to_hide_forum_activity()}.
-	 *
-	 * @deprecated Use bboss_moderation_to_hide_forum_activity() instead.
-	 */
-	function bb_moderation_to_hide_forum_activity( $activity_id ) {
-		return bboss_moderation_to_hide_forum_activity( $activity_id );
-	}
-}
-if ( function_exists( 'bboss_suspend_add_meta' ) && ! function_exists( 'bb_suspend_add_meta' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_suspend_add_meta()}.
-	 *
-	 * @deprecated Use bboss_suspend_add_meta() instead.
-	 */
-	function bb_suspend_add_meta( $suspend_id, $meta_key, $meta_value, $unique = false ) {
-		return bboss_suspend_add_meta( $suspend_id, $meta_key, $meta_value, $unique );
-	}
-}
-if ( function_exists( 'bboss_suspend_delete_meta' ) && ! function_exists( 'bb_suspend_delete_meta' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_suspend_delete_meta()}.
-	 *
-	 * @deprecated Use bboss_suspend_delete_meta() instead.
-	 */
-	function bb_suspend_delete_meta( $suspend_id, $meta_key = '', $meta_value = '', $delete_all = false ) {
-		return bboss_suspend_delete_meta( $suspend_id, $meta_key, $meta_value, $delete_all );
-	}
-}
-if ( function_exists( 'bboss_suspend_get_meta' ) && ! function_exists( 'bb_suspend_get_meta' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_suspend_get_meta()}.
-	 *
-	 * @deprecated Use bboss_suspend_get_meta() instead.
-	 */
-	function bb_suspend_get_meta( $suspend_id = 0, $meta_key = '', $single = true ) {
-		return bboss_suspend_get_meta( $suspend_id, $meta_key, $single );
-	}
-}
-if ( function_exists( 'bboss_suspend_update_meta' ) && ! function_exists( 'bb_suspend_update_meta' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_suspend_update_meta()}.
-	 *
-	 * @deprecated Use bboss_suspend_update_meta() instead.
-	 */
-	function bb_suspend_update_meta( $suspend_id, $meta_key, $meta_value, $prev_value = '' ) {
-		return bboss_suspend_update_meta( $suspend_id, $meta_key, $meta_value, $prev_value );
-	}
-}
-if ( function_exists( 'bboss_is_moderation_auto_hide_enable' ) && ! function_exists( 'bp_is_moderation_auto_hide_enable' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_moderation_auto_hide_enable()}.
-	 *
-	 * @deprecated Use bboss_is_moderation_auto_hide_enable() instead.
-	 */
-	function bp_is_moderation_auto_hide_enable( $default = 0, $content_type = '' ) {
-		return bboss_is_moderation_auto_hide_enable( $default, $content_type );
-	}
-}
-if ( function_exists( 'bboss_is_moderation_auto_suspend_enable' ) && ! function_exists( 'bp_is_moderation_auto_suspend_enable' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_moderation_auto_suspend_enable()}.
-	 *
-	 * @deprecated Use bboss_is_moderation_auto_suspend_enable() instead.
-	 */
-	function bp_is_moderation_auto_suspend_enable( $default = 0 ) {
-		return bboss_is_moderation_auto_suspend_enable( $default );
-	}
-}
-if ( function_exists( 'bboss_is_moderation_blocking_email_notification_enable' ) && ! function_exists( 'bp_is_moderation_blocking_email_notification_enable' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_moderation_blocking_email_notification_enable()}.
-	 *
-	 * @deprecated Use bboss_is_moderation_blocking_email_notification_enable() instead.
-	 */
-	function bp_is_moderation_blocking_email_notification_enable( $default = 0 ) {
-		return bboss_is_moderation_blocking_email_notification_enable( $default );
-	}
-}
-if ( function_exists( 'bboss_is_moderation_content_reporting_enable' ) && ! function_exists( 'bp_is_moderation_content_reporting_enable' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_moderation_content_reporting_enable()}.
-	 *
-	 * @deprecated Use bboss_is_moderation_content_reporting_enable() instead.
-	 */
-	function bp_is_moderation_content_reporting_enable( $default = 0, $content_type = '' ) {
-		return bboss_is_moderation_content_reporting_enable( $default, $content_type );
-	}
-}
-if ( function_exists( 'bboss_is_moderation_member_blocking_enable' ) && ! function_exists( 'bp_is_moderation_member_blocking_enable' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_moderation_member_blocking_enable()}.
-	 *
-	 * @deprecated Use bboss_is_moderation_member_blocking_enable() instead.
-	 */
-	function bp_is_moderation_member_blocking_enable( $default = 0 ) {
-		return bboss_is_moderation_member_blocking_enable( $default );
-	}
-}
-if ( function_exists( 'bboss_is_moderation_reporting_email_notification_enable' ) && ! function_exists( 'bp_is_moderation_reporting_email_notification_enable' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_moderation_reporting_email_notification_enable()}.
-	 *
-	 * @deprecated Use bboss_is_moderation_reporting_email_notification_enable() instead.
-	 */
-	function bp_is_moderation_reporting_email_notification_enable( $default = 0 ) {
-		return bboss_is_moderation_reporting_email_notification_enable( $default );
-	}
-}
-if ( function_exists( 'bboss_moderation_add' ) && ! function_exists( 'bp_moderation_add' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_moderation_add()}.
-	 *
-	 * @deprecated Use bboss_moderation_add() instead.
-	 */
-	function bp_moderation_add( $args = array() ) {
-		return bboss_moderation_add( $args );
-	}
-}
-if ( function_exists( 'bboss_moderation_add_meta' ) && ! function_exists( 'bp_moderation_add_meta' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_moderation_add_meta()}.
-	 *
-	 * @deprecated Use bboss_moderation_add_meta() instead.
-	 */
-	function bp_moderation_add_meta( $moderation_id, $meta_key, $meta_value, $unique = false ) {
-		return bboss_moderation_add_meta( $moderation_id, $meta_key, $meta_value, $unique );
-	}
-}
-if ( function_exists( 'bboss_moderation_auto_suspend_threshold' ) && ! function_exists( 'bp_moderation_auto_suspend_threshold' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_moderation_auto_suspend_threshold()}.
-	 *
-	 * @deprecated Use bboss_moderation_auto_suspend_threshold() instead.
-	 */
-	function bp_moderation_auto_suspend_threshold( $default = 5 ) {
-		return bboss_moderation_auto_suspend_threshold( $default );
-	}
-}
-if ( function_exists( 'bboss_moderation_can_report' ) && ! function_exists( 'bp_moderation_can_report' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_moderation_can_report()}.
-	 *
-	 * @deprecated Use bboss_moderation_can_report() instead.
-	 */
-	function bp_moderation_can_report( $item_id, $item_type, $bypass_validate = true ) {
-		return bboss_moderation_can_report( $item_id, $item_type, $bypass_validate );
-	}
-}
-if ( function_exists( 'bboss_moderation_content_hide_email' ) && ! function_exists( 'bp_moderation_content_hide_email' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_moderation_content_hide_email()}.
-	 *
-	 * @deprecated Use bboss_moderation_content_hide_email() instead.
-	 */
-	function bp_moderation_content_hide_email( $email, $tokens ) {
-		return bboss_moderation_content_hide_email( $email, $tokens );
-	}
-}
-if ( function_exists( 'bboss_moderation_content_types' ) && ! function_exists( 'bp_moderation_content_types' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_moderation_content_types()}.
-	 *
-	 * @deprecated Use bboss_moderation_content_types() instead.
-	 */
-	function bp_moderation_content_types() {
-		return bboss_moderation_content_types();
-	}
-}
-if ( function_exists( 'bboss_moderation_delete' ) && ! function_exists( 'bp_moderation_delete' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_moderation_delete()}.
-	 *
-	 * @deprecated Use bboss_moderation_delete() instead.
-	 */
-	function bp_moderation_delete( $args = array() ) {
-		return bboss_moderation_delete( $args );
-	}
-}
-if ( function_exists( 'bboss_moderation_delete_meta' ) && ! function_exists( 'bp_moderation_delete_meta' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_moderation_delete_meta()}.
-	 *
-	 * @deprecated Use bboss_moderation_delete_meta() instead.
-	 */
-	function bp_moderation_delete_meta( $moderation_id, $meta_key = '', $meta_value = '', $delete_all = false ) {
-		return bboss_moderation_delete_meta( $moderation_id, $meta_key, $meta_value, $delete_all );
-	}
-}
-if ( function_exists( 'bboss_moderation_get' ) && ! function_exists( 'bp_moderation_get' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_moderation_get()}.
-	 *
-	 * @deprecated Use bboss_moderation_get() instead.
-	 */
-	function bp_moderation_get( $args = '' ) {
-		return bboss_moderation_get( $args );
-	}
-}
-if ( function_exists( 'bboss_moderation_get_content_owner_id' ) && ! function_exists( 'bp_moderation_get_content_owner_id' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_moderation_get_content_owner_id()}.
-	 *
-	 * @deprecated Use bboss_moderation_get_content_owner_id() instead.
-	 */
-	function bp_moderation_get_content_owner_id( $moderation_item_id, $moderation_item_type ) {
-		return bboss_moderation_get_content_owner_id( $moderation_item_id, $moderation_item_type );
-	}
-}
-if ( function_exists( 'bboss_moderation_get_content_type' ) && ! function_exists( 'bp_moderation_get_content_type' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_moderation_get_content_type()}.
-	 *
-	 * @deprecated Use bboss_moderation_get_content_type() instead.
-	 */
-	function bp_moderation_get_content_type( $key ) {
-		return bboss_moderation_get_content_type( $key );
-	}
-}
-if ( function_exists( 'bboss_moderation_get_default_report_categories' ) && ! function_exists( 'bp_moderation_get_default_report_categories' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_moderation_get_default_report_categories()}.
-	 *
-	 * @deprecated Use bboss_moderation_get_default_report_categories() instead.
-	 */
-	function bp_moderation_get_default_report_categories() {
-		return bboss_moderation_get_default_report_categories();
-	}
-}
-if ( function_exists( 'bboss_moderation_get_hidden_user_ids' ) && ! function_exists( 'bp_moderation_get_hidden_user_ids' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_moderation_get_hidden_user_ids()}.
-	 *
-	 * @deprecated Use bboss_moderation_get_hidden_user_ids() instead.
-	 */
-	function bp_moderation_get_hidden_user_ids( $force_cache = false ) {
-		return bboss_moderation_get_hidden_user_ids( $force_cache );
-	}
-}
-if ( function_exists( 'bboss_moderation_get_meta' ) && ! function_exists( 'bp_moderation_get_meta' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_moderation_get_meta()}.
-	 *
-	 * @deprecated Use bboss_moderation_get_meta() instead.
-	 */
-	function bp_moderation_get_meta( $moderation_id = 0, $meta_key = '', $single = true ) {
-		return bboss_moderation_get_meta( $moderation_id, $meta_key, $single );
-	}
-}
-if ( function_exists( 'bboss_moderation_get_permalink' ) && ! function_exists( 'bp_moderation_get_permalink' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_moderation_get_permalink()}.
-	 *
-	 * @deprecated Use bboss_moderation_get_permalink() instead.
-	 */
-	function bp_moderation_get_permalink( $moderation_item_id, $moderation_item_type ) {
-		return bboss_moderation_get_permalink( $moderation_item_id, $moderation_item_type );
-	}
-}
-if ( function_exists( 'bboss_moderation_get_report_button' ) && ! function_exists( 'bp_moderation_get_report_button' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_moderation_get_report_button()}.
-	 *
-	 * @deprecated Use bboss_moderation_get_report_button() instead.
-	 */
-	function bp_moderation_get_report_button( $args, $html = true ) {
-		return bboss_moderation_get_report_button( $args, $html );
-	}
-}
-if ( function_exists( 'bboss_moderation_get_report_button_text' ) && ! function_exists( 'bp_moderation_get_report_button_text' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_moderation_get_report_button_text()}.
-	 *
-	 * @deprecated Use bboss_moderation_get_report_button_text() instead.
-	 */
-	function bp_moderation_get_report_button_text( $item_type, $item_id ) {
-		return bboss_moderation_get_report_button_text( $item_type, $item_id );
-	}
-}
-if ( function_exists( 'bboss_moderation_get_report_type' ) && ! function_exists( 'bp_moderation_get_report_type' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_moderation_get_report_type()}.
-	 *
-	 * @deprecated Use bboss_moderation_get_report_type() instead.
-	 */
-	function bp_moderation_get_report_type( $item_type, $item_id ) {
-		return bboss_moderation_get_report_type( $item_type, $item_id );
-	}
-}
-if ( function_exists( 'bboss_moderation_get_reported_button_text' ) && ! function_exists( 'bp_moderation_get_reported_button_text' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_moderation_get_reported_button_text()}.
-	 *
-	 * @deprecated Use bboss_moderation_get_reported_button_text() instead.
-	 */
-	function bp_moderation_get_reported_button_text( $item_type, $item_id ) {
-		return bboss_moderation_get_reported_button_text( $item_type, $item_id );
-	}
-}
-if ( function_exists( 'bboss_moderation_get_sub_items' ) && ! function_exists( 'bp_moderation_get_sub_items' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_moderation_get_sub_items()}.
-	 *
-	 * @deprecated Use bboss_moderation_get_sub_items() instead.
-	 */
-	function bp_moderation_get_sub_items( $item_id, $item_type ) {
-		return bboss_moderation_get_sub_items( $item_id, $item_type );
-	}
-}
-if ( function_exists( 'bboss_moderation_hide' ) && ! function_exists( 'bp_moderation_hide' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_moderation_hide()}.
-	 *
-	 * @deprecated Use bboss_moderation_hide() instead.
-	 */
-	function bp_moderation_hide( $args = array() ) {
-		return bboss_moderation_hide( $args );
-	}
-}
-if ( function_exists( 'bboss_moderation_is_content_hidden' ) && ! function_exists( 'bp_moderation_is_content_hidden' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_moderation_is_content_hidden()}.
-	 *
-	 * @deprecated Use bboss_moderation_is_content_hidden() instead.
-	 */
-	function bp_moderation_is_content_hidden( $item_id, $item_type ) {
-		return bboss_moderation_is_content_hidden( $item_id, $item_type );
-	}
-}
-if ( function_exists( 'bboss_moderation_is_user_blocked' ) && ! function_exists( 'bp_moderation_is_user_blocked' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_moderation_is_user_blocked()}.
-	 *
-	 * @deprecated Use bboss_moderation_is_user_blocked() instead.
-	 */
-	function bp_moderation_is_user_blocked( $user_id, $blocking_user_id = false ) {
-		return bboss_moderation_is_user_blocked( $user_id, $blocking_user_id );
-	}
-}
-if ( function_exists( 'bboss_moderation_is_user_suspended' ) && ! function_exists( 'bp_moderation_is_user_suspended' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_moderation_is_user_suspended()}.
-	 *
-	 * @deprecated Use bboss_moderation_is_user_suspended() instead.
-	 */
-	function bp_moderation_is_user_suspended( $user_id ) {
-		return bboss_moderation_is_user_suspended( $user_id );
-	}
-}
-if ( function_exists( 'bboss_moderation_item_count' ) && ! function_exists( 'bp_moderation_item_count' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_moderation_item_count()}.
-	 *
-	 * @deprecated Use bboss_moderation_item_count() instead.
-	 */
-	function bp_moderation_item_count( $args = array() ) {
-		return bboss_moderation_item_count( $args );
-	}
-}
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_moderation_maybe_translate_report_term' ) && ! function_exists( 'bp_moderation_maybe_translate_report_term' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_moderation_maybe_translate_report_term()}.
@@ -2992,64 +3318,5 @@ if ( function_exists( 'bboss_moderation_maybe_translate_report_term' ) && ! func
 		return bboss_moderation_maybe_translate_report_term( $term );
 	}
 }
-if ( function_exists( 'bboss_moderation_member_suspend_email' ) && ! function_exists( 'bp_moderation_member_suspend_email' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_moderation_member_suspend_email()}.
-	 *
-	 * @deprecated Use bboss_moderation_member_suspend_email() instead.
-	 */
-	function bp_moderation_member_suspend_email( $email, $tokens ) {
-		return bboss_moderation_member_suspend_email( $email, $tokens );
-	}
-}
-if ( function_exists( 'bboss_moderation_report_exist' ) && ! function_exists( 'bp_moderation_report_exist' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_moderation_report_exist()}.
-	 *
-	 * @deprecated Use bboss_moderation_report_exist() instead.
-	 */
-	function bp_moderation_report_exist( $item_id, $item_type, $blocking_user_id = false ) {
-		return bboss_moderation_report_exist( $item_id, $item_type, $blocking_user_id );
-	}
-}
-if ( function_exists( 'bboss_moderation_reporting_auto_hide_threshold' ) && ! function_exists( 'bp_moderation_reporting_auto_hide_threshold' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_moderation_reporting_auto_hide_threshold()}.
-	 *
-	 * @deprecated Use bboss_moderation_reporting_auto_hide_threshold() instead.
-	 */
-	function bp_moderation_reporting_auto_hide_threshold( $default = 5, $content_type = '' ) {
-		return bboss_moderation_reporting_auto_hide_threshold( $default, $content_type );
-	}
-}
-if ( function_exists( 'bboss_moderation_unhide' ) && ! function_exists( 'bp_moderation_unhide' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_moderation_unhide()}.
-	 *
-	 * @deprecated Use bboss_moderation_unhide() instead.
-	 */
-	function bp_moderation_unhide( $args = array() ) {
-		return bboss_moderation_unhide( $args );
-	}
-}
-if ( function_exists( 'bboss_moderation_update_meta' ) && ! function_exists( 'bp_moderation_update_meta' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_moderation_update_meta()}.
-	 *
-	 * @deprecated Use bboss_moderation_update_meta() instead.
-	 */
-	function bp_moderation_update_meta( $moderation_id, $meta_key, $meta_value, $prev_value = '' ) {
-		return bboss_moderation_update_meta( $moderation_id, $meta_key, $meta_value, $prev_value );
-	}
-}
-if ( function_exists( 'bboss_moderation_user_can' ) && ! function_exists( 'bp_moderation_user_can' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_moderation_user_can()}.
-	 *
-	 * @deprecated Use bboss_moderation_user_can() instead.
-	 */
-	function bp_moderation_user_can( $item_id, $item_type, $bypass_validate = true ) {
-		return bboss_moderation_user_can( $item_id, $item_type, $bypass_validate );
-	}
-}
 // @bbwt-com-end compat-layer
+

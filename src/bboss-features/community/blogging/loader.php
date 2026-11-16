@@ -33,6 +33,20 @@ function bboss_blog_rl_is_enabled() {
 
 	return ! empty( $enabled_pages['blog'] );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_blog_rl_is_enabled' ) && ! function_exists( 'bb_blog_rl_is_enabled' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_blog_rl_is_enabled()}.
+	 *
+	 * @deprecated Use bboss_blog_rl_is_enabled() instead.
+	 */
+	function bb_blog_rl_is_enabled() {
+		return bboss_blog_rl_is_enabled();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Route blog URLs into ReadyLaunch when the Blog template page is enabled.
@@ -50,6 +64,20 @@ function bboss_blog_readylaunch_enabled_for_page( $retval ) {
 
 	return $retval;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_blog_readylaunch_enabled_for_page' ) && ! function_exists( 'bb_blog_readylaunch_enabled_for_page' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_blog_readylaunch_enabled_for_page()}.
+	 *
+	 * @deprecated Use bboss_blog_readylaunch_enabled_for_page() instead.
+	 */
+	function bb_blog_readylaunch_enabled_for_page( $retval ) {
+		return bboss_blog_readylaunch_enabled_for_page( $retval );
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_filter( 'bb_is_readylaunch_enabled_for_page', 'bb_blog_readylaunch_enabled_for_page' );
 
 /**
@@ -67,6 +95,20 @@ function bboss_blog_rl_archive_open() {
 	bboss_get_template_part( 'blog/archive-header' );
 	echo '<div class="bb-rl-blog-grid">';
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_blog_rl_archive_open' ) && ! function_exists( 'bb_blog_rl_archive_open' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_blog_rl_archive_open()}.
+	 *
+	 * @deprecated Use bboss_blog_rl_archive_open() instead.
+	 */
+	function bb_blog_rl_archive_open() {
+		return bboss_blog_rl_archive_open();
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'bb_rl_layout_before_loop', 'bb_blog_rl_archive_open' );
 
 /**
@@ -91,6 +133,20 @@ function bboss_blog_rl_archive_close() {
 		)
 	);
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_blog_rl_archive_close' ) && ! function_exists( 'bb_blog_rl_archive_close' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_blog_rl_archive_close()}.
+	 *
+	 * @deprecated Use bboss_blog_rl_archive_close() instead.
+	 */
+	function bb_blog_rl_archive_close() {
+		return bboss_blog_rl_archive_close();
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'bb_rl_layout_after_loop', 'bb_blog_rl_archive_close' );
 
 /**
@@ -129,6 +185,20 @@ function bboss_blog_setup_profile_nav() {
 		)
 	);
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_blog_setup_profile_nav' ) && ! function_exists( 'bb_blog_setup_profile_nav' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_blog_setup_profile_nav()}.
+	 *
+	 * @deprecated Use bboss_blog_setup_profile_nav() instead.
+	 */
+	function bb_blog_setup_profile_nav() {
+		return bboss_blog_setup_profile_nav();
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'bp_setup_nav', 'bb_blog_setup_profile_nav', 100 );
 
 /**
@@ -150,6 +220,20 @@ function bboss_blog_screen_member_posts() {
 	 */
 	bboss_core_load_template( apply_filters( 'bb_blog_screen_member_posts_template', 'members/single/home' ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_blog_screen_member_posts' ) && ! function_exists( 'bb_blog_screen_member_posts' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_blog_screen_member_posts()}.
+	 *
+	 * @deprecated Use bboss_blog_screen_member_posts() instead.
+	 */
+	function bb_blog_screen_member_posts() {
+		return bboss_blog_screen_member_posts();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output the member "Blogs" tab content.
@@ -161,6 +245,20 @@ function bboss_blog_screen_member_posts() {
 function bboss_blog_member_posts_content() {
 	bboss_get_template_part( 'members/single/blog' );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_blog_member_posts_content' ) && ! function_exists( 'bb_blog_member_posts_content' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_blog_member_posts_content()}.
+	 *
+	 * @deprecated Use bboss_blog_member_posts_content() instead.
+	 */
+	function bb_blog_member_posts_content() {
+		return bboss_blog_member_posts_content();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Enqueue the member profile Blogs tab base stylesheet.
@@ -190,11 +288,8 @@ function bboss_blog_enqueue_member_blog_assets() {
 		bboss_get_version()
 	);
 }
-add_action( 'bp_enqueue_scripts', 'bb_blog_enqueue_member_blog_assets' );
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_blog_enqueue_member_blog_assets' ) && ! function_exists( 'bb_blog_enqueue_member_blog_assets' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_blog_enqueue_member_blog_assets()}.
@@ -205,74 +300,6 @@ if ( function_exists( 'bboss_blog_enqueue_member_blog_assets' ) && ! function_ex
 		return bboss_blog_enqueue_member_blog_assets();
 	}
 }
-if ( function_exists( 'bboss_blog_member_posts_content' ) && ! function_exists( 'bb_blog_member_posts_content' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_blog_member_posts_content()}.
-	 *
-	 * @deprecated Use bboss_blog_member_posts_content() instead.
-	 */
-	function bb_blog_member_posts_content() {
-		return bboss_blog_member_posts_content();
-	}
-}
-if ( function_exists( 'bboss_blog_readylaunch_enabled_for_page' ) && ! function_exists( 'bb_blog_readylaunch_enabled_for_page' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_blog_readylaunch_enabled_for_page()}.
-	 *
-	 * @deprecated Use bboss_blog_readylaunch_enabled_for_page() instead.
-	 */
-	function bb_blog_readylaunch_enabled_for_page( $retval ) {
-		return bboss_blog_readylaunch_enabled_for_page( $retval );
-	}
-}
-if ( function_exists( 'bboss_blog_rl_archive_close' ) && ! function_exists( 'bb_blog_rl_archive_close' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_blog_rl_archive_close()}.
-	 *
-	 * @deprecated Use bboss_blog_rl_archive_close() instead.
-	 */
-	function bb_blog_rl_archive_close() {
-		return bboss_blog_rl_archive_close();
-	}
-}
-if ( function_exists( 'bboss_blog_rl_archive_open' ) && ! function_exists( 'bb_blog_rl_archive_open' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_blog_rl_archive_open()}.
-	 *
-	 * @deprecated Use bboss_blog_rl_archive_open() instead.
-	 */
-	function bb_blog_rl_archive_open() {
-		return bboss_blog_rl_archive_open();
-	}
-}
-if ( function_exists( 'bboss_blog_rl_is_enabled' ) && ! function_exists( 'bb_blog_rl_is_enabled' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_blog_rl_is_enabled()}.
-	 *
-	 * @deprecated Use bboss_blog_rl_is_enabled() instead.
-	 */
-	function bb_blog_rl_is_enabled() {
-		return bboss_blog_rl_is_enabled();
-	}
-}
-if ( function_exists( 'bboss_blog_screen_member_posts' ) && ! function_exists( 'bb_blog_screen_member_posts' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_blog_screen_member_posts()}.
-	 *
-	 * @deprecated Use bboss_blog_screen_member_posts() instead.
-	 */
-	function bb_blog_screen_member_posts() {
-		return bboss_blog_screen_member_posts();
-	}
-}
-if ( function_exists( 'bboss_blog_setup_profile_nav' ) && ! function_exists( 'bb_blog_setup_profile_nav' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_blog_setup_profile_nav()}.
-	 *
-	 * @deprecated Use bboss_blog_setup_profile_nav() instead.
-	 */
-	function bb_blog_setup_profile_nav() {
-		return bboss_blog_setup_profile_nav();
-	}
-}
 // @bbwt-com-end compat-layer
+
+add_action( 'bp_enqueue_scripts', 'bb_blog_enqueue_member_blog_assets' );

@@ -41,6 +41,20 @@ function bboss_blog_is_pro_outdated_for_settings() {
 		&& function_exists( 'bboss_pro_blog_version' )
 		&& version_compare( bb_platform_pro()->version, bboss_pro_blog_version(), '<' );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_blog_is_pro_outdated_for_settings' ) && ! function_exists( 'bb_blog_is_pro_outdated_for_settings' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_blog_is_pro_outdated_for_settings()}.
+	 *
+	 * @deprecated Use bboss_blog_is_pro_outdated_for_settings() instead.
+	 */
+	function bb_blog_is_pro_outdated_for_settings() {
+		return bboss_blog_is_pro_outdated_for_settings();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Build the "update Pro" version-compat notice field for the Blogs settings.
@@ -72,6 +86,20 @@ function bboss_blog_get_version_compat_notice_field( $name, $order ) {
 		'order'             => $order,
 	);
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_blog_get_version_compat_notice_field' ) && ! function_exists( 'bb_blog_get_version_compat_notice_field' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_blog_get_version_compat_notice_field()}.
+	 *
+	 * @deprecated Use bboss_blog_get_version_compat_notice_field() instead.
+	 */
+	function bb_blog_get_version_compat_notice_field( $name, $order ) {
+		return bboss_blog_get_version_compat_notice_field( $name, $order );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Register Blogs feature side panels, sections and fields.
@@ -364,31 +392,8 @@ function bboss_blogging_register_admin_settings() {
 	 */
 	do_action( 'bb_blogging_after_register_settings_fields' );
 }
-add_action( 'bb_register_features', 'bb_blogging_register_admin_settings', 20 );
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
-if ( function_exists( 'bboss_blog_get_version_compat_notice_field' ) && ! function_exists( 'bb_blog_get_version_compat_notice_field' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_blog_get_version_compat_notice_field()}.
-	 *
-	 * @deprecated Use bboss_blog_get_version_compat_notice_field() instead.
-	 */
-	function bb_blog_get_version_compat_notice_field( $name, $order ) {
-		return bboss_blog_get_version_compat_notice_field( $name, $order );
-	}
-}
-if ( function_exists( 'bboss_blog_is_pro_outdated_for_settings' ) && ! function_exists( 'bb_blog_is_pro_outdated_for_settings' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_blog_is_pro_outdated_for_settings()}.
-	 *
-	 * @deprecated Use bboss_blog_is_pro_outdated_for_settings() instead.
-	 */
-	function bb_blog_is_pro_outdated_for_settings() {
-		return bboss_blog_is_pro_outdated_for_settings();
-	}
-}
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_blogging_register_admin_settings' ) && ! function_exists( 'bb_blogging_register_admin_settings' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_blogging_register_admin_settings()}.
@@ -400,3 +405,5 @@ if ( function_exists( 'bboss_blogging_register_admin_settings' ) && ! function_e
 	}
 }
 // @bbwt-com-end compat-layer
+
+add_action( 'bb_register_features', 'bb_blogging_register_admin_settings', 20 );

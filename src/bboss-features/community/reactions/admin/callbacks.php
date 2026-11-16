@@ -47,6 +47,20 @@ function bboss_reactions_sanitize_content_types( $value ) {
 
 	return $sanitized;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_reactions_sanitize_content_types' ) && ! function_exists( 'bb_reactions_sanitize_content_types' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_reactions_sanitize_content_types()}.
+	 *
+	 * @deprecated Use bboss_reactions_sanitize_content_types() instead.
+	 */
+	function bb_reactions_sanitize_content_types( $value ) {
+		return bboss_reactions_sanitize_content_types( $value );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Sanitize reactions button settings.
@@ -75,6 +89,20 @@ function bboss_reactions_sanitize_button_settings( $value ) {
 
 	return $sanitized;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_reactions_sanitize_button_settings' ) && ! function_exists( 'bb_reactions_sanitize_button_settings' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_reactions_sanitize_button_settings()}.
+	 *
+	 * @deprecated Use bboss_reactions_sanitize_button_settings() instead.
+	 */
+	function bb_reactions_sanitize_button_settings( $value ) {
+		return bboss_reactions_sanitize_button_settings( $value );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Sanitize reaction mode setting.
@@ -97,6 +125,20 @@ function bboss_reactions_sanitize_mode( $value ) {
 
 	return $value;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_reactions_sanitize_mode' ) && ! function_exists( 'bb_reactions_sanitize_mode' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_reactions_sanitize_mode()}.
+	 *
+	 * @deprecated Use bboss_reactions_sanitize_mode() instead.
+	 */
+	function bb_reactions_sanitize_mode( $value ) {
+		return bboss_reactions_sanitize_mode( $value );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get all of the reactions settings fields.
@@ -138,10 +180,8 @@ function bboss_reactions_get_settings_fields() {
 	 */
 	return (array) apply_filters( 'bb_reactions_get_settings_fields', $fields );
 }
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_reactions_get_settings_fields' ) && ! function_exists( 'bb_reactions_get_settings_fields' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_reactions_get_settings_fields()}.
@@ -152,34 +192,5 @@ if ( function_exists( 'bboss_reactions_get_settings_fields' ) && ! function_exis
 		return bboss_reactions_get_settings_fields();
 	}
 }
-if ( function_exists( 'bboss_reactions_sanitize_button_settings' ) && ! function_exists( 'bb_reactions_sanitize_button_settings' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_reactions_sanitize_button_settings()}.
-	 *
-	 * @deprecated Use bboss_reactions_sanitize_button_settings() instead.
-	 */
-	function bb_reactions_sanitize_button_settings( $value ) {
-		return bboss_reactions_sanitize_button_settings( $value );
-	}
-}
-if ( function_exists( 'bboss_reactions_sanitize_content_types' ) && ! function_exists( 'bb_reactions_sanitize_content_types' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_reactions_sanitize_content_types()}.
-	 *
-	 * @deprecated Use bboss_reactions_sanitize_content_types() instead.
-	 */
-	function bb_reactions_sanitize_content_types( $value ) {
-		return bboss_reactions_sanitize_content_types( $value );
-	}
-}
-if ( function_exists( 'bboss_reactions_sanitize_mode' ) && ! function_exists( 'bb_reactions_sanitize_mode' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_reactions_sanitize_mode()}.
-	 *
-	 * @deprecated Use bboss_reactions_sanitize_mode() instead.
-	 */
-	function bb_reactions_sanitize_mode( $value ) {
-		return bboss_reactions_sanitize_mode( $value );
-	}
-}
 // @bbwt-com-end compat-layer
+

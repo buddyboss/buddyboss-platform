@@ -22,6 +22,20 @@ defined( 'ABSPATH' ) || exit;
 function bboss_bbp_ajax_url() {
 	echo esc_url( bboss_bbp_get_ajax_url() );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_ajax_url' ) && ! function_exists( 'bbp_ajax_url' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_ajax_url()}.
+	 *
+	 * @deprecated Use bboss_bbp_ajax_url() instead.
+	 */
+	function bbp_ajax_url() {
+		return bboss_bbp_ajax_url();
+	}
+}
+// @bbwt-com-end compat-layer
+
 	/**
 	 * Return the URL to use for theme-side Forums AJAX requests
 	 *
@@ -40,6 +54,20 @@ function bboss_bbp_get_ajax_url() {
 
 	return apply_filters( 'bbp_get_ajax_url', $ajaxurl );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_ajax_url' ) && ! function_exists( 'bbp_get_ajax_url' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_ajax_url()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_ajax_url() instead.
+	 */
+	function bbp_get_ajax_url() {
+		return bboss_bbp_get_ajax_url();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Is this a Forums AJAX request?
@@ -51,6 +79,20 @@ function bboss_bbp_get_ajax_url() {
 function bboss_bbp_is_ajax() {
 	return (bool) ( ( isset( $_GET['bbp-ajax'] ) || isset( $_POST['bbp-ajax'] ) ) && ! empty( $_REQUEST['action'] ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_is_ajax' ) && ! function_exists( 'bbp_is_ajax' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_is_ajax()}.
+	 *
+	 * @deprecated Use bboss_bbp_is_ajax() instead.
+	 */
+	function bbp_is_ajax() {
+		return bboss_bbp_is_ajax();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Hooked to the 'bbp_template_redirect' action, this is Forums' custom
@@ -82,6 +124,20 @@ function bboss_bbp_do_ajax() {
 	// All done
 	die( '0' );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_do_ajax' ) && ! function_exists( 'bbp_do_ajax' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_do_ajax()}.
+	 *
+	 * @deprecated Use bboss_bbp_do_ajax() instead.
+	 */
+	function bbp_do_ajax() {
+		return bboss_bbp_do_ajax();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Helper method to return JSON response for the ajax calls
@@ -119,10 +175,8 @@ function bboss_bbp_ajax_response( $success = false, $content = '', $status = -1,
 	// Send back the JSON.
 	wp_send_json( $response, $status );
 }
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_bbp_ajax_response' ) && ! function_exists( 'bbp_ajax_response' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_bbp_ajax_response()}.
@@ -133,44 +187,5 @@ if ( function_exists( 'bboss_bbp_ajax_response' ) && ! function_exists( 'bbp_aja
 		return bboss_bbp_ajax_response( $success, $content, $status, $extras );
 	}
 }
-if ( function_exists( 'bboss_bbp_ajax_url' ) && ! function_exists( 'bbp_ajax_url' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_ajax_url()}.
-	 *
-	 * @deprecated Use bboss_bbp_ajax_url() instead.
-	 */
-	function bbp_ajax_url() {
-		return bboss_bbp_ajax_url();
-	}
-}
-if ( function_exists( 'bboss_bbp_do_ajax' ) && ! function_exists( 'bbp_do_ajax' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_do_ajax()}.
-	 *
-	 * @deprecated Use bboss_bbp_do_ajax() instead.
-	 */
-	function bbp_do_ajax() {
-		return bboss_bbp_do_ajax();
-	}
-}
-if ( function_exists( 'bboss_bbp_get_ajax_url' ) && ! function_exists( 'bbp_get_ajax_url' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_ajax_url()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_ajax_url() instead.
-	 */
-	function bbp_get_ajax_url() {
-		return bboss_bbp_get_ajax_url();
-	}
-}
-if ( function_exists( 'bboss_bbp_is_ajax' ) && ! function_exists( 'bbp_is_ajax' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_is_ajax()}.
-	 *
-	 * @deprecated Use bboss_bbp_is_ajax() instead.
-	 */
-	function bbp_is_ajax() {
-		return bboss_bbp_is_ajax();
-	}
-}
 // @bbwt-com-end compat-layer
+

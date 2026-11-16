@@ -285,10 +285,8 @@ class BBoss_Integration_Bridge {
 function bboss_integration_bridge() {
 	return BBoss_Integration_Bridge::instance();
 }
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_integration_bridge' ) && ! function_exists( 'bb_integration_bridge' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_integration_bridge()}.
@@ -300,3 +298,4 @@ if ( function_exists( 'bboss_integration_bridge' ) && ! function_exists( 'bb_int
 	}
 }
 // @bbwt-com-end compat-layer
+

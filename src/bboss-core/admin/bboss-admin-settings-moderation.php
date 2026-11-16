@@ -39,6 +39,20 @@ function bboss_moderation_get_admin_user_ids() {
 
 	return $admins;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_moderation_get_admin_user_ids' ) && ! function_exists( 'bb_moderation_get_admin_user_ids' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_moderation_get_admin_user_ids()}.
+	 *
+	 * @deprecated Use bboss_moderation_get_admin_user_ids() instead.
+	 */
+	function bb_moderation_get_admin_user_ids() {
+		return bboss_moderation_get_admin_user_ids();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Temporarily bypass suspension filters so admin can see real user data.
@@ -77,6 +91,20 @@ function bboss_moderation_bypass_suspend_filters() {
 	// Remove user domain filter.
 	remove_filter( 'bp_core_get_user_domain', array( $suspend, 'bp_core_get_user_domain' ), 9999 );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_moderation_bypass_suspend_filters' ) && ! function_exists( 'bb_moderation_bypass_suspend_filters' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_moderation_bypass_suspend_filters()}.
+	 *
+	 * @deprecated Use bboss_moderation_bypass_suspend_filters() instead.
+	 */
+	function bb_moderation_bypass_suspend_filters() {
+		return bboss_moderation_bypass_suspend_filters();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Restore suspension filters after admin data fetch.
@@ -111,6 +139,20 @@ function bboss_moderation_restore_suspend_filters() {
 	// Restore user domain filter.
 	add_filter( 'bp_core_get_user_domain', array( $suspend, 'bp_core_get_user_domain' ), 9999, 2 );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_moderation_restore_suspend_filters' ) && ! function_exists( 'bb_moderation_restore_suspend_filters' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_moderation_restore_suspend_filters()}.
+	 *
+	 * @deprecated Use bboss_moderation_restore_suspend_filters() instead.
+	 */
+	function bb_moderation_restore_suspend_filters() {
+		return bboss_moderation_restore_suspend_filters();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Register Moderation feature and settings in Feature Registry.
@@ -313,12 +355,8 @@ function bboss_admin_settings_register_moderation_feature() {
 	 */
 	do_action( 'bb_moderation_after_register_settings_fields' );
 }
-
-add_action( 'bb_register_features', 'bb_admin_settings_register_moderation_feature', 20 );
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_admin_settings_register_moderation_feature' ) && ! function_exists( 'bb_admin_settings_register_moderation_feature' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_admin_settings_register_moderation_feature()}.
@@ -329,34 +367,7 @@ if ( function_exists( 'bboss_admin_settings_register_moderation_feature' ) && ! 
 		return bboss_admin_settings_register_moderation_feature();
 	}
 }
-if ( function_exists( 'bboss_moderation_bypass_suspend_filters' ) && ! function_exists( 'bb_moderation_bypass_suspend_filters' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_moderation_bypass_suspend_filters()}.
-	 *
-	 * @deprecated Use bboss_moderation_bypass_suspend_filters() instead.
-	 */
-	function bb_moderation_bypass_suspend_filters() {
-		return bboss_moderation_bypass_suspend_filters();
-	}
-}
-if ( function_exists( 'bboss_moderation_get_admin_user_ids' ) && ! function_exists( 'bb_moderation_get_admin_user_ids' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_moderation_get_admin_user_ids()}.
-	 *
-	 * @deprecated Use bboss_moderation_get_admin_user_ids() instead.
-	 */
-	function bb_moderation_get_admin_user_ids() {
-		return bboss_moderation_get_admin_user_ids();
-	}
-}
-if ( function_exists( 'bboss_moderation_restore_suspend_filters' ) && ! function_exists( 'bb_moderation_restore_suspend_filters' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_moderation_restore_suspend_filters()}.
-	 *
-	 * @deprecated Use bboss_moderation_restore_suspend_filters() instead.
-	 */
-	function bb_moderation_restore_suspend_filters() {
-		return bboss_moderation_restore_suspend_filters();
-	}
-}
 // @bbwt-com-end compat-layer
+
+
+add_action( 'bb_register_features', 'bb_admin_settings_register_moderation_feature', 20 );

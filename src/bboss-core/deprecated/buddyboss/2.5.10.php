@@ -28,6 +28,20 @@ function bboss_activity_get_favorite_users_string( $activity_id ) {
 	return bboss_activity_reaction_names_and_count( $activity_id, 'activity' );
 
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_activity_get_favorite_users_string' ) && ! function_exists( 'bp_activity_get_favorite_users_string' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_activity_get_favorite_users_string()}.
+	 *
+	 * @deprecated Use bboss_activity_get_favorite_users_string() instead.
+	 */
+	function bp_activity_get_favorite_users_string( $activity_id ) {
+		return bboss_activity_get_favorite_users_string( $activity_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get users for activity favorite tooltip
@@ -48,20 +62,8 @@ function bboss_activity_get_favorite_users_tooltip_string( $activity_id ) {
 
 	return bboss_activity_reaction_names_and_count( $activity_id );
 }
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
-if ( function_exists( 'bboss_activity_get_favorite_users_string' ) && ! function_exists( 'bp_activity_get_favorite_users_string' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_activity_get_favorite_users_string()}.
-	 *
-	 * @deprecated Use bboss_activity_get_favorite_users_string() instead.
-	 */
-	function bp_activity_get_favorite_users_string( $activity_id ) {
-		return bboss_activity_get_favorite_users_string( $activity_id );
-	}
-}
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_activity_get_favorite_users_tooltip_string' ) && ! function_exists( 'bp_activity_get_favorite_users_tooltip_string' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_activity_get_favorite_users_tooltip_string()}.
@@ -73,3 +75,4 @@ if ( function_exists( 'bboss_activity_get_favorite_users_tooltip_string' ) && ! 
 	}
 }
 // @bbwt-com-end compat-layer
+

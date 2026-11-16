@@ -46,6 +46,20 @@ function bboss_core_set_avatar_constants() {
 		define( 'BBOSS_SHOW_AVATARS', true );
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_core_set_avatar_constants' ) && ! function_exists( 'bp_core_set_avatar_constants' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_set_avatar_constants()}.
+	 *
+	 * @deprecated Use bboss_core_set_avatar_constants() instead.
+	 */
+	function bp_core_set_avatar_constants() {
+		return bboss_core_set_avatar_constants();
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'bp_init', 'bp_core_set_avatar_constants', 3 );
 
 /**
@@ -99,6 +113,20 @@ function bboss_core_set_avatar_globals() {
 	 */
 	do_action( 'bp_core_set_avatar_globals' );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_core_set_avatar_globals' ) && ! function_exists( 'bp_core_set_avatar_globals' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_set_avatar_globals()}.
+	 *
+	 * @deprecated Use bboss_core_set_avatar_globals() instead.
+	 */
+	function bp_core_set_avatar_globals() {
+		return bboss_core_set_avatar_globals();
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'bp_setup_globals', 'bp_core_set_avatar_globals' );
 
 /**
@@ -821,6 +849,20 @@ function bboss_core_fetch_avatar( $args = '' ) {
 		return apply_filters( 'bp_core_fetch_avatar_url', $gravatar, $params );
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_core_fetch_avatar' ) && ! function_exists( 'bp_core_fetch_avatar' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_fetch_avatar()}.
+	 *
+	 * @deprecated Use bboss_core_fetch_avatar() instead.
+	 */
+	function bp_core_fetch_avatar( $args = '' ) {
+		return bboss_core_fetch_avatar( $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Delete an existing avatar.
@@ -951,6 +993,20 @@ function bboss_core_delete_existing_avatar( $args = '' ) {
 
 	return true;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_core_delete_existing_avatar' ) && ! function_exists( 'bp_core_delete_existing_avatar' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_delete_existing_avatar()}.
+	 *
+	 * @deprecated Use bboss_core_delete_existing_avatar() instead.
+	 */
+	function bp_core_delete_existing_avatar( $args = '' ) {
+		return bboss_core_delete_existing_avatar( $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Ajax delete an avatar for a given object and item id.
@@ -1024,6 +1080,20 @@ function bboss_avatar_ajax_delete() {
 		);
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_avatar_ajax_delete' ) && ! function_exists( 'bp_avatar_ajax_delete' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_avatar_ajax_delete()}.
+	 *
+	 * @deprecated Use bboss_avatar_ajax_delete() instead.
+	 */
+	function bp_avatar_ajax_delete() {
+		return bboss_avatar_ajax_delete();
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'wp_ajax_bp_avatar_delete', 'bp_avatar_ajax_delete' );
 
 /**
@@ -1124,6 +1194,20 @@ function bboss_core_avatar_handle_upload( $file, $upload_dir_filter ) {
 
 	return true;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_core_avatar_handle_upload' ) && ! function_exists( 'bp_core_avatar_handle_upload' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_avatar_handle_upload()}.
+	 *
+	 * @deprecated Use bboss_core_avatar_handle_upload() instead.
+	 */
+	function bp_core_avatar_handle_upload( $file, $upload_dir_filter ) {
+		return bboss_core_avatar_handle_upload( $file, $upload_dir_filter );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Ajax upload an avatar.
@@ -1288,6 +1372,20 @@ function bboss_avatar_ajax_upload() {
 		)
 	);
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_avatar_ajax_upload' ) && ! function_exists( 'bp_avatar_ajax_upload' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_avatar_ajax_upload()}.
+	 *
+	 * @deprecated Use bboss_avatar_ajax_upload() instead.
+	 */
+	function bp_avatar_ajax_upload() {
+		return bboss_avatar_ajax_upload();
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'wp_ajax_bp_avatar_upload', 'bp_avatar_ajax_upload' );
 
 /**
@@ -1368,6 +1466,20 @@ function bboss_avatar_handle_capture( $data = '', $item_id = 0 ) {
 		return false;
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_avatar_handle_capture' ) && ! function_exists( 'bp_avatar_handle_capture' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_avatar_handle_capture()}.
+	 *
+	 * @deprecated Use bboss_avatar_handle_capture() instead.
+	 */
+	function bp_avatar_handle_capture( $data = '', $item_id = 0 ) {
+		return bboss_avatar_handle_capture( $data, $item_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Crop an uploaded avatar.
@@ -1448,6 +1560,20 @@ function bboss_core_avatar_handle_crop( $args = '' ) {
 
 	return true;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_core_avatar_handle_crop' ) && ! function_exists( 'bp_core_avatar_handle_crop' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_avatar_handle_crop()}.
+	 *
+	 * @deprecated Use bboss_core_avatar_handle_crop() instead.
+	 */
+	function bp_core_avatar_handle_crop( $args = '' ) {
+		return bboss_core_avatar_handle_crop( $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Ajax set an avatar for a given object and item id.
@@ -1617,6 +1743,20 @@ function bboss_avatar_ajax_set() {
 		);
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_avatar_ajax_set' ) && ! function_exists( 'bp_avatar_ajax_set' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_avatar_ajax_set()}.
+	 *
+	 * @deprecated Use bboss_avatar_ajax_set() instead.
+	 */
+	function bp_avatar_ajax_set() {
+		return bboss_avatar_ajax_set();
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'wp_ajax_bp_avatar_set', 'bp_avatar_ajax_set' );
 
 /**
@@ -1634,6 +1774,20 @@ function bboss_core_check_avatar_upload( $file ) {
 
 	return true;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_core_check_avatar_upload' ) && ! function_exists( 'bp_core_check_avatar_upload' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_check_avatar_upload()}.
+	 *
+	 * @deprecated Use bboss_core_check_avatar_upload() instead.
+	 */
+	function bp_core_check_avatar_upload( $file ) {
+		return bboss_core_check_avatar_upload( $file );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Is the file size of the current avatar upload permitted?
@@ -1650,6 +1804,20 @@ function bboss_core_check_avatar_size( $file ) {
 
 	return true;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_core_check_avatar_size' ) && ! function_exists( 'bp_core_check_avatar_size' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_check_avatar_size()}.
+	 *
+	 * @deprecated Use bboss_core_check_avatar_size() instead.
+	 */
+	function bp_core_check_avatar_size( $file ) {
+		return bboss_core_check_avatar_size( $file );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get allowed avatar types.
@@ -1678,6 +1846,20 @@ function bboss_core_get_allowed_avatar_types() {
 
 	return array_values( $avatar_types );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_core_get_allowed_avatar_types' ) && ! function_exists( 'bp_core_get_allowed_avatar_types' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_get_allowed_avatar_types()}.
+	 *
+	 * @deprecated Use bboss_core_get_allowed_avatar_types() instead.
+	 */
+	function bp_core_get_allowed_avatar_types() {
+		return bboss_core_get_allowed_avatar_types();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get allowed avatar mime types.
@@ -1691,6 +1873,20 @@ function bboss_core_get_allowed_avatar_mimes() {
 
 	return bboss_attachments_get_allowed_mimes( 'avatar', $allowed_types );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_core_get_allowed_avatar_mimes' ) && ! function_exists( 'bp_core_get_allowed_avatar_mimes' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_get_allowed_avatar_mimes()}.
+	 *
+	 * @deprecated Use bboss_core_get_allowed_avatar_mimes() instead.
+	 */
+	function bp_core_get_allowed_avatar_mimes() {
+		return bboss_core_get_allowed_avatar_mimes();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Does the current avatar upload have an allowed file type?
@@ -1705,6 +1901,20 @@ function bboss_core_get_allowed_avatar_mimes() {
 function bboss_core_check_avatar_type( $file ) {
 	return bboss_attachments_check_filetype( $file['file']['tmp_name'], $file['file']['name'], bboss_core_get_allowed_avatar_mimes() );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_core_check_avatar_type' ) && ! function_exists( 'bp_core_check_avatar_type' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_check_avatar_type()}.
+	 *
+	 * @deprecated Use bboss_core_check_avatar_type() instead.
+	 */
+	function bp_core_check_avatar_type( $file ) {
+		return bboss_core_check_avatar_type( $file );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Fetch data from the BP root blog's upload directory.
@@ -1785,6 +1995,20 @@ function bboss_core_get_upload_dir( $type = 'upload_path' ) {
 
 	return $retval;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_core_get_upload_dir' ) && ! function_exists( 'bp_core_get_upload_dir' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_get_upload_dir()}.
+	 *
+	 * @deprecated Use bboss_core_get_upload_dir() instead.
+	 */
+	function bp_core_get_upload_dir( $type = 'upload_path' ) {
+		return bboss_core_get_upload_dir( $type );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get the absolute upload path for the WP installation.
@@ -1804,6 +2028,20 @@ function bboss_core_avatar_upload_path() {
 	 */
 	return apply_filters( 'bp_core_avatar_upload_path', bboss_core_get_upload_dir() );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_core_avatar_upload_path' ) && ! function_exists( 'bp_core_avatar_upload_path' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_avatar_upload_path()}.
+	 *
+	 * @deprecated Use bboss_core_avatar_upload_path() instead.
+	 */
+	function bp_core_avatar_upload_path() {
+		return bboss_core_avatar_upload_path();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get the raw base URL for root site upload location.
@@ -1823,6 +2061,20 @@ function bboss_core_avatar_url() {
 	 */
 	return apply_filters( 'bp_core_avatar_url', bboss_core_get_upload_dir( 'url' ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_core_avatar_url' ) && ! function_exists( 'bp_core_avatar_url' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_avatar_url()}.
+	 *
+	 * @deprecated Use bboss_core_avatar_url() instead.
+	 */
+	function bp_core_avatar_url() {
+		return bboss_core_avatar_url();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Check if a given user ID has an uploaded avatar.
@@ -1887,6 +2139,20 @@ function bboss_get_user_has_avatar( $user_id = 0 ) {
 	 */
 	return (bool) apply_filters( 'bp_get_user_has_avatar', $retval, $user_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_user_has_avatar' ) && ! function_exists( 'bp_get_user_has_avatar' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_user_has_avatar()}.
+	 *
+	 * @deprecated Use bboss_get_user_has_avatar() instead.
+	 */
+	function bp_get_user_has_avatar( $user_id = 0 ) {
+		return bboss_get_user_has_avatar( $user_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Utility function for fetching an avatar dimension setting.
@@ -1914,6 +2180,20 @@ function bboss_core_avatar_dimension( $type = 'thumb', $h_or_w = 'height' ) {
 	 */
 	return apply_filters( 'bp_core_avatar_dimension', $dim, $type, $h_or_w );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_core_avatar_dimension' ) && ! function_exists( 'bp_core_avatar_dimension' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_avatar_dimension()}.
+	 *
+	 * @deprecated Use bboss_core_avatar_dimension() instead.
+	 */
+	function bp_core_avatar_dimension( $type = 'thumb', $h_or_w = 'height' ) {
+		return bboss_core_avatar_dimension( $type, $h_or_w );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get the 'thumb' avatar width setting.
@@ -1933,6 +2213,20 @@ function bboss_core_avatar_thumb_width() {
 	 */
 	return apply_filters( 'bp_core_avatar_thumb_width', bboss_core_avatar_dimension( 'thumb', 'width' ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_core_avatar_thumb_width' ) && ! function_exists( 'bp_core_avatar_thumb_width' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_avatar_thumb_width()}.
+	 *
+	 * @deprecated Use bboss_core_avatar_thumb_width() instead.
+	 */
+	function bp_core_avatar_thumb_width() {
+		return bboss_core_avatar_thumb_width();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get the 'thumb' avatar height setting.
@@ -1952,6 +2246,20 @@ function bboss_core_avatar_thumb_height() {
 	 */
 	return apply_filters( 'bp_core_avatar_thumb_height', bboss_core_avatar_dimension( 'thumb', 'height' ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_core_avatar_thumb_height' ) && ! function_exists( 'bp_core_avatar_thumb_height' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_avatar_thumb_height()}.
+	 *
+	 * @deprecated Use bboss_core_avatar_thumb_height() instead.
+	 */
+	function bp_core_avatar_thumb_height() {
+		return bboss_core_avatar_thumb_height();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get the 'full' avatar width setting.
@@ -1971,6 +2279,20 @@ function bboss_core_avatar_full_width() {
 	 */
 	return apply_filters( 'bp_core_avatar_full_width', bboss_core_avatar_dimension( 'full', 'width' ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_core_avatar_full_width' ) && ! function_exists( 'bp_core_avatar_full_width' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_avatar_full_width()}.
+	 *
+	 * @deprecated Use bboss_core_avatar_full_width() instead.
+	 */
+	function bp_core_avatar_full_width() {
+		return bboss_core_avatar_full_width();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get the 'full' avatar height setting.
@@ -1990,6 +2312,20 @@ function bboss_core_avatar_full_height() {
 	 */
 	return apply_filters( 'bp_core_avatar_full_height', bboss_core_avatar_dimension( 'full', 'height' ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_core_avatar_full_height' ) && ! function_exists( 'bp_core_avatar_full_height' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_avatar_full_height()}.
+	 *
+	 * @deprecated Use bboss_core_avatar_full_height() instead.
+	 */
+	function bp_core_avatar_full_height() {
+		return bboss_core_avatar_full_height();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get the max width for original avatar uploads.
@@ -2009,6 +2345,20 @@ function bboss_core_avatar_original_max_width() {
 	 */
 	return apply_filters( 'bp_core_avatar_original_max_width', (int) bboss()->avatar->original_max_width );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_core_avatar_original_max_width' ) && ! function_exists( 'bp_core_avatar_original_max_width' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_avatar_original_max_width()}.
+	 *
+	 * @deprecated Use bboss_core_avatar_original_max_width() instead.
+	 */
+	function bp_core_avatar_original_max_width() {
+		return bboss_core_avatar_original_max_width();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get the max filesize for original avatar uploads.
@@ -2028,6 +2378,20 @@ function bboss_core_avatar_original_max_filesize() {
 	 */
 	return apply_filters( 'bp_core_avatar_original_max_filesize', (int) bboss()->avatar->original_max_filesize );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_core_avatar_original_max_filesize' ) && ! function_exists( 'bp_core_avatar_original_max_filesize' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_avatar_original_max_filesize()}.
+	 *
+	 * @deprecated Use bboss_core_avatar_original_max_filesize() instead.
+	 */
+	function bp_core_avatar_original_max_filesize() {
+		return bboss_core_avatar_original_max_filesize();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get the URL of the 'full' default avatar.
@@ -2099,6 +2463,20 @@ function bboss_core_avatar_default( $type = 'gravatar', $params = array() ) {
 	 */
 	return apply_filters( 'bp_core_avatar_default', $avatar, $params );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_core_avatar_default' ) && ! function_exists( 'bp_core_avatar_default' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_avatar_default()}.
+	 *
+	 * @deprecated Use bboss_core_avatar_default() instead.
+	 */
+	function bp_core_avatar_default( $type = 'gravatar', $params = array() ) {
+		return bboss_core_avatar_default( $type, $params );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get the URL of the 'thumb' default avatar.
@@ -2140,6 +2518,20 @@ function bboss_core_avatar_default_thumb( $type = 'gravatar', $params = array() 
 	 */
 	return apply_filters( 'bp_core_avatar_thumb', $avatar, $params );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_core_avatar_default_thumb' ) && ! function_exists( 'bp_core_avatar_default_thumb' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_avatar_default_thumb()}.
+	 *
+	 * @deprecated Use bboss_core_avatar_default_thumb() instead.
+	 */
+	function bp_core_avatar_default_thumb( $type = 'gravatar', $params = array() ) {
+		return bboss_core_avatar_default_thumb( $type, $params );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Reset the week parameter of the WordPress main query if needed.
@@ -2177,6 +2569,20 @@ function bboss_core_avatar_reset_query( $posts_query = null ) {
 		$posts_query->set( 'w', 0 );
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_core_avatar_reset_query' ) && ! function_exists( 'bp_core_avatar_reset_query' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_avatar_reset_query()}.
+	 *
+	 * @deprecated Use bboss_core_avatar_reset_query() instead.
+	 */
+	function bp_core_avatar_reset_query( $posts_query = null ) {
+		return bboss_core_avatar_reset_query( $posts_query );
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'bp_parse_query', 'bp_core_avatar_reset_query', 10, 1 );
 
 /**
@@ -2220,6 +2626,20 @@ function bboss_avatar_is_front_edit() {
 	 */
 	return apply_filters( 'bp_avatar_is_front_edit', $retval );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_avatar_is_front_edit' ) && ! function_exists( 'bp_avatar_is_front_edit' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_avatar_is_front_edit()}.
+	 *
+	 * @deprecated Use bboss_avatar_is_front_edit() instead.
+	 */
+	function bp_avatar_is_front_edit() {
+		return bboss_avatar_is_front_edit();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Checks whether the Webcam Avatar UI part should be loaded.
@@ -2263,6 +2683,20 @@ function bboss_avatar_use_webcam() {
 	 */
 	return apply_filters( 'bp_avatar_use_webcam', true );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_avatar_use_webcam' ) && ! function_exists( 'bp_avatar_use_webcam' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_avatar_use_webcam()}.
+	 *
+	 * @deprecated Use bboss_avatar_use_webcam() instead.
+	 */
+	function bp_avatar_use_webcam() {
+		return bboss_avatar_use_webcam();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Template function to load the Avatar UI javascript templates.
@@ -2276,6 +2710,20 @@ function bboss_avatar_get_templates() {
 
 	bboss_attachments_get_template_part( 'avatars/index' );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_avatar_get_templates' ) && ! function_exists( 'bp_avatar_get_templates' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_avatar_get_templates()}.
+	 *
+	 * @deprecated Use bboss_avatar_get_templates() instead.
+	 */
+	function bp_avatar_get_templates() {
+		return bboss_avatar_get_templates();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Trick to check if the theme's BuddyPress templates are up to date.
@@ -2294,6 +2742,20 @@ function bboss_avatar_template_check() {
 		bboss_attachments_get_template_part( 'avatars/index' );
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_avatar_template_check' ) && ! function_exists( 'bp_avatar_template_check' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_avatar_template_check()}.
+	 *
+	 * @deprecated Use bboss_avatar_template_check() instead.
+	 */
+	function bp_avatar_template_check() {
+		return bboss_avatar_template_check();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Inject uploaded profile photo as avatar into get_avatar()
@@ -2386,6 +2848,20 @@ function bboss_core_pre_get_avatar_filter( $data, $id_or_email, $args ) {
 
 	return apply_filters( 'bp_core_pre_get_avatar_data_url_filter', $data, $id_or_email, $args );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_core_pre_get_avatar_filter' ) && ! function_exists( 'bp_core_pre_get_avatar_filter' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_pre_get_avatar_filter()}.
+	 *
+	 * @deprecated Use bboss_core_pre_get_avatar_filter() instead.
+	 */
+	function bp_core_pre_get_avatar_filter( $data, $id_or_email, $args ) {
+		return bboss_core_pre_get_avatar_filter( $data, $id_or_email, $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_filter( 'pre_get_avatar', 'bp_core_pre_get_avatar_filter', 10, 3 );
 
 /**
@@ -2450,11 +2926,8 @@ function bboss_bb_core_get_avatar_data_url_filter( $retval, $id_or_email, $args 
 
 	return $retval;
 }
-add_filter( 'get_avatar_url', 'bb_core_get_avatar_data_url_filter', 10, 3 );
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_bb_core_get_avatar_data_url_filter' ) && ! function_exists( 'bb_core_get_avatar_data_url_filter' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_bb_core_get_avatar_data_url_filter()}.
@@ -2465,344 +2938,6 @@ if ( function_exists( 'bboss_bb_core_get_avatar_data_url_filter' ) && ! function
 		return bboss_bb_core_get_avatar_data_url_filter( $retval, $id_or_email, $args );
 	}
 }
-if ( function_exists( 'bboss_avatar_ajax_delete' ) && ! function_exists( 'bp_avatar_ajax_delete' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_avatar_ajax_delete()}.
-	 *
-	 * @deprecated Use bboss_avatar_ajax_delete() instead.
-	 */
-	function bp_avatar_ajax_delete() {
-		return bboss_avatar_ajax_delete();
-	}
-}
-if ( function_exists( 'bboss_avatar_ajax_set' ) && ! function_exists( 'bp_avatar_ajax_set' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_avatar_ajax_set()}.
-	 *
-	 * @deprecated Use bboss_avatar_ajax_set() instead.
-	 */
-	function bp_avatar_ajax_set() {
-		return bboss_avatar_ajax_set();
-	}
-}
-if ( function_exists( 'bboss_avatar_ajax_upload' ) && ! function_exists( 'bp_avatar_ajax_upload' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_avatar_ajax_upload()}.
-	 *
-	 * @deprecated Use bboss_avatar_ajax_upload() instead.
-	 */
-	function bp_avatar_ajax_upload() {
-		return bboss_avatar_ajax_upload();
-	}
-}
-if ( function_exists( 'bboss_avatar_get_templates' ) && ! function_exists( 'bp_avatar_get_templates' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_avatar_get_templates()}.
-	 *
-	 * @deprecated Use bboss_avatar_get_templates() instead.
-	 */
-	function bp_avatar_get_templates() {
-		return bboss_avatar_get_templates();
-	}
-}
-if ( function_exists( 'bboss_avatar_handle_capture' ) && ! function_exists( 'bp_avatar_handle_capture' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_avatar_handle_capture()}.
-	 *
-	 * @deprecated Use bboss_avatar_handle_capture() instead.
-	 */
-	function bp_avatar_handle_capture( $data = '', $item_id = 0 ) {
-		return bboss_avatar_handle_capture( $data, $item_id );
-	}
-}
-if ( function_exists( 'bboss_avatar_is_front_edit' ) && ! function_exists( 'bp_avatar_is_front_edit' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_avatar_is_front_edit()}.
-	 *
-	 * @deprecated Use bboss_avatar_is_front_edit() instead.
-	 */
-	function bp_avatar_is_front_edit() {
-		return bboss_avatar_is_front_edit();
-	}
-}
-if ( function_exists( 'bboss_avatar_template_check' ) && ! function_exists( 'bp_avatar_template_check' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_avatar_template_check()}.
-	 *
-	 * @deprecated Use bboss_avatar_template_check() instead.
-	 */
-	function bp_avatar_template_check() {
-		return bboss_avatar_template_check();
-	}
-}
-if ( function_exists( 'bboss_avatar_use_webcam' ) && ! function_exists( 'bp_avatar_use_webcam' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_avatar_use_webcam()}.
-	 *
-	 * @deprecated Use bboss_avatar_use_webcam() instead.
-	 */
-	function bp_avatar_use_webcam() {
-		return bboss_avatar_use_webcam();
-	}
-}
-if ( function_exists( 'bboss_core_avatar_default' ) && ! function_exists( 'bp_core_avatar_default' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_core_avatar_default()}.
-	 *
-	 * @deprecated Use bboss_core_avatar_default() instead.
-	 */
-	function bp_core_avatar_default( $type = 'gravatar', $params = array() ) {
-		return bboss_core_avatar_default( $type, $params );
-	}
-}
-if ( function_exists( 'bboss_core_avatar_default_thumb' ) && ! function_exists( 'bp_core_avatar_default_thumb' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_core_avatar_default_thumb()}.
-	 *
-	 * @deprecated Use bboss_core_avatar_default_thumb() instead.
-	 */
-	function bp_core_avatar_default_thumb( $type = 'gravatar', $params = array() ) {
-		return bboss_core_avatar_default_thumb( $type, $params );
-	}
-}
-if ( function_exists( 'bboss_core_avatar_dimension' ) && ! function_exists( 'bp_core_avatar_dimension' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_core_avatar_dimension()}.
-	 *
-	 * @deprecated Use bboss_core_avatar_dimension() instead.
-	 */
-	function bp_core_avatar_dimension( $type = 'thumb', $h_or_w = 'height' ) {
-		return bboss_core_avatar_dimension( $type, $h_or_w );
-	}
-}
-if ( function_exists( 'bboss_core_avatar_full_height' ) && ! function_exists( 'bp_core_avatar_full_height' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_core_avatar_full_height()}.
-	 *
-	 * @deprecated Use bboss_core_avatar_full_height() instead.
-	 */
-	function bp_core_avatar_full_height() {
-		return bboss_core_avatar_full_height();
-	}
-}
-if ( function_exists( 'bboss_core_avatar_full_width' ) && ! function_exists( 'bp_core_avatar_full_width' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_core_avatar_full_width()}.
-	 *
-	 * @deprecated Use bboss_core_avatar_full_width() instead.
-	 */
-	function bp_core_avatar_full_width() {
-		return bboss_core_avatar_full_width();
-	}
-}
-if ( function_exists( 'bboss_core_avatar_handle_crop' ) && ! function_exists( 'bp_core_avatar_handle_crop' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_core_avatar_handle_crop()}.
-	 *
-	 * @deprecated Use bboss_core_avatar_handle_crop() instead.
-	 */
-	function bp_core_avatar_handle_crop( $args = '' ) {
-		return bboss_core_avatar_handle_crop( $args );
-	}
-}
-if ( function_exists( 'bboss_core_avatar_handle_upload' ) && ! function_exists( 'bp_core_avatar_handle_upload' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_core_avatar_handle_upload()}.
-	 *
-	 * @deprecated Use bboss_core_avatar_handle_upload() instead.
-	 */
-	function bp_core_avatar_handle_upload( $file, $upload_dir_filter ) {
-		return bboss_core_avatar_handle_upload( $file, $upload_dir_filter );
-	}
-}
-if ( function_exists( 'bboss_core_avatar_original_max_filesize' ) && ! function_exists( 'bp_core_avatar_original_max_filesize' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_core_avatar_original_max_filesize()}.
-	 *
-	 * @deprecated Use bboss_core_avatar_original_max_filesize() instead.
-	 */
-	function bp_core_avatar_original_max_filesize() {
-		return bboss_core_avatar_original_max_filesize();
-	}
-}
-if ( function_exists( 'bboss_core_avatar_original_max_width' ) && ! function_exists( 'bp_core_avatar_original_max_width' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_core_avatar_original_max_width()}.
-	 *
-	 * @deprecated Use bboss_core_avatar_original_max_width() instead.
-	 */
-	function bp_core_avatar_original_max_width() {
-		return bboss_core_avatar_original_max_width();
-	}
-}
-if ( function_exists( 'bboss_core_avatar_reset_query' ) && ! function_exists( 'bp_core_avatar_reset_query' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_core_avatar_reset_query()}.
-	 *
-	 * @deprecated Use bboss_core_avatar_reset_query() instead.
-	 */
-	function bp_core_avatar_reset_query( $posts_query = null ) {
-		return bboss_core_avatar_reset_query( $posts_query );
-	}
-}
-if ( function_exists( 'bboss_core_avatar_thumb_height' ) && ! function_exists( 'bp_core_avatar_thumb_height' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_core_avatar_thumb_height()}.
-	 *
-	 * @deprecated Use bboss_core_avatar_thumb_height() instead.
-	 */
-	function bp_core_avatar_thumb_height() {
-		return bboss_core_avatar_thumb_height();
-	}
-}
-if ( function_exists( 'bboss_core_avatar_thumb_width' ) && ! function_exists( 'bp_core_avatar_thumb_width' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_core_avatar_thumb_width()}.
-	 *
-	 * @deprecated Use bboss_core_avatar_thumb_width() instead.
-	 */
-	function bp_core_avatar_thumb_width() {
-		return bboss_core_avatar_thumb_width();
-	}
-}
-if ( function_exists( 'bboss_core_avatar_upload_path' ) && ! function_exists( 'bp_core_avatar_upload_path' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_core_avatar_upload_path()}.
-	 *
-	 * @deprecated Use bboss_core_avatar_upload_path() instead.
-	 */
-	function bp_core_avatar_upload_path() {
-		return bboss_core_avatar_upload_path();
-	}
-}
-if ( function_exists( 'bboss_core_avatar_url' ) && ! function_exists( 'bp_core_avatar_url' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_core_avatar_url()}.
-	 *
-	 * @deprecated Use bboss_core_avatar_url() instead.
-	 */
-	function bp_core_avatar_url() {
-		return bboss_core_avatar_url();
-	}
-}
-if ( function_exists( 'bboss_core_check_avatar_size' ) && ! function_exists( 'bp_core_check_avatar_size' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_core_check_avatar_size()}.
-	 *
-	 * @deprecated Use bboss_core_check_avatar_size() instead.
-	 */
-	function bp_core_check_avatar_size( $file ) {
-		return bboss_core_check_avatar_size( $file );
-	}
-}
-if ( function_exists( 'bboss_core_check_avatar_type' ) && ! function_exists( 'bp_core_check_avatar_type' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_core_check_avatar_type()}.
-	 *
-	 * @deprecated Use bboss_core_check_avatar_type() instead.
-	 */
-	function bp_core_check_avatar_type( $file ) {
-		return bboss_core_check_avatar_type( $file );
-	}
-}
-if ( function_exists( 'bboss_core_check_avatar_upload' ) && ! function_exists( 'bp_core_check_avatar_upload' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_core_check_avatar_upload()}.
-	 *
-	 * @deprecated Use bboss_core_check_avatar_upload() instead.
-	 */
-	function bp_core_check_avatar_upload( $file ) {
-		return bboss_core_check_avatar_upload( $file );
-	}
-}
-if ( function_exists( 'bboss_core_delete_existing_avatar' ) && ! function_exists( 'bp_core_delete_existing_avatar' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_core_delete_existing_avatar()}.
-	 *
-	 * @deprecated Use bboss_core_delete_existing_avatar() instead.
-	 */
-	function bp_core_delete_existing_avatar( $args = '' ) {
-		return bboss_core_delete_existing_avatar( $args );
-	}
-}
-if ( function_exists( 'bboss_core_fetch_avatar' ) && ! function_exists( 'bp_core_fetch_avatar' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_core_fetch_avatar()}.
-	 *
-	 * @deprecated Use bboss_core_fetch_avatar() instead.
-	 */
-	function bp_core_fetch_avatar( $args = '' ) {
-		return bboss_core_fetch_avatar( $args );
-	}
-}
-if ( function_exists( 'bboss_core_get_allowed_avatar_mimes' ) && ! function_exists( 'bp_core_get_allowed_avatar_mimes' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_core_get_allowed_avatar_mimes()}.
-	 *
-	 * @deprecated Use bboss_core_get_allowed_avatar_mimes() instead.
-	 */
-	function bp_core_get_allowed_avatar_mimes() {
-		return bboss_core_get_allowed_avatar_mimes();
-	}
-}
-if ( function_exists( 'bboss_core_get_allowed_avatar_types' ) && ! function_exists( 'bp_core_get_allowed_avatar_types' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_core_get_allowed_avatar_types()}.
-	 *
-	 * @deprecated Use bboss_core_get_allowed_avatar_types() instead.
-	 */
-	function bp_core_get_allowed_avatar_types() {
-		return bboss_core_get_allowed_avatar_types();
-	}
-}
-if ( function_exists( 'bboss_core_get_upload_dir' ) && ! function_exists( 'bp_core_get_upload_dir' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_core_get_upload_dir()}.
-	 *
-	 * @deprecated Use bboss_core_get_upload_dir() instead.
-	 */
-	function bp_core_get_upload_dir( $type = 'upload_path' ) {
-		return bboss_core_get_upload_dir( $type );
-	}
-}
-if ( function_exists( 'bboss_core_pre_get_avatar_filter' ) && ! function_exists( 'bp_core_pre_get_avatar_filter' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_core_pre_get_avatar_filter()}.
-	 *
-	 * @deprecated Use bboss_core_pre_get_avatar_filter() instead.
-	 */
-	function bp_core_pre_get_avatar_filter( $data, $id_or_email, $args ) {
-		return bboss_core_pre_get_avatar_filter( $data, $id_or_email, $args );
-	}
-}
-if ( function_exists( 'bboss_core_set_avatar_constants' ) && ! function_exists( 'bp_core_set_avatar_constants' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_core_set_avatar_constants()}.
-	 *
-	 * @deprecated Use bboss_core_set_avatar_constants() instead.
-	 */
-	function bp_core_set_avatar_constants() {
-		return bboss_core_set_avatar_constants();
-	}
-}
-if ( function_exists( 'bboss_core_set_avatar_globals' ) && ! function_exists( 'bp_core_set_avatar_globals' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_core_set_avatar_globals()}.
-	 *
-	 * @deprecated Use bboss_core_set_avatar_globals() instead.
-	 */
-	function bp_core_set_avatar_globals() {
-		return bboss_core_set_avatar_globals();
-	}
-}
-if ( function_exists( 'bboss_get_user_has_avatar' ) && ! function_exists( 'bp_get_user_has_avatar' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_user_has_avatar()}.
-	 *
-	 * @deprecated Use bboss_get_user_has_avatar() instead.
-	 */
-	function bp_get_user_has_avatar( $user_id = 0 ) {
-		return bboss_get_user_has_avatar( $user_id );
-	}
-}
 // @bbwt-com-end compat-layer
+
+add_filter( 'get_avatar_url', 'bb_core_get_avatar_data_url_filter', 10, 3 );

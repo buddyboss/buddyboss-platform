@@ -22,6 +22,20 @@ if ( ! defined( 'ABSPATH' ) ) {
 function bboss_is_profile_media_support_enabled( $default = 1 ) {
 	return (bool) apply_filters( 'bp_is_profile_media_support_enabled', (bool) get_option( 'bp_media_profile_media_support', $default ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_profile_media_support_enabled' ) && ! function_exists( 'bp_is_profile_media_support_enabled' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_profile_media_support_enabled()}.
+	 *
+	 * @deprecated Use bboss_is_profile_media_support_enabled() instead.
+	 */
+	function bp_is_profile_media_support_enabled( $default = 1 ) {
+		return bboss_is_profile_media_support_enabled( $default );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Checks if media profile albums support is enabled.
@@ -34,6 +48,20 @@ function bboss_is_profile_media_support_enabled( $default = 1 ) {
 function bboss_is_profile_albums_support_enabled( $default = 1 ) {
 	return (bool) apply_filters( 'bp_is_profile_albums_support_enabled', (bool) get_option( 'bp_media_profile_albums_support', $default ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_profile_albums_support_enabled' ) && ! function_exists( 'bp_is_profile_albums_support_enabled' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_profile_albums_support_enabled()}.
+	 *
+	 * @deprecated Use bboss_is_profile_albums_support_enabled() instead.
+	 */
+	function bp_is_profile_albums_support_enabled( $default = 1 ) {
+		return bboss_is_profile_albums_support_enabled( $default );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Checks if media group media support is enabled.
@@ -46,6 +74,20 @@ function bboss_is_profile_albums_support_enabled( $default = 1 ) {
 function bboss_is_group_media_support_enabled( $default = 1 ) {
 	return (bool) apply_filters( 'bp_is_group_media_support_enabled', (bool) get_option( 'bp_media_group_media_support', $default ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_group_media_support_enabled' ) && ! function_exists( 'bp_is_group_media_support_enabled' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_group_media_support_enabled()}.
+	 *
+	 * @deprecated Use bboss_is_group_media_support_enabled() instead.
+	 */
+	function bp_is_group_media_support_enabled( $default = 1 ) {
+		return bboss_is_group_media_support_enabled( $default );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Checks if media group album support is enabled.
@@ -58,6 +100,20 @@ function bboss_is_group_media_support_enabled( $default = 1 ) {
 function bboss_is_group_albums_support_enabled( $default = 1 ) {
 	return (bool) apply_filters( 'bp_is_group_albums_support_enabled', (bool) get_option( 'bp_media_group_albums_support', $default ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_group_albums_support_enabled' ) && ! function_exists( 'bp_is_group_albums_support_enabled' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_group_albums_support_enabled()}.
+	 *
+	 * @deprecated Use bboss_is_group_albums_support_enabled() instead.
+	 */
+	function bp_is_group_albums_support_enabled( $default = 1 ) {
+		return bboss_is_group_albums_support_enabled( $default );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Checks if media messages media support is enabled.
@@ -70,6 +126,20 @@ function bboss_is_group_albums_support_enabled( $default = 1 ) {
 function bboss_is_messages_media_support_enabled( $default = 0 ) {
 	return (bool) apply_filters( 'bp_is_messages_media_support_enabled', (bool) get_option( 'bp_media_messages_media_support', $default ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_messages_media_support_enabled' ) && ! function_exists( 'bp_is_messages_media_support_enabled' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_messages_media_support_enabled()}.
+	 *
+	 * @deprecated Use bboss_is_messages_media_support_enabled() instead.
+	 */
+	function bp_is_messages_media_support_enabled( $default = 0 ) {
+		return bboss_is_messages_media_support_enabled( $default );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Checks if media forums media support is enabled.
@@ -82,6 +152,20 @@ function bboss_is_messages_media_support_enabled( $default = 0 ) {
 function bboss_is_forums_media_support_enabled( $default = 0 ) {
 	return (bool) apply_filters( 'bp_is_forums_media_support_enabled', (bool) get_option( 'bp_media_forums_media_support', $default ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_forums_media_support_enabled' ) && ! function_exists( 'bp_is_forums_media_support_enabled' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_forums_media_support_enabled()}.
+	 *
+	 * @deprecated Use bboss_is_forums_media_support_enabled() instead.
+	 */
+	function bp_is_forums_media_support_enabled( $default = 0 ) {
+		return bboss_is_forums_media_support_enabled( $default );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Checks if media emoji support is enabled in profiles.
@@ -94,6 +178,20 @@ function bboss_is_forums_media_support_enabled( $default = 0 ) {
 function bboss_is_profiles_emoji_support_enabled( $default = 0 ) {
 	return (bool) apply_filters( 'bp_is_profiles_emoji_support_enabled', (bool) get_option( 'bp_media_profiles_emoji_support', $default ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_profiles_emoji_support_enabled' ) && ! function_exists( 'bp_is_profiles_emoji_support_enabled' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_profiles_emoji_support_enabled()}.
+	 *
+	 * @deprecated Use bboss_is_profiles_emoji_support_enabled() instead.
+	 */
+	function bp_is_profiles_emoji_support_enabled( $default = 0 ) {
+		return bboss_is_profiles_emoji_support_enabled( $default );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Checks if media emoji support is enabled in groups.
@@ -106,6 +204,20 @@ function bboss_is_profiles_emoji_support_enabled( $default = 0 ) {
 function bboss_is_groups_emoji_support_enabled( $default = 0 ) {
 	return (bool) apply_filters( 'bp_is_groups_emoji_support_enabled', (bool) get_option( 'bp_media_groups_emoji_support', $default ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_groups_emoji_support_enabled' ) && ! function_exists( 'bp_is_groups_emoji_support_enabled' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_groups_emoji_support_enabled()}.
+	 *
+	 * @deprecated Use bboss_is_groups_emoji_support_enabled() instead.
+	 */
+	function bp_is_groups_emoji_support_enabled( $default = 0 ) {
+		return bboss_is_groups_emoji_support_enabled( $default );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Checks if media emoji support is enabled in messages.
@@ -118,6 +230,20 @@ function bboss_is_groups_emoji_support_enabled( $default = 0 ) {
 function bboss_is_messages_emoji_support_enabled( $default = 0 ) {
 	return (bool) apply_filters( 'bp_is_messages_emoji_support_enabled', (bool) get_option( 'bp_media_messages_emoji_support', $default ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_messages_emoji_support_enabled' ) && ! function_exists( 'bp_is_messages_emoji_support_enabled' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_messages_emoji_support_enabled()}.
+	 *
+	 * @deprecated Use bboss_is_messages_emoji_support_enabled() instead.
+	 */
+	function bp_is_messages_emoji_support_enabled( $default = 0 ) {
+		return bboss_is_messages_emoji_support_enabled( $default );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Checks if media emoji support is enabled in forums.
@@ -130,6 +256,20 @@ function bboss_is_messages_emoji_support_enabled( $default = 0 ) {
 function bboss_is_forums_emoji_support_enabled( $default = 0 ) {
 	return (bool) apply_filters( 'bp_is_forums_emoji_support_enabled', (bool) get_option( 'bp_media_forums_emoji_support', $default ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_forums_emoji_support_enabled' ) && ! function_exists( 'bp_is_forums_emoji_support_enabled' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_forums_emoji_support_enabled()}.
+	 *
+	 * @deprecated Use bboss_is_forums_emoji_support_enabled() instead.
+	 */
+	function bp_is_forums_emoji_support_enabled( $default = 0 ) {
+		return bboss_is_forums_emoji_support_enabled( $default );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Whether a GIPHY integration provider is available to power the GIF feature.
@@ -158,6 +298,20 @@ function bboss_giphy_provider_available() {
 	 */
 	return (bool) apply_filters( 'bb_giphy_module_active', $available );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_giphy_provider_available' ) && ! function_exists( 'bb_giphy_provider_available' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_giphy_provider_available()}.
+	 *
+	 * @deprecated Use bboss_giphy_provider_available() instead.
+	 */
+	function bb_giphy_provider_available() {
+		return bboss_giphy_provider_available();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return GIFs API Key
@@ -179,6 +333,20 @@ function bboss_media_get_gif_api_key( $default = '' ) {
 	 */
 	return apply_filters( 'bp_media_get_gif_api_key', bboss_get_option( 'bp_media_gif_api_key', $default ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_media_get_gif_api_key' ) && ! function_exists( 'bp_media_get_gif_api_key' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_media_get_gif_api_key()}.
+	 *
+	 * @deprecated Use bboss_media_get_gif_api_key() instead.
+	 */
+	function bp_media_get_gif_api_key( $default = '' ) {
+		return bboss_media_get_gif_api_key( $default );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Checks if media gif support is enabled in profiles.
@@ -195,6 +363,20 @@ function bboss_is_profiles_gif_support_enabled( $default = 0 ) {
 	}
 	return (bool) apply_filters( 'bp_is_profiles_gif_support_enabled', $result );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_profiles_gif_support_enabled' ) && ! function_exists( 'bp_is_profiles_gif_support_enabled' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_profiles_gif_support_enabled()}.
+	 *
+	 * @deprecated Use bboss_is_profiles_gif_support_enabled() instead.
+	 */
+	function bp_is_profiles_gif_support_enabled( $default = 0 ) {
+		return bboss_is_profiles_gif_support_enabled( $default );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Checks if media gif support is enabled in groups.
@@ -211,6 +393,20 @@ function bboss_is_groups_gif_support_enabled( $default = 0 ) {
 	}
 	return (bool) apply_filters( 'bp_is_groups_gif_support_enabled', $result );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_groups_gif_support_enabled' ) && ! function_exists( 'bp_is_groups_gif_support_enabled' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_groups_gif_support_enabled()}.
+	 *
+	 * @deprecated Use bboss_is_groups_gif_support_enabled() instead.
+	 */
+	function bp_is_groups_gif_support_enabled( $default = 0 ) {
+		return bboss_is_groups_gif_support_enabled( $default );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Checks if media gif support is enabled in messages.
@@ -227,6 +423,20 @@ function bboss_is_messages_gif_support_enabled( $default = 0 ) {
 	}
 	return (bool) apply_filters( 'bp_is_messages_gif_support_enabled', $result );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_messages_gif_support_enabled' ) && ! function_exists( 'bp_is_messages_gif_support_enabled' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_messages_gif_support_enabled()}.
+	 *
+	 * @deprecated Use bboss_is_messages_gif_support_enabled() instead.
+	 */
+	function bp_is_messages_gif_support_enabled( $default = 0 ) {
+		return bboss_is_messages_gif_support_enabled( $default );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Checks if media gif support is enabled in forums.
@@ -243,6 +453,20 @@ function bboss_is_forums_gif_support_enabled( $default = 0 ) {
 	}
 	return (bool) apply_filters( 'bp_is_forums_gif_support_enabled', $result );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_forums_gif_support_enabled' ) && ! function_exists( 'bp_is_forums_gif_support_enabled' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_forums_gif_support_enabled()}.
+	 *
+	 * @deprecated Use bboss_is_forums_gif_support_enabled() instead.
+	 */
+	function bp_is_forums_gif_support_enabled( $default = 0 ) {
+		return bboss_is_forums_gif_support_enabled( $default );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Checks if media messages doc support is enabled.
@@ -255,6 +479,20 @@ function bboss_is_forums_gif_support_enabled( $default = 0 ) {
 function bboss_is_messages_document_support_enabled( $default = 0 ) {
 	return (bool) apply_filters( 'bp_is_messages_document_support_enabled', (bool) get_option( 'bp_media_messages_document_support', $default ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_messages_document_support_enabled' ) && ! function_exists( 'bp_is_messages_document_support_enabled' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_messages_document_support_enabled()}.
+	 *
+	 * @deprecated Use bboss_is_messages_document_support_enabled() instead.
+	 */
+	function bp_is_messages_document_support_enabled( $default = 0 ) {
+		return bboss_is_messages_document_support_enabled( $default );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Checks if media group document support is enabled.
@@ -267,6 +505,20 @@ function bboss_is_messages_document_support_enabled( $default = 0 ) {
 function bboss_is_group_document_support_enabled( $default = 0 ) {
 	return (bool) apply_filters( 'bp_is_group_document_support_enabled', (bool) get_option( 'bp_media_group_document_support', $default ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_group_document_support_enabled' ) && ! function_exists( 'bp_is_group_document_support_enabled' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_group_document_support_enabled()}.
+	 *
+	 * @deprecated Use bboss_is_group_document_support_enabled() instead.
+	 */
+	function bp_is_group_document_support_enabled( $default = 0 ) {
+		return bboss_is_group_document_support_enabled( $default );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Checks if media forums document support is enabled.
@@ -279,6 +531,20 @@ function bboss_is_group_document_support_enabled( $default = 0 ) {
 function bboss_is_forums_document_support_enabled( $default = 0 ) {
 	return (bool) apply_filters( 'bp_is_forums_document_support_enabled', (bool) get_option( 'bp_media_forums_document_support', $default ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_forums_document_support_enabled' ) && ! function_exists( 'bp_is_forums_document_support_enabled' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_forums_document_support_enabled()}.
+	 *
+	 * @deprecated Use bboss_is_forums_document_support_enabled() instead.
+	 */
+	function bp_is_forums_document_support_enabled( $default = 0 ) {
+		return bboss_is_forums_document_support_enabled( $default );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Checks if media forums document support is enabled.
@@ -291,6 +557,20 @@ function bboss_is_forums_document_support_enabled( $default = 0 ) {
 function bboss_is_profile_document_support_enabled( $default = 0 ) {
 	return (bool) apply_filters( 'bp_is_profile_document_support_enabled', (bool) get_option( 'bp_media_profile_document_support', $default ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_profile_document_support_enabled' ) && ! function_exists( 'bp_is_profile_document_support_enabled' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_profile_document_support_enabled()}.
+	 *
+	 * @deprecated Use bboss_is_profile_document_support_enabled() instead.
+	 */
+	function bp_is_profile_document_support_enabled( $default = 0 ) {
+		return bboss_is_profile_document_support_enabled( $default );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /*
  * Video support helpers.
@@ -319,6 +599,20 @@ function bboss_is_profile_document_support_enabled( $default = 0 ) {
 function bboss_is_profile_video_support_enabled( $default = 0 ) {
 	return (bool) apply_filters( 'bp_is_profile_video_support_enabled', (bool) get_option( 'bp_video_profile_video_support', $default ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_profile_video_support_enabled' ) && ! function_exists( 'bp_is_profile_video_support_enabled' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_profile_video_support_enabled()}.
+	 *
+	 * @deprecated Use bboss_is_profile_video_support_enabled() instead.
+	 */
+	function bp_is_profile_video_support_enabled( $default = 0 ) {
+		return bboss_is_profile_video_support_enabled( $default );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Checks if group video support is enabled.
@@ -332,6 +626,20 @@ function bboss_is_profile_video_support_enabled( $default = 0 ) {
 function bboss_is_group_video_support_enabled( $default = 0 ) {
 	return (bool) apply_filters( 'bp_is_group_video_support_enabled', (bool) get_option( 'bp_video_group_video_support', $default ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_group_video_support_enabled' ) && ! function_exists( 'bp_is_group_video_support_enabled' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_group_video_support_enabled()}.
+	 *
+	 * @deprecated Use bboss_is_group_video_support_enabled() instead.
+	 */
+	function bp_is_group_video_support_enabled( $default = 0 ) {
+		return bboss_is_group_video_support_enabled( $default );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Checks if messages video support is enabled.
@@ -345,6 +653,20 @@ function bboss_is_group_video_support_enabled( $default = 0 ) {
 function bboss_is_messages_video_support_enabled( $default = 0 ) {
 	return (bool) apply_filters( 'bp_is_messages_video_support_enabled', (bool) get_option( 'bp_video_messages_video_support', $default ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_messages_video_support_enabled' ) && ! function_exists( 'bp_is_messages_video_support_enabled' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_messages_video_support_enabled()}.
+	 *
+	 * @deprecated Use bboss_is_messages_video_support_enabled() instead.
+	 */
+	function bp_is_messages_video_support_enabled( $default = 0 ) {
+		return bboss_is_messages_video_support_enabled( $default );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Checks if forums video support is enabled.
@@ -358,6 +680,20 @@ function bboss_is_messages_video_support_enabled( $default = 0 ) {
 function bboss_is_forums_video_support_enabled( $default = 0 ) {
 	return (bool) apply_filters( 'bp_is_forums_video_support_enabled', (bool) get_option( 'bp_video_forums_video_support', $default ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_forums_video_support_enabled' ) && ! function_exists( 'bp_is_forums_video_support_enabled' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_forums_video_support_enabled()}.
+	 *
+	 * @deprecated Use bboss_is_forums_video_support_enabled() instead.
+	 */
+	function bp_is_forums_video_support_enabled( $default = 0 ) {
+		return bboss_is_forums_video_support_enabled( $default );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Checks if extension support is enabled.
@@ -382,6 +718,20 @@ function bboss_document_extensions_list() {
 	 */
 	return apply_filters( 'bp_document_extensions_list', $final );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_document_extensions_list' ) && ! function_exists( 'bp_document_extensions_list' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_document_extensions_list()}.
+	 *
+	 * @deprecated Use bboss_document_extensions_list() instead.
+	 */
+	function bp_document_extensions_list() {
+		return bboss_document_extensions_list();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Allowed upload file size for the media.
@@ -395,6 +745,20 @@ function bboss_media_allowed_upload_media_size() {
 	$default  = bboss_media_format_size_units( $max_size, false, 'MB' );
 	return (int) apply_filters( 'bp_media_allowed_upload_media_size', (int) get_option( 'bp_media_allowed_size', $default ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_media_allowed_upload_media_size' ) && ! function_exists( 'bp_media_allowed_upload_media_size' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_media_allowed_upload_media_size()}.
+	 *
+	 * @deprecated Use bboss_media_allowed_upload_media_size() instead.
+	 */
+	function bp_media_allowed_upload_media_size() {
+		return bboss_media_allowed_upload_media_size();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Allowed upload file size for the document.
@@ -408,6 +772,20 @@ function bboss_media_allowed_upload_document_size() {
 	$default  = function_exists( 'bp_document_format_size_units' ) ? bp_document_format_size_units( $max_size, false, 'MB' ) : bboss_media_format_size_units( $max_size, false, 'MB' );
 	return (int) apply_filters( 'bp_media_allowed_upload_document_size', (int) get_option( 'bp_document_allowed_size', $default ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_media_allowed_upload_document_size' ) && ! function_exists( 'bp_media_allowed_upload_document_size' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_media_allowed_upload_document_size()}.
+	 *
+	 * @deprecated Use bboss_media_allowed_upload_document_size() instead.
+	 */
+	function bp_media_allowed_upload_document_size() {
+		return bboss_media_allowed_upload_document_size();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Allowed per batch for the media.
@@ -420,6 +798,20 @@ function bboss_media_allowed_upload_media_per_batch() {
 	$default = apply_filters( 'bp_media_upload_chunk_limit', 10 );
 	return (int) apply_filters( 'bp_media_allowed_upload_media_per_batch', (int) get_option( 'bp_media_allowed_per_batch', $default ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_media_allowed_upload_media_per_batch' ) && ! function_exists( 'bp_media_allowed_upload_media_per_batch' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_media_allowed_upload_media_per_batch()}.
+	 *
+	 * @deprecated Use bboss_media_allowed_upload_media_per_batch() instead.
+	 */
+	function bp_media_allowed_upload_media_per_batch() {
+		return bboss_media_allowed_upload_media_per_batch();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Allowed per batch for the document.
@@ -447,6 +839,20 @@ function bboss_media_allowed_upload_document_per_batch() {
 	 */
 	return (int) apply_filters( 'bp_media_allowed_upload_document_per_batch', (int) get_option( 'bp_document_allowed_per_batch', $default ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_media_allowed_upload_document_per_batch' ) && ! function_exists( 'bp_media_allowed_upload_document_per_batch' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_media_allowed_upload_document_per_batch()}.
+	 *
+	 * @deprecated Use bboss_media_allowed_upload_document_per_batch() instead.
+	 */
+	function bp_media_allowed_upload_document_per_batch() {
+		return bboss_media_allowed_upload_document_per_batch();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Checks if extension support is enabled.
@@ -460,300 +866,8 @@ function bboss_video_extensions_list() {
 
 	return apply_filters( 'bp_video_extensions_list', bboss_get_option( 'bp_video_extensions_support', $default ) );
 }
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
-if ( function_exists( 'bboss_giphy_provider_available' ) && ! function_exists( 'bb_giphy_provider_available' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_giphy_provider_available()}.
-	 *
-	 * @deprecated Use bboss_giphy_provider_available() instead.
-	 */
-	function bb_giphy_provider_available() {
-		return bboss_giphy_provider_available();
-	}
-}
-if ( function_exists( 'bboss_document_extensions_list' ) && ! function_exists( 'bp_document_extensions_list' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_document_extensions_list()}.
-	 *
-	 * @deprecated Use bboss_document_extensions_list() instead.
-	 */
-	function bp_document_extensions_list() {
-		return bboss_document_extensions_list();
-	}
-}
-if ( function_exists( 'bboss_is_forums_document_support_enabled' ) && ! function_exists( 'bp_is_forums_document_support_enabled' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_forums_document_support_enabled()}.
-	 *
-	 * @deprecated Use bboss_is_forums_document_support_enabled() instead.
-	 */
-	function bp_is_forums_document_support_enabled( $default = 0 ) {
-		return bboss_is_forums_document_support_enabled( $default );
-	}
-}
-if ( function_exists( 'bboss_is_forums_emoji_support_enabled' ) && ! function_exists( 'bp_is_forums_emoji_support_enabled' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_forums_emoji_support_enabled()}.
-	 *
-	 * @deprecated Use bboss_is_forums_emoji_support_enabled() instead.
-	 */
-	function bp_is_forums_emoji_support_enabled( $default = 0 ) {
-		return bboss_is_forums_emoji_support_enabled( $default );
-	}
-}
-if ( function_exists( 'bboss_is_forums_gif_support_enabled' ) && ! function_exists( 'bp_is_forums_gif_support_enabled' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_forums_gif_support_enabled()}.
-	 *
-	 * @deprecated Use bboss_is_forums_gif_support_enabled() instead.
-	 */
-	function bp_is_forums_gif_support_enabled( $default = 0 ) {
-		return bboss_is_forums_gif_support_enabled( $default );
-	}
-}
-if ( function_exists( 'bboss_is_forums_media_support_enabled' ) && ! function_exists( 'bp_is_forums_media_support_enabled' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_forums_media_support_enabled()}.
-	 *
-	 * @deprecated Use bboss_is_forums_media_support_enabled() instead.
-	 */
-	function bp_is_forums_media_support_enabled( $default = 0 ) {
-		return bboss_is_forums_media_support_enabled( $default );
-	}
-}
-if ( function_exists( 'bboss_is_forums_video_support_enabled' ) && ! function_exists( 'bp_is_forums_video_support_enabled' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_forums_video_support_enabled()}.
-	 *
-	 * @deprecated Use bboss_is_forums_video_support_enabled() instead.
-	 */
-	function bp_is_forums_video_support_enabled( $default = 0 ) {
-		return bboss_is_forums_video_support_enabled( $default );
-	}
-}
-if ( function_exists( 'bboss_is_group_albums_support_enabled' ) && ! function_exists( 'bp_is_group_albums_support_enabled' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_group_albums_support_enabled()}.
-	 *
-	 * @deprecated Use bboss_is_group_albums_support_enabled() instead.
-	 */
-	function bp_is_group_albums_support_enabled( $default = 1 ) {
-		return bboss_is_group_albums_support_enabled( $default );
-	}
-}
-if ( function_exists( 'bboss_is_group_document_support_enabled' ) && ! function_exists( 'bp_is_group_document_support_enabled' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_group_document_support_enabled()}.
-	 *
-	 * @deprecated Use bboss_is_group_document_support_enabled() instead.
-	 */
-	function bp_is_group_document_support_enabled( $default = 0 ) {
-		return bboss_is_group_document_support_enabled( $default );
-	}
-}
-if ( function_exists( 'bboss_is_group_media_support_enabled' ) && ! function_exists( 'bp_is_group_media_support_enabled' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_group_media_support_enabled()}.
-	 *
-	 * @deprecated Use bboss_is_group_media_support_enabled() instead.
-	 */
-	function bp_is_group_media_support_enabled( $default = 1 ) {
-		return bboss_is_group_media_support_enabled( $default );
-	}
-}
-if ( function_exists( 'bboss_is_group_video_support_enabled' ) && ! function_exists( 'bp_is_group_video_support_enabled' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_group_video_support_enabled()}.
-	 *
-	 * @deprecated Use bboss_is_group_video_support_enabled() instead.
-	 */
-	function bp_is_group_video_support_enabled( $default = 0 ) {
-		return bboss_is_group_video_support_enabled( $default );
-	}
-}
-if ( function_exists( 'bboss_is_groups_emoji_support_enabled' ) && ! function_exists( 'bp_is_groups_emoji_support_enabled' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_groups_emoji_support_enabled()}.
-	 *
-	 * @deprecated Use bboss_is_groups_emoji_support_enabled() instead.
-	 */
-	function bp_is_groups_emoji_support_enabled( $default = 0 ) {
-		return bboss_is_groups_emoji_support_enabled( $default );
-	}
-}
-if ( function_exists( 'bboss_is_groups_gif_support_enabled' ) && ! function_exists( 'bp_is_groups_gif_support_enabled' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_groups_gif_support_enabled()}.
-	 *
-	 * @deprecated Use bboss_is_groups_gif_support_enabled() instead.
-	 */
-	function bp_is_groups_gif_support_enabled( $default = 0 ) {
-		return bboss_is_groups_gif_support_enabled( $default );
-	}
-}
-if ( function_exists( 'bboss_is_messages_document_support_enabled' ) && ! function_exists( 'bp_is_messages_document_support_enabled' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_messages_document_support_enabled()}.
-	 *
-	 * @deprecated Use bboss_is_messages_document_support_enabled() instead.
-	 */
-	function bp_is_messages_document_support_enabled( $default = 0 ) {
-		return bboss_is_messages_document_support_enabled( $default );
-	}
-}
-if ( function_exists( 'bboss_is_messages_emoji_support_enabled' ) && ! function_exists( 'bp_is_messages_emoji_support_enabled' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_messages_emoji_support_enabled()}.
-	 *
-	 * @deprecated Use bboss_is_messages_emoji_support_enabled() instead.
-	 */
-	function bp_is_messages_emoji_support_enabled( $default = 0 ) {
-		return bboss_is_messages_emoji_support_enabled( $default );
-	}
-}
-if ( function_exists( 'bboss_is_messages_gif_support_enabled' ) && ! function_exists( 'bp_is_messages_gif_support_enabled' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_messages_gif_support_enabled()}.
-	 *
-	 * @deprecated Use bboss_is_messages_gif_support_enabled() instead.
-	 */
-	function bp_is_messages_gif_support_enabled( $default = 0 ) {
-		return bboss_is_messages_gif_support_enabled( $default );
-	}
-}
-if ( function_exists( 'bboss_is_messages_media_support_enabled' ) && ! function_exists( 'bp_is_messages_media_support_enabled' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_messages_media_support_enabled()}.
-	 *
-	 * @deprecated Use bboss_is_messages_media_support_enabled() instead.
-	 */
-	function bp_is_messages_media_support_enabled( $default = 0 ) {
-		return bboss_is_messages_media_support_enabled( $default );
-	}
-}
-if ( function_exists( 'bboss_is_messages_video_support_enabled' ) && ! function_exists( 'bp_is_messages_video_support_enabled' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_messages_video_support_enabled()}.
-	 *
-	 * @deprecated Use bboss_is_messages_video_support_enabled() instead.
-	 */
-	function bp_is_messages_video_support_enabled( $default = 0 ) {
-		return bboss_is_messages_video_support_enabled( $default );
-	}
-}
-if ( function_exists( 'bboss_is_profile_albums_support_enabled' ) && ! function_exists( 'bp_is_profile_albums_support_enabled' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_profile_albums_support_enabled()}.
-	 *
-	 * @deprecated Use bboss_is_profile_albums_support_enabled() instead.
-	 */
-	function bp_is_profile_albums_support_enabled( $default = 1 ) {
-		return bboss_is_profile_albums_support_enabled( $default );
-	}
-}
-if ( function_exists( 'bboss_is_profile_document_support_enabled' ) && ! function_exists( 'bp_is_profile_document_support_enabled' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_profile_document_support_enabled()}.
-	 *
-	 * @deprecated Use bboss_is_profile_document_support_enabled() instead.
-	 */
-	function bp_is_profile_document_support_enabled( $default = 0 ) {
-		return bboss_is_profile_document_support_enabled( $default );
-	}
-}
-if ( function_exists( 'bboss_is_profile_media_support_enabled' ) && ! function_exists( 'bp_is_profile_media_support_enabled' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_profile_media_support_enabled()}.
-	 *
-	 * @deprecated Use bboss_is_profile_media_support_enabled() instead.
-	 */
-	function bp_is_profile_media_support_enabled( $default = 1 ) {
-		return bboss_is_profile_media_support_enabled( $default );
-	}
-}
-if ( function_exists( 'bboss_is_profile_video_support_enabled' ) && ! function_exists( 'bp_is_profile_video_support_enabled' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_profile_video_support_enabled()}.
-	 *
-	 * @deprecated Use bboss_is_profile_video_support_enabled() instead.
-	 */
-	function bp_is_profile_video_support_enabled( $default = 0 ) {
-		return bboss_is_profile_video_support_enabled( $default );
-	}
-}
-if ( function_exists( 'bboss_is_profiles_emoji_support_enabled' ) && ! function_exists( 'bp_is_profiles_emoji_support_enabled' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_profiles_emoji_support_enabled()}.
-	 *
-	 * @deprecated Use bboss_is_profiles_emoji_support_enabled() instead.
-	 */
-	function bp_is_profiles_emoji_support_enabled( $default = 0 ) {
-		return bboss_is_profiles_emoji_support_enabled( $default );
-	}
-}
-if ( function_exists( 'bboss_is_profiles_gif_support_enabled' ) && ! function_exists( 'bp_is_profiles_gif_support_enabled' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_profiles_gif_support_enabled()}.
-	 *
-	 * @deprecated Use bboss_is_profiles_gif_support_enabled() instead.
-	 */
-	function bp_is_profiles_gif_support_enabled( $default = 0 ) {
-		return bboss_is_profiles_gif_support_enabled( $default );
-	}
-}
-if ( function_exists( 'bboss_media_allowed_upload_document_per_batch' ) && ! function_exists( 'bp_media_allowed_upload_document_per_batch' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_media_allowed_upload_document_per_batch()}.
-	 *
-	 * @deprecated Use bboss_media_allowed_upload_document_per_batch() instead.
-	 */
-	function bp_media_allowed_upload_document_per_batch() {
-		return bboss_media_allowed_upload_document_per_batch();
-	}
-}
-if ( function_exists( 'bboss_media_allowed_upload_document_size' ) && ! function_exists( 'bp_media_allowed_upload_document_size' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_media_allowed_upload_document_size()}.
-	 *
-	 * @deprecated Use bboss_media_allowed_upload_document_size() instead.
-	 */
-	function bp_media_allowed_upload_document_size() {
-		return bboss_media_allowed_upload_document_size();
-	}
-}
-if ( function_exists( 'bboss_media_allowed_upload_media_per_batch' ) && ! function_exists( 'bp_media_allowed_upload_media_per_batch' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_media_allowed_upload_media_per_batch()}.
-	 *
-	 * @deprecated Use bboss_media_allowed_upload_media_per_batch() instead.
-	 */
-	function bp_media_allowed_upload_media_per_batch() {
-		return bboss_media_allowed_upload_media_per_batch();
-	}
-}
-if ( function_exists( 'bboss_media_allowed_upload_media_size' ) && ! function_exists( 'bp_media_allowed_upload_media_size' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_media_allowed_upload_media_size()}.
-	 *
-	 * @deprecated Use bboss_media_allowed_upload_media_size() instead.
-	 */
-	function bp_media_allowed_upload_media_size() {
-		return bboss_media_allowed_upload_media_size();
-	}
-}
-if ( function_exists( 'bboss_media_get_gif_api_key' ) && ! function_exists( 'bp_media_get_gif_api_key' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_media_get_gif_api_key()}.
-	 *
-	 * @deprecated Use bboss_media_get_gif_api_key() instead.
-	 */
-	function bp_media_get_gif_api_key( $default = '' ) {
-		return bboss_media_get_gif_api_key( $default );
-	}
-}
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_video_extensions_list' ) && ! function_exists( 'bp_video_extensions_list' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_video_extensions_list()}.
@@ -765,3 +879,4 @@ if ( function_exists( 'bboss_video_extensions_list' ) && ! function_exists( 'bp_
 	}
 }
 // @bbwt-com-end compat-layer
+

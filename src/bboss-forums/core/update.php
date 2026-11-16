@@ -21,6 +21,20 @@ defined( 'ABSPATH' ) || exit;
 function bboss_bbp_is_install() {
 	return ! bboss_bbp_get_db_version_raw();
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_is_install' ) && ! function_exists( 'bbp_is_install' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_is_install()}.
+	 *
+	 * @deprecated Use bboss_bbp_is_install() instead.
+	 */
+	function bbp_is_install() {
+		return bboss_bbp_is_install();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Compare the Forums version to the DB version to determine if updating
@@ -37,6 +51,20 @@ function bboss_bbp_is_update() {
 	$retval = (bool) ( $raw < $cur );
 	return $retval;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_is_update' ) && ! function_exists( 'bbp_is_update' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_is_update()}.
+	 *
+	 * @deprecated Use bboss_bbp_is_update() instead.
+	 */
+	function bbp_is_update() {
+		return bboss_bbp_is_update();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Determine if Forums is being activated
@@ -90,6 +118,20 @@ function bboss_bbp_is_activation( $basename = '' ) {
 	// Is Forums being activated?
 	return in_array( $basename, $plugins );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_is_activation' ) && ! function_exists( 'bbp_is_activation' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_is_activation()}.
+	 *
+	 * @deprecated Use bboss_bbp_is_activation() instead.
+	 */
+	function bbp_is_activation( $basename = '' ) {
+		return bboss_bbp_is_activation( $basename );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Determine if Forums is being deactivated
@@ -139,6 +181,20 @@ function bboss_bbp_is_deactivation( $basename = '' ) {
 	// Is Forums being deactivated?
 	return in_array( $basename, $plugins );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_is_deactivation' ) && ! function_exists( 'bbp_is_deactivation' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_is_deactivation()}.
+	 *
+	 * @deprecated Use bboss_bbp_is_deactivation() instead.
+	 */
+	function bbp_is_deactivation( $basename = '' ) {
+		return bboss_bbp_is_deactivation( $basename );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Update the DB to the latest version
@@ -150,6 +206,20 @@ function bboss_bbp_is_deactivation( $basename = '' ) {
 function bboss_bbp_version_bump() {
 	update_option( '_bbp_db_version', bboss_bbp_get_db_version() );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_version_bump' ) && ! function_exists( 'bbp_version_bump' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_version_bump()}.
+	 *
+	 * @deprecated Use bboss_bbp_version_bump() instead.
+	 */
+	function bbp_version_bump() {
+		return bboss_bbp_version_bump();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Setup the Forums updater
@@ -170,6 +240,20 @@ function bboss_bbp_setup_updater() {
 	// Call the automated updater
 	bboss_bbp_version_updater();
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_setup_updater' ) && ! function_exists( 'bbp_setup_updater' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_setup_updater()}.
+	 *
+	 * @deprecated Use bboss_bbp_setup_updater() instead.
+	 */
+	function bbp_setup_updater() {
+		return bboss_bbp_setup_updater();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Create a default forum, topic, and reply
@@ -234,6 +318,20 @@ function bboss_bbp_create_initial_content( $args = array() ) {
 		'reply_id' => $reply_id,
 	);
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_create_initial_content' ) && ! function_exists( 'bbp_create_initial_content' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_create_initial_content()}.
+	 *
+	 * @deprecated Use bboss_bbp_create_initial_content() instead.
+	 */
+	function bbp_create_initial_content( $args = array() ) {
+		return bboss_bbp_create_initial_content( $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Forums' version updater looks at what the current database version is, and
@@ -299,6 +397,20 @@ function bboss_bbp_version_updater() {
 	// Delete rewrite rules to force a flush
 	bboss_bbp_delete_rewrite_rules();
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_version_updater' ) && ! function_exists( 'bbp_version_updater' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_version_updater()}.
+	 *
+	 * @deprecated Use bboss_bbp_version_updater() instead.
+	 */
+	function bbp_version_updater() {
+		return bboss_bbp_version_updater();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Hooked to the 'bbp_activate' action, this helper function automatically makes
@@ -346,60 +458,8 @@ function bboss_bbp_make_current_user_keymaster() {
 	// Reload the current user so caps apply immediately
 	wp_get_current_user();
 }
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
-if ( function_exists( 'bboss_bbp_create_initial_content' ) && ! function_exists( 'bbp_create_initial_content' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_create_initial_content()}.
-	 *
-	 * @deprecated Use bboss_bbp_create_initial_content() instead.
-	 */
-	function bbp_create_initial_content( $args = array() ) {
-		return bboss_bbp_create_initial_content( $args );
-	}
-}
-if ( function_exists( 'bboss_bbp_is_activation' ) && ! function_exists( 'bbp_is_activation' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_is_activation()}.
-	 *
-	 * @deprecated Use bboss_bbp_is_activation() instead.
-	 */
-	function bbp_is_activation( $basename = '' ) {
-		return bboss_bbp_is_activation( $basename );
-	}
-}
-if ( function_exists( 'bboss_bbp_is_deactivation' ) && ! function_exists( 'bbp_is_deactivation' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_is_deactivation()}.
-	 *
-	 * @deprecated Use bboss_bbp_is_deactivation() instead.
-	 */
-	function bbp_is_deactivation( $basename = '' ) {
-		return bboss_bbp_is_deactivation( $basename );
-	}
-}
-if ( function_exists( 'bboss_bbp_is_install' ) && ! function_exists( 'bbp_is_install' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_is_install()}.
-	 *
-	 * @deprecated Use bboss_bbp_is_install() instead.
-	 */
-	function bbp_is_install() {
-		return bboss_bbp_is_install();
-	}
-}
-if ( function_exists( 'bboss_bbp_is_update' ) && ! function_exists( 'bbp_is_update' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_is_update()}.
-	 *
-	 * @deprecated Use bboss_bbp_is_update() instead.
-	 */
-	function bbp_is_update() {
-		return bboss_bbp_is_update();
-	}
-}
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_bbp_make_current_user_keymaster' ) && ! function_exists( 'bbp_make_current_user_keymaster' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_bbp_make_current_user_keymaster()}.
@@ -410,34 +470,5 @@ if ( function_exists( 'bboss_bbp_make_current_user_keymaster' ) && ! function_ex
 		return bboss_bbp_make_current_user_keymaster();
 	}
 }
-if ( function_exists( 'bboss_bbp_setup_updater' ) && ! function_exists( 'bbp_setup_updater' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_setup_updater()}.
-	 *
-	 * @deprecated Use bboss_bbp_setup_updater() instead.
-	 */
-	function bbp_setup_updater() {
-		return bboss_bbp_setup_updater();
-	}
-}
-if ( function_exists( 'bboss_bbp_version_bump' ) && ! function_exists( 'bbp_version_bump' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_version_bump()}.
-	 *
-	 * @deprecated Use bboss_bbp_version_bump() instead.
-	 */
-	function bbp_version_bump() {
-		return bboss_bbp_version_bump();
-	}
-}
-if ( function_exists( 'bboss_bbp_version_updater' ) && ! function_exists( 'bbp_version_updater' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_version_updater()}.
-	 *
-	 * @deprecated Use bboss_bbp_version_updater() instead.
-	 */
-	function bbp_version_updater() {
-		return bboss_bbp_version_updater();
-	}
-}
 // @bbwt-com-end compat-layer
+

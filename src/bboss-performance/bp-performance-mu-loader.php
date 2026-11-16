@@ -54,6 +54,20 @@ if ( ! function_exists( 'bboss_performance_loaded' ) ) {
 			}
 		}
 	}
+	// @bbwt-com-start compat-layer
+	// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+	if ( function_exists( 'bboss_performance_loaded' ) && ! function_exists( 'bp_performance_loaded' ) ) {
+		/**
+		 * Backward-compatible alias of {@see bboss_performance_loaded()}.
+		 *
+		 * @deprecated Use bboss_performance_loaded() instead.
+		 */
+		function bp_performance_loaded() {
+			return bboss_performance_loaded();
+		}
+	}
+	// @bbwt-com-end compat-layer
+
 
 	add_action( 'muplugins_loaded', 'bboss_performance_loaded', 20 );
 }
@@ -122,6 +136,20 @@ if ( ! function_exists( 'bboss_rest_post_dispatch_cache_callback' ) ) {
 
 		return $data;
 	}
+	// @bbwt-com-start compat-layer
+	// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+	if ( function_exists( 'bboss_rest_post_dispatch_cache_callback' ) && ! function_exists( 'rest_post_dispatch_cache_callback' ) ) {
+		/**
+		 * Backward-compatible alias of {@see bboss_rest_post_dispatch_cache_callback()}.
+		 *
+		 * @deprecated Use bboss_rest_post_dispatch_cache_callback() instead.
+		 */
+		function rest_post_dispatch_cache_callback( $data, $user_id, $current_endpoint ) {
+			return bboss_rest_post_dispatch_cache_callback( $data, $user_id, $current_endpoint );
+		}
+	}
+	// @bbwt-com-end compat-layer
+
 
 	add_filter( 'rest_get_cache', 'bboss_rest_post_dispatch_cache_callback', 10, 3 );
 }
@@ -167,6 +195,20 @@ if ( ! function_exists( 'bboss_restricate_rest_api_mu_cache' ) ) {
 
 		return $data;
 	}
+	// @bbwt-com-start compat-layer
+	// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+	if ( function_exists( 'bboss_restricate_rest_api_mu_cache' ) && ! function_exists( 'bb_restricate_rest_api_mu_cache' ) ) {
+		/**
+		 * Backward-compatible alias of {@see bboss_restricate_rest_api_mu_cache()}.
+		 *
+		 * @deprecated Use bboss_restricate_rest_api_mu_cache() instead.
+		 */
+		function bb_restricate_rest_api_mu_cache( $data, $current_endpoint, $exclude_endpoints ) {
+			return bboss_restricate_rest_api_mu_cache( $data, $current_endpoint, $exclude_endpoints );
+		}
+	}
+	// @bbwt-com-end compat-layer
+
 }
 
 /**
@@ -211,49 +253,18 @@ if ( ! function_exists( 'bboss_is_allowed_endpoint_mu_cache' ) ) {
 			}
 		}
 	}
-}
+	// @bbwt-com-start compat-layer
+	// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+	if ( function_exists( 'bboss_is_allowed_endpoint_mu_cache' ) && ! function_exists( 'bb_is_allowed_endpoint_mu_cache' ) ) {
+		/**
+		 * Backward-compatible alias of {@see bboss_is_allowed_endpoint_mu_cache()}.
+		 *
+		 * @deprecated Use bboss_is_allowed_endpoint_mu_cache() instead.
+		 */
+		function bb_is_allowed_endpoint_mu_cache( $current_endpoint, $exclude_endpoints, $get_site_url ) {
+			return bboss_is_allowed_endpoint_mu_cache( $current_endpoint, $exclude_endpoints, $get_site_url );
+		}
+	}
+	// @bbwt-com-end compat-layer
 
-// @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
-if ( function_exists( 'bboss_is_allowed_endpoint_mu_cache' ) && ! function_exists( 'bb_is_allowed_endpoint_mu_cache' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_allowed_endpoint_mu_cache()}.
-	 *
-	 * @deprecated Use bboss_is_allowed_endpoint_mu_cache() instead.
-	 */
-	function bb_is_allowed_endpoint_mu_cache( $current_endpoint, $exclude_endpoints, $get_site_url ) {
-		return bboss_is_allowed_endpoint_mu_cache( $current_endpoint, $exclude_endpoints, $get_site_url );
-	}
 }
-if ( function_exists( 'bboss_restricate_rest_api_mu_cache' ) && ! function_exists( 'bb_restricate_rest_api_mu_cache' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_restricate_rest_api_mu_cache()}.
-	 *
-	 * @deprecated Use bboss_restricate_rest_api_mu_cache() instead.
-	 */
-	function bb_restricate_rest_api_mu_cache( $data, $current_endpoint, $exclude_endpoints ) {
-		return bboss_restricate_rest_api_mu_cache( $data, $current_endpoint, $exclude_endpoints );
-	}
-}
-if ( function_exists( 'bboss_performance_loaded' ) && ! function_exists( 'bp_performance_loaded' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_performance_loaded()}.
-	 *
-	 * @deprecated Use bboss_performance_loaded() instead.
-	 */
-	function bp_performance_loaded() {
-		return bboss_performance_loaded();
-	}
-}
-if ( function_exists( 'bboss_rest_post_dispatch_cache_callback' ) && ! function_exists( 'rest_post_dispatch_cache_callback' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_rest_post_dispatch_cache_callback()}.
-	 *
-	 * @deprecated Use bboss_rest_post_dispatch_cache_callback() instead.
-	 */
-	function rest_post_dispatch_cache_callback( $data, $user_id, $current_endpoint ) {
-		return bboss_rest_post_dispatch_cache_callback( $data, $user_id, $current_endpoint );
-	}
-}
-// @bbwt-com-end compat-layer

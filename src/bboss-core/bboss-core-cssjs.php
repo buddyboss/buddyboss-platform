@@ -243,6 +243,20 @@ function bboss_core_register_common_scripts() {
 		)
 	);
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_core_register_common_scripts' ) && ! function_exists( 'bp_core_register_common_scripts' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_register_common_scripts()}.
+	 *
+	 * @deprecated Use bboss_core_register_common_scripts() instead.
+	 */
+	function bp_core_register_common_scripts() {
+		return bboss_core_register_common_scripts();
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'bp_enqueue_scripts', 'bp_core_register_common_scripts', 1 );
 add_action( 'bp_admin_enqueue_scripts', 'bp_core_register_common_scripts', 1 );
 
@@ -319,6 +333,20 @@ function bboss_core_register_common_styles() {
 		}
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_core_register_common_styles' ) && ! function_exists( 'bp_core_register_common_styles' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_register_common_styles()}.
+	 *
+	 * @deprecated Use bboss_core_register_common_styles() instead.
+	 */
+	function bp_core_register_common_styles() {
+		return bboss_core_register_common_styles();
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'bp_enqueue_scripts', 'bp_core_register_common_styles', 1 );
 add_action( 'bp_admin_enqueue_scripts', 'bp_core_register_common_styles', 1 );
 
@@ -343,6 +371,20 @@ function bboss_core_confirmation_js() {
 	);
 
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_core_confirmation_js' ) && ! function_exists( 'bp_core_confirmation_js' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_confirmation_js()}.
+	 *
+	 * @deprecated Use bboss_core_confirmation_js() instead.
+	 */
+	function bp_core_confirmation_js() {
+		return bboss_core_confirmation_js();
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'bp_enqueue_scripts', 'bp_core_confirmation_js' );
 add_action( 'bp_admin_enqueue_scripts', 'bp_core_confirmation_js' );
 
@@ -364,6 +406,20 @@ function bboss_core_avatar_scripts() {
 	add_action( 'bp_after_group_admin_content', 'bp_avatar_template_check' );
 	add_action( 'bp_after_group_avatar_creation_step', 'bp_avatar_template_check' );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_core_avatar_scripts' ) && ! function_exists( 'bp_core_avatar_scripts' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_avatar_scripts()}.
+	 *
+	 * @deprecated Use bboss_core_avatar_scripts() instead.
+	 */
+	function bp_core_avatar_scripts() {
+		return bboss_core_avatar_scripts();
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'bp_enqueue_scripts', 'bp_core_avatar_scripts' );
 
 /**
@@ -379,6 +435,20 @@ function bboss_core_cover_image_scripts() {
 	// Enqueue the Attachments scripts for the Cover Photo UI.
 	bboss_attachments_enqueue_scripts( 'BBoss_Attachment_Cover_Image' );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_core_cover_image_scripts' ) && ! function_exists( 'bp_core_cover_image_scripts' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_cover_image_scripts()}.
+	 *
+	 * @deprecated Use bboss_core_cover_image_scripts() instead.
+	 */
+	function bp_core_cover_image_scripts() {
+		return bboss_core_cover_image_scripts();
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'bp_enqueue_scripts', 'bp_core_cover_image_scripts' );
 
 /**
@@ -394,6 +464,20 @@ function bboss_core_add_jquery_cropper() {
 	bboss_core_add_cropper_inline_js();
 	add_action( 'wp_head', 'bp_core_add_cropper_inline_css' );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_core_add_jquery_cropper' ) && ! function_exists( 'bp_core_add_jquery_cropper' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_add_jquery_cropper()}.
+	 *
+	 * @deprecated Use bboss_core_add_jquery_cropper() instead.
+	 */
+	function bp_core_add_jquery_cropper() {
+		return bboss_core_add_jquery_cropper();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Attach the inline JS needed for the cropper to the jcrop script, per page.
@@ -505,6 +589,20 @@ function bboss_core_add_cropper_inline_js() {
 
 	wp_add_inline_script( 'jcrop', $inline_js );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_core_add_cropper_inline_js' ) && ! function_exists( 'bp_core_add_cropper_inline_js' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_add_cropper_inline_js()}.
+	 *
+	 * @deprecated Use bboss_core_add_cropper_inline_js() instead.
+	 */
+	function bp_core_add_cropper_inline_js() {
+		return bboss_core_add_cropper_inline_js();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output the inline CSS for the BP image cropper.
@@ -527,6 +625,20 @@ function bboss_core_add_cropper_inline_css() {
 
 	<?php
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_core_add_cropper_inline_css' ) && ! function_exists( 'bp_core_add_cropper_inline_css' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_add_cropper_inline_css()}.
+	 *
+	 * @deprecated Use bboss_core_add_cropper_inline_css() instead.
+	 */
+	function bp_core_add_cropper_inline_css() {
+		return bboss_core_add_cropper_inline_css();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Define the 'ajaxurl' JS variable, used by themes as an AJAX endpoint.
@@ -543,6 +655,20 @@ function bboss_core_add_ajax_url_js() {
 		echo '<script>' . $inline_js . '</script>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- the URL is esc_url()'d above. WordPress < 5.7 only.
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_core_add_ajax_url_js' ) && ! function_exists( 'bp_core_add_ajax_url_js' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_add_ajax_url_js()}.
+	 *
+	 * @deprecated Use bboss_core_add_ajax_url_js() instead.
+	 */
+	function bp_core_add_ajax_url_js() {
+		return bboss_core_add_ajax_url_js();
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'wp_head', 'bp_core_add_ajax_url_js' );
 
 /**
@@ -566,6 +692,20 @@ function bboss_core_ajax_url() {
 	 */
 	return apply_filters( 'bp_core_ajax_url', admin_url( 'admin-ajax.php', is_ssl() ? 'admin' : 'http' ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_core_ajax_url' ) && ! function_exists( 'bp_core_ajax_url' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_ajax_url()}.
+	 *
+	 * @deprecated Use bboss_core_ajax_url() instead.
+	 */
+	function bp_core_ajax_url() {
+		return bboss_core_ajax_url();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get the JavaScript dependencies for buddypress.js.
@@ -597,6 +737,20 @@ function bboss_core_get_js_dependencies() {
 		)
 	);
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_core_get_js_dependencies' ) && ! function_exists( 'bp_core_get_js_dependencies' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_get_js_dependencies()}.
+	 *
+	 * @deprecated Use bboss_core_get_js_dependencies() instead.
+	 */
+	function bp_core_get_js_dependencies() {
+		return bboss_core_get_js_dependencies();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Add inline css to display the component's single item cover photo.
@@ -705,6 +859,20 @@ function bboss_add_cover_image_inline_css( $return = false ) {
 		}
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_add_cover_image_inline_css' ) && ! function_exists( 'bp_add_cover_image_inline_css' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_add_cover_image_inline_css()}.
+	 *
+	 * @deprecated Use bboss_add_cover_image_inline_css() instead.
+	 */
+	function bp_add_cover_image_inline_css( $return = false ) {
+		return bboss_add_cover_image_inline_css( $return );
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'bp_enqueue_scripts', 'bp_add_cover_image_inline_css', 11 );
 
 /**
@@ -723,6 +891,20 @@ function bboss_core_add_livestamp() {
 
 	bboss_core_enqueue_livestamp();
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_core_add_livestamp' ) && ! function_exists( 'bp_core_add_livestamp' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_add_livestamp()}.
+	 *
+	 * @deprecated Use bboss_core_add_livestamp() instead.
+	 */
+	function bp_core_add_livestamp() {
+		return bboss_core_add_livestamp();
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'bp_enqueue_scripts', 'bp_core_add_livestamp' );
 
 /**
@@ -817,6 +999,20 @@ function bboss_core_enqueue_livestamp() {
 
 	wp_enqueue_script( 'bp-livestamp' );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_core_enqueue_livestamp' ) && ! function_exists( 'bp_core_enqueue_livestamp' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_enqueue_livestamp()}.
+	 *
+	 * @deprecated Use bboss_core_enqueue_livestamp() instead.
+	 */
+	function bp_core_enqueue_livestamp() {
+		return bboss_core_enqueue_livestamp();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Enqueues jquery.mask.js on BuddyPress pages.
@@ -841,6 +1037,20 @@ function bboss_core_add_jquery_mask() {
 	// Attach the telephone-mask init to the jquery-mask handle it depends on.
 	bboss_core_add_jquery_mask_inline_js();
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_core_add_jquery_mask' ) && ! function_exists( 'bp_core_add_jquery_mask' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_add_jquery_mask()}.
+	 *
+	 * @deprecated Use bboss_core_add_jquery_mask() instead.
+	 */
+	function bp_core_add_jquery_mask() {
+		return bboss_core_add_jquery_mask();
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'bp_enqueue_scripts', 'bp_core_add_jquery_mask' );
 
 /**
@@ -865,6 +1075,20 @@ JS;
 
 	wp_add_inline_script( 'jquery-mask', $inline_js );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_core_add_jquery_mask_inline_js' ) && ! function_exists( 'bp_core_add_jquery_mask_inline_js' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_add_jquery_mask_inline_js()}.
+	 *
+	 * @deprecated Use bboss_core_add_jquery_mask_inline_js() instead.
+	 */
+	function bp_core_add_jquery_mask_inline_js() {
+		return bboss_core_add_jquery_mask_inline_js();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Load the JS for register page and populate conditional field
@@ -890,6 +1114,20 @@ function bboss_core_register_page_js() {
 	}
 
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_core_register_page_js' ) && ! function_exists( 'bp_core_register_page_js' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_register_page_js()}.
+	 *
+	 * @deprecated Use bboss_core_register_page_js() instead.
+	 */
+	function bp_core_register_page_js() {
+		return bboss_core_register_page_js();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 add_action( 'bp_enqueue_scripts', 'bp_core_register_page_js' );
 
@@ -911,6 +1149,20 @@ function bboss_core_enqueue_isInViewPort() {
 		wp_enqueue_script( 'isInViewport' );
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_core_enqueue_isInViewPort' ) && ! function_exists( 'bp_core_enqueue_isInViewPort' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_enqueue_isInViewPort()}.
+	 *
+	 * @deprecated Use bboss_core_enqueue_isInViewPort() instead.
+	 */
+	function bp_core_enqueue_isInViewPort() {
+		return bboss_core_enqueue_isInViewPort();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 add_action( 'bp_enqueue_scripts', 'bp_core_enqueue_isInViewPort', 5 );
 
@@ -922,6 +1174,20 @@ add_action( 'bp_enqueue_scripts', 'bp_core_enqueue_isInViewPort', 5 );
 function bboss_load_link_preview_js_template() {
 	bboss_get_template_part( 'common/js-templates/members/bboss-link-preview' );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_load_link_preview_js_template' ) && ! function_exists( 'bb_load_link_preview_js_template' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_load_link_preview_js_template()}.
+	 *
+	 * @deprecated Use bboss_load_link_preview_js_template() instead.
+	 */
+	function bb_load_link_preview_js_template() {
+		return bboss_load_link_preview_js_template();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 add_action( 'bp_enqueue_scripts', 'bb_load_link_preview_js_template' );
 
@@ -994,12 +1260,8 @@ function bboss_load_emoji_detection_script() {
 		wp_enqueue_script( 'bb-emoji-loader' );
 	}
 }
-
-add_action( 'bp_enqueue_scripts', 'bb_load_emoji_detection_script', 7 );
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_load_emoji_detection_script' ) && ! function_exists( 'bb_load_emoji_detection_script' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_load_emoji_detection_script()}.
@@ -1010,194 +1272,7 @@ if ( function_exists( 'bboss_load_emoji_detection_script' ) && ! function_exists
 		return bboss_load_emoji_detection_script();
 	}
 }
-if ( function_exists( 'bboss_load_link_preview_js_template' ) && ! function_exists( 'bb_load_link_preview_js_template' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_load_link_preview_js_template()}.
-	 *
-	 * @deprecated Use bboss_load_link_preview_js_template() instead.
-	 */
-	function bb_load_link_preview_js_template() {
-		return bboss_load_link_preview_js_template();
-	}
-}
-if ( function_exists( 'bboss_add_cover_image_inline_css' ) && ! function_exists( 'bp_add_cover_image_inline_css' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_add_cover_image_inline_css()}.
-	 *
-	 * @deprecated Use bboss_add_cover_image_inline_css() instead.
-	 */
-	function bp_add_cover_image_inline_css( $return = false ) {
-		return bboss_add_cover_image_inline_css( $return );
-	}
-}
-if ( function_exists( 'bboss_core_add_ajax_url_js' ) && ! function_exists( 'bp_core_add_ajax_url_js' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_core_add_ajax_url_js()}.
-	 *
-	 * @deprecated Use bboss_core_add_ajax_url_js() instead.
-	 */
-	function bp_core_add_ajax_url_js() {
-		return bboss_core_add_ajax_url_js();
-	}
-}
-if ( function_exists( 'bboss_core_add_cropper_inline_css' ) && ! function_exists( 'bp_core_add_cropper_inline_css' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_core_add_cropper_inline_css()}.
-	 *
-	 * @deprecated Use bboss_core_add_cropper_inline_css() instead.
-	 */
-	function bp_core_add_cropper_inline_css() {
-		return bboss_core_add_cropper_inline_css();
-	}
-}
-if ( function_exists( 'bboss_core_add_cropper_inline_js' ) && ! function_exists( 'bp_core_add_cropper_inline_js' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_core_add_cropper_inline_js()}.
-	 *
-	 * @deprecated Use bboss_core_add_cropper_inline_js() instead.
-	 */
-	function bp_core_add_cropper_inline_js() {
-		return bboss_core_add_cropper_inline_js();
-	}
-}
-if ( function_exists( 'bboss_core_add_jquery_cropper' ) && ! function_exists( 'bp_core_add_jquery_cropper' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_core_add_jquery_cropper()}.
-	 *
-	 * @deprecated Use bboss_core_add_jquery_cropper() instead.
-	 */
-	function bp_core_add_jquery_cropper() {
-		return bboss_core_add_jquery_cropper();
-	}
-}
-if ( function_exists( 'bboss_core_add_jquery_mask' ) && ! function_exists( 'bp_core_add_jquery_mask' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_core_add_jquery_mask()}.
-	 *
-	 * @deprecated Use bboss_core_add_jquery_mask() instead.
-	 */
-	function bp_core_add_jquery_mask() {
-		return bboss_core_add_jquery_mask();
-	}
-}
-if ( function_exists( 'bboss_core_add_jquery_mask_inline_js' ) && ! function_exists( 'bp_core_add_jquery_mask_inline_js' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_core_add_jquery_mask_inline_js()}.
-	 *
-	 * @deprecated Use bboss_core_add_jquery_mask_inline_js() instead.
-	 */
-	function bp_core_add_jquery_mask_inline_js() {
-		return bboss_core_add_jquery_mask_inline_js();
-	}
-}
-if ( function_exists( 'bboss_core_add_livestamp' ) && ! function_exists( 'bp_core_add_livestamp' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_core_add_livestamp()}.
-	 *
-	 * @deprecated Use bboss_core_add_livestamp() instead.
-	 */
-	function bp_core_add_livestamp() {
-		return bboss_core_add_livestamp();
-	}
-}
-if ( function_exists( 'bboss_core_ajax_url' ) && ! function_exists( 'bp_core_ajax_url' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_core_ajax_url()}.
-	 *
-	 * @deprecated Use bboss_core_ajax_url() instead.
-	 */
-	function bp_core_ajax_url() {
-		return bboss_core_ajax_url();
-	}
-}
-if ( function_exists( 'bboss_core_avatar_scripts' ) && ! function_exists( 'bp_core_avatar_scripts' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_core_avatar_scripts()}.
-	 *
-	 * @deprecated Use bboss_core_avatar_scripts() instead.
-	 */
-	function bp_core_avatar_scripts() {
-		return bboss_core_avatar_scripts();
-	}
-}
-if ( function_exists( 'bboss_core_confirmation_js' ) && ! function_exists( 'bp_core_confirmation_js' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_core_confirmation_js()}.
-	 *
-	 * @deprecated Use bboss_core_confirmation_js() instead.
-	 */
-	function bp_core_confirmation_js() {
-		return bboss_core_confirmation_js();
-	}
-}
-if ( function_exists( 'bboss_core_cover_image_scripts' ) && ! function_exists( 'bp_core_cover_image_scripts' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_core_cover_image_scripts()}.
-	 *
-	 * @deprecated Use bboss_core_cover_image_scripts() instead.
-	 */
-	function bp_core_cover_image_scripts() {
-		return bboss_core_cover_image_scripts();
-	}
-}
-if ( function_exists( 'bboss_core_enqueue_isInViewPort' ) && ! function_exists( 'bp_core_enqueue_isInViewPort' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_core_enqueue_isInViewPort()}.
-	 *
-	 * @deprecated Use bboss_core_enqueue_isInViewPort() instead.
-	 */
-	function bp_core_enqueue_isInViewPort() {
-		return bboss_core_enqueue_isInViewPort();
-	}
-}
-if ( function_exists( 'bboss_core_enqueue_livestamp' ) && ! function_exists( 'bp_core_enqueue_livestamp' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_core_enqueue_livestamp()}.
-	 *
-	 * @deprecated Use bboss_core_enqueue_livestamp() instead.
-	 */
-	function bp_core_enqueue_livestamp() {
-		return bboss_core_enqueue_livestamp();
-	}
-}
-if ( function_exists( 'bboss_core_get_js_dependencies' ) && ! function_exists( 'bp_core_get_js_dependencies' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_core_get_js_dependencies()}.
-	 *
-	 * @deprecated Use bboss_core_get_js_dependencies() instead.
-	 */
-	function bp_core_get_js_dependencies() {
-		return bboss_core_get_js_dependencies();
-	}
-}
-if ( function_exists( 'bboss_core_register_common_scripts' ) && ! function_exists( 'bp_core_register_common_scripts' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_core_register_common_scripts()}.
-	 *
-	 * @deprecated Use bboss_core_register_common_scripts() instead.
-	 */
-	function bp_core_register_common_scripts() {
-		return bboss_core_register_common_scripts();
-	}
-}
-if ( function_exists( 'bboss_core_register_common_styles' ) && ! function_exists( 'bp_core_register_common_styles' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_core_register_common_styles()}.
-	 *
-	 * @deprecated Use bboss_core_register_common_styles() instead.
-	 */
-	function bp_core_register_common_styles() {
-		return bboss_core_register_common_styles();
-	}
-}
-if ( function_exists( 'bboss_core_register_page_js' ) && ! function_exists( 'bp_core_register_page_js' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_core_register_page_js()}.
-	 *
-	 * @deprecated Use bboss_core_register_page_js() instead.
-	 */
-	function bp_core_register_page_js() {
-		return bboss_core_register_page_js();
-	}
-}
 // @bbwt-com-end compat-layer
+
+
+add_action( 'bp_enqueue_scripts', 'bb_load_emoji_detection_script', 7 );

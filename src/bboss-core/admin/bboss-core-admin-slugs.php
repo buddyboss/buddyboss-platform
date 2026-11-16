@@ -68,6 +68,20 @@ function bboss_core_admin_get_directory_pages() {
 	 */
 	return apply_filters( 'bp_directory_pages', $directory_pages );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_core_admin_get_directory_pages' ) && ! function_exists( 'bp_core_admin_get_directory_pages' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_admin_get_directory_pages()}.
+	 *
+	 * @deprecated Use bboss_core_admin_get_directory_pages() instead.
+	 */
+	function bp_core_admin_get_directory_pages() {
+		return bboss_core_admin_get_directory_pages();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Insert a value or key/value pair after a specific key in an array.  If key doesn't exist, value is appended
@@ -85,6 +99,20 @@ function bboss_array_insert_after( array $array, $key, array $new ) {
 	$pos   = false === $index ? count( $array ) : $index + 1;
 	return array_merge( array_slice( $array, 0, $pos ), $new, array_slice( $array, $pos ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_array_insert_after' ) && ! function_exists( 'array_insert_after' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_array_insert_after()}.
+	 *
+	 * @deprecated Use bboss_array_insert_after() instead.
+	 */
+	function array_insert_after( array $array, $key, array $new ) {
+		return bboss_array_insert_after( $array, $key, $new );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Generate a list of static pages, for use when building Components panel markup.
@@ -112,6 +140,20 @@ function bboss_core_admin_get_static_pages() {
 	 */
 	return apply_filters( 'bp_static_pages', $static_pages );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_core_admin_get_static_pages' ) && ! function_exists( 'bp_core_admin_get_static_pages' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_admin_get_static_pages()}.
+	 *
+	 * @deprecated Use bboss_core_admin_get_static_pages() instead.
+	 */
+	function bp_core_admin_get_static_pages() {
+		return bboss_core_admin_get_static_pages();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Handle saving of the BuddyPress slugs.
@@ -144,38 +186,3 @@ function bboss_core_admin_get_static_pages() {
 // }
 // }
 // add_action( 'bp_admin_init', 'bp_core_admin_slugs_setup_handler' );
-
-// @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
-if ( function_exists( 'bboss_array_insert_after' ) && ! function_exists( 'array_insert_after' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_array_insert_after()}.
-	 *
-	 * @deprecated Use bboss_array_insert_after() instead.
-	 */
-	function array_insert_after( array $array, $key, array $new ) {
-		return bboss_array_insert_after( $array, $key, $new );
-	}
-}
-if ( function_exists( 'bboss_core_admin_get_directory_pages' ) && ! function_exists( 'bp_core_admin_get_directory_pages' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_core_admin_get_directory_pages()}.
-	 *
-	 * @deprecated Use bboss_core_admin_get_directory_pages() instead.
-	 */
-	function bp_core_admin_get_directory_pages() {
-		return bboss_core_admin_get_directory_pages();
-	}
-}
-if ( function_exists( 'bboss_core_admin_get_static_pages' ) && ! function_exists( 'bp_core_admin_get_static_pages' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_core_admin_get_static_pages()}.
-	 *
-	 * @deprecated Use bboss_core_admin_get_static_pages() instead.
-	 */
-	function bp_core_admin_get_static_pages() {
-		return bboss_core_admin_get_static_pages();
-	}
-}
-// @bbwt-com-end compat-layer

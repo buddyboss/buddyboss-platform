@@ -37,6 +37,20 @@ function bboss_nouveau_messages_hook( $when = '', $suffix = '' ) {
 
 	bboss_nouveau_hook( $hook );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_messages_hook' ) && ! function_exists( 'bp_nouveau_messages_hook' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_messages_hook()}.
+	 *
+	 * @deprecated Use bboss_nouveau_messages_hook() instead.
+	 */
+	function bp_nouveau_messages_hook( $when = '', $suffix = '' ) {
+		return bboss_nouveau_messages_hook( $when, $suffix );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Load the new Messages User Interface
@@ -61,6 +75,20 @@ function bboss_nouveau_messages_member_interface() {
 	 */
 	do_action( 'bp_after_member_messages_content' );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_messages_member_interface' ) && ! function_exists( 'bp_nouveau_messages_member_interface' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_messages_member_interface()}.
+	 *
+	 * @deprecated Use bboss_nouveau_messages_member_interface() instead.
+	 */
+	function bp_nouveau_messages_member_interface() {
+		return bboss_nouveau_messages_member_interface();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
  /**
  * Output the Member's messages search form.
@@ -80,10 +108,8 @@ function bboss_nouveau_message_search_form() {
 	 */
 	echo apply_filters( 'bp_message_search_form', $search_form_html ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- buffered search-form template HTML (contains <form>/<input> controls); wp_kses_post would strip the form controls.
 }
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_nouveau_message_search_form' ) && ! function_exists( 'bp_nouveau_message_search_form' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_nouveau_message_search_form()}.
@@ -94,24 +120,5 @@ if ( function_exists( 'bboss_nouveau_message_search_form' ) && ! function_exists
 		return bboss_nouveau_message_search_form();
 	}
 }
-if ( function_exists( 'bboss_nouveau_messages_hook' ) && ! function_exists( 'bp_nouveau_messages_hook' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_messages_hook()}.
-	 *
-	 * @deprecated Use bboss_nouveau_messages_hook() instead.
-	 */
-	function bp_nouveau_messages_hook( $when = '', $suffix = '' ) {
-		return bboss_nouveau_messages_hook( $when, $suffix );
-	}
-}
-if ( function_exists( 'bboss_nouveau_messages_member_interface' ) && ! function_exists( 'bp_nouveau_messages_member_interface' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_messages_member_interface()}.
-	 *
-	 * @deprecated Use bboss_nouveau_messages_member_interface() instead.
-	 */
-	function bp_nouveau_messages_member_interface() {
-		return bboss_nouveau_messages_member_interface();
-	}
-}
 // @bbwt-com-end compat-layer
+

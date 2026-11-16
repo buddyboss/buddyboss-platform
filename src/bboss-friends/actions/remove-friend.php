@@ -50,11 +50,8 @@ function bboss_friends_action_remove_friend() {
 
 	return false;
 }
-add_action( 'bp_actions', 'friends_action_remove_friend' );
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_friends_action_remove_friend' ) && ! function_exists( 'friends_action_remove_friend' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_friends_action_remove_friend()}.
@@ -66,3 +63,5 @@ if ( function_exists( 'bboss_friends_action_remove_friend' ) && ! function_exist
 	}
 }
 // @bbwt-com-end compat-layer
+
+add_action( 'bp_actions', 'friends_action_remove_friend' );

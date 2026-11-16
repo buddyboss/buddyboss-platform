@@ -20,6 +20,20 @@ defined( 'ABSPATH' ) || exit;
 function bboss_bbp_forum_post_type() {
 	echo esc_attr( bboss_bbp_get_forum_post_type() );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_forum_post_type' ) && ! function_exists( 'bbp_forum_post_type' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_forum_post_type()}.
+	 *
+	 * @deprecated Use bboss_bbp_forum_post_type() instead.
+	 */
+	function bbp_forum_post_type() {
+		return bboss_bbp_forum_post_type();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return the unique id of the custom post type for forums
@@ -33,6 +47,20 @@ function bboss_bbp_forum_post_type() {
 function bboss_bbp_get_forum_post_type() {
 	return apply_filters( 'bbp_get_forum_post_type', bboss_forums()->forum_post_type );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_forum_post_type' ) && ! function_exists( 'bbp_get_forum_post_type' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_forum_post_type()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_forum_post_type() instead.
+	 */
+	function bbp_get_forum_post_type() {
+		return bboss_bbp_get_forum_post_type();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 
 /**
@@ -64,6 +92,20 @@ function bboss_bbp_get_forum_post_type_labels() {
 		)
 	);
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_forum_post_type_labels' ) && ! function_exists( 'bbp_get_forum_post_type_labels' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_forum_post_type_labels()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_forum_post_type_labels() instead.
+	 */
+	function bbp_get_forum_post_type_labels() {
+		return bboss_bbp_get_forum_post_type_labels();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return array of forum post type rewrite settings
@@ -81,6 +123,20 @@ function bboss_bbp_get_forum_post_type_rewrite() {
 		)
 	);
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_forum_post_type_rewrite' ) && ! function_exists( 'bbp_get_forum_post_type_rewrite' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_forum_post_type_rewrite()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_forum_post_type_rewrite() instead.
+	 */
+	function bbp_get_forum_post_type_rewrite() {
+		return bboss_bbp_get_forum_post_type_rewrite();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return array of features the forum post type supports
@@ -99,6 +155,20 @@ function bboss_bbp_get_forum_post_type_supports() {
 		)
 	);
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_forum_post_type_supports' ) && ! function_exists( 'bbp_get_forum_post_type_supports' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_forum_post_type_supports()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_forum_post_type_supports() instead.
+	 */
+	function bbp_get_forum_post_type_supports() {
+		return bboss_bbp_get_forum_post_type_supports();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /** Forum Loop ****************************************************************/
 
@@ -233,6 +303,20 @@ function bboss_bbp_has_forums( $args = '' ) {
 
 	return apply_filters( 'bbp_has_forums', $bbp->forum_query->have_posts(), $bbp->forum_query );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_has_forums' ) && ! function_exists( 'bbp_has_forums' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_has_forums()}.
+	 *
+	 * @deprecated Use bboss_bbp_has_forums() instead.
+	 */
+	function bbp_has_forums( $args = '' ) {
+		return bboss_bbp_has_forums( $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Whether there are more forums available in the loop
@@ -255,6 +339,20 @@ function bboss_bbp_forums() {
 
 	return $have_posts;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_forums' ) && ! function_exists( 'bbp_forums' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_forums()}.
+	 *
+	 * @deprecated Use bboss_bbp_forums() instead.
+	 */
+	function bbp_forums() {
+		return bboss_bbp_forums();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Loads up the current forum in the loop
@@ -267,6 +365,20 @@ function bboss_bbp_forums() {
 function bboss_bbp_the_forum() {
 	return bboss_forums()->forum_query->the_post();
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_the_forum' ) && ! function_exists( 'bbp_the_forum' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_the_forum()}.
+	 *
+	 * @deprecated Use bboss_bbp_the_forum() instead.
+	 */
+	function bbp_the_forum() {
+		return bboss_bbp_the_forum();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /** Forum *********************************************************************/
 
@@ -282,6 +394,20 @@ function bboss_bbp_the_forum() {
 function bboss_bbp_forum_id( $forum_id = 0 ) {
 	echo esc_attr( bboss_bbp_get_forum_id( $forum_id ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_forum_id' ) && ! function_exists( 'bbp_forum_id' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_forum_id()}.
+	 *
+	 * @deprecated Use bboss_bbp_forum_id() instead.
+	 */
+	function bbp_forum_id( $forum_id = 0 ) {
+		return bboss_bbp_forum_id( $forum_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return the forum id
@@ -338,6 +464,20 @@ function bboss_bbp_get_forum_id( $forum_id = 0 ) {
 
 	return (int) apply_filters( 'bbp_get_forum_id', (int) $bbp_forum_id, $forum_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_forum_id' ) && ! function_exists( 'bbp_get_forum_id' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_forum_id()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_forum_id() instead.
+	 */
+	function bbp_get_forum_id( $forum_id = 0 ) {
+		return bboss_bbp_get_forum_id( $forum_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Gets a forum
@@ -381,6 +521,20 @@ function bboss_bbp_get_forum( $forum, $output = OBJECT, $filter = 'raw' ) {
 
 	return apply_filters( 'bbp_get_forum', $forum, $output, $filter );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_forum' ) && ! function_exists( 'bbp_get_forum' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_forum()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_forum() instead.
+	 */
+	function bbp_get_forum( $forum, $output = OBJECT, $filter = 'raw' ) {
+		return bboss_bbp_get_forum( $forum, $output, $filter );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output the link to the forum
@@ -394,6 +548,20 @@ function bboss_bbp_get_forum( $forum, $output = OBJECT, $filter = 'raw' ) {
 function bboss_bbp_forum_permalink( $forum_id = 0 ) {
 	echo esc_url( bboss_bbp_get_forum_permalink( $forum_id ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_forum_permalink' ) && ! function_exists( 'bbp_forum_permalink' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_forum_permalink()}.
+	 *
+	 * @deprecated Use bboss_bbp_forum_permalink() instead.
+	 */
+	function bbp_forum_permalink( $forum_id = 0 ) {
+		return bboss_bbp_forum_permalink( $forum_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return the link to the forum
@@ -426,6 +594,20 @@ function bboss_bbp_get_forum_permalink( $forum_id = 0, $redirect_to = '' ) {
 
 	return apply_filters( 'bbp_get_forum_permalink', $forum_permalink, $forum_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_forum_permalink' ) && ! function_exists( 'bbp_get_forum_permalink' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_forum_permalink()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_forum_permalink() instead.
+	 */
+	function bbp_get_forum_permalink( $forum_id = 0, $redirect_to = '' ) {
+		return bboss_bbp_get_forum_permalink( $forum_id, $redirect_to );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output the title of the forum
@@ -439,6 +621,20 @@ function bboss_bbp_get_forum_permalink( $forum_id = 0, $redirect_to = '' ) {
 function bboss_bbp_forum_title( $forum_id = 0 ) {
 	echo esc_html( bboss_bbp_get_forum_title( $forum_id ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_forum_title' ) && ! function_exists( 'bbp_forum_title' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_forum_title()}.
+	 *
+	 * @deprecated Use bboss_bbp_forum_title() instead.
+	 */
+	function bbp_forum_title( $forum_id = 0 ) {
+		return bboss_bbp_forum_title( $forum_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return the title of the forum
@@ -458,6 +654,20 @@ function bboss_bbp_get_forum_title( $forum_id = 0 ) {
 
 	return apply_filters( 'bbp_get_forum_title', $title, $forum_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_forum_title' ) && ! function_exists( 'bbp_get_forum_title' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_forum_title()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_forum_title() instead.
+	 */
+	function bbp_get_forum_title( $forum_id = 0 ) {
+		return bboss_bbp_get_forum_title( $forum_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output the forum archive title
@@ -469,6 +679,20 @@ function bboss_bbp_get_forum_title( $forum_id = 0 ) {
 function bboss_bbp_forum_archive_title( $title = '' ) {
 	echo esc_html( bboss_bbp_get_forum_archive_title( $title ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_forum_archive_title' ) && ! function_exists( 'bbp_forum_archive_title' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_forum_archive_title()}.
+	 *
+	 * @deprecated Use bboss_bbp_forum_archive_title() instead.
+	 */
+	function bbp_forum_archive_title( $title = '' ) {
+		return bboss_bbp_forum_archive_title( $title );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return the forum archive title
@@ -505,6 +729,20 @@ function bboss_bbp_get_forum_archive_title( $title = '' ) {
 
 	return apply_filters( 'bbp_get_forum_archive_title', $title );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_forum_archive_title' ) && ! function_exists( 'bbp_get_forum_archive_title' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_forum_archive_title()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_forum_archive_title() instead.
+	 */
+	function bbp_get_forum_archive_title( $title = '' ) {
+		return bboss_bbp_get_forum_archive_title( $title );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output the content of the forum
@@ -518,6 +756,20 @@ function bboss_bbp_get_forum_archive_title( $title = '' ) {
 function bboss_bbp_forum_content( $forum_id = 0 ) {
 	echo wp_kses_post( bboss_bbp_get_forum_content( $forum_id ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_forum_content' ) && ! function_exists( 'bbp_forum_content' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_forum_content()}.
+	 *
+	 * @deprecated Use bboss_bbp_forum_content() instead.
+	 */
+	function bbp_forum_content( $forum_id = 0 ) {
+		return bboss_bbp_forum_content( $forum_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return the content of the forum
@@ -546,6 +798,20 @@ function bboss_bbp_get_forum_content( $forum_id = 0 ) {
 
 	return apply_filters( 'bbp_get_forum_content', $content, $forum_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_forum_content' ) && ! function_exists( 'bbp_get_forum_content' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_forum_content()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_forum_content() instead.
+	 */
+	function bbp_get_forum_content( $forum_id = 0 ) {
+		return bboss_bbp_get_forum_content( $forum_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Allow forum rows to have adminstrative actions
@@ -557,6 +823,20 @@ function bboss_bbp_get_forum_content( $forum_id = 0 ) {
 function bboss_bbp_forum_row_actions() {
 	do_action( 'bbp_forum_row_actions' );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_forum_row_actions' ) && ! function_exists( 'bbp_forum_row_actions' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_forum_row_actions()}.
+	 *
+	 * @deprecated Use bboss_bbp_forum_row_actions() instead.
+	 */
+	function bbp_forum_row_actions() {
+		return bboss_bbp_forum_row_actions();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output the forums last active ID
@@ -570,6 +850,20 @@ function bboss_bbp_forum_row_actions() {
 function bboss_bbp_forum_last_active_id( $forum_id = 0 ) {
 	echo esc_attr( bboss_bbp_get_forum_last_active_id( $forum_id ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_forum_last_active_id' ) && ! function_exists( 'bbp_forum_last_active_id' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_forum_last_active_id()}.
+	 *
+	 * @deprecated Use bboss_bbp_forum_last_active_id() instead.
+	 */
+	function bbp_forum_last_active_id( $forum_id = 0 ) {
+		return bboss_bbp_forum_last_active_id( $forum_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return the forums last active ID
@@ -590,6 +884,20 @@ function bboss_bbp_get_forum_last_active_id( $forum_id = 0 ) {
 
 	return (int) apply_filters( 'bbp_get_forum_last_active_id', (int) $active_id, $forum_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_forum_last_active_id' ) && ! function_exists( 'bbp_get_forum_last_active_id' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_forum_last_active_id()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_forum_last_active_id() instead.
+	 */
+	function bbp_get_forum_last_active_id( $forum_id = 0 ) {
+		return bboss_bbp_get_forum_last_active_id( $forum_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output the forums last update date/time (aka freshness)
@@ -603,6 +911,20 @@ function bboss_bbp_get_forum_last_active_id( $forum_id = 0 ) {
 function bboss_bbp_forum_last_active_time( $forum_id = 0 ) {
 	echo esc_html( bboss_bbp_get_forum_last_active_time( $forum_id ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_forum_last_active_time' ) && ! function_exists( 'bbp_forum_last_active_time' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_forum_last_active_time()}.
+	 *
+	 * @deprecated Use bboss_bbp_forum_last_active_time() instead.
+	 */
+	function bbp_forum_last_active_time( $forum_id = 0 ) {
+		return bboss_bbp_forum_last_active_time( $forum_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return the forums last update date/time (aka freshness)
@@ -646,6 +968,20 @@ function bboss_bbp_get_forum_last_active_time( $forum_id = 0 ) {
 
 	return apply_filters( 'bbp_get_forum_last_active', $active_time, $forum_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_forum_last_active_time' ) && ! function_exists( 'bbp_get_forum_last_active_time' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_forum_last_active_time()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_forum_last_active_time() instead.
+	 */
+	function bbp_get_forum_last_active_time( $forum_id = 0 ) {
+		return bboss_bbp_get_forum_last_active_time( $forum_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output link to the most recent activity inside a forum.
@@ -661,6 +997,20 @@ function bboss_bbp_get_forum_last_active_time( $forum_id = 0 ) {
 function bboss_bbp_forum_freshness_link( $forum_id = 0 ) {
 	echo wp_kses_post( bboss_bbp_get_forum_freshness_link( $forum_id ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_forum_freshness_link' ) && ! function_exists( 'bbp_forum_freshness_link' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_forum_freshness_link()}.
+	 *
+	 * @deprecated Use bboss_bbp_forum_freshness_link() instead.
+	 */
+	function bbp_forum_freshness_link( $forum_id = 0 ) {
+		return bboss_bbp_forum_freshness_link( $forum_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Returns link to the most recent activity inside a forum.
@@ -718,6 +1068,20 @@ function bboss_bbp_get_forum_freshness_link( $forum_id = 0 ) {
 
 	return apply_filters( 'bbp_get_forum_freshness_link', $anchor, $forum_id, $time_since, $link_url, $title, $active_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_forum_freshness_link' ) && ! function_exists( 'bbp_get_forum_freshness_link' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_forum_freshness_link()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_forum_freshness_link() instead.
+	 */
+	function bbp_get_forum_freshness_link( $forum_id = 0 ) {
+		return bboss_bbp_get_forum_freshness_link( $forum_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output parent ID of a forum, if exists
@@ -731,6 +1095,20 @@ function bboss_bbp_get_forum_freshness_link( $forum_id = 0 ) {
 function bboss_bbp_forum_parent_id( $forum_id = 0 ) {
 	echo esc_attr( bboss_bbp_get_forum_parent_id( $forum_id ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_forum_parent_id' ) && ! function_exists( 'bbp_forum_parent_id' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_forum_parent_id()}.
+	 *
+	 * @deprecated Use bboss_bbp_forum_parent_id() instead.
+	 */
+	function bbp_forum_parent_id( $forum_id = 0 ) {
+		return bboss_bbp_forum_parent_id( $forum_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return ID of forum parent, if exists
@@ -750,6 +1128,20 @@ function bboss_bbp_get_forum_parent_id( $forum_id = 0 ) {
 
 	return (int) apply_filters( 'bbp_get_forum_parent_id', (int) $parent_id, $forum_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_forum_parent_id' ) && ! function_exists( 'bbp_get_forum_parent_id' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_forum_parent_id()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_forum_parent_id() instead.
+	 */
+	function bbp_get_forum_parent_id( $forum_id = 0 ) {
+		return bboss_bbp_get_forum_parent_id( $forum_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return array of parent forums
@@ -778,6 +1170,20 @@ function bboss_bbp_get_forum_ancestors( $forum_id = 0 ) {
 
 	return apply_filters( 'bbp_get_forum_ancestors', $ancestors, $forum_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_forum_ancestors' ) && ! function_exists( 'bbp_get_forum_ancestors' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_forum_ancestors()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_forum_ancestors() instead.
+	 */
+	function bbp_get_forum_ancestors( $forum_id = 0 ) {
+		return bboss_bbp_get_forum_ancestors( $forum_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return subforums of given forum
@@ -847,6 +1253,20 @@ function bboss_bbp_forum_get_subforums( $args = '' ) {
 
 	return (array) apply_filters( 'bbp_forum_get_subforums', $sub_forums, $r );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_forum_get_subforums' ) && ! function_exists( 'bbp_forum_get_subforums' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_forum_get_subforums()}.
+	 *
+	 * @deprecated Use bboss_bbp_forum_get_subforums() instead.
+	 */
+	function bbp_forum_get_subforums( $args = '' ) {
+		return bboss_bbp_forum_get_subforums( $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output a list of forums (can be used to list subforums)
@@ -932,6 +1352,20 @@ function bboss_bbp_list_forums( $args = '' ) {
 		echo wp_kses_post( apply_filters( 'bbp_list_forums', $r['before'] . $output . $r['after'], $r ) );
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_list_forums' ) && ! function_exists( 'bbp_list_forums' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_list_forums()}.
+	 *
+	 * @deprecated Use bboss_bbp_list_forums() instead.
+	 */
+	function bbp_list_forums( $args = '' ) {
+		return bboss_bbp_list_forums( $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output a list of forums recursively.
@@ -1032,12 +1466,40 @@ function bboss_get_list_forums_recursively( $args = array() ) {
 
 	return $output;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_list_forums_recursively' ) && ! function_exists( 'bb_get_list_forums_recursively' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_list_forums_recursively()}.
+	 *
+	 * @deprecated Use bboss_get_list_forums_recursively() instead.
+	 */
+	function bb_get_list_forums_recursively( $args = array() ) {
+		return bboss_get_list_forums_recursively( $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /** Forum Pagination **********************************************************/
 
 function bboss_bbp_forum_index_pagination_count() {
 	echo bboss_bbp_get_forum_index_pagination_count(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bbp_get_forum_index_pagination_count() self-escapes its return value.
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_forum_index_pagination_count' ) && ! function_exists( 'bbp_forum_index_pagination_count' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_forum_index_pagination_count()}.
+	 *
+	 * @deprecated Use bboss_bbp_forum_index_pagination_count() instead.
+	 */
+	function bbp_forum_index_pagination_count() {
+		return bboss_bbp_forum_index_pagination_count();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return the forum index pagination count
@@ -1077,6 +1539,20 @@ function bboss_bbp_get_forum_index_pagination_count() {
 	// Filter and return
 	return apply_filters( 'bbp_get_forum_index_pagination_count', esc_html( $retstr ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_forum_index_pagination_count' ) && ! function_exists( 'bbp_get_forum_index_pagination_count' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_forum_index_pagination_count()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_forum_index_pagination_count() instead.
+	 */
+	function bbp_get_forum_index_pagination_count() {
+		return bboss_bbp_get_forum_index_pagination_count();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output forum pagination links
@@ -1088,6 +1564,20 @@ function bboss_bbp_get_forum_index_pagination_count() {
 function bboss_bbp_forum_index_pagination_links() {
 	echo wp_kses_post( bboss_bbp_get_forum_index_pagination_links() );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_forum_index_pagination_links' ) && ! function_exists( 'bbp_forum_index_pagination_links' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_forum_index_pagination_links()}.
+	 *
+	 * @deprecated Use bboss_bbp_forum_index_pagination_links() instead.
+	 */
+	function bbp_forum_index_pagination_links() {
+		return bboss_bbp_forum_index_pagination_links();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return forum pagination links
@@ -1107,6 +1597,20 @@ function bboss_bbp_get_forum_index_pagination_links() {
 
 	return apply_filters( 'bbp_get_forum_index_pagination_links', $bbp->forum_query->pagination_links );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_forum_index_pagination_links' ) && ! function_exists( 'bbp_get_forum_index_pagination_links' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_forum_index_pagination_links()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_forum_index_pagination_links() instead.
+	 */
+	function bbp_get_forum_index_pagination_links() {
+		return bboss_bbp_get_forum_index_pagination_links();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /** Forum Subscriptions *******************************************************/
 
@@ -1120,6 +1624,20 @@ function bboss_bbp_get_forum_index_pagination_links() {
 function bboss_bbp_forum_subscription_link( $args = array() ) {
 	echo wp_kses_post( bboss_bbp_get_forum_subscription_link( $args ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_forum_subscription_link' ) && ! function_exists( 'bbp_forum_subscription_link' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_forum_subscription_link()}.
+	 *
+	 * @deprecated Use bboss_bbp_forum_subscription_link() instead.
+	 */
+	function bbp_forum_subscription_link( $args = array() ) {
+		return bboss_bbp_forum_subscription_link( $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get the forum subscription link
@@ -1159,6 +1677,20 @@ function bboss_bbp_get_forum_subscription_link( $args = array() ) {
 
 	return apply_filters( 'bbp_get_forum_subscribe_link', $retval, $r );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_forum_subscription_link' ) && ! function_exists( 'bbp_get_forum_subscription_link' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_forum_subscription_link()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_forum_subscription_link() instead.
+	 */
+	function bbp_get_forum_subscription_link( $args = array() ) {
+		return bboss_bbp_get_forum_subscription_link( $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /** Forum Report **********************************************************/
 
@@ -1172,6 +1704,20 @@ function bboss_bbp_get_forum_subscription_link( $args = array() ) {
 function bboss_bbp_forum_report_link( $args = array() ) {
 	echo wp_kses_post( bboss_bbp_get_forum_report_link( $args ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_forum_report_link' ) && ! function_exists( 'bbp_forum_report_link' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_forum_report_link()}.
+	 *
+	 * @deprecated Use bboss_bbp_forum_report_link() instead.
+	 */
+	function bbp_forum_report_link( $args = array() ) {
+		return bboss_bbp_forum_report_link( $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get the forum report link
@@ -1205,6 +1751,20 @@ function bboss_bbp_get_forum_report_link( $args = array() ) {
 
 	return apply_filters( 'bbp_get_forum_report_link', $retval, $args );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_forum_report_link' ) && ! function_exists( 'bbp_get_forum_report_link' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_forum_report_link()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_forum_report_link() instead.
+	 */
+	function bbp_get_forum_report_link( $args = array() ) {
+		return bboss_bbp_get_forum_report_link( $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /** Forum Last Topic **********************************************************/
 
@@ -1220,6 +1780,20 @@ function bboss_bbp_get_forum_report_link( $args = array() ) {
 function bboss_bbp_forum_last_topic_id( $forum_id = 0 ) {
 	echo esc_attr( bboss_bbp_get_forum_last_topic_id( $forum_id ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_forum_last_topic_id' ) && ! function_exists( 'bbp_forum_last_topic_id' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_forum_last_topic_id()}.
+	 *
+	 * @deprecated Use bboss_bbp_forum_last_topic_id() instead.
+	 */
+	function bbp_forum_last_topic_id( $forum_id = 0 ) {
+		return bboss_bbp_forum_last_topic_id( $forum_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return the forum's last topic id
@@ -1240,6 +1814,20 @@ function bboss_bbp_get_forum_last_topic_id( $forum_id = 0 ) {
 
 	return (int) apply_filters( 'bbp_get_forum_last_topic_id', (int) $topic_id, $forum_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_forum_last_topic_id' ) && ! function_exists( 'bbp_get_forum_last_topic_id' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_forum_last_topic_id()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_forum_last_topic_id() instead.
+	 */
+	function bbp_get_forum_last_topic_id( $forum_id = 0 ) {
+		return bboss_bbp_get_forum_last_topic_id( $forum_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output the title of the last topic inside a forum
@@ -1253,6 +1841,20 @@ function bboss_bbp_get_forum_last_topic_id( $forum_id = 0 ) {
 function bboss_bbp_forum_last_topic_title( $forum_id = 0 ) {
 	echo esc_html( bboss_bbp_get_forum_last_topic_title( $forum_id ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_forum_last_topic_title' ) && ! function_exists( 'bbp_forum_last_topic_title' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_forum_last_topic_title()}.
+	 *
+	 * @deprecated Use bboss_bbp_forum_last_topic_title() instead.
+	 */
+	function bbp_forum_last_topic_title( $forum_id = 0 ) {
+		return bboss_bbp_forum_last_topic_title( $forum_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return the title of the last topic inside a forum
@@ -1275,6 +1877,20 @@ function bboss_bbp_get_forum_last_topic_title( $forum_id = 0 ) {
 
 	return apply_filters( 'bbp_get_forum_last_topic_title', $title, $forum_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_forum_last_topic_title' ) && ! function_exists( 'bbp_get_forum_last_topic_title' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_forum_last_topic_title()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_forum_last_topic_title() instead.
+	 */
+	function bbp_get_forum_last_topic_title( $forum_id = 0 ) {
+		return bboss_bbp_get_forum_last_topic_title( $forum_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output the link to the last topic in a forum
@@ -1289,6 +1905,20 @@ function bboss_bbp_get_forum_last_topic_title( $forum_id = 0 ) {
 function bboss_bbp_forum_last_topic_permalink( $forum_id = 0 ) {
 	echo esc_url( bboss_bbp_get_forum_last_topic_permalink( $forum_id ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_forum_last_topic_permalink' ) && ! function_exists( 'bbp_forum_last_topic_permalink' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_forum_last_topic_permalink()}.
+	 *
+	 * @deprecated Use bboss_bbp_forum_last_topic_permalink() instead.
+	 */
+	function bbp_forum_last_topic_permalink( $forum_id = 0 ) {
+		return bboss_bbp_forum_last_topic_permalink( $forum_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return the link to the last topic in a forum
@@ -1309,6 +1939,20 @@ function bboss_bbp_get_forum_last_topic_permalink( $forum_id = 0 ) {
 
 	return apply_filters( 'bbp_get_forum_last_topic_permalink', bboss_bbp_get_topic_permalink( bboss_bbp_get_forum_last_topic_id( $forum_id ) ), $forum_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_forum_last_topic_permalink' ) && ! function_exists( 'bbp_get_forum_last_topic_permalink' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_forum_last_topic_permalink()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_forum_last_topic_permalink() instead.
+	 */
+	function bbp_get_forum_last_topic_permalink( $forum_id = 0 ) {
+		return bboss_bbp_get_forum_last_topic_permalink( $forum_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return the author ID of the last topic of a forum
@@ -1330,6 +1974,20 @@ function bboss_bbp_get_forum_last_topic_author_id( $forum_id = 0 ) {
 
 	return (int) apply_filters( 'bbp_get_forum_last_topic_author_id', (int) $author_id, $forum_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_forum_last_topic_author_id' ) && ! function_exists( 'bbp_get_forum_last_topic_author_id' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_forum_last_topic_author_id()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_forum_last_topic_author_id() instead.
+	 */
+	function bbp_get_forum_last_topic_author_id( $forum_id = 0 ) {
+		return bboss_bbp_get_forum_last_topic_author_id( $forum_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output link to author of last topic of forum
@@ -1344,6 +2002,20 @@ function bboss_bbp_get_forum_last_topic_author_id( $forum_id = 0 ) {
 function bboss_bbp_forum_last_topic_author_link( $forum_id = 0 ) {
 	echo bboss_bbp_get_forum_last_topic_author_link( $forum_id ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- pre-escaped bbPress markup incl. get_avatar() output; wp_kses_post() strips the avatar srcset.
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_forum_last_topic_author_link' ) && ! function_exists( 'bbp_forum_last_topic_author_link' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_forum_last_topic_author_link()}.
+	 *
+	 * @deprecated Use bboss_bbp_forum_last_topic_author_link() instead.
+	 */
+	function bbp_forum_last_topic_author_link( $forum_id = 0 ) {
+		return bboss_bbp_forum_last_topic_author_link( $forum_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return link to author of last topic of forum
@@ -1367,6 +2039,20 @@ function bboss_bbp_get_forum_last_topic_author_link( $forum_id = 0 ) {
 
 	return apply_filters( 'bbp_get_forum_last_topic_author_link', $author_link, $forum_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_forum_last_topic_author_link' ) && ! function_exists( 'bbp_get_forum_last_topic_author_link' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_forum_last_topic_author_link()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_forum_last_topic_author_link() instead.
+	 */
+	function bbp_get_forum_last_topic_author_link( $forum_id = 0 ) {
+		return bboss_bbp_get_forum_last_topic_author_link( $forum_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /** Forum Last Reply **********************************************************/
 
@@ -1382,6 +2068,20 @@ function bboss_bbp_get_forum_last_topic_author_link( $forum_id = 0 ) {
 function bboss_bbp_forum_last_reply_id( $forum_id = 0 ) {
 	echo esc_attr( bboss_bbp_get_forum_last_reply_id( $forum_id ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_forum_last_reply_id' ) && ! function_exists( 'bbp_forum_last_reply_id' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_forum_last_reply_id()}.
+	 *
+	 * @deprecated Use bboss_bbp_forum_last_reply_id() instead.
+	 */
+	function bbp_forum_last_reply_id( $forum_id = 0 ) {
+		return bboss_bbp_forum_last_reply_id( $forum_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return the forums last reply id
@@ -1407,6 +2107,20 @@ function bboss_bbp_get_forum_last_reply_id( $forum_id = 0 ) {
 
 	return (int) apply_filters( 'bbp_get_forum_last_reply_id', (int) $reply_id, $forum_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_forum_last_reply_id' ) && ! function_exists( 'bbp_get_forum_last_reply_id' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_forum_last_reply_id()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_forum_last_reply_id() instead.
+	 */
+	function bbp_get_forum_last_reply_id( $forum_id = 0 ) {
+		return bboss_bbp_get_forum_last_reply_id( $forum_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output the title of the last reply inside a forum
@@ -1418,6 +2132,20 @@ function bboss_bbp_get_forum_last_reply_id( $forum_id = 0 ) {
 function bboss_bbp_forum_last_reply_title( $forum_id = 0 ) {
 	echo esc_html( bboss_bbp_get_forum_last_reply_title( $forum_id ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_forum_last_reply_title' ) && ! function_exists( 'bbp_forum_last_reply_title' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_forum_last_reply_title()}.
+	 *
+	 * @deprecated Use bboss_bbp_forum_last_reply_title() instead.
+	 */
+	function bbp_forum_last_reply_title( $forum_id = 0 ) {
+		return bboss_bbp_forum_last_reply_title( $forum_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return the title of the last reply inside a forum
@@ -1436,6 +2164,20 @@ function bboss_bbp_get_forum_last_reply_title( $forum_id = 0 ) {
 
 	return apply_filters( 'bbp_get_forum_last_reply_title', bboss_bbp_get_reply_title( bboss_bbp_get_forum_last_reply_id( $forum_id ) ), $forum_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_forum_last_reply_title' ) && ! function_exists( 'bbp_get_forum_last_reply_title' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_forum_last_reply_title()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_forum_last_reply_title() instead.
+	 */
+	function bbp_get_forum_last_reply_title( $forum_id = 0 ) {
+		return bboss_bbp_get_forum_last_reply_title( $forum_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output the link to the last reply in a forum
@@ -1449,6 +2191,20 @@ function bboss_bbp_get_forum_last_reply_title( $forum_id = 0 ) {
 function bboss_bbp_forum_last_reply_permalink( $forum_id = 0 ) {
 	echo esc_url( bboss_bbp_get_forum_last_reply_permalink( $forum_id ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_forum_last_reply_permalink' ) && ! function_exists( 'bbp_forum_last_reply_permalink' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_forum_last_reply_permalink()}.
+	 *
+	 * @deprecated Use bboss_bbp_forum_last_reply_permalink() instead.
+	 */
+	function bbp_forum_last_reply_permalink( $forum_id = 0 ) {
+		return bboss_bbp_forum_last_reply_permalink( $forum_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return the link to the last reply in a forum
@@ -1469,6 +2225,20 @@ function bboss_bbp_get_forum_last_reply_permalink( $forum_id = 0 ) {
 
 	return apply_filters( 'bbp_get_forum_last_reply_permalink', bboss_bbp_get_reply_permalink( bboss_bbp_get_forum_last_reply_id( $forum_id ) ), $forum_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_forum_last_reply_permalink' ) && ! function_exists( 'bbp_get_forum_last_reply_permalink' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_forum_last_reply_permalink()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_forum_last_reply_permalink() instead.
+	 */
+	function bbp_get_forum_last_reply_permalink( $forum_id = 0 ) {
+		return bboss_bbp_get_forum_last_reply_permalink( $forum_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output the url to the last reply in a forum
@@ -1482,6 +2252,20 @@ function bboss_bbp_get_forum_last_reply_permalink( $forum_id = 0 ) {
 function bboss_bbp_forum_last_reply_url( $forum_id = 0 ) {
 	echo esc_url( bboss_bbp_get_forum_last_reply_url( $forum_id ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_forum_last_reply_url' ) && ! function_exists( 'bbp_forum_last_reply_url' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_forum_last_reply_url()}.
+	 *
+	 * @deprecated Use bboss_bbp_forum_last_reply_url() instead.
+	 */
+	function bbp_forum_last_reply_url( $forum_id = 0 ) {
+		return bboss_bbp_forum_last_reply_url( $forum_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return the url to the last reply in a forum
@@ -1520,6 +2304,20 @@ function bboss_bbp_get_forum_last_reply_url( $forum_id = 0 ) {
 	// Filter and return
 	return apply_filters( 'bbp_get_forum_last_reply_url', $reply_url, $forum_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_forum_last_reply_url' ) && ! function_exists( 'bbp_get_forum_last_reply_url' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_forum_last_reply_url()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_forum_last_reply_url() instead.
+	 */
+	function bbp_get_forum_last_reply_url( $forum_id = 0 ) {
+		return bboss_bbp_get_forum_last_reply_url( $forum_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output author ID of last reply of forum
@@ -1534,6 +2332,20 @@ function bboss_bbp_get_forum_last_reply_url( $forum_id = 0 ) {
 function bboss_bbp_forum_last_reply_author_id( $forum_id = 0 ) {
 	echo esc_attr( bboss_bbp_get_forum_last_reply_author_id( $forum_id ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_forum_last_reply_author_id' ) && ! function_exists( 'bbp_forum_last_reply_author_id' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_forum_last_reply_author_id()}.
+	 *
+	 * @deprecated Use bboss_bbp_forum_last_reply_author_id() instead.
+	 */
+	function bbp_forum_last_reply_author_id( $forum_id = 0 ) {
+		return bboss_bbp_forum_last_reply_author_id( $forum_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return author ID of last reply of forum
@@ -1556,6 +2368,20 @@ function bboss_bbp_get_forum_last_reply_author_id( $forum_id = 0 ) {
 
 	return apply_filters( 'bbp_get_forum_last_reply_author_id', $author_id, $forum_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_forum_last_reply_author_id' ) && ! function_exists( 'bbp_get_forum_last_reply_author_id' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_forum_last_reply_author_id()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_forum_last_reply_author_id() instead.
+	 */
+	function bbp_get_forum_last_reply_author_id( $forum_id = 0 ) {
+		return bboss_bbp_get_forum_last_reply_author_id( $forum_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output link to author of last reply of forum
@@ -1570,6 +2396,20 @@ function bboss_bbp_get_forum_last_reply_author_id( $forum_id = 0 ) {
 function bboss_bbp_forum_last_reply_author_link( $forum_id = 0 ) {
 	echo bboss_bbp_get_forum_last_reply_author_link( $forum_id ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- pre-escaped bbPress markup incl. get_avatar() output; wp_kses_post() strips the avatar srcset.
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_forum_last_reply_author_link' ) && ! function_exists( 'bbp_forum_last_reply_author_link' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_forum_last_reply_author_link()}.
+	 *
+	 * @deprecated Use bboss_bbp_forum_last_reply_author_link() instead.
+	 */
+	function bbp_forum_last_reply_author_link( $forum_id = 0 ) {
+		return bboss_bbp_forum_last_reply_author_link( $forum_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return link to author of last reply of forum
@@ -1594,6 +2434,20 @@ function bboss_bbp_get_forum_last_reply_author_link( $forum_id = 0 ) {
 
 	return apply_filters( 'bbp_get_forum_last_reply_author_link', $author_link, $forum_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_forum_last_reply_author_link' ) && ! function_exists( 'bbp_get_forum_last_reply_author_link' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_forum_last_reply_author_link()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_forum_last_reply_author_link() instead.
+	 */
+	function bbp_get_forum_last_reply_author_link( $forum_id = 0 ) {
+		return bboss_bbp_get_forum_last_reply_author_link( $forum_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /** Forum Counts **************************************************************/
 
@@ -1609,6 +2463,20 @@ function bboss_bbp_get_forum_last_reply_author_link( $forum_id = 0 ) {
 function bboss_bbp_forum_topics_link( $forum_id = 0 ) {
 	echo wp_kses_post( bboss_bbp_get_forum_topics_link( $forum_id ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_forum_topics_link' ) && ! function_exists( 'bbp_forum_topics_link' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_forum_topics_link()}.
+	 *
+	 * @deprecated Use bboss_bbp_forum_topics_link() instead.
+	 */
+	function bbp_forum_topics_link( $forum_id = 0 ) {
+		return bboss_bbp_forum_topics_link( $forum_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return the topics link of the forum
@@ -1663,6 +2531,20 @@ function bboss_bbp_get_forum_topics_link( $forum_id = 0 ) {
 
 	return apply_filters( 'bbp_get_forum_topics_link', $retval, $forum_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_forum_topics_link' ) && ! function_exists( 'bbp_get_forum_topics_link' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_forum_topics_link()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_forum_topics_link() instead.
+	 */
+	function bbp_get_forum_topics_link( $forum_id = 0 ) {
+		return bboss_bbp_get_forum_topics_link( $forum_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output total sub-forum count of a forum
@@ -1677,6 +2559,20 @@ function bboss_bbp_get_forum_topics_link( $forum_id = 0 ) {
 function bboss_bbp_forum_subforum_count( $forum_id = 0, $integer = false ) {
 	echo esc_html( bboss_bbp_get_forum_subforum_count( $forum_id, $integer ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_forum_subforum_count' ) && ! function_exists( 'bbp_forum_subforum_count' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_forum_subforum_count()}.
+	 *
+	 * @deprecated Use bboss_bbp_forum_subforum_count() instead.
+	 */
+	function bbp_forum_subforum_count( $forum_id = 0, $integer = false ) {
+		return bboss_bbp_forum_subforum_count( $forum_id, $integer );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return total subforum count of a forum
@@ -1699,6 +2595,20 @@ function bboss_bbp_get_forum_subforum_count( $forum_id = 0, $integer = false ) {
 
 	return apply_filters( $filter, $forum_count, $forum_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_forum_subforum_count' ) && ! function_exists( 'bbp_get_forum_subforum_count' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_forum_subforum_count()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_forum_subforum_count() instead.
+	 */
+	function bbp_get_forum_subforum_count( $forum_id = 0, $integer = false ) {
+		return bboss_bbp_get_forum_subforum_count( $forum_id, $integer );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output total topic count of a forum
@@ -1714,6 +2624,20 @@ function bboss_bbp_get_forum_subforum_count( $forum_id = 0, $integer = false ) {
 function bboss_bbp_forum_topic_count( $forum_id = 0, $total_count = true, $integer = false ) {
 	echo esc_html( bboss_bbp_get_forum_topic_count( $forum_id, $total_count, $integer ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_forum_topic_count' ) && ! function_exists( 'bbp_forum_topic_count' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_forum_topic_count()}.
+	 *
+	 * @deprecated Use bboss_bbp_forum_topic_count() instead.
+	 */
+	function bbp_forum_topic_count( $forum_id = 0, $total_count = true, $integer = false ) {
+		return bboss_bbp_forum_topic_count( $forum_id, $total_count, $integer );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return total topic count of a forum
@@ -1739,6 +2663,20 @@ function bboss_bbp_get_forum_topic_count( $forum_id = 0, $total_count = true, $i
 
 	return apply_filters( $filter, $topics, $forum_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_forum_topic_count' ) && ! function_exists( 'bbp_get_forum_topic_count' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_forum_topic_count()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_forum_topic_count() instead.
+	 */
+	function bbp_get_forum_topic_count( $forum_id = 0, $total_count = true, $integer = false ) {
+		return bboss_bbp_get_forum_topic_count( $forum_id, $total_count, $integer );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output total reply count of a forum
@@ -1754,6 +2692,20 @@ function bboss_bbp_get_forum_topic_count( $forum_id = 0, $total_count = true, $i
 function bboss_bbp_forum_reply_count( $forum_id = 0, $total_count = true, $integer = false ) {
 	echo esc_html( bboss_bbp_get_forum_reply_count( $forum_id, $total_count, $integer ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_forum_reply_count' ) && ! function_exists( 'bbp_forum_reply_count' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_forum_reply_count()}.
+	 *
+	 * @deprecated Use bboss_bbp_forum_reply_count() instead.
+	 */
+	function bbp_forum_reply_count( $forum_id = 0, $total_count = true, $integer = false ) {
+		return bboss_bbp_forum_reply_count( $forum_id, $total_count, $integer );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return total post count of a forum
@@ -1779,6 +2731,20 @@ function bboss_bbp_get_forum_reply_count( $forum_id = 0, $total_count = true, $i
 
 	return apply_filters( $filter, $replies, $forum_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_forum_reply_count' ) && ! function_exists( 'bbp_get_forum_reply_count' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_forum_reply_count()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_forum_reply_count() instead.
+	 */
+	function bbp_get_forum_reply_count( $forum_id = 0, $total_count = true, $integer = false ) {
+		return bboss_bbp_get_forum_reply_count( $forum_id, $total_count, $integer );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output total post count of a forum
@@ -1794,6 +2760,20 @@ function bboss_bbp_get_forum_reply_count( $forum_id = 0, $total_count = true, $i
 function bboss_bbp_forum_post_count( $forum_id = 0, $total_count = true, $integer = false ) {
 	echo esc_html( bboss_bbp_get_forum_post_count( $forum_id, $total_count, $integer ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_forum_post_count' ) && ! function_exists( 'bbp_forum_post_count' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_forum_post_count()}.
+	 *
+	 * @deprecated Use bboss_bbp_forum_post_count() instead.
+	 */
+	function bbp_forum_post_count( $forum_id = 0, $total_count = true, $integer = false ) {
+		return bboss_bbp_forum_post_count( $forum_id, $total_count, $integer );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return total post count of a forum
@@ -1821,6 +2801,20 @@ function bboss_bbp_get_forum_post_count( $forum_id = 0, $total_count = true, $in
 
 	return apply_filters( $filter, $retval, $forum_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_forum_post_count' ) && ! function_exists( 'bbp_get_forum_post_count' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_forum_post_count()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_forum_post_count() instead.
+	 */
+	function bbp_get_forum_post_count( $forum_id = 0, $total_count = true, $integer = false ) {
+		return bboss_bbp_get_forum_post_count( $forum_id, $total_count, $integer );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output total hidden topic count of a forum (hidden includes trashed and
@@ -1836,6 +2830,20 @@ function bboss_bbp_get_forum_post_count( $forum_id = 0, $total_count = true, $in
 function bboss_bbp_forum_topic_count_hidden( $forum_id = 0, $integer = false ) {
 	echo esc_html( bboss_bbp_get_forum_topic_count_hidden( $forum_id, $integer ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_forum_topic_count_hidden' ) && ! function_exists( 'bbp_forum_topic_count_hidden' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_forum_topic_count_hidden()}.
+	 *
+	 * @deprecated Use bboss_bbp_forum_topic_count_hidden() instead.
+	 */
+	function bbp_forum_topic_count_hidden( $forum_id = 0, $integer = false ) {
+		return bboss_bbp_forum_topic_count_hidden( $forum_id, $integer );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return total hidden topic count of a forum (hidden includes trashed
@@ -1859,6 +2867,20 @@ function bboss_bbp_get_forum_topic_count_hidden( $forum_id = 0, $integer = false
 
 	return apply_filters( $filter, $topics, $forum_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_forum_topic_count_hidden' ) && ! function_exists( 'bbp_get_forum_topic_count_hidden' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_forum_topic_count_hidden()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_forum_topic_count_hidden() instead.
+	 */
+	function bbp_get_forum_topic_count_hidden( $forum_id = 0, $integer = false ) {
+		return bboss_bbp_get_forum_topic_count_hidden( $forum_id, $integer );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output the status of the forum
@@ -1872,6 +2894,20 @@ function bboss_bbp_get_forum_topic_count_hidden( $forum_id = 0, $integer = false
 function bboss_bbp_forum_status( $forum_id = 0 ) {
 	echo esc_attr( bboss_bbp_get_forum_status( $forum_id ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_forum_status' ) && ! function_exists( 'bbp_forum_status' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_forum_status()}.
+	 *
+	 * @deprecated Use bboss_bbp_forum_status() instead.
+	 */
+	function bbp_forum_status( $forum_id = 0 ) {
+		return bboss_bbp_forum_status( $forum_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return the status of the forum
@@ -1895,6 +2931,20 @@ function bboss_bbp_get_forum_status( $forum_id = 0 ) {
 
 	return apply_filters( 'bbp_get_forum_status', $status, $forum_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_forum_status' ) && ! function_exists( 'bbp_get_forum_status' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_forum_status()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_forum_status() instead.
+	 */
+	function bbp_get_forum_status( $forum_id = 0 ) {
+		return bboss_bbp_get_forum_status( $forum_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output the visibility of the forum
@@ -1908,6 +2958,20 @@ function bboss_bbp_get_forum_status( $forum_id = 0 ) {
 function bboss_bbp_forum_visibility( $forum_id = 0 ) {
 	echo esc_html( bboss_bbp_get_forum_visibility( $forum_id ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_forum_visibility' ) && ! function_exists( 'bbp_forum_visibility' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_forum_visibility()}.
+	 *
+	 * @deprecated Use bboss_bbp_forum_visibility() instead.
+	 */
+	function bbp_forum_visibility( $forum_id = 0 ) {
+		return bboss_bbp_forum_visibility( $forum_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return the visibility of the forum
@@ -1927,6 +2991,20 @@ function bboss_bbp_get_forum_visibility( $forum_id = 0 ) {
 
 	return apply_filters( 'bbp_get_forum_visibility', get_post_status( $forum_id ), $forum_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_forum_visibility' ) && ! function_exists( 'bbp_get_forum_visibility' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_forum_visibility()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_forum_visibility() instead.
+	 */
+	function bbp_get_forum_visibility( $forum_id = 0 ) {
+		return bboss_bbp_get_forum_visibility( $forum_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output the type of the forum
@@ -1940,6 +3018,20 @@ function bboss_bbp_get_forum_visibility( $forum_id = 0 ) {
 function bboss_bbp_forum_type( $forum_id = 0 ) {
 	echo esc_attr( bboss_bbp_get_forum_type( $forum_id ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_forum_type' ) && ! function_exists( 'bbp_forum_type' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_forum_type()}.
+	 *
+	 * @deprecated Use bboss_bbp_forum_type() instead.
+	 */
+	function bbp_forum_type( $forum_id = 0 ) {
+		return bboss_bbp_forum_type( $forum_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return the type of forum (category/forum/etc...)
@@ -1960,6 +3052,20 @@ function bboss_bbp_get_forum_type( $forum_id = 0 ) {
 
 	return apply_filters( 'bbp_get_forum_type', $retval, $forum_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_forum_type' ) && ! function_exists( 'bbp_get_forum_type' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_forum_type()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_forum_type() instead.
+	 */
+	function bbp_get_forum_type( $forum_id = 0 ) {
+		return bboss_bbp_get_forum_type( $forum_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Is the forum a category?
@@ -1978,6 +3084,20 @@ function bboss_bbp_is_forum_category( $forum_id = 0 ) {
 
 	return (bool) apply_filters( 'bbp_is_forum_category', (bool) $retval, $forum_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_is_forum_category' ) && ! function_exists( 'bbp_is_forum_category' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_is_forum_category()}.
+	 *
+	 * @deprecated Use bboss_bbp_is_forum_category() instead.
+	 */
+	function bbp_is_forum_category( $forum_id = 0 ) {
+		return bboss_bbp_is_forum_category( $forum_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Is the forum open?
@@ -1994,6 +3114,20 @@ function bboss_bbp_is_forum_category( $forum_id = 0 ) {
 function bboss_bbp_is_forum_open( $forum_id = 0 ) {
 	return ! bboss_bbp_is_forum_closed( $forum_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_is_forum_open' ) && ! function_exists( 'bbp_is_forum_open' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_is_forum_open()}.
+	 *
+	 * @deprecated Use bboss_bbp_is_forum_open() instead.
+	 */
+	function bbp_is_forum_open( $forum_id = 0 ) {
+		return bboss_bbp_is_forum_open( $forum_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Is the forum closed?
@@ -2027,6 +3161,20 @@ function bboss_bbp_is_forum_closed( $forum_id = 0, $check_ancestors = true ) {
 
 	return (bool) apply_filters( 'bbp_is_forum_closed', (bool) $retval, $forum_id, $check_ancestors );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_is_forum_closed' ) && ! function_exists( 'bbp_is_forum_closed' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_is_forum_closed()}.
+	 *
+	 * @deprecated Use bboss_bbp_is_forum_closed() instead.
+	 */
+	function bbp_is_forum_closed( $forum_id = 0, $check_ancestors = true ) {
+		return bboss_bbp_is_forum_closed( $forum_id, $check_ancestors );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Is the forum public?
@@ -2064,6 +3212,20 @@ function bboss_bbp_is_forum_public( $forum_id = 0, $check_ancestors = true ) {
 
 	return (bool) apply_filters( 'bbp_is_forum_public', (bool) $retval, $forum_id, $check_ancestors );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_is_forum_public' ) && ! function_exists( 'bbp_is_forum_public' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_is_forum_public()}.
+	 *
+	 * @deprecated Use bboss_bbp_is_forum_public() instead.
+	 */
+	function bbp_is_forum_public( $forum_id = 0, $check_ancestors = true ) {
+		return bboss_bbp_is_forum_public( $forum_id, $check_ancestors );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Is the forum private?
@@ -2101,6 +3263,20 @@ function bboss_bbp_is_forum_private( $forum_id = 0, $check_ancestors = true ) {
 
 	return (bool) apply_filters( 'bbp_is_forum_private', (bool) $retval, $forum_id, $check_ancestors );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_is_forum_private' ) && ! function_exists( 'bbp_is_forum_private' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_is_forum_private()}.
+	 *
+	 * @deprecated Use bboss_bbp_is_forum_private() instead.
+	 */
+	function bbp_is_forum_private( $forum_id = 0, $check_ancestors = true ) {
+		return bboss_bbp_is_forum_private( $forum_id, $check_ancestors );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Is the forum hidden?
@@ -2138,6 +3314,20 @@ function bboss_bbp_is_forum_hidden( $forum_id = 0, $check_ancestors = true ) {
 
 	return (bool) apply_filters( 'bbp_is_forum_hidden', (bool) $retval, $forum_id, $check_ancestors );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_is_forum_hidden' ) && ! function_exists( 'bbp_is_forum_hidden' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_is_forum_hidden()}.
+	 *
+	 * @deprecated Use bboss_bbp_is_forum_hidden() instead.
+	 */
+	function bbp_is_forum_hidden( $forum_id = 0, $check_ancestors = true ) {
+		return bboss_bbp_is_forum_hidden( $forum_id, $check_ancestors );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output the author of the forum
@@ -2151,6 +3341,20 @@ function bboss_bbp_is_forum_hidden( $forum_id = 0, $check_ancestors = true ) {
 function bboss_bbp_forum_author_display_name( $forum_id = 0 ) {
 	echo esc_html( bboss_bbp_get_forum_author_display_name( $forum_id ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_forum_author_display_name' ) && ! function_exists( 'bbp_forum_author_display_name' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_forum_author_display_name()}.
+	 *
+	 * @deprecated Use bboss_bbp_forum_author_display_name() instead.
+	 */
+	function bbp_forum_author_display_name( $forum_id = 0 ) {
+		return bboss_bbp_forum_author_display_name( $forum_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return the author of the forum
@@ -2172,6 +3376,20 @@ function bboss_bbp_get_forum_author_display_name( $forum_id = 0 ) {
 
 	return apply_filters( 'bbp_get_forum_author_display_name', $author, $forum_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_forum_author_display_name' ) && ! function_exists( 'bbp_get_forum_author_display_name' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_forum_author_display_name()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_forum_author_display_name() instead.
+	 */
+	function bbp_get_forum_author_display_name( $forum_id = 0 ) {
+		return bboss_bbp_get_forum_author_display_name( $forum_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output the author ID of the forum
@@ -2185,6 +3403,20 @@ function bboss_bbp_get_forum_author_display_name( $forum_id = 0 ) {
 function bboss_bbp_forum_author_id( $forum_id = 0 ) {
 	echo esc_attr( bboss_bbp_get_forum_author_id( $forum_id ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_forum_author_id' ) && ! function_exists( 'bbp_forum_author_id' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_forum_author_id()}.
+	 *
+	 * @deprecated Use bboss_bbp_forum_author_id() instead.
+	 */
+	function bbp_forum_author_id( $forum_id = 0 ) {
+		return bboss_bbp_forum_author_id( $forum_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return the author ID of the forum
@@ -2205,6 +3437,20 @@ function bboss_bbp_get_forum_author_id( $forum_id = 0 ) {
 
 	return (int) apply_filters( 'bbp_get_forum_author_id', (int) $author_id, $forum_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_forum_author_id' ) && ! function_exists( 'bbp_get_forum_author_id' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_forum_author_id()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_forum_author_id() instead.
+	 */
+	function bbp_get_forum_author_id( $forum_id = 0 ) {
+		return bboss_bbp_get_forum_author_id( $forum_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Replace forum meta details for users that cannot view them.
@@ -2226,6 +3472,20 @@ function bboss_bbp_suppress_private_forum_meta( $retval, $forum_id ) {
 
 	return apply_filters( 'bbp_suppress_private_forum_meta', $retval );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_suppress_private_forum_meta' ) && ! function_exists( 'bbp_suppress_private_forum_meta' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_suppress_private_forum_meta()}.
+	 *
+	 * @deprecated Use bboss_bbp_suppress_private_forum_meta() instead.
+	 */
+	function bbp_suppress_private_forum_meta( $retval, $forum_id ) {
+		return bboss_bbp_suppress_private_forum_meta( $retval, $forum_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Replace forum author details for users that cannot view them.
@@ -2286,6 +3546,20 @@ function bboss_bbp_suppress_private_author_link( $author_link, $args ) {
 
 	return apply_filters( 'bbp_suppress_private_author_link', $retval );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_suppress_private_author_link' ) && ! function_exists( 'bbp_suppress_private_author_link' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_suppress_private_author_link()}.
+	 *
+	 * @deprecated Use bboss_bbp_suppress_private_author_link() instead.
+	 */
+	function bbp_suppress_private_author_link( $author_link, $args ) {
+		return bboss_bbp_suppress_private_author_link( $author_link, $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output the row class of a forum
@@ -2300,6 +3574,20 @@ function bboss_bbp_suppress_private_author_link( $author_link, $args ) {
 function bboss_bbp_forum_class( $forum_id = 0, $classes = array() ) {
 	echo bboss_bbp_get_forum_class( $forum_id, $classes ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bbp_get_forum_class returns class="..." attribute markup; esc_attr would corrupt it.
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_forum_class' ) && ! function_exists( 'bbp_forum_class' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_forum_class()}.
+	 *
+	 * @deprecated Use bboss_bbp_forum_class() instead.
+	 */
+	function bbp_forum_class( $forum_id = 0, $classes = array() ) {
+		return bboss_bbp_forum_class( $forum_id, $classes );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return the row class of a forum
@@ -2343,6 +3631,20 @@ function bboss_bbp_get_forum_class( $forum_id = 0, $classes = array() ) {
 
 	return $retval;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_forum_class' ) && ! function_exists( 'bbp_get_forum_class' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_forum_class()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_forum_class() instead.
+	 */
+	function bbp_get_forum_class( $forum_id = 0, $classes = array() ) {
+		return bboss_bbp_get_forum_class( $forum_id, $classes );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /** Forms *********************************************************************/
 
@@ -2356,6 +3658,20 @@ function bboss_bbp_get_forum_class( $forum_id = 0, $classes = array() ) {
 function bboss_bbp_form_forum_title() {
 	echo bboss_bbp_get_form_forum_title(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bbp_get_form_forum_title() self-escapes its return value.
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_form_forum_title' ) && ! function_exists( 'bbp_form_forum_title' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_form_forum_title()}.
+	 *
+	 * @deprecated Use bboss_bbp_form_forum_title() instead.
+	 */
+	function bbp_form_forum_title() {
+		return bboss_bbp_form_forum_title();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return the value of forum title field
@@ -2383,6 +3699,20 @@ function bboss_bbp_get_form_forum_title() {
 
 	return apply_filters( 'bbp_get_form_forum_title', esc_attr( $forum_title ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_form_forum_title' ) && ! function_exists( 'bbp_get_form_forum_title' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_form_forum_title()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_form_forum_title() instead.
+	 */
+	function bbp_get_form_forum_title() {
+		return bboss_bbp_get_form_forum_title();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output the value of forum content field
@@ -2394,6 +3724,20 @@ function bboss_bbp_get_form_forum_title() {
 function bboss_bbp_form_forum_content() {
 	echo wp_kses_post( bboss_bbp_get_form_forum_content() );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_form_forum_content' ) && ! function_exists( 'bbp_form_forum_content' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_form_forum_content()}.
+	 *
+	 * @deprecated Use bboss_bbp_form_forum_content() instead.
+	 */
+	function bbp_form_forum_content() {
+		return bboss_bbp_form_forum_content();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return the value of forum content field
@@ -2421,6 +3765,20 @@ function bboss_bbp_get_form_forum_content() {
 
 	return apply_filters( 'bbp_get_form_forum_content', $forum_content );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_form_forum_content' ) && ! function_exists( 'bbp_get_form_forum_content' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_form_forum_content()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_form_forum_content() instead.
+	 */
+	function bbp_get_form_forum_content() {
+		return bboss_bbp_get_form_forum_content();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output value of forum parent
@@ -2432,6 +3790,20 @@ function bboss_bbp_get_form_forum_content() {
 function bboss_bbp_form_forum_parent() {
 	echo bboss_bbp_get_form_forum_parent(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bbp_get_form_forum_parent() returns esc_attr()'d value.
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_form_forum_parent' ) && ! function_exists( 'bbp_form_forum_parent' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_form_forum_parent()}.
+	 *
+	 * @deprecated Use bboss_bbp_form_forum_parent() instead.
+	 */
+	function bbp_form_forum_parent() {
+		return bboss_bbp_form_forum_parent();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return value of forum parent
@@ -2460,6 +3832,20 @@ function bboss_bbp_get_form_forum_parent() {
 
 	return apply_filters( 'bbp_get_form_forum_parent', esc_attr( $forum_parent ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_form_forum_parent' ) && ! function_exists( 'bbp_get_form_forum_parent' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_form_forum_parent()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_form_forum_parent() instead.
+	 */
+	function bbp_get_form_forum_parent() {
+		return bboss_bbp_get_form_forum_parent();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output value of forum type
@@ -2471,6 +3857,20 @@ function bboss_bbp_get_form_forum_parent() {
 function bboss_bbp_form_forum_type() {
 	echo bboss_bbp_get_form_forum_type(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bbp_get_form_forum_type() returns esc_attr()'d value.
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_form_forum_type' ) && ! function_exists( 'bbp_form_forum_type' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_form_forum_type()}.
+	 *
+	 * @deprecated Use bboss_bbp_form_forum_type() instead.
+	 */
+	function bbp_form_forum_type() {
+		return bboss_bbp_form_forum_type();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return value of forum type
@@ -2499,6 +3899,20 @@ function bboss_bbp_get_form_forum_type() {
 
 	return apply_filters( 'bbp_get_form_forum_type', esc_attr( $forum_type ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_form_forum_type' ) && ! function_exists( 'bbp_get_form_forum_type' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_form_forum_type()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_form_forum_type() instead.
+	 */
+	function bbp_get_form_forum_type() {
+		return bboss_bbp_get_form_forum_type();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output value of forum visibility
@@ -2510,6 +3924,20 @@ function bboss_bbp_get_form_forum_type() {
 function bboss_bbp_form_forum_visibility() {
 	echo bboss_bbp_get_form_forum_visibility(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bbp_get_form_forum_visibility() returns esc_attr()'d value.
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_form_forum_visibility' ) && ! function_exists( 'bbp_form_forum_visibility' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_form_forum_visibility()}.
+	 *
+	 * @deprecated Use bboss_bbp_form_forum_visibility() instead.
+	 */
+	function bbp_form_forum_visibility() {
+		return bboss_bbp_form_forum_visibility();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return value of forum visibility
@@ -2538,6 +3966,20 @@ function bboss_bbp_get_form_forum_visibility() {
 
 	return apply_filters( 'bbp_get_form_forum_visibility', esc_attr( $forum_visibility ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_form_forum_visibility' ) && ! function_exists( 'bbp_get_form_forum_visibility' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_form_forum_visibility()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_form_forum_visibility() instead.
+	 */
+	function bbp_get_form_forum_visibility() {
+		return bboss_bbp_get_form_forum_visibility();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output checked value of forum subscription
@@ -2549,6 +3991,20 @@ function bboss_bbp_get_form_forum_visibility() {
 function bboss_bbp_form_forum_subscribed() {
 	echo bboss_bbp_get_form_forum_subscribed(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bbp_get_form_forum_subscribed() returns checked() attribute markup.
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_form_forum_subscribed' ) && ! function_exists( 'bbp_form_forum_subscribed' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_form_forum_subscribed()}.
+	 *
+	 * @deprecated Use bboss_bbp_form_forum_subscribed() instead.
+	 */
+	function bbp_form_forum_subscribed() {
+		return bboss_bbp_form_forum_subscribed();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return checked value of forum subscription
@@ -2590,6 +4046,20 @@ function bboss_bbp_get_form_forum_subscribed() {
 
 	return apply_filters( 'bbp_get_form_forum_subscribed', $checked, $forum_subscribed );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_form_forum_subscribed' ) && ! function_exists( 'bbp_get_form_forum_subscribed' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_form_forum_subscribed()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_form_forum_subscribed() instead.
+	 */
+	function bbp_get_form_forum_subscribed() {
+		return bboss_bbp_get_form_forum_subscribed();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /** Form Dropdowns ************************************************************/
 
@@ -2605,6 +4075,20 @@ function bboss_bbp_get_form_forum_subscribed() {
 function bboss_bbp_form_forum_type_dropdown( $args = '' ) {
 	echo bboss_bbp_get_form_forum_type_dropdown( $args ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- returns form-control markup (<select>/<option>/<input>) pre-escaped per value at construction; wp_kses_post strips the controls.
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_form_forum_type_dropdown' ) && ! function_exists( 'bbp_form_forum_type_dropdown' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_form_forum_type_dropdown()}.
+	 *
+	 * @deprecated Use bboss_bbp_form_forum_type_dropdown() instead.
+	 */
+	function bbp_form_forum_type_dropdown( $args = '' ) {
+		return bboss_bbp_form_forum_type_dropdown( $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return the forum type dropdown
@@ -2683,6 +4167,20 @@ function bboss_bbp_get_form_forum_type_dropdown( $args = '' ) {
 	// Return the results
 	return apply_filters( 'bbp_get_form_forum_type_dropdown', ob_get_clean(), $r );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_form_forum_type_dropdown' ) && ! function_exists( 'bbp_get_form_forum_type_dropdown' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_form_forum_type_dropdown()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_form_forum_type_dropdown() instead.
+	 */
+	function bbp_get_form_forum_type_dropdown( $args = '' ) {
+		return bboss_bbp_get_form_forum_type_dropdown( $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output value forum status dropdown
@@ -2696,6 +4194,20 @@ function bboss_bbp_get_form_forum_type_dropdown( $args = '' ) {
 function bboss_bbp_form_forum_status_dropdown( $args = '' ) {
 	echo bboss_bbp_get_form_forum_status_dropdown( $args ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- returns form-control markup (<select>/<option>/<input>) pre-escaped per value at construction; wp_kses_post strips the controls.
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_form_forum_status_dropdown' ) && ! function_exists( 'bbp_form_forum_status_dropdown' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_form_forum_status_dropdown()}.
+	 *
+	 * @deprecated Use bboss_bbp_form_forum_status_dropdown() instead.
+	 */
+	function bbp_form_forum_status_dropdown( $args = '' ) {
+		return bboss_bbp_form_forum_status_dropdown( $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return the forum status dropdown
@@ -2773,6 +4285,20 @@ function bboss_bbp_get_form_forum_status_dropdown( $args = '' ) {
 	// Return the results
 	return apply_filters( 'bbp_get_form_forum_status_dropdown', ob_get_clean(), $r );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_form_forum_status_dropdown' ) && ! function_exists( 'bbp_get_form_forum_status_dropdown' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_form_forum_status_dropdown()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_form_forum_status_dropdown() instead.
+	 */
+	function bbp_get_form_forum_status_dropdown( $args = '' ) {
+		return bboss_bbp_get_form_forum_status_dropdown( $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output value forum visibility dropdown
@@ -2786,6 +4312,20 @@ function bboss_bbp_get_form_forum_status_dropdown( $args = '' ) {
 function bboss_bbp_form_forum_visibility_dropdown( $args = '' ) {
 	echo bboss_bbp_get_form_forum_visibility_dropdown( $args ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- returns form-control markup (<select>/<option>/<input>) pre-escaped per value at construction; wp_kses_post strips the controls.
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_form_forum_visibility_dropdown' ) && ! function_exists( 'bbp_form_forum_visibility_dropdown' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_form_forum_visibility_dropdown()}.
+	 *
+	 * @deprecated Use bboss_bbp_form_forum_visibility_dropdown() instead.
+	 */
+	function bbp_form_forum_visibility_dropdown( $args = '' ) {
+		return bboss_bbp_form_forum_visibility_dropdown( $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return the forum visibility dropdown
@@ -2866,6 +4406,20 @@ function bboss_bbp_get_form_forum_visibility_dropdown( $args = '' ) {
 	// Return the results
 	return apply_filters( 'bbp_get_form_forum_type_dropdown', ob_get_clean(), $r );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_form_forum_visibility_dropdown' ) && ! function_exists( 'bbp_get_form_forum_visibility_dropdown' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_form_forum_visibility_dropdown()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_form_forum_visibility_dropdown() instead.
+	 */
+	function bbp_get_form_forum_visibility_dropdown( $args = '' ) {
+		return bboss_bbp_get_form_forum_visibility_dropdown( $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /** Feeds *********************************************************************/
 
@@ -2881,6 +4435,20 @@ function bboss_bbp_get_form_forum_visibility_dropdown( $args = '' ) {
 function bboss_bbp_forum_topics_feed_link( $forum_id = 0 ) {
 	echo wp_kses_post( bboss_bbp_get_forum_topics_feed_link( $forum_id ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_forum_topics_feed_link' ) && ! function_exists( 'bbp_forum_topics_feed_link' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_forum_topics_feed_link()}.
+	 *
+	 * @deprecated Use bboss_bbp_forum_topics_feed_link() instead.
+	 */
+	function bbp_forum_topics_feed_link( $forum_id = 0 ) {
+		return bboss_bbp_forum_topics_feed_link( $forum_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Retrieve the link for the forum feed
@@ -2935,6 +4503,20 @@ function bboss_bbp_get_forum_topics_feed_link( $forum_id = 0 ) {
 
 	return apply_filters( 'bbp_get_forum_topics_feed_link', $link, $url, $forum_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_forum_topics_feed_link' ) && ! function_exists( 'bbp_get_forum_topics_feed_link' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_forum_topics_feed_link()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_forum_topics_feed_link() instead.
+	 */
+	function bbp_get_forum_topics_feed_link( $forum_id = 0 ) {
+		return bboss_bbp_get_forum_topics_feed_link( $forum_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output the link for the forum replies feed
@@ -2948,6 +4530,20 @@ function bboss_bbp_get_forum_topics_feed_link( $forum_id = 0 ) {
 function bboss_bbp_forum_replies_feed_link( $forum_id = 0 ) {
 	echo wp_kses_post( bboss_bbp_get_forum_replies_feed_link( $forum_id ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_forum_replies_feed_link' ) && ! function_exists( 'bbp_forum_replies_feed_link' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_forum_replies_feed_link()}.
+	 *
+	 * @deprecated Use bboss_bbp_forum_replies_feed_link() instead.
+	 */
+	function bbp_forum_replies_feed_link( $forum_id = 0 ) {
+		return bboss_bbp_forum_replies_feed_link( $forum_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Retrieve the link for the forum replies feed
@@ -3004,6 +4600,20 @@ function bboss_bbp_get_forum_replies_feed_link( $forum_id = 0 ) {
 
 	return apply_filters( 'bbp_get_forum_replies_feed_link', $link, $url, $forum_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_forum_replies_feed_link' ) && ! function_exists( 'bbp_get_forum_replies_feed_link' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_forum_replies_feed_link()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_forum_replies_feed_link() instead.
+	 */
+	function bbp_get_forum_replies_feed_link( $forum_id = 0 ) {
+		return bboss_bbp_get_forum_replies_feed_link( $forum_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get group ID's for a child forum.
@@ -3038,6 +4648,20 @@ function bboss_get_child_forum_group_ids( $forum_id ) {
 
 	return array();
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_child_forum_group_ids' ) && ! function_exists( 'bb_get_child_forum_group_ids' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_child_forum_group_ids()}.
+	 *
+	 * @deprecated Use bboss_get_child_forum_group_ids() instead.
+	 */
+	function bb_get_child_forum_group_ids( $forum_id ) {
+		return bboss_get_child_forum_group_ids( $forum_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return the content of the forum
@@ -3069,690 +4693,8 @@ function bboss_bbp_get_forum_content_excerpt_view_more( $forum_id = 0, $length =
 	 */
 	return apply_filters( 'bbp_get_forum_content_excerpt_view_more', bboss_create_excerpt( $forum_content, $length, array( 'ending' => $forum_link ) ), $forum_id );
 }
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
-if ( function_exists( 'bboss_get_child_forum_group_ids' ) && ! function_exists( 'bb_get_child_forum_group_ids' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_child_forum_group_ids()}.
-	 *
-	 * @deprecated Use bboss_get_child_forum_group_ids() instead.
-	 */
-	function bb_get_child_forum_group_ids( $forum_id ) {
-		return bboss_get_child_forum_group_ids( $forum_id );
-	}
-}
-if ( function_exists( 'bboss_get_list_forums_recursively' ) && ! function_exists( 'bb_get_list_forums_recursively' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_list_forums_recursively()}.
-	 *
-	 * @deprecated Use bboss_get_list_forums_recursively() instead.
-	 */
-	function bb_get_list_forums_recursively( $args = array() ) {
-		return bboss_get_list_forums_recursively( $args );
-	}
-}
-if ( function_exists( 'bboss_bbp_form_forum_content' ) && ! function_exists( 'bbp_form_forum_content' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_form_forum_content()}.
-	 *
-	 * @deprecated Use bboss_bbp_form_forum_content() instead.
-	 */
-	function bbp_form_forum_content() {
-		return bboss_bbp_form_forum_content();
-	}
-}
-if ( function_exists( 'bboss_bbp_form_forum_parent' ) && ! function_exists( 'bbp_form_forum_parent' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_form_forum_parent()}.
-	 *
-	 * @deprecated Use bboss_bbp_form_forum_parent() instead.
-	 */
-	function bbp_form_forum_parent() {
-		return bboss_bbp_form_forum_parent();
-	}
-}
-if ( function_exists( 'bboss_bbp_form_forum_status_dropdown' ) && ! function_exists( 'bbp_form_forum_status_dropdown' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_form_forum_status_dropdown()}.
-	 *
-	 * @deprecated Use bboss_bbp_form_forum_status_dropdown() instead.
-	 */
-	function bbp_form_forum_status_dropdown( $args = '' ) {
-		return bboss_bbp_form_forum_status_dropdown( $args );
-	}
-}
-if ( function_exists( 'bboss_bbp_form_forum_subscribed' ) && ! function_exists( 'bbp_form_forum_subscribed' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_form_forum_subscribed()}.
-	 *
-	 * @deprecated Use bboss_bbp_form_forum_subscribed() instead.
-	 */
-	function bbp_form_forum_subscribed() {
-		return bboss_bbp_form_forum_subscribed();
-	}
-}
-if ( function_exists( 'bboss_bbp_form_forum_title' ) && ! function_exists( 'bbp_form_forum_title' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_form_forum_title()}.
-	 *
-	 * @deprecated Use bboss_bbp_form_forum_title() instead.
-	 */
-	function bbp_form_forum_title() {
-		return bboss_bbp_form_forum_title();
-	}
-}
-if ( function_exists( 'bboss_bbp_form_forum_type' ) && ! function_exists( 'bbp_form_forum_type' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_form_forum_type()}.
-	 *
-	 * @deprecated Use bboss_bbp_form_forum_type() instead.
-	 */
-	function bbp_form_forum_type() {
-		return bboss_bbp_form_forum_type();
-	}
-}
-if ( function_exists( 'bboss_bbp_form_forum_type_dropdown' ) && ! function_exists( 'bbp_form_forum_type_dropdown' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_form_forum_type_dropdown()}.
-	 *
-	 * @deprecated Use bboss_bbp_form_forum_type_dropdown() instead.
-	 */
-	function bbp_form_forum_type_dropdown( $args = '' ) {
-		return bboss_bbp_form_forum_type_dropdown( $args );
-	}
-}
-if ( function_exists( 'bboss_bbp_form_forum_visibility' ) && ! function_exists( 'bbp_form_forum_visibility' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_form_forum_visibility()}.
-	 *
-	 * @deprecated Use bboss_bbp_form_forum_visibility() instead.
-	 */
-	function bbp_form_forum_visibility() {
-		return bboss_bbp_form_forum_visibility();
-	}
-}
-if ( function_exists( 'bboss_bbp_form_forum_visibility_dropdown' ) && ! function_exists( 'bbp_form_forum_visibility_dropdown' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_form_forum_visibility_dropdown()}.
-	 *
-	 * @deprecated Use bboss_bbp_form_forum_visibility_dropdown() instead.
-	 */
-	function bbp_form_forum_visibility_dropdown( $args = '' ) {
-		return bboss_bbp_form_forum_visibility_dropdown( $args );
-	}
-}
-if ( function_exists( 'bboss_bbp_forum_archive_title' ) && ! function_exists( 'bbp_forum_archive_title' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_forum_archive_title()}.
-	 *
-	 * @deprecated Use bboss_bbp_forum_archive_title() instead.
-	 */
-	function bbp_forum_archive_title( $title = '' ) {
-		return bboss_bbp_forum_archive_title( $title );
-	}
-}
-if ( function_exists( 'bboss_bbp_forum_author_display_name' ) && ! function_exists( 'bbp_forum_author_display_name' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_forum_author_display_name()}.
-	 *
-	 * @deprecated Use bboss_bbp_forum_author_display_name() instead.
-	 */
-	function bbp_forum_author_display_name( $forum_id = 0 ) {
-		return bboss_bbp_forum_author_display_name( $forum_id );
-	}
-}
-if ( function_exists( 'bboss_bbp_forum_author_id' ) && ! function_exists( 'bbp_forum_author_id' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_forum_author_id()}.
-	 *
-	 * @deprecated Use bboss_bbp_forum_author_id() instead.
-	 */
-	function bbp_forum_author_id( $forum_id = 0 ) {
-		return bboss_bbp_forum_author_id( $forum_id );
-	}
-}
-if ( function_exists( 'bboss_bbp_forum_class' ) && ! function_exists( 'bbp_forum_class' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_forum_class()}.
-	 *
-	 * @deprecated Use bboss_bbp_forum_class() instead.
-	 */
-	function bbp_forum_class( $forum_id = 0, $classes = array() ) {
-		return bboss_bbp_forum_class( $forum_id, $classes );
-	}
-}
-if ( function_exists( 'bboss_bbp_forum_content' ) && ! function_exists( 'bbp_forum_content' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_forum_content()}.
-	 *
-	 * @deprecated Use bboss_bbp_forum_content() instead.
-	 */
-	function bbp_forum_content( $forum_id = 0 ) {
-		return bboss_bbp_forum_content( $forum_id );
-	}
-}
-if ( function_exists( 'bboss_bbp_forum_freshness_link' ) && ! function_exists( 'bbp_forum_freshness_link' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_forum_freshness_link()}.
-	 *
-	 * @deprecated Use bboss_bbp_forum_freshness_link() instead.
-	 */
-	function bbp_forum_freshness_link( $forum_id = 0 ) {
-		return bboss_bbp_forum_freshness_link( $forum_id );
-	}
-}
-if ( function_exists( 'bboss_bbp_forum_get_subforums' ) && ! function_exists( 'bbp_forum_get_subforums' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_forum_get_subforums()}.
-	 *
-	 * @deprecated Use bboss_bbp_forum_get_subforums() instead.
-	 */
-	function bbp_forum_get_subforums( $args = '' ) {
-		return bboss_bbp_forum_get_subforums( $args );
-	}
-}
-if ( function_exists( 'bboss_bbp_forum_id' ) && ! function_exists( 'bbp_forum_id' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_forum_id()}.
-	 *
-	 * @deprecated Use bboss_bbp_forum_id() instead.
-	 */
-	function bbp_forum_id( $forum_id = 0 ) {
-		return bboss_bbp_forum_id( $forum_id );
-	}
-}
-if ( function_exists( 'bboss_bbp_forum_index_pagination_count' ) && ! function_exists( 'bbp_forum_index_pagination_count' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_forum_index_pagination_count()}.
-	 *
-	 * @deprecated Use bboss_bbp_forum_index_pagination_count() instead.
-	 */
-	function bbp_forum_index_pagination_count() {
-		return bboss_bbp_forum_index_pagination_count();
-	}
-}
-if ( function_exists( 'bboss_bbp_forum_index_pagination_links' ) && ! function_exists( 'bbp_forum_index_pagination_links' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_forum_index_pagination_links()}.
-	 *
-	 * @deprecated Use bboss_bbp_forum_index_pagination_links() instead.
-	 */
-	function bbp_forum_index_pagination_links() {
-		return bboss_bbp_forum_index_pagination_links();
-	}
-}
-if ( function_exists( 'bboss_bbp_forum_last_active_id' ) && ! function_exists( 'bbp_forum_last_active_id' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_forum_last_active_id()}.
-	 *
-	 * @deprecated Use bboss_bbp_forum_last_active_id() instead.
-	 */
-	function bbp_forum_last_active_id( $forum_id = 0 ) {
-		return bboss_bbp_forum_last_active_id( $forum_id );
-	}
-}
-if ( function_exists( 'bboss_bbp_forum_last_active_time' ) && ! function_exists( 'bbp_forum_last_active_time' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_forum_last_active_time()}.
-	 *
-	 * @deprecated Use bboss_bbp_forum_last_active_time() instead.
-	 */
-	function bbp_forum_last_active_time( $forum_id = 0 ) {
-		return bboss_bbp_forum_last_active_time( $forum_id );
-	}
-}
-if ( function_exists( 'bboss_bbp_forum_last_reply_author_id' ) && ! function_exists( 'bbp_forum_last_reply_author_id' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_forum_last_reply_author_id()}.
-	 *
-	 * @deprecated Use bboss_bbp_forum_last_reply_author_id() instead.
-	 */
-	function bbp_forum_last_reply_author_id( $forum_id = 0 ) {
-		return bboss_bbp_forum_last_reply_author_id( $forum_id );
-	}
-}
-if ( function_exists( 'bboss_bbp_forum_last_reply_author_link' ) && ! function_exists( 'bbp_forum_last_reply_author_link' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_forum_last_reply_author_link()}.
-	 *
-	 * @deprecated Use bboss_bbp_forum_last_reply_author_link() instead.
-	 */
-	function bbp_forum_last_reply_author_link( $forum_id = 0 ) {
-		return bboss_bbp_forum_last_reply_author_link( $forum_id );
-	}
-}
-if ( function_exists( 'bboss_bbp_forum_last_reply_id' ) && ! function_exists( 'bbp_forum_last_reply_id' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_forum_last_reply_id()}.
-	 *
-	 * @deprecated Use bboss_bbp_forum_last_reply_id() instead.
-	 */
-	function bbp_forum_last_reply_id( $forum_id = 0 ) {
-		return bboss_bbp_forum_last_reply_id( $forum_id );
-	}
-}
-if ( function_exists( 'bboss_bbp_forum_last_reply_permalink' ) && ! function_exists( 'bbp_forum_last_reply_permalink' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_forum_last_reply_permalink()}.
-	 *
-	 * @deprecated Use bboss_bbp_forum_last_reply_permalink() instead.
-	 */
-	function bbp_forum_last_reply_permalink( $forum_id = 0 ) {
-		return bboss_bbp_forum_last_reply_permalink( $forum_id );
-	}
-}
-if ( function_exists( 'bboss_bbp_forum_last_reply_title' ) && ! function_exists( 'bbp_forum_last_reply_title' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_forum_last_reply_title()}.
-	 *
-	 * @deprecated Use bboss_bbp_forum_last_reply_title() instead.
-	 */
-	function bbp_forum_last_reply_title( $forum_id = 0 ) {
-		return bboss_bbp_forum_last_reply_title( $forum_id );
-	}
-}
-if ( function_exists( 'bboss_bbp_forum_last_reply_url' ) && ! function_exists( 'bbp_forum_last_reply_url' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_forum_last_reply_url()}.
-	 *
-	 * @deprecated Use bboss_bbp_forum_last_reply_url() instead.
-	 */
-	function bbp_forum_last_reply_url( $forum_id = 0 ) {
-		return bboss_bbp_forum_last_reply_url( $forum_id );
-	}
-}
-if ( function_exists( 'bboss_bbp_forum_last_topic_author_link' ) && ! function_exists( 'bbp_forum_last_topic_author_link' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_forum_last_topic_author_link()}.
-	 *
-	 * @deprecated Use bboss_bbp_forum_last_topic_author_link() instead.
-	 */
-	function bbp_forum_last_topic_author_link( $forum_id = 0 ) {
-		return bboss_bbp_forum_last_topic_author_link( $forum_id );
-	}
-}
-if ( function_exists( 'bboss_bbp_forum_last_topic_id' ) && ! function_exists( 'bbp_forum_last_topic_id' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_forum_last_topic_id()}.
-	 *
-	 * @deprecated Use bboss_bbp_forum_last_topic_id() instead.
-	 */
-	function bbp_forum_last_topic_id( $forum_id = 0 ) {
-		return bboss_bbp_forum_last_topic_id( $forum_id );
-	}
-}
-if ( function_exists( 'bboss_bbp_forum_last_topic_permalink' ) && ! function_exists( 'bbp_forum_last_topic_permalink' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_forum_last_topic_permalink()}.
-	 *
-	 * @deprecated Use bboss_bbp_forum_last_topic_permalink() instead.
-	 */
-	function bbp_forum_last_topic_permalink( $forum_id = 0 ) {
-		return bboss_bbp_forum_last_topic_permalink( $forum_id );
-	}
-}
-if ( function_exists( 'bboss_bbp_forum_last_topic_title' ) && ! function_exists( 'bbp_forum_last_topic_title' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_forum_last_topic_title()}.
-	 *
-	 * @deprecated Use bboss_bbp_forum_last_topic_title() instead.
-	 */
-	function bbp_forum_last_topic_title( $forum_id = 0 ) {
-		return bboss_bbp_forum_last_topic_title( $forum_id );
-	}
-}
-if ( function_exists( 'bboss_bbp_forum_parent_id' ) && ! function_exists( 'bbp_forum_parent_id' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_forum_parent_id()}.
-	 *
-	 * @deprecated Use bboss_bbp_forum_parent_id() instead.
-	 */
-	function bbp_forum_parent_id( $forum_id = 0 ) {
-		return bboss_bbp_forum_parent_id( $forum_id );
-	}
-}
-if ( function_exists( 'bboss_bbp_forum_permalink' ) && ! function_exists( 'bbp_forum_permalink' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_forum_permalink()}.
-	 *
-	 * @deprecated Use bboss_bbp_forum_permalink() instead.
-	 */
-	function bbp_forum_permalink( $forum_id = 0 ) {
-		return bboss_bbp_forum_permalink( $forum_id );
-	}
-}
-if ( function_exists( 'bboss_bbp_forum_post_count' ) && ! function_exists( 'bbp_forum_post_count' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_forum_post_count()}.
-	 *
-	 * @deprecated Use bboss_bbp_forum_post_count() instead.
-	 */
-	function bbp_forum_post_count( $forum_id = 0, $total_count = true, $integer = false ) {
-		return bboss_bbp_forum_post_count( $forum_id, $total_count, $integer );
-	}
-}
-if ( function_exists( 'bboss_bbp_forum_post_type' ) && ! function_exists( 'bbp_forum_post_type' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_forum_post_type()}.
-	 *
-	 * @deprecated Use bboss_bbp_forum_post_type() instead.
-	 */
-	function bbp_forum_post_type() {
-		return bboss_bbp_forum_post_type();
-	}
-}
-if ( function_exists( 'bboss_bbp_forum_replies_feed_link' ) && ! function_exists( 'bbp_forum_replies_feed_link' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_forum_replies_feed_link()}.
-	 *
-	 * @deprecated Use bboss_bbp_forum_replies_feed_link() instead.
-	 */
-	function bbp_forum_replies_feed_link( $forum_id = 0 ) {
-		return bboss_bbp_forum_replies_feed_link( $forum_id );
-	}
-}
-if ( function_exists( 'bboss_bbp_forum_reply_count' ) && ! function_exists( 'bbp_forum_reply_count' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_forum_reply_count()}.
-	 *
-	 * @deprecated Use bboss_bbp_forum_reply_count() instead.
-	 */
-	function bbp_forum_reply_count( $forum_id = 0, $total_count = true, $integer = false ) {
-		return bboss_bbp_forum_reply_count( $forum_id, $total_count, $integer );
-	}
-}
-if ( function_exists( 'bboss_bbp_forum_report_link' ) && ! function_exists( 'bbp_forum_report_link' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_forum_report_link()}.
-	 *
-	 * @deprecated Use bboss_bbp_forum_report_link() instead.
-	 */
-	function bbp_forum_report_link( $args = array() ) {
-		return bboss_bbp_forum_report_link( $args );
-	}
-}
-if ( function_exists( 'bboss_bbp_forum_row_actions' ) && ! function_exists( 'bbp_forum_row_actions' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_forum_row_actions()}.
-	 *
-	 * @deprecated Use bboss_bbp_forum_row_actions() instead.
-	 */
-	function bbp_forum_row_actions() {
-		return bboss_bbp_forum_row_actions();
-	}
-}
-if ( function_exists( 'bboss_bbp_forum_status' ) && ! function_exists( 'bbp_forum_status' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_forum_status()}.
-	 *
-	 * @deprecated Use bboss_bbp_forum_status() instead.
-	 */
-	function bbp_forum_status( $forum_id = 0 ) {
-		return bboss_bbp_forum_status( $forum_id );
-	}
-}
-if ( function_exists( 'bboss_bbp_forum_subforum_count' ) && ! function_exists( 'bbp_forum_subforum_count' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_forum_subforum_count()}.
-	 *
-	 * @deprecated Use bboss_bbp_forum_subforum_count() instead.
-	 */
-	function bbp_forum_subforum_count( $forum_id = 0, $integer = false ) {
-		return bboss_bbp_forum_subforum_count( $forum_id, $integer );
-	}
-}
-if ( function_exists( 'bboss_bbp_forum_subscription_link' ) && ! function_exists( 'bbp_forum_subscription_link' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_forum_subscription_link()}.
-	 *
-	 * @deprecated Use bboss_bbp_forum_subscription_link() instead.
-	 */
-	function bbp_forum_subscription_link( $args = array() ) {
-		return bboss_bbp_forum_subscription_link( $args );
-	}
-}
-if ( function_exists( 'bboss_bbp_forum_title' ) && ! function_exists( 'bbp_forum_title' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_forum_title()}.
-	 *
-	 * @deprecated Use bboss_bbp_forum_title() instead.
-	 */
-	function bbp_forum_title( $forum_id = 0 ) {
-		return bboss_bbp_forum_title( $forum_id );
-	}
-}
-if ( function_exists( 'bboss_bbp_forum_topic_count' ) && ! function_exists( 'bbp_forum_topic_count' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_forum_topic_count()}.
-	 *
-	 * @deprecated Use bboss_bbp_forum_topic_count() instead.
-	 */
-	function bbp_forum_topic_count( $forum_id = 0, $total_count = true, $integer = false ) {
-		return bboss_bbp_forum_topic_count( $forum_id, $total_count, $integer );
-	}
-}
-if ( function_exists( 'bboss_bbp_forum_topic_count_hidden' ) && ! function_exists( 'bbp_forum_topic_count_hidden' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_forum_topic_count_hidden()}.
-	 *
-	 * @deprecated Use bboss_bbp_forum_topic_count_hidden() instead.
-	 */
-	function bbp_forum_topic_count_hidden( $forum_id = 0, $integer = false ) {
-		return bboss_bbp_forum_topic_count_hidden( $forum_id, $integer );
-	}
-}
-if ( function_exists( 'bboss_bbp_forum_topics_feed_link' ) && ! function_exists( 'bbp_forum_topics_feed_link' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_forum_topics_feed_link()}.
-	 *
-	 * @deprecated Use bboss_bbp_forum_topics_feed_link() instead.
-	 */
-	function bbp_forum_topics_feed_link( $forum_id = 0 ) {
-		return bboss_bbp_forum_topics_feed_link( $forum_id );
-	}
-}
-if ( function_exists( 'bboss_bbp_forum_topics_link' ) && ! function_exists( 'bbp_forum_topics_link' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_forum_topics_link()}.
-	 *
-	 * @deprecated Use bboss_bbp_forum_topics_link() instead.
-	 */
-	function bbp_forum_topics_link( $forum_id = 0 ) {
-		return bboss_bbp_forum_topics_link( $forum_id );
-	}
-}
-if ( function_exists( 'bboss_bbp_forum_type' ) && ! function_exists( 'bbp_forum_type' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_forum_type()}.
-	 *
-	 * @deprecated Use bboss_bbp_forum_type() instead.
-	 */
-	function bbp_forum_type( $forum_id = 0 ) {
-		return bboss_bbp_forum_type( $forum_id );
-	}
-}
-if ( function_exists( 'bboss_bbp_forum_visibility' ) && ! function_exists( 'bbp_forum_visibility' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_forum_visibility()}.
-	 *
-	 * @deprecated Use bboss_bbp_forum_visibility() instead.
-	 */
-	function bbp_forum_visibility( $forum_id = 0 ) {
-		return bboss_bbp_forum_visibility( $forum_id );
-	}
-}
-if ( function_exists( 'bboss_bbp_forums' ) && ! function_exists( 'bbp_forums' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_forums()}.
-	 *
-	 * @deprecated Use bboss_bbp_forums() instead.
-	 */
-	function bbp_forums() {
-		return bboss_bbp_forums();
-	}
-}
-if ( function_exists( 'bboss_bbp_get_form_forum_content' ) && ! function_exists( 'bbp_get_form_forum_content' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_form_forum_content()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_form_forum_content() instead.
-	 */
-	function bbp_get_form_forum_content() {
-		return bboss_bbp_get_form_forum_content();
-	}
-}
-if ( function_exists( 'bboss_bbp_get_form_forum_parent' ) && ! function_exists( 'bbp_get_form_forum_parent' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_form_forum_parent()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_form_forum_parent() instead.
-	 */
-	function bbp_get_form_forum_parent() {
-		return bboss_bbp_get_form_forum_parent();
-	}
-}
-if ( function_exists( 'bboss_bbp_get_form_forum_status_dropdown' ) && ! function_exists( 'bbp_get_form_forum_status_dropdown' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_form_forum_status_dropdown()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_form_forum_status_dropdown() instead.
-	 */
-	function bbp_get_form_forum_status_dropdown( $args = '' ) {
-		return bboss_bbp_get_form_forum_status_dropdown( $args );
-	}
-}
-if ( function_exists( 'bboss_bbp_get_form_forum_subscribed' ) && ! function_exists( 'bbp_get_form_forum_subscribed' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_form_forum_subscribed()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_form_forum_subscribed() instead.
-	 */
-	function bbp_get_form_forum_subscribed() {
-		return bboss_bbp_get_form_forum_subscribed();
-	}
-}
-if ( function_exists( 'bboss_bbp_get_form_forum_title' ) && ! function_exists( 'bbp_get_form_forum_title' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_form_forum_title()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_form_forum_title() instead.
-	 */
-	function bbp_get_form_forum_title() {
-		return bboss_bbp_get_form_forum_title();
-	}
-}
-if ( function_exists( 'bboss_bbp_get_form_forum_type' ) && ! function_exists( 'bbp_get_form_forum_type' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_form_forum_type()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_form_forum_type() instead.
-	 */
-	function bbp_get_form_forum_type() {
-		return bboss_bbp_get_form_forum_type();
-	}
-}
-if ( function_exists( 'bboss_bbp_get_form_forum_type_dropdown' ) && ! function_exists( 'bbp_get_form_forum_type_dropdown' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_form_forum_type_dropdown()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_form_forum_type_dropdown() instead.
-	 */
-	function bbp_get_form_forum_type_dropdown( $args = '' ) {
-		return bboss_bbp_get_form_forum_type_dropdown( $args );
-	}
-}
-if ( function_exists( 'bboss_bbp_get_form_forum_visibility' ) && ! function_exists( 'bbp_get_form_forum_visibility' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_form_forum_visibility()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_form_forum_visibility() instead.
-	 */
-	function bbp_get_form_forum_visibility() {
-		return bboss_bbp_get_form_forum_visibility();
-	}
-}
-if ( function_exists( 'bboss_bbp_get_form_forum_visibility_dropdown' ) && ! function_exists( 'bbp_get_form_forum_visibility_dropdown' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_form_forum_visibility_dropdown()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_form_forum_visibility_dropdown() instead.
-	 */
-	function bbp_get_form_forum_visibility_dropdown( $args = '' ) {
-		return bboss_bbp_get_form_forum_visibility_dropdown( $args );
-	}
-}
-if ( function_exists( 'bboss_bbp_get_forum' ) && ! function_exists( 'bbp_get_forum' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_forum()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_forum() instead.
-	 */
-	function bbp_get_forum( $forum, $output = OBJECT, $filter = 'raw' ) {
-		return bboss_bbp_get_forum( $forum, $output, $filter );
-	}
-}
-if ( function_exists( 'bboss_bbp_get_forum_ancestors' ) && ! function_exists( 'bbp_get_forum_ancestors' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_forum_ancestors()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_forum_ancestors() instead.
-	 */
-	function bbp_get_forum_ancestors( $forum_id = 0 ) {
-		return bboss_bbp_get_forum_ancestors( $forum_id );
-	}
-}
-if ( function_exists( 'bboss_bbp_get_forum_archive_title' ) && ! function_exists( 'bbp_get_forum_archive_title' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_forum_archive_title()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_forum_archive_title() instead.
-	 */
-	function bbp_get_forum_archive_title( $title = '' ) {
-		return bboss_bbp_get_forum_archive_title( $title );
-	}
-}
-if ( function_exists( 'bboss_bbp_get_forum_author_display_name' ) && ! function_exists( 'bbp_get_forum_author_display_name' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_forum_author_display_name()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_forum_author_display_name() instead.
-	 */
-	function bbp_get_forum_author_display_name( $forum_id = 0 ) {
-		return bboss_bbp_get_forum_author_display_name( $forum_id );
-	}
-}
-if ( function_exists( 'bboss_bbp_get_forum_author_id' ) && ! function_exists( 'bbp_get_forum_author_id' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_forum_author_id()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_forum_author_id() instead.
-	 */
-	function bbp_get_forum_author_id( $forum_id = 0 ) {
-		return bboss_bbp_get_forum_author_id( $forum_id );
-	}
-}
-if ( function_exists( 'bboss_bbp_get_forum_class' ) && ! function_exists( 'bbp_get_forum_class' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_forum_class()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_forum_class() instead.
-	 */
-	function bbp_get_forum_class( $forum_id = 0, $classes = array() ) {
-		return bboss_bbp_get_forum_class( $forum_id, $classes );
-	}
-}
-if ( function_exists( 'bboss_bbp_get_forum_content' ) && ! function_exists( 'bbp_get_forum_content' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_forum_content()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_forum_content() instead.
-	 */
-	function bbp_get_forum_content( $forum_id = 0 ) {
-		return bboss_bbp_get_forum_content( $forum_id );
-	}
-}
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_bbp_get_forum_content_excerpt_view_more' ) && ! function_exists( 'bbp_get_forum_content_excerpt_view_more' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_bbp_get_forum_content_excerpt_view_more()}.
@@ -3763,484 +4705,5 @@ if ( function_exists( 'bboss_bbp_get_forum_content_excerpt_view_more' ) && ! fun
 		return bboss_bbp_get_forum_content_excerpt_view_more( $forum_id, $length, $forum_link );
 	}
 }
-if ( function_exists( 'bboss_bbp_get_forum_freshness_link' ) && ! function_exists( 'bbp_get_forum_freshness_link' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_forum_freshness_link()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_forum_freshness_link() instead.
-	 */
-	function bbp_get_forum_freshness_link( $forum_id = 0 ) {
-		return bboss_bbp_get_forum_freshness_link( $forum_id );
-	}
-}
-if ( function_exists( 'bboss_bbp_get_forum_id' ) && ! function_exists( 'bbp_get_forum_id' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_forum_id()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_forum_id() instead.
-	 */
-	function bbp_get_forum_id( $forum_id = 0 ) {
-		return bboss_bbp_get_forum_id( $forum_id );
-	}
-}
-if ( function_exists( 'bboss_bbp_get_forum_index_pagination_count' ) && ! function_exists( 'bbp_get_forum_index_pagination_count' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_forum_index_pagination_count()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_forum_index_pagination_count() instead.
-	 */
-	function bbp_get_forum_index_pagination_count() {
-		return bboss_bbp_get_forum_index_pagination_count();
-	}
-}
-if ( function_exists( 'bboss_bbp_get_forum_index_pagination_links' ) && ! function_exists( 'bbp_get_forum_index_pagination_links' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_forum_index_pagination_links()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_forum_index_pagination_links() instead.
-	 */
-	function bbp_get_forum_index_pagination_links() {
-		return bboss_bbp_get_forum_index_pagination_links();
-	}
-}
-if ( function_exists( 'bboss_bbp_get_forum_last_active_id' ) && ! function_exists( 'bbp_get_forum_last_active_id' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_forum_last_active_id()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_forum_last_active_id() instead.
-	 */
-	function bbp_get_forum_last_active_id( $forum_id = 0 ) {
-		return bboss_bbp_get_forum_last_active_id( $forum_id );
-	}
-}
-if ( function_exists( 'bboss_bbp_get_forum_last_active_time' ) && ! function_exists( 'bbp_get_forum_last_active_time' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_forum_last_active_time()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_forum_last_active_time() instead.
-	 */
-	function bbp_get_forum_last_active_time( $forum_id = 0 ) {
-		return bboss_bbp_get_forum_last_active_time( $forum_id );
-	}
-}
-if ( function_exists( 'bboss_bbp_get_forum_last_reply_author_id' ) && ! function_exists( 'bbp_get_forum_last_reply_author_id' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_forum_last_reply_author_id()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_forum_last_reply_author_id() instead.
-	 */
-	function bbp_get_forum_last_reply_author_id( $forum_id = 0 ) {
-		return bboss_bbp_get_forum_last_reply_author_id( $forum_id );
-	}
-}
-if ( function_exists( 'bboss_bbp_get_forum_last_reply_author_link' ) && ! function_exists( 'bbp_get_forum_last_reply_author_link' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_forum_last_reply_author_link()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_forum_last_reply_author_link() instead.
-	 */
-	function bbp_get_forum_last_reply_author_link( $forum_id = 0 ) {
-		return bboss_bbp_get_forum_last_reply_author_link( $forum_id );
-	}
-}
-if ( function_exists( 'bboss_bbp_get_forum_last_reply_id' ) && ! function_exists( 'bbp_get_forum_last_reply_id' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_forum_last_reply_id()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_forum_last_reply_id() instead.
-	 */
-	function bbp_get_forum_last_reply_id( $forum_id = 0 ) {
-		return bboss_bbp_get_forum_last_reply_id( $forum_id );
-	}
-}
-if ( function_exists( 'bboss_bbp_get_forum_last_reply_permalink' ) && ! function_exists( 'bbp_get_forum_last_reply_permalink' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_forum_last_reply_permalink()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_forum_last_reply_permalink() instead.
-	 */
-	function bbp_get_forum_last_reply_permalink( $forum_id = 0 ) {
-		return bboss_bbp_get_forum_last_reply_permalink( $forum_id );
-	}
-}
-if ( function_exists( 'bboss_bbp_get_forum_last_reply_title' ) && ! function_exists( 'bbp_get_forum_last_reply_title' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_forum_last_reply_title()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_forum_last_reply_title() instead.
-	 */
-	function bbp_get_forum_last_reply_title( $forum_id = 0 ) {
-		return bboss_bbp_get_forum_last_reply_title( $forum_id );
-	}
-}
-if ( function_exists( 'bboss_bbp_get_forum_last_reply_url' ) && ! function_exists( 'bbp_get_forum_last_reply_url' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_forum_last_reply_url()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_forum_last_reply_url() instead.
-	 */
-	function bbp_get_forum_last_reply_url( $forum_id = 0 ) {
-		return bboss_bbp_get_forum_last_reply_url( $forum_id );
-	}
-}
-if ( function_exists( 'bboss_bbp_get_forum_last_topic_author_id' ) && ! function_exists( 'bbp_get_forum_last_topic_author_id' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_forum_last_topic_author_id()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_forum_last_topic_author_id() instead.
-	 */
-	function bbp_get_forum_last_topic_author_id( $forum_id = 0 ) {
-		return bboss_bbp_get_forum_last_topic_author_id( $forum_id );
-	}
-}
-if ( function_exists( 'bboss_bbp_get_forum_last_topic_author_link' ) && ! function_exists( 'bbp_get_forum_last_topic_author_link' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_forum_last_topic_author_link()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_forum_last_topic_author_link() instead.
-	 */
-	function bbp_get_forum_last_topic_author_link( $forum_id = 0 ) {
-		return bboss_bbp_get_forum_last_topic_author_link( $forum_id );
-	}
-}
-if ( function_exists( 'bboss_bbp_get_forum_last_topic_id' ) && ! function_exists( 'bbp_get_forum_last_topic_id' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_forum_last_topic_id()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_forum_last_topic_id() instead.
-	 */
-	function bbp_get_forum_last_topic_id( $forum_id = 0 ) {
-		return bboss_bbp_get_forum_last_topic_id( $forum_id );
-	}
-}
-if ( function_exists( 'bboss_bbp_get_forum_last_topic_permalink' ) && ! function_exists( 'bbp_get_forum_last_topic_permalink' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_forum_last_topic_permalink()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_forum_last_topic_permalink() instead.
-	 */
-	function bbp_get_forum_last_topic_permalink( $forum_id = 0 ) {
-		return bboss_bbp_get_forum_last_topic_permalink( $forum_id );
-	}
-}
-if ( function_exists( 'bboss_bbp_get_forum_last_topic_title' ) && ! function_exists( 'bbp_get_forum_last_topic_title' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_forum_last_topic_title()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_forum_last_topic_title() instead.
-	 */
-	function bbp_get_forum_last_topic_title( $forum_id = 0 ) {
-		return bboss_bbp_get_forum_last_topic_title( $forum_id );
-	}
-}
-if ( function_exists( 'bboss_bbp_get_forum_parent_id' ) && ! function_exists( 'bbp_get_forum_parent_id' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_forum_parent_id()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_forum_parent_id() instead.
-	 */
-	function bbp_get_forum_parent_id( $forum_id = 0 ) {
-		return bboss_bbp_get_forum_parent_id( $forum_id );
-	}
-}
-if ( function_exists( 'bboss_bbp_get_forum_permalink' ) && ! function_exists( 'bbp_get_forum_permalink' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_forum_permalink()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_forum_permalink() instead.
-	 */
-	function bbp_get_forum_permalink( $forum_id = 0, $redirect_to = '' ) {
-		return bboss_bbp_get_forum_permalink( $forum_id, $redirect_to );
-	}
-}
-if ( function_exists( 'bboss_bbp_get_forum_post_count' ) && ! function_exists( 'bbp_get_forum_post_count' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_forum_post_count()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_forum_post_count() instead.
-	 */
-	function bbp_get_forum_post_count( $forum_id = 0, $total_count = true, $integer = false ) {
-		return bboss_bbp_get_forum_post_count( $forum_id, $total_count, $integer );
-	}
-}
-if ( function_exists( 'bboss_bbp_get_forum_post_type' ) && ! function_exists( 'bbp_get_forum_post_type' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_forum_post_type()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_forum_post_type() instead.
-	 */
-	function bbp_get_forum_post_type() {
-		return bboss_bbp_get_forum_post_type();
-	}
-}
-if ( function_exists( 'bboss_bbp_get_forum_post_type_labels' ) && ! function_exists( 'bbp_get_forum_post_type_labels' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_forum_post_type_labels()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_forum_post_type_labels() instead.
-	 */
-	function bbp_get_forum_post_type_labels() {
-		return bboss_bbp_get_forum_post_type_labels();
-	}
-}
-if ( function_exists( 'bboss_bbp_get_forum_post_type_rewrite' ) && ! function_exists( 'bbp_get_forum_post_type_rewrite' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_forum_post_type_rewrite()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_forum_post_type_rewrite() instead.
-	 */
-	function bbp_get_forum_post_type_rewrite() {
-		return bboss_bbp_get_forum_post_type_rewrite();
-	}
-}
-if ( function_exists( 'bboss_bbp_get_forum_post_type_supports' ) && ! function_exists( 'bbp_get_forum_post_type_supports' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_forum_post_type_supports()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_forum_post_type_supports() instead.
-	 */
-	function bbp_get_forum_post_type_supports() {
-		return bboss_bbp_get_forum_post_type_supports();
-	}
-}
-if ( function_exists( 'bboss_bbp_get_forum_replies_feed_link' ) && ! function_exists( 'bbp_get_forum_replies_feed_link' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_forum_replies_feed_link()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_forum_replies_feed_link() instead.
-	 */
-	function bbp_get_forum_replies_feed_link( $forum_id = 0 ) {
-		return bboss_bbp_get_forum_replies_feed_link( $forum_id );
-	}
-}
-if ( function_exists( 'bboss_bbp_get_forum_reply_count' ) && ! function_exists( 'bbp_get_forum_reply_count' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_forum_reply_count()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_forum_reply_count() instead.
-	 */
-	function bbp_get_forum_reply_count( $forum_id = 0, $total_count = true, $integer = false ) {
-		return bboss_bbp_get_forum_reply_count( $forum_id, $total_count, $integer );
-	}
-}
-if ( function_exists( 'bboss_bbp_get_forum_report_link' ) && ! function_exists( 'bbp_get_forum_report_link' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_forum_report_link()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_forum_report_link() instead.
-	 */
-	function bbp_get_forum_report_link( $args = array() ) {
-		return bboss_bbp_get_forum_report_link( $args );
-	}
-}
-if ( function_exists( 'bboss_bbp_get_forum_status' ) && ! function_exists( 'bbp_get_forum_status' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_forum_status()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_forum_status() instead.
-	 */
-	function bbp_get_forum_status( $forum_id = 0 ) {
-		return bboss_bbp_get_forum_status( $forum_id );
-	}
-}
-if ( function_exists( 'bboss_bbp_get_forum_subforum_count' ) && ! function_exists( 'bbp_get_forum_subforum_count' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_forum_subforum_count()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_forum_subforum_count() instead.
-	 */
-	function bbp_get_forum_subforum_count( $forum_id = 0, $integer = false ) {
-		return bboss_bbp_get_forum_subforum_count( $forum_id, $integer );
-	}
-}
-if ( function_exists( 'bboss_bbp_get_forum_subscription_link' ) && ! function_exists( 'bbp_get_forum_subscription_link' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_forum_subscription_link()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_forum_subscription_link() instead.
-	 */
-	function bbp_get_forum_subscription_link( $args = array() ) {
-		return bboss_bbp_get_forum_subscription_link( $args );
-	}
-}
-if ( function_exists( 'bboss_bbp_get_forum_title' ) && ! function_exists( 'bbp_get_forum_title' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_forum_title()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_forum_title() instead.
-	 */
-	function bbp_get_forum_title( $forum_id = 0 ) {
-		return bboss_bbp_get_forum_title( $forum_id );
-	}
-}
-if ( function_exists( 'bboss_bbp_get_forum_topic_count' ) && ! function_exists( 'bbp_get_forum_topic_count' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_forum_topic_count()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_forum_topic_count() instead.
-	 */
-	function bbp_get_forum_topic_count( $forum_id = 0, $total_count = true, $integer = false ) {
-		return bboss_bbp_get_forum_topic_count( $forum_id, $total_count, $integer );
-	}
-}
-if ( function_exists( 'bboss_bbp_get_forum_topic_count_hidden' ) && ! function_exists( 'bbp_get_forum_topic_count_hidden' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_forum_topic_count_hidden()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_forum_topic_count_hidden() instead.
-	 */
-	function bbp_get_forum_topic_count_hidden( $forum_id = 0, $integer = false ) {
-		return bboss_bbp_get_forum_topic_count_hidden( $forum_id, $integer );
-	}
-}
-if ( function_exists( 'bboss_bbp_get_forum_topics_feed_link' ) && ! function_exists( 'bbp_get_forum_topics_feed_link' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_forum_topics_feed_link()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_forum_topics_feed_link() instead.
-	 */
-	function bbp_get_forum_topics_feed_link( $forum_id = 0 ) {
-		return bboss_bbp_get_forum_topics_feed_link( $forum_id );
-	}
-}
-if ( function_exists( 'bboss_bbp_get_forum_topics_link' ) && ! function_exists( 'bbp_get_forum_topics_link' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_forum_topics_link()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_forum_topics_link() instead.
-	 */
-	function bbp_get_forum_topics_link( $forum_id = 0 ) {
-		return bboss_bbp_get_forum_topics_link( $forum_id );
-	}
-}
-if ( function_exists( 'bboss_bbp_get_forum_type' ) && ! function_exists( 'bbp_get_forum_type' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_forum_type()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_forum_type() instead.
-	 */
-	function bbp_get_forum_type( $forum_id = 0 ) {
-		return bboss_bbp_get_forum_type( $forum_id );
-	}
-}
-if ( function_exists( 'bboss_bbp_get_forum_visibility' ) && ! function_exists( 'bbp_get_forum_visibility' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_forum_visibility()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_forum_visibility() instead.
-	 */
-	function bbp_get_forum_visibility( $forum_id = 0 ) {
-		return bboss_bbp_get_forum_visibility( $forum_id );
-	}
-}
-if ( function_exists( 'bboss_bbp_has_forums' ) && ! function_exists( 'bbp_has_forums' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_has_forums()}.
-	 *
-	 * @deprecated Use bboss_bbp_has_forums() instead.
-	 */
-	function bbp_has_forums( $args = '' ) {
-		return bboss_bbp_has_forums( $args );
-	}
-}
-if ( function_exists( 'bboss_bbp_is_forum_category' ) && ! function_exists( 'bbp_is_forum_category' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_is_forum_category()}.
-	 *
-	 * @deprecated Use bboss_bbp_is_forum_category() instead.
-	 */
-	function bbp_is_forum_category( $forum_id = 0 ) {
-		return bboss_bbp_is_forum_category( $forum_id );
-	}
-}
-if ( function_exists( 'bboss_bbp_is_forum_closed' ) && ! function_exists( 'bbp_is_forum_closed' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_is_forum_closed()}.
-	 *
-	 * @deprecated Use bboss_bbp_is_forum_closed() instead.
-	 */
-	function bbp_is_forum_closed( $forum_id = 0, $check_ancestors = true ) {
-		return bboss_bbp_is_forum_closed( $forum_id, $check_ancestors );
-	}
-}
-if ( function_exists( 'bboss_bbp_is_forum_hidden' ) && ! function_exists( 'bbp_is_forum_hidden' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_is_forum_hidden()}.
-	 *
-	 * @deprecated Use bboss_bbp_is_forum_hidden() instead.
-	 */
-	function bbp_is_forum_hidden( $forum_id = 0, $check_ancestors = true ) {
-		return bboss_bbp_is_forum_hidden( $forum_id, $check_ancestors );
-	}
-}
-if ( function_exists( 'bboss_bbp_is_forum_open' ) && ! function_exists( 'bbp_is_forum_open' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_is_forum_open()}.
-	 *
-	 * @deprecated Use bboss_bbp_is_forum_open() instead.
-	 */
-	function bbp_is_forum_open( $forum_id = 0 ) {
-		return bboss_bbp_is_forum_open( $forum_id );
-	}
-}
-if ( function_exists( 'bboss_bbp_is_forum_private' ) && ! function_exists( 'bbp_is_forum_private' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_is_forum_private()}.
-	 *
-	 * @deprecated Use bboss_bbp_is_forum_private() instead.
-	 */
-	function bbp_is_forum_private( $forum_id = 0, $check_ancestors = true ) {
-		return bboss_bbp_is_forum_private( $forum_id, $check_ancestors );
-	}
-}
-if ( function_exists( 'bboss_bbp_is_forum_public' ) && ! function_exists( 'bbp_is_forum_public' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_is_forum_public()}.
-	 *
-	 * @deprecated Use bboss_bbp_is_forum_public() instead.
-	 */
-	function bbp_is_forum_public( $forum_id = 0, $check_ancestors = true ) {
-		return bboss_bbp_is_forum_public( $forum_id, $check_ancestors );
-	}
-}
-if ( function_exists( 'bboss_bbp_list_forums' ) && ! function_exists( 'bbp_list_forums' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_list_forums()}.
-	 *
-	 * @deprecated Use bboss_bbp_list_forums() instead.
-	 */
-	function bbp_list_forums( $args = '' ) {
-		return bboss_bbp_list_forums( $args );
-	}
-}
-if ( function_exists( 'bboss_bbp_suppress_private_author_link' ) && ! function_exists( 'bbp_suppress_private_author_link' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_suppress_private_author_link()}.
-	 *
-	 * @deprecated Use bboss_bbp_suppress_private_author_link() instead.
-	 */
-	function bbp_suppress_private_author_link( $author_link, $args ) {
-		return bboss_bbp_suppress_private_author_link( $author_link, $args );
-	}
-}
-if ( function_exists( 'bboss_bbp_suppress_private_forum_meta' ) && ! function_exists( 'bbp_suppress_private_forum_meta' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_suppress_private_forum_meta()}.
-	 *
-	 * @deprecated Use bboss_bbp_suppress_private_forum_meta() instead.
-	 */
-	function bbp_suppress_private_forum_meta( $retval, $forum_id ) {
-		return bboss_bbp_suppress_private_forum_meta( $retval, $forum_id );
-	}
-}
-if ( function_exists( 'bboss_bbp_the_forum' ) && ! function_exists( 'bbp_the_forum' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_the_forum()}.
-	 *
-	 * @deprecated Use bboss_bbp_the_forum() instead.
-	 */
-	function bbp_the_forum() {
-		return bboss_bbp_the_forum();
-	}
-}
 // @bbwt-com-end compat-layer
+

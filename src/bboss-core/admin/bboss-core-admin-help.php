@@ -39,6 +39,20 @@ function bboss_core_admin_help_main_page() {
 	</div>
 	<?php
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_core_admin_help_main_page' ) && ! function_exists( 'bp_core_admin_help_main_page' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_admin_help_main_page()}.
+	 *
+	 * @deprecated Use bboss_core_admin_help_main_page() instead.
+	 */
+	function bp_core_admin_help_main_page() {
+		return bboss_core_admin_help_main_page();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Render the BuddyBoss Help page.
@@ -66,19 +80,8 @@ function bboss_core_admin_help() {
 	</div>
 	<?php
 }
-
-/**
- * Get the article value from GLOBAL variable
- *
- * @return string
- */
-function bboss_core_admin_help_get_article_value() {
-	return isset( $_REQUEST['article'] ) ? $_REQUEST['article'] : '';
-}
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_core_admin_help' ) && ! function_exists( 'bp_core_admin_help' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_core_admin_help()}.
@@ -89,6 +92,19 @@ if ( function_exists( 'bboss_core_admin_help' ) && ! function_exists( 'bp_core_a
 		return bboss_core_admin_help();
 	}
 }
+// @bbwt-com-end compat-layer
+
+
+/**
+ * Get the article value from GLOBAL variable
+ *
+ * @return string
+ */
+function bboss_core_admin_help_get_article_value() {
+	return isset( $_REQUEST['article'] ) ? $_REQUEST['article'] : '';
+}
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_core_admin_help_get_article_value' ) && ! function_exists( 'bp_core_admin_help_get_article_value' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_core_admin_help_get_article_value()}.
@@ -99,14 +115,5 @@ if ( function_exists( 'bboss_core_admin_help_get_article_value' ) && ! function_
 		return bboss_core_admin_help_get_article_value();
 	}
 }
-if ( function_exists( 'bboss_core_admin_help_main_page' ) && ! function_exists( 'bp_core_admin_help_main_page' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_core_admin_help_main_page()}.
-	 *
-	 * @deprecated Use bboss_core_admin_help_main_page() instead.
-	 */
-	function bp_core_admin_help_main_page() {
-		return bboss_core_admin_help_main_page();
-	}
-}
 // @bbwt-com-end compat-layer
+

@@ -48,6 +48,20 @@ function bboss_get_current_blog_roles() {
 	 */
 	return apply_filters( 'bp_get_current_blog_roles', $roles, $wp_roles );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_current_blog_roles' ) && ! function_exists( 'bp_get_current_blog_roles' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_current_blog_roles()}.
+	 *
+	 * @deprecated Use bboss_get_current_blog_roles() instead.
+	 */
+	function bp_get_current_blog_roles() {
+		return bboss_get_current_blog_roles();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Add capabilities to WordPress user roles.
@@ -80,6 +94,20 @@ function bboss_add_caps() {
 	 */
 	do_action( 'bp_add_caps' );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_add_caps' ) && ! function_exists( 'bp_add_caps' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_add_caps()}.
+	 *
+	 * @deprecated Use bboss_add_caps() instead.
+	 */
+	function bp_add_caps() {
+		return bboss_add_caps();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Remove capabilities from WordPress user roles.
@@ -112,6 +140,20 @@ function bboss_remove_caps() {
 	 */
 	do_action( 'bp_remove_caps' );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_remove_caps' ) && ! function_exists( 'bp_remove_caps' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_remove_caps()}.
+	 *
+	 * @deprecated Use bboss_remove_caps() instead.
+	 */
+	function bp_remove_caps() {
+		return bboss_remove_caps();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Map community caps to built in WordPress caps.
@@ -142,6 +184,20 @@ function bboss_map_meta_caps( $caps, $cap, $user_id, $args ) {
 	 */
 	return apply_filters( 'bp_map_meta_caps', $caps, $cap, $user_id, $args );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_map_meta_caps' ) && ! function_exists( 'bp_map_meta_caps' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_map_meta_caps()}.
+	 *
+	 * @deprecated Use bboss_map_meta_caps() instead.
+	 */
+	function bp_map_meta_caps( $caps, $cap, $user_id, $args ) {
+		return bboss_map_meta_caps( $caps, $cap, $user_id, $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return community capabilities.
@@ -164,6 +220,20 @@ function bboss_get_community_caps() {
 	 */
 	return apply_filters( 'bp_get_community_caps', $caps );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_community_caps' ) && ! function_exists( 'bp_get_community_caps' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_community_caps()}.
+	 *
+	 * @deprecated Use bboss_get_community_caps() instead.
+	 */
+	function bp_get_community_caps() {
+		return bboss_get_community_caps();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return an array of capabilities based on the role that is being requested.
@@ -207,6 +277,20 @@ function bboss_get_caps_for_role( $role = '' ) {
 	 */
 	return apply_filters( 'bp_get_caps_for_role', $caps, $role );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_caps_for_role' ) && ! function_exists( 'bp_get_caps_for_role' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_caps_for_role()}.
+	 *
+	 * @deprecated Use bboss_get_caps_for_role() instead.
+	 */
+	function bp_get_caps_for_role( $role = '' ) {
+		return bboss_get_caps_for_role( $role );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Set a default role for the current user.
@@ -236,6 +320,20 @@ function bboss_set_current_user_default_role() {
 	// Set the current users default role.
 	bboss()->current_user->set_role( bboss_get_option( 'default_role', 'subscriber' ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_set_current_user_default_role' ) && ! function_exists( 'bp_set_current_user_default_role' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_set_current_user_default_role()}.
+	 *
+	 * @deprecated Use bboss_set_current_user_default_role() instead.
+	 */
+	function bp_set_current_user_default_role() {
+		return bboss_set_current_user_default_role();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Check whether the current user has a given capability.
@@ -295,6 +393,20 @@ function bboss_current_user_can( $capability, $args = array() ) {
 	 */
 	return (bool) apply_filters( 'bp_current_user_can', $retval, $capability, $args['site_id'], $args );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_current_user_can' ) && ! function_exists( 'bp_current_user_can' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_current_user_can()}.
+	 *
+	 * @deprecated Use bboss_current_user_can() instead.
+	 */
+	function bp_current_user_can( $capability, $args = array() ) {
+		return bboss_current_user_can( $capability, $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Check whether the specified user has a given capability on a given site.
@@ -342,6 +454,20 @@ function bboss_user_can( $user_id, $capability, $args = array() ) {
 
 	return $retval;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_user_can' ) && ! function_exists( 'bp_user_can' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_user_can()}.
+	 *
+	 * @deprecated Use bboss_user_can() instead.
+	 */
+	function bp_user_can( $user_id, $capability, $args = array() ) {
+		return bboss_user_can( $user_id, $capability, $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Temporary implementation of 'bp_moderate' cap.
@@ -393,6 +519,20 @@ function bboss__bp_enforce_bp_moderate_cap_for_admins( $caps = array(), $cap = '
 	// Only users that can 'manage_options' on this site can 'bp_moderate'.
 	return array( 'manage_options' );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss__bp_enforce_bp_moderate_cap_for_admins' ) && ! function_exists( '_bp_enforce_bp_moderate_cap_for_admins' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss__bp_enforce_bp_moderate_cap_for_admins()}.
+	 *
+	 * @deprecated Use bboss__bp_enforce_bp_moderate_cap_for_admins() instead.
+	 */
+	function _bp_enforce_bp_moderate_cap_for_admins( $caps = array(), $cap = '', $user_id = 0, $args = array() ) {
+		return bboss__bp_enforce_bp_moderate_cap_for_admins( $caps, $cap, $user_id, $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_filter( 'map_meta_cap', '_bp_enforce_bp_moderate_cap_for_admins', 10, 4 );
 
 /** Deprecated ****************************************************************/
@@ -408,6 +548,20 @@ add_filter( 'map_meta_cap', '_bp_enforce_bp_moderate_cap_for_admins', 10, 4 );
 function bboss_add_roles() {
 	_doing_it_wrong( 'bboss_add_roles', esc_html__( 'Special community roles no longer exist. Use mapped capabilities instead', 'buddyboss' ), '1.7' );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_add_roles' ) && ! function_exists( 'bp_add_roles' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_add_roles()}.
+	 *
+	 * @deprecated Use bboss_add_roles() instead.
+	 */
+	function bp_add_roles() {
+		return bboss_add_roles();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Removes BuddyPress-specific user roles.
@@ -420,6 +574,20 @@ function bboss_add_roles() {
 function bboss_remove_roles() {
 	_doing_it_wrong( 'bboss_remove_roles', esc_html__( 'Special community roles no longer exist. Use mapped capabilities instead', 'buddyboss' ), '1.7' );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_remove_roles' ) && ! function_exists( 'bp_remove_roles' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_remove_roles()}.
+	 *
+	 * @deprecated Use bboss_remove_roles() instead.
+	 */
+	function bp_remove_roles() {
+		return bboss_remove_roles();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 
 /**
@@ -434,100 +602,8 @@ function bboss_remove_roles() {
 function bboss_get_participant_role() {
 	_doing_it_wrong( 'bboss_get_participant_role', esc_html__( 'Special community roles no longer exist. Use mapped capabilities instead', 'buddyboss' ), '1.7' );
 }
-
-/**
- * The moderator role for BuddyPress users.
- *
- * @since BuddyPress 1.6.0
- * @deprecated 1.7.0
- */
-function bboss_get_moderator_role() {
-	_doing_it_wrong( 'bboss_get_moderator_role', esc_html__( 'Special community roles no longer exist. Use mapped capabilities instead', 'buddyboss' ), '1.7' );
-}
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
-if ( function_exists( 'bboss__bp_enforce_bp_moderate_cap_for_admins' ) && ! function_exists( '_bp_enforce_bp_moderate_cap_for_admins' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss__bp_enforce_bp_moderate_cap_for_admins()}.
-	 *
-	 * @deprecated Use bboss__bp_enforce_bp_moderate_cap_for_admins() instead.
-	 */
-	function _bp_enforce_bp_moderate_cap_for_admins( $caps = array(), $cap = '', $user_id = 0, $args = array() ) {
-		return bboss__bp_enforce_bp_moderate_cap_for_admins( $caps, $cap, $user_id, $args );
-	}
-}
-if ( function_exists( 'bboss_add_caps' ) && ! function_exists( 'bp_add_caps' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_add_caps()}.
-	 *
-	 * @deprecated Use bboss_add_caps() instead.
-	 */
-	function bp_add_caps() {
-		return bboss_add_caps();
-	}
-}
-if ( function_exists( 'bboss_add_roles' ) && ! function_exists( 'bp_add_roles' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_add_roles()}.
-	 *
-	 * @deprecated Use bboss_add_roles() instead.
-	 */
-	function bp_add_roles() {
-		return bboss_add_roles();
-	}
-}
-if ( function_exists( 'bboss_current_user_can' ) && ! function_exists( 'bp_current_user_can' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_current_user_can()}.
-	 *
-	 * @deprecated Use bboss_current_user_can() instead.
-	 */
-	function bp_current_user_can( $capability, $args = array() ) {
-		return bboss_current_user_can( $capability, $args );
-	}
-}
-if ( function_exists( 'bboss_get_caps_for_role' ) && ! function_exists( 'bp_get_caps_for_role' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_caps_for_role()}.
-	 *
-	 * @deprecated Use bboss_get_caps_for_role() instead.
-	 */
-	function bp_get_caps_for_role( $role = '' ) {
-		return bboss_get_caps_for_role( $role );
-	}
-}
-if ( function_exists( 'bboss_get_community_caps' ) && ! function_exists( 'bp_get_community_caps' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_community_caps()}.
-	 *
-	 * @deprecated Use bboss_get_community_caps() instead.
-	 */
-	function bp_get_community_caps() {
-		return bboss_get_community_caps();
-	}
-}
-if ( function_exists( 'bboss_get_current_blog_roles' ) && ! function_exists( 'bp_get_current_blog_roles' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_current_blog_roles()}.
-	 *
-	 * @deprecated Use bboss_get_current_blog_roles() instead.
-	 */
-	function bp_get_current_blog_roles() {
-		return bboss_get_current_blog_roles();
-	}
-}
-if ( function_exists( 'bboss_get_moderator_role' ) && ! function_exists( 'bp_get_moderator_role' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_moderator_role()}.
-	 *
-	 * @deprecated Use bboss_get_moderator_role() instead.
-	 */
-	function bp_get_moderator_role() {
-		return bboss_get_moderator_role();
-	}
-}
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_get_participant_role' ) && ! function_exists( 'bp_get_participant_role' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_get_participant_role()}.
@@ -538,54 +614,29 @@ if ( function_exists( 'bboss_get_participant_role' ) && ! function_exists( 'bp_g
 		return bboss_get_participant_role();
 	}
 }
-if ( function_exists( 'bboss_map_meta_caps' ) && ! function_exists( 'bp_map_meta_caps' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_map_meta_caps()}.
-	 *
-	 * @deprecated Use bboss_map_meta_caps() instead.
-	 */
-	function bp_map_meta_caps( $caps, $cap, $user_id, $args ) {
-		return bboss_map_meta_caps( $caps, $cap, $user_id, $args );
-	}
+// @bbwt-com-end compat-layer
+
+
+/**
+ * The moderator role for BuddyPress users.
+ *
+ * @since BuddyPress 1.6.0
+ * @deprecated 1.7.0
+ */
+function bboss_get_moderator_role() {
+	_doing_it_wrong( 'bboss_get_moderator_role', esc_html__( 'Special community roles no longer exist. Use mapped capabilities instead', 'buddyboss' ), '1.7' );
 }
-if ( function_exists( 'bboss_remove_caps' ) && ! function_exists( 'bp_remove_caps' ) ) {
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_moderator_role' ) && ! function_exists( 'bp_get_moderator_role' ) ) {
 	/**
-	 * Backward-compatible alias of {@see bboss_remove_caps()}.
+	 * Backward-compatible alias of {@see bboss_get_moderator_role()}.
 	 *
-	 * @deprecated Use bboss_remove_caps() instead.
+	 * @deprecated Use bboss_get_moderator_role() instead.
 	 */
-	function bp_remove_caps() {
-		return bboss_remove_caps();
-	}
-}
-if ( function_exists( 'bboss_remove_roles' ) && ! function_exists( 'bp_remove_roles' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_remove_roles()}.
-	 *
-	 * @deprecated Use bboss_remove_roles() instead.
-	 */
-	function bp_remove_roles() {
-		return bboss_remove_roles();
-	}
-}
-if ( function_exists( 'bboss_set_current_user_default_role' ) && ! function_exists( 'bp_set_current_user_default_role' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_set_current_user_default_role()}.
-	 *
-	 * @deprecated Use bboss_set_current_user_default_role() instead.
-	 */
-	function bp_set_current_user_default_role() {
-		return bboss_set_current_user_default_role();
-	}
-}
-if ( function_exists( 'bboss_user_can' ) && ! function_exists( 'bp_user_can' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_user_can()}.
-	 *
-	 * @deprecated Use bboss_user_can() instead.
-	 */
-	function bp_user_can( $user_id, $capability, $args = array() ) {
-		return bboss_user_can( $user_id, $capability, $args );
+	function bp_get_moderator_role() {
+		return bboss_get_moderator_role();
 	}
 }
 // @bbwt-com-end compat-layer
+

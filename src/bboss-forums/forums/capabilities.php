@@ -33,6 +33,20 @@ function bboss_bbp_get_forum_caps() {
 		)
 	);
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_forum_caps' ) && ! function_exists( 'bbp_get_forum_caps' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_forum_caps()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_forum_caps() instead.
+	 */
+	function bbp_get_forum_caps() {
+		return bboss_bbp_get_forum_caps();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Maps forum capabilities
@@ -185,20 +199,8 @@ function bboss_bbp_map_forum_meta_caps( $caps = array(), $cap = '', $user_id = 0
 
 	return apply_filters( 'bbp_map_forum_meta_caps', $caps, $cap, $user_id, $args );
 }
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
-if ( function_exists( 'bboss_bbp_get_forum_caps' ) && ! function_exists( 'bbp_get_forum_caps' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_forum_caps()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_forum_caps() instead.
-	 */
-	function bbp_get_forum_caps() {
-		return bboss_bbp_get_forum_caps();
-	}
-}
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_bbp_map_forum_meta_caps' ) && ! function_exists( 'bbp_map_forum_meta_caps' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_bbp_map_forum_meta_caps()}.
@@ -210,3 +212,4 @@ if ( function_exists( 'bboss_bbp_map_forum_meta_caps' ) && ! function_exists( 'b
 	}
 }
 // @bbwt-com-end compat-layer
+

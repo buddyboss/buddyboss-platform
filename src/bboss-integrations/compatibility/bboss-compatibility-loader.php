@@ -50,21 +50,8 @@ function bboss_core_compatibility_do_settings_sections( $page ) {
 		}
 	}
 }
-
-/**
- * Set up the bp compatibility integration.
- *
- * @since BuddyBoss 1.1.5
- */
-function bboss_register_compatibility_integration() {
-	require_once dirname( __FILE__ ) . '/bboss-compatibility-integration.php';
-	bboss()->integrations['compatibility'] = new BBoss_Compatibility_Integration();
-}
-add_action( 'bp_setup_integrations', 'bp_register_compatibility_integration' );
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_core_compatibility_do_settings_sections' ) && ! function_exists( 'bp_core_compatibility_do_settings_sections' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_core_compatibility_do_settings_sections()}.
@@ -75,6 +62,20 @@ if ( function_exists( 'bboss_core_compatibility_do_settings_sections' ) && ! fun
 		return bboss_core_compatibility_do_settings_sections( $page );
 	}
 }
+// @bbwt-com-end compat-layer
+
+
+/**
+ * Set up the bp compatibility integration.
+ *
+ * @since BuddyBoss 1.1.5
+ */
+function bboss_register_compatibility_integration() {
+	require_once dirname( __FILE__ ) . '/bboss-compatibility-integration.php';
+	bboss()->integrations['compatibility'] = new BBoss_Compatibility_Integration();
+}
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_register_compatibility_integration' ) && ! function_exists( 'bp_register_compatibility_integration' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_register_compatibility_integration()}.
@@ -86,3 +87,5 @@ if ( function_exists( 'bboss_register_compatibility_integration' ) && ! function
 	}
 }
 // @bbwt-com-end compat-layer
+
+add_action( 'bp_setup_integrations', 'bp_register_compatibility_integration' );

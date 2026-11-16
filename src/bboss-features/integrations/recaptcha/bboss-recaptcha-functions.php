@@ -19,6 +19,20 @@ defined( 'ABSPATH' ) || exit;
 function bboss_recaptcha_integration_url( $path = '' ) {
 	return trailingslashit( bboss()->plugin_url ) . 'bboss-features/integrations/recaptcha/' . trim( $path, '/\\' );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_recaptcha_integration_url' ) && ! function_exists( 'bb_recaptcha_integration_url' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_recaptcha_integration_url()}.
+	 *
+	 * @deprecated Use bboss_recaptcha_integration_url() instead.
+	 */
+	function bb_recaptcha_integration_url( $path = '' ) {
+		return bboss_recaptcha_integration_url( $path );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Retrieves the reCAPTCHA options.
@@ -38,6 +52,20 @@ function bboss_recaptcha_options() {
 	 */
 	return apply_filters( 'bb_recaptcha_options', bboss_get_option( 'bb_recaptcha', array() ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_recaptcha_options' ) && ! function_exists( 'bb_recaptcha_options' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_recaptcha_options()}.
+	 *
+	 * @deprecated Use bboss_recaptcha_options() instead.
+	 */
+	function bb_recaptcha_options() {
+		return bboss_recaptcha_options();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Retrieves the value of a specific reCAPTCHA setting.
@@ -68,6 +96,20 @@ function bboss_recaptcha_setting( $key, $default = '' ) {
 	 */
 	return apply_filters( 'bb_recaptcha_setting', $retval, $key, $default );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_recaptcha_setting' ) && ! function_exists( 'bb_recaptcha_setting' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_recaptcha_setting()}.
+	 *
+	 * @deprecated Use bboss_recaptcha_setting() instead.
+	 */
+	function bb_recaptcha_setting( $key, $default = '' ) {
+		return bboss_recaptcha_setting( $key, $default );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Retrieves the selected reCAPTCHA version.
@@ -88,6 +130,20 @@ function bboss_recaptcha_recaptcha_versions() {
 	 */
 	return apply_filters( 'bb_recaptcha_recaptcha_versions', $recaptcha_version );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_recaptcha_recaptcha_versions' ) && ! function_exists( 'bb_recaptcha_recaptcha_versions' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_recaptcha_recaptcha_versions()}.
+	 *
+	 * @deprecated Use bboss_recaptcha_recaptcha_versions() instead.
+	 */
+	function bb_recaptcha_recaptcha_versions() {
+		return bboss_recaptcha_recaptcha_versions();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Retrieves the selected reCAPTCHA v2 option.
@@ -108,6 +164,20 @@ function bboss_recaptcha_recaptcha_v2_option() {
 	 */
 	return apply_filters( 'bb_recaptcha_recaptcha_v2_option', $recaptcha_v2_option );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_recaptcha_recaptcha_v2_option' ) && ! function_exists( 'bb_recaptcha_recaptcha_v2_option' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_recaptcha_recaptcha_v2_option()}.
+	 *
+	 * @deprecated Use bboss_recaptcha_recaptcha_v2_option() instead.
+	 */
+	function bb_recaptcha_recaptcha_v2_option() {
+		return bboss_recaptcha_recaptcha_v2_option();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Retrieves the reCAPTCHA site key.
@@ -128,6 +198,20 @@ function bboss_recaptcha_site_key() {
 	 */
 	return apply_filters( 'bb_recaptcha_site_key', $site_key );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_recaptcha_site_key' ) && ! function_exists( 'bb_recaptcha_site_key' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_recaptcha_site_key()}.
+	 *
+	 * @deprecated Use bboss_recaptcha_site_key() instead.
+	 */
+	function bb_recaptcha_site_key() {
+		return bboss_recaptcha_site_key();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Retrieves the reCAPTCHA secret key.
@@ -148,6 +232,20 @@ function bboss_recaptcha_secret_key() {
 	 */
 	return apply_filters( 'bb_recaptcha_secret_key', $secret_key );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_recaptcha_secret_key' ) && ! function_exists( 'bb_recaptcha_secret_key' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_recaptcha_secret_key()}.
+	 *
+	 * @deprecated Use bboss_recaptcha_secret_key() instead.
+	 */
+	function bb_recaptcha_secret_key() {
+		return bboss_recaptcha_secret_key();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Retrieves the reCAPTCHA connection status.
@@ -168,6 +266,20 @@ function bboss_recaptcha_connection_status() {
 	 */
 	return apply_filters( 'bb_recaptcha_connection_status', $connection_status );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_recaptcha_connection_status' ) && ! function_exists( 'bb_recaptcha_connection_status' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_recaptcha_connection_status()}.
+	 *
+	 * @deprecated Use bboss_recaptcha_connection_status() instead.
+	 */
+	function bb_recaptcha_connection_status() {
+		return bboss_recaptcha_connection_status();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Retrieves the reCAPTCHA score threshold.
@@ -189,6 +301,20 @@ function bboss_recaptcha_score_threshold( $default = 0.5 ) {
 	 */
 	return apply_filters( 'bb_recaptcha_score_threshold', bboss_recaptcha_setting( 'score_threshold', $default ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_recaptcha_score_threshold' ) && ! function_exists( 'bb_recaptcha_score_threshold' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_recaptcha_score_threshold()}.
+	 *
+	 * @deprecated Use bboss_recaptcha_score_threshold() instead.
+	 */
+	function bb_recaptcha_score_threshold( $default = 0.5 ) {
+		return bboss_recaptcha_score_threshold( $default );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Retrieves the reCAPTCHA actions and their configurations.
@@ -230,6 +356,20 @@ function bboss_recaptcha_actions() {
 	 */
 	return apply_filters( 'bb_recaptcha_actions', $actions );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_recaptcha_actions' ) && ! function_exists( 'bb_recaptcha_actions' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_recaptcha_actions()}.
+	 *
+	 * @deprecated Use bboss_recaptcha_actions() instead.
+	 */
+	function bb_recaptcha_actions() {
+		return bboss_recaptcha_actions();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Determines if reCAPTCHA is enabled for a specific action.
@@ -254,6 +394,20 @@ function bboss_recaptcha_is_enabled( $key ) {
 	 */
 	return (bool) apply_filters( 'bb_recaptcha_is_enabled', $retval, $key );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_recaptcha_is_enabled' ) && ! function_exists( 'bb_recaptcha_is_enabled' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_recaptcha_is_enabled()}.
+	 *
+	 * @deprecated Use bboss_recaptcha_is_enabled() instead.
+	 */
+	function bb_recaptcha_is_enabled( $key ) {
+		return bboss_recaptcha_is_enabled( $key );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Retrieves the reCAPTCHA bypass option.
@@ -278,6 +432,20 @@ function bboss_recaptcha_allow_bypass_enable() {
 	 */
 	return (bool) apply_filters( 'bb_recaptcha_allow_bypass_enable', $allow_bypass );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_recaptcha_allow_bypass_enable' ) && ! function_exists( 'bb_recaptcha_allow_bypass_enable' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_recaptcha_allow_bypass_enable()}.
+	 *
+	 * @deprecated Use bboss_recaptcha_allow_bypass_enable() instead.
+	 */
+	function bb_recaptcha_allow_bypass_enable() {
+		return bboss_recaptcha_allow_bypass_enable();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Retrieves the list of supported reCAPTCHA languages.
@@ -370,6 +538,20 @@ function bboss_recaptcha_languages() {
 	 */
 	return apply_filters( 'bb_recaptcha_languages', $languages );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_recaptcha_languages' ) && ! function_exists( 'bb_recaptcha_languages' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_recaptcha_languages()}.
+	 *
+	 * @deprecated Use bboss_recaptcha_languages() instead.
+	 */
+	function bb_recaptcha_languages() {
+		return bboss_recaptcha_languages();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Retrieves the reCAPTCHA conflict mode.
@@ -390,6 +572,20 @@ function bboss_recaptcha_conflict_mode() {
 	 */
 	return (bool) apply_filters( 'bb_recaptcha_conflict_mode', $conflict_mode );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_recaptcha_conflict_mode' ) && ! function_exists( 'bb_recaptcha_conflict_mode' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_recaptcha_conflict_mode()}.
+	 *
+	 * @deprecated Use bboss_recaptcha_conflict_mode() instead.
+	 */
+	function bb_recaptcha_conflict_mode() {
+		return bboss_recaptcha_conflict_mode();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Determines whether the current login submission comes from a form that
@@ -428,6 +624,20 @@ function bboss_recaptcha_is_protected_login_request() {
 	 */
 	return (bool) apply_filters( 'bb_recaptcha_is_protected_login_request', false );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_recaptcha_is_protected_login_request' ) && ! function_exists( 'bb_recaptcha_is_protected_login_request' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_recaptcha_is_protected_login_request()}.
+	 *
+	 * @deprecated Use bboss_recaptcha_is_protected_login_request() instead.
+	 */
+	function bb_recaptcha_is_protected_login_request() {
+		return bboss_recaptcha_is_protected_login_request();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Logs a login that was allowed through without reCAPTCHA verification because
@@ -464,6 +674,20 @@ function bboss_recaptcha_log_uncovered_login() {
 		)
 	);
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_recaptcha_log_uncovered_login' ) && ! function_exists( 'bb_recaptcha_log_uncovered_login' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_recaptcha_log_uncovered_login()}.
+	 *
+	 * @deprecated Use bboss_recaptcha_log_uncovered_login() instead.
+	 */
+	function bb_recaptcha_log_uncovered_login() {
+		return bboss_recaptcha_log_uncovered_login();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Retrieves the selected reCAPTCHA v2 theme.
@@ -484,6 +708,20 @@ function bboss_recaptcha_v2_theme() {
 	 */
 	return apply_filters( 'bb_recaptcha_v2_theme', $recaptcha_v2_theme );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_recaptcha_v2_theme' ) && ! function_exists( 'bb_recaptcha_v2_theme' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_recaptcha_v2_theme()}.
+	 *
+	 * @deprecated Use bboss_recaptcha_v2_theme() instead.
+	 */
+	function bb_recaptcha_v2_theme() {
+		return bboss_recaptcha_v2_theme();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Retrieves the selected reCAPTCHA v2 size.
@@ -504,6 +742,20 @@ function bboss_recaptcha_v2_size() {
 	 */
 	return apply_filters( 'bb_recaptcha_v2_size', $recaptcha_v2_size );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_recaptcha_v2_size' ) && ! function_exists( 'bb_recaptcha_v2_size' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_recaptcha_v2_size()}.
+	 *
+	 * @deprecated Use bboss_recaptcha_v2_size() instead.
+	 */
+	function bb_recaptcha_v2_size() {
+		return bboss_recaptcha_v2_size();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Retrieves the selected reCAPTCHA v2 badge.
@@ -524,6 +776,20 @@ function bboss_recaptcha_v2_badge() {
 	 */
 	return apply_filters( 'bb_recaptcha_v2_badge', $recaptcha_v2_badge );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_recaptcha_v2_badge' ) && ! function_exists( 'bb_recaptcha_v2_badge' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_recaptcha_v2_badge()}.
+	 *
+	 * @deprecated Use bboss_recaptcha_v2_badge() instead.
+	 */
+	function bb_recaptcha_v2_badge() {
+		return bboss_recaptcha_v2_badge();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Retrieve the Google reCAPTCHA API response.
@@ -552,6 +818,20 @@ function bboss_get_google_recaptcha_api_response( $secret_key, $token ) {
 
 	return json_decode( wp_remote_retrieve_body( $get_data ), true );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_google_recaptcha_api_response' ) && ! function_exists( 'bb_get_google_recaptcha_api_response' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_google_recaptcha_api_response()}.
+	 *
+	 * @deprecated Use bboss_get_google_recaptcha_api_response() instead.
+	 */
+	function bb_get_google_recaptcha_api_response( $secret_key, $token ) {
+		return bboss_get_google_recaptcha_api_response( $secret_key, $token );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Display the reCAPTCHA widget based on the configured settings.
@@ -670,6 +950,20 @@ function bboss_recaptcha_display( $action = '' ) {
 		wp_localize_script( 'bb-recaptcha', 'bbRecaptcha', array( 'data' => $localize_data ) );
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_recaptcha_display' ) && ! function_exists( 'bb_recaptcha_display' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_recaptcha_display()}.
+	 *
+	 * @deprecated Use bboss_recaptcha_display() instead.
+	 */
+	function bb_recaptcha_display( $action = '' ) {
+		return bboss_recaptcha_display( $action );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Perform reCAPTCHA verification on the front end.
@@ -750,6 +1044,20 @@ function bboss_recaptcha_verification_front( $action = '' ) {
 
 	return true;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_recaptcha_verification_front' ) && ! function_exists( 'bb_recaptcha_verification_front' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_recaptcha_verification_front()}.
+	 *
+	 * @deprecated Use bboss_recaptcha_verification_front() instead.
+	 */
+	function bb_recaptcha_verification_front( $action = '' ) {
+		return bboss_recaptcha_verification_front( $action );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Check if the current user's IP is allowed to bypass reCAPTCHA verification.
@@ -773,6 +1081,20 @@ function bboss_recaptcha_allow_ip() {
 
 	return false;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_recaptcha_allow_ip' ) && ! function_exists( 'bb_recaptcha_allow_ip' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_recaptcha_allow_ip()}.
+	 *
+	 * @deprecated Use bboss_recaptcha_allow_ip() instead.
+	 */
+	function bb_recaptcha_allow_ip() {
+		return bboss_recaptcha_allow_ip();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get the current user's IP address.
@@ -823,6 +1145,20 @@ function bboss_recaptcha_get_current_ip() {
 
 	return $anon_ip;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_recaptcha_get_current_ip' ) && ! function_exists( 'bb_recaptcha_get_current_ip' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_recaptcha_get_current_ip()}.
+	 *
+	 * @deprecated Use bboss_recaptcha_get_current_ip() instead.
+	 */
+	function bb_recaptcha_get_current_ip() {
+		return bboss_recaptcha_get_current_ip();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Removes duplicate reCAPTCHA scripts from the other plugins or WordPress.
@@ -854,170 +1190,8 @@ function bboss_recaptcha_remove_duplicate_scripts() {
 		}
 	}
 }
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
-if ( function_exists( 'bboss_get_google_recaptcha_api_response' ) && ! function_exists( 'bb_get_google_recaptcha_api_response' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_google_recaptcha_api_response()}.
-	 *
-	 * @deprecated Use bboss_get_google_recaptcha_api_response() instead.
-	 */
-	function bb_get_google_recaptcha_api_response( $secret_key, $token ) {
-		return bboss_get_google_recaptcha_api_response( $secret_key, $token );
-	}
-}
-if ( function_exists( 'bboss_recaptcha_actions' ) && ! function_exists( 'bb_recaptcha_actions' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_recaptcha_actions()}.
-	 *
-	 * @deprecated Use bboss_recaptcha_actions() instead.
-	 */
-	function bb_recaptcha_actions() {
-		return bboss_recaptcha_actions();
-	}
-}
-if ( function_exists( 'bboss_recaptcha_allow_bypass_enable' ) && ! function_exists( 'bb_recaptcha_allow_bypass_enable' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_recaptcha_allow_bypass_enable()}.
-	 *
-	 * @deprecated Use bboss_recaptcha_allow_bypass_enable() instead.
-	 */
-	function bb_recaptcha_allow_bypass_enable() {
-		return bboss_recaptcha_allow_bypass_enable();
-	}
-}
-if ( function_exists( 'bboss_recaptcha_allow_ip' ) && ! function_exists( 'bb_recaptcha_allow_ip' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_recaptcha_allow_ip()}.
-	 *
-	 * @deprecated Use bboss_recaptcha_allow_ip() instead.
-	 */
-	function bb_recaptcha_allow_ip() {
-		return bboss_recaptcha_allow_ip();
-	}
-}
-if ( function_exists( 'bboss_recaptcha_conflict_mode' ) && ! function_exists( 'bb_recaptcha_conflict_mode' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_recaptcha_conflict_mode()}.
-	 *
-	 * @deprecated Use bboss_recaptcha_conflict_mode() instead.
-	 */
-	function bb_recaptcha_conflict_mode() {
-		return bboss_recaptcha_conflict_mode();
-	}
-}
-if ( function_exists( 'bboss_recaptcha_connection_status' ) && ! function_exists( 'bb_recaptcha_connection_status' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_recaptcha_connection_status()}.
-	 *
-	 * @deprecated Use bboss_recaptcha_connection_status() instead.
-	 */
-	function bb_recaptcha_connection_status() {
-		return bboss_recaptcha_connection_status();
-	}
-}
-if ( function_exists( 'bboss_recaptcha_display' ) && ! function_exists( 'bb_recaptcha_display' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_recaptcha_display()}.
-	 *
-	 * @deprecated Use bboss_recaptcha_display() instead.
-	 */
-	function bb_recaptcha_display( $action = '' ) {
-		return bboss_recaptcha_display( $action );
-	}
-}
-if ( function_exists( 'bboss_recaptcha_get_current_ip' ) && ! function_exists( 'bb_recaptcha_get_current_ip' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_recaptcha_get_current_ip()}.
-	 *
-	 * @deprecated Use bboss_recaptcha_get_current_ip() instead.
-	 */
-	function bb_recaptcha_get_current_ip() {
-		return bboss_recaptcha_get_current_ip();
-	}
-}
-if ( function_exists( 'bboss_recaptcha_integration_url' ) && ! function_exists( 'bb_recaptcha_integration_url' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_recaptcha_integration_url()}.
-	 *
-	 * @deprecated Use bboss_recaptcha_integration_url() instead.
-	 */
-	function bb_recaptcha_integration_url( $path = '' ) {
-		return bboss_recaptcha_integration_url( $path );
-	}
-}
-if ( function_exists( 'bboss_recaptcha_is_enabled' ) && ! function_exists( 'bb_recaptcha_is_enabled' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_recaptcha_is_enabled()}.
-	 *
-	 * @deprecated Use bboss_recaptcha_is_enabled() instead.
-	 */
-	function bb_recaptcha_is_enabled( $key ) {
-		return bboss_recaptcha_is_enabled( $key );
-	}
-}
-if ( function_exists( 'bboss_recaptcha_is_protected_login_request' ) && ! function_exists( 'bb_recaptcha_is_protected_login_request' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_recaptcha_is_protected_login_request()}.
-	 *
-	 * @deprecated Use bboss_recaptcha_is_protected_login_request() instead.
-	 */
-	function bb_recaptcha_is_protected_login_request() {
-		return bboss_recaptcha_is_protected_login_request();
-	}
-}
-if ( function_exists( 'bboss_recaptcha_languages' ) && ! function_exists( 'bb_recaptcha_languages' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_recaptcha_languages()}.
-	 *
-	 * @deprecated Use bboss_recaptcha_languages() instead.
-	 */
-	function bb_recaptcha_languages() {
-		return bboss_recaptcha_languages();
-	}
-}
-if ( function_exists( 'bboss_recaptcha_log_uncovered_login' ) && ! function_exists( 'bb_recaptcha_log_uncovered_login' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_recaptcha_log_uncovered_login()}.
-	 *
-	 * @deprecated Use bboss_recaptcha_log_uncovered_login() instead.
-	 */
-	function bb_recaptcha_log_uncovered_login() {
-		return bboss_recaptcha_log_uncovered_login();
-	}
-}
-if ( function_exists( 'bboss_recaptcha_options' ) && ! function_exists( 'bb_recaptcha_options' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_recaptcha_options()}.
-	 *
-	 * @deprecated Use bboss_recaptcha_options() instead.
-	 */
-	function bb_recaptcha_options() {
-		return bboss_recaptcha_options();
-	}
-}
-if ( function_exists( 'bboss_recaptcha_recaptcha_v2_option' ) && ! function_exists( 'bb_recaptcha_recaptcha_v2_option' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_recaptcha_recaptcha_v2_option()}.
-	 *
-	 * @deprecated Use bboss_recaptcha_recaptcha_v2_option() instead.
-	 */
-	function bb_recaptcha_recaptcha_v2_option() {
-		return bboss_recaptcha_recaptcha_v2_option();
-	}
-}
-if ( function_exists( 'bboss_recaptcha_recaptcha_versions' ) && ! function_exists( 'bb_recaptcha_recaptcha_versions' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_recaptcha_recaptcha_versions()}.
-	 *
-	 * @deprecated Use bboss_recaptcha_recaptcha_versions() instead.
-	 */
-	function bb_recaptcha_recaptcha_versions() {
-		return bboss_recaptcha_recaptcha_versions();
-	}
-}
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_recaptcha_remove_duplicate_scripts' ) && ! function_exists( 'bb_recaptcha_remove_duplicate_scripts' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_recaptcha_remove_duplicate_scripts()}.
@@ -1028,84 +1202,5 @@ if ( function_exists( 'bboss_recaptcha_remove_duplicate_scripts' ) && ! function
 		return bboss_recaptcha_remove_duplicate_scripts();
 	}
 }
-if ( function_exists( 'bboss_recaptcha_score_threshold' ) && ! function_exists( 'bb_recaptcha_score_threshold' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_recaptcha_score_threshold()}.
-	 *
-	 * @deprecated Use bboss_recaptcha_score_threshold() instead.
-	 */
-	function bb_recaptcha_score_threshold( $default = 0.5 ) {
-		return bboss_recaptcha_score_threshold( $default );
-	}
-}
-if ( function_exists( 'bboss_recaptcha_secret_key' ) && ! function_exists( 'bb_recaptcha_secret_key' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_recaptcha_secret_key()}.
-	 *
-	 * @deprecated Use bboss_recaptcha_secret_key() instead.
-	 */
-	function bb_recaptcha_secret_key() {
-		return bboss_recaptcha_secret_key();
-	}
-}
-if ( function_exists( 'bboss_recaptcha_setting' ) && ! function_exists( 'bb_recaptcha_setting' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_recaptcha_setting()}.
-	 *
-	 * @deprecated Use bboss_recaptcha_setting() instead.
-	 */
-	function bb_recaptcha_setting( $key, $default = '' ) {
-		return bboss_recaptcha_setting( $key, $default );
-	}
-}
-if ( function_exists( 'bboss_recaptcha_site_key' ) && ! function_exists( 'bb_recaptcha_site_key' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_recaptcha_site_key()}.
-	 *
-	 * @deprecated Use bboss_recaptcha_site_key() instead.
-	 */
-	function bb_recaptcha_site_key() {
-		return bboss_recaptcha_site_key();
-	}
-}
-if ( function_exists( 'bboss_recaptcha_v2_badge' ) && ! function_exists( 'bb_recaptcha_v2_badge' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_recaptcha_v2_badge()}.
-	 *
-	 * @deprecated Use bboss_recaptcha_v2_badge() instead.
-	 */
-	function bb_recaptcha_v2_badge() {
-		return bboss_recaptcha_v2_badge();
-	}
-}
-if ( function_exists( 'bboss_recaptcha_v2_size' ) && ! function_exists( 'bb_recaptcha_v2_size' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_recaptcha_v2_size()}.
-	 *
-	 * @deprecated Use bboss_recaptcha_v2_size() instead.
-	 */
-	function bb_recaptcha_v2_size() {
-		return bboss_recaptcha_v2_size();
-	}
-}
-if ( function_exists( 'bboss_recaptcha_v2_theme' ) && ! function_exists( 'bb_recaptcha_v2_theme' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_recaptcha_v2_theme()}.
-	 *
-	 * @deprecated Use bboss_recaptcha_v2_theme() instead.
-	 */
-	function bb_recaptcha_v2_theme() {
-		return bboss_recaptcha_v2_theme();
-	}
-}
-if ( function_exists( 'bboss_recaptcha_verification_front' ) && ! function_exists( 'bb_recaptcha_verification_front' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_recaptcha_verification_front()}.
-	 *
-	 * @deprecated Use bboss_recaptcha_verification_front() instead.
-	 */
-	function bb_recaptcha_verification_front( $action = '' ) {
-		return bboss_recaptcha_verification_front( $action );
-	}
-}
 // @bbwt-com-end compat-layer
+

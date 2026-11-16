@@ -31,6 +31,20 @@ function bboss_xprofile_screen_settings() {
 	 */
 	bboss_core_load_template( apply_filters( 'bp_settings_screen_xprofile', '/members/single/settings/profile' ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_xprofile_screen_settings' ) && ! function_exists( 'bp_xprofile_screen_settings' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_xprofile_screen_settings()}.
+	 *
+	 * @deprecated Use bboss_xprofile_screen_settings() instead.
+	 */
+	function bp_xprofile_screen_settings() {
+		return bboss_xprofile_screen_settings();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Handles the saving of xprofile field visibilities.
@@ -124,11 +138,8 @@ function bboss_xprofile_action_settings() {
 	// Redirect to the root domain.
 	bboss_core_redirect( bboss_displayed_user_domain() . bboss_get_settings_slug() . '/profile' );
 }
-add_action( 'bp_actions', 'bp_xprofile_action_settings' );
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_xprofile_action_settings' ) && ! function_exists( 'bp_xprofile_action_settings' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_xprofile_action_settings()}.
@@ -139,14 +150,6 @@ if ( function_exists( 'bboss_xprofile_action_settings' ) && ! function_exists( '
 		return bboss_xprofile_action_settings();
 	}
 }
-if ( function_exists( 'bboss_xprofile_screen_settings' ) && ! function_exists( 'bp_xprofile_screen_settings' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_xprofile_screen_settings()}.
-	 *
-	 * @deprecated Use bboss_xprofile_screen_settings() instead.
-	 */
-	function bp_xprofile_screen_settings() {
-		return bboss_xprofile_screen_settings();
-	}
-}
 // @bbwt-com-end compat-layer
+
+add_action( 'bp_actions', 'bp_xprofile_action_settings' );

@@ -206,6 +206,20 @@ function bboss_bbp_get_caps_for_role( $role = '' ) {
 
 	return apply_filters( 'bbp_get_caps_for_role', $caps, $role );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_caps_for_role' ) && ! function_exists( 'bbp_get_caps_for_role' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_caps_for_role()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_caps_for_role() instead.
+	 */
+	function bbp_get_caps_for_role( $role = '' ) {
+		return bboss_bbp_get_caps_for_role( $role );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Adds capabilities to WordPress user roles.
@@ -223,6 +237,20 @@ function bboss_bbp_add_caps() {
 
 	do_action( 'bbp_add_caps' );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_add_caps' ) && ! function_exists( 'bbp_add_caps' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_add_caps()}.
+	 *
+	 * @deprecated Use bboss_bbp_add_caps() instead.
+	 */
+	function bbp_add_caps() {
+		return bboss_bbp_add_caps();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Removes capabilities from WordPress user roles.
@@ -240,6 +268,20 @@ function bboss_bbp_remove_caps() {
 
 	do_action( 'bbp_remove_caps' );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_remove_caps' ) && ! function_exists( 'bbp_remove_caps' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_remove_caps()}.
+	 *
+	 * @deprecated Use bboss_bbp_remove_caps() instead.
+	 */
+	function bbp_remove_caps() {
+		return bboss_bbp_remove_caps();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get the $wp_roles global without needing to declare it everywhere
@@ -258,6 +300,20 @@ function bboss_bbp_get_wp_roles() {
 
 	return $wp_roles;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_wp_roles' ) && ! function_exists( 'bbp_get_wp_roles' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_wp_roles()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_wp_roles() instead.
+	 */
+	function bbp_get_wp_roles() {
+		return bboss_bbp_get_wp_roles();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get the available roles minus Forums' dynamic roles
@@ -281,6 +337,20 @@ function bboss_bbp_get_blog_roles() {
 
 	return apply_filters( 'bbp_get_blog_roles', $all_roles, $wp_roles );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_blog_roles' ) && ! function_exists( 'bbp_get_blog_roles' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_blog_roles()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_blog_roles() instead.
+	 */
+	function bbp_get_blog_roles() {
+		return bboss_bbp_get_blog_roles();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /** Forum Roles ***************************************************************/
 
@@ -314,6 +384,20 @@ function bboss_bbp_add_forums_roles( $wp_roles = null ) {
 	// Return the modified $wp_roles array
 	return $wp_roles;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_add_forums_roles' ) && ! function_exists( 'bbp_add_forums_roles' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_add_forums_roles()}.
+	 *
+	 * @deprecated Use bboss_bbp_add_forums_roles() instead.
+	 */
+	function bbp_add_forums_roles( $wp_roles = null ) {
+		return bboss_bbp_add_forums_roles( $wp_roles );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Helper function to add filter to option_wp_user_roles
@@ -329,6 +413,20 @@ function bboss_bbp_filter_user_roles_option() {
 
 	add_filter( 'option_' . $role_key, '_bbp_reinit_dynamic_roles' );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_filter_user_roles_option' ) && ! function_exists( 'bbp_filter_user_roles_option' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_filter_user_roles_option()}.
+	 *
+	 * @deprecated Use bboss_bbp_filter_user_roles_option() instead.
+	 */
+	function bbp_filter_user_roles_option() {
+		return bboss_bbp_filter_user_roles_option();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * This is necessary because in a few places (noted below) WordPress initializes
@@ -359,6 +457,20 @@ function bboss__bbp_reinit_dynamic_roles( $roles = array() ) {
 	}
 	return $roles;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss__bbp_reinit_dynamic_roles' ) && ! function_exists( '_bbp_reinit_dynamic_roles' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss__bbp_reinit_dynamic_roles()}.
+	 *
+	 * @deprecated Use bboss__bbp_reinit_dynamic_roles() instead.
+	 */
+	function _bbp_reinit_dynamic_roles( $roles = array() ) {
+		return bboss__bbp_reinit_dynamic_roles( $roles );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Fetch a filtered list of forum roles that the current user is
@@ -414,6 +526,20 @@ function bboss_bbp_get_dynamic_roles() {
 		)
 	);
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_dynamic_roles' ) && ! function_exists( 'bbp_get_dynamic_roles' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_dynamic_roles()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_dynamic_roles() instead.
+	 */
+	function bbp_get_dynamic_roles() {
+		return bboss_bbp_get_dynamic_roles();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Gets a translated role name from a role ID
@@ -429,6 +555,20 @@ function bboss_bbp_get_dynamic_role_name( $role_id = '' ) {
 
 	return apply_filters( 'bbp_get_dynamic_role_name', $role, $role_id, $roles );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_dynamic_role_name' ) && ! function_exists( 'bbp_get_dynamic_role_name' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_dynamic_role_name()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_dynamic_role_name() instead.
+	 */
+	function bbp_get_dynamic_role_name( $role_id = '' ) {
+		return bboss_bbp_get_dynamic_role_name( $role_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Removes the Forums roles from the editable roles array
@@ -458,6 +598,20 @@ function bboss_bbp_filter_blog_editable_roles( $all_roles = array() ) {
 
 	return $all_roles;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_filter_blog_editable_roles' ) && ! function_exists( 'bbp_filter_blog_editable_roles' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_filter_blog_editable_roles()}.
+	 *
+	 * @deprecated Use bboss_bbp_filter_blog_editable_roles() instead.
+	 */
+	function bbp_filter_blog_editable_roles( $all_roles = array() ) {
+		return bboss_bbp_filter_blog_editable_roles( $all_roles );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * The keymaster role for Forums users
@@ -470,6 +624,20 @@ function bboss_bbp_filter_blog_editable_roles( $all_roles = array() ) {
 function bboss_bbp_get_keymaster_role() {
 	return apply_filters( 'bbp_get_keymaster_role', 'bbp_keymaster' );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_keymaster_role' ) && ! function_exists( 'bbp_get_keymaster_role' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_keymaster_role()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_keymaster_role() instead.
+	 */
+	function bbp_get_keymaster_role() {
+		return bboss_bbp_get_keymaster_role();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * The moderator role for Forums users
@@ -482,6 +650,20 @@ function bboss_bbp_get_keymaster_role() {
 function bboss_bbp_get_moderator_role() {
 	return apply_filters( 'bbp_get_moderator_role', 'bbp_moderator' );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_moderator_role' ) && ! function_exists( 'bbp_get_moderator_role' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_moderator_role()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_moderator_role() instead.
+	 */
+	function bbp_get_moderator_role() {
+		return bboss_bbp_get_moderator_role();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * The participant role for registered user that can participate in forums
@@ -494,6 +676,20 @@ function bboss_bbp_get_moderator_role() {
 function bboss_bbp_get_participant_role() {
 	return apply_filters( 'bbp_get_participant_role', 'bbp_participant' );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_participant_role' ) && ! function_exists( 'bbp_get_participant_role' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_participant_role()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_participant_role() instead.
+	 */
+	function bbp_get_participant_role() {
+		return bboss_bbp_get_participant_role();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * The spectator role is for registered users without any capabilities
@@ -506,6 +702,20 @@ function bboss_bbp_get_participant_role() {
 function bboss_bbp_get_spectator_role() {
 	return apply_filters( 'bbp_get_spectator_role', 'bbp_spectator' );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_spectator_role' ) && ! function_exists( 'bbp_get_spectator_role' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_spectator_role()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_spectator_role() instead.
+	 */
+	function bbp_get_spectator_role() {
+		return bboss_bbp_get_spectator_role();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * The blocked role is for registered users that cannot spectate or participate
@@ -518,6 +728,20 @@ function bboss_bbp_get_spectator_role() {
 function bboss_bbp_get_blocked_role() {
 	return apply_filters( 'bbp_get_blocked_role', 'bbp_blocked' );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_blocked_role' ) && ! function_exists( 'bbp_get_blocked_role' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_blocked_role()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_blocked_role() instead.
+	 */
+	function bbp_get_blocked_role() {
+		return bboss_bbp_get_blocked_role();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /** Deprecated ****************************************************************/
 
@@ -530,6 +754,20 @@ function bboss_bbp_get_blocked_role() {
 function bboss_bbp_add_roles() {
 	_doing_it_wrong( 'bboss_bbp_add_roles', esc_html__( 'Editable forum roles no longer exist.', 'buddyboss' ), '2.2' );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_add_roles' ) && ! function_exists( 'bbp_add_roles' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_add_roles()}.
+	 *
+	 * @deprecated Use bboss_bbp_add_roles() instead.
+	 */
+	function bbp_add_roles() {
+		return bboss_bbp_add_roles();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Removes bbPress-specific user roles from the `wp_user_roles` array.
@@ -553,6 +791,20 @@ function bboss_bbp_remove_roles() {
 	// replaced by the Spectator role.
 	remove_role( 'bbp_visitor' );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_remove_roles' ) && ! function_exists( 'bbp_remove_roles' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_remove_roles()}.
+	 *
+	 * @deprecated Use bboss_bbp_remove_roles() instead.
+	 */
+	function bbp_remove_roles() {
+		return bboss_bbp_remove_roles();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Map forum capabilities to WP roles
@@ -579,6 +831,20 @@ function bboss_bbp_map_caps_to_wp_roles() {
 		}
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_map_caps_to_wp_roles' ) && ! function_exists( 'bbp_map_caps_to_wp_roles' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_map_caps_to_wp_roles()}.
+	 *
+	 * @deprecated Use bboss_bbp_map_caps_to_wp_roles() instead.
+	 */
+	function bbp_map_caps_to_wp_roles() {
+		return bboss_bbp_map_caps_to_wp_roles();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Restore forum capabilities from WP roles
@@ -610,200 +876,8 @@ function bboss_bbp_restore_caps_from_wp_roles() {
 		'message' => __( 'Complete!', 'buddyboss' ),
 	);
 }
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
-if ( function_exists( 'bboss__bbp_reinit_dynamic_roles' ) && ! function_exists( '_bbp_reinit_dynamic_roles' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss__bbp_reinit_dynamic_roles()}.
-	 *
-	 * @deprecated Use bboss__bbp_reinit_dynamic_roles() instead.
-	 */
-	function _bbp_reinit_dynamic_roles( $roles = array() ) {
-		return bboss__bbp_reinit_dynamic_roles( $roles );
-	}
-}
-if ( function_exists( 'bboss_bbp_add_caps' ) && ! function_exists( 'bbp_add_caps' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_add_caps()}.
-	 *
-	 * @deprecated Use bboss_bbp_add_caps() instead.
-	 */
-	function bbp_add_caps() {
-		return bboss_bbp_add_caps();
-	}
-}
-if ( function_exists( 'bboss_bbp_add_forums_roles' ) && ! function_exists( 'bbp_add_forums_roles' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_add_forums_roles()}.
-	 *
-	 * @deprecated Use bboss_bbp_add_forums_roles() instead.
-	 */
-	function bbp_add_forums_roles( $wp_roles = null ) {
-		return bboss_bbp_add_forums_roles( $wp_roles );
-	}
-}
-if ( function_exists( 'bboss_bbp_add_roles' ) && ! function_exists( 'bbp_add_roles' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_add_roles()}.
-	 *
-	 * @deprecated Use bboss_bbp_add_roles() instead.
-	 */
-	function bbp_add_roles() {
-		return bboss_bbp_add_roles();
-	}
-}
-if ( function_exists( 'bboss_bbp_filter_blog_editable_roles' ) && ! function_exists( 'bbp_filter_blog_editable_roles' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_filter_blog_editable_roles()}.
-	 *
-	 * @deprecated Use bboss_bbp_filter_blog_editable_roles() instead.
-	 */
-	function bbp_filter_blog_editable_roles( $all_roles = array() ) {
-		return bboss_bbp_filter_blog_editable_roles( $all_roles );
-	}
-}
-if ( function_exists( 'bboss_bbp_filter_user_roles_option' ) && ! function_exists( 'bbp_filter_user_roles_option' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_filter_user_roles_option()}.
-	 *
-	 * @deprecated Use bboss_bbp_filter_user_roles_option() instead.
-	 */
-	function bbp_filter_user_roles_option() {
-		return bboss_bbp_filter_user_roles_option();
-	}
-}
-if ( function_exists( 'bboss_bbp_get_blocked_role' ) && ! function_exists( 'bbp_get_blocked_role' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_blocked_role()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_blocked_role() instead.
-	 */
-	function bbp_get_blocked_role() {
-		return bboss_bbp_get_blocked_role();
-	}
-}
-if ( function_exists( 'bboss_bbp_get_blog_roles' ) && ! function_exists( 'bbp_get_blog_roles' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_blog_roles()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_blog_roles() instead.
-	 */
-	function bbp_get_blog_roles() {
-		return bboss_bbp_get_blog_roles();
-	}
-}
-if ( function_exists( 'bboss_bbp_get_caps_for_role' ) && ! function_exists( 'bbp_get_caps_for_role' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_caps_for_role()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_caps_for_role() instead.
-	 */
-	function bbp_get_caps_for_role( $role = '' ) {
-		return bboss_bbp_get_caps_for_role( $role );
-	}
-}
-if ( function_exists( 'bboss_bbp_get_dynamic_role_name' ) && ! function_exists( 'bbp_get_dynamic_role_name' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_dynamic_role_name()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_dynamic_role_name() instead.
-	 */
-	function bbp_get_dynamic_role_name( $role_id = '' ) {
-		return bboss_bbp_get_dynamic_role_name( $role_id );
-	}
-}
-if ( function_exists( 'bboss_bbp_get_dynamic_roles' ) && ! function_exists( 'bbp_get_dynamic_roles' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_dynamic_roles()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_dynamic_roles() instead.
-	 */
-	function bbp_get_dynamic_roles() {
-		return bboss_bbp_get_dynamic_roles();
-	}
-}
-if ( function_exists( 'bboss_bbp_get_keymaster_role' ) && ! function_exists( 'bbp_get_keymaster_role' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_keymaster_role()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_keymaster_role() instead.
-	 */
-	function bbp_get_keymaster_role() {
-		return bboss_bbp_get_keymaster_role();
-	}
-}
-if ( function_exists( 'bboss_bbp_get_moderator_role' ) && ! function_exists( 'bbp_get_moderator_role' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_moderator_role()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_moderator_role() instead.
-	 */
-	function bbp_get_moderator_role() {
-		return bboss_bbp_get_moderator_role();
-	}
-}
-if ( function_exists( 'bboss_bbp_get_participant_role' ) && ! function_exists( 'bbp_get_participant_role' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_participant_role()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_participant_role() instead.
-	 */
-	function bbp_get_participant_role() {
-		return bboss_bbp_get_participant_role();
-	}
-}
-if ( function_exists( 'bboss_bbp_get_spectator_role' ) && ! function_exists( 'bbp_get_spectator_role' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_spectator_role()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_spectator_role() instead.
-	 */
-	function bbp_get_spectator_role() {
-		return bboss_bbp_get_spectator_role();
-	}
-}
-if ( function_exists( 'bboss_bbp_get_wp_roles' ) && ! function_exists( 'bbp_get_wp_roles' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_wp_roles()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_wp_roles() instead.
-	 */
-	function bbp_get_wp_roles() {
-		return bboss_bbp_get_wp_roles();
-	}
-}
-if ( function_exists( 'bboss_bbp_map_caps_to_wp_roles' ) && ! function_exists( 'bbp_map_caps_to_wp_roles' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_map_caps_to_wp_roles()}.
-	 *
-	 * @deprecated Use bboss_bbp_map_caps_to_wp_roles() instead.
-	 */
-	function bbp_map_caps_to_wp_roles() {
-		return bboss_bbp_map_caps_to_wp_roles();
-	}
-}
-if ( function_exists( 'bboss_bbp_remove_caps' ) && ! function_exists( 'bbp_remove_caps' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_remove_caps()}.
-	 *
-	 * @deprecated Use bboss_bbp_remove_caps() instead.
-	 */
-	function bbp_remove_caps() {
-		return bboss_bbp_remove_caps();
-	}
-}
-if ( function_exists( 'bboss_bbp_remove_roles' ) && ! function_exists( 'bbp_remove_roles' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_remove_roles()}.
-	 *
-	 * @deprecated Use bboss_bbp_remove_roles() instead.
-	 */
-	function bbp_remove_roles() {
-		return bboss_bbp_remove_roles();
-	}
-}
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_bbp_restore_caps_from_wp_roles' ) && ! function_exists( 'bbp_restore_caps_from_wp_roles' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_bbp_restore_caps_from_wp_roles()}.
@@ -815,3 +889,4 @@ if ( function_exists( 'bboss_bbp_restore_caps_from_wp_roles' ) && ! function_exi
 	}
 }
 // @bbwt-com-end compat-layer
+

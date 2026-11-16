@@ -20,6 +20,20 @@ defined( 'ABSPATH' ) || exit;
 function bboss_activity_setup_oembed() {
 	bboss()->activity->oembed = new BBoss_Activity_oEmbed_Extension();
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_activity_setup_oembed' ) && ! function_exists( 'bp_activity_setup_oembed' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_activity_setup_oembed()}.
+	 *
+	 * @deprecated Use bboss_activity_setup_oembed() instead.
+	 */
+	function bp_activity_setup_oembed() {
+		return bboss_activity_setup_oembed();
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'bp_loaded', 'bp_activity_setup_oembed' );
 
 /**
@@ -36,6 +50,20 @@ add_action( 'bp_loaded', 'bp_activity_setup_oembed' );
 function bboss_activity_embed_excerpt_onclick_location_filter( $text ) {
 	return preg_replace_callback( '/<a\s+[^>]*href=\"([^\"]*)\"/iU', 'bboss_activity_embed_excerpt_onclick_location_filter_callback', $text );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_activity_embed_excerpt_onclick_location_filter' ) && ! function_exists( 'bp_activity_embed_excerpt_onclick_location_filter' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_activity_embed_excerpt_onclick_location_filter()}.
+	 *
+	 * @deprecated Use bboss_activity_embed_excerpt_onclick_location_filter() instead.
+	 */
+	function bp_activity_embed_excerpt_onclick_location_filter( $text ) {
+		return bboss_activity_embed_excerpt_onclick_location_filter( $text );
+	}
+}
+// @bbwt-com-end compat-layer
+
 	/**
 	 * Add onclick="top.location.href" to a link.
 	 *
@@ -47,6 +75,20 @@ function bboss_activity_embed_excerpt_onclick_location_filter( $text ) {
 function bboss_activity_embed_excerpt_onclick_location_filter_callback( $matches ) {
 	return sprintf( '<a href="%1$s" onclick="top.location.href=\'%1$s\'"', $matches[1] );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_activity_embed_excerpt_onclick_location_filter_callback' ) && ! function_exists( 'bp_activity_embed_excerpt_onclick_location_filter_callback' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_activity_embed_excerpt_onclick_location_filter_callback()}.
+	 *
+	 * @deprecated Use bboss_activity_embed_excerpt_onclick_location_filter_callback() instead.
+	 */
+	function bp_activity_embed_excerpt_onclick_location_filter_callback( $matches ) {
+		return bboss_activity_embed_excerpt_onclick_location_filter_callback( $matches );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Add inline styles for BP activity embeds.
@@ -77,6 +119,20 @@ function bboss_activity_embed_add_inline_styles() {
 
 	printf( '<style>%s</style>', $css ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static stylesheet string defined in this file.
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_activity_embed_add_inline_styles' ) && ! function_exists( 'bp_activity_embed_add_inline_styles' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_activity_embed_add_inline_styles()}.
+	 *
+	 * @deprecated Use bboss_activity_embed_add_inline_styles() instead.
+	 */
+	function bp_activity_embed_add_inline_styles() {
+		return bboss_activity_embed_add_inline_styles();
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'embed_head', 'bp_activity_embed_add_inline_styles', 20 );
 
 /**
@@ -115,6 +171,20 @@ function bboss_activity_embed_has_activity( $activity_id = 0 ) {
 		)
 	);
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_activity_embed_has_activity' ) && ! function_exists( 'bp_activity_embed_has_activity' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_activity_embed_has_activity()}.
+	 *
+	 * @deprecated Use bboss_activity_embed_has_activity() instead.
+	 */
+	function bp_activity_embed_has_activity( $activity_id = 0 ) {
+		return bboss_activity_embed_has_activity( $activity_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Outputs excerpt for an activity embed item.
@@ -124,6 +194,20 @@ function bboss_activity_embed_has_activity( $activity_id = 0 ) {
 function bboss_activity_embed_excerpt( $content = '' ) {
 	echo wp_kses_post( bboss_activity_get_embed_excerpt( $content ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_activity_embed_excerpt' ) && ! function_exists( 'bp_activity_embed_excerpt' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_activity_embed_excerpt()}.
+	 *
+	 * @deprecated Use bboss_activity_embed_excerpt() instead.
+	 */
+	function bp_activity_embed_excerpt( $content = '' ) {
+		return bboss_activity_embed_excerpt( $content );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 	/**
 	 * Generates excerpt for an activity embed item.
@@ -163,6 +247,20 @@ function bboss_activity_get_embed_excerpt( $content = '' ) {
 	 */
 	return apply_filters( 'bp_activity_get_embed_excerpt', $content, $GLOBALS['activities_template']->activity->content );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_activity_get_embed_excerpt' ) && ! function_exists( 'bp_activity_get_embed_excerpt' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_activity_get_embed_excerpt()}.
+	 *
+	 * @deprecated Use bboss_activity_get_embed_excerpt() instead.
+	 */
+	function bp_activity_get_embed_excerpt( $content = '' ) {
+		return bboss_activity_get_embed_excerpt( $content );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Outputs the first embedded item in the activity oEmbed template.
@@ -355,60 +453,8 @@ function bboss_activity_embed_media() {
 	/** This hook is documented in /bboss-activity/bboss-activity-embeds.php */
 	do_action( 'bp_activity_embed_after_media' );
 }
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
-if ( function_exists( 'bboss_activity_embed_add_inline_styles' ) && ! function_exists( 'bp_activity_embed_add_inline_styles' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_activity_embed_add_inline_styles()}.
-	 *
-	 * @deprecated Use bboss_activity_embed_add_inline_styles() instead.
-	 */
-	function bp_activity_embed_add_inline_styles() {
-		return bboss_activity_embed_add_inline_styles();
-	}
-}
-if ( function_exists( 'bboss_activity_embed_excerpt' ) && ! function_exists( 'bp_activity_embed_excerpt' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_activity_embed_excerpt()}.
-	 *
-	 * @deprecated Use bboss_activity_embed_excerpt() instead.
-	 */
-	function bp_activity_embed_excerpt( $content = '' ) {
-		return bboss_activity_embed_excerpt( $content );
-	}
-}
-if ( function_exists( 'bboss_activity_embed_excerpt_onclick_location_filter' ) && ! function_exists( 'bp_activity_embed_excerpt_onclick_location_filter' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_activity_embed_excerpt_onclick_location_filter()}.
-	 *
-	 * @deprecated Use bboss_activity_embed_excerpt_onclick_location_filter() instead.
-	 */
-	function bp_activity_embed_excerpt_onclick_location_filter( $text ) {
-		return bboss_activity_embed_excerpt_onclick_location_filter( $text );
-	}
-}
-if ( function_exists( 'bboss_activity_embed_excerpt_onclick_location_filter_callback' ) && ! function_exists( 'bp_activity_embed_excerpt_onclick_location_filter_callback' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_activity_embed_excerpt_onclick_location_filter_callback()}.
-	 *
-	 * @deprecated Use bboss_activity_embed_excerpt_onclick_location_filter_callback() instead.
-	 */
-	function bp_activity_embed_excerpt_onclick_location_filter_callback( $matches ) {
-		return bboss_activity_embed_excerpt_onclick_location_filter_callback( $matches );
-	}
-}
-if ( function_exists( 'bboss_activity_embed_has_activity' ) && ! function_exists( 'bp_activity_embed_has_activity' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_activity_embed_has_activity()}.
-	 *
-	 * @deprecated Use bboss_activity_embed_has_activity() instead.
-	 */
-	function bp_activity_embed_has_activity( $activity_id = 0 ) {
-		return bboss_activity_embed_has_activity( $activity_id );
-	}
-}
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_activity_embed_media' ) && ! function_exists( 'bp_activity_embed_media' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_activity_embed_media()}.
@@ -419,24 +465,5 @@ if ( function_exists( 'bboss_activity_embed_media' ) && ! function_exists( 'bp_a
 		return bboss_activity_embed_media();
 	}
 }
-if ( function_exists( 'bboss_activity_get_embed_excerpt' ) && ! function_exists( 'bp_activity_get_embed_excerpt' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_activity_get_embed_excerpt()}.
-	 *
-	 * @deprecated Use bboss_activity_get_embed_excerpt() instead.
-	 */
-	function bp_activity_get_embed_excerpt( $content = '' ) {
-		return bboss_activity_get_embed_excerpt( $content );
-	}
-}
-if ( function_exists( 'bboss_activity_setup_oembed' ) && ! function_exists( 'bp_activity_setup_oembed' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_activity_setup_oembed()}.
-	 *
-	 * @deprecated Use bboss_activity_setup_oembed() instead.
-	 */
-	function bp_activity_setup_oembed() {
-		return bboss_activity_setup_oembed();
-	}
-}
 // @bbwt-com-end compat-layer
+

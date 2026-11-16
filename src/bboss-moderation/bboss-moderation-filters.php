@@ -59,6 +59,20 @@ function bboss_moderation_load() {
 		new BBoss_Moderation_Notification();
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_moderation_load' ) && ! function_exists( 'bb_moderation_load' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_moderation_load()}.
+	 *
+	 * @deprecated Use bboss_moderation_load() instead.
+	 */
+	function bb_moderation_load() {
+		return bboss_moderation_load();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 add_action( 'bp_init', 'bb_moderation_load', 1 );
 
@@ -74,6 +88,20 @@ function bboss_moderation_js_strings( $params ) {
 
 	return $params;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_moderation_js_strings' ) && ! function_exists( 'bp_moderation_js_strings' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_moderation_js_strings()}.
+	 *
+	 * @deprecated Use bboss_moderation_js_strings() instead.
+	 */
+	function bp_moderation_js_strings( $params ) {
+		return bboss_moderation_js_strings( $params );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 add_filter( 'bp_core_get_js_strings', 'bp_moderation_js_strings' );
 
@@ -100,6 +128,20 @@ function bboss_moderation_wp_redirect( $location ) {
 
 	return $location;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_moderation_wp_redirect' ) && ! function_exists( 'bp_moderation_wp_redirect' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_moderation_wp_redirect()}.
+	 *
+	 * @deprecated Use bboss_moderation_wp_redirect() instead.
+	 */
+	function bp_moderation_wp_redirect( $location ) {
+		return bboss_moderation_wp_redirect( $location );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 add_filter( 'wp_redirect', 'bp_moderation_wp_redirect' );
 
@@ -222,6 +264,20 @@ function bboss_moderation_content_report() {
 	wp_send_json_success( $response );
 	exit();
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_moderation_content_report' ) && ! function_exists( 'bp_moderation_content_report' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_moderation_content_report()}.
+	 *
+	 * @deprecated Use bboss_moderation_content_report() instead.
+	 */
+	function bp_moderation_content_report() {
+		return bboss_moderation_content_report();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 add_action( 'wp_ajax_bp_moderation_content_report', 'bp_moderation_content_report' );
 add_action( 'wp_ajax_nopriv_bp_moderation_content_report', 'bp_moderation_content_report' );
@@ -303,6 +359,20 @@ function bboss_moderation_block_member() {
 	exit();
 
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_moderation_block_member' ) && ! function_exists( 'bp_moderation_block_member' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_moderation_block_member()}.
+	 *
+	 * @deprecated Use bboss_moderation_block_member() instead.
+	 */
+	function bp_moderation_block_member() {
+		return bboss_moderation_block_member();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 add_action( 'wp_ajax_bp_moderation_block_member', 'bp_moderation_block_member' );
 add_action( 'wp_ajax_nopriv_bp_moderation_block_member', 'bp_moderation_block_member' );
@@ -360,6 +430,20 @@ function bboss_moderation_unblock_user() {
 	wp_send_json_success( $response );
 	exit();
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_moderation_unblock_user' ) && ! function_exists( 'bp_moderation_unblock_user' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_moderation_unblock_user()}.
+	 *
+	 * @deprecated Use bboss_moderation_unblock_user() instead.
+	 */
+	function bp_moderation_unblock_user() {
+		return bboss_moderation_unblock_user();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 add_action( 'wp_ajax_bp_moderation_unblock_user', 'bp_moderation_unblock_user' );
 add_action( 'wp_ajax_nopriv_bp_moderation_unblock_user', 'bp_moderation_unblock_user' );
@@ -426,6 +510,20 @@ function bboss_moderation_content_actions_request() {
 	wp_send_json_success( $response );
 	exit();
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_moderation_content_actions_request' ) && ! function_exists( 'bp_moderation_content_actions_request' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_moderation_content_actions_request()}.
+	 *
+	 * @deprecated Use bboss_moderation_content_actions_request() instead.
+	 */
+	function bp_moderation_content_actions_request() {
+		return bboss_moderation_content_actions_request();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 add_action( 'wp_ajax_bp_moderation_content_actions_request', 'bp_moderation_content_actions_request' );
 add_action( 'wp_ajax_nopriv_bp_moderation_content_actions_request', 'bp_moderation_content_actions_request' );
@@ -479,6 +577,20 @@ function bboss_moderation_user_actions_request() {
 	wp_send_json_success( $response );
 	exit();
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_moderation_user_actions_request' ) && ! function_exists( 'bp_moderation_user_actions_request' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_moderation_user_actions_request()}.
+	 *
+	 * @deprecated Use bboss_moderation_user_actions_request() instead.
+	 */
+	function bp_moderation_user_actions_request() {
+		return bboss_moderation_user_actions_request();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 add_action( 'wp_ajax_bp_moderation_user_actions_request', 'bp_moderation_user_actions_request' );
 add_action( 'wp_ajax_nopriv_bp_moderation_user_actions_request', 'bp_moderation_user_actions_request' );
@@ -500,6 +612,20 @@ function bboss_moderation_content_report_popup() {
 		include bboss()->core->path . 'bboss-moderation/screens/reported-content-popup.php';
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_moderation_content_report_popup' ) && ! function_exists( 'bb_moderation_content_report_popup' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_moderation_content_report_popup()}.
+	 *
+	 * @deprecated Use bboss_moderation_content_report_popup() instead.
+	 */
+	function bb_moderation_content_report_popup() {
+		return bboss_moderation_content_report_popup();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 add_action( 'wp_footer', 'bb_moderation_content_report_popup' );
 
@@ -524,6 +650,20 @@ function bboss_moderation_block_user_profile_button( $buttons ) {
 
 	return $buttons;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_moderation_block_user_profile_button' ) && ! function_exists( 'bp_moderation_block_user_profile_button' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_moderation_block_user_profile_button()}.
+	 *
+	 * @deprecated Use bboss_moderation_block_user_profile_button() instead.
+	 */
+	function bp_moderation_block_user_profile_button( $buttons ) {
+		return bboss_moderation_block_user_profile_button( $buttons );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 add_filter( 'bp_nouveau_customizer_user_profile_actions', 'bp_moderation_block_user_profile_button' );
 
@@ -543,6 +683,20 @@ function bboss_moderation_suspend_after_delete( $recode ) {
 	BBoss_Moderation::delete_moderation_by_id( $recode->id );
 
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_moderation_suspend_after_delete' ) && ! function_exists( 'bb_moderation_suspend_after_delete' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_moderation_suspend_after_delete()}.
+	 *
+	 * @deprecated Use bboss_moderation_suspend_after_delete() instead.
+	 */
+	function bb_moderation_suspend_after_delete( $recode ) {
+		return bboss_moderation_suspend_after_delete( $recode );
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'suspend_after_delete', 'bb_moderation_suspend_after_delete' );
 
 /**
@@ -567,6 +721,20 @@ function bboss_moderation_clear_suspend_cache( $moderation_data ) {
 	// wp_cache_delete( 'bb_get_recode_' . $moderation_data['item_type'] . '_' . $moderation_data['item_id'], 'bp_moderation' );
 	// wp_cache_delete( 'bb_get_specific_moderation_' . $moderation_data['item_type'] . '_' . $moderation_data['item_id'], 'bp_moderation' );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_moderation_clear_suspend_cache' ) && ! function_exists( 'bb_moderation_clear_suspend_cache' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_moderation_clear_suspend_cache()}.
+	 *
+	 * @deprecated Use bboss_moderation_clear_suspend_cache() instead.
+	 */
+	function bb_moderation_clear_suspend_cache( $moderation_data ) {
+		return bboss_moderation_clear_suspend_cache( $moderation_data );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 add_action( 'bb_suspend_before_add_suspend', 'bb_moderation_clear_suspend_cache' );
 add_action( 'bb_suspend_before_remove_suspend', 'bb_moderation_clear_suspend_cache' );
@@ -600,6 +768,20 @@ function bboss_moderation_clear_delete_cache( $suspend_record ) {
 	// wp_cache_delete( 'bb_check_user_suspend_user_' . $suspend_record->item_type . '_' . md5( serialize( $suspend_record->user_id ) ), 'bp_moderation' );
 	// wp_cache_delete( 'bb_get_recode_' . $suspend_record->item_type . '_' . $suspend_record->item_id, 'bp_moderation' );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_moderation_clear_delete_cache' ) && ! function_exists( 'bb_moderation_clear_delete_cache' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_moderation_clear_delete_cache()}.
+	 *
+	 * @deprecated Use bboss_moderation_clear_delete_cache() instead.
+	 */
+	function bb_moderation_clear_delete_cache( $suspend_record ) {
+		return bboss_moderation_clear_delete_cache( $suspend_record );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 add_action( 'bp_moderation_after_save', 'bb_moderation_clear_delete_cache' );
 add_action( 'suspend_after_delete', 'bb_moderation_clear_delete_cache' );
@@ -640,6 +822,20 @@ function bboss_moderation_clear_status_change_cache( $content_type, $content_id,
 	// wp_cache_delete( 'bb_check_blocked_user_content_' . $blocked_user . '_' . $content_type . '_' . $content_id, 'bp_moderation' );
 	// }
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_moderation_clear_status_change_cache' ) && ! function_exists( 'bb_moderation_clear_status_change_cache' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_moderation_clear_status_change_cache()}.
+	 *
+	 * @deprecated Use bboss_moderation_clear_status_change_cache() instead.
+	 */
+	function bb_moderation_clear_status_change_cache( $content_type, $content_id, $args ) {
+		return bboss_moderation_clear_status_change_cache( $content_type, $content_id, $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 add_action( 'bb_suspend_hide_before', 'bb_moderation_clear_status_change_cache', 10, 3 );
 add_action( 'bb_suspend_unhide_before', 'bb_moderation_clear_status_change_cache', 10, 3 );
@@ -665,6 +861,20 @@ function bboss_moderation_migrate_old_data( $repair_list ) {
 
 	return $repair_list;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_moderation_migrate_old_data' ) && ! function_exists( 'bb_moderation_migrate_old_data' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_moderation_migrate_old_data()}.
+	 *
+	 * @deprecated Use bboss_moderation_migrate_old_data() instead.
+	 */
+	function bb_moderation_migrate_old_data( $repair_list ) {
+		return bboss_moderation_migrate_old_data( $repair_list );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 add_filter( 'bp_repair_list', 'bb_moderation_migrate_old_data' );
 
@@ -702,6 +912,20 @@ function bboss_moderation_admin_repair_old_moderation_data() {
 		);
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_moderation_admin_repair_old_moderation_data' ) && ! function_exists( 'bb_moderation_admin_repair_old_moderation_data' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_moderation_admin_repair_old_moderation_data()}.
+	 *
+	 * @deprecated Use bboss_moderation_admin_repair_old_moderation_data() instead.
+	 */
+	function bb_moderation_admin_repair_old_moderation_data() {
+		return bboss_moderation_admin_repair_old_moderation_data();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Added magnific popup as dependencies.
@@ -717,6 +941,20 @@ function bboss_moderation_get_js_dependencies( $js_handles = array() ) {
 
 	return $js_handles;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_moderation_get_js_dependencies' ) && ! function_exists( 'bp_moderation_get_js_dependencies' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_moderation_get_js_dependencies()}.
+	 *
+	 * @deprecated Use bboss_moderation_get_js_dependencies() instead.
+	 */
+	function bp_moderation_get_js_dependencies( $js_handles = array() ) {
+		return bboss_moderation_get_js_dependencies( $js_handles );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 add_filter( 'bp_core_get_js_dependencies', 'bp_moderation_get_js_dependencies', 10, 1 );
 
@@ -742,6 +980,20 @@ function bboss_moderation_is_recipient_moderated( $retval, $item_id, $user_id ) 
 
 	return (bool) $retval;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_moderation_is_recipient_moderated' ) && ! function_exists( 'bb_moderation_is_recipient_moderated' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_moderation_is_recipient_moderated()}.
+	 *
+	 * @deprecated Use bboss_moderation_is_recipient_moderated() instead.
+	 */
+	function bb_moderation_is_recipient_moderated( $retval, $item_id, $user_id ) {
+		return bboss_moderation_is_recipient_moderated( $retval, $item_id, $user_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_filter( 'bb_is_recipient_moderated', 'bb_moderation_is_recipient_moderated', 10, 3 );
 
 /**
@@ -766,6 +1018,20 @@ function bboss_category_add_term_fields_show_when_reporting() {
 	</div>
 	<?php
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_category_add_term_fields_show_when_reporting' ) && ! function_exists( 'bb_category_add_term_fields_show_when_reporting' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_category_add_term_fields_show_when_reporting()}.
+	 *
+	 * @deprecated Use bboss_category_add_term_fields_show_when_reporting() instead.
+	 */
+	function bb_category_add_term_fields_show_when_reporting() {
+		return bboss_category_add_term_fields_show_when_reporting();
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'bpm_category_add_form_fields', 'bb_category_add_term_fields_show_when_reporting' );
 
 /**
@@ -797,6 +1063,20 @@ function bboss_category_edit_term_fields_show_when_reporting( $term ) {
 	</tr>
 	<?php
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_category_edit_term_fields_show_when_reporting' ) && ! function_exists( 'bb_category_edit_term_fields_show_when_reporting' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_category_edit_term_fields_show_when_reporting()}.
+	 *
+	 * @deprecated Use bboss_category_edit_term_fields_show_when_reporting() instead.
+	 */
+	function bb_category_edit_term_fields_show_when_reporting( $term ) {
+		return bboss_category_edit_term_fields_show_when_reporting( $term );
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'bpm_category_edit_form_fields', 'bb_category_edit_term_fields_show_when_reporting', 10, 1 );
 
 /**
@@ -816,6 +1096,20 @@ function bboss_category_save_term_fields_show_when_reporting( $term_id ) {
 		);
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_category_save_term_fields_show_when_reporting' ) && ! function_exists( 'bb_category_save_term_fields_show_when_reporting' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_category_save_term_fields_show_when_reporting()}.
+	 *
+	 * @deprecated Use bboss_category_save_term_fields_show_when_reporting() instead.
+	 */
+	function bb_category_save_term_fields_show_when_reporting( $term_id ) {
+		return bboss_category_save_term_fields_show_when_reporting( $term_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'created_bpm_category', 'bb_category_save_term_fields_show_when_reporting' );
 add_action( 'edited_bpm_category', 'bb_category_save_term_fields_show_when_reporting' );
 
@@ -834,6 +1128,20 @@ function bboss_category_show_when_reporting_columns( $columns ) {
 	$columns['bb_category_show_when_reporting'] = __( 'Show When Reporting', 'buddyboss' );
 	return $columns;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_category_show_when_reporting_columns' ) && ! function_exists( 'bb_category_show_when_reporting_columns' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_category_show_when_reporting_columns()}.
+	 *
+	 * @deprecated Use bboss_category_show_when_reporting_columns() instead.
+	 */
+	function bb_category_show_when_reporting_columns( $columns ) {
+		return bboss_category_show_when_reporting_columns( $columns );
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_filter( 'manage_edit-bpm_category_columns', 'bb_category_show_when_reporting_columns' );
 
 /**
@@ -852,6 +1160,20 @@ function bboss_category_show_when_reporting_column_display( $string = '', $colum
 	$show_when_options = bboss_moderation_get_reporting_category_fields_array();
 	return ( isset( $show_when_options[ $value ] ) ? esc_attr( $show_when_options[ $value ] ) : esc_attr__( 'Content', 'buddyboss' ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_category_show_when_reporting_column_display' ) && ! function_exists( 'bb_category_show_when_reporting_column_display' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_category_show_when_reporting_column_display()}.
+	 *
+	 * @deprecated Use bboss_category_show_when_reporting_column_display() instead.
+	 */
+	function bb_category_show_when_reporting_column_display( $string = '', $column_name = '', $term_id = 0 ) {
+		return bboss_category_show_when_reporting_column_display( $string, $column_name, $term_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_filter( 'manage_bpm_category_custom_column', 'bb_category_show_when_reporting_column_display', 10, 3 );
 
 /**
@@ -889,6 +1211,20 @@ function bboss_quick_edit_bb_category_show_when_reporting_field( $column_name, $
 	</fieldset>
 	<?php
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_quick_edit_bb_category_show_when_reporting_field' ) && ! function_exists( 'bb_quick_edit_bb_category_show_when_reporting_field' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_quick_edit_bb_category_show_when_reporting_field()}.
+	 *
+	 * @deprecated Use bboss_quick_edit_bb_category_show_when_reporting_field() instead.
+	 */
+	function bb_quick_edit_bb_category_show_when_reporting_field( $column_name, $screen ) {
+		return bboss_quick_edit_bb_category_show_when_reporting_field( $column_name, $screen );
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'quick_edit_custom_box', 'bb_quick_edit_bb_category_show_when_reporting_field', 10, 2 );
 
 /**
@@ -904,6 +1240,20 @@ add_action( 'quick_edit_custom_box', 'bb_quick_edit_bb_category_show_when_report
 function bboss_moderation_user_report_content_type( $content_type, $item_id ) {
 	return esc_html__( 'Member', 'buddyboss' );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_moderation_user_report_content_type' ) && ! function_exists( 'bp_moderation_user_report_content_type' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_moderation_user_report_content_type()}.
+	 *
+	 * @deprecated Use bboss_moderation_user_report_content_type() instead.
+	 */
+	function bp_moderation_user_report_content_type( $content_type, $item_id ) {
+		return bboss_moderation_user_report_content_type( $content_type, $item_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'bp_moderation_user_report_report_content_type', 'bp_moderation_user_report_content_type', 10, 2 );
 
 /**
@@ -920,6 +1270,20 @@ function bboss_get_bpm_category_labels( $labels ) {
 	$labels->desc_field_description = esc_html__( 'A short description of this reporting category.', 'buddyboss' );
 	return $labels;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_bpm_category_labels' ) && ! function_exists( 'bb_get_bpm_category_labels' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_bpm_category_labels()}.
+	 *
+	 * @deprecated Use bboss_get_bpm_category_labels() instead.
+	 */
+	function bb_get_bpm_category_labels( $labels ) {
+		return bboss_get_bpm_category_labels( $labels );
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'taxonomy_labels_bpm_category', 'bb_get_bpm_category_labels' );
 
 /**
@@ -939,6 +1303,20 @@ function bboss_moderation_category_admin_edit_description( $tax_slug ) {
 		printf( '<p id="bb_reporting_category_description" >%s</p>', esc_attr( $tax_obj->description ) );
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_moderation_category_admin_edit_description' ) && ! function_exists( 'bb_moderation_category_admin_edit_description' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_moderation_category_admin_edit_description()}.
+	 *
+	 * @deprecated Use bboss_moderation_category_admin_edit_description() instead.
+	 */
+	function bb_moderation_category_admin_edit_description( $tax_slug ) {
+		return bboss_moderation_category_admin_edit_description( $tax_slug );
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'bpm_category_pre_add_form', 'bb_moderation_category_admin_edit_description' );
 
 /**
@@ -951,6 +1329,20 @@ add_action( 'bpm_category_pre_add_form', 'bb_moderation_category_admin_edit_desc
 function bboss_moderation_before_activity_entry_callback() {
 	add_filter( 'bb_get_blocked_avatar_url', 'bb_moderation_fetch_avatar_url_filter', 10, 3 );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_moderation_before_activity_entry_callback' ) && ! function_exists( 'bb_moderation_before_activity_entry_callback' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_moderation_before_activity_entry_callback()}.
+	 *
+	 * @deprecated Use bboss_moderation_before_activity_entry_callback() instead.
+	 */
+	function bb_moderation_before_activity_entry_callback() {
+		return bboss_moderation_before_activity_entry_callback();
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'bp_before_activity_entry', 'bb_moderation_before_activity_entry_callback' );
 add_action( 'bp_before_activity_comment_entry', 'bb_moderation_before_activity_entry_callback' );
 add_action( 'bp_before_group_members_list', 'bb_moderation_before_activity_entry_callback' );
@@ -966,6 +1358,20 @@ add_action( 'bp_before_group_manage_members_list', 'bb_moderation_before_activit
 function bboss_moderation_after_activity_entry_callback() {
 	remove_filter( 'bb_get_blocked_avatar_url', 'bb_moderation_fetch_avatar_url_filter', 10, 3 );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_moderation_after_activity_entry_callback' ) && ! function_exists( 'bb_moderation_after_activity_entry_callback' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_moderation_after_activity_entry_callback()}.
+	 *
+	 * @deprecated Use bboss_moderation_after_activity_entry_callback() instead.
+	 */
+	function bb_moderation_after_activity_entry_callback() {
+		return bboss_moderation_after_activity_entry_callback();
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'bp_after_activity_entry', 'bb_moderation_after_activity_entry_callback' );
 add_action( 'bp_after_activity_comment_entry', 'bb_moderation_after_activity_entry_callback' );
 add_action( 'bp_after_group_members_list', 'bb_moderation_after_activity_entry_callback' );
@@ -1055,6 +1461,20 @@ function bboss_moderation_async_request_batch_process( $batch ) {
 		}
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_moderation_async_request_batch_process' ) && ! function_exists( 'bb_moderation_async_request_batch_process' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_moderation_async_request_batch_process()}.
+	 *
+	 * @deprecated Use bboss_moderation_async_request_batch_process() instead.
+	 */
+	function bb_moderation_async_request_batch_process( $batch ) {
+		return bboss_moderation_async_request_batch_process( $batch );
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'bb_async_request_batch_process', 'bb_moderation_async_request_batch_process', 10, 1 );
 
 /**
@@ -1096,6 +1516,20 @@ function bboss_moderation_get_friendship_ids_for_user_where_sql( $where ) {
 
 	return $where;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_moderation_get_friendship_ids_for_user_where_sql' ) && ! function_exists( 'bb_moderation_get_friendship_ids_for_user_where_sql' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_moderation_get_friendship_ids_for_user_where_sql()}.
+	 *
+	 * @deprecated Use bboss_moderation_get_friendship_ids_for_user_where_sql() instead.
+	 */
+	function bb_moderation_get_friendship_ids_for_user_where_sql( $where ) {
+		return bboss_moderation_get_friendship_ids_for_user_where_sql( $where );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 add_filter( 'bb_get_friendship_ids_for_user_where_sql', 'bb_moderation_get_friendship_ids_for_user_where_sql', 10, 1 );
 
@@ -1118,162 +1552,8 @@ function bboss_moderation_get_friendship_ids_for_user_join_sql( $join, $user_id 
 
 	return $join;
 }
-
-add_filter( 'bb_get_friendship_ids_for_user_join_sql', 'bb_moderation_get_friendship_ids_for_user_join_sql', 10, 2 );
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
-if ( function_exists( 'bboss_category_add_term_fields_show_when_reporting' ) && ! function_exists( 'bb_category_add_term_fields_show_when_reporting' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_category_add_term_fields_show_when_reporting()}.
-	 *
-	 * @deprecated Use bboss_category_add_term_fields_show_when_reporting() instead.
-	 */
-	function bb_category_add_term_fields_show_when_reporting() {
-		return bboss_category_add_term_fields_show_when_reporting();
-	}
-}
-if ( function_exists( 'bboss_category_edit_term_fields_show_when_reporting' ) && ! function_exists( 'bb_category_edit_term_fields_show_when_reporting' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_category_edit_term_fields_show_when_reporting()}.
-	 *
-	 * @deprecated Use bboss_category_edit_term_fields_show_when_reporting() instead.
-	 */
-	function bb_category_edit_term_fields_show_when_reporting( $term ) {
-		return bboss_category_edit_term_fields_show_when_reporting( $term );
-	}
-}
-if ( function_exists( 'bboss_category_save_term_fields_show_when_reporting' ) && ! function_exists( 'bb_category_save_term_fields_show_when_reporting' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_category_save_term_fields_show_when_reporting()}.
-	 *
-	 * @deprecated Use bboss_category_save_term_fields_show_when_reporting() instead.
-	 */
-	function bb_category_save_term_fields_show_when_reporting( $term_id ) {
-		return bboss_category_save_term_fields_show_when_reporting( $term_id );
-	}
-}
-if ( function_exists( 'bboss_category_show_when_reporting_column_display' ) && ! function_exists( 'bb_category_show_when_reporting_column_display' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_category_show_when_reporting_column_display()}.
-	 *
-	 * @deprecated Use bboss_category_show_when_reporting_column_display() instead.
-	 */
-	function bb_category_show_when_reporting_column_display( $string = '', $column_name = '', $term_id = 0 ) {
-		return bboss_category_show_when_reporting_column_display( $string, $column_name, $term_id );
-	}
-}
-if ( function_exists( 'bboss_category_show_when_reporting_columns' ) && ! function_exists( 'bb_category_show_when_reporting_columns' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_category_show_when_reporting_columns()}.
-	 *
-	 * @deprecated Use bboss_category_show_when_reporting_columns() instead.
-	 */
-	function bb_category_show_when_reporting_columns( $columns ) {
-		return bboss_category_show_when_reporting_columns( $columns );
-	}
-}
-if ( function_exists( 'bboss_get_bpm_category_labels' ) && ! function_exists( 'bb_get_bpm_category_labels' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_bpm_category_labels()}.
-	 *
-	 * @deprecated Use bboss_get_bpm_category_labels() instead.
-	 */
-	function bb_get_bpm_category_labels( $labels ) {
-		return bboss_get_bpm_category_labels( $labels );
-	}
-}
-if ( function_exists( 'bboss_moderation_admin_repair_old_moderation_data' ) && ! function_exists( 'bb_moderation_admin_repair_old_moderation_data' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_moderation_admin_repair_old_moderation_data()}.
-	 *
-	 * @deprecated Use bboss_moderation_admin_repair_old_moderation_data() instead.
-	 */
-	function bb_moderation_admin_repair_old_moderation_data() {
-		return bboss_moderation_admin_repair_old_moderation_data();
-	}
-}
-if ( function_exists( 'bboss_moderation_after_activity_entry_callback' ) && ! function_exists( 'bb_moderation_after_activity_entry_callback' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_moderation_after_activity_entry_callback()}.
-	 *
-	 * @deprecated Use bboss_moderation_after_activity_entry_callback() instead.
-	 */
-	function bb_moderation_after_activity_entry_callback() {
-		return bboss_moderation_after_activity_entry_callback();
-	}
-}
-if ( function_exists( 'bboss_moderation_async_request_batch_process' ) && ! function_exists( 'bb_moderation_async_request_batch_process' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_moderation_async_request_batch_process()}.
-	 *
-	 * @deprecated Use bboss_moderation_async_request_batch_process() instead.
-	 */
-	function bb_moderation_async_request_batch_process( $batch ) {
-		return bboss_moderation_async_request_batch_process( $batch );
-	}
-}
-if ( function_exists( 'bboss_moderation_before_activity_entry_callback' ) && ! function_exists( 'bb_moderation_before_activity_entry_callback' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_moderation_before_activity_entry_callback()}.
-	 *
-	 * @deprecated Use bboss_moderation_before_activity_entry_callback() instead.
-	 */
-	function bb_moderation_before_activity_entry_callback() {
-		return bboss_moderation_before_activity_entry_callback();
-	}
-}
-if ( function_exists( 'bboss_moderation_category_admin_edit_description' ) && ! function_exists( 'bb_moderation_category_admin_edit_description' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_moderation_category_admin_edit_description()}.
-	 *
-	 * @deprecated Use bboss_moderation_category_admin_edit_description() instead.
-	 */
-	function bb_moderation_category_admin_edit_description( $tax_slug ) {
-		return bboss_moderation_category_admin_edit_description( $tax_slug );
-	}
-}
-if ( function_exists( 'bboss_moderation_clear_delete_cache' ) && ! function_exists( 'bb_moderation_clear_delete_cache' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_moderation_clear_delete_cache()}.
-	 *
-	 * @deprecated Use bboss_moderation_clear_delete_cache() instead.
-	 */
-	function bb_moderation_clear_delete_cache( $suspend_record ) {
-		return bboss_moderation_clear_delete_cache( $suspend_record );
-	}
-}
-if ( function_exists( 'bboss_moderation_clear_status_change_cache' ) && ! function_exists( 'bb_moderation_clear_status_change_cache' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_moderation_clear_status_change_cache()}.
-	 *
-	 * @deprecated Use bboss_moderation_clear_status_change_cache() instead.
-	 */
-	function bb_moderation_clear_status_change_cache( $content_type, $content_id, $args ) {
-		return bboss_moderation_clear_status_change_cache( $content_type, $content_id, $args );
-	}
-}
-if ( function_exists( 'bboss_moderation_clear_suspend_cache' ) && ! function_exists( 'bb_moderation_clear_suspend_cache' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_moderation_clear_suspend_cache()}.
-	 *
-	 * @deprecated Use bboss_moderation_clear_suspend_cache() instead.
-	 */
-	function bb_moderation_clear_suspend_cache( $moderation_data ) {
-		return bboss_moderation_clear_suspend_cache( $moderation_data );
-	}
-}
-if ( function_exists( 'bboss_moderation_content_report_popup' ) && ! function_exists( 'bb_moderation_content_report_popup' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_moderation_content_report_popup()}.
-	 *
-	 * @deprecated Use bboss_moderation_content_report_popup() instead.
-	 */
-	function bb_moderation_content_report_popup() {
-		return bboss_moderation_content_report_popup();
-	}
-}
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_moderation_get_friendship_ids_for_user_join_sql' ) && ! function_exists( 'bb_moderation_get_friendship_ids_for_user_join_sql' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_moderation_get_friendship_ids_for_user_join_sql()}.
@@ -1284,164 +1564,7 @@ if ( function_exists( 'bboss_moderation_get_friendship_ids_for_user_join_sql' ) 
 		return bboss_moderation_get_friendship_ids_for_user_join_sql( $join, $user_id );
 	}
 }
-if ( function_exists( 'bboss_moderation_get_friendship_ids_for_user_where_sql' ) && ! function_exists( 'bb_moderation_get_friendship_ids_for_user_where_sql' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_moderation_get_friendship_ids_for_user_where_sql()}.
-	 *
-	 * @deprecated Use bboss_moderation_get_friendship_ids_for_user_where_sql() instead.
-	 */
-	function bb_moderation_get_friendship_ids_for_user_where_sql( $where ) {
-		return bboss_moderation_get_friendship_ids_for_user_where_sql( $where );
-	}
-}
-if ( function_exists( 'bboss_moderation_is_recipient_moderated' ) && ! function_exists( 'bb_moderation_is_recipient_moderated' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_moderation_is_recipient_moderated()}.
-	 *
-	 * @deprecated Use bboss_moderation_is_recipient_moderated() instead.
-	 */
-	function bb_moderation_is_recipient_moderated( $retval, $item_id, $user_id ) {
-		return bboss_moderation_is_recipient_moderated( $retval, $item_id, $user_id );
-	}
-}
-if ( function_exists( 'bboss_moderation_load' ) && ! function_exists( 'bb_moderation_load' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_moderation_load()}.
-	 *
-	 * @deprecated Use bboss_moderation_load() instead.
-	 */
-	function bb_moderation_load() {
-		return bboss_moderation_load();
-	}
-}
-if ( function_exists( 'bboss_moderation_migrate_old_data' ) && ! function_exists( 'bb_moderation_migrate_old_data' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_moderation_migrate_old_data()}.
-	 *
-	 * @deprecated Use bboss_moderation_migrate_old_data() instead.
-	 */
-	function bb_moderation_migrate_old_data( $repair_list ) {
-		return bboss_moderation_migrate_old_data( $repair_list );
-	}
-}
-if ( function_exists( 'bboss_moderation_suspend_after_delete' ) && ! function_exists( 'bb_moderation_suspend_after_delete' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_moderation_suspend_after_delete()}.
-	 *
-	 * @deprecated Use bboss_moderation_suspend_after_delete() instead.
-	 */
-	function bb_moderation_suspend_after_delete( $recode ) {
-		return bboss_moderation_suspend_after_delete( $recode );
-	}
-}
-if ( function_exists( 'bboss_quick_edit_bb_category_show_when_reporting_field' ) && ! function_exists( 'bb_quick_edit_bb_category_show_when_reporting_field' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_quick_edit_bb_category_show_when_reporting_field()}.
-	 *
-	 * @deprecated Use bboss_quick_edit_bb_category_show_when_reporting_field() instead.
-	 */
-	function bb_quick_edit_bb_category_show_when_reporting_field( $column_name, $screen ) {
-		return bboss_quick_edit_bb_category_show_when_reporting_field( $column_name, $screen );
-	}
-}
-if ( function_exists( 'bboss_moderation_block_member' ) && ! function_exists( 'bp_moderation_block_member' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_moderation_block_member()}.
-	 *
-	 * @deprecated Use bboss_moderation_block_member() instead.
-	 */
-	function bp_moderation_block_member() {
-		return bboss_moderation_block_member();
-	}
-}
-if ( function_exists( 'bboss_moderation_block_user_profile_button' ) && ! function_exists( 'bp_moderation_block_user_profile_button' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_moderation_block_user_profile_button()}.
-	 *
-	 * @deprecated Use bboss_moderation_block_user_profile_button() instead.
-	 */
-	function bp_moderation_block_user_profile_button( $buttons ) {
-		return bboss_moderation_block_user_profile_button( $buttons );
-	}
-}
-if ( function_exists( 'bboss_moderation_content_actions_request' ) && ! function_exists( 'bp_moderation_content_actions_request' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_moderation_content_actions_request()}.
-	 *
-	 * @deprecated Use bboss_moderation_content_actions_request() instead.
-	 */
-	function bp_moderation_content_actions_request() {
-		return bboss_moderation_content_actions_request();
-	}
-}
-if ( function_exists( 'bboss_moderation_content_report' ) && ! function_exists( 'bp_moderation_content_report' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_moderation_content_report()}.
-	 *
-	 * @deprecated Use bboss_moderation_content_report() instead.
-	 */
-	function bp_moderation_content_report() {
-		return bboss_moderation_content_report();
-	}
-}
-if ( function_exists( 'bboss_moderation_get_js_dependencies' ) && ! function_exists( 'bp_moderation_get_js_dependencies' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_moderation_get_js_dependencies()}.
-	 *
-	 * @deprecated Use bboss_moderation_get_js_dependencies() instead.
-	 */
-	function bp_moderation_get_js_dependencies( $js_handles = array() ) {
-		return bboss_moderation_get_js_dependencies( $js_handles );
-	}
-}
-if ( function_exists( 'bboss_moderation_js_strings' ) && ! function_exists( 'bp_moderation_js_strings' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_moderation_js_strings()}.
-	 *
-	 * @deprecated Use bboss_moderation_js_strings() instead.
-	 */
-	function bp_moderation_js_strings( $params ) {
-		return bboss_moderation_js_strings( $params );
-	}
-}
-if ( function_exists( 'bboss_moderation_unblock_user' ) && ! function_exists( 'bp_moderation_unblock_user' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_moderation_unblock_user()}.
-	 *
-	 * @deprecated Use bboss_moderation_unblock_user() instead.
-	 */
-	function bp_moderation_unblock_user() {
-		return bboss_moderation_unblock_user();
-	}
-}
-if ( function_exists( 'bboss_moderation_user_actions_request' ) && ! function_exists( 'bp_moderation_user_actions_request' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_moderation_user_actions_request()}.
-	 *
-	 * @deprecated Use bboss_moderation_user_actions_request() instead.
-	 */
-	function bp_moderation_user_actions_request() {
-		return bboss_moderation_user_actions_request();
-	}
-}
-if ( function_exists( 'bboss_moderation_user_report_content_type' ) && ! function_exists( 'bp_moderation_user_report_content_type' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_moderation_user_report_content_type()}.
-	 *
-	 * @deprecated Use bboss_moderation_user_report_content_type() instead.
-	 */
-	function bp_moderation_user_report_content_type( $content_type, $item_id ) {
-		return bboss_moderation_user_report_content_type( $content_type, $item_id );
-	}
-}
-if ( function_exists( 'bboss_moderation_wp_redirect' ) && ! function_exists( 'bp_moderation_wp_redirect' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_moderation_wp_redirect()}.
-	 *
-	 * @deprecated Use bboss_moderation_wp_redirect() instead.
-	 */
-	function bp_moderation_wp_redirect( $location ) {
-		return bboss_moderation_wp_redirect( $location );
-	}
-}
 // @bbwt-com-end compat-layer
+
+
+add_filter( 'bb_get_friendship_ids_for_user_join_sql', 'bb_moderation_get_friendship_ids_for_user_join_sql', 10, 2 );

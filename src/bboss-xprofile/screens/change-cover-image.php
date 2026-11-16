@@ -37,10 +37,8 @@ function bboss_xprofile_screen_change_cover_image() {
 	 */
 	bboss_core_load_template( apply_filters( 'xprofile_template_cover_image', 'members/single/home' ) );
 }
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_xprofile_screen_change_cover_image' ) && ! function_exists( 'xprofile_screen_change_cover_image' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_xprofile_screen_change_cover_image()}.
@@ -52,3 +50,4 @@ if ( function_exists( 'bboss_xprofile_screen_change_cover_image' ) && ! function
 	}
 }
 // @bbwt-com-end compat-layer
+

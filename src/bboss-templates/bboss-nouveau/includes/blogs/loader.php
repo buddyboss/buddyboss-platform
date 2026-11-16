@@ -97,11 +97,8 @@ function bboss_nouveau_blogs( $bp_nouveau = null ) {
 
 	$bp_nouveau->blogs = new BBoss_Nouveau_Blogs();
 }
-add_action( 'bp_nouveau_includes', 'bp_nouveau_blogs', 10, 1 );
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_nouveau_blogs' ) && ! function_exists( 'bp_nouveau_blogs' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_nouveau_blogs()}.
@@ -113,3 +110,5 @@ if ( function_exists( 'bboss_nouveau_blogs' ) && ! function_exists( 'bp_nouveau_
 	}
 }
 // @bbwt-com-end compat-layer
+
+add_action( 'bp_nouveau_includes', 'bp_nouveau_blogs', 10, 1 );

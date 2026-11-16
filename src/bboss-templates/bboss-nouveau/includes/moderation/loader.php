@@ -95,12 +95,8 @@ function bboss_nouveau_moderation( $bp_nouveau = null ) {
 
 	$bp_nouveau->moderation = new BBoss_Nouveau_Moderation();
 }
-
-add_action( 'bp_nouveau_includes', 'bp_nouveau_moderation', 10, 1 );
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_nouveau_moderation' ) && ! function_exists( 'bp_nouveau_moderation' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_nouveau_moderation()}.
@@ -112,3 +108,6 @@ if ( function_exists( 'bboss_nouveau_moderation' ) && ! function_exists( 'bp_nou
 	}
 }
 // @bbwt-com-end compat-layer
+
+
+add_action( 'bp_nouveau_includes', 'bp_nouveau_moderation', 10, 1 );

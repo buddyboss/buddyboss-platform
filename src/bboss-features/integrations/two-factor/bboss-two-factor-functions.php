@@ -41,6 +41,20 @@ function bboss_two_factor_plugin_is_active() {
 
 	return false;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_two_factor_plugin_is_active' ) && ! function_exists( 'bb_two_factor_plugin_is_active' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_two_factor_plugin_is_active()}.
+	 *
+	 * @deprecated Use bboss_two_factor_plugin_is_active() instead.
+	 */
+	function bb_two_factor_plugin_is_active() {
+		return bboss_two_factor_plugin_is_active();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get the version of the Two Factor plugin that is loaded.
@@ -55,6 +69,20 @@ function bboss_two_factor_plugin_is_active() {
 function bboss_two_factor_plugin_version() {
 	return defined( 'TWO_FACTOR_VERSION' ) ? (string) TWO_FACTOR_VERSION : '';
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_two_factor_plugin_version' ) && ! function_exists( 'bb_two_factor_plugin_version' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_two_factor_plugin_version()}.
+	 *
+	 * @deprecated Use bboss_two_factor_plugin_version() instead.
+	 */
+	function bb_two_factor_plugin_version() {
+		return bboss_two_factor_plugin_version();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Whether the Two Factor plugin is active, loaded and new enough to build on.
@@ -79,6 +107,20 @@ function bboss_two_factor_is_supported() {
 
 	return version_compare( $version, bboss_two_factor_min_plugin_version(), '>=' );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_two_factor_is_supported' ) && ! function_exists( 'bb_two_factor_is_supported' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_two_factor_is_supported()}.
+	 *
+	 * @deprecated Use bboss_two_factor_is_supported() instead.
+	 */
+	function bb_two_factor_is_supported() {
+		return bboss_two_factor_is_supported();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Whether the Two-Factor feature is switched on in the admin.
@@ -110,6 +152,20 @@ function bboss_two_factor_feature_is_on() {
 	 */
 	return (bool) apply_filters( 'bb_two_factor_is_enabled', $is_on );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_two_factor_feature_is_on' ) && ! function_exists( 'bb_two_factor_feature_is_on' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_two_factor_feature_is_on()}.
+	 *
+	 * @deprecated Use bboss_two_factor_feature_is_on() instead.
+	 */
+	function bb_two_factor_feature_is_on() {
+		return bboss_two_factor_feature_is_on();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * The guard every consumer of this integration uses.
@@ -125,6 +181,20 @@ function bboss_two_factor_feature_is_on() {
 function bboss_two_factor_is_active() {
 	return bboss_two_factor_is_supported() && bboss_two_factor_feature_is_on();
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_two_factor_is_active' ) && ! function_exists( 'bb_two_factor_is_active' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_two_factor_is_active()}.
+	 *
+	 * @deprecated Use bboss_two_factor_is_active() instead.
+	 */
+	function bb_two_factor_is_active() {
+		return bboss_two_factor_is_active();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * URL of a member's Security tab.
@@ -150,6 +220,20 @@ function bboss_two_factor_get_settings_url( $user_id = 0 ) {
 
 	return trailingslashit( $domain . bboss_get_settings_slug() . '/security' );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_two_factor_get_settings_url' ) && ! function_exists( 'bb_two_factor_get_settings_url' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_two_factor_get_settings_url()}.
+	 *
+	 * @deprecated Use bboss_two_factor_get_settings_url() instead.
+	 */
+	function bb_two_factor_get_settings_url( $user_id = 0 ) {
+		return bboss_two_factor_get_settings_url( $user_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get a member's unusable two-factor configuration, if they have one.
@@ -174,6 +258,20 @@ function bboss_two_factor_get_broken_config( $user_id ) {
 
 	return is_wp_error( $available ) ? $available : false;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_two_factor_get_broken_config' ) && ! function_exists( 'bb_two_factor_get_broken_config' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_two_factor_get_broken_config()}.
+	 *
+	 * @deprecated Use bboss_two_factor_get_broken_config() instead.
+	 */
+	function bb_two_factor_get_broken_config( $user_id ) {
+		return bboss_two_factor_get_broken_config( $user_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Whether the current user may change two-factor settings right now.
@@ -237,6 +335,20 @@ function bboss_two_factor_current_user_can_manage( $context = 'display' ) {
 
 	return ( time() - (int) $last_validated ) <= $grace;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_two_factor_current_user_can_manage' ) && ! function_exists( 'bb_two_factor_current_user_can_manage' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_two_factor_current_user_can_manage()}.
+	 *
+	 * @deprecated Use bboss_two_factor_current_user_can_manage() instead.
+	 */
+	function bb_two_factor_current_user_can_manage( $context = 'display' ) {
+		return bboss_two_factor_current_user_can_manage( $context );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Provider keys that count as a recovery method.
@@ -259,6 +371,20 @@ function bboss_two_factor_get_recovery_providers() {
 	 */
 	return (array) apply_filters( 'bb_two_factor_recovery_providers', array( 'Two_Factor_Backup_Codes' ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_two_factor_get_recovery_providers' ) && ! function_exists( 'bb_two_factor_get_recovery_providers' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_two_factor_get_recovery_providers()}.
+	 *
+	 * @deprecated Use bboss_two_factor_get_recovery_providers() instead.
+	 */
+	function bb_two_factor_get_recovery_providers() {
+		return bboss_two_factor_get_recovery_providers();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Check that a set of enabled methods keeps a usable recovery method.
@@ -355,6 +481,20 @@ function bboss_two_factor_check_recovery_method( $user_id, $provider_ids ) {
 		__( 'Set up and enable a recovery method, such as Recovery Codes, before turning on a two-factor method, so you can still sign in if you lose access to your device.', 'buddyboss' )
 	);
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_two_factor_check_recovery_method' ) && ! function_exists( 'bb_two_factor_check_recovery_method' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_two_factor_check_recovery_method()}.
+	 *
+	 * @deprecated Use bboss_two_factor_check_recovery_method() instead.
+	 */
+	function bb_two_factor_check_recovery_method( $user_id, $provider_ids ) {
+		return bboss_two_factor_check_recovery_method( $user_id, $provider_ids );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Check the methods submitted from the Security tab keep a usable recovery method.
@@ -376,6 +516,20 @@ function bboss_two_factor_validate_recovery_method( $user_id ) {
 	// The plugin prints an empty placeholder input so the field always posts; it is dropped by the check.
 	return bboss_two_factor_check_recovery_method( $user_id, $input );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_two_factor_validate_recovery_method' ) && ! function_exists( 'bb_two_factor_validate_recovery_method' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_two_factor_validate_recovery_method()}.
+	 *
+	 * @deprecated Use bboss_two_factor_validate_recovery_method() instead.
+	 */
+	function bb_two_factor_validate_recovery_method( $user_id ) {
+		return bboss_two_factor_validate_recovery_method( $user_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Drain the plugin's private profile-error store into a WP_Error.
@@ -393,6 +547,20 @@ function bboss_two_factor_drain_errors() {
 
 	return $errors;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_two_factor_drain_errors' ) && ! function_exists( 'bb_two_factor_drain_errors' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_two_factor_drain_errors()}.
+	 *
+	 * @deprecated Use bboss_two_factor_drain_errors() instead.
+	 */
+	function bb_two_factor_drain_errors() {
+		return bboss_two_factor_drain_errors();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Point the plugin's revalidation link back at the Security tab.
@@ -428,6 +596,20 @@ function bboss_two_factor_set_revalidate_return( $html, $return_url ) {
 		$html
 	);
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_two_factor_set_revalidate_return' ) && ! function_exists( 'bb_two_factor_set_revalidate_return' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_two_factor_set_revalidate_return()}.
+	 *
+	 * @deprecated Use bboss_two_factor_set_revalidate_return() instead.
+	 */
+	function bb_two_factor_set_revalidate_return( $html, $return_url ) {
+		return bboss_two_factor_set_revalidate_return( $html, $return_url );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Reword plugin strings that only make sense on the wp-admin profile screen.
@@ -454,6 +636,20 @@ function bboss_two_factor_filter_plugin_strings( $translation, $text, $domain ) 
 
 	return $translation;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_two_factor_filter_plugin_strings' ) && ! function_exists( 'bb_two_factor_filter_plugin_strings' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_two_factor_filter_plugin_strings()}.
+	 *
+	 * @deprecated Use bboss_two_factor_filter_plugin_strings() instead.
+	 */
+	function bb_two_factor_filter_plugin_strings( $translation, $text, $domain ) {
+		return bboss_two_factor_filter_plugin_strings( $translation, $text, $domain );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Render the plugin's own two-factor options for a member.
@@ -485,6 +681,20 @@ function bboss_two_factor_render_options( $user ) {
 	// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Markup is produced and escaped by Two_Factor_Core.
 	echo bboss_two_factor_set_revalidate_return( $html, bboss_two_factor_get_settings_url( $user->ID ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_two_factor_render_options' ) && ! function_exists( 'bb_two_factor_render_options' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_two_factor_render_options()}.
+	 *
+	 * @deprecated Use bboss_two_factor_render_options() instead.
+	 */
+	function bb_two_factor_render_options( $user ) {
+		return bboss_two_factor_render_options( $user );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Render the Security section.
@@ -534,140 +744,8 @@ function bboss_two_factor_render_section() {
 	</form>
 	<?php
 }
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
-if ( function_exists( 'bboss_two_factor_check_recovery_method' ) && ! function_exists( 'bb_two_factor_check_recovery_method' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_two_factor_check_recovery_method()}.
-	 *
-	 * @deprecated Use bboss_two_factor_check_recovery_method() instead.
-	 */
-	function bb_two_factor_check_recovery_method( $user_id, $provider_ids ) {
-		return bboss_two_factor_check_recovery_method( $user_id, $provider_ids );
-	}
-}
-if ( function_exists( 'bboss_two_factor_current_user_can_manage' ) && ! function_exists( 'bb_two_factor_current_user_can_manage' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_two_factor_current_user_can_manage()}.
-	 *
-	 * @deprecated Use bboss_two_factor_current_user_can_manage() instead.
-	 */
-	function bb_two_factor_current_user_can_manage( $context = 'display' ) {
-		return bboss_two_factor_current_user_can_manage( $context );
-	}
-}
-if ( function_exists( 'bboss_two_factor_drain_errors' ) && ! function_exists( 'bb_two_factor_drain_errors' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_two_factor_drain_errors()}.
-	 *
-	 * @deprecated Use bboss_two_factor_drain_errors() instead.
-	 */
-	function bb_two_factor_drain_errors() {
-		return bboss_two_factor_drain_errors();
-	}
-}
-if ( function_exists( 'bboss_two_factor_feature_is_on' ) && ! function_exists( 'bb_two_factor_feature_is_on' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_two_factor_feature_is_on()}.
-	 *
-	 * @deprecated Use bboss_two_factor_feature_is_on() instead.
-	 */
-	function bb_two_factor_feature_is_on() {
-		return bboss_two_factor_feature_is_on();
-	}
-}
-if ( function_exists( 'bboss_two_factor_filter_plugin_strings' ) && ! function_exists( 'bb_two_factor_filter_plugin_strings' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_two_factor_filter_plugin_strings()}.
-	 *
-	 * @deprecated Use bboss_two_factor_filter_plugin_strings() instead.
-	 */
-	function bb_two_factor_filter_plugin_strings( $translation, $text, $domain ) {
-		return bboss_two_factor_filter_plugin_strings( $translation, $text, $domain );
-	}
-}
-if ( function_exists( 'bboss_two_factor_get_broken_config' ) && ! function_exists( 'bb_two_factor_get_broken_config' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_two_factor_get_broken_config()}.
-	 *
-	 * @deprecated Use bboss_two_factor_get_broken_config() instead.
-	 */
-	function bb_two_factor_get_broken_config( $user_id ) {
-		return bboss_two_factor_get_broken_config( $user_id );
-	}
-}
-if ( function_exists( 'bboss_two_factor_get_recovery_providers' ) && ! function_exists( 'bb_two_factor_get_recovery_providers' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_two_factor_get_recovery_providers()}.
-	 *
-	 * @deprecated Use bboss_two_factor_get_recovery_providers() instead.
-	 */
-	function bb_two_factor_get_recovery_providers() {
-		return bboss_two_factor_get_recovery_providers();
-	}
-}
-if ( function_exists( 'bboss_two_factor_get_settings_url' ) && ! function_exists( 'bb_two_factor_get_settings_url' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_two_factor_get_settings_url()}.
-	 *
-	 * @deprecated Use bboss_two_factor_get_settings_url() instead.
-	 */
-	function bb_two_factor_get_settings_url( $user_id = 0 ) {
-		return bboss_two_factor_get_settings_url( $user_id );
-	}
-}
-if ( function_exists( 'bboss_two_factor_is_active' ) && ! function_exists( 'bb_two_factor_is_active' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_two_factor_is_active()}.
-	 *
-	 * @deprecated Use bboss_two_factor_is_active() instead.
-	 */
-	function bb_two_factor_is_active() {
-		return bboss_two_factor_is_active();
-	}
-}
-if ( function_exists( 'bboss_two_factor_is_supported' ) && ! function_exists( 'bb_two_factor_is_supported' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_two_factor_is_supported()}.
-	 *
-	 * @deprecated Use bboss_two_factor_is_supported() instead.
-	 */
-	function bb_two_factor_is_supported() {
-		return bboss_two_factor_is_supported();
-	}
-}
-if ( function_exists( 'bboss_two_factor_plugin_is_active' ) && ! function_exists( 'bb_two_factor_plugin_is_active' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_two_factor_plugin_is_active()}.
-	 *
-	 * @deprecated Use bboss_two_factor_plugin_is_active() instead.
-	 */
-	function bb_two_factor_plugin_is_active() {
-		return bboss_two_factor_plugin_is_active();
-	}
-}
-if ( function_exists( 'bboss_two_factor_plugin_version' ) && ! function_exists( 'bb_two_factor_plugin_version' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_two_factor_plugin_version()}.
-	 *
-	 * @deprecated Use bboss_two_factor_plugin_version() instead.
-	 */
-	function bb_two_factor_plugin_version() {
-		return bboss_two_factor_plugin_version();
-	}
-}
-if ( function_exists( 'bboss_two_factor_render_options' ) && ! function_exists( 'bb_two_factor_render_options' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_two_factor_render_options()}.
-	 *
-	 * @deprecated Use bboss_two_factor_render_options() instead.
-	 */
-	function bb_two_factor_render_options( $user ) {
-		return bboss_two_factor_render_options( $user );
-	}
-}
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_two_factor_render_section' ) && ! function_exists( 'bb_two_factor_render_section' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_two_factor_render_section()}.
@@ -678,24 +756,5 @@ if ( function_exists( 'bboss_two_factor_render_section' ) && ! function_exists( 
 		return bboss_two_factor_render_section();
 	}
 }
-if ( function_exists( 'bboss_two_factor_set_revalidate_return' ) && ! function_exists( 'bb_two_factor_set_revalidate_return' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_two_factor_set_revalidate_return()}.
-	 *
-	 * @deprecated Use bboss_two_factor_set_revalidate_return() instead.
-	 */
-	function bb_two_factor_set_revalidate_return( $html, $return_url ) {
-		return bboss_two_factor_set_revalidate_return( $html, $return_url );
-	}
-}
-if ( function_exists( 'bboss_two_factor_validate_recovery_method' ) && ! function_exists( 'bb_two_factor_validate_recovery_method' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_two_factor_validate_recovery_method()}.
-	 *
-	 * @deprecated Use bboss_two_factor_validate_recovery_method() instead.
-	 */
-	function bb_two_factor_validate_recovery_method( $user_id ) {
-		return bboss_two_factor_validate_recovery_method( $user_id );
-	}
-}
 // @bbwt-com-end compat-layer
+

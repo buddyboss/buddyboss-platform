@@ -31,6 +31,20 @@ function bboss_blogs_catch_transition_post_status( $new_status, $old_status, $po
 	_deprecated_function( __FUNCTION__, '2.2', 'bp_activity_catch_transition_post_type_status()' );
 	bboss_activity_catch_transition_post_type_status( $new_status, $old_status, $post );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_blogs_catch_transition_post_status' ) && ! function_exists( 'bp_blogs_catch_transition_post_status' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_blogs_catch_transition_post_status()}.
+	 *
+	 * @deprecated Use bboss_blogs_catch_transition_post_status() instead.
+	 */
+	function bp_blogs_catch_transition_post_status( $new_status, $old_status, $post ) {
+		return bboss_blogs_catch_transition_post_status( $new_status, $old_status, $post );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Record a new blog post in the BuddyBoss activity feed.
@@ -47,6 +61,20 @@ function bboss_blogs_record_post( $post_id, $post, $user_id = 0 ) {
 	_deprecated_function( __FUNCTION__, '2.2', 'bp_activity_post_type_publish()' );
 	bboss_activity_post_type_publish( $post_id, $post, $user_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_blogs_record_post' ) && ! function_exists( 'bp_blogs_record_post' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_blogs_record_post()}.
+	 *
+	 * @deprecated Use bboss_blogs_record_post() instead.
+	 */
+	function bp_blogs_record_post( $post_id, $post, $user_id = 0 ) {
+		return bboss_blogs_record_post( $post_id, $post, $user_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Updates a blog post's corresponding activity entry during a post edit.
@@ -62,6 +90,20 @@ function bboss_blogs_update_post( $post ) {
 	_deprecated_function( __FUNCTION__, '2.2', 'bp_activity_post_type_update()' );
 	bboss_activity_post_type_update( $post );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_blogs_update_post' ) && ! function_exists( 'bp_blogs_update_post' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_blogs_update_post()}.
+	 *
+	 * @deprecated Use bboss_blogs_update_post() instead.
+	 */
+	function bp_blogs_update_post( $post ) {
+		return bboss_blogs_update_post( $post );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Clear cache when a new blog is created.
@@ -76,6 +118,20 @@ function bboss_blogs_format_clear_blog_cache( $recorded_blog_obj ) {
 	_deprecated_function( __FUNCTION__, '2.2', 'bp_blogs_clear_blog_object_cache()' );
 	bboss_blogs_clear_blog_object_cache( false, $recorded_blog_obj->user_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_blogs_format_clear_blog_cache' ) && ! function_exists( 'bp_blogs_format_clear_blog_cache' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_blogs_format_clear_blog_cache()}.
+	 *
+	 * @deprecated Use bboss_blogs_format_clear_blog_cache() instead.
+	 */
+	function bp_blogs_format_clear_blog_cache( $recorded_blog_obj ) {
+		return bboss_blogs_format_clear_blog_cache( $recorded_blog_obj );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Format 'new_member' activity actions.
@@ -93,90 +149,8 @@ function bboss_xprofile_format_activity_action_new_member( $action, $activity ) 
 	$action = apply_filters( 'bp_xprofile_format_activity_action_new_member', $action, $activity );
 	return bboss_members_format_activity_action_new_member( $action, $activity );
 }
-
-/**
- * Add 'bp' to global group of network wide cachable objects.
- *
- * @since BuddyPress 1.1.0
- * @deprecated BuddyPress 2.2.0
- */
-function bboss_core_add_global_group() {
-	_deprecated_function( __FUNCTION__, '2.2', 'This function has no replacement' );
-}
-
-/**
- * Add a piece of message metadata.
- *
- * @deprecated BuddyPress 2.2.2
- */
-function bboss_message_add_meta( $message_id, $meta_key, $meta_value, $unique = false ) {
-	_deprecated_function( __FUNCTION__, '2.3.0', 'bp_messages_add_meta()' );
-	return bboss_messages_add_meta( $message_id, $meta_key, $meta_value, $unique );
-}
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
-if ( function_exists( 'bboss_blogs_catch_transition_post_status' ) && ! function_exists( 'bp_blogs_catch_transition_post_status' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_blogs_catch_transition_post_status()}.
-	 *
-	 * @deprecated Use bboss_blogs_catch_transition_post_status() instead.
-	 */
-	function bp_blogs_catch_transition_post_status( $new_status, $old_status, $post ) {
-		return bboss_blogs_catch_transition_post_status( $new_status, $old_status, $post );
-	}
-}
-if ( function_exists( 'bboss_blogs_format_clear_blog_cache' ) && ! function_exists( 'bp_blogs_format_clear_blog_cache' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_blogs_format_clear_blog_cache()}.
-	 *
-	 * @deprecated Use bboss_blogs_format_clear_blog_cache() instead.
-	 */
-	function bp_blogs_format_clear_blog_cache( $recorded_blog_obj ) {
-		return bboss_blogs_format_clear_blog_cache( $recorded_blog_obj );
-	}
-}
-if ( function_exists( 'bboss_blogs_record_post' ) && ! function_exists( 'bp_blogs_record_post' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_blogs_record_post()}.
-	 *
-	 * @deprecated Use bboss_blogs_record_post() instead.
-	 */
-	function bp_blogs_record_post( $post_id, $post, $user_id = 0 ) {
-		return bboss_blogs_record_post( $post_id, $post, $user_id );
-	}
-}
-if ( function_exists( 'bboss_blogs_update_post' ) && ! function_exists( 'bp_blogs_update_post' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_blogs_update_post()}.
-	 *
-	 * @deprecated Use bboss_blogs_update_post() instead.
-	 */
-	function bp_blogs_update_post( $post ) {
-		return bboss_blogs_update_post( $post );
-	}
-}
-if ( function_exists( 'bboss_core_add_global_group' ) && ! function_exists( 'bp_core_add_global_group' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_core_add_global_group()}.
-	 *
-	 * @deprecated Use bboss_core_add_global_group() instead.
-	 */
-	function bp_core_add_global_group() {
-		return bboss_core_add_global_group();
-	}
-}
-if ( function_exists( 'bboss_message_add_meta' ) && ! function_exists( 'bp_message_add_meta' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_message_add_meta()}.
-	 *
-	 * @deprecated Use bboss_message_add_meta() instead.
-	 */
-	function bp_message_add_meta( $message_id, $meta_key, $meta_value, $unique = false ) {
-		return bboss_message_add_meta( $message_id, $meta_key, $meta_value, $unique );
-	}
-}
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_xprofile_format_activity_action_new_member' ) && ! function_exists( 'bp_xprofile_format_activity_action_new_member' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_xprofile_format_activity_action_new_member()}.
@@ -188,3 +162,52 @@ if ( function_exists( 'bboss_xprofile_format_activity_action_new_member' ) && ! 
 	}
 }
 // @bbwt-com-end compat-layer
+
+
+/**
+ * Add 'bp' to global group of network wide cachable objects.
+ *
+ * @since BuddyPress 1.1.0
+ * @deprecated BuddyPress 2.2.0
+ */
+function bboss_core_add_global_group() {
+	_deprecated_function( __FUNCTION__, '2.2', 'This function has no replacement' );
+}
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_core_add_global_group' ) && ! function_exists( 'bp_core_add_global_group' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_add_global_group()}.
+	 *
+	 * @deprecated Use bboss_core_add_global_group() instead.
+	 */
+	function bp_core_add_global_group() {
+		return bboss_core_add_global_group();
+	}
+}
+// @bbwt-com-end compat-layer
+
+
+/**
+ * Add a piece of message metadata.
+ *
+ * @deprecated BuddyPress 2.2.2
+ */
+function bboss_message_add_meta( $message_id, $meta_key, $meta_value, $unique = false ) {
+	_deprecated_function( __FUNCTION__, '2.3.0', 'bp_messages_add_meta()' );
+	return bboss_messages_add_meta( $message_id, $meta_key, $meta_value, $unique );
+}
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_message_add_meta' ) && ! function_exists( 'bp_message_add_meta' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_message_add_meta()}.
+	 *
+	 * @deprecated Use bboss_message_add_meta() instead.
+	 */
+	function bp_message_add_meta( $message_id, $meta_key, $meta_value, $unique = false ) {
+		return bboss_message_add_meta( $message_id, $meta_key, $meta_value, $unique );
+	}
+}
+// @bbwt-com-end compat-layer
+

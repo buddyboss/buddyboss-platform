@@ -20,10 +20,8 @@ defined( 'ABSPATH' ) || exit;
 function bboss_pusher_integration_url( $path = '' ) {
 	return trailingslashit( bboss()->integration_url ) . 'pusher/' . trim( $path, '/\\' );
 }
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_pusher_integration_url' ) && ! function_exists( 'bb_pusher_integration_url' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_pusher_integration_url()}.
@@ -35,3 +33,4 @@ if ( function_exists( 'bboss_pusher_integration_url' ) && ! function_exists( 'bb
 	}
 }
 // @bbwt-com-end compat-layer
+

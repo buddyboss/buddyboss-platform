@@ -70,6 +70,20 @@ function bboss_groups_register_activity_actions() {
 	 */
 	do_action( 'groups_register_activity_actions' );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_groups_register_activity_actions' ) && ! function_exists( 'groups_register_activity_actions' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_register_activity_actions()}.
+	 *
+	 * @deprecated Use bboss_groups_register_activity_actions() instead.
+	 */
+	function groups_register_activity_actions() {
+		return bboss_groups_register_activity_actions();
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'bp_register_activity_actions', 'groups_register_activity_actions' );
 
 /**
@@ -93,6 +107,20 @@ function bboss_groups_get_activity_group( $group_id = 0 ) {
 
 	return $group;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_groups_get_activity_group' ) && ! function_exists( 'bp_groups_get_activity_group' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_get_activity_group()}.
+	 *
+	 * @deprecated Use bboss_groups_get_activity_group() instead.
+	 */
+	function bp_groups_get_activity_group( $group_id = 0 ) {
+		return bboss_groups_get_activity_group( $group_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Format 'created_group' activity actions.
@@ -122,6 +150,20 @@ function bboss_groups_format_activity_action_created_group( $action, $activity )
 	 */
 	return apply_filters( 'groups_activity_created_group_action', $action, $activity );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_groups_format_activity_action_created_group' ) && ! function_exists( 'bp_groups_format_activity_action_created_group' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_format_activity_action_created_group()}.
+	 *
+	 * @deprecated Use bboss_groups_format_activity_action_created_group() instead.
+	 */
+	function bp_groups_format_activity_action_created_group( $action, $activity ) {
+		return bboss_groups_format_activity_action_created_group( $action, $activity );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Format 'joined_group' activity actions.
@@ -162,6 +204,20 @@ function bboss_groups_format_activity_action_joined_group( $action, $activity ) 
 	 */
 	return apply_filters( 'bp_groups_format_activity_action_joined_group', $action, $activity );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_groups_format_activity_action_joined_group' ) && ! function_exists( 'bp_groups_format_activity_action_joined_group' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_format_activity_action_joined_group()}.
+	 *
+	 * @deprecated Use bboss_groups_format_activity_action_joined_group() instead.
+	 */
+	function bp_groups_format_activity_action_joined_group( $action, $activity ) {
+		return bboss_groups_format_activity_action_joined_group( $action, $activity );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Format groups 'activity_update' activity actions.
@@ -191,6 +247,20 @@ function bboss_groups_format_activity_action_activity_update( $action, $activity
 	 */
 	return apply_filters( 'bp_groups_format_activity_action_activity_update', $action, $activity );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_groups_format_activity_action_activity_update' ) && ! function_exists( 'bp_groups_format_activity_action_activity_update' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_format_activity_action_activity_update()}.
+	 *
+	 * @deprecated Use bboss_groups_format_activity_action_activity_update() instead.
+	 */
+	function bp_groups_format_activity_action_activity_update( $action, $activity ) {
+		return bboss_groups_format_activity_action_activity_update( $action, $activity );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Format 'group_details_updated' activity actions.
@@ -249,6 +319,20 @@ function bboss_groups_format_activity_action_group_details_updated( $action, $ac
 	 */
 	return apply_filters( 'bp_groups_format_activity_action_joined_group', $action, $activity );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_groups_format_activity_action_group_details_updated' ) && ! function_exists( 'bp_groups_format_activity_action_group_details_updated' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_format_activity_action_group_details_updated()}.
+	 *
+	 * @deprecated Use bboss_groups_format_activity_action_group_details_updated() instead.
+	 */
+	function bp_groups_format_activity_action_group_details_updated( $action, $activity ) {
+		return bboss_groups_format_activity_action_group_details_updated( $action, $activity );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Fetch data related to groups at the beginning of an activity loop.
@@ -300,6 +384,20 @@ function bboss_groups_prefetch_activity_object_data( $activities ) {
 
 	return $activities;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_groups_prefetch_activity_object_data' ) && ! function_exists( 'bp_groups_prefetch_activity_object_data' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_prefetch_activity_object_data()}.
+	 *
+	 * @deprecated Use bboss_groups_prefetch_activity_object_data() instead.
+	 */
+	function bp_groups_prefetch_activity_object_data( $activities ) {
+		return bboss_groups_prefetch_activity_object_data( $activities );
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_filter( 'bp_activity_prefetch_object_data', 'bp_groups_prefetch_activity_object_data' );
 
 /**
@@ -457,6 +555,20 @@ function bboss_groups_filter_activity_scope( $retval = array(), $filter = array(
 
 	return $retval;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_groups_filter_activity_scope' ) && ! function_exists( 'bp_groups_filter_activity_scope' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_filter_activity_scope()}.
+	 *
+	 * @deprecated Use bboss_groups_filter_activity_scope() instead.
+	 */
+	function bp_groups_filter_activity_scope( $retval = array(), $filter = array() ) {
+		return bboss_groups_filter_activity_scope( $retval, $filter );
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_filter( 'bp_activity_set_groups_scope_args', 'bp_groups_filter_activity_scope', 10, 2 );
 
 /**
@@ -588,6 +700,20 @@ function bboss_groups_record_activity( $args = '' ) {
 
 	return bboss_activity_add( $r );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_groups_record_activity' ) && ! function_exists( 'groups_record_activity' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_record_activity()}.
+	 *
+	 * @deprecated Use bboss_groups_record_activity() instead.
+	 */
+	function groups_record_activity( $args = '' ) {
+		return bboss_groups_record_activity( $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Function used to determine if a user can comment on a group activity item.
@@ -631,6 +757,20 @@ function bboss_groups_filter_activity_can_comment( $retval, $activity = null ) {
 
 	return $retval;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_groups_filter_activity_can_comment' ) && ! function_exists( 'bp_groups_filter_activity_can_comment' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_filter_activity_can_comment()}.
+	 *
+	 * @deprecated Use bboss_groups_filter_activity_can_comment() instead.
+	 */
+	function bp_groups_filter_activity_can_comment( $retval, $activity = null ) {
+		return bboss_groups_filter_activity_can_comment( $retval, $activity );
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_filter( 'bp_activity_can_comment', 'bp_groups_filter_activity_can_comment', 99, 1 );
 
 /**
@@ -656,6 +796,20 @@ function bboss_groups_filter_activity_can_comment_reply( $retval, $comment ) {
 	// Check to see if user can reply to parent group activity item.
 	return bboss_groups_filter_activity_can_comment( $retval, $parent );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_groups_filter_activity_can_comment_reply' ) && ! function_exists( 'bp_groups_filter_activity_can_comment_reply' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_filter_activity_can_comment_reply()}.
+	 *
+	 * @deprecated Use bboss_groups_filter_activity_can_comment_reply() instead.
+	 */
+	function bp_groups_filter_activity_can_comment_reply( $retval, $comment ) {
+		return bboss_groups_filter_activity_can_comment_reply( $retval, $comment );
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_filter( 'bp_activity_can_comment_reply', 'bp_groups_filter_activity_can_comment_reply', 99, 2 );
 
 /**
@@ -699,6 +853,20 @@ function bboss_groups_membership_accepted_add_activity( $user_id, $group_id ) {
 		)
 	);
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_groups_membership_accepted_add_activity' ) && ! function_exists( 'bp_groups_membership_accepted_add_activity' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_membership_accepted_add_activity()}.
+	 *
+	 * @deprecated Use bboss_groups_membership_accepted_add_activity() instead.
+	 */
+	function bp_groups_membership_accepted_add_activity( $user_id, $group_id ) {
+		return bboss_groups_membership_accepted_add_activity( $user_id, $group_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'groups_membership_accepted', 'bp_groups_membership_accepted_add_activity', 10, 2 );
 
 /**
@@ -786,6 +954,20 @@ function bboss_groups_group_details_updated_add_activity( $group_id, $old_group,
 	);
 
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_groups_group_details_updated_add_activity' ) && ! function_exists( 'bp_groups_group_details_updated_add_activity' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_group_details_updated_add_activity()}.
+	 *
+	 * @deprecated Use bboss_groups_group_details_updated_add_activity() instead.
+	 */
+	function bp_groups_group_details_updated_add_activity( $group_id, $old_group, $notify_members ) {
+		return bboss_groups_group_details_updated_add_activity( $group_id, $old_group, $notify_members );
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'groups_details_updated', 'bp_groups_group_details_updated_add_activity', 10, 3 );
 
 /**
@@ -805,6 +987,20 @@ function bboss_groups_delete_group_delete_all_activity( $group_id ) {
 		);
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_groups_delete_group_delete_all_activity' ) && ! function_exists( 'bp_groups_delete_group_delete_all_activity' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_delete_group_delete_all_activity()}.
+	 *
+	 * @deprecated Use bboss_groups_delete_group_delete_all_activity() instead.
+	 */
+	function bp_groups_delete_group_delete_all_activity( $group_id ) {
+		return bboss_groups_delete_group_delete_all_activity( $group_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'groups_delete_group', 'bp_groups_delete_group_delete_all_activity', 10 );
 
 /**
@@ -841,6 +1037,20 @@ function bboss_groups_leave_group_delete_recent_activity( $group_id, $user_id ) 
 		);
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_groups_leave_group_delete_recent_activity' ) && ! function_exists( 'bp_groups_leave_group_delete_recent_activity' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_leave_group_delete_recent_activity()}.
+	 *
+	 * @deprecated Use bboss_groups_leave_group_delete_recent_activity() instead.
+	 */
+	function bp_groups_leave_group_delete_recent_activity( $group_id, $user_id ) {
+		return bboss_groups_leave_group_delete_recent_activity( $group_id, $user_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'groups_leave_group', 'bp_groups_leave_group_delete_recent_activity', 10, 2 );
 add_action( 'groups_remove_member', 'bp_groups_leave_group_delete_recent_activity', 10, 2 );
 add_action( 'groups_ban_member', 'bp_groups_leave_group_delete_recent_activity', 10, 2 );
@@ -865,6 +1075,20 @@ function bboss_groups_get_join_sql_for_activity( $sql, $r ) {
 
 	return $sql;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_groups_get_join_sql_for_activity' ) && ! function_exists( 'bb_groups_get_join_sql_for_activity' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_get_join_sql_for_activity()}.
+	 *
+	 * @deprecated Use bboss_groups_get_join_sql_for_activity() instead.
+	 */
+	function bb_groups_get_join_sql_for_activity( $sql, $r ) {
+		return bboss_groups_get_join_sql_for_activity( $sql, $r );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Function will append where condition to display group lists in the activity feed.
@@ -895,20 +1119,8 @@ function bboss_groups_get_where_conditions_for_activity( $where_conditions, $r )
 
 	return $where_conditions;
 }
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
-if ( function_exists( 'bboss_groups_get_join_sql_for_activity' ) && ! function_exists( 'bb_groups_get_join_sql_for_activity' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_groups_get_join_sql_for_activity()}.
-	 *
-	 * @deprecated Use bboss_groups_get_join_sql_for_activity() instead.
-	 */
-	function bb_groups_get_join_sql_for_activity( $sql, $r ) {
-		return bboss_groups_get_join_sql_for_activity( $sql, $r );
-	}
-}
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_groups_get_where_conditions_for_activity' ) && ! function_exists( 'bb_groups_get_where_conditions_for_activity' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_groups_get_where_conditions_for_activity()}.
@@ -919,154 +1131,5 @@ if ( function_exists( 'bboss_groups_get_where_conditions_for_activity' ) && ! fu
 		return bboss_groups_get_where_conditions_for_activity( $where_conditions, $r );
 	}
 }
-if ( function_exists( 'bboss_groups_delete_group_delete_all_activity' ) && ! function_exists( 'bp_groups_delete_group_delete_all_activity' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_groups_delete_group_delete_all_activity()}.
-	 *
-	 * @deprecated Use bboss_groups_delete_group_delete_all_activity() instead.
-	 */
-	function bp_groups_delete_group_delete_all_activity( $group_id ) {
-		return bboss_groups_delete_group_delete_all_activity( $group_id );
-	}
-}
-if ( function_exists( 'bboss_groups_filter_activity_can_comment' ) && ! function_exists( 'bp_groups_filter_activity_can_comment' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_groups_filter_activity_can_comment()}.
-	 *
-	 * @deprecated Use bboss_groups_filter_activity_can_comment() instead.
-	 */
-	function bp_groups_filter_activity_can_comment( $retval, $activity = null ) {
-		return bboss_groups_filter_activity_can_comment( $retval, $activity );
-	}
-}
-if ( function_exists( 'bboss_groups_filter_activity_can_comment_reply' ) && ! function_exists( 'bp_groups_filter_activity_can_comment_reply' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_groups_filter_activity_can_comment_reply()}.
-	 *
-	 * @deprecated Use bboss_groups_filter_activity_can_comment_reply() instead.
-	 */
-	function bp_groups_filter_activity_can_comment_reply( $retval, $comment ) {
-		return bboss_groups_filter_activity_can_comment_reply( $retval, $comment );
-	}
-}
-if ( function_exists( 'bboss_groups_filter_activity_scope' ) && ! function_exists( 'bp_groups_filter_activity_scope' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_groups_filter_activity_scope()}.
-	 *
-	 * @deprecated Use bboss_groups_filter_activity_scope() instead.
-	 */
-	function bp_groups_filter_activity_scope( $retval = array(), $filter = array() ) {
-		return bboss_groups_filter_activity_scope( $retval, $filter );
-	}
-}
-if ( function_exists( 'bboss_groups_format_activity_action_activity_update' ) && ! function_exists( 'bp_groups_format_activity_action_activity_update' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_groups_format_activity_action_activity_update()}.
-	 *
-	 * @deprecated Use bboss_groups_format_activity_action_activity_update() instead.
-	 */
-	function bp_groups_format_activity_action_activity_update( $action, $activity ) {
-		return bboss_groups_format_activity_action_activity_update( $action, $activity );
-	}
-}
-if ( function_exists( 'bboss_groups_format_activity_action_created_group' ) && ! function_exists( 'bp_groups_format_activity_action_created_group' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_groups_format_activity_action_created_group()}.
-	 *
-	 * @deprecated Use bboss_groups_format_activity_action_created_group() instead.
-	 */
-	function bp_groups_format_activity_action_created_group( $action, $activity ) {
-		return bboss_groups_format_activity_action_created_group( $action, $activity );
-	}
-}
-if ( function_exists( 'bboss_groups_format_activity_action_group_details_updated' ) && ! function_exists( 'bp_groups_format_activity_action_group_details_updated' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_groups_format_activity_action_group_details_updated()}.
-	 *
-	 * @deprecated Use bboss_groups_format_activity_action_group_details_updated() instead.
-	 */
-	function bp_groups_format_activity_action_group_details_updated( $action, $activity ) {
-		return bboss_groups_format_activity_action_group_details_updated( $action, $activity );
-	}
-}
-if ( function_exists( 'bboss_groups_format_activity_action_joined_group' ) && ! function_exists( 'bp_groups_format_activity_action_joined_group' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_groups_format_activity_action_joined_group()}.
-	 *
-	 * @deprecated Use bboss_groups_format_activity_action_joined_group() instead.
-	 */
-	function bp_groups_format_activity_action_joined_group( $action, $activity ) {
-		return bboss_groups_format_activity_action_joined_group( $action, $activity );
-	}
-}
-if ( function_exists( 'bboss_groups_get_activity_group' ) && ! function_exists( 'bp_groups_get_activity_group' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_groups_get_activity_group()}.
-	 *
-	 * @deprecated Use bboss_groups_get_activity_group() instead.
-	 */
-	function bp_groups_get_activity_group( $group_id = 0 ) {
-		return bboss_groups_get_activity_group( $group_id );
-	}
-}
-if ( function_exists( 'bboss_groups_group_details_updated_add_activity' ) && ! function_exists( 'bp_groups_group_details_updated_add_activity' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_groups_group_details_updated_add_activity()}.
-	 *
-	 * @deprecated Use bboss_groups_group_details_updated_add_activity() instead.
-	 */
-	function bp_groups_group_details_updated_add_activity( $group_id, $old_group, $notify_members ) {
-		return bboss_groups_group_details_updated_add_activity( $group_id, $old_group, $notify_members );
-	}
-}
-if ( function_exists( 'bboss_groups_leave_group_delete_recent_activity' ) && ! function_exists( 'bp_groups_leave_group_delete_recent_activity' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_groups_leave_group_delete_recent_activity()}.
-	 *
-	 * @deprecated Use bboss_groups_leave_group_delete_recent_activity() instead.
-	 */
-	function bp_groups_leave_group_delete_recent_activity( $group_id, $user_id ) {
-		return bboss_groups_leave_group_delete_recent_activity( $group_id, $user_id );
-	}
-}
-if ( function_exists( 'bboss_groups_membership_accepted_add_activity' ) && ! function_exists( 'bp_groups_membership_accepted_add_activity' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_groups_membership_accepted_add_activity()}.
-	 *
-	 * @deprecated Use bboss_groups_membership_accepted_add_activity() instead.
-	 */
-	function bp_groups_membership_accepted_add_activity( $user_id, $group_id ) {
-		return bboss_groups_membership_accepted_add_activity( $user_id, $group_id );
-	}
-}
-if ( function_exists( 'bboss_groups_prefetch_activity_object_data' ) && ! function_exists( 'bp_groups_prefetch_activity_object_data' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_groups_prefetch_activity_object_data()}.
-	 *
-	 * @deprecated Use bboss_groups_prefetch_activity_object_data() instead.
-	 */
-	function bp_groups_prefetch_activity_object_data( $activities ) {
-		return bboss_groups_prefetch_activity_object_data( $activities );
-	}
-}
-if ( function_exists( 'bboss_groups_record_activity' ) && ! function_exists( 'groups_record_activity' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_groups_record_activity()}.
-	 *
-	 * @deprecated Use bboss_groups_record_activity() instead.
-	 */
-	function groups_record_activity( $args = '' ) {
-		return bboss_groups_record_activity( $args );
-	}
-}
-if ( function_exists( 'bboss_groups_register_activity_actions' ) && ! function_exists( 'groups_register_activity_actions' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_groups_register_activity_actions()}.
-	 *
-	 * @deprecated Use bboss_groups_register_activity_actions() instead.
-	 */
-	function groups_register_activity_actions() {
-		return bboss_groups_register_activity_actions();
-	}
-}
 // @bbwt-com-end compat-layer
+

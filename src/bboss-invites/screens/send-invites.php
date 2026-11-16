@@ -32,19 +32,8 @@ function bboss_invites_screen_send_invite() {
 	 */
 	bboss_core_load_template( apply_filters( 'bp_invites_screen_send_invite', 'members/single/plugins' ) );
 }
-
-/**
- * Output members's Invites > Sent Invite page.
- *
- * @since BuddyBoss 1.0.0
- */
-function bboss_invites_send_invite_screen() {
-	bboss_get_template_part( 'members/single/invites' );
-}
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_invites_screen_send_invite' ) && ! function_exists( 'bp_invites_screen_send_invite' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_invites_screen_send_invite()}.
@@ -55,6 +44,19 @@ if ( function_exists( 'bboss_invites_screen_send_invite' ) && ! function_exists(
 		return bboss_invites_screen_send_invite();
 	}
 }
+// @bbwt-com-end compat-layer
+
+
+/**
+ * Output members's Invites > Sent Invite page.
+ *
+ * @since BuddyBoss 1.0.0
+ */
+function bboss_invites_send_invite_screen() {
+	bboss_get_template_part( 'members/single/invites' );
+}
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_invites_send_invite_screen' ) && ! function_exists( 'bp_invites_send_invite_screen' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_invites_send_invite_screen()}.
@@ -66,3 +68,4 @@ if ( function_exists( 'bboss_invites_send_invite_screen' ) && ! function_exists(
 	}
 }
 // @bbwt-com-end compat-layer
+

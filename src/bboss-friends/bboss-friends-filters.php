@@ -45,6 +45,20 @@ function bboss_friends_filter_user_query_populate_extras( BBoss_User_Query $user
 	}
 
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_friends_filter_user_query_populate_extras' ) && ! function_exists( 'bp_friends_filter_user_query_populate_extras' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_friends_filter_user_query_populate_extras()}.
+	 *
+	 * @deprecated Use bboss_friends_filter_user_query_populate_extras() instead.
+	 */
+	function bp_friends_filter_user_query_populate_extras( BBoss_User_Query $user_query, $user_ids_sql ) {
+		return bboss_friends_filter_user_query_populate_extras( $user_query, $user_ids_sql );
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_filter( 'bp_user_query_populate_extras', 'bp_friends_filter_user_query_populate_extras', 4, 2 );
 
 /**
@@ -122,6 +136,20 @@ function bboss_friends_filter_media_scope( $retval = array(), $filter = array() 
 
 	return $retval;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_friends_filter_media_scope' ) && ! function_exists( 'bp_friends_filter_media_scope' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_friends_filter_media_scope()}.
+	 *
+	 * @deprecated Use bboss_friends_filter_media_scope() instead.
+	 */
+	function bp_friends_filter_media_scope( $retval = array(), $filter = array() ) {
+		return bboss_friends_filter_media_scope( $retval, $filter );
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_filter( 'bp_media_set_friends_scope_args', 'bp_friends_filter_media_scope', 10, 2 );
 
 /**
@@ -199,6 +227,20 @@ function bboss_friends_filter_video_scope( $retval = array(), $filter = array() 
 
 	return $retval;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_friends_filter_video_scope' ) && ! function_exists( 'bp_friends_filter_video_scope' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_friends_filter_video_scope()}.
+	 *
+	 * @deprecated Use bboss_friends_filter_video_scope() instead.
+	 */
+	function bp_friends_filter_video_scope( $retval = array(), $filter = array() ) {
+		return bboss_friends_filter_video_scope( $retval, $filter );
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_filter( 'bp_video_set_friends_scope_args', 'bp_friends_filter_video_scope', 10, 2 );
 
 /**
@@ -286,6 +328,20 @@ function bboss_friends_filter_document_scope( $retval = array(), $filter = array
 
 	return $args;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_friends_filter_document_scope' ) && ! function_exists( 'bp_friends_filter_document_scope' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_friends_filter_document_scope()}.
+	 *
+	 * @deprecated Use bboss_friends_filter_document_scope() instead.
+	 */
+	function bp_friends_filter_document_scope( $retval = array(), $filter = array() ) {
+		return bboss_friends_filter_document_scope( $retval, $filter );
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_filter( 'bp_document_set_document_friends_scope_args', 'bp_friends_filter_document_scope', 10, 2 );
 
 /**
@@ -374,6 +430,20 @@ function bboss_friends_filter_folder_scope( $retval = array(), $filter = array()
 
 	return $args;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_friends_filter_folder_scope' ) && ! function_exists( 'bp_friends_filter_folder_scope' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_friends_filter_folder_scope()}.
+	 *
+	 * @deprecated Use bboss_friends_filter_folder_scope() instead.
+	 */
+	function bp_friends_filter_folder_scope( $retval = array(), $filter = array() ) {
+		return bboss_friends_filter_folder_scope( $retval, $filter );
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_filter( 'bp_document_set_folder_friends_scope_args', 'bp_friends_filter_folder_scope', 10, 2 );
 
 /**
@@ -457,6 +527,20 @@ function bboss_friends_screen_notification_settings() {
 	<?php
 
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_friends_screen_notification_settings' ) && ! function_exists( 'friends_screen_notification_settings' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_friends_screen_notification_settings()}.
+	 *
+	 * @deprecated Use bboss_friends_screen_notification_settings() instead.
+	 */
+	function friends_screen_notification_settings() {
+		return bboss_friends_screen_notification_settings();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 add_action( 'bp_notification_settings', 'friends_screen_notification_settings', 15 );
 
@@ -470,6 +554,20 @@ function bboss_load_friends_notifications() {
 		BBoss_Friends_Notification::instance();
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_load_friends_notifications' ) && ! function_exists( 'bb_load_friends_notifications' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_load_friends_notifications()}.
+	 *
+	 * @deprecated Use bboss_load_friends_notifications() instead.
+	 */
+	function bb_load_friends_notifications() {
+		return bboss_load_friends_notifications();
+	}
+}
+// @bbwt-com-end compat-layer
+
 // Load Group Notifications.
 add_action( 'bp_friends_includes', 'bb_load_friends_notifications' );
 
@@ -490,12 +588,8 @@ function bboss_friends_friendship_before_save( $value ) {
 		}
 	}
 }
-
-add_action( 'friends_friendship_before_save', 'bb_friends_friendship_before_save', 10, 1 );
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_friends_friendship_before_save' ) && ! function_exists( 'bb_friends_friendship_before_save' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_friends_friendship_before_save()}.
@@ -506,74 +600,7 @@ if ( function_exists( 'bboss_friends_friendship_before_save' ) && ! function_exi
 		return bboss_friends_friendship_before_save( $value );
 	}
 }
-if ( function_exists( 'bboss_load_friends_notifications' ) && ! function_exists( 'bb_load_friends_notifications' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_load_friends_notifications()}.
-	 *
-	 * @deprecated Use bboss_load_friends_notifications() instead.
-	 */
-	function bb_load_friends_notifications() {
-		return bboss_load_friends_notifications();
-	}
-}
-if ( function_exists( 'bboss_friends_filter_document_scope' ) && ! function_exists( 'bp_friends_filter_document_scope' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_friends_filter_document_scope()}.
-	 *
-	 * @deprecated Use bboss_friends_filter_document_scope() instead.
-	 */
-	function bp_friends_filter_document_scope( $retval = array(), $filter = array() ) {
-		return bboss_friends_filter_document_scope( $retval, $filter );
-	}
-}
-if ( function_exists( 'bboss_friends_filter_folder_scope' ) && ! function_exists( 'bp_friends_filter_folder_scope' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_friends_filter_folder_scope()}.
-	 *
-	 * @deprecated Use bboss_friends_filter_folder_scope() instead.
-	 */
-	function bp_friends_filter_folder_scope( $retval = array(), $filter = array() ) {
-		return bboss_friends_filter_folder_scope( $retval, $filter );
-	}
-}
-if ( function_exists( 'bboss_friends_filter_media_scope' ) && ! function_exists( 'bp_friends_filter_media_scope' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_friends_filter_media_scope()}.
-	 *
-	 * @deprecated Use bboss_friends_filter_media_scope() instead.
-	 */
-	function bp_friends_filter_media_scope( $retval = array(), $filter = array() ) {
-		return bboss_friends_filter_media_scope( $retval, $filter );
-	}
-}
-if ( function_exists( 'bboss_friends_filter_user_query_populate_extras' ) && ! function_exists( 'bp_friends_filter_user_query_populate_extras' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_friends_filter_user_query_populate_extras()}.
-	 *
-	 * @deprecated Use bboss_friends_filter_user_query_populate_extras() instead.
-	 */
-	function bp_friends_filter_user_query_populate_extras( BBoss_User_Query $user_query, $user_ids_sql ) {
-		return bboss_friends_filter_user_query_populate_extras( $user_query, $user_ids_sql );
-	}
-}
-if ( function_exists( 'bboss_friends_filter_video_scope' ) && ! function_exists( 'bp_friends_filter_video_scope' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_friends_filter_video_scope()}.
-	 *
-	 * @deprecated Use bboss_friends_filter_video_scope() instead.
-	 */
-	function bp_friends_filter_video_scope( $retval = array(), $filter = array() ) {
-		return bboss_friends_filter_video_scope( $retval, $filter );
-	}
-}
-if ( function_exists( 'bboss_friends_screen_notification_settings' ) && ! function_exists( 'friends_screen_notification_settings' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_friends_screen_notification_settings()}.
-	 *
-	 * @deprecated Use bboss_friends_screen_notification_settings() instead.
-	 */
-	function friends_screen_notification_settings() {
-		return bboss_friends_screen_notification_settings();
-	}
-}
 // @bbwt-com-end compat-layer
+
+
+add_action( 'friends_friendship_before_save', 'bb_friends_friendship_before_save', 10, 1 );

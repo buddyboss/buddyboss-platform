@@ -142,10 +142,8 @@ function bboss_nouveau_ajax_xprofile_get_field() {
 	wp_send_json_success( $response );
 
 }
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_nouveau_ajax_xprofile_get_field' ) && ! function_exists( 'bp_nouveau_ajax_xprofile_get_field' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_nouveau_ajax_xprofile_get_field()}.
@@ -157,3 +155,4 @@ if ( function_exists( 'bboss_nouveau_ajax_xprofile_get_field' ) && ! function_ex
 	}
 }
 // @bbwt-com-end compat-layer
+

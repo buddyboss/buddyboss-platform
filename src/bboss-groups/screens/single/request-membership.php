@@ -60,10 +60,8 @@ function bboss_groups_screen_group_request_membership() {
 	 */
 	bboss_core_load_template( apply_filters( 'groups_template_group_request_membership', 'groups/single/home' ) );
 }
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_groups_screen_group_request_membership' ) && ! function_exists( 'groups_screen_group_request_membership' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_groups_screen_group_request_membership()}.
@@ -75,3 +73,4 @@ if ( function_exists( 'bboss_groups_screen_group_request_membership' ) && ! func
 	}
 }
 // @bbwt-com-end compat-layer
+

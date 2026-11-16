@@ -178,10 +178,8 @@ function bboss_bbp_clean_post_cache( $post_id = null, $post = null ) {
 		wp_cache_set( 'last_changed', microtime(), 'bbpress_posts' );
 	}
 }
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_bbp_clean_post_cache' ) && ! function_exists( 'bbp_clean_post_cache' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_bbp_clean_post_cache()}.
@@ -193,3 +191,4 @@ if ( function_exists( 'bboss_bbp_clean_post_cache' ) && ! function_exists( 'bbp_
 	}
 }
 // @bbwt-com-end compat-layer
+

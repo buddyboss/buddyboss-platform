@@ -52,6 +52,20 @@ function bboss_appearance_sanitize_layout( $value ) {
 	}
 	return (bool) (int) $value;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_appearance_sanitize_layout' ) && ! function_exists( 'bb_appearance_sanitize_layout' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_appearance_sanitize_layout()}.
+	 *
+	 * @deprecated Use bboss_appearance_sanitize_layout() instead.
+	 */
+	function bb_appearance_sanitize_layout( $value ) {
+		return bboss_appearance_sanitize_layout( $value );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Sanitize the ReadyLaunch theme mode (light / dark / choice).
@@ -65,6 +79,20 @@ function bboss_appearance_sanitize_theme_mode( $value ) {
 	$allowed = array( 'light', 'dark', 'choice' );
 	return in_array( $value, $allowed, true ) ? $value : 'light';
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_appearance_sanitize_theme_mode' ) && ! function_exists( 'bb_appearance_sanitize_theme_mode' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_appearance_sanitize_theme_mode()}.
+	 *
+	 * @deprecated Use bboss_appearance_sanitize_theme_mode() instead.
+	 */
+	function bb_appearance_sanitize_theme_mode( $value ) {
+		return bboss_appearance_sanitize_theme_mode( $value );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Sanitize a ReadyLaunch primary color with an optional fallback default.
@@ -79,6 +107,20 @@ function bboss_appearance_sanitize_color( $value, $default_value = '#3E34FF' ) {
 	$sanitized = sanitize_hex_color( $value );
 	return $sanitized ? $sanitized : $default_value;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_appearance_sanitize_color' ) && ! function_exists( 'bb_appearance_sanitize_color' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_appearance_sanitize_color()}.
+	 *
+	 * @deprecated Use bboss_appearance_sanitize_color() instead.
+	 */
+	function bb_appearance_sanitize_color( $value, $default_value = '#3E34FF' ) {
+		return bboss_appearance_sanitize_color( $value, $default_value );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Sanitize a ReadyLaunch logo media field.
@@ -157,6 +199,20 @@ function bboss_appearance_sanitize_media( $value ) {
 	}
 	return null;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_appearance_sanitize_media' ) && ! function_exists( 'bb_appearance_sanitize_media' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_appearance_sanitize_media()}.
+	 *
+	 * @deprecated Use bboss_appearance_sanitize_media() instead.
+	 */
+	function bb_appearance_sanitize_media( $value ) {
+		return bboss_appearance_sanitize_media( $value );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Sanitize the Template Pages selector into the legacy `bb_rl_enabled_pages` shape.
@@ -199,6 +255,20 @@ function bboss_appearance_sanitize_enabled_pages( $value ) {
 	}
 	return $map;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_appearance_sanitize_enabled_pages' ) && ! function_exists( 'bb_appearance_sanitize_enabled_pages' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_appearance_sanitize_enabled_pages()}.
+	 *
+	 * @deprecated Use bboss_appearance_sanitize_enabled_pages() instead.
+	 */
+	function bb_appearance_sanitize_enabled_pages( $value ) {
+		return bboss_appearance_sanitize_enabled_pages( $value );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Sanitize a sidebar toggle map (activity / member profile / groups).
@@ -239,6 +309,20 @@ function bboss_appearance_sanitize_sidebar_map( $value ) {
 	}
 	return $map;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_appearance_sanitize_sidebar_map' ) && ! function_exists( 'bb_appearance_sanitize_sidebar_map' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_appearance_sanitize_sidebar_map()}.
+	 *
+	 * @deprecated Use bboss_appearance_sanitize_sidebar_map() instead.
+	 */
+	function bb_appearance_sanitize_sidebar_map( $value ) {
+		return bboss_appearance_sanitize_sidebar_map( $value );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Sanitize the `bb_rl_side_menu` field.
@@ -289,6 +373,20 @@ function bboss_appearance_sanitize_side_menu( $value ) {
 	}
 	return $map;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_appearance_sanitize_side_menu' ) && ! function_exists( 'bb_appearance_sanitize_side_menu' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_appearance_sanitize_side_menu()}.
+	 *
+	 * @deprecated Use bboss_appearance_sanitize_side_menu() instead.
+	 */
+	function bb_appearance_sanitize_side_menu( $value ) {
+		return bboss_appearance_sanitize_side_menu( $value );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Sanitize the `bb_rl_custom_links` field.
@@ -322,6 +420,20 @@ function bboss_appearance_sanitize_custom_links( $value ) {
 
 	return $links;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_appearance_sanitize_custom_links' ) && ! function_exists( 'bb_appearance_sanitize_custom_links' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_appearance_sanitize_custom_links()}.
+	 *
+	 * @deprecated Use bboss_appearance_sanitize_custom_links() instead.
+	 */
+	function bb_appearance_sanitize_custom_links( $value ) {
+		return bboss_appearance_sanitize_custom_links( $value );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Convert a sequential list of enabled keys (legacy onboarding shape) to an
@@ -352,6 +464,20 @@ function bboss_appearance_normalize_list_to_map( $value ) {
 	}
 	return $map;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_appearance_normalize_list_to_map' ) && ! function_exists( 'bb_appearance_normalize_list_to_map' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_appearance_normalize_list_to_map()}.
+	 *
+	 * @deprecated Use bboss_appearance_normalize_list_to_map() instead.
+	 */
+	function bb_appearance_normalize_list_to_map( $value ) {
+		return bboss_appearance_normalize_list_to_map( $value );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Normalize `bb_rl_side_menu` to the canonical map-of-items shape.
@@ -395,20 +521,8 @@ function bboss_appearance_normalize_side_menu_shape( $value ) {
 	// Already map-shaped — pass through unchanged.
 	return $value;
 }
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
-if ( function_exists( 'bboss_appearance_normalize_list_to_map' ) && ! function_exists( 'bb_appearance_normalize_list_to_map' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_appearance_normalize_list_to_map()}.
-	 *
-	 * @deprecated Use bboss_appearance_normalize_list_to_map() instead.
-	 */
-	function bb_appearance_normalize_list_to_map( $value ) {
-		return bboss_appearance_normalize_list_to_map( $value );
-	}
-}
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_appearance_normalize_side_menu_shape' ) && ! function_exists( 'bb_appearance_normalize_side_menu_shape' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_appearance_normalize_side_menu_shape()}.
@@ -419,84 +533,5 @@ if ( function_exists( 'bboss_appearance_normalize_side_menu_shape' ) && ! functi
 		return bboss_appearance_normalize_side_menu_shape( $value );
 	}
 }
-if ( function_exists( 'bboss_appearance_sanitize_color' ) && ! function_exists( 'bb_appearance_sanitize_color' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_appearance_sanitize_color()}.
-	 *
-	 * @deprecated Use bboss_appearance_sanitize_color() instead.
-	 */
-	function bb_appearance_sanitize_color( $value, $default_value = '#3E34FF' ) {
-		return bboss_appearance_sanitize_color( $value, $default_value );
-	}
-}
-if ( function_exists( 'bboss_appearance_sanitize_custom_links' ) && ! function_exists( 'bb_appearance_sanitize_custom_links' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_appearance_sanitize_custom_links()}.
-	 *
-	 * @deprecated Use bboss_appearance_sanitize_custom_links() instead.
-	 */
-	function bb_appearance_sanitize_custom_links( $value ) {
-		return bboss_appearance_sanitize_custom_links( $value );
-	}
-}
-if ( function_exists( 'bboss_appearance_sanitize_enabled_pages' ) && ! function_exists( 'bb_appearance_sanitize_enabled_pages' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_appearance_sanitize_enabled_pages()}.
-	 *
-	 * @deprecated Use bboss_appearance_sanitize_enabled_pages() instead.
-	 */
-	function bb_appearance_sanitize_enabled_pages( $value ) {
-		return bboss_appearance_sanitize_enabled_pages( $value );
-	}
-}
-if ( function_exists( 'bboss_appearance_sanitize_layout' ) && ! function_exists( 'bb_appearance_sanitize_layout' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_appearance_sanitize_layout()}.
-	 *
-	 * @deprecated Use bboss_appearance_sanitize_layout() instead.
-	 */
-	function bb_appearance_sanitize_layout( $value ) {
-		return bboss_appearance_sanitize_layout( $value );
-	}
-}
-if ( function_exists( 'bboss_appearance_sanitize_media' ) && ! function_exists( 'bb_appearance_sanitize_media' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_appearance_sanitize_media()}.
-	 *
-	 * @deprecated Use bboss_appearance_sanitize_media() instead.
-	 */
-	function bb_appearance_sanitize_media( $value ) {
-		return bboss_appearance_sanitize_media( $value );
-	}
-}
-if ( function_exists( 'bboss_appearance_sanitize_side_menu' ) && ! function_exists( 'bb_appearance_sanitize_side_menu' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_appearance_sanitize_side_menu()}.
-	 *
-	 * @deprecated Use bboss_appearance_sanitize_side_menu() instead.
-	 */
-	function bb_appearance_sanitize_side_menu( $value ) {
-		return bboss_appearance_sanitize_side_menu( $value );
-	}
-}
-if ( function_exists( 'bboss_appearance_sanitize_sidebar_map' ) && ! function_exists( 'bb_appearance_sanitize_sidebar_map' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_appearance_sanitize_sidebar_map()}.
-	 *
-	 * @deprecated Use bboss_appearance_sanitize_sidebar_map() instead.
-	 */
-	function bb_appearance_sanitize_sidebar_map( $value ) {
-		return bboss_appearance_sanitize_sidebar_map( $value );
-	}
-}
-if ( function_exists( 'bboss_appearance_sanitize_theme_mode' ) && ! function_exists( 'bb_appearance_sanitize_theme_mode' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_appearance_sanitize_theme_mode()}.
-	 *
-	 * @deprecated Use bboss_appearance_sanitize_theme_mode() instead.
-	 */
-	function bb_appearance_sanitize_theme_mode( $value ) {
-		return bboss_appearance_sanitize_theme_mode( $value );
-	}
-}
 // @bbwt-com-end compat-layer
+

@@ -159,6 +159,20 @@ function bboss_core_active_plugin_is( $plugin, $name ) {
 
 	return isset( $data['name'] ) && trim( (string) $data['name'] ) === $name;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_core_active_plugin_is' ) && ! function_exists( 'bp_core_active_plugin_is' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_active_plugin_is()}.
+	 *
+	 * @deprecated Use bboss_core_active_plugin_is() instead.
+	 */
+	function bp_core_active_plugin_is( $plugin, $name ) {
+		return bboss_core_active_plugin_is( $plugin, $name );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 // Check if BuddyPress or bbPress is activated, by identity rather than by folder name.
 foreach ( $bp_plugins as $bp_active_plugin ) {
@@ -217,6 +231,20 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 			remove_filter( 'site_option_active_sitewide_plugins', 'bboss_core_set_bbpress_buddypress_active', 0 );
 		}
 	}
+	// @bbwt-com-start compat-layer
+	// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+	if ( function_exists( 'bboss_core_unset_bbpress_buddypress_active' ) && ! function_exists( 'bp_core_unset_bbpress_buddypress_active' ) ) {
+		/**
+		 * Backward-compatible alias of {@see bboss_core_unset_bbpress_buddypress_active()}.
+		 *
+		 * @deprecated Use bboss_core_unset_bbpress_buddypress_active() instead.
+		 */
+		function bp_core_unset_bbpress_buddypress_active() {
+			return bboss_core_unset_bbpress_buddypress_active();
+		}
+	}
+	// @bbwt-com-end compat-layer
+
 
 	/**
 	 * Again set the spoofing of BuddyPress and bbPress on Admin Notices
@@ -231,6 +259,20 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 			add_filter( 'site_option_active_sitewide_plugins', 'bboss_core_set_bbpress_buddypress_active', 0 );
 		}
 	}
+	// @bbwt-com-start compat-layer
+	// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+	if ( function_exists( 'bboss_core_set_bbpress_buddypress_on_admin_notices' ) && ! function_exists( 'bp_core_set_bbpress_buddypress_on_admin_notices' ) ) {
+		/**
+		 * Backward-compatible alias of {@see bboss_core_set_bbpress_buddypress_on_admin_notices()}.
+		 *
+		 * @deprecated Use bboss_core_set_bbpress_buddypress_on_admin_notices() instead.
+		 */
+		function bp_core_set_bbpress_buddypress_on_admin_notices() {
+			return bboss_core_set_bbpress_buddypress_on_admin_notices();
+		}
+	}
+	// @bbwt-com-end compat-layer
+
 
 	/**
 	 * Filter for setting the spoofing of BuddyPress.
@@ -355,6 +397,20 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 
 		return $value;
 	}
+	// @bbwt-com-start compat-layer
+	// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+	if ( function_exists( 'bboss_core_set_bbpress_buddypress_active' ) && ! function_exists( 'bp_core_set_bbpress_buddypress_active' ) ) {
+		/**
+		 * Backward-compatible alias of {@see bboss_core_set_bbpress_buddypress_active()}.
+		 *
+		 * @deprecated Use bboss_core_set_bbpress_buddypress_active() instead.
+		 */
+		function bp_core_set_bbpress_buddypress_active( $value = array() ) {
+			return bboss_core_set_bbpress_buddypress_active( $value );
+		}
+	}
+	// @bbwt-com-end compat-layer
+
 
 	/**
 	 * Remove the BuddyPress and bbPress Spoofing
@@ -370,6 +426,20 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 
 		return $plugins;
 	}
+	// @bbwt-com-start compat-layer
+	// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+	if ( function_exists( 'bboss_core_unset_bbpress_buddypress_active_all_plugins' ) && ! function_exists( 'bp_core_unset_bbpress_buddypress_active_all_plugins' ) ) {
+		/**
+		 * Backward-compatible alias of {@see bboss_core_unset_bbpress_buddypress_active_all_plugins()}.
+		 *
+		 * @deprecated Use bboss_core_unset_bbpress_buddypress_active_all_plugins() instead.
+		 */
+		function bp_core_unset_bbpress_buddypress_active_all_plugins( $plugins ) {
+			return bboss_core_unset_bbpress_buddypress_active_all_plugins( $plugins );
+		}
+	}
+	// @bbwt-com-end compat-layer
+
 
 	/**
 	 * Removing the spoofing of BuddyPress and bbPress when option updated.
@@ -396,6 +466,20 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 
 		return $value;
 	}
+	// @bbwt-com-start compat-layer
+	// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+	if ( function_exists( 'bboss_pre_update_option_active_plugins' ) && ! function_exists( 'bp_pre_update_option_active_plugins' ) ) {
+		/**
+		 * Backward-compatible alias of {@see bboss_pre_update_option_active_plugins()}.
+		 *
+		 * @deprecated Use bboss_pre_update_option_active_plugins() instead.
+		 */
+		function bp_pre_update_option_active_plugins( $value ) {
+			return bboss_pre_update_option_active_plugins( $value );
+		}
+	}
+	// @bbwt-com-end compat-layer
+
 
 	if ( ! is_network_admin() ) {
 		add_filter( 'option_active_plugins', 'bboss_core_set_bbpress_buddypress_active', 0 );
@@ -435,6 +519,20 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 
 		<?php
 	}
+	// @bbwt-com-start compat-layer
+	// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+	if ( function_exists( 'bboss_php_requirements_notice' ) && ! function_exists( 'bp_php_requirements_notice' ) ) {
+		/**
+		 * Backward-compatible alias of {@see bboss_php_requirements_notice()}.
+		 *
+		 * @deprecated Use bboss_php_requirements_notice() instead.
+		 */
+		function bp_php_requirements_notice() {
+			return bboss_php_requirements_notice();
+		}
+	}
+	// @bbwt-com-end compat-layer
+
 
 	if ( version_compare( phpversion(), BBOSS_REQUIRED_PHP_VERSION, '<' ) ) {
 		add_action( 'admin_notices', 'bboss_php_requirements_notice' );
@@ -457,6 +555,20 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 		function bboss() {
 			return BBoss_Platform::instance();
 		}
+		// @bbwt-com-start compat-layer
+		// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+		if ( function_exists( 'bboss' ) && ! function_exists( 'buddypress' ) ) {
+			/**
+			 * Backward-compatible alias of {@see bboss()}.
+			 *
+			 * @deprecated Use bboss() instead.
+			 */
+			function buddypress() {
+				return bboss();
+			}
+		}
+		// @bbwt-com-end compat-layer
+
 
 		// load the member switch class so all the hook prior to bp_init can be hook in.
 		require dirname( __FILE__ ) . '/bboss-members/classes/class-bboss-core-members-switching.php';
@@ -554,6 +666,20 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 			}
 		}
 	}
+	// @bbwt-com-start compat-layer
+	// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+	if ( function_exists( 'bboss_duplicate_notice' ) && ! function_exists( 'bp_duplicate_notice' ) ) {
+		/**
+		 * Backward-compatible alias of {@see bboss_duplicate_notice()}.
+		 *
+		 * @deprecated Use bboss_duplicate_notice() instead.
+		 */
+		function bp_duplicate_notice() {
+			return bboss_duplicate_notice();
+		}
+	}
+	// @bbwt-com-end compat-layer
+
 
 	/**
 	 * You can't have bbPress and BuddyBoss Platform both active at the same time!
@@ -934,6 +1060,20 @@ if ( ! function_exists( 'bboss_core_load_buddypress_textdomain' ) ) {
 
 		return false;
 	}
+	// @bbwt-com-start compat-layer
+	// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+	if ( function_exists( 'bboss_core_load_buddypress_textdomain' ) && ! function_exists( 'bp_core_load_buddypress_textdomain' ) ) {
+		/**
+		 * Backward-compatible alias of {@see bboss_core_load_buddypress_textdomain()}.
+		 *
+		 * @deprecated Use bboss_core_load_buddypress_textdomain() instead.
+		 */
+		function bp_core_load_buddypress_textdomain() {
+			return bboss_core_load_buddypress_textdomain();
+		}
+	}
+	// @bbwt-com-end compat-layer
+
 }
 
 // @bbwt-com-start compat-layer
@@ -941,110 +1081,5 @@ if ( ! function_exists( 'bboss_core_load_buddypress_textdomain' ) ) {
 // for plugins that check them at file-include time.
 if ( function_exists( 'bb_compat_sweep' ) ) {
 	bb_compat_sweep();
-}
-// @bbwt-com-end compat-layer
-
-// @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
-if ( function_exists( 'bboss_core_active_plugin_is' ) && ! function_exists( 'bp_core_active_plugin_is' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_core_active_plugin_is()}.
-	 *
-	 * @deprecated Use bboss_core_active_plugin_is() instead.
-	 */
-	function bp_core_active_plugin_is( $plugin, $name ) {
-		return bboss_core_active_plugin_is( $plugin, $name );
-	}
-}
-if ( function_exists( 'bboss_core_load_buddypress_textdomain' ) && ! function_exists( 'bp_core_load_buddypress_textdomain' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_core_load_buddypress_textdomain()}.
-	 *
-	 * @deprecated Use bboss_core_load_buddypress_textdomain() instead.
-	 */
-	function bp_core_load_buddypress_textdomain() {
-		return bboss_core_load_buddypress_textdomain();
-	}
-}
-if ( function_exists( 'bboss_core_set_bbpress_buddypress_active' ) && ! function_exists( 'bp_core_set_bbpress_buddypress_active' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_core_set_bbpress_buddypress_active()}.
-	 *
-	 * @deprecated Use bboss_core_set_bbpress_buddypress_active() instead.
-	 */
-	function bp_core_set_bbpress_buddypress_active( $value = array() ) {
-		return bboss_core_set_bbpress_buddypress_active( $value );
-	}
-}
-if ( function_exists( 'bboss_core_set_bbpress_buddypress_on_admin_notices' ) && ! function_exists( 'bp_core_set_bbpress_buddypress_on_admin_notices' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_core_set_bbpress_buddypress_on_admin_notices()}.
-	 *
-	 * @deprecated Use bboss_core_set_bbpress_buddypress_on_admin_notices() instead.
-	 */
-	function bp_core_set_bbpress_buddypress_on_admin_notices() {
-		return bboss_core_set_bbpress_buddypress_on_admin_notices();
-	}
-}
-if ( function_exists( 'bboss_core_unset_bbpress_buddypress_active' ) && ! function_exists( 'bp_core_unset_bbpress_buddypress_active' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_core_unset_bbpress_buddypress_active()}.
-	 *
-	 * @deprecated Use bboss_core_unset_bbpress_buddypress_active() instead.
-	 */
-	function bp_core_unset_bbpress_buddypress_active() {
-		return bboss_core_unset_bbpress_buddypress_active();
-	}
-}
-if ( function_exists( 'bboss_core_unset_bbpress_buddypress_active_all_plugins' ) && ! function_exists( 'bp_core_unset_bbpress_buddypress_active_all_plugins' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_core_unset_bbpress_buddypress_active_all_plugins()}.
-	 *
-	 * @deprecated Use bboss_core_unset_bbpress_buddypress_active_all_plugins() instead.
-	 */
-	function bp_core_unset_bbpress_buddypress_active_all_plugins( $plugins ) {
-		return bboss_core_unset_bbpress_buddypress_active_all_plugins( $plugins );
-	}
-}
-if ( function_exists( 'bboss_duplicate_notice' ) && ! function_exists( 'bp_duplicate_notice' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_duplicate_notice()}.
-	 *
-	 * @deprecated Use bboss_duplicate_notice() instead.
-	 */
-	function bp_duplicate_notice() {
-		return bboss_duplicate_notice();
-	}
-}
-if ( function_exists( 'bboss_php_requirements_notice' ) && ! function_exists( 'bp_php_requirements_notice' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_php_requirements_notice()}.
-	 *
-	 * @deprecated Use bboss_php_requirements_notice() instead.
-	 */
-	function bp_php_requirements_notice() {
-		return bboss_php_requirements_notice();
-	}
-}
-if ( function_exists( 'bboss_pre_update_option_active_plugins' ) && ! function_exists( 'bp_pre_update_option_active_plugins' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_pre_update_option_active_plugins()}.
-	 *
-	 * @deprecated Use bboss_pre_update_option_active_plugins() instead.
-	 */
-	function bp_pre_update_option_active_plugins( $value ) {
-		return bboss_pre_update_option_active_plugins( $value );
-	}
-}
-if ( function_exists( 'bboss' ) && ! function_exists( 'buddypress' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss()}.
-	 *
-	 * @deprecated Use bboss() instead.
-	 */
-	function buddypress() {
-		return bboss();
-	}
 }
 // @bbwt-com-end compat-layer

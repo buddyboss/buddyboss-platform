@@ -132,10 +132,10 @@ spl_autoload_register(
 
 bb_compat_import_constants();
 
-// Old FUNCTION names are not declared here: each one is declared at the end of the file that
-// declares its renamed function, guarded on that declaration (decision 0013), so it exists exactly
-// when the renamed function does. Nothing is declared when Platform stands down for BuddyPress or
-// bbPress, since their files are then never loaded.
+// Old FUNCTION names are not declared here: each one is declared right after its renamed function,
+// in the same file and at the same nesting level, guarded on that declaration (decision 0013), so
+// it exists exactly when the renamed function does. Nothing is declared when Platform stands down
+// for BuddyPress or bbPress, since their files are then never loaded.
 
 // Sweeps during boot catch constants defined late and classes loaded by require.
 foreach ( array( 'plugins_loaded' => -1000, 'bp_loaded' => 1000, 'bp_init' => -1000, 'init' => 1000, 'wp_loaded' => -1000 ) as $bb_hook => $bb_priority ) {

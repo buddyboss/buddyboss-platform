@@ -241,6 +241,20 @@ function bboss_nouveau_ajax_querystring( $query_string, $object ) {
 	 */
 	return apply_filters( 'bp_nouveau_ajax_querystring', $query_string, $object, $filter, $scope, $page, $search_terms, $extras );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_ajax_querystring' ) && ! function_exists( 'bp_nouveau_ajax_querystring' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_ajax_querystring()}.
+	 *
+	 * @deprecated Use bboss_nouveau_ajax_querystring() instead.
+	 */
+	function bp_nouveau_ajax_querystring( $query_string, $object ) {
+		return bboss_nouveau_ajax_querystring( $query_string, $object );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output ajax button for action (e.g. request connection with member, join group, leave group, follow member, etc.)
@@ -311,6 +325,20 @@ function bboss_nouveau_ajax_button( $output = '', $button = null, $before = '', 
 	// Add span bp-screen-reader-text class
 	return $before . $output . $after;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_ajax_button' ) && ! function_exists( 'bp_nouveau_ajax_button' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_ajax_button()}.
+	 *
+	 * @deprecated Use bboss_nouveau_ajax_button() instead.
+	 */
+	function bp_nouveau_ajax_button( $output = '', $button = null, $before = '', $after = '', $r = array() ) {
+		return bboss_nouveau_ajax_button( $output, $button, $before, $after, $r );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output HTML content into a wrapper.
@@ -381,6 +409,20 @@ function bboss_nouveau_wrapper( $args = array() ) {
 	// Print the wrapper and its content.
 	printf( '<%1$s%2$s%3$s>%4$s</%1$s>', esc_attr( $container ), $container_id, $container_classes, $output ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $container_id/$container_classes are attribute fragments built with esc_attr(); $output is the buffered, self-escaping template part.
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_wrapper' ) && ! function_exists( 'bp_nouveau_wrapper' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_wrapper()}.
+	 *
+	 * @deprecated Use bboss_nouveau_wrapper() instead.
+	 */
+	function bp_nouveau_wrapper( $args = array() ) {
+		return bboss_nouveau_wrapper( $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Check if Nouveau sidebar object nav widget is active.
@@ -391,6 +433,20 @@ function bboss_nouveau_wrapper( $args = array() ) {
 function bboss_nouveau_is_object_nav_in_sidebar() {
 	return is_active_widget( false, false, 'bp_nouveau_sidebar_object_nav_widget', true );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_is_object_nav_in_sidebar' ) && ! function_exists( 'bp_nouveau_is_object_nav_in_sidebar' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_is_object_nav_in_sidebar()}.
+	 *
+	 * @deprecated Use bboss_nouveau_is_object_nav_in_sidebar() instead.
+	 */
+	function bp_nouveau_is_object_nav_in_sidebar() {
+		return bboss_nouveau_is_object_nav_in_sidebar();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Check if logged in user has queried capability.
@@ -410,6 +466,20 @@ function bboss_nouveau_current_user_can( $capability = '' ) {
 	 */
 	return apply_filters( 'bp_nouveau_current_user_can', is_user_logged_in(), $capability, bboss_loggedin_user_id() );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_current_user_can' ) && ! function_exists( 'bp_nouveau_current_user_can' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_current_user_can()}.
+	 *
+	 * @deprecated Use bboss_nouveau_current_user_can() instead.
+	 */
+	function bp_nouveau_current_user_can( $capability = '' ) {
+		return bboss_nouveau_current_user_can( $capability );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Parse an html output to a list of component's directory nav item.
@@ -493,6 +563,20 @@ function bboss_nouveau_parse_hooked_dir_nav( $hook = '', $component = '', $posit
 
 	return $extra_nav_items;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_parse_hooked_dir_nav' ) && ! function_exists( 'bp_nouveau_parse_hooked_dir_nav' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_parse_hooked_dir_nav()}.
+	 *
+	 * @deprecated Use bboss_nouveau_parse_hooked_dir_nav() instead.
+	 */
+	function bp_nouveau_parse_hooked_dir_nav( $hook = '', $component = '', $position = 99 ) {
+		return bboss_nouveau_parse_hooked_dir_nav( $hook, $component, $position );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Run specific "select filter" hooks to catch the options and build an array out of them
@@ -533,6 +617,20 @@ function bboss_nouveau_parse_hooked_options( $hook = '', $filters = array() ) {
 
 	return $filters;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_parse_hooked_options' ) && ! function_exists( 'bp_nouveau_parse_hooked_options' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_parse_hooked_options()}.
+	 *
+	 * @deprecated Use bboss_nouveau_parse_hooked_options() instead.
+	 */
+	function bp_nouveau_parse_hooked_options( $hook = '', $filters = array() ) {
+		return bboss_nouveau_parse_hooked_options( $hook, $filters );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get Dropdawn filters for the current component of the one passed in params
@@ -592,6 +690,20 @@ function bboss_nouveau_get_component_filters( $context = '', $component = '' ) {
 
 	return $filters;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_get_component_filters' ) && ! function_exists( 'bp_nouveau_get_component_filters' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_get_component_filters()}.
+	 *
+	 * @deprecated Use bboss_nouveau_get_component_filters() instead.
+	 */
+	function bp_nouveau_get_component_filters( $context = '', $component = '' ) {
+		return bboss_nouveau_get_component_filters( $context, $component );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * When previewing make sure to get the temporary setting of the customizer.
@@ -637,6 +749,20 @@ function bboss_nouveau_get_temporary_setting( $option = '', $retval = false ) {
 
 	return $retval;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_get_temporary_setting' ) && ! function_exists( 'bp_nouveau_get_temporary_setting' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_get_temporary_setting()}.
+	 *
+	 * @deprecated Use bboss_nouveau_get_temporary_setting() instead.
+	 */
+	function bp_nouveau_get_temporary_setting( $option = '', $retval = false ) {
+		return bboss_nouveau_get_temporary_setting( $option, $retval );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get the BP Nouveau Appearance settings.
@@ -716,6 +842,20 @@ function bboss_nouveau_get_appearance_settings( $option = '' ) {
 
 	return $settings;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_get_appearance_settings' ) && ! function_exists( 'bp_nouveau_get_appearance_settings' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_get_appearance_settings()}.
+	 *
+	 * @deprecated Use bboss_nouveau_get_appearance_settings() instead.
+	 */
+	function bp_nouveau_get_appearance_settings( $option = '' ) {
+		return bboss_nouveau_get_appearance_settings( $option );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Sanitize a list of slugs to save it as an array
@@ -732,6 +872,20 @@ function bboss_nouveau_sanitize_nav_order( $option = '' ) {
 
 	return array_map( 'sanitize_key', $option );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_sanitize_nav_order' ) && ! function_exists( 'bp_nouveau_sanitize_nav_order' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_sanitize_nav_order()}.
+	 *
+	 * @deprecated Use bboss_nouveau_sanitize_nav_order() instead.
+	 */
+	function bp_nouveau_sanitize_nav_order( $option = '' ) {
+		return bboss_nouveau_sanitize_nav_order( $option );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Sanitize a list of slugs to save it as an array
@@ -748,6 +902,20 @@ function bboss_nouveau_sanitize_nav_hide( $option = '' ) {
 
 	return array_map( 'sanitize_key', $option );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_sanitize_nav_hide' ) && ! function_exists( 'bp_nouveau_sanitize_nav_hide' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_sanitize_nav_hide()}.
+	 *
+	 * @deprecated Use bboss_nouveau_sanitize_nav_hide() instead.
+	 */
+	function bp_nouveau_sanitize_nav_hide( $option = '' ) {
+		return bboss_nouveau_sanitize_nav_hide( $option );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * BP Nouveau's callback for the cover photo feature.
@@ -866,6 +1034,20 @@ function bboss_nouveau_theme_cover_image( $params = array() ) {
 		}
 	';
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_theme_cover_image' ) && ! function_exists( 'bp_nouveau_theme_cover_image' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_theme_cover_image()}.
+	 *
+	 * @deprecated Use bboss_nouveau_theme_cover_image() instead.
+	 */
+	function bp_nouveau_theme_cover_image( $params = array() ) {
+		return bboss_nouveau_theme_cover_image( $params );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * All user feedback messages are available here
@@ -1196,6 +1378,20 @@ function bboss_nouveau_get_user_feedback( $feedback_id = '' ) {
 	 */
 	return apply_filters( 'bp_nouveau_get_user_feedback', $feedback_messages[ $feedback_id ] );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_get_user_feedback' ) && ! function_exists( 'bp_nouveau_get_user_feedback' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_get_user_feedback()}.
+	 *
+	 * @deprecated Use bboss_nouveau_get_user_feedback() instead.
+	 */
+	function bp_nouveau_get_user_feedback( $feedback_id = '' ) {
+		return bboss_nouveau_get_user_feedback( $feedback_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get the signup fields for the requested section
@@ -1500,6 +1696,20 @@ function bboss_nouveau_get_signup_fields( $section = '' ) {
 
 	return false;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_get_signup_fields' ) && ! function_exists( 'bp_nouveau_get_signup_fields' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_get_signup_fields()}.
+	 *
+	 * @deprecated Use bboss_nouveau_get_signup_fields() instead.
+	 */
+	function bp_nouveau_get_signup_fields( $section = '' ) {
+		return bboss_nouveau_get_signup_fields( $section );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get Some submit buttons data.
@@ -1647,6 +1857,20 @@ function bboss_nouveau_get_submit_button( $action = '' ) {
 
 	return false;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_get_submit_button' ) && ! function_exists( 'bp_nouveau_get_submit_button' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_get_submit_button()}.
+	 *
+	 * @deprecated Use bboss_nouveau_get_submit_button() instead.
+	 */
+	function bp_nouveau_get_submit_button( $action = '' ) {
+		return bboss_nouveau_get_submit_button( $action );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Reorder a BuddyPress item nav according to a given list of nav item slugs
@@ -1686,6 +1910,20 @@ function bboss_nouveau_set_nav_item_order( $nav = null, $order = array(), $paren
 
 	return true;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_set_nav_item_order' ) && ! function_exists( 'bp_nouveau_set_nav_item_order' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_set_nav_item_order()}.
+	 *
+	 * @deprecated Use bboss_nouveau_set_nav_item_order() instead.
+	 */
+	function bp_nouveau_set_nav_item_order( $nav = null, $order = array(), $parent_slug = '' ) {
+		return bboss_nouveau_set_nav_item_order( $nav, $order, $parent_slug );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return saved profile header buttons by order
@@ -1708,6 +1946,20 @@ function bboss_nouveau_get_user_profile_actions() {
 
 	return apply_filters( 'bp_nouveau_get_user_profile_actions', $profile_header_btn_orders );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_get_user_profile_actions' ) && ! function_exists( 'bp_nouveau_get_user_profile_actions' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_get_user_profile_actions()}.
+	 *
+	 * @deprecated Use bboss_nouveau_get_user_profile_actions() instead.
+	 */
+	function bp_nouveau_get_user_profile_actions() {
+		return bboss_nouveau_get_user_profile_actions();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Provide safe fallbacks for the Video and Document localized script data when
@@ -1755,11 +2007,8 @@ function bboss_nouveau_inactive_media_localize_fallback( $params = array() ) {
 
 	return $params;
 }
-add_filter( 'bp_core_get_js_strings', 'bb_nouveau_inactive_media_localize_fallback', 99, 1 );
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_nouveau_inactive_media_localize_fallback' ) && ! function_exists( 'bb_nouveau_inactive_media_localize_fallback' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_nouveau_inactive_media_localize_fallback()}.
@@ -1770,184 +2019,6 @@ if ( function_exists( 'bboss_nouveau_inactive_media_localize_fallback' ) && ! fu
 		return bboss_nouveau_inactive_media_localize_fallback( $params );
 	}
 }
-if ( function_exists( 'bboss_nouveau_ajax_button' ) && ! function_exists( 'bp_nouveau_ajax_button' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_ajax_button()}.
-	 *
-	 * @deprecated Use bboss_nouveau_ajax_button() instead.
-	 */
-	function bp_nouveau_ajax_button( $output = '', $button = null, $before = '', $after = '', $r = array() ) {
-		return bboss_nouveau_ajax_button( $output, $button, $before, $after, $r );
-	}
-}
-if ( function_exists( 'bboss_nouveau_ajax_querystring' ) && ! function_exists( 'bp_nouveau_ajax_querystring' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_ajax_querystring()}.
-	 *
-	 * @deprecated Use bboss_nouveau_ajax_querystring() instead.
-	 */
-	function bp_nouveau_ajax_querystring( $query_string, $object ) {
-		return bboss_nouveau_ajax_querystring( $query_string, $object );
-	}
-}
-if ( function_exists( 'bboss_nouveau_current_user_can' ) && ! function_exists( 'bp_nouveau_current_user_can' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_current_user_can()}.
-	 *
-	 * @deprecated Use bboss_nouveau_current_user_can() instead.
-	 */
-	function bp_nouveau_current_user_can( $capability = '' ) {
-		return bboss_nouveau_current_user_can( $capability );
-	}
-}
-if ( function_exists( 'bboss_nouveau_get_appearance_settings' ) && ! function_exists( 'bp_nouveau_get_appearance_settings' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_get_appearance_settings()}.
-	 *
-	 * @deprecated Use bboss_nouveau_get_appearance_settings() instead.
-	 */
-	function bp_nouveau_get_appearance_settings( $option = '' ) {
-		return bboss_nouveau_get_appearance_settings( $option );
-	}
-}
-if ( function_exists( 'bboss_nouveau_get_component_filters' ) && ! function_exists( 'bp_nouveau_get_component_filters' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_get_component_filters()}.
-	 *
-	 * @deprecated Use bboss_nouveau_get_component_filters() instead.
-	 */
-	function bp_nouveau_get_component_filters( $context = '', $component = '' ) {
-		return bboss_nouveau_get_component_filters( $context, $component );
-	}
-}
-if ( function_exists( 'bboss_nouveau_get_signup_fields' ) && ! function_exists( 'bp_nouveau_get_signup_fields' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_get_signup_fields()}.
-	 *
-	 * @deprecated Use bboss_nouveau_get_signup_fields() instead.
-	 */
-	function bp_nouveau_get_signup_fields( $section = '' ) {
-		return bboss_nouveau_get_signup_fields( $section );
-	}
-}
-if ( function_exists( 'bboss_nouveau_get_submit_button' ) && ! function_exists( 'bp_nouveau_get_submit_button' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_get_submit_button()}.
-	 *
-	 * @deprecated Use bboss_nouveau_get_submit_button() instead.
-	 */
-	function bp_nouveau_get_submit_button( $action = '' ) {
-		return bboss_nouveau_get_submit_button( $action );
-	}
-}
-if ( function_exists( 'bboss_nouveau_get_temporary_setting' ) && ! function_exists( 'bp_nouveau_get_temporary_setting' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_get_temporary_setting()}.
-	 *
-	 * @deprecated Use bboss_nouveau_get_temporary_setting() instead.
-	 */
-	function bp_nouveau_get_temporary_setting( $option = '', $retval = false ) {
-		return bboss_nouveau_get_temporary_setting( $option, $retval );
-	}
-}
-if ( function_exists( 'bboss_nouveau_get_user_feedback' ) && ! function_exists( 'bp_nouveau_get_user_feedback' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_get_user_feedback()}.
-	 *
-	 * @deprecated Use bboss_nouveau_get_user_feedback() instead.
-	 */
-	function bp_nouveau_get_user_feedback( $feedback_id = '' ) {
-		return bboss_nouveau_get_user_feedback( $feedback_id );
-	}
-}
-if ( function_exists( 'bboss_nouveau_get_user_profile_actions' ) && ! function_exists( 'bp_nouveau_get_user_profile_actions' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_get_user_profile_actions()}.
-	 *
-	 * @deprecated Use bboss_nouveau_get_user_profile_actions() instead.
-	 */
-	function bp_nouveau_get_user_profile_actions() {
-		return bboss_nouveau_get_user_profile_actions();
-	}
-}
-if ( function_exists( 'bboss_nouveau_is_object_nav_in_sidebar' ) && ! function_exists( 'bp_nouveau_is_object_nav_in_sidebar' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_is_object_nav_in_sidebar()}.
-	 *
-	 * @deprecated Use bboss_nouveau_is_object_nav_in_sidebar() instead.
-	 */
-	function bp_nouveau_is_object_nav_in_sidebar() {
-		return bboss_nouveau_is_object_nav_in_sidebar();
-	}
-}
-if ( function_exists( 'bboss_nouveau_parse_hooked_dir_nav' ) && ! function_exists( 'bp_nouveau_parse_hooked_dir_nav' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_parse_hooked_dir_nav()}.
-	 *
-	 * @deprecated Use bboss_nouveau_parse_hooked_dir_nav() instead.
-	 */
-	function bp_nouveau_parse_hooked_dir_nav( $hook = '', $component = '', $position = 99 ) {
-		return bboss_nouveau_parse_hooked_dir_nav( $hook, $component, $position );
-	}
-}
-if ( function_exists( 'bboss_nouveau_parse_hooked_options' ) && ! function_exists( 'bp_nouveau_parse_hooked_options' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_parse_hooked_options()}.
-	 *
-	 * @deprecated Use bboss_nouveau_parse_hooked_options() instead.
-	 */
-	function bp_nouveau_parse_hooked_options( $hook = '', $filters = array() ) {
-		return bboss_nouveau_parse_hooked_options( $hook, $filters );
-	}
-}
-if ( function_exists( 'bboss_nouveau_sanitize_nav_hide' ) && ! function_exists( 'bp_nouveau_sanitize_nav_hide' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_sanitize_nav_hide()}.
-	 *
-	 * @deprecated Use bboss_nouveau_sanitize_nav_hide() instead.
-	 */
-	function bp_nouveau_sanitize_nav_hide( $option = '' ) {
-		return bboss_nouveau_sanitize_nav_hide( $option );
-	}
-}
-if ( function_exists( 'bboss_nouveau_sanitize_nav_order' ) && ! function_exists( 'bp_nouveau_sanitize_nav_order' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_sanitize_nav_order()}.
-	 *
-	 * @deprecated Use bboss_nouveau_sanitize_nav_order() instead.
-	 */
-	function bp_nouveau_sanitize_nav_order( $option = '' ) {
-		return bboss_nouveau_sanitize_nav_order( $option );
-	}
-}
-if ( function_exists( 'bboss_nouveau_set_nav_item_order' ) && ! function_exists( 'bp_nouveau_set_nav_item_order' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_set_nav_item_order()}.
-	 *
-	 * @deprecated Use bboss_nouveau_set_nav_item_order() instead.
-	 */
-	function bp_nouveau_set_nav_item_order( $nav = null, $order = array(), $parent_slug = '' ) {
-		return bboss_nouveau_set_nav_item_order( $nav, $order, $parent_slug );
-	}
-}
-if ( function_exists( 'bboss_nouveau_theme_cover_image' ) && ! function_exists( 'bp_nouveau_theme_cover_image' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_theme_cover_image()}.
-	 *
-	 * @deprecated Use bboss_nouveau_theme_cover_image() instead.
-	 */
-	function bp_nouveau_theme_cover_image( $params = array() ) {
-		return bboss_nouveau_theme_cover_image( $params );
-	}
-}
-if ( function_exists( 'bboss_nouveau_wrapper' ) && ! function_exists( 'bp_nouveau_wrapper' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_wrapper()}.
-	 *
-	 * @deprecated Use bboss_nouveau_wrapper() instead.
-	 */
-	function bp_nouveau_wrapper( $args = array() ) {
-		return bboss_nouveau_wrapper( $args );
-	}
-}
 // @bbwt-com-end compat-layer
+
+add_filter( 'bp_core_get_js_strings', 'bb_nouveau_inactive_media_localize_fallback', 99, 1 );

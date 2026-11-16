@@ -76,6 +76,20 @@ function bboss_reactions_init_load() {
 		bboss_load_reaction();
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_reactions_init_load' ) && ! function_exists( 'bb_reactions_init_load' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_reactions_init_load()}.
+	 *
+	 * @deprecated Use bboss_reactions_init_load() instead.
+	 */
+	function bb_reactions_init_load() {
+		return bboss_reactions_init_load();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Register the Reactions REST API endpoint.
@@ -92,20 +106,8 @@ function bboss_reactions_register_rest_routes() {
 		$controller->register_routes();
 	}
 }
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
-if ( function_exists( 'bboss_reactions_init_load' ) && ! function_exists( 'bb_reactions_init_load' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_reactions_init_load()}.
-	 *
-	 * @deprecated Use bboss_reactions_init_load() instead.
-	 */
-	function bb_reactions_init_load() {
-		return bboss_reactions_init_load();
-	}
-}
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_reactions_register_rest_routes' ) && ! function_exists( 'bb_reactions_register_rest_routes' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_reactions_register_rest_routes()}.
@@ -117,3 +119,4 @@ if ( function_exists( 'bboss_reactions_register_rest_routes' ) && ! function_exi
 	}
 }
 // @bbwt-com-end compat-layer
+

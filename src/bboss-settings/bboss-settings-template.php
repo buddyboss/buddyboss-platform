@@ -17,6 +17,20 @@ defined( 'ABSPATH' ) || exit;
 function bboss_settings_slug() {
 	echo esc_attr( bboss_get_settings_slug() );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_settings_slug' ) && ! function_exists( 'bp_settings_slug' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_settings_slug()}.
+	 *
+	 * @deprecated Use bboss_settings_slug() instead.
+	 */
+	function bp_settings_slug() {
+		return bboss_settings_slug();
+	}
+}
+// @bbwt-com-end compat-layer
+
 	/**
 	 * Return the settings component slug.
 	 *
@@ -35,6 +49,20 @@ function bboss_get_settings_slug() {
 	 */
 	return apply_filters( 'bp_get_settings_slug', bboss()->settings->slug );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_settings_slug' ) && ! function_exists( 'bp_get_settings_slug' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_settings_slug()}.
+	 *
+	 * @deprecated Use bboss_get_settings_slug() instead.
+	 */
+	function bp_get_settings_slug() {
+		return bboss_get_settings_slug();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output the settings component root slug.
@@ -44,6 +72,20 @@ function bboss_get_settings_slug() {
 function bboss_settings_root_slug() {
 	echo esc_attr( bboss_get_settings_root_slug() );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_settings_root_slug' ) && ! function_exists( 'bp_settings_root_slug' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_settings_root_slug()}.
+	 *
+	 * @deprecated Use bboss_settings_root_slug() instead.
+	 */
+	function bp_settings_root_slug() {
+		return bboss_settings_root_slug();
+	}
+}
+// @bbwt-com-end compat-layer
+
 	/**
 	 * Return the settings component root slug.
 	 *
@@ -62,6 +104,20 @@ function bboss_get_settings_root_slug() {
 	 */
 	return apply_filters( 'bp_get_settings_root_slug', bboss()->settings->root_slug );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_settings_root_slug' ) && ! function_exists( 'bp_get_settings_root_slug' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_settings_root_slug()}.
+	 *
+	 * @deprecated Use bboss_get_settings_root_slug() instead.
+	 */
+	function bp_get_settings_root_slug() {
+		return bboss_get_settings_root_slug();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Add the 'pending email change' message to the settings page.
@@ -107,31 +163,8 @@ function bboss_settings_pending_email_notice() {
 
 	<?php
 }
-add_action( 'bp_before_member_settings_template', 'bp_settings_pending_email_notice' );
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
-if ( function_exists( 'bboss_get_settings_root_slug' ) && ! function_exists( 'bp_get_settings_root_slug' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_settings_root_slug()}.
-	 *
-	 * @deprecated Use bboss_get_settings_root_slug() instead.
-	 */
-	function bp_get_settings_root_slug() {
-		return bboss_get_settings_root_slug();
-	}
-}
-if ( function_exists( 'bboss_get_settings_slug' ) && ! function_exists( 'bp_get_settings_slug' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_settings_slug()}.
-	 *
-	 * @deprecated Use bboss_get_settings_slug() instead.
-	 */
-	function bp_get_settings_slug() {
-		return bboss_get_settings_slug();
-	}
-}
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_settings_pending_email_notice' ) && ! function_exists( 'bp_settings_pending_email_notice' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_settings_pending_email_notice()}.
@@ -142,24 +175,6 @@ if ( function_exists( 'bboss_settings_pending_email_notice' ) && ! function_exis
 		return bboss_settings_pending_email_notice();
 	}
 }
-if ( function_exists( 'bboss_settings_root_slug' ) && ! function_exists( 'bp_settings_root_slug' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_settings_root_slug()}.
-	 *
-	 * @deprecated Use bboss_settings_root_slug() instead.
-	 */
-	function bp_settings_root_slug() {
-		return bboss_settings_root_slug();
-	}
-}
-if ( function_exists( 'bboss_settings_slug' ) && ! function_exists( 'bp_settings_slug' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_settings_slug()}.
-	 *
-	 * @deprecated Use bboss_settings_slug() instead.
-	 */
-	function bp_settings_slug() {
-		return bboss_settings_slug();
-	}
-}
 // @bbwt-com-end compat-layer
+
+add_action( 'bp_before_member_settings_template', 'bp_settings_pending_email_notice' );

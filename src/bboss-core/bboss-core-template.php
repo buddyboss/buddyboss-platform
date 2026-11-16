@@ -104,6 +104,20 @@ function bboss_get_options_nav( $parent_slug = '' ) {
 		echo wp_kses_post( apply_filters( 'bp_get_options_nav_' . $subnav_item->css_id, '<li id="' . esc_attr( $subnav_item->css_id . '-' . $list_type . '-li' ) . '" ' . $selected . '><a id="' . esc_attr( $subnav_item->css_id ) . '" href="' . esc_url( $subnav_item->link ) . '">' . $subnav_item->name . '</a></li>', $subnav_item, $selected_item ) );
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_options_nav' ) && ! function_exists( 'bp_get_options_nav' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_options_nav()}.
+	 *
+	 * @deprecated Use bboss_get_options_nav() instead.
+	 */
+	function bp_get_options_nav( $parent_slug = '' ) {
+		return bboss_get_options_nav( $parent_slug );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get the 'bp_options_title' property from the BP global.
@@ -122,6 +136,20 @@ function bboss_get_options_title() {
 	// Already escaped before the filter; wp_kses_post() keeps entities as they are instead of encoding them twice.
 	echo wp_kses_post( apply_filters( 'bp_get_options_title', esc_attr( $bp->bp_options_title ) ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_options_title' ) && ! function_exists( 'bp_get_options_title' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_options_title()}.
+	 *
+	 * @deprecated Use bboss_get_options_title() instead.
+	 */
+	function bp_get_options_title() {
+		return bboss_get_options_title();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get the directory title for a component.
@@ -157,6 +185,20 @@ function bboss_get_directory_title( $component = '' ) {
 	 */
 	return apply_filters( 'bp_get_directory_title', $title, $component );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_directory_title' ) && ! function_exists( 'bp_get_directory_title' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_directory_title()}.
+	 *
+	 * @deprecated Use bboss_get_directory_title() instead.
+	 */
+	function bp_get_directory_title( $component = '' ) {
+		return bboss_get_directory_title( $component );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /** Avatars *******************************************************************/
 
@@ -173,6 +215,20 @@ function bboss_get_directory_title( $component = '' ) {
 function bboss_has_options_avatar() {
 	return (bool) bboss()->bp_options_avatar;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_has_options_avatar' ) && ! function_exists( 'bp_has_options_avatar' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_has_options_avatar()}.
+	 *
+	 * @deprecated Use bboss_has_options_avatar() instead.
+	 */
+	function bp_has_options_avatar() {
+		return bboss_has_options_avatar();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output the options avatar.
@@ -184,6 +240,20 @@ function bboss_has_options_avatar() {
 function bboss_get_options_avatar() {
 	echo wp_kses_post( apply_filters( 'bp_get_options_avatar', bboss()->bp_options_avatar ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_options_avatar' ) && ! function_exists( 'bp_get_options_avatar' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_options_avatar()}.
+	 *
+	 * @deprecated Use bboss_get_options_avatar() instead.
+	 */
+	function bp_get_options_avatar() {
+		return bboss_get_options_avatar();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output a comment author's avatar.
@@ -211,6 +281,20 @@ function bboss_comment_author_avatar() {
 		get_avatar();
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_comment_author_avatar' ) && ! function_exists( 'bp_comment_author_avatar' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_comment_author_avatar()}.
+	 *
+	 * @deprecated Use bboss_comment_author_avatar() instead.
+	 */
+	function bp_comment_author_avatar() {
+		return bboss_comment_author_avatar();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output a post author's avatar.
@@ -238,6 +322,20 @@ function bboss_post_author_avatar() {
 		get_avatar();
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_post_author_avatar' ) && ! function_exists( 'bp_post_author_avatar' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_post_author_avatar()}.
+	 *
+	 * @deprecated Use bboss_post_author_avatar() instead.
+	 */
+	function bp_post_author_avatar() {
+		return bboss_post_author_avatar();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output the current avatar upload step.
@@ -247,6 +345,20 @@ function bboss_post_author_avatar() {
 function bboss_avatar_admin_step() {
 	echo esc_html( bboss_get_avatar_admin_step() );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_avatar_admin_step' ) && ! function_exists( 'bp_avatar_admin_step' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_avatar_admin_step()}.
+	 *
+	 * @deprecated Use bboss_avatar_admin_step() instead.
+	 */
+	function bp_avatar_admin_step() {
+		return bboss_avatar_admin_step();
+	}
+}
+// @bbwt-com-end compat-layer
+
 	/**
 	 * Return the current avatar upload step.
 	 *
@@ -270,6 +382,20 @@ function bboss_get_avatar_admin_step() {
 	 */
 	return apply_filters( 'bp_get_avatar_admin_step', $step );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_avatar_admin_step' ) && ! function_exists( 'bp_get_avatar_admin_step' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_avatar_admin_step()}.
+	 *
+	 * @deprecated Use bboss_get_avatar_admin_step() instead.
+	 */
+	function bp_get_avatar_admin_step() {
+		return bboss_get_avatar_admin_step();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output the URL of the avatar to crop.
@@ -279,6 +405,20 @@ function bboss_get_avatar_admin_step() {
 function bboss_avatar_to_crop() {
 	echo esc_url( bboss_get_avatar_to_crop() );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_avatar_to_crop' ) && ! function_exists( 'bp_avatar_to_crop' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_avatar_to_crop()}.
+	 *
+	 * @deprecated Use bboss_avatar_to_crop() instead.
+	 */
+	function bp_avatar_to_crop() {
+		return bboss_avatar_to_crop();
+	}
+}
+// @bbwt-com-end compat-layer
+
 	/**
 	 * Return the URL of the avatar to crop.
 	 *
@@ -301,6 +441,20 @@ function bboss_get_avatar_to_crop() {
 	 */
 	return apply_filters( 'bp_get_avatar_to_crop', $url );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_avatar_to_crop' ) && ! function_exists( 'bp_get_avatar_to_crop' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_avatar_to_crop()}.
+	 *
+	 * @deprecated Use bboss_get_avatar_to_crop() instead.
+	 */
+	function bp_get_avatar_to_crop() {
+		return bboss_get_avatar_to_crop();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output the relative file path to the avatar to crop.
@@ -310,6 +464,20 @@ function bboss_get_avatar_to_crop() {
 function bboss_avatar_to_crop_src() {
 	echo esc_url( bboss_get_avatar_to_crop_src() );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_avatar_to_crop_src' ) && ! function_exists( 'bp_avatar_to_crop_src' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_avatar_to_crop_src()}.
+	 *
+	 * @deprecated Use bboss_avatar_to_crop_src() instead.
+	 */
+	function bp_avatar_to_crop_src() {
+		return bboss_avatar_to_crop_src();
+	}
+}
+// @bbwt-com-end compat-layer
+
 	/**
 	 * Return the relative file path to the avatar to crop.
 	 *
@@ -332,6 +500,20 @@ function bboss_get_avatar_to_crop_src() {
 	 */
 	return apply_filters( 'bp_get_avatar_to_crop_src', $src );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_avatar_to_crop_src' ) && ! function_exists( 'bp_get_avatar_to_crop_src' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_avatar_to_crop_src()}.
+	 *
+	 * @deprecated Use bboss_get_avatar_to_crop_src() instead.
+	 */
+	function bp_get_avatar_to_crop_src() {
+		return bboss_get_avatar_to_crop_src();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output the avatar cropper <img> markup.
@@ -345,6 +527,20 @@ function bboss_avatar_cropper() {
 	<img id="avatar-to-crop" class="avatar" src="<?php echo esc_url( bboss()->avatar_admin->image ); ?>" />
 	<?php
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_avatar_cropper' ) && ! function_exists( 'bp_avatar_cropper' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_avatar_cropper()}.
+	 *
+	 * @deprecated Use bboss_avatar_cropper() instead.
+	 */
+	function bp_avatar_cropper() {
+		return bboss_avatar_cropper();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output the name of the BP site. Used in RSS headers.
@@ -354,6 +550,20 @@ function bboss_avatar_cropper() {
 function bboss_site_name() {
 	echo esc_html( bboss_get_site_name() );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_site_name' ) && ! function_exists( 'bp_site_name' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_site_name()}.
+	 *
+	 * @deprecated Use bboss_site_name() instead.
+	 */
+	function bp_site_name() {
+		return bboss_site_name();
+	}
+}
+// @bbwt-com-end compat-layer
+
 	/**
 	 * Returns the name of the BP site. Used in RSS headers.
 	 *
@@ -372,6 +582,20 @@ function bboss_get_site_name() {
 	 */
 	return apply_filters( 'bp_site_name', get_bloginfo( 'name', 'display' ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_site_name' ) && ! function_exists( 'bp_get_site_name' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_site_name()}.
+	 *
+	 * @deprecated Use bboss_get_site_name() instead.
+	 */
+	function bp_get_site_name() {
+		return bboss_get_site_name();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Format a date based on a UNIX timestamp.
@@ -458,6 +682,20 @@ function bboss_format_time( $time = '', $exclude_time = false, $gmt = true ) {
 	 */
 	return apply_filters( 'bp_format_time', $formatted_date );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_format_time' ) && ! function_exists( 'bp_format_time' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_format_time()}.
+	 *
+	 * @deprecated Use bboss_format_time() instead.
+	 */
+	function bp_format_time( $time = '', $exclude_time = false, $gmt = true ) {
+		return bboss_format_time( $time, $exclude_time, $gmt );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Select between two dynamic strings, according to context.
@@ -516,6 +754,20 @@ function bboss_word_or_name( $youtext, $nametext, $capitalize = true, $echo = tr
 		}
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_word_or_name' ) && ! function_exists( 'bp_word_or_name' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_word_or_name()}.
+	 *
+	 * @deprecated Use bboss_word_or_name() instead.
+	 */
+	function bp_word_or_name( $youtext, $nametext, $capitalize = true, $echo = true ) {
+		return bboss_word_or_name( $youtext, $nametext, $capitalize, $echo );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Do the 'bp_styles' action, and call wp_print_styles().
@@ -533,6 +785,20 @@ function bboss_styles() {
 	do_action( 'bp_styles' );
 	wp_print_styles();
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_styles' ) && ! function_exists( 'bp_styles' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_styles()}.
+	 *
+	 * @deprecated Use bboss_styles() instead.
+	 */
+	function bp_styles() {
+		return bboss_styles();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /** Search Form ***************************************************************/
 
@@ -554,6 +820,20 @@ function bboss_search_form_action() {
 	 */
 	return apply_filters( 'bp_search_form_action', trailingslashit( bboss_get_root_domain() . '/' . bboss_get_search_slug() ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_search_form_action' ) && ! function_exists( 'bp_search_form_action' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_search_form_action()}.
+	 *
+	 * @deprecated Use bboss_search_form_action() instead.
+	 */
+	function bp_search_form_action() {
+		return bboss_search_form_action();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Generate the basic search form as used in BP-Default's header.
@@ -607,6 +887,20 @@ function bboss_search_form_type_select() {
 	 */
 	return apply_filters( 'bp_search_form_type_select', $selection_box );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_search_form_type_select' ) && ! function_exists( 'bp_search_form_type_select' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_search_form_type_select()}.
+	 *
+	 * @deprecated Use bboss_search_form_type_select() instead.
+	 */
+	function bp_search_form_type_select() {
+		return bboss_search_form_type_select();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output the 'name' attribute for search form input element.
@@ -618,6 +912,20 @@ function bboss_search_form_type_select() {
 function bboss_search_input_name( $component = '' ) {
 	echo esc_attr( bboss_get_search_input_name( $component ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_search_input_name' ) && ! function_exists( 'bp_search_input_name' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_search_input_name()}.
+	 *
+	 * @deprecated Use bboss_search_input_name() instead.
+	 */
+	function bp_search_input_name( $component = '' ) {
+		return bboss_search_input_name( $component );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get the 'name' attribute for the search form input element.
@@ -641,6 +949,20 @@ function bboss_get_search_input_name( $component = '' ) {
 
 	return $name;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_search_input_name' ) && ! function_exists( 'bp_get_search_input_name' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_search_input_name()}.
+	 *
+	 * @deprecated Use bboss_get_search_input_name() instead.
+	 */
+	function bp_get_search_input_name( $component = '' ) {
+		return bboss_get_search_input_name( $component );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output the placeholder text for the search box for a given component.
@@ -652,6 +974,20 @@ function bboss_get_search_input_name( $component = '' ) {
 function bboss_search_placeholder( $component = '' ) {
 	echo esc_attr( bboss_get_search_placeholder( $component ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_search_placeholder' ) && ! function_exists( 'bp_search_placeholder' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_search_placeholder()}.
+	 *
+	 * @deprecated Use bboss_search_placeholder() instead.
+	 */
+	function bp_search_placeholder( $component = '' ) {
+		return bboss_search_placeholder( $component );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get the placeholder text for the search box for a given component.
@@ -672,6 +1008,20 @@ function bboss_get_search_placeholder( $component = '' ) {
 
 	return $placeholder;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_search_placeholder' ) && ! function_exists( 'bp_get_search_placeholder' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_search_placeholder()}.
+	 *
+	 * @deprecated Use bboss_get_search_placeholder() instead.
+	 */
+	function bp_get_search_placeholder( $component = '' ) {
+		return bboss_get_search_placeholder( $component );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output the default text for the search box for a given component.
@@ -685,6 +1035,20 @@ function bboss_get_search_placeholder( $component = '' ) {
 function bboss_search_default_text( $component = '' ) {
 	echo esc_html( bboss_get_search_default_text( $component ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_search_default_text' ) && ! function_exists( 'bp_search_default_text' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_search_default_text()}.
+	 *
+	 * @deprecated Use bboss_search_default_text() instead.
+	 */
+	function bp_search_default_text( $component = '' ) {
+		return bboss_search_default_text( $component );
+	}
+}
+// @bbwt-com-end compat-layer
+
 	/**
 	 * Return the default text for the search box for a given component.
 	 *
@@ -729,6 +1093,20 @@ function bboss_get_search_default_text( $component = '' ) {
 	 */
 	return apply_filters( 'bp_get_search_default_text', $default_text, $component );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_search_default_text' ) && ! function_exists( 'bp_get_search_default_text' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_search_default_text()}.
+	 *
+	 * @deprecated Use bboss_get_search_default_text() instead.
+	 */
+	function bp_get_search_default_text( $component = '' ) {
+		return bboss_get_search_default_text( $component );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Fire the 'bp_custom_profile_boxes' action.
@@ -740,6 +1118,20 @@ function bboss_get_search_default_text( $component = '' ) {
 function bboss_custom_profile_boxes() {
 	do_action( 'bp_custom_profile_boxes' );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_custom_profile_boxes' ) && ! function_exists( 'bp_custom_profile_boxes' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_custom_profile_boxes()}.
+	 *
+	 * @deprecated Use bboss_custom_profile_boxes() instead.
+	 */
+	function bp_custom_profile_boxes() {
+		return bboss_custom_profile_boxes();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Fire the 'bp_custom_profile_sidebar_boxes' action.
@@ -751,6 +1143,20 @@ function bboss_custom_profile_boxes() {
 function bboss_custom_profile_sidebar_boxes() {
 	do_action( 'bp_custom_profile_sidebar_boxes' );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_custom_profile_sidebar_boxes' ) && ! function_exists( 'bp_custom_profile_sidebar_boxes' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_custom_profile_sidebar_boxes()}.
+	 *
+	 * @deprecated Use bboss_custom_profile_sidebar_boxes() instead.
+	 */
+	function bp_custom_profile_sidebar_boxes() {
+		return bboss_custom_profile_sidebar_boxes();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output the attributes for a form field.
@@ -763,6 +1169,20 @@ function bboss_custom_profile_sidebar_boxes() {
 function bboss_form_field_attributes( $name = '', $attributes = array() ) {
 	echo bboss_get_form_field_attributes( $name, $attributes ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- returns attribute markup built with esc_attr(); escaping it again would corrupt the attribute.
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_form_field_attributes' ) && ! function_exists( 'bp_form_field_attributes' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_form_field_attributes()}.
+	 *
+	 * @deprecated Use bboss_form_field_attributes() instead.
+	 */
+	function bp_form_field_attributes( $name = '', $attributes = array() ) {
+		return bboss_form_field_attributes( $name, $attributes );
+	}
+}
+// @bbwt-com-end compat-layer
+
 	/**
 	 * Get the attributes for a form field.
 	 *
@@ -832,6 +1252,20 @@ function bboss_get_form_field_attributes( $name = '', $attributes = array() ) {
 
 	return $retval;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_form_field_attributes' ) && ! function_exists( 'bp_get_form_field_attributes' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_form_field_attributes()}.
+	 *
+	 * @deprecated Use bboss_get_form_field_attributes() instead.
+	 */
+	function bp_get_form_field_attributes( $name = '', $attributes = array() ) {
+		return bboss_get_form_field_attributes( $name, $attributes );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Create and output a button.
@@ -845,6 +1279,20 @@ function bboss_get_form_field_attributes( $name = '', $attributes = array() ) {
 function bboss_button( $args = '' ) {
 	echo wp_kses_post( bboss_get_button( $args ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_button' ) && ! function_exists( 'bp_button' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_button()}.
+	 *
+	 * @deprecated Use bboss_button() instead.
+	 */
+	function bp_button( $args = '' ) {
+		return bboss_button( $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 	/**
 	 * Create and return a button.
 	 *
@@ -869,6 +1317,20 @@ function bboss_get_button( $args = '' ) {
 	 */
 	return apply_filters( 'bp_get_button', $button->contents, $args, $button );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_button' ) && ! function_exists( 'bp_get_button' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_button()}.
+	 *
+	 * @deprecated Use bboss_get_button() instead.
+	 */
+	function bp_get_button( $args = '' ) {
+		return bboss_get_button( $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Truncate text.
@@ -1138,6 +1600,20 @@ function bboss_create_excerpt( $text, $length = 225, $options = array() ) {
 	/** This filter is documented in /bboss-core/bboss-core-template.php */
 	return apply_filters( 'bp_create_excerpt', $truncate, $original_text, $length, $options );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_create_excerpt' ) && ! function_exists( 'bp_create_excerpt' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_create_excerpt()}.
+	 *
+	 * @deprecated Use bboss_create_excerpt() instead.
+	 */
+	function bp_create_excerpt( $text, $length = 225, $options = array() ) {
+		return bboss_create_excerpt( $text, $length, $options );
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_filter( 'bp_create_excerpt', 'stripslashes_deep' );
 add_filter( 'bp_create_excerpt', 'force_balance_tags' );
 
@@ -1149,6 +1625,20 @@ add_filter( 'bp_create_excerpt', 'force_balance_tags' );
 function bboss_total_member_count() {
 	echo esc_html( bboss_get_total_member_count() );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_total_member_count' ) && ! function_exists( 'bp_total_member_count' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_total_member_count()}.
+	 *
+	 * @deprecated Use bboss_total_member_count() instead.
+	 */
+	function bp_total_member_count() {
+		return bboss_total_member_count();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return the total member count in your BP instance.
@@ -1181,6 +1671,20 @@ function bboss_get_total_member_count() {
 	 */
 	return apply_filters( 'bp_get_total_member_count', bboss_core_get_total_member_count() );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_total_member_count' ) && ! function_exists( 'bp_get_total_member_count' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_total_member_count()}.
+	 *
+	 * @deprecated Use bboss_get_total_member_count() instead.
+	 */
+	function bp_get_total_member_count() {
+		return bboss_get_total_member_count();
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_filter( 'bp_get_total_member_count', 'bp_core_number_format' );
 
 /**
@@ -1191,6 +1695,20 @@ add_filter( 'bp_get_total_member_count', 'bp_core_number_format' );
 function bboss_blog_signup_allowed() {
 	echo esc_html( bboss_get_blog_signup_allowed() );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_blog_signup_allowed' ) && ! function_exists( 'bp_blog_signup_allowed' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_blog_signup_allowed()}.
+	 *
+	 * @deprecated Use bboss_blog_signup_allowed() instead.
+	 */
+	function bp_blog_signup_allowed() {
+		return bboss_blog_signup_allowed();
+	}
+}
+// @bbwt-com-end compat-layer
+
 	/**
 	 * Is blog signup allowed?
 	 *
@@ -1214,6 +1732,20 @@ function bboss_get_blog_signup_allowed() {
 
 	return false;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_blog_signup_allowed' ) && ! function_exists( 'bp_get_blog_signup_allowed' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_blog_signup_allowed()}.
+	 *
+	 * @deprecated Use bboss_get_blog_signup_allowed() instead.
+	 */
+	function bp_get_blog_signup_allowed() {
+		return bboss_get_blog_signup_allowed();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Check whether an activation has just been completed.
@@ -1228,6 +1760,20 @@ function bboss_account_was_activated() {
 
 	return $activation_complete;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_account_was_activated' ) && ! function_exists( 'bp_account_was_activated' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_account_was_activated()}.
+	 *
+	 * @deprecated Use bboss_account_was_activated() instead.
+	 */
+	function bp_account_was_activated() {
+		return bboss_account_was_activated();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Check whether registrations require activation on this installation.
@@ -1251,6 +1797,20 @@ function bboss_registration_needs_activation() {
 	 */
 	return apply_filters( 'bp_registration_needs_activation', true );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_registration_needs_activation' ) && ! function_exists( 'bp_registration_needs_activation' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_registration_needs_activation()}.
+	 *
+	 * @deprecated Use bboss_registration_needs_activation() instead.
+	 */
+	function bp_registration_needs_activation() {
+		return bboss_registration_needs_activation();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Retrieve a client friendly version of the root blog name.
@@ -1301,6 +1861,20 @@ function bboss_get_email_subject( $args = array() ) {
 	 */
 	return apply_filters( 'bp_get_email_subject', $subject, $r );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_email_subject' ) && ! function_exists( 'bp_get_email_subject' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_email_subject()}.
+	 *
+	 * @deprecated Use bboss_get_email_subject() instead.
+	 */
+	function bp_get_email_subject( $args = array() ) {
+		return bboss_get_email_subject( $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Allow templates to pass parameters directly into the template loops via AJAX.
@@ -1336,6 +1910,20 @@ function bboss_ajax_querystring( $object = false ) {
 	 */
 	return apply_filters( 'bp_ajax_querystring', $bp->ajax_querystring, $object );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_ajax_querystring' ) && ! function_exists( 'bp_ajax_querystring' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_ajax_querystring()}.
+	 *
+	 * @deprecated Use bboss_ajax_querystring() instead.
+	 */
+	function bp_ajax_querystring( $object = false ) {
+		return bboss_ajax_querystring( $object );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /** Template Classes and _is functions ****************************************/
 
@@ -1361,6 +1949,20 @@ function bboss_current_component() {
 	 */
 	return apply_filters( 'bp_current_component', $current_component );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_current_component' ) && ! function_exists( 'bp_current_component' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_current_component()}.
+	 *
+	 * @deprecated Use bboss_current_component() instead.
+	 */
+	function bp_current_component() {
+		return bboss_current_component();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return the name of the current action.
@@ -1384,6 +1986,20 @@ function bboss_current_action() {
 	 */
 	return apply_filters( 'bp_current_action', $current_action );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_current_action' ) && ! function_exists( 'bp_current_action' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_current_action()}.
+	 *
+	 * @deprecated Use bboss_current_action() instead.
+	 */
+	function bp_current_action() {
+		return bboss_current_action();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return the name of the current item.
@@ -1407,6 +2023,20 @@ function bboss_current_item() {
 	 */
 	return apply_filters( 'bp_current_item', $current_item );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_current_item' ) && ! function_exists( 'bp_current_item' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_current_item()}.
+	 *
+	 * @deprecated Use bboss_current_item() instead.
+	 */
+	function bp_current_item() {
+		return bboss_current_item();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return the value of $bp->action_variables.
@@ -1431,6 +2061,20 @@ function bboss_action_variables() {
 	 */
 	return apply_filters( 'bp_action_variables', $action_variables );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_action_variables' ) && ! function_exists( 'bp_action_variables' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_action_variables()}.
+	 *
+	 * @deprecated Use bboss_action_variables() instead.
+	 */
+	function bp_action_variables() {
+		return bboss_action_variables();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return the value of a given action variable.
@@ -1457,6 +2101,20 @@ function bboss_action_variable( $position = 0 ) {
 	 */
 	return apply_filters( 'bp_action_variable', $action_variable, $position );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_action_variable' ) && ! function_exists( 'bp_action_variable' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_action_variable()}.
+	 *
+	 * @deprecated Use bboss_action_variable() instead.
+	 */
+	function bp_action_variable( $position = 0 ) {
+		return bboss_action_variable( $position );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output the "root domain", the URL of the BP root blog.
@@ -1466,6 +2124,20 @@ function bboss_action_variable( $position = 0 ) {
 function bboss_root_domain() {
 	echo esc_url( bboss_get_root_domain() );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_root_domain' ) && ! function_exists( 'bp_root_domain' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_root_domain()}.
+	 *
+	 * @deprecated Use bboss_root_domain() instead.
+	 */
+	function bp_root_domain() {
+		return bboss_root_domain();
+	}
+}
+// @bbwt-com-end compat-layer
+
 	/**
 	 * Return the "root domain", the URL of the BP root blog.
 	 *
@@ -1492,6 +2164,20 @@ function bboss_get_root_domain() {
 	 */
 	return apply_filters( 'bp_get_root_domain', $domain );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_root_domain' ) && ! function_exists( 'bp_get_root_domain' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_root_domain()}.
+	 *
+	 * @deprecated Use bboss_get_root_domain() instead.
+	 */
+	function bp_get_root_domain() {
+		return bboss_get_root_domain();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output the root slug for a given component.
@@ -1503,6 +2189,20 @@ function bboss_get_root_domain() {
 function bboss_root_slug( $component = '' ) {
 	echo esc_attr( bboss_get_root_slug( $component ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_root_slug' ) && ! function_exists( 'bp_root_slug' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_root_slug()}.
+	 *
+	 * @deprecated Use bboss_root_slug() instead.
+	 */
+	function bp_root_slug( $component = '' ) {
+		return bboss_root_slug( $component );
+	}
+}
+// @bbwt-com-end compat-layer
+
 	/**
 	 * Get the root slug for given component.
 	 *
@@ -1572,6 +2272,20 @@ function bboss_get_root_slug( $component = '' ) {
 	 */
 	return apply_filters( 'bp_get_root_slug', $root_slug, $component );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_root_slug' ) && ! function_exists( 'bp_get_root_slug' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_root_slug()}.
+	 *
+	 * @deprecated Use bboss_get_root_slug() instead.
+	 */
+	function bp_get_root_slug( $component = '' ) {
+		return bboss_get_root_slug( $component );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return the component name based on a root slug.
@@ -1603,6 +2317,20 @@ function bboss_get_name_from_root_slug( $root_slug = '' ) {
 
 	return false;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_name_from_root_slug' ) && ! function_exists( 'bp_get_name_from_root_slug' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_name_from_root_slug()}.
+	 *
+	 * @deprecated Use bboss_get_name_from_root_slug() instead.
+	 */
+	function bp_get_name_from_root_slug( $root_slug = '' ) {
+		return bboss_get_name_from_root_slug( $root_slug );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Returns whether or not a user has access.
@@ -1623,6 +2351,20 @@ function bboss_user_has_access() {
 	 */
 	return (bool) apply_filters( 'bp_user_has_access', $has_access );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_user_has_access' ) && ! function_exists( 'bp_user_has_access' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_user_has_access()}.
+	 *
+	 * @deprecated Use bboss_user_has_access() instead.
+	 */
+	function bp_user_has_access() {
+		return bboss_user_has_access();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output the search slug.
@@ -1632,6 +2374,20 @@ function bboss_user_has_access() {
 function bboss_search_slug() {
 	echo esc_attr( bboss_get_search_slug() );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_search_slug' ) && ! function_exists( 'bp_search_slug' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_search_slug()}.
+	 *
+	 * @deprecated Use bboss_search_slug() instead.
+	 */
+	function bp_search_slug() {
+		return bboss_search_slug();
+	}
+}
+// @bbwt-com-end compat-layer
+
 	/**
 	 * Return the search slug.
 	 *
@@ -1650,6 +2406,20 @@ function bboss_get_search_slug() {
 	 */
 	return apply_filters( 'bp_get_search_slug', BBOSS_SEARCH_SLUG );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_search_slug' ) && ! function_exists( 'bp_get_search_slug' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_search_slug()}.
+	 *
+	 * @deprecated Use bboss_get_search_slug() instead.
+	 */
+	function bp_get_search_slug() {
+		return bboss_get_search_slug();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get the ID of the currently displayed user.
@@ -1673,6 +2443,20 @@ function bboss_displayed_user_id() {
 	 */
 	return (int) apply_filters( 'bp_displayed_user_id', $id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_displayed_user_id' ) && ! function_exists( 'bp_displayed_user_id' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_displayed_user_id()}.
+	 *
+	 * @deprecated Use bboss_displayed_user_id() instead.
+	 */
+	function bp_displayed_user_id() {
+		return bboss_displayed_user_id();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get the ID of the currently logged-in user.
@@ -1696,6 +2480,20 @@ function bboss_loggedin_user_id() {
 	 */
 	return (int) apply_filters( 'bp_loggedin_user_id', $id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_loggedin_user_id' ) && ! function_exists( 'bp_loggedin_user_id' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_loggedin_user_id()}.
+	 *
+	 * @deprecated Use bboss_loggedin_user_id() instead.
+	 */
+	function bp_loggedin_user_id() {
+		return bboss_loggedin_user_id();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /** The is_() functions to determine the current page *****************************/
 
@@ -1783,6 +2581,20 @@ function bboss_is_current_component( $component = '' ) {
 	 */
 	return apply_filters( 'bp_is_current_component', $is_current_component, $component );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_current_component' ) && ! function_exists( 'bp_is_current_component' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_current_component()}.
+	 *
+	 * @deprecated Use bboss_is_current_component() instead.
+	 */
+	function bp_is_current_component( $component = '' ) {
+		return bboss_is_current_component( $component );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Check to see whether the current page matches a given action.
@@ -1804,6 +2616,20 @@ function bboss_is_current_component( $component = '' ) {
 function bboss_is_current_action( $action = '' ) {
 	return (bool) ( $action === bboss_current_action() );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_current_action' ) && ! function_exists( 'bp_is_current_action' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_current_action()}.
+	 *
+	 * @deprecated Use bboss_is_current_action() instead.
+	 */
+	function bp_is_current_action( $action = '' ) {
+		return bboss_is_current_action( $action );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Check to see whether the current page matches a given action_variable.
@@ -1853,6 +2679,20 @@ function bboss_is_action_variable( $action_variable = '', $position = false ) {
 	 */
 	return apply_filters( 'bp_is_action_variable', $is_action_variable, $action_variable, $position );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_action_variable' ) && ! function_exists( 'bp_is_action_variable' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_action_variable()}.
+	 *
+	 * @deprecated Use bboss_is_action_variable() instead.
+	 */
+	function bp_is_action_variable( $action_variable = '', $position = false ) {
+		return bboss_is_action_variable( $action_variable, $position );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Check against the current_item.
@@ -1875,6 +2715,20 @@ function bboss_is_current_item( $item = '' ) {
 	 */
 	return (bool) apply_filters( 'bp_is_current_item', $retval, $item );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_current_item' ) && ! function_exists( 'bp_is_current_item' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_current_item()}.
+	 *
+	 * @deprecated Use bboss_is_current_item() instead.
+	 */
+	function bp_is_current_item( $item = '' ) {
+		return bboss_is_current_item( $item );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Are we looking at a single item? (group, user, etc).
@@ -1900,6 +2754,20 @@ function bboss_is_single_item() {
 	 */
 	return (bool) apply_filters( 'bp_is_single_item', $retval );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_single_item' ) && ! function_exists( 'bp_is_single_item' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_single_item()}.
+	 *
+	 * @deprecated Use bboss_is_single_item() instead.
+	 */
+	function bp_is_single_item() {
+		return bboss_is_single_item();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Is the logged-in user an admin for the current item?
@@ -1926,6 +2794,20 @@ function bboss_is_item_admin() {
 	 */
 	return (bool) apply_filters( 'bp_is_item_admin', $retval );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_item_admin' ) && ! function_exists( 'bp_is_item_admin' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_item_admin()}.
+	 *
+	 * @deprecated Use bboss_is_item_admin() instead.
+	 */
+	function bp_is_item_admin() {
+		return bboss_is_item_admin();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Is the logged-in user a mod for the current item?
@@ -1952,6 +2834,20 @@ function bboss_is_item_mod() {
 	 */
 	return (bool) apply_filters( 'bp_is_item_mod', $retval );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_item_mod' ) && ! function_exists( 'bp_is_item_mod' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_item_mod()}.
+	 *
+	 * @deprecated Use bboss_is_item_mod() instead.
+	 */
+	function bp_is_item_mod() {
+		return bboss_is_item_mod();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Is this a component directory page?
@@ -1977,6 +2873,20 @@ function bboss_is_directory() {
 	 */
 	return (bool) apply_filters( 'bp_is_directory', $retval );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_directory' ) && ! function_exists( 'bp_is_directory' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_directory()}.
+	 *
+	 * @deprecated Use bboss_is_directory() instead.
+	 */
+	function bp_is_directory() {
+		return bboss_is_directory();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Check to see if a component's URL should be in the root, not under a member page.
@@ -2021,6 +2931,20 @@ function bboss_is_root_component( $component_name = '' ) {
 	 */
 	return (bool) apply_filters( 'bp_is_root_component', $retval );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_root_component' ) && ! function_exists( 'bp_is_root_component' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_root_component()}.
+	 *
+	 * @deprecated Use bboss_is_root_component() instead.
+	 */
+	function bp_is_root_component( $component_name = '' ) {
+		return bboss_is_root_component( $component_name );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Check if the specified BuddyPress component directory is set to be the front page.
@@ -2071,6 +2995,20 @@ function bboss_is_component_front_page( $component = '' ) {
 	 */
 	return (bool) apply_filters( 'bp_is_component_front_page', ( $bp->pages->{$component}->id == $page_on_front ), $component );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_component_front_page' ) && ! function_exists( 'bp_is_component_front_page' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_component_front_page()}.
+	 *
+	 * @deprecated Use bboss_is_component_front_page() instead.
+	 */
+	function bp_is_component_front_page( $component = '' ) {
+		return bboss_is_component_front_page( $component );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Is this a blog page, ie a non-BP page?
@@ -2102,6 +3040,20 @@ function bboss_is_blog_page() {
 	 */
 	return (bool) apply_filters( 'bp_is_blog_page', $is_blog_page );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_blog_page' ) && ! function_exists( 'bp_is_blog_page' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_blog_page()}.
+	 *
+	 * @deprecated Use bboss_is_blog_page() instead.
+	 */
+	function bp_is_blog_page() {
+		return bboss_is_blog_page();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Is this a BuddyPress component?
@@ -2129,6 +3081,20 @@ function bboss_is_buddypress() {
 	 */
 	return apply_filters( 'is_buddypress', $retval );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_buddypress' ) && ! function_exists( 'is_buddypress' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_buddypress()}.
+	 *
+	 * @deprecated Use bboss_is_buddypress() instead.
+	 */
+	function is_buddypress() {
+		return bboss_is_buddypress();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /** Components ****************************************************************/
 
@@ -2189,6 +3155,20 @@ function bboss_is_active( $component = '', $feature = '' ) {
 	 */
 	return apply_filters( 'bp_is_active', $retval, $component );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_active' ) && ! function_exists( 'bp_is_active' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_active()}.
+	 *
+	 * @deprecated Use bboss_is_active() instead.
+	 */
+	function bp_is_active( $component = '', $feature = '' ) {
+		return bboss_is_active( $component, $feature );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Check whether the current page is part of the Members component.
@@ -2200,6 +3180,20 @@ function bboss_is_active( $component = '', $feature = '' ) {
 function bboss_is_members_component() {
 	return (bool) bboss_is_current_component( 'members' );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_members_component' ) && ! function_exists( 'bp_is_members_component' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_members_component()}.
+	 *
+	 * @deprecated Use bboss_is_members_component() instead.
+	 */
+	function bp_is_members_component() {
+		return bboss_is_members_component();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Check whether the current page is part of the Profile component.
@@ -2211,6 +3205,20 @@ function bboss_is_members_component() {
 function bboss_is_profile_component() {
 	return (bool) bboss_is_current_component( 'xprofile' );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_profile_component' ) && ! function_exists( 'bp_is_profile_component' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_profile_component()}.
+	 *
+	 * @deprecated Use bboss_is_profile_component() instead.
+	 */
+	function bp_is_profile_component() {
+		return bboss_is_profile_component();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Check whether the current page is part of the Activity component.
@@ -2222,6 +3230,20 @@ function bboss_is_profile_component() {
 function bboss_is_activity_component() {
 	return (bool) bboss_is_current_component( 'activity' );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_activity_component' ) && ! function_exists( 'bp_is_activity_component' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_activity_component()}.
+	 *
+	 * @deprecated Use bboss_is_activity_component() instead.
+	 */
+	function bp_is_activity_component() {
+		return bboss_is_activity_component();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Check whether the current page is part of the Blogs component.
@@ -2233,6 +3255,20 @@ function bboss_is_activity_component() {
 function bboss_is_blogs_component() {
 	return (bool) ( is_multisite() && bboss_is_current_component( 'blogs' ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_blogs_component' ) && ! function_exists( 'bp_is_blogs_component' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_blogs_component()}.
+	 *
+	 * @deprecated Use bboss_is_blogs_component() instead.
+	 */
+	function bp_is_blogs_component() {
+		return bboss_is_blogs_component();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Check whether the current page is part of the Messages component.
@@ -2244,6 +3280,20 @@ function bboss_is_blogs_component() {
 function bboss_is_messages_component() {
 	return (bool) bboss_is_current_component( 'messages' );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_messages_component' ) && ! function_exists( 'bp_is_messages_component' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_messages_component()}.
+	 *
+	 * @deprecated Use bboss_is_messages_component() instead.
+	 */
+	function bp_is_messages_component() {
+		return bboss_is_messages_component();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Check whether the current page is part of the Connections component.
@@ -2255,6 +3305,20 @@ function bboss_is_messages_component() {
 function bboss_is_friends_component() {
 	return (bool) bboss_is_current_component( 'friends' );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_friends_component' ) && ! function_exists( 'bp_is_friends_component' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_friends_component()}.
+	 *
+	 * @deprecated Use bboss_is_friends_component() instead.
+	 */
+	function bp_is_friends_component() {
+		return bboss_is_friends_component();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Check whether the current page is part of the Groups component.
@@ -2266,6 +3330,20 @@ function bboss_is_friends_component() {
 function bboss_is_groups_component() {
 	return (bool) bboss_is_current_component( 'groups' );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_groups_component' ) && ! function_exists( 'bp_is_groups_component' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_groups_component()}.
+	 *
+	 * @deprecated Use bboss_is_groups_component() instead.
+	 */
+	function bp_is_groups_component() {
+		return bboss_is_groups_component();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Check whether the current page is part of the Forums component.
@@ -2278,6 +3356,20 @@ function bboss_is_groups_component() {
 function bboss_is_forums_component() {
 	return (bool) bboss_is_current_component( 'forums' );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_forums_component' ) && ! function_exists( 'bp_is_forums_component' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_forums_component()}.
+	 *
+	 * @deprecated Use bboss_is_forums_component() instead.
+	 */
+	function bp_is_forums_component() {
+		return bboss_is_forums_component();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Check whether the current page is part of the Notifications component.
@@ -2289,6 +3381,20 @@ function bboss_is_forums_component() {
 function bboss_is_notifications_component() {
 	return (bool) bboss_is_current_component( 'notifications' );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_notifications_component' ) && ! function_exists( 'bp_is_notifications_component' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_notifications_component()}.
+	 *
+	 * @deprecated Use bboss_is_notifications_component() instead.
+	 */
+	function bp_is_notifications_component() {
+		return bboss_is_notifications_component();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Check whether the current page is part of the Settings component.
@@ -2300,6 +3406,20 @@ function bboss_is_notifications_component() {
 function bboss_is_settings_component() {
 	return (bool) bboss_is_current_component( 'settings' );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_settings_component' ) && ! function_exists( 'bp_is_settings_component' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_settings_component()}.
+	 *
+	 * @deprecated Use bboss_is_settings_component() instead.
+	 */
+	function bp_is_settings_component() {
+		return bboss_is_settings_component();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Check whether the current page is part of the Invites component.
@@ -2311,6 +3431,20 @@ function bboss_is_settings_component() {
 function bboss_is_invites_component() {
 	return (bool) bboss_is_current_component( 'invites' );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_invites_component' ) && ! function_exists( 'bp_is_invites_component' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_invites_component()}.
+	 *
+	 * @deprecated Use bboss_is_invites_component() instead.
+	 */
+	function bp_is_invites_component() {
+		return bboss_is_invites_component();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Check whether the current page is part of the Media component.
@@ -2322,6 +3456,20 @@ function bboss_is_invites_component() {
 function bboss_is_media_component() {
 	return (bool) bboss_is_current_component( 'media' );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_media_component' ) && ! function_exists( 'bp_is_media_component' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_media_component()}.
+	 *
+	 * @deprecated Use bboss_is_media_component() instead.
+	 */
+	function bp_is_media_component() {
+		return bboss_is_media_component();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Check whether the current page is part of the Document component.
@@ -2333,6 +3481,20 @@ function bboss_is_media_component() {
 function bboss_is_document_component() {
 	return (bool) bboss_is_current_component( 'document' );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_document_component' ) && ! function_exists( 'bp_is_document_component' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_document_component()}.
+	 *
+	 * @deprecated Use bboss_is_document_component() instead.
+	 */
+	function bp_is_document_component() {
+		return bboss_is_document_component();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Check whether the current page is part of the Moderation component.
@@ -2344,6 +3506,20 @@ function bboss_is_document_component() {
 function bboss_is_moderation_component() {
 	return (bool) bboss_is_current_component( 'moderation' );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_moderation_component' ) && ! function_exists( 'bp_is_moderation_component' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_moderation_component()}.
+	 *
+	 * @deprecated Use bboss_is_moderation_component() instead.
+	 */
+	function bp_is_moderation_component() {
+		return bboss_is_moderation_component();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Check whether the current page is part of the Video component.
@@ -2355,6 +3531,20 @@ function bboss_is_moderation_component() {
 function bboss_is_video_component() {
 	return (bool) bboss_is_current_component( 'video' ) || (bool) bboss_is_current_component( 'media' );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_video_component' ) && ! function_exists( 'bp_is_video_component' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_video_component()}.
+	 *
+	 * @deprecated Use bboss_is_video_component() instead.
+	 */
+	function bp_is_video_component() {
+		return bboss_is_video_component();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Is the current component an active core component?
@@ -2382,6 +3572,20 @@ function bboss_is_current_component_core() {
 
 	return $retval;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_current_component_core' ) && ! function_exists( 'bp_is_current_component_core' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_current_component_core()}.
+	 *
+	 * @deprecated Use bboss_is_current_component_core() instead.
+	 */
+	function bp_is_current_component_core() {
+		return bboss_is_current_component_core();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /** Activity ******************************************************************/
 
@@ -2399,6 +3603,20 @@ function bboss_is_activity_directory() {
 
 	return false;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_activity_directory' ) && ! function_exists( 'bp_is_activity_directory' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_activity_directory()}.
+	 *
+	 * @deprecated Use bboss_is_activity_directory() instead.
+	 */
+	function bp_is_activity_directory() {
+		return bboss_is_activity_directory();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Is the current page a single activity item permalink?
@@ -2410,6 +3628,20 @@ function bboss_is_activity_directory() {
 function bboss_is_single_activity() {
 	return (bool) ( bboss_is_activity_component() && is_numeric( bboss_current_action() ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_single_activity' ) && ! function_exists( 'bp_is_single_activity' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_single_activity()}.
+	 *
+	 * @deprecated Use bboss_is_single_activity() instead.
+	 */
+	function bp_is_single_activity() {
+		return bboss_is_single_activity();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Is the current page a single activity item edit permalink?
@@ -2421,6 +3653,20 @@ function bboss_is_single_activity() {
 function bboss_is_activity_edit() {
 	return (bool) ( bboss_is_activity_component() && is_numeric( bboss_current_action() ) && 'edit' === bboss_action_variable() );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_activity_edit' ) && ! function_exists( 'bp_is_activity_edit' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_activity_edit()}.
+	 *
+	 * @deprecated Use bboss_is_activity_edit() instead.
+	 */
+	function bp_is_activity_edit() {
+		return bboss_is_activity_edit();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /** User **********************************************************************/
 
@@ -2438,6 +3684,20 @@ function bboss_is_members_directory() {
 
 	return false;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_members_directory' ) && ! function_exists( 'bp_is_members_directory' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_members_directory()}.
+	 *
+	 * @deprecated Use bboss_is_members_directory() instead.
+	 */
+	function bp_is_members_directory() {
+		return bboss_is_members_directory();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Is the current page part of the profile of the logged-in user?
@@ -2465,6 +3725,20 @@ function bboss_is_my_profile() {
 	 */
 	return apply_filters( 'bp_is_my_profile', $my_profile );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_my_profile' ) && ! function_exists( 'bp_is_my_profile' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_my_profile()}.
+	 *
+	 * @deprecated Use bboss_is_my_profile() instead.
+	 */
+	function bp_is_my_profile() {
+		return bboss_is_my_profile();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Is the current page a user page?
@@ -2478,6 +3752,20 @@ function bboss_is_my_profile() {
 function bboss_is_user() {
 	return (bool) bboss_displayed_user_id();
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_user' ) && ! function_exists( 'bp_is_user' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_user()}.
+	 *
+	 * @deprecated Use bboss_is_user() instead.
+	 */
+	function bp_is_user() {
+		return bboss_is_user();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Is the current page a user custom front page?
@@ -2491,6 +3779,20 @@ function bboss_is_user() {
 function bboss_is_user_front() {
 	return (bool) ( bboss_is_user() && bboss_is_current_component( 'front' ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_user_front' ) && ! function_exists( 'bp_is_user_front' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_user_front()}.
+	 *
+	 * @deprecated Use bboss_is_user_front() instead.
+	 */
+	function bp_is_user_front() {
+		return bboss_is_user_front();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Is the current page a user's activity feed page?
@@ -2504,6 +3806,20 @@ function bboss_is_user_front() {
 function bboss_is_user_activity() {
 	return (bool) ( bboss_is_user() && bboss_is_activity_component() );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_user_activity' ) && ! function_exists( 'bp_is_user_activity' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_user_activity()}.
+	 *
+	 * @deprecated Use bboss_is_user_activity() instead.
+	 */
+	function bp_is_user_activity() {
+		return bboss_is_user_activity();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Is the current page a user's Connections activity feed?
@@ -2532,6 +3848,20 @@ function bboss_is_user_friends_activity() {
 
 	return false;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_user_friends_activity' ) && ! function_exists( 'bp_is_user_friends_activity' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_user_friends_activity()}.
+	 *
+	 * @deprecated Use bboss_is_user_friends_activity() instead.
+	 */
+	function bp_is_user_friends_activity() {
+		return bboss_is_user_friends_activity();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Is the current page a user's Groups activity feed?
@@ -2558,6 +3888,20 @@ function bboss_is_user_groups_activity() {
 
 	return false;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_user_groups_activity' ) && ! function_exists( 'bp_is_user_groups_activity' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_user_groups_activity()}.
+	 *
+	 * @deprecated Use bboss_is_user_groups_activity() instead.
+	 */
+	function bp_is_user_groups_activity() {
+		return bboss_is_user_groups_activity();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Is the current page part of a user's extended profile?
@@ -2571,6 +3915,20 @@ function bboss_is_user_groups_activity() {
 function bboss_is_user_profile() {
 	return (bool) ( bboss_is_profile_component() || bboss_is_current_component( 'profile' ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_user_profile' ) && ! function_exists( 'bp_is_user_profile' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_user_profile()}.
+	 *
+	 * @deprecated Use bboss_is_user_profile() instead.
+	 */
+	function bp_is_user_profile() {
+		return bboss_is_user_profile();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Is the current page part of a user's profile editing section?
@@ -2584,6 +3942,20 @@ function bboss_is_user_profile() {
 function bboss_is_user_profile_edit() {
 	return (bool) ( bboss_is_profile_component() && bboss_is_current_action( 'edit' ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_user_profile_edit' ) && ! function_exists( 'bp_is_user_profile_edit' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_user_profile_edit()}.
+	 *
+	 * @deprecated Use bboss_is_user_profile_edit() instead.
+	 */
+	function bp_is_user_profile_edit() {
+		return bboss_is_user_profile_edit();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Is the current page part of a user's profile avatar editing section?
@@ -2597,6 +3969,20 @@ function bboss_is_user_profile_edit() {
 function bboss_is_user_change_avatar() {
 	return (bool) ( bboss_is_profile_component() && bboss_is_current_action( 'change-avatar' ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_user_change_avatar' ) && ! function_exists( 'bp_is_user_change_avatar' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_user_change_avatar()}.
+	 *
+	 * @deprecated Use bboss_is_user_change_avatar() instead.
+	 */
+	function bp_is_user_change_avatar() {
+		return bboss_is_user_change_avatar();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Is the current page the a user's change cover photo profile page?
@@ -2610,6 +3996,20 @@ function bboss_is_user_change_avatar() {
 function bboss_is_user_change_cover_image() {
 	return (bool) ( bboss_is_profile_component() && bboss_is_current_action( 'change-cover-image' ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_user_change_cover_image' ) && ! function_exists( 'bp_is_user_change_cover_image' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_user_change_cover_image()}.
+	 *
+	 * @deprecated Use bboss_is_user_change_cover_image() instead.
+	 */
+	function bp_is_user_change_cover_image() {
+		return bboss_is_user_change_cover_image();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Is the current page part of a user's Groups page?
@@ -2623,6 +4023,20 @@ function bboss_is_user_change_cover_image() {
 function bboss_is_user_groups() {
 	return (bool) ( bboss_is_user() && bboss_is_groups_component() );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_user_groups' ) && ! function_exists( 'bp_is_user_groups' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_user_groups()}.
+	 *
+	 * @deprecated Use bboss_is_user_groups() instead.
+	 */
+	function bp_is_user_groups() {
+		return bboss_is_user_groups();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Is the current page part of a user's Groups invite page?
@@ -2636,6 +4050,20 @@ function bboss_is_user_groups() {
 function bboss_is_user_groups_invites() {
 	return (bool) ( bboss_is_user_groups() && bboss_is_current_action( 'invites' ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_user_groups_invites' ) && ! function_exists( 'bp_is_user_groups_invites' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_user_groups_invites()}.
+	 *
+	 * @deprecated Use bboss_is_user_groups_invites() instead.
+	 */
+	function bp_is_user_groups_invites() {
+		return bboss_is_user_groups_invites();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Is the current page part of a user's Blogs page?
@@ -2649,6 +4077,20 @@ function bboss_is_user_groups_invites() {
 function bboss_is_user_blogs() {
 	return (bool) ( bboss_is_user() && bboss_is_blogs_component() );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_user_blogs' ) && ! function_exists( 'bp_is_user_blogs' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_user_blogs()}.
+	 *
+	 * @deprecated Use bboss_is_user_blogs() instead.
+	 */
+	function bp_is_user_blogs() {
+		return bboss_is_user_blogs();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Is the current page a user's Recent Blog Posts page?
@@ -2662,6 +4104,20 @@ function bboss_is_user_blogs() {
 function bboss_is_user_recent_posts() {
 	return (bool) ( bboss_is_user_blogs() && bboss_is_current_action( 'recent-posts' ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_user_recent_posts' ) && ! function_exists( 'bp_is_user_recent_posts' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_user_recent_posts()}.
+	 *
+	 * @deprecated Use bboss_is_user_recent_posts() instead.
+	 */
+	function bp_is_user_recent_posts() {
+		return bboss_is_user_recent_posts();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Is the current page a user's Recent Blog Comments page?
@@ -2675,6 +4131,20 @@ function bboss_is_user_recent_posts() {
 function bboss_is_user_recent_commments() {
 	return (bool) ( bboss_is_user_blogs() && bboss_is_current_action( 'recent-comments' ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_user_recent_commments' ) && ! function_exists( 'bp_is_user_recent_commments' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_user_recent_commments()}.
+	 *
+	 * @deprecated Use bboss_is_user_recent_commments() instead.
+	 */
+	function bp_is_user_recent_commments() {
+		return bboss_is_user_recent_commments();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Is the current page a user's Connections page?
@@ -2688,6 +4158,20 @@ function bboss_is_user_recent_commments() {
 function bboss_is_user_friends() {
 	return (bool) ( bboss_is_user() && bboss_is_friends_component() );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_user_friends' ) && ! function_exists( 'bp_is_user_friends' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_user_friends()}.
+	 *
+	 * @deprecated Use bboss_is_user_friends() instead.
+	 */
+	function bp_is_user_friends() {
+		return bboss_is_user_friends();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Is the current page a user's Connection Requests page?
@@ -2701,6 +4185,20 @@ function bboss_is_user_friends() {
 function bboss_is_user_friend_requests() {
 	return (bool) ( bboss_is_user_friends() && bboss_is_current_action( 'requests' ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_user_friend_requests' ) && ! function_exists( 'bp_is_user_friend_requests' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_user_friend_requests()}.
+	 *
+	 * @deprecated Use bboss_is_user_friend_requests() instead.
+	 */
+	function bp_is_user_friend_requests() {
+		return bboss_is_user_friend_requests();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 
 /**
@@ -2715,6 +4213,20 @@ function bboss_is_user_friend_requests() {
 function bboss_is_user_mutual_friends() {
 	return (bool) ( bboss_is_user_friends() && bboss_is_current_action( 'mutual' ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_user_mutual_friends' ) && ! function_exists( 'bp_is_user_mutual_friends' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_user_mutual_friends()}.
+	 *
+	 * @deprecated Use bboss_is_user_mutual_friends() instead.
+	 */
+	function bp_is_user_mutual_friends() {
+		return bboss_is_user_mutual_friends();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Is this a user's notifications page?
@@ -2728,6 +4240,20 @@ function bboss_is_user_mutual_friends() {
 function bboss_is_user_notifications() {
 	return (bool) ( bboss_is_user() && bboss_is_notifications_component() );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_user_notifications' ) && ! function_exists( 'bp_is_user_notifications' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_user_notifications()}.
+	 *
+	 * @deprecated Use bboss_is_user_notifications() instead.
+	 */
+	function bp_is_user_notifications() {
+		return bboss_is_user_notifications();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Is this a user's settings page?
@@ -2741,6 +4267,20 @@ function bboss_is_user_notifications() {
 function bboss_is_user_settings() {
 	return (bool) ( bboss_is_user() && bboss_is_settings_component() );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_user_settings' ) && ! function_exists( 'bp_is_user_settings' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_user_settings()}.
+	 *
+	 * @deprecated Use bboss_is_user_settings() instead.
+	 */
+	function bp_is_user_settings() {
+		return bboss_is_user_settings();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Is this a user's General Settings page?
@@ -2754,6 +4294,20 @@ function bboss_is_user_settings() {
 function bboss_is_user_settings_general() {
 	return (bool) ( bboss_is_user_settings() && bboss_is_current_action( 'general' ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_user_settings_general' ) && ! function_exists( 'bp_is_user_settings_general' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_user_settings_general()}.
+	 *
+	 * @deprecated Use bboss_is_user_settings_general() instead.
+	 */
+	function bp_is_user_settings_general() {
+		return bboss_is_user_settings_general();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Is this a user's Notification Settings page?
@@ -2767,6 +4321,20 @@ function bboss_is_user_settings_general() {
 function bboss_is_user_settings_notifications() {
 	return (bool) ( bboss_is_user_settings() && bboss_is_current_action( 'notifications' ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_user_settings_notifications' ) && ! function_exists( 'bp_is_user_settings_notifications' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_user_settings_notifications()}.
+	 *
+	 * @deprecated Use bboss_is_user_settings_notifications() instead.
+	 */
+	function bp_is_user_settings_notifications() {
+		return bboss_is_user_settings_notifications();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Is this a user's Account Deletion page?
@@ -2780,6 +4348,20 @@ function bboss_is_user_settings_notifications() {
 function bboss_is_user_settings_account_delete() {
 	return (bool) ( bboss_is_user_settings() && bboss_is_current_action( 'delete-account' ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_user_settings_account_delete' ) && ! function_exists( 'bp_is_user_settings_account_delete' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_user_settings_account_delete()}.
+	 *
+	 * @deprecated Use bboss_is_user_settings_account_delete() instead.
+	 */
+	function bp_is_user_settings_account_delete() {
+		return bboss_is_user_settings_account_delete();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Is this a user's profile settings?
@@ -2793,6 +4375,20 @@ function bboss_is_user_settings_account_delete() {
 function bboss_is_user_settings_profile() {
 	return (bool) ( bboss_is_user_settings() && bboss_is_current_action( 'profile' ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_user_settings_profile' ) && ! function_exists( 'bp_is_user_settings_profile' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_user_settings_profile()}.
+	 *
+	 * @deprecated Use bboss_is_user_settings_profile() instead.
+	 */
+	function bp_is_user_settings_profile() {
+		return bboss_is_user_settings_profile();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /** Invites ********************************************************************/
 
@@ -2808,6 +4404,20 @@ function bboss_is_user_settings_profile() {
 function bboss_is_user_invites() {
 	return (bool) ( bboss_is_user() && bboss_is_invites_component() );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_user_invites' ) && ! function_exists( 'bp_is_user_invites' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_user_invites()}.
+	 *
+	 * @deprecated Use bboss_is_user_invites() instead.
+	 */
+	function bp_is_user_invites() {
+		return bboss_is_user_invites();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Is this a user's send invites?
@@ -2821,6 +4431,20 @@ function bboss_is_user_invites() {
 function bboss_is_user_invites_send_invites() {
 	return (bool) ( bboss_is_user_invites() && bboss_is_current_action( 'invites' ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_user_invites_send_invites' ) && ! function_exists( 'bp_is_user_invites_send_invites' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_user_invites_send_invites()}.
+	 *
+	 * @deprecated Use bboss_is_user_invites_send_invites() instead.
+	 */
+	function bp_is_user_invites_send_invites() {
+		return bboss_is_user_invites_send_invites();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /** Media ********************************************************************/
 
@@ -2836,6 +4460,20 @@ function bboss_is_user_invites_send_invites() {
 function bboss_is_user_media() {
 	return (bool) ( bboss_is_user() && bboss_is_media_component() );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_user_media' ) && ! function_exists( 'bp_is_user_media' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_user_media()}.
+	 *
+	 * @deprecated Use bboss_is_user_media() instead.
+	 */
+	function bp_is_user_media() {
+		return bboss_is_user_media();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Is this a user's video page?
@@ -2849,6 +4487,20 @@ function bboss_is_user_media() {
 function bboss_is_user_video() {
 	return (bool) ( bboss_is_user() && bboss_is_video_component() );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_user_video' ) && ! function_exists( 'bp_is_user_video' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_user_video()}.
+	 *
+	 * @deprecated Use bboss_is_user_video() instead.
+	 */
+	function bp_is_user_video() {
+		return bboss_is_user_video();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Is this a user's document page?
@@ -2862,6 +4514,20 @@ function bboss_is_user_video() {
 function bboss_is_user_document() {
 	return (bool) ( bboss_is_user() && bboss_is_document_component() );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_user_document' ) && ! function_exists( 'bp_is_user_document' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_user_document()}.
+	 *
+	 * @deprecated Use bboss_is_user_document() instead.
+	 */
+	function bp_is_user_document() {
+		return bboss_is_user_document();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Is this a user's moderation page?
@@ -2875,6 +4541,20 @@ function bboss_is_user_document() {
 function bboss_is_user_moderation() {
 	return (bool) ( bboss_is_user() && bboss_is_moderation_component() );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_user_moderation' ) && ! function_exists( 'bp_is_user_moderation' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_user_moderation()}.
+	 *
+	 * @deprecated Use bboss_is_user_moderation() instead.
+	 */
+	function bp_is_user_moderation() {
+		return bboss_is_user_moderation();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 
 /**
@@ -2891,6 +4571,20 @@ function bboss_is_media_directory() {
 
 	return false;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_media_directory' ) && ! function_exists( 'bp_is_media_directory' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_media_directory()}.
+	 *
+	 * @deprecated Use bboss_is_media_directory() instead.
+	 */
+	function bp_is_media_directory() {
+		return bboss_is_media_directory();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Is the current page the video directory?
@@ -2906,6 +4600,20 @@ function bboss_is_video_directory() {
 
 	return false;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_video_directory' ) && ! function_exists( 'bp_is_video_directory' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_video_directory()}.
+	 *
+	 * @deprecated Use bboss_is_video_directory() instead.
+	 */
+	function bp_is_video_directory() {
+		return bboss_is_video_directory();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Is the current page the media directory?
@@ -2921,6 +4629,20 @@ function bboss_is_document_directory() {
 
 	return false;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_document_directory' ) && ! function_exists( 'bp_is_document_directory' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_document_directory()}.
+	 *
+	 * @deprecated Use bboss_is_document_directory() instead.
+	 */
+	function bp_is_document_directory() {
+		return bboss_is_document_directory();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Is the current page a single album item permalink?
@@ -2937,6 +4659,20 @@ function bboss_is_single_album() {
 
 	return (bool) ( bboss_is_media_component() && 'albums' == bboss_current_action() && is_numeric( bboss_action_variable( 0 ) ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_single_album' ) && ! function_exists( 'bp_is_single_album' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_single_album()}.
+	 *
+	 * @deprecated Use bboss_is_single_album() instead.
+	 */
+	function bp_is_single_album() {
+		return bboss_is_single_album();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Is the current page a single video album item permalink?
@@ -2953,6 +4689,20 @@ function bboss_is_single_video_album() {
 
 	return (bool) ( bboss_is_video_component() && 'albums' === bboss_current_action() && is_numeric( bboss_action_variable( 0 ) ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_single_video_album' ) && ! function_exists( 'bp_is_single_video_album' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_single_video_album()}.
+	 *
+	 * @deprecated Use bboss_is_single_video_album() instead.
+	 */
+	function bp_is_single_video_album() {
+		return bboss_is_single_video_album();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Is the current page a single folder item permalink?
@@ -2969,6 +4719,20 @@ function bboss_is_single_folder() {
 
 	return (bool) ( bboss_is_document_component() && 'folders' == bboss_current_action() && is_numeric( bboss_action_variable( 0 ) ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_single_folder' ) && ! function_exists( 'bp_is_single_folder' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_single_folder()}.
+	 *
+	 * @deprecated Use bboss_is_single_folder() instead.
+	 */
+	function bp_is_single_folder() {
+		return bboss_is_single_folder();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 
 /**
@@ -2986,6 +4750,20 @@ function bboss_is_single_document() {
 
 	return (bool) ( bboss_is_media_component() && 'my-document' == bboss_current_action() && is_numeric( bboss_action_variable( 0 ) ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_single_document' ) && ! function_exists( 'bp_is_single_document' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_single_document()}.
+	 *
+	 * @deprecated Use bboss_is_single_document() instead.
+	 */
+	function bp_is_single_document() {
+		return bboss_is_single_document();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 
 /** Groups ********************************************************************/
@@ -3004,6 +4782,20 @@ function bboss_is_groups_directory() {
 
 	return false;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_groups_directory' ) && ! function_exists( 'bp_is_groups_directory' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_groups_directory()}.
+	 *
+	 * @deprecated Use bboss_is_groups_directory() instead.
+	 */
+	function bp_is_groups_directory() {
+		return bboss_is_groups_directory();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Does the current page belong to a single group?
@@ -3023,6 +4815,20 @@ function bboss_is_group() {
 
 	return (bool) $retval;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_group' ) && ! function_exists( 'bp_is_group' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_group()}.
+	 *
+	 * @deprecated Use bboss_is_group() instead.
+	 */
+	function bp_is_group() {
+		return bboss_is_group();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Is the current page a single group's home page?
@@ -3041,6 +4847,20 @@ function bboss_is_group_home() {
 
 	return false;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_group_home' ) && ! function_exists( 'bp_is_group_home' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_group_home()}.
+	 *
+	 * @deprecated Use bboss_is_group_home() instead.
+	 */
+	function bp_is_group_home() {
+		return bboss_is_group_home();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Is the current page part of the group creation process?
@@ -3052,6 +4872,20 @@ function bboss_is_group_home() {
 function bboss_is_group_create() {
 	return (bool) ( bboss_is_groups_component() && bboss_is_current_action( 'create' ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_group_create' ) && ! function_exists( 'bp_is_group_create' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_group_create()}.
+	 *
+	 * @deprecated Use bboss_is_group_create() instead.
+	 */
+	function bp_is_group_create() {
+		return bboss_is_group_create();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Is the current page part of a single group's admin screens?
@@ -3065,6 +4899,20 @@ function bboss_is_group_create() {
 function bboss_is_group_admin_page() {
 	return (bool) ( bboss_is_single_item() && bboss_is_groups_component() && bboss_is_current_action( 'admin' ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_group_admin_page' ) && ! function_exists( 'bp_is_group_admin_page' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_group_admin_page()}.
+	 *
+	 * @deprecated Use bboss_is_group_admin_page() instead.
+	 */
+	function bp_is_group_admin_page() {
+		return bboss_is_group_admin_page();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Is the current page a group's activity page?
@@ -3086,6 +4934,20 @@ function bboss_is_group_activity() {
 
 	return $retval;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_group_activity' ) && ! function_exists( 'bp_is_group_activity' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_group_activity()}.
+	 *
+	 * @deprecated Use bboss_is_group_activity() instead.
+	 */
+	function bp_is_group_activity() {
+		return bboss_is_group_activity();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Is the current page a group's subgroups page?
@@ -3097,6 +4959,20 @@ function bboss_is_group_activity() {
 function bboss_is_group_subgroups() {
 	return (bool) ( bboss_is_single_item() && bboss_is_groups_component() && bboss_is_current_action( 'subgroups' ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_group_subgroups' ) && ! function_exists( 'bp_is_group_subgroups' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_group_subgroups()}.
+	 *
+	 * @deprecated Use bboss_is_group_subgroups() instead.
+	 */
+	function bp_is_group_subgroups() {
+		return bboss_is_group_subgroups();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Is the current page a group forum topic?
@@ -3109,6 +4985,20 @@ function bboss_is_group_subgroups() {
 function bboss_is_group_forum_topic() {
 	return (bool) ( bboss_is_single_item() && bboss_is_groups_component() && bboss_is_current_action( urlencode( get_option( '_bbp_forum_slug', 'forum' ) ) ) && bboss_is_action_variable( urlencode( get_option( '_bbp_topic_slug', 'discussions' ) ), 0 ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_group_forum_topic' ) && ! function_exists( 'bp_is_group_forum_topic' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_group_forum_topic()}.
+	 *
+	 * @deprecated Use bboss_is_group_forum_topic() instead.
+	 */
+	function bp_is_group_forum_topic() {
+		return bboss_is_group_forum_topic();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Is the current page a group forum topic edit page?
@@ -3121,6 +5011,20 @@ function bboss_is_group_forum_topic() {
 function bboss_is_group_forum_topic_edit() {
 	return (bool) ( bboss_is_single_item() && bboss_is_groups_component() && bboss_is_current_action( urlencode( get_option( '_bbp_forum_slug', 'forum' ) ) ) && bboss_is_action_variable( 'topic', 0 ) && bboss_is_action_variable( 'edit', 2 ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_group_forum_topic_edit' ) && ! function_exists( 'bp_is_group_forum_topic_edit' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_group_forum_topic_edit()}.
+	 *
+	 * @deprecated Use bboss_is_group_forum_topic_edit() instead.
+	 */
+	function bp_is_group_forum_topic_edit() {
+		return bboss_is_group_forum_topic_edit();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Is the current page a group's Members page?
@@ -3144,6 +5048,20 @@ function bboss_is_group_members() {
 
 	return $retval;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_group_members' ) && ! function_exists( 'bp_is_group_members' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_group_members()}.
+	 *
+	 * @deprecated Use bboss_is_group_members() instead.
+	 */
+	function bp_is_group_members() {
+		return bboss_is_group_members();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Is the current page a group's Leaders page?
@@ -3163,6 +5081,20 @@ function bboss_is_group_leaders() {
 
 	return $retval;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_group_leaders' ) && ! function_exists( 'bp_is_group_leaders' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_group_leaders()}.
+	 *
+	 * @deprecated Use bboss_is_group_leaders() instead.
+	 */
+	function bp_is_group_leaders() {
+		return bboss_is_group_leaders();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Is the current page a group's Invites page?
@@ -3176,6 +5108,20 @@ function bboss_is_group_leaders() {
 function bboss_is_group_invites() {
 	return (bool) ( bboss_is_groups_component() && bboss_is_current_action( 'invite' ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_group_invites' ) && ! function_exists( 'bp_is_group_invites' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_group_invites()}.
+	 *
+	 * @deprecated Use bboss_is_group_invites() instead.
+	 */
+	function bp_is_group_invites() {
+		return bboss_is_group_invites();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Is the current page a group's Request Membership page?
@@ -3189,6 +5135,20 @@ function bboss_is_group_invites() {
 function bboss_is_group_membership_request() {
 	return (bool) ( bboss_is_groups_component() && bboss_is_current_action( 'request-membership' ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_group_membership_request' ) && ! function_exists( 'bp_is_group_membership_request' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_group_membership_request()}.
+	 *
+	 * @deprecated Use bboss_is_group_membership_request() instead.
+	 */
+	function bp_is_group_membership_request() {
+		return bboss_is_group_membership_request();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Is the current page a leave group attempt?
@@ -3200,6 +5160,20 @@ function bboss_is_group_membership_request() {
 function bboss_is_group_leave() {
 	return (bool) ( bboss_is_groups_component() && bboss_is_single_item() && bboss_is_current_action( 'leave-group' ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_group_leave' ) && ! function_exists( 'bp_is_group_leave' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_group_leave()}.
+	 *
+	 * @deprecated Use bboss_is_group_leave() instead.
+	 */
+	function bp_is_group_leave() {
+		return bboss_is_group_leave();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Is the current page part of a single group?
@@ -3213,6 +5187,20 @@ function bboss_is_group_leave() {
 function bboss_is_group_single() {
 	return (bool) ( bboss_is_groups_component() && bboss_is_single_item() );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_group_single' ) && ! function_exists( 'bp_is_group_single' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_group_single()}.
+	 *
+	 * @deprecated Use bboss_is_group_single() instead.
+	 */
+	function bp_is_group_single() {
+		return bboss_is_group_single();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Is the current group page a custom front?
@@ -3225,6 +5213,20 @@ function bboss_is_group_custom_front() {
 	$bp = bboss();
 	return (bool) bboss_is_group_home() && ! empty( $bp->groups->current_group->front_template );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_group_custom_front' ) && ! function_exists( 'bp_is_group_custom_front' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_group_custom_front()}.
+	 *
+	 * @deprecated Use bboss_is_group_custom_front() instead.
+	 */
+	function bp_is_group_custom_front() {
+		return bboss_is_group_custom_front();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Is the current page the Create a Blog page?
@@ -3238,6 +5240,20 @@ function bboss_is_group_custom_front() {
 function bboss_is_create_blog() {
 	return (bool) ( bboss_is_blogs_component() && bboss_is_current_action( 'create' ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_create_blog' ) && ! function_exists( 'bp_is_create_blog' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_create_blog()}.
+	 *
+	 * @deprecated Use bboss_is_create_blog() instead.
+	 */
+	function bp_is_create_blog() {
+		return bboss_is_create_blog();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Is the current page the blogs directory ?
@@ -3253,6 +5269,20 @@ function bboss_is_blogs_directory() {
 
 	return false;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_blogs_directory' ) && ! function_exists( 'bp_is_blogs_directory' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_blogs_directory()}.
+	 *
+	 * @deprecated Use bboss_is_blogs_directory() instead.
+	 */
+	function bp_is_blogs_directory() {
+		return bboss_is_blogs_directory();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Is the current page a group's activity page?
@@ -3270,6 +5300,20 @@ function bboss_is_group_media() {
 
 	return $retval;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_group_media' ) && ! function_exists( 'bp_is_group_media' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_group_media()}.
+	 *
+	 * @deprecated Use bboss_is_group_media() instead.
+	 */
+	function bp_is_group_media() {
+		return bboss_is_group_media();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Is the current page a group's activity page?
@@ -3287,6 +5331,20 @@ function bboss_is_group_albums() {
 
 	return $retval;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_group_albums' ) && ! function_exists( 'bp_is_group_albums' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_group_albums()}.
+	 *
+	 * @deprecated Use bboss_is_group_albums() instead.
+	 */
+	function bp_is_group_albums() {
+		return bboss_is_group_albums();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Is the current page a group's video albums page?
@@ -3304,6 +5362,20 @@ function bboss_is_group_video_albums() {
 
 	return $retval;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_group_video_albums' ) && ! function_exists( 'bp_is_group_video_albums' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_group_video_albums()}.
+	 *
+	 * @deprecated Use bboss_is_group_video_albums() instead.
+	 */
+	function bp_is_group_video_albums() {
+		return bboss_is_group_video_albums();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Is the current page a group's document page?
@@ -3325,6 +5397,20 @@ function bboss_is_group_document() {
 
 	return $retval;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_group_document' ) && ! function_exists( 'bp_is_group_document' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_group_document()}.
+	 *
+	 * @deprecated Use bboss_is_group_document() instead.
+	 */
+	function bp_is_group_document() {
+		return bboss_is_group_document();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Is the current page a group's folder page?
@@ -3346,6 +5432,20 @@ function bboss_is_group_folders() {
 
 	return $retval;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_group_folders' ) && ! function_exists( 'bp_is_group_folders' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_group_folders()}.
+	 *
+	 * @deprecated Use bboss_is_group_folders() instead.
+	 */
+	function bp_is_group_folders() {
+		return bboss_is_group_folders();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Is the current page a user's folder page?
@@ -3363,6 +5463,20 @@ function bboss_is_user_folders() {
 
 	return $retval;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_user_folders' ) && ! function_exists( 'bp_is_user_folders' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_user_folders()}.
+	 *
+	 * @deprecated Use bboss_is_user_folders() instead.
+	 */
+	function bp_is_user_folders() {
+		return bboss_is_user_folders();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /** Messages ******************************************************************/
 
@@ -3378,6 +5492,20 @@ function bboss_is_user_folders() {
 function bboss_is_user_messages() {
 	return (bool) ( bboss_is_user() && bboss_is_messages_component() );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_user_messages' ) && ! function_exists( 'bp_is_user_messages' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_user_messages()}.
+	 *
+	 * @deprecated Use bboss_is_user_messages() instead.
+	 */
+	function bp_is_user_messages() {
+		return bboss_is_user_messages();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Is the current page a user's Messages Inbox?
@@ -3395,6 +5523,20 @@ function bboss_is_messages_inbox() {
 
 	return false;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_messages_inbox' ) && ! function_exists( 'bp_is_messages_inbox' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_messages_inbox()}.
+	 *
+	 * @deprecated Use bboss_is_messages_inbox() instead.
+	 */
+	function bp_is_messages_inbox() {
+		return bboss_is_messages_inbox();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Is the current page a user's Messages Compose screen??
@@ -3408,6 +5550,20 @@ function bboss_is_messages_inbox() {
 function bboss_is_messages_compose_screen() {
 	return (bool) ( bboss_is_user_messages() && bboss_is_current_action( 'compose' ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_messages_compose_screen' ) && ! function_exists( 'bp_is_messages_compose_screen' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_messages_compose_screen()}.
+	 *
+	 * @deprecated Use bboss_is_messages_compose_screen() instead.
+	 */
+	function bp_is_messages_compose_screen() {
+		return bboss_is_messages_compose_screen();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Is the current page the Notices screen?
@@ -3421,6 +5577,20 @@ function bboss_is_messages_compose_screen() {
 function bboss_is_notices() {
 	return (bool) ( bboss_is_user_messages() && bboss_is_current_action( 'notices' ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_notices' ) && ! function_exists( 'bp_is_notices' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_notices()}.
+	 *
+	 * @deprecated Use bboss_is_notices() instead.
+	 */
+	function bp_is_notices() {
+		return bboss_is_notices();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Is the current page a single Messages conversation thread?
@@ -3432,6 +5602,20 @@ function bboss_is_notices() {
 function bboss_is_messages_conversation() {
 	return (bool) ( bboss_is_user_messages() && ( bboss_is_current_action( 'view' ) ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_messages_conversation' ) && ! function_exists( 'bp_is_messages_conversation' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_messages_conversation()}.
+	 *
+	 * @deprecated Use bboss_is_messages_conversation() instead.
+	 */
+	function bp_is_messages_conversation() {
+		return bboss_is_messages_conversation();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Not currently used by BuddyPress.
@@ -3443,6 +5627,20 @@ function bboss_is_messages_conversation() {
 function bboss_is_single( $component, $callback ) {
 	return (bool) ( bboss_is_current_component( $component ) && ( true === call_user_func( $callback ) ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_single' ) && ! function_exists( 'bp_is_single' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_single()}.
+	 *
+	 * @deprecated Use bboss_is_single() instead.
+	 */
+	function bp_is_single( $component, $callback ) {
+		return bboss_is_single( $component, $callback );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /** Registration **************************************************************/
 
@@ -3458,6 +5656,20 @@ function bboss_is_single( $component, $callback ) {
 function bboss_is_activation_page() {
 	return (bool) bboss_is_current_component( 'activate' );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_activation_page' ) && ! function_exists( 'bp_is_activation_page' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_activation_page()}.
+	 *
+	 * @deprecated Use bboss_is_activation_page() instead.
+	 */
+	function bp_is_activation_page() {
+		return bboss_is_activation_page();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Is the current page the Register page?
@@ -3471,6 +5683,20 @@ function bboss_is_activation_page() {
 function bboss_is_register_page() {
 	return (bool) bboss_is_current_component( 'register' );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_register_page' ) && ! function_exists( 'bp_is_register_page' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_register_page()}.
+	 *
+	 * @deprecated Use bboss_is_register_page() instead.
+	 */
+	function bp_is_register_page() {
+		return bboss_is_register_page();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get the title parts of the BuddyPress displayed page
@@ -3649,6 +5875,20 @@ function bboss_get_title_parts( $seplocation = 'right' ) {
 	 */
 	return (array) apply_filters( 'bp_get_title_parts', $bp_title_parts );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_title_parts' ) && ! function_exists( 'bp_get_title_parts' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_title_parts()}.
+	 *
+	 * @deprecated Use bboss_get_title_parts() instead.
+	 */
+	function bp_get_title_parts( $seplocation = 'right' ) {
+		return bboss_get_title_parts( $seplocation );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Customize the body class, according to the currently displayed BP content.
@@ -3658,6 +5898,20 @@ function bboss_get_title_parts( $seplocation = 'right' ) {
 function bboss_the_body_class() {
 	echo esc_attr( bboss_get_the_body_class() );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_the_body_class' ) && ! function_exists( 'bp_the_body_class' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_the_body_class()}.
+	 *
+	 * @deprecated Use bboss_the_body_class() instead.
+	 */
+	function bp_the_body_class() {
+		return bboss_the_body_class();
+	}
+}
+// @bbwt-com-end compat-layer
+
 	/**
 	 * Customize the body class, according to the currently displayed BP content.
 	 *
@@ -3926,6 +6180,20 @@ function bboss_get_the_body_class( $wp_classes = array(), $custom_classes = fals
 	 */
 	return apply_filters( 'bp_get_the_body_class', $classes, $bp_classes, $wp_classes, $custom_classes );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_the_body_class' ) && ! function_exists( 'bp_get_the_body_class' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_the_body_class()}.
+	 *
+	 * @deprecated Use bboss_get_the_body_class() instead.
+	 */
+	function bp_get_the_body_class( $wp_classes = array(), $custom_classes = false ) {
+		return bboss_get_the_body_class( $wp_classes, $custom_classes );
+	}
+}
+// @bbwt-com-end compat-layer
+
 	add_filter( 'body_class', 'bp_get_the_body_class', 10, 2 );
 
 /**
@@ -3977,6 +6245,20 @@ function bboss_get_the_post_class( $wp_classes = array() ) {
 	// Okay let's merge!
 	return array_unique( array_merge( $bp_classes, $wp_classes ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_the_post_class' ) && ! function_exists( 'bp_get_the_post_class' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_the_post_class()}.
+	 *
+	 * @deprecated Use bboss_get_the_post_class() instead.
+	 */
+	function bp_get_the_post_class( $wp_classes = array() ) {
+		return bboss_get_the_post_class( $wp_classes );
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_filter( 'post_class', 'bp_get_the_post_class' );
 
 /**
@@ -4003,6 +6285,20 @@ function bboss__bp_nav_menu_sort( $a, $b ) {
 		return 1;
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss__bp_nav_menu_sort' ) && ! function_exists( '_bp_nav_menu_sort' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss__bp_nav_menu_sort()}.
+	 *
+	 * @deprecated Use bboss__bp_nav_menu_sort() instead.
+	 */
+	function _bp_nav_menu_sort( $a, $b ) {
+		return bboss__bp_nav_menu_sort( $a, $b );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get the items registered in the primary and secondary BuddyPress navigation menus.
@@ -4071,6 +6367,20 @@ function bboss_get_nav_menu_items( $component = 'members' ) {
 	 */
 	return apply_filters( 'bp_get_nav_menu_items', $menus );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_nav_menu_items' ) && ! function_exists( 'bp_get_nav_menu_items' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_nav_menu_items()}.
+	 *
+	 * @deprecated Use bboss_get_nav_menu_items() instead.
+	 */
+	function bp_get_nav_menu_items( $component = 'members' ) {
+		return bboss_get_nav_menu_items( $component );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Display a navigation menu.
@@ -4241,6 +6551,20 @@ function bboss_nav_menu( $args = array() ) {
 		return $nav_menu;
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nav_menu' ) && ! function_exists( 'bp_nav_menu' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nav_menu()}.
+	 *
+	 * @deprecated Use bboss_nav_menu() instead.
+	 */
+	function bp_nav_menu( $args = array() ) {
+		return bboss_nav_menu( $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Prints the Recipient Salutation.
@@ -4252,6 +6576,20 @@ function bboss_nav_menu( $args = array() ) {
 function bboss_email_the_salutation( $settings = array() ) {
 	echo wp_kses_post( bboss_email_get_salutation( $settings ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_email_the_salutation' ) && ! function_exists( 'bp_email_the_salutation' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_email_the_salutation()}.
+	 *
+	 * @deprecated Use bboss_email_the_salutation() instead.
+	 */
+	function bp_email_the_salutation( $settings = array() ) {
+		return bboss_email_the_salutation( $settings );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 	/**
 	 * Gets the Recipient Salutation.
@@ -4275,6 +6613,20 @@ function bboss_email_get_salutation( $settings = array() ) {
 	 */
 	return apply_filters( 'bp_email_get_salutation', sprintf( '%s', $token ), $settings, $token );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_email_get_salutation' ) && ! function_exists( 'bp_email_get_salutation' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_email_get_salutation()}.
+	 *
+	 * @deprecated Use bboss_email_get_salutation() instead.
+	 */
+	function bp_email_get_salutation( $settings = array() ) {
+		return bboss_email_get_salutation( $settings );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Is the current page a group's message page?
@@ -4292,6 +6644,20 @@ function bboss_is_group_messages() {
 
 	return $retval;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_group_messages' ) && ! function_exists( 'bp_is_group_messages' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_group_messages()}.
+	 *
+	 * @deprecated Use bboss_is_group_messages() instead.
+	 */
+	function bp_is_group_messages() {
+		return bboss_is_group_messages();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Is the current page a user's album page?
@@ -4309,6 +6675,20 @@ function bboss_is_user_albums() {
 
 	return $retval;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_user_albums' ) && ! function_exists( 'bp_is_user_albums' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_user_albums()}.
+	 *
+	 * @deprecated Use bboss_is_user_albums() instead.
+	 */
+	function bp_is_user_albums() {
+		return bboss_is_user_albums();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Checks if user can create a document or not.
@@ -4319,6 +6699,20 @@ function bboss_is_user_albums() {
 function bboss_user_can_create_document() {
 	return (bool) apply_filters( 'bb_user_can_create_document', true );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_user_can_create_document' ) && ! function_exists( 'bb_user_can_create_document' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_user_can_create_document()}.
+	 *
+	 * @deprecated Use bboss_user_can_create_document() instead.
+	 */
+	function bb_user_can_create_document() {
+		return bboss_user_can_create_document();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Checks if user can create a media or not.
@@ -4329,6 +6723,20 @@ function bboss_user_can_create_document() {
 function bboss_user_can_create_media() {
 	return (bool) apply_filters( 'bb_user_can_create_media', true );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_user_can_create_media' ) && ! function_exists( 'bb_user_can_create_media' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_user_can_create_media()}.
+	 *
+	 * @deprecated Use bboss_user_can_create_media() instead.
+	 */
+	function bb_user_can_create_media() {
+		return bboss_user_can_create_media();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Checks if user can create a activity or not.
@@ -4339,6 +6747,20 @@ function bboss_user_can_create_media() {
 function bboss_user_can_create_activity() {
 	return (bool) apply_filters( 'bb_user_can_create_activity', true );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_user_can_create_activity' ) && ! function_exists( 'bb_user_can_create_activity' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_user_can_create_activity()}.
+	 *
+	 * @deprecated Use bboss_user_can_create_activity() instead.
+	 */
+	function bb_user_can_create_activity() {
+		return bboss_user_can_create_activity();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Checks if user can send messages or not.
@@ -4353,6 +6775,20 @@ function bboss_user_can_create_activity() {
 function bboss_user_can_send_messages( $thread, $thread_template, $error_type = 'wp_error' ) {
 	return apply_filters( 'bb_user_can_send_messages', $thread, $thread_template, $error_type );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_user_can_send_messages' ) && ! function_exists( 'bb_user_can_send_messages' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_user_can_send_messages()}.
+	 *
+	 * @deprecated Use bboss_user_can_send_messages() instead.
+	 */
+	function bb_user_can_send_messages( $thread, $thread_template, $error_type = 'wp_error' ) {
+		return bboss_user_can_send_messages( $thread, $thread_template, $error_type );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Checks if user can send group membership requests or not.
@@ -4366,6 +6802,20 @@ function bboss_user_can_send_messages( $thread, $thread_template, $error_type = 
 function bboss_groups_user_can_send_membership_requests( $group_id ) {
 	return (bool) apply_filters( 'bb_groups_user_can_send_membership_requests', true, $group_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_groups_user_can_send_membership_requests' ) && ! function_exists( 'bb_groups_user_can_send_membership_requests' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_user_can_send_membership_requests()}.
+	 *
+	 * @deprecated Use bboss_groups_user_can_send_membership_requests() instead.
+	 */
+	function bb_groups_user_can_send_membership_requests( $group_id ) {
+		return bboss_groups_user_can_send_membership_requests( $group_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Whether user has access to upload documents or not.
@@ -4415,6 +6865,20 @@ function bboss_user_has_access_upload_document( $group_id = 0, $user_id = 0, $fo
 	return false;
 
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_user_has_access_upload_document' ) && ! function_exists( 'bb_user_has_access_upload_document' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_user_has_access_upload_document()}.
+	 *
+	 * @deprecated Use bboss_user_has_access_upload_document() instead.
+	 */
+	function bb_user_has_access_upload_document( $group_id = 0, $user_id = 0, $forum_id = 0, $thread_id = 0, $type = 'profile' ) {
+		return bboss_user_has_access_upload_document( $group_id, $user_id, $forum_id, $thread_id, $type );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Whether user has access to upload media or not.
@@ -4464,6 +6928,20 @@ function bboss_user_has_access_upload_media( $group_id = 0, $user_id = 0, $forum
 	return false;
 
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_user_has_access_upload_media' ) && ! function_exists( 'bb_user_has_access_upload_media' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_user_has_access_upload_media()}.
+	 *
+	 * @deprecated Use bboss_user_has_access_upload_media() instead.
+	 */
+	function bb_user_has_access_upload_media( $group_id = 0, $user_id = 0, $forum_id = 0, $thread_id = 0, $type = 'profile' ) {
+		return bboss_user_has_access_upload_media( $group_id, $user_id, $forum_id, $thread_id, $type );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Whether user has access to upload GIF or not.
@@ -4513,6 +6991,20 @@ function bboss_user_has_access_upload_gif( $group_id = 0, $user_id = 0, $forum_i
 	return false;
 
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_user_has_access_upload_gif' ) && ! function_exists( 'bb_user_has_access_upload_gif' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_user_has_access_upload_gif()}.
+	 *
+	 * @deprecated Use bboss_user_has_access_upload_gif() instead.
+	 */
+	function bb_user_has_access_upload_gif( $group_id = 0, $user_id = 0, $forum_id = 0, $thread_id = 0, $type = 'profile' ) {
+		return bboss_user_has_access_upload_gif( $group_id, $user_id, $forum_id, $thread_id, $type );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Whether the active Add-ons build is missing a player or picker library that moved into it.
@@ -4532,6 +7024,20 @@ function bboss_user_has_access_upload_gif( $group_id = 0, $user_id = 0, $forum_i
 function bboss_addons_lacks_moved_assets( $register_function ) {
 	return defined( 'BB_ADDONS_PLUGIN_VERSION' ) && ! function_exists( $register_function );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_addons_lacks_moved_assets' ) && ! function_exists( 'bb_addons_lacks_moved_assets' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_addons_lacks_moved_assets()}.
+	 *
+	 * @deprecated Use bboss_addons_lacks_moved_assets() instead.
+	 */
+	function bb_addons_lacks_moved_assets( $register_function ) {
+		return bboss_addons_lacks_moved_assets( $register_function );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Whether the GIF picker can be shown on the front end.
@@ -4549,6 +7055,20 @@ function bboss_addons_lacks_moved_assets( $register_function ) {
 function bboss_media_gif_picker_available() {
 	return ! bboss_addons_lacks_moved_assets( 'bb_addons_giphy_register_scripts' );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_media_gif_picker_available' ) && ! function_exists( 'bb_media_gif_picker_available' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_media_gif_picker_available()}.
+	 *
+	 * @deprecated Use bboss_media_gif_picker_available() instead.
+	 */
+	function bb_media_gif_picker_available() {
+		return bboss_media_gif_picker_available();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Whether user has access to upload Emoji or not.
@@ -4598,6 +7118,20 @@ function bboss_user_has_access_upload_emoji( $group_id = 0, $user_id = 0, $forum
 	return false;
 
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_user_has_access_upload_emoji' ) && ! function_exists( 'bb_user_has_access_upload_emoji' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_user_has_access_upload_emoji()}.
+	 *
+	 * @deprecated Use bboss_user_has_access_upload_emoji() instead.
+	 */
+	function bb_user_has_access_upload_emoji( $group_id = 0, $user_id = 0, $forum_id = 0, $thread_id = 0, $type = 'profile' ) {
+		return bboss_user_has_access_upload_emoji( $group_id, $user_id, $forum_id, $thread_id, $type );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Is the current page a group's video page?
@@ -4615,6 +7149,20 @@ function bboss_is_group_video() {
 
 	return $retval;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_group_video' ) && ! function_exists( 'bp_is_group_video' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_group_video()}.
+	 *
+	 * @deprecated Use bboss_is_group_video() instead.
+	 */
+	function bp_is_group_video() {
+		return bboss_is_group_video();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Checks if user can create a video or not.
@@ -4625,6 +7173,20 @@ function bboss_is_group_video() {
 function bboss_user_can_create_video() {
 	return (bool) apply_filters( 'bb_user_can_create_video', true );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_user_can_create_video' ) && ! function_exists( 'bb_user_can_create_video' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_user_can_create_video()}.
+	 *
+	 * @deprecated Use bboss_user_can_create_video() instead.
+	 */
+	function bb_user_can_create_video() {
+		return bboss_user_can_create_video();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Whether user has access to upload video or not.
@@ -4674,140 +7236,8 @@ function bboss_user_has_access_upload_video( $group_id = 0, $user_id = 0, $forum
 	return false;
 
 }
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
-if ( function_exists( 'bboss__bp_nav_menu_sort' ) && ! function_exists( '_bp_nav_menu_sort' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss__bp_nav_menu_sort()}.
-	 *
-	 * @deprecated Use bboss__bp_nav_menu_sort() instead.
-	 */
-	function _bp_nav_menu_sort( $a, $b ) {
-		return bboss__bp_nav_menu_sort( $a, $b );
-	}
-}
-if ( function_exists( 'bboss_addons_lacks_moved_assets' ) && ! function_exists( 'bb_addons_lacks_moved_assets' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_addons_lacks_moved_assets()}.
-	 *
-	 * @deprecated Use bboss_addons_lacks_moved_assets() instead.
-	 */
-	function bb_addons_lacks_moved_assets( $register_function ) {
-		return bboss_addons_lacks_moved_assets( $register_function );
-	}
-}
-if ( function_exists( 'bboss_groups_user_can_send_membership_requests' ) && ! function_exists( 'bb_groups_user_can_send_membership_requests' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_groups_user_can_send_membership_requests()}.
-	 *
-	 * @deprecated Use bboss_groups_user_can_send_membership_requests() instead.
-	 */
-	function bb_groups_user_can_send_membership_requests( $group_id ) {
-		return bboss_groups_user_can_send_membership_requests( $group_id );
-	}
-}
-if ( function_exists( 'bboss_media_gif_picker_available' ) && ! function_exists( 'bb_media_gif_picker_available' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_media_gif_picker_available()}.
-	 *
-	 * @deprecated Use bboss_media_gif_picker_available() instead.
-	 */
-	function bb_media_gif_picker_available() {
-		return bboss_media_gif_picker_available();
-	}
-}
-if ( function_exists( 'bboss_user_can_create_activity' ) && ! function_exists( 'bb_user_can_create_activity' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_user_can_create_activity()}.
-	 *
-	 * @deprecated Use bboss_user_can_create_activity() instead.
-	 */
-	function bb_user_can_create_activity() {
-		return bboss_user_can_create_activity();
-	}
-}
-if ( function_exists( 'bboss_user_can_create_document' ) && ! function_exists( 'bb_user_can_create_document' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_user_can_create_document()}.
-	 *
-	 * @deprecated Use bboss_user_can_create_document() instead.
-	 */
-	function bb_user_can_create_document() {
-		return bboss_user_can_create_document();
-	}
-}
-if ( function_exists( 'bboss_user_can_create_media' ) && ! function_exists( 'bb_user_can_create_media' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_user_can_create_media()}.
-	 *
-	 * @deprecated Use bboss_user_can_create_media() instead.
-	 */
-	function bb_user_can_create_media() {
-		return bboss_user_can_create_media();
-	}
-}
-if ( function_exists( 'bboss_user_can_create_video' ) && ! function_exists( 'bb_user_can_create_video' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_user_can_create_video()}.
-	 *
-	 * @deprecated Use bboss_user_can_create_video() instead.
-	 */
-	function bb_user_can_create_video() {
-		return bboss_user_can_create_video();
-	}
-}
-if ( function_exists( 'bboss_user_can_send_messages' ) && ! function_exists( 'bb_user_can_send_messages' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_user_can_send_messages()}.
-	 *
-	 * @deprecated Use bboss_user_can_send_messages() instead.
-	 */
-	function bb_user_can_send_messages( $thread, $thread_template, $error_type = 'wp_error' ) {
-		return bboss_user_can_send_messages( $thread, $thread_template, $error_type );
-	}
-}
-if ( function_exists( 'bboss_user_has_access_upload_document' ) && ! function_exists( 'bb_user_has_access_upload_document' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_user_has_access_upload_document()}.
-	 *
-	 * @deprecated Use bboss_user_has_access_upload_document() instead.
-	 */
-	function bb_user_has_access_upload_document( $group_id = 0, $user_id = 0, $forum_id = 0, $thread_id = 0, $type = 'profile' ) {
-		return bboss_user_has_access_upload_document( $group_id, $user_id, $forum_id, $thread_id, $type );
-	}
-}
-if ( function_exists( 'bboss_user_has_access_upload_emoji' ) && ! function_exists( 'bb_user_has_access_upload_emoji' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_user_has_access_upload_emoji()}.
-	 *
-	 * @deprecated Use bboss_user_has_access_upload_emoji() instead.
-	 */
-	function bb_user_has_access_upload_emoji( $group_id = 0, $user_id = 0, $forum_id = 0, $thread_id = 0, $type = 'profile' ) {
-		return bboss_user_has_access_upload_emoji( $group_id, $user_id, $forum_id, $thread_id, $type );
-	}
-}
-if ( function_exists( 'bboss_user_has_access_upload_gif' ) && ! function_exists( 'bb_user_has_access_upload_gif' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_user_has_access_upload_gif()}.
-	 *
-	 * @deprecated Use bboss_user_has_access_upload_gif() instead.
-	 */
-	function bb_user_has_access_upload_gif( $group_id = 0, $user_id = 0, $forum_id = 0, $thread_id = 0, $type = 'profile' ) {
-		return bboss_user_has_access_upload_gif( $group_id, $user_id, $forum_id, $thread_id, $type );
-	}
-}
-if ( function_exists( 'bboss_user_has_access_upload_media' ) && ! function_exists( 'bb_user_has_access_upload_media' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_user_has_access_upload_media()}.
-	 *
-	 * @deprecated Use bboss_user_has_access_upload_media() instead.
-	 */
-	function bb_user_has_access_upload_media( $group_id = 0, $user_id = 0, $forum_id = 0, $thread_id = 0, $type = 'profile' ) {
-		return bboss_user_has_access_upload_media( $group_id, $user_id, $forum_id, $thread_id, $type );
-	}
-}
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_user_has_access_upload_video' ) && ! function_exists( 'bb_user_has_access_upload_video' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_user_has_access_upload_video()}.
@@ -4818,1704 +7248,5 @@ if ( function_exists( 'bboss_user_has_access_upload_video' ) && ! function_exist
 		return bboss_user_has_access_upload_video( $group_id, $user_id, $forum_id, $thread_id, $type );
 	}
 }
-if ( function_exists( 'bboss_account_was_activated' ) && ! function_exists( 'bp_account_was_activated' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_account_was_activated()}.
-	 *
-	 * @deprecated Use bboss_account_was_activated() instead.
-	 */
-	function bp_account_was_activated() {
-		return bboss_account_was_activated();
-	}
-}
-if ( function_exists( 'bboss_action_variable' ) && ! function_exists( 'bp_action_variable' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_action_variable()}.
-	 *
-	 * @deprecated Use bboss_action_variable() instead.
-	 */
-	function bp_action_variable( $position = 0 ) {
-		return bboss_action_variable( $position );
-	}
-}
-if ( function_exists( 'bboss_action_variables' ) && ! function_exists( 'bp_action_variables' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_action_variables()}.
-	 *
-	 * @deprecated Use bboss_action_variables() instead.
-	 */
-	function bp_action_variables() {
-		return bboss_action_variables();
-	}
-}
-if ( function_exists( 'bboss_ajax_querystring' ) && ! function_exists( 'bp_ajax_querystring' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_ajax_querystring()}.
-	 *
-	 * @deprecated Use bboss_ajax_querystring() instead.
-	 */
-	function bp_ajax_querystring( $object = false ) {
-		return bboss_ajax_querystring( $object );
-	}
-}
-if ( function_exists( 'bboss_avatar_admin_step' ) && ! function_exists( 'bp_avatar_admin_step' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_avatar_admin_step()}.
-	 *
-	 * @deprecated Use bboss_avatar_admin_step() instead.
-	 */
-	function bp_avatar_admin_step() {
-		return bboss_avatar_admin_step();
-	}
-}
-if ( function_exists( 'bboss_avatar_cropper' ) && ! function_exists( 'bp_avatar_cropper' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_avatar_cropper()}.
-	 *
-	 * @deprecated Use bboss_avatar_cropper() instead.
-	 */
-	function bp_avatar_cropper() {
-		return bboss_avatar_cropper();
-	}
-}
-if ( function_exists( 'bboss_avatar_to_crop' ) && ! function_exists( 'bp_avatar_to_crop' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_avatar_to_crop()}.
-	 *
-	 * @deprecated Use bboss_avatar_to_crop() instead.
-	 */
-	function bp_avatar_to_crop() {
-		return bboss_avatar_to_crop();
-	}
-}
-if ( function_exists( 'bboss_avatar_to_crop_src' ) && ! function_exists( 'bp_avatar_to_crop_src' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_avatar_to_crop_src()}.
-	 *
-	 * @deprecated Use bboss_avatar_to_crop_src() instead.
-	 */
-	function bp_avatar_to_crop_src() {
-		return bboss_avatar_to_crop_src();
-	}
-}
-if ( function_exists( 'bboss_blog_signup_allowed' ) && ! function_exists( 'bp_blog_signup_allowed' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_blog_signup_allowed()}.
-	 *
-	 * @deprecated Use bboss_blog_signup_allowed() instead.
-	 */
-	function bp_blog_signup_allowed() {
-		return bboss_blog_signup_allowed();
-	}
-}
-if ( function_exists( 'bboss_button' ) && ! function_exists( 'bp_button' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_button()}.
-	 *
-	 * @deprecated Use bboss_button() instead.
-	 */
-	function bp_button( $args = '' ) {
-		return bboss_button( $args );
-	}
-}
-if ( function_exists( 'bboss_comment_author_avatar' ) && ! function_exists( 'bp_comment_author_avatar' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_comment_author_avatar()}.
-	 *
-	 * @deprecated Use bboss_comment_author_avatar() instead.
-	 */
-	function bp_comment_author_avatar() {
-		return bboss_comment_author_avatar();
-	}
-}
-if ( function_exists( 'bboss_create_excerpt' ) && ! function_exists( 'bp_create_excerpt' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_create_excerpt()}.
-	 *
-	 * @deprecated Use bboss_create_excerpt() instead.
-	 */
-	function bp_create_excerpt( $text, $length = 225, $options = array() ) {
-		return bboss_create_excerpt( $text, $length, $options );
-	}
-}
-if ( function_exists( 'bboss_current_action' ) && ! function_exists( 'bp_current_action' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_current_action()}.
-	 *
-	 * @deprecated Use bboss_current_action() instead.
-	 */
-	function bp_current_action() {
-		return bboss_current_action();
-	}
-}
-if ( function_exists( 'bboss_current_component' ) && ! function_exists( 'bp_current_component' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_current_component()}.
-	 *
-	 * @deprecated Use bboss_current_component() instead.
-	 */
-	function bp_current_component() {
-		return bboss_current_component();
-	}
-}
-if ( function_exists( 'bboss_current_item' ) && ! function_exists( 'bp_current_item' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_current_item()}.
-	 *
-	 * @deprecated Use bboss_current_item() instead.
-	 */
-	function bp_current_item() {
-		return bboss_current_item();
-	}
-}
-if ( function_exists( 'bboss_custom_profile_boxes' ) && ! function_exists( 'bp_custom_profile_boxes' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_custom_profile_boxes()}.
-	 *
-	 * @deprecated Use bboss_custom_profile_boxes() instead.
-	 */
-	function bp_custom_profile_boxes() {
-		return bboss_custom_profile_boxes();
-	}
-}
-if ( function_exists( 'bboss_custom_profile_sidebar_boxes' ) && ! function_exists( 'bp_custom_profile_sidebar_boxes' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_custom_profile_sidebar_boxes()}.
-	 *
-	 * @deprecated Use bboss_custom_profile_sidebar_boxes() instead.
-	 */
-	function bp_custom_profile_sidebar_boxes() {
-		return bboss_custom_profile_sidebar_boxes();
-	}
-}
-if ( function_exists( 'bboss_displayed_user_id' ) && ! function_exists( 'bp_displayed_user_id' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_displayed_user_id()}.
-	 *
-	 * @deprecated Use bboss_displayed_user_id() instead.
-	 */
-	function bp_displayed_user_id() {
-		return bboss_displayed_user_id();
-	}
-}
-if ( function_exists( 'bboss_email_get_salutation' ) && ! function_exists( 'bp_email_get_salutation' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_email_get_salutation()}.
-	 *
-	 * @deprecated Use bboss_email_get_salutation() instead.
-	 */
-	function bp_email_get_salutation( $settings = array() ) {
-		return bboss_email_get_salutation( $settings );
-	}
-}
-if ( function_exists( 'bboss_email_the_salutation' ) && ! function_exists( 'bp_email_the_salutation' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_email_the_salutation()}.
-	 *
-	 * @deprecated Use bboss_email_the_salutation() instead.
-	 */
-	function bp_email_the_salutation( $settings = array() ) {
-		return bboss_email_the_salutation( $settings );
-	}
-}
-if ( function_exists( 'bboss_form_field_attributes' ) && ! function_exists( 'bp_form_field_attributes' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_form_field_attributes()}.
-	 *
-	 * @deprecated Use bboss_form_field_attributes() instead.
-	 */
-	function bp_form_field_attributes( $name = '', $attributes = array() ) {
-		return bboss_form_field_attributes( $name, $attributes );
-	}
-}
-if ( function_exists( 'bboss_format_time' ) && ! function_exists( 'bp_format_time' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_format_time()}.
-	 *
-	 * @deprecated Use bboss_format_time() instead.
-	 */
-	function bp_format_time( $time = '', $exclude_time = false, $gmt = true ) {
-		return bboss_format_time( $time, $exclude_time, $gmt );
-	}
-}
-if ( function_exists( 'bboss_get_avatar_admin_step' ) && ! function_exists( 'bp_get_avatar_admin_step' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_avatar_admin_step()}.
-	 *
-	 * @deprecated Use bboss_get_avatar_admin_step() instead.
-	 */
-	function bp_get_avatar_admin_step() {
-		return bboss_get_avatar_admin_step();
-	}
-}
-if ( function_exists( 'bboss_get_avatar_to_crop' ) && ! function_exists( 'bp_get_avatar_to_crop' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_avatar_to_crop()}.
-	 *
-	 * @deprecated Use bboss_get_avatar_to_crop() instead.
-	 */
-	function bp_get_avatar_to_crop() {
-		return bboss_get_avatar_to_crop();
-	}
-}
-if ( function_exists( 'bboss_get_avatar_to_crop_src' ) && ! function_exists( 'bp_get_avatar_to_crop_src' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_avatar_to_crop_src()}.
-	 *
-	 * @deprecated Use bboss_get_avatar_to_crop_src() instead.
-	 */
-	function bp_get_avatar_to_crop_src() {
-		return bboss_get_avatar_to_crop_src();
-	}
-}
-if ( function_exists( 'bboss_get_blog_signup_allowed' ) && ! function_exists( 'bp_get_blog_signup_allowed' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_blog_signup_allowed()}.
-	 *
-	 * @deprecated Use bboss_get_blog_signup_allowed() instead.
-	 */
-	function bp_get_blog_signup_allowed() {
-		return bboss_get_blog_signup_allowed();
-	}
-}
-if ( function_exists( 'bboss_get_button' ) && ! function_exists( 'bp_get_button' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_button()}.
-	 *
-	 * @deprecated Use bboss_get_button() instead.
-	 */
-	function bp_get_button( $args = '' ) {
-		return bboss_get_button( $args );
-	}
-}
-if ( function_exists( 'bboss_get_directory_title' ) && ! function_exists( 'bp_get_directory_title' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_directory_title()}.
-	 *
-	 * @deprecated Use bboss_get_directory_title() instead.
-	 */
-	function bp_get_directory_title( $component = '' ) {
-		return bboss_get_directory_title( $component );
-	}
-}
-if ( function_exists( 'bboss_get_email_subject' ) && ! function_exists( 'bp_get_email_subject' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_email_subject()}.
-	 *
-	 * @deprecated Use bboss_get_email_subject() instead.
-	 */
-	function bp_get_email_subject( $args = array() ) {
-		return bboss_get_email_subject( $args );
-	}
-}
-if ( function_exists( 'bboss_get_form_field_attributes' ) && ! function_exists( 'bp_get_form_field_attributes' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_form_field_attributes()}.
-	 *
-	 * @deprecated Use bboss_get_form_field_attributes() instead.
-	 */
-	function bp_get_form_field_attributes( $name = '', $attributes = array() ) {
-		return bboss_get_form_field_attributes( $name, $attributes );
-	}
-}
-if ( function_exists( 'bboss_get_name_from_root_slug' ) && ! function_exists( 'bp_get_name_from_root_slug' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_name_from_root_slug()}.
-	 *
-	 * @deprecated Use bboss_get_name_from_root_slug() instead.
-	 */
-	function bp_get_name_from_root_slug( $root_slug = '' ) {
-		return bboss_get_name_from_root_slug( $root_slug );
-	}
-}
-if ( function_exists( 'bboss_get_nav_menu_items' ) && ! function_exists( 'bp_get_nav_menu_items' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_nav_menu_items()}.
-	 *
-	 * @deprecated Use bboss_get_nav_menu_items() instead.
-	 */
-	function bp_get_nav_menu_items( $component = 'members' ) {
-		return bboss_get_nav_menu_items( $component );
-	}
-}
-if ( function_exists( 'bboss_get_options_avatar' ) && ! function_exists( 'bp_get_options_avatar' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_options_avatar()}.
-	 *
-	 * @deprecated Use bboss_get_options_avatar() instead.
-	 */
-	function bp_get_options_avatar() {
-		return bboss_get_options_avatar();
-	}
-}
-if ( function_exists( 'bboss_get_options_nav' ) && ! function_exists( 'bp_get_options_nav' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_options_nav()}.
-	 *
-	 * @deprecated Use bboss_get_options_nav() instead.
-	 */
-	function bp_get_options_nav( $parent_slug = '' ) {
-		return bboss_get_options_nav( $parent_slug );
-	}
-}
-if ( function_exists( 'bboss_get_options_title' ) && ! function_exists( 'bp_get_options_title' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_options_title()}.
-	 *
-	 * @deprecated Use bboss_get_options_title() instead.
-	 */
-	function bp_get_options_title() {
-		return bboss_get_options_title();
-	}
-}
-if ( function_exists( 'bboss_get_root_domain' ) && ! function_exists( 'bp_get_root_domain' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_root_domain()}.
-	 *
-	 * @deprecated Use bboss_get_root_domain() instead.
-	 */
-	function bp_get_root_domain() {
-		return bboss_get_root_domain();
-	}
-}
-if ( function_exists( 'bboss_get_root_slug' ) && ! function_exists( 'bp_get_root_slug' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_root_slug()}.
-	 *
-	 * @deprecated Use bboss_get_root_slug() instead.
-	 */
-	function bp_get_root_slug( $component = '' ) {
-		return bboss_get_root_slug( $component );
-	}
-}
-if ( function_exists( 'bboss_get_search_default_text' ) && ! function_exists( 'bp_get_search_default_text' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_search_default_text()}.
-	 *
-	 * @deprecated Use bboss_get_search_default_text() instead.
-	 */
-	function bp_get_search_default_text( $component = '' ) {
-		return bboss_get_search_default_text( $component );
-	}
-}
-if ( function_exists( 'bboss_get_search_input_name' ) && ! function_exists( 'bp_get_search_input_name' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_search_input_name()}.
-	 *
-	 * @deprecated Use bboss_get_search_input_name() instead.
-	 */
-	function bp_get_search_input_name( $component = '' ) {
-		return bboss_get_search_input_name( $component );
-	}
-}
-if ( function_exists( 'bboss_get_search_placeholder' ) && ! function_exists( 'bp_get_search_placeholder' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_search_placeholder()}.
-	 *
-	 * @deprecated Use bboss_get_search_placeholder() instead.
-	 */
-	function bp_get_search_placeholder( $component = '' ) {
-		return bboss_get_search_placeholder( $component );
-	}
-}
-if ( function_exists( 'bboss_get_search_slug' ) && ! function_exists( 'bp_get_search_slug' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_search_slug()}.
-	 *
-	 * @deprecated Use bboss_get_search_slug() instead.
-	 */
-	function bp_get_search_slug() {
-		return bboss_get_search_slug();
-	}
-}
-if ( function_exists( 'bboss_get_site_name' ) && ! function_exists( 'bp_get_site_name' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_site_name()}.
-	 *
-	 * @deprecated Use bboss_get_site_name() instead.
-	 */
-	function bp_get_site_name() {
-		return bboss_get_site_name();
-	}
-}
-if ( function_exists( 'bboss_get_the_body_class' ) && ! function_exists( 'bp_get_the_body_class' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_the_body_class()}.
-	 *
-	 * @deprecated Use bboss_get_the_body_class() instead.
-	 */
-	function bp_get_the_body_class( $wp_classes = array(), $custom_classes = false ) {
-		return bboss_get_the_body_class( $wp_classes, $custom_classes );
-	}
-}
-if ( function_exists( 'bboss_get_the_post_class' ) && ! function_exists( 'bp_get_the_post_class' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_the_post_class()}.
-	 *
-	 * @deprecated Use bboss_get_the_post_class() instead.
-	 */
-	function bp_get_the_post_class( $wp_classes = array() ) {
-		return bboss_get_the_post_class( $wp_classes );
-	}
-}
-if ( function_exists( 'bboss_get_title_parts' ) && ! function_exists( 'bp_get_title_parts' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_title_parts()}.
-	 *
-	 * @deprecated Use bboss_get_title_parts() instead.
-	 */
-	function bp_get_title_parts( $seplocation = 'right' ) {
-		return bboss_get_title_parts( $seplocation );
-	}
-}
-if ( function_exists( 'bboss_get_total_member_count' ) && ! function_exists( 'bp_get_total_member_count' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_total_member_count()}.
-	 *
-	 * @deprecated Use bboss_get_total_member_count() instead.
-	 */
-	function bp_get_total_member_count() {
-		return bboss_get_total_member_count();
-	}
-}
-if ( function_exists( 'bboss_has_options_avatar' ) && ! function_exists( 'bp_has_options_avatar' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_has_options_avatar()}.
-	 *
-	 * @deprecated Use bboss_has_options_avatar() instead.
-	 */
-	function bp_has_options_avatar() {
-		return bboss_has_options_avatar();
-	}
-}
-if ( function_exists( 'bboss_is_action_variable' ) && ! function_exists( 'bp_is_action_variable' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_action_variable()}.
-	 *
-	 * @deprecated Use bboss_is_action_variable() instead.
-	 */
-	function bp_is_action_variable( $action_variable = '', $position = false ) {
-		return bboss_is_action_variable( $action_variable, $position );
-	}
-}
-if ( function_exists( 'bboss_is_activation_page' ) && ! function_exists( 'bp_is_activation_page' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_activation_page()}.
-	 *
-	 * @deprecated Use bboss_is_activation_page() instead.
-	 */
-	function bp_is_activation_page() {
-		return bboss_is_activation_page();
-	}
-}
-if ( function_exists( 'bboss_is_active' ) && ! function_exists( 'bp_is_active' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_active()}.
-	 *
-	 * @deprecated Use bboss_is_active() instead.
-	 */
-	function bp_is_active( $component = '', $feature = '' ) {
-		return bboss_is_active( $component, $feature );
-	}
-}
-if ( function_exists( 'bboss_is_activity_component' ) && ! function_exists( 'bp_is_activity_component' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_activity_component()}.
-	 *
-	 * @deprecated Use bboss_is_activity_component() instead.
-	 */
-	function bp_is_activity_component() {
-		return bboss_is_activity_component();
-	}
-}
-if ( function_exists( 'bboss_is_activity_directory' ) && ! function_exists( 'bp_is_activity_directory' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_activity_directory()}.
-	 *
-	 * @deprecated Use bboss_is_activity_directory() instead.
-	 */
-	function bp_is_activity_directory() {
-		return bboss_is_activity_directory();
-	}
-}
-if ( function_exists( 'bboss_is_activity_edit' ) && ! function_exists( 'bp_is_activity_edit' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_activity_edit()}.
-	 *
-	 * @deprecated Use bboss_is_activity_edit() instead.
-	 */
-	function bp_is_activity_edit() {
-		return bboss_is_activity_edit();
-	}
-}
-if ( function_exists( 'bboss_is_blog_page' ) && ! function_exists( 'bp_is_blog_page' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_blog_page()}.
-	 *
-	 * @deprecated Use bboss_is_blog_page() instead.
-	 */
-	function bp_is_blog_page() {
-		return bboss_is_blog_page();
-	}
-}
-if ( function_exists( 'bboss_is_blogs_component' ) && ! function_exists( 'bp_is_blogs_component' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_blogs_component()}.
-	 *
-	 * @deprecated Use bboss_is_blogs_component() instead.
-	 */
-	function bp_is_blogs_component() {
-		return bboss_is_blogs_component();
-	}
-}
-if ( function_exists( 'bboss_is_blogs_directory' ) && ! function_exists( 'bp_is_blogs_directory' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_blogs_directory()}.
-	 *
-	 * @deprecated Use bboss_is_blogs_directory() instead.
-	 */
-	function bp_is_blogs_directory() {
-		return bboss_is_blogs_directory();
-	}
-}
-if ( function_exists( 'bboss_is_component_front_page' ) && ! function_exists( 'bp_is_component_front_page' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_component_front_page()}.
-	 *
-	 * @deprecated Use bboss_is_component_front_page() instead.
-	 */
-	function bp_is_component_front_page( $component = '' ) {
-		return bboss_is_component_front_page( $component );
-	}
-}
-if ( function_exists( 'bboss_is_create_blog' ) && ! function_exists( 'bp_is_create_blog' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_create_blog()}.
-	 *
-	 * @deprecated Use bboss_is_create_blog() instead.
-	 */
-	function bp_is_create_blog() {
-		return bboss_is_create_blog();
-	}
-}
-if ( function_exists( 'bboss_is_current_action' ) && ! function_exists( 'bp_is_current_action' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_current_action()}.
-	 *
-	 * @deprecated Use bboss_is_current_action() instead.
-	 */
-	function bp_is_current_action( $action = '' ) {
-		return bboss_is_current_action( $action );
-	}
-}
-if ( function_exists( 'bboss_is_current_component' ) && ! function_exists( 'bp_is_current_component' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_current_component()}.
-	 *
-	 * @deprecated Use bboss_is_current_component() instead.
-	 */
-	function bp_is_current_component( $component = '' ) {
-		return bboss_is_current_component( $component );
-	}
-}
-if ( function_exists( 'bboss_is_current_component_core' ) && ! function_exists( 'bp_is_current_component_core' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_current_component_core()}.
-	 *
-	 * @deprecated Use bboss_is_current_component_core() instead.
-	 */
-	function bp_is_current_component_core() {
-		return bboss_is_current_component_core();
-	}
-}
-if ( function_exists( 'bboss_is_current_item' ) && ! function_exists( 'bp_is_current_item' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_current_item()}.
-	 *
-	 * @deprecated Use bboss_is_current_item() instead.
-	 */
-	function bp_is_current_item( $item = '' ) {
-		return bboss_is_current_item( $item );
-	}
-}
-if ( function_exists( 'bboss_is_directory' ) && ! function_exists( 'bp_is_directory' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_directory()}.
-	 *
-	 * @deprecated Use bboss_is_directory() instead.
-	 */
-	function bp_is_directory() {
-		return bboss_is_directory();
-	}
-}
-if ( function_exists( 'bboss_is_document_component' ) && ! function_exists( 'bp_is_document_component' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_document_component()}.
-	 *
-	 * @deprecated Use bboss_is_document_component() instead.
-	 */
-	function bp_is_document_component() {
-		return bboss_is_document_component();
-	}
-}
-if ( function_exists( 'bboss_is_document_directory' ) && ! function_exists( 'bp_is_document_directory' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_document_directory()}.
-	 *
-	 * @deprecated Use bboss_is_document_directory() instead.
-	 */
-	function bp_is_document_directory() {
-		return bboss_is_document_directory();
-	}
-}
-if ( function_exists( 'bboss_is_forums_component' ) && ! function_exists( 'bp_is_forums_component' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_forums_component()}.
-	 *
-	 * @deprecated Use bboss_is_forums_component() instead.
-	 */
-	function bp_is_forums_component() {
-		return bboss_is_forums_component();
-	}
-}
-if ( function_exists( 'bboss_is_friends_component' ) && ! function_exists( 'bp_is_friends_component' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_friends_component()}.
-	 *
-	 * @deprecated Use bboss_is_friends_component() instead.
-	 */
-	function bp_is_friends_component() {
-		return bboss_is_friends_component();
-	}
-}
-if ( function_exists( 'bboss_is_group' ) && ! function_exists( 'bp_is_group' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_group()}.
-	 *
-	 * @deprecated Use bboss_is_group() instead.
-	 */
-	function bp_is_group() {
-		return bboss_is_group();
-	}
-}
-if ( function_exists( 'bboss_is_group_activity' ) && ! function_exists( 'bp_is_group_activity' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_group_activity()}.
-	 *
-	 * @deprecated Use bboss_is_group_activity() instead.
-	 */
-	function bp_is_group_activity() {
-		return bboss_is_group_activity();
-	}
-}
-if ( function_exists( 'bboss_is_group_admin_page' ) && ! function_exists( 'bp_is_group_admin_page' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_group_admin_page()}.
-	 *
-	 * @deprecated Use bboss_is_group_admin_page() instead.
-	 */
-	function bp_is_group_admin_page() {
-		return bboss_is_group_admin_page();
-	}
-}
-if ( function_exists( 'bboss_is_group_albums' ) && ! function_exists( 'bp_is_group_albums' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_group_albums()}.
-	 *
-	 * @deprecated Use bboss_is_group_albums() instead.
-	 */
-	function bp_is_group_albums() {
-		return bboss_is_group_albums();
-	}
-}
-if ( function_exists( 'bboss_is_group_create' ) && ! function_exists( 'bp_is_group_create' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_group_create()}.
-	 *
-	 * @deprecated Use bboss_is_group_create() instead.
-	 */
-	function bp_is_group_create() {
-		return bboss_is_group_create();
-	}
-}
-if ( function_exists( 'bboss_is_group_custom_front' ) && ! function_exists( 'bp_is_group_custom_front' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_group_custom_front()}.
-	 *
-	 * @deprecated Use bboss_is_group_custom_front() instead.
-	 */
-	function bp_is_group_custom_front() {
-		return bboss_is_group_custom_front();
-	}
-}
-if ( function_exists( 'bboss_is_group_document' ) && ! function_exists( 'bp_is_group_document' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_group_document()}.
-	 *
-	 * @deprecated Use bboss_is_group_document() instead.
-	 */
-	function bp_is_group_document() {
-		return bboss_is_group_document();
-	}
-}
-if ( function_exists( 'bboss_is_group_folders' ) && ! function_exists( 'bp_is_group_folders' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_group_folders()}.
-	 *
-	 * @deprecated Use bboss_is_group_folders() instead.
-	 */
-	function bp_is_group_folders() {
-		return bboss_is_group_folders();
-	}
-}
-if ( function_exists( 'bboss_is_group_forum_topic' ) && ! function_exists( 'bp_is_group_forum_topic' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_group_forum_topic()}.
-	 *
-	 * @deprecated Use bboss_is_group_forum_topic() instead.
-	 */
-	function bp_is_group_forum_topic() {
-		return bboss_is_group_forum_topic();
-	}
-}
-if ( function_exists( 'bboss_is_group_forum_topic_edit' ) && ! function_exists( 'bp_is_group_forum_topic_edit' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_group_forum_topic_edit()}.
-	 *
-	 * @deprecated Use bboss_is_group_forum_topic_edit() instead.
-	 */
-	function bp_is_group_forum_topic_edit() {
-		return bboss_is_group_forum_topic_edit();
-	}
-}
-if ( function_exists( 'bboss_is_group_home' ) && ! function_exists( 'bp_is_group_home' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_group_home()}.
-	 *
-	 * @deprecated Use bboss_is_group_home() instead.
-	 */
-	function bp_is_group_home() {
-		return bboss_is_group_home();
-	}
-}
-if ( function_exists( 'bboss_is_group_invites' ) && ! function_exists( 'bp_is_group_invites' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_group_invites()}.
-	 *
-	 * @deprecated Use bboss_is_group_invites() instead.
-	 */
-	function bp_is_group_invites() {
-		return bboss_is_group_invites();
-	}
-}
-if ( function_exists( 'bboss_is_group_leaders' ) && ! function_exists( 'bp_is_group_leaders' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_group_leaders()}.
-	 *
-	 * @deprecated Use bboss_is_group_leaders() instead.
-	 */
-	function bp_is_group_leaders() {
-		return bboss_is_group_leaders();
-	}
-}
-if ( function_exists( 'bboss_is_group_leave' ) && ! function_exists( 'bp_is_group_leave' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_group_leave()}.
-	 *
-	 * @deprecated Use bboss_is_group_leave() instead.
-	 */
-	function bp_is_group_leave() {
-		return bboss_is_group_leave();
-	}
-}
-if ( function_exists( 'bboss_is_group_media' ) && ! function_exists( 'bp_is_group_media' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_group_media()}.
-	 *
-	 * @deprecated Use bboss_is_group_media() instead.
-	 */
-	function bp_is_group_media() {
-		return bboss_is_group_media();
-	}
-}
-if ( function_exists( 'bboss_is_group_members' ) && ! function_exists( 'bp_is_group_members' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_group_members()}.
-	 *
-	 * @deprecated Use bboss_is_group_members() instead.
-	 */
-	function bp_is_group_members() {
-		return bboss_is_group_members();
-	}
-}
-if ( function_exists( 'bboss_is_group_membership_request' ) && ! function_exists( 'bp_is_group_membership_request' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_group_membership_request()}.
-	 *
-	 * @deprecated Use bboss_is_group_membership_request() instead.
-	 */
-	function bp_is_group_membership_request() {
-		return bboss_is_group_membership_request();
-	}
-}
-if ( function_exists( 'bboss_is_group_messages' ) && ! function_exists( 'bp_is_group_messages' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_group_messages()}.
-	 *
-	 * @deprecated Use bboss_is_group_messages() instead.
-	 */
-	function bp_is_group_messages() {
-		return bboss_is_group_messages();
-	}
-}
-if ( function_exists( 'bboss_is_group_single' ) && ! function_exists( 'bp_is_group_single' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_group_single()}.
-	 *
-	 * @deprecated Use bboss_is_group_single() instead.
-	 */
-	function bp_is_group_single() {
-		return bboss_is_group_single();
-	}
-}
-if ( function_exists( 'bboss_is_group_subgroups' ) && ! function_exists( 'bp_is_group_subgroups' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_group_subgroups()}.
-	 *
-	 * @deprecated Use bboss_is_group_subgroups() instead.
-	 */
-	function bp_is_group_subgroups() {
-		return bboss_is_group_subgroups();
-	}
-}
-if ( function_exists( 'bboss_is_group_video' ) && ! function_exists( 'bp_is_group_video' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_group_video()}.
-	 *
-	 * @deprecated Use bboss_is_group_video() instead.
-	 */
-	function bp_is_group_video() {
-		return bboss_is_group_video();
-	}
-}
-if ( function_exists( 'bboss_is_group_video_albums' ) && ! function_exists( 'bp_is_group_video_albums' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_group_video_albums()}.
-	 *
-	 * @deprecated Use bboss_is_group_video_albums() instead.
-	 */
-	function bp_is_group_video_albums() {
-		return bboss_is_group_video_albums();
-	}
-}
-if ( function_exists( 'bboss_is_groups_component' ) && ! function_exists( 'bp_is_groups_component' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_groups_component()}.
-	 *
-	 * @deprecated Use bboss_is_groups_component() instead.
-	 */
-	function bp_is_groups_component() {
-		return bboss_is_groups_component();
-	}
-}
-if ( function_exists( 'bboss_is_groups_directory' ) && ! function_exists( 'bp_is_groups_directory' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_groups_directory()}.
-	 *
-	 * @deprecated Use bboss_is_groups_directory() instead.
-	 */
-	function bp_is_groups_directory() {
-		return bboss_is_groups_directory();
-	}
-}
-if ( function_exists( 'bboss_is_invites_component' ) && ! function_exists( 'bp_is_invites_component' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_invites_component()}.
-	 *
-	 * @deprecated Use bboss_is_invites_component() instead.
-	 */
-	function bp_is_invites_component() {
-		return bboss_is_invites_component();
-	}
-}
-if ( function_exists( 'bboss_is_item_admin' ) && ! function_exists( 'bp_is_item_admin' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_item_admin()}.
-	 *
-	 * @deprecated Use bboss_is_item_admin() instead.
-	 */
-	function bp_is_item_admin() {
-		return bboss_is_item_admin();
-	}
-}
-if ( function_exists( 'bboss_is_item_mod' ) && ! function_exists( 'bp_is_item_mod' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_item_mod()}.
-	 *
-	 * @deprecated Use bboss_is_item_mod() instead.
-	 */
-	function bp_is_item_mod() {
-		return bboss_is_item_mod();
-	}
-}
-if ( function_exists( 'bboss_is_media_component' ) && ! function_exists( 'bp_is_media_component' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_media_component()}.
-	 *
-	 * @deprecated Use bboss_is_media_component() instead.
-	 */
-	function bp_is_media_component() {
-		return bboss_is_media_component();
-	}
-}
-if ( function_exists( 'bboss_is_media_directory' ) && ! function_exists( 'bp_is_media_directory' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_media_directory()}.
-	 *
-	 * @deprecated Use bboss_is_media_directory() instead.
-	 */
-	function bp_is_media_directory() {
-		return bboss_is_media_directory();
-	}
-}
-if ( function_exists( 'bboss_is_members_component' ) && ! function_exists( 'bp_is_members_component' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_members_component()}.
-	 *
-	 * @deprecated Use bboss_is_members_component() instead.
-	 */
-	function bp_is_members_component() {
-		return bboss_is_members_component();
-	}
-}
-if ( function_exists( 'bboss_is_members_directory' ) && ! function_exists( 'bp_is_members_directory' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_members_directory()}.
-	 *
-	 * @deprecated Use bboss_is_members_directory() instead.
-	 */
-	function bp_is_members_directory() {
-		return bboss_is_members_directory();
-	}
-}
-if ( function_exists( 'bboss_is_messages_component' ) && ! function_exists( 'bp_is_messages_component' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_messages_component()}.
-	 *
-	 * @deprecated Use bboss_is_messages_component() instead.
-	 */
-	function bp_is_messages_component() {
-		return bboss_is_messages_component();
-	}
-}
-if ( function_exists( 'bboss_is_messages_compose_screen' ) && ! function_exists( 'bp_is_messages_compose_screen' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_messages_compose_screen()}.
-	 *
-	 * @deprecated Use bboss_is_messages_compose_screen() instead.
-	 */
-	function bp_is_messages_compose_screen() {
-		return bboss_is_messages_compose_screen();
-	}
-}
-if ( function_exists( 'bboss_is_messages_conversation' ) && ! function_exists( 'bp_is_messages_conversation' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_messages_conversation()}.
-	 *
-	 * @deprecated Use bboss_is_messages_conversation() instead.
-	 */
-	function bp_is_messages_conversation() {
-		return bboss_is_messages_conversation();
-	}
-}
-if ( function_exists( 'bboss_is_messages_inbox' ) && ! function_exists( 'bp_is_messages_inbox' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_messages_inbox()}.
-	 *
-	 * @deprecated Use bboss_is_messages_inbox() instead.
-	 */
-	function bp_is_messages_inbox() {
-		return bboss_is_messages_inbox();
-	}
-}
-if ( function_exists( 'bboss_is_moderation_component' ) && ! function_exists( 'bp_is_moderation_component' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_moderation_component()}.
-	 *
-	 * @deprecated Use bboss_is_moderation_component() instead.
-	 */
-	function bp_is_moderation_component() {
-		return bboss_is_moderation_component();
-	}
-}
-if ( function_exists( 'bboss_is_my_profile' ) && ! function_exists( 'bp_is_my_profile' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_my_profile()}.
-	 *
-	 * @deprecated Use bboss_is_my_profile() instead.
-	 */
-	function bp_is_my_profile() {
-		return bboss_is_my_profile();
-	}
-}
-if ( function_exists( 'bboss_is_notices' ) && ! function_exists( 'bp_is_notices' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_notices()}.
-	 *
-	 * @deprecated Use bboss_is_notices() instead.
-	 */
-	function bp_is_notices() {
-		return bboss_is_notices();
-	}
-}
-if ( function_exists( 'bboss_is_notifications_component' ) && ! function_exists( 'bp_is_notifications_component' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_notifications_component()}.
-	 *
-	 * @deprecated Use bboss_is_notifications_component() instead.
-	 */
-	function bp_is_notifications_component() {
-		return bboss_is_notifications_component();
-	}
-}
-if ( function_exists( 'bboss_is_profile_component' ) && ! function_exists( 'bp_is_profile_component' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_profile_component()}.
-	 *
-	 * @deprecated Use bboss_is_profile_component() instead.
-	 */
-	function bp_is_profile_component() {
-		return bboss_is_profile_component();
-	}
-}
-if ( function_exists( 'bboss_is_register_page' ) && ! function_exists( 'bp_is_register_page' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_register_page()}.
-	 *
-	 * @deprecated Use bboss_is_register_page() instead.
-	 */
-	function bp_is_register_page() {
-		return bboss_is_register_page();
-	}
-}
-if ( function_exists( 'bboss_is_root_component' ) && ! function_exists( 'bp_is_root_component' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_root_component()}.
-	 *
-	 * @deprecated Use bboss_is_root_component() instead.
-	 */
-	function bp_is_root_component( $component_name = '' ) {
-		return bboss_is_root_component( $component_name );
-	}
-}
-if ( function_exists( 'bboss_is_settings_component' ) && ! function_exists( 'bp_is_settings_component' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_settings_component()}.
-	 *
-	 * @deprecated Use bboss_is_settings_component() instead.
-	 */
-	function bp_is_settings_component() {
-		return bboss_is_settings_component();
-	}
-}
-if ( function_exists( 'bboss_is_single' ) && ! function_exists( 'bp_is_single' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_single()}.
-	 *
-	 * @deprecated Use bboss_is_single() instead.
-	 */
-	function bp_is_single( $component, $callback ) {
-		return bboss_is_single( $component, $callback );
-	}
-}
-if ( function_exists( 'bboss_is_single_activity' ) && ! function_exists( 'bp_is_single_activity' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_single_activity()}.
-	 *
-	 * @deprecated Use bboss_is_single_activity() instead.
-	 */
-	function bp_is_single_activity() {
-		return bboss_is_single_activity();
-	}
-}
-if ( function_exists( 'bboss_is_single_album' ) && ! function_exists( 'bp_is_single_album' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_single_album()}.
-	 *
-	 * @deprecated Use bboss_is_single_album() instead.
-	 */
-	function bp_is_single_album() {
-		return bboss_is_single_album();
-	}
-}
-if ( function_exists( 'bboss_is_single_document' ) && ! function_exists( 'bp_is_single_document' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_single_document()}.
-	 *
-	 * @deprecated Use bboss_is_single_document() instead.
-	 */
-	function bp_is_single_document() {
-		return bboss_is_single_document();
-	}
-}
-if ( function_exists( 'bboss_is_single_folder' ) && ! function_exists( 'bp_is_single_folder' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_single_folder()}.
-	 *
-	 * @deprecated Use bboss_is_single_folder() instead.
-	 */
-	function bp_is_single_folder() {
-		return bboss_is_single_folder();
-	}
-}
-if ( function_exists( 'bboss_is_single_item' ) && ! function_exists( 'bp_is_single_item' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_single_item()}.
-	 *
-	 * @deprecated Use bboss_is_single_item() instead.
-	 */
-	function bp_is_single_item() {
-		return bboss_is_single_item();
-	}
-}
-if ( function_exists( 'bboss_is_single_video_album' ) && ! function_exists( 'bp_is_single_video_album' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_single_video_album()}.
-	 *
-	 * @deprecated Use bboss_is_single_video_album() instead.
-	 */
-	function bp_is_single_video_album() {
-		return bboss_is_single_video_album();
-	}
-}
-if ( function_exists( 'bboss_is_user' ) && ! function_exists( 'bp_is_user' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_user()}.
-	 *
-	 * @deprecated Use bboss_is_user() instead.
-	 */
-	function bp_is_user() {
-		return bboss_is_user();
-	}
-}
-if ( function_exists( 'bboss_is_user_activity' ) && ! function_exists( 'bp_is_user_activity' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_user_activity()}.
-	 *
-	 * @deprecated Use bboss_is_user_activity() instead.
-	 */
-	function bp_is_user_activity() {
-		return bboss_is_user_activity();
-	}
-}
-if ( function_exists( 'bboss_is_user_albums' ) && ! function_exists( 'bp_is_user_albums' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_user_albums()}.
-	 *
-	 * @deprecated Use bboss_is_user_albums() instead.
-	 */
-	function bp_is_user_albums() {
-		return bboss_is_user_albums();
-	}
-}
-if ( function_exists( 'bboss_is_user_blogs' ) && ! function_exists( 'bp_is_user_blogs' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_user_blogs()}.
-	 *
-	 * @deprecated Use bboss_is_user_blogs() instead.
-	 */
-	function bp_is_user_blogs() {
-		return bboss_is_user_blogs();
-	}
-}
-if ( function_exists( 'bboss_is_user_change_avatar' ) && ! function_exists( 'bp_is_user_change_avatar' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_user_change_avatar()}.
-	 *
-	 * @deprecated Use bboss_is_user_change_avatar() instead.
-	 */
-	function bp_is_user_change_avatar() {
-		return bboss_is_user_change_avatar();
-	}
-}
-if ( function_exists( 'bboss_is_user_change_cover_image' ) && ! function_exists( 'bp_is_user_change_cover_image' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_user_change_cover_image()}.
-	 *
-	 * @deprecated Use bboss_is_user_change_cover_image() instead.
-	 */
-	function bp_is_user_change_cover_image() {
-		return bboss_is_user_change_cover_image();
-	}
-}
-if ( function_exists( 'bboss_is_user_document' ) && ! function_exists( 'bp_is_user_document' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_user_document()}.
-	 *
-	 * @deprecated Use bboss_is_user_document() instead.
-	 */
-	function bp_is_user_document() {
-		return bboss_is_user_document();
-	}
-}
-if ( function_exists( 'bboss_is_user_folders' ) && ! function_exists( 'bp_is_user_folders' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_user_folders()}.
-	 *
-	 * @deprecated Use bboss_is_user_folders() instead.
-	 */
-	function bp_is_user_folders() {
-		return bboss_is_user_folders();
-	}
-}
-if ( function_exists( 'bboss_is_user_friend_requests' ) && ! function_exists( 'bp_is_user_friend_requests' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_user_friend_requests()}.
-	 *
-	 * @deprecated Use bboss_is_user_friend_requests() instead.
-	 */
-	function bp_is_user_friend_requests() {
-		return bboss_is_user_friend_requests();
-	}
-}
-if ( function_exists( 'bboss_is_user_friends' ) && ! function_exists( 'bp_is_user_friends' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_user_friends()}.
-	 *
-	 * @deprecated Use bboss_is_user_friends() instead.
-	 */
-	function bp_is_user_friends() {
-		return bboss_is_user_friends();
-	}
-}
-if ( function_exists( 'bboss_is_user_friends_activity' ) && ! function_exists( 'bp_is_user_friends_activity' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_user_friends_activity()}.
-	 *
-	 * @deprecated Use bboss_is_user_friends_activity() instead.
-	 */
-	function bp_is_user_friends_activity() {
-		return bboss_is_user_friends_activity();
-	}
-}
-if ( function_exists( 'bboss_is_user_front' ) && ! function_exists( 'bp_is_user_front' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_user_front()}.
-	 *
-	 * @deprecated Use bboss_is_user_front() instead.
-	 */
-	function bp_is_user_front() {
-		return bboss_is_user_front();
-	}
-}
-if ( function_exists( 'bboss_is_user_groups' ) && ! function_exists( 'bp_is_user_groups' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_user_groups()}.
-	 *
-	 * @deprecated Use bboss_is_user_groups() instead.
-	 */
-	function bp_is_user_groups() {
-		return bboss_is_user_groups();
-	}
-}
-if ( function_exists( 'bboss_is_user_groups_activity' ) && ! function_exists( 'bp_is_user_groups_activity' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_user_groups_activity()}.
-	 *
-	 * @deprecated Use bboss_is_user_groups_activity() instead.
-	 */
-	function bp_is_user_groups_activity() {
-		return bboss_is_user_groups_activity();
-	}
-}
-if ( function_exists( 'bboss_is_user_groups_invites' ) && ! function_exists( 'bp_is_user_groups_invites' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_user_groups_invites()}.
-	 *
-	 * @deprecated Use bboss_is_user_groups_invites() instead.
-	 */
-	function bp_is_user_groups_invites() {
-		return bboss_is_user_groups_invites();
-	}
-}
-if ( function_exists( 'bboss_is_user_invites' ) && ! function_exists( 'bp_is_user_invites' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_user_invites()}.
-	 *
-	 * @deprecated Use bboss_is_user_invites() instead.
-	 */
-	function bp_is_user_invites() {
-		return bboss_is_user_invites();
-	}
-}
-if ( function_exists( 'bboss_is_user_invites_send_invites' ) && ! function_exists( 'bp_is_user_invites_send_invites' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_user_invites_send_invites()}.
-	 *
-	 * @deprecated Use bboss_is_user_invites_send_invites() instead.
-	 */
-	function bp_is_user_invites_send_invites() {
-		return bboss_is_user_invites_send_invites();
-	}
-}
-if ( function_exists( 'bboss_is_user_media' ) && ! function_exists( 'bp_is_user_media' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_user_media()}.
-	 *
-	 * @deprecated Use bboss_is_user_media() instead.
-	 */
-	function bp_is_user_media() {
-		return bboss_is_user_media();
-	}
-}
-if ( function_exists( 'bboss_is_user_messages' ) && ! function_exists( 'bp_is_user_messages' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_user_messages()}.
-	 *
-	 * @deprecated Use bboss_is_user_messages() instead.
-	 */
-	function bp_is_user_messages() {
-		return bboss_is_user_messages();
-	}
-}
-if ( function_exists( 'bboss_is_user_moderation' ) && ! function_exists( 'bp_is_user_moderation' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_user_moderation()}.
-	 *
-	 * @deprecated Use bboss_is_user_moderation() instead.
-	 */
-	function bp_is_user_moderation() {
-		return bboss_is_user_moderation();
-	}
-}
-if ( function_exists( 'bboss_is_user_mutual_friends' ) && ! function_exists( 'bp_is_user_mutual_friends' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_user_mutual_friends()}.
-	 *
-	 * @deprecated Use bboss_is_user_mutual_friends() instead.
-	 */
-	function bp_is_user_mutual_friends() {
-		return bboss_is_user_mutual_friends();
-	}
-}
-if ( function_exists( 'bboss_is_user_notifications' ) && ! function_exists( 'bp_is_user_notifications' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_user_notifications()}.
-	 *
-	 * @deprecated Use bboss_is_user_notifications() instead.
-	 */
-	function bp_is_user_notifications() {
-		return bboss_is_user_notifications();
-	}
-}
-if ( function_exists( 'bboss_is_user_profile' ) && ! function_exists( 'bp_is_user_profile' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_user_profile()}.
-	 *
-	 * @deprecated Use bboss_is_user_profile() instead.
-	 */
-	function bp_is_user_profile() {
-		return bboss_is_user_profile();
-	}
-}
-if ( function_exists( 'bboss_is_user_profile_edit' ) && ! function_exists( 'bp_is_user_profile_edit' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_user_profile_edit()}.
-	 *
-	 * @deprecated Use bboss_is_user_profile_edit() instead.
-	 */
-	function bp_is_user_profile_edit() {
-		return bboss_is_user_profile_edit();
-	}
-}
-if ( function_exists( 'bboss_is_user_recent_commments' ) && ! function_exists( 'bp_is_user_recent_commments' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_user_recent_commments()}.
-	 *
-	 * @deprecated Use bboss_is_user_recent_commments() instead.
-	 */
-	function bp_is_user_recent_commments() {
-		return bboss_is_user_recent_commments();
-	}
-}
-if ( function_exists( 'bboss_is_user_recent_posts' ) && ! function_exists( 'bp_is_user_recent_posts' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_user_recent_posts()}.
-	 *
-	 * @deprecated Use bboss_is_user_recent_posts() instead.
-	 */
-	function bp_is_user_recent_posts() {
-		return bboss_is_user_recent_posts();
-	}
-}
-if ( function_exists( 'bboss_is_user_settings' ) && ! function_exists( 'bp_is_user_settings' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_user_settings()}.
-	 *
-	 * @deprecated Use bboss_is_user_settings() instead.
-	 */
-	function bp_is_user_settings() {
-		return bboss_is_user_settings();
-	}
-}
-if ( function_exists( 'bboss_is_user_settings_account_delete' ) && ! function_exists( 'bp_is_user_settings_account_delete' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_user_settings_account_delete()}.
-	 *
-	 * @deprecated Use bboss_is_user_settings_account_delete() instead.
-	 */
-	function bp_is_user_settings_account_delete() {
-		return bboss_is_user_settings_account_delete();
-	}
-}
-if ( function_exists( 'bboss_is_user_settings_general' ) && ! function_exists( 'bp_is_user_settings_general' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_user_settings_general()}.
-	 *
-	 * @deprecated Use bboss_is_user_settings_general() instead.
-	 */
-	function bp_is_user_settings_general() {
-		return bboss_is_user_settings_general();
-	}
-}
-if ( function_exists( 'bboss_is_user_settings_notifications' ) && ! function_exists( 'bp_is_user_settings_notifications' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_user_settings_notifications()}.
-	 *
-	 * @deprecated Use bboss_is_user_settings_notifications() instead.
-	 */
-	function bp_is_user_settings_notifications() {
-		return bboss_is_user_settings_notifications();
-	}
-}
-if ( function_exists( 'bboss_is_user_settings_profile' ) && ! function_exists( 'bp_is_user_settings_profile' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_user_settings_profile()}.
-	 *
-	 * @deprecated Use bboss_is_user_settings_profile() instead.
-	 */
-	function bp_is_user_settings_profile() {
-		return bboss_is_user_settings_profile();
-	}
-}
-if ( function_exists( 'bboss_is_user_video' ) && ! function_exists( 'bp_is_user_video' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_user_video()}.
-	 *
-	 * @deprecated Use bboss_is_user_video() instead.
-	 */
-	function bp_is_user_video() {
-		return bboss_is_user_video();
-	}
-}
-if ( function_exists( 'bboss_is_video_component' ) && ! function_exists( 'bp_is_video_component' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_video_component()}.
-	 *
-	 * @deprecated Use bboss_is_video_component() instead.
-	 */
-	function bp_is_video_component() {
-		return bboss_is_video_component();
-	}
-}
-if ( function_exists( 'bboss_is_video_directory' ) && ! function_exists( 'bp_is_video_directory' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_video_directory()}.
-	 *
-	 * @deprecated Use bboss_is_video_directory() instead.
-	 */
-	function bp_is_video_directory() {
-		return bboss_is_video_directory();
-	}
-}
-if ( function_exists( 'bboss_loggedin_user_id' ) && ! function_exists( 'bp_loggedin_user_id' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_loggedin_user_id()}.
-	 *
-	 * @deprecated Use bboss_loggedin_user_id() instead.
-	 */
-	function bp_loggedin_user_id() {
-		return bboss_loggedin_user_id();
-	}
-}
-if ( function_exists( 'bboss_nav_menu' ) && ! function_exists( 'bp_nav_menu' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nav_menu()}.
-	 *
-	 * @deprecated Use bboss_nav_menu() instead.
-	 */
-	function bp_nav_menu( $args = array() ) {
-		return bboss_nav_menu( $args );
-	}
-}
-if ( function_exists( 'bboss_post_author_avatar' ) && ! function_exists( 'bp_post_author_avatar' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_post_author_avatar()}.
-	 *
-	 * @deprecated Use bboss_post_author_avatar() instead.
-	 */
-	function bp_post_author_avatar() {
-		return bboss_post_author_avatar();
-	}
-}
-if ( function_exists( 'bboss_registration_needs_activation' ) && ! function_exists( 'bp_registration_needs_activation' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_registration_needs_activation()}.
-	 *
-	 * @deprecated Use bboss_registration_needs_activation() instead.
-	 */
-	function bp_registration_needs_activation() {
-		return bboss_registration_needs_activation();
-	}
-}
-if ( function_exists( 'bboss_root_domain' ) && ! function_exists( 'bp_root_domain' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_root_domain()}.
-	 *
-	 * @deprecated Use bboss_root_domain() instead.
-	 */
-	function bp_root_domain() {
-		return bboss_root_domain();
-	}
-}
-if ( function_exists( 'bboss_root_slug' ) && ! function_exists( 'bp_root_slug' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_root_slug()}.
-	 *
-	 * @deprecated Use bboss_root_slug() instead.
-	 */
-	function bp_root_slug( $component = '' ) {
-		return bboss_root_slug( $component );
-	}
-}
-if ( function_exists( 'bboss_search_default_text' ) && ! function_exists( 'bp_search_default_text' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_search_default_text()}.
-	 *
-	 * @deprecated Use bboss_search_default_text() instead.
-	 */
-	function bp_search_default_text( $component = '' ) {
-		return bboss_search_default_text( $component );
-	}
-}
-if ( function_exists( 'bboss_search_form_action' ) && ! function_exists( 'bp_search_form_action' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_search_form_action()}.
-	 *
-	 * @deprecated Use bboss_search_form_action() instead.
-	 */
-	function bp_search_form_action() {
-		return bboss_search_form_action();
-	}
-}
-if ( function_exists( 'bboss_search_form_type_select' ) && ! function_exists( 'bp_search_form_type_select' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_search_form_type_select()}.
-	 *
-	 * @deprecated Use bboss_search_form_type_select() instead.
-	 */
-	function bp_search_form_type_select() {
-		return bboss_search_form_type_select();
-	}
-}
-if ( function_exists( 'bboss_search_input_name' ) && ! function_exists( 'bp_search_input_name' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_search_input_name()}.
-	 *
-	 * @deprecated Use bboss_search_input_name() instead.
-	 */
-	function bp_search_input_name( $component = '' ) {
-		return bboss_search_input_name( $component );
-	}
-}
-if ( function_exists( 'bboss_search_placeholder' ) && ! function_exists( 'bp_search_placeholder' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_search_placeholder()}.
-	 *
-	 * @deprecated Use bboss_search_placeholder() instead.
-	 */
-	function bp_search_placeholder( $component = '' ) {
-		return bboss_search_placeholder( $component );
-	}
-}
-if ( function_exists( 'bboss_search_slug' ) && ! function_exists( 'bp_search_slug' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_search_slug()}.
-	 *
-	 * @deprecated Use bboss_search_slug() instead.
-	 */
-	function bp_search_slug() {
-		return bboss_search_slug();
-	}
-}
-if ( function_exists( 'bboss_site_name' ) && ! function_exists( 'bp_site_name' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_site_name()}.
-	 *
-	 * @deprecated Use bboss_site_name() instead.
-	 */
-	function bp_site_name() {
-		return bboss_site_name();
-	}
-}
-if ( function_exists( 'bboss_styles' ) && ! function_exists( 'bp_styles' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_styles()}.
-	 *
-	 * @deprecated Use bboss_styles() instead.
-	 */
-	function bp_styles() {
-		return bboss_styles();
-	}
-}
-if ( function_exists( 'bboss_the_body_class' ) && ! function_exists( 'bp_the_body_class' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_the_body_class()}.
-	 *
-	 * @deprecated Use bboss_the_body_class() instead.
-	 */
-	function bp_the_body_class() {
-		return bboss_the_body_class();
-	}
-}
-if ( function_exists( 'bboss_total_member_count' ) && ! function_exists( 'bp_total_member_count' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_total_member_count()}.
-	 *
-	 * @deprecated Use bboss_total_member_count() instead.
-	 */
-	function bp_total_member_count() {
-		return bboss_total_member_count();
-	}
-}
-if ( function_exists( 'bboss_user_has_access' ) && ! function_exists( 'bp_user_has_access' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_user_has_access()}.
-	 *
-	 * @deprecated Use bboss_user_has_access() instead.
-	 */
-	function bp_user_has_access() {
-		return bboss_user_has_access();
-	}
-}
-if ( function_exists( 'bboss_word_or_name' ) && ! function_exists( 'bp_word_or_name' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_word_or_name()}.
-	 *
-	 * @deprecated Use bboss_word_or_name() instead.
-	 */
-	function bp_word_or_name( $youtext, $nametext, $capitalize = true, $echo = true ) {
-		return bboss_word_or_name( $youtext, $nametext, $capitalize, $echo );
-	}
-}
-if ( function_exists( 'bboss_is_buddypress' ) && ! function_exists( 'is_buddypress' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_buddypress()}.
-	 *
-	 * @deprecated Use bboss_is_buddypress() instead.
-	 */
-	function is_buddypress() {
-		return bboss_is_buddypress();
-	}
-}
 // @bbwt-com-end compat-layer
+

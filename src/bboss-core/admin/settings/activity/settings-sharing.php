@@ -29,6 +29,20 @@ defined( 'ABSPATH' ) || exit;
 function bboss_activity_sharing_section_title() {
 	return __( 'Activity Sharing', 'buddyboss' );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_activity_sharing_section_title' ) && ! function_exists( 'bb_activity_sharing_section_title' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_activity_sharing_section_title()}.
+	 *
+	 * @deprecated Use bboss_activity_sharing_section_title() instead.
+	 */
+	function bb_activity_sharing_section_title() {
+		return bboss_activity_sharing_section_title();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Activity Sharing help article ID.
@@ -44,6 +58,20 @@ function bboss_activity_sharing_section_title() {
 function bboss_activity_sharing_section_help_article() {
 	return '637448';
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_activity_sharing_section_help_article' ) && ! function_exists( 'bb_activity_sharing_section_help_article' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_activity_sharing_section_help_article()}.
+	 *
+	 * @deprecated Use bboss_activity_sharing_section_help_article() instead.
+	 */
+	function bb_activity_sharing_section_help_article() {
+		return bboss_activity_sharing_section_help_article();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Base args for the Activity Sharing section.
@@ -66,6 +94,20 @@ function bboss_activity_sharing_section_base_args() {
 		'help_url' => bboss_activity_sharing_section_help_article(),
 	);
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_activity_sharing_section_base_args' ) && ! function_exists( 'bb_activity_sharing_section_base_args' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_activity_sharing_section_base_args()}.
+	 *
+	 * @deprecated Use bboss_activity_sharing_section_base_args() instead.
+	 */
+	function bb_activity_sharing_section_base_args() {
+		return bboss_activity_sharing_section_base_args();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Build the final section args for `activity_sharing`, after extensions filter.
@@ -111,6 +153,20 @@ function bboss_activity_sharing_get_section_args() {
 	 */
 	return apply_filters( 'bb_activity_sharing_section_args', bboss_activity_sharing_section_base_args() );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_activity_sharing_get_section_args' ) && ! function_exists( 'bb_activity_sharing_get_section_args' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_activity_sharing_get_section_args()}.
+	 *
+	 * @deprecated Use bboss_activity_sharing_get_section_args() instead.
+	 */
+	function bb_activity_sharing_get_section_args() {
+		return bboss_activity_sharing_get_section_args();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Filter callback: add UPGRADE LAUNCH badge when the BuddyBoss Sharing plugin is
@@ -150,6 +206,20 @@ function bboss_activity_sharing_add_pro_badge_when_no_sharing( $args ) {
 
 	return $args;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_activity_sharing_add_pro_badge_when_no_sharing' ) && ! function_exists( 'bb_activity_sharing_add_pro_badge_when_no_sharing' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_activity_sharing_add_pro_badge_when_no_sharing()}.
+	 *
+	 * @deprecated Use bboss_activity_sharing_add_pro_badge_when_no_sharing() instead.
+	 */
+	function bb_activity_sharing_add_pro_badge_when_no_sharing( $args ) {
+		return bboss_activity_sharing_add_pro_badge_when_no_sharing( $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_filter( 'bb_activity_sharing_section_args', 'bb_activity_sharing_add_pro_badge_when_no_sharing' );
 
 /**
@@ -227,6 +297,20 @@ function bboss_activity_register_sharing_panel_fields() {
 	// badge from the filter callback above. Register the placeholder fields.
 	bboss_activity_register_sharing_pro_placeholder_fields();
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_activity_register_sharing_panel_fields' ) && ! function_exists( 'bb_activity_register_sharing_panel_fields' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_activity_register_sharing_panel_fields()}.
+	 *
+	 * @deprecated Use bboss_activity_register_sharing_panel_fields() instead.
+	 */
+	function bb_activity_register_sharing_panel_fields() {
+		return bboss_activity_register_sharing_panel_fields();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Register PRO-gated placeholder fields for the Activity Sharing panel, and
@@ -483,20 +567,8 @@ function bboss_activity_register_sharing_pro_placeholder_fields() {
 		)
 	);
 }
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
-if ( function_exists( 'bboss_activity_register_sharing_panel_fields' ) && ! function_exists( 'bb_activity_register_sharing_panel_fields' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_activity_register_sharing_panel_fields()}.
-	 *
-	 * @deprecated Use bboss_activity_register_sharing_panel_fields() instead.
-	 */
-	function bb_activity_register_sharing_panel_fields() {
-		return bboss_activity_register_sharing_panel_fields();
-	}
-}
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_activity_register_sharing_pro_placeholder_fields' ) && ! function_exists( 'bb_activity_register_sharing_pro_placeholder_fields' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_activity_register_sharing_pro_placeholder_fields()}.
@@ -507,54 +579,5 @@ if ( function_exists( 'bboss_activity_register_sharing_pro_placeholder_fields' )
 		return bboss_activity_register_sharing_pro_placeholder_fields();
 	}
 }
-if ( function_exists( 'bboss_activity_sharing_add_pro_badge_when_no_sharing' ) && ! function_exists( 'bb_activity_sharing_add_pro_badge_when_no_sharing' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_activity_sharing_add_pro_badge_when_no_sharing()}.
-	 *
-	 * @deprecated Use bboss_activity_sharing_add_pro_badge_when_no_sharing() instead.
-	 */
-	function bb_activity_sharing_add_pro_badge_when_no_sharing( $args ) {
-		return bboss_activity_sharing_add_pro_badge_when_no_sharing( $args );
-	}
-}
-if ( function_exists( 'bboss_activity_sharing_get_section_args' ) && ! function_exists( 'bb_activity_sharing_get_section_args' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_activity_sharing_get_section_args()}.
-	 *
-	 * @deprecated Use bboss_activity_sharing_get_section_args() instead.
-	 */
-	function bb_activity_sharing_get_section_args() {
-		return bboss_activity_sharing_get_section_args();
-	}
-}
-if ( function_exists( 'bboss_activity_sharing_section_base_args' ) && ! function_exists( 'bb_activity_sharing_section_base_args' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_activity_sharing_section_base_args()}.
-	 *
-	 * @deprecated Use bboss_activity_sharing_section_base_args() instead.
-	 */
-	function bb_activity_sharing_section_base_args() {
-		return bboss_activity_sharing_section_base_args();
-	}
-}
-if ( function_exists( 'bboss_activity_sharing_section_help_article' ) && ! function_exists( 'bb_activity_sharing_section_help_article' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_activity_sharing_section_help_article()}.
-	 *
-	 * @deprecated Use bboss_activity_sharing_section_help_article() instead.
-	 */
-	function bb_activity_sharing_section_help_article() {
-		return bboss_activity_sharing_section_help_article();
-	}
-}
-if ( function_exists( 'bboss_activity_sharing_section_title' ) && ! function_exists( 'bb_activity_sharing_section_title' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_activity_sharing_section_title()}.
-	 *
-	 * @deprecated Use bboss_activity_sharing_section_title() instead.
-	 */
-	function bb_activity_sharing_section_title() {
-		return bboss_activity_sharing_section_title();
-	}
-}
 // @bbwt-com-end compat-layer
+

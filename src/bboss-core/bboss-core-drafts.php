@@ -37,6 +37,20 @@ function bboss_draft_is_draft_meta_key( $meta_key ) {
 
 	return (bool) preg_match( '/^draft_(user|group)_\d+$/', (string) $meta_key );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_draft_is_draft_meta_key' ) && ! function_exists( 'bb_draft_is_draft_meta_key' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_is_draft_meta_key()}.
+	 *
+	 * @deprecated Use bboss_draft_is_draft_meta_key() instead.
+	 */
+	function bb_draft_is_draft_meta_key( $meta_key ) {
+		return bboss_draft_is_draft_meta_key( $meta_key );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * How `bp_get_user_meta_key` wraps the draft meta keys on this install.
@@ -117,6 +131,20 @@ function bboss_draft_meta_key_wrap() {
 
 	return $wrap;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_draft_meta_key_wrap' ) && ! function_exists( 'bb_draft_meta_key_wrap' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_meta_key_wrap()}.
+	 *
+	 * @deprecated Use bboss_draft_meta_key_wrap() instead.
+	 */
+	function bb_draft_meta_key_wrap() {
+		return bboss_draft_meta_key_wrap();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Map a stored usermeta key back to the draft key the writers asked for.
@@ -161,6 +189,20 @@ function bboss_draft_logical_meta_key( $stored_key ) {
 
 	return bboss_draft_is_draft_meta_key( $logical ) ? $logical : '';
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_draft_logical_meta_key' ) && ! function_exists( 'bb_draft_logical_meta_key' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_logical_meta_key()}.
+	 *
+	 * @deprecated Use bboss_draft_logical_meta_key() instead.
+	 */
+	function bb_draft_logical_meta_key( $stored_key ) {
+		return bboss_draft_logical_meta_key( $stored_key );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * SQL fragments matching the draft keys as they are actually stored.
@@ -200,6 +242,20 @@ function bboss_draft_meta_key_sql() {
 		),
 	);
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_draft_meta_key_sql' ) && ! function_exists( 'bb_draft_meta_key_sql' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_meta_key_sql()}.
+	 *
+	 * @deprecated Use bboss_draft_meta_key_sql() instead.
+	 */
+	function bb_draft_meta_key_sql() {
+		return bboss_draft_meta_key_sql();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Maximum stored size of a single draft, in bytes.
@@ -226,6 +282,20 @@ function bboss_draft_max_size() {
 
 	return $size > 0 ? $size : 100 * KB_IN_BYTES;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_draft_max_size' ) && ! function_exists( 'bb_draft_max_size' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_max_size()}.
+	 *
+	 * @deprecated Use bboss_draft_max_size() instead.
+	 */
+	function bb_draft_max_size() {
+		return bboss_draft_max_size();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Maximum combined stored size of all of a user's drafts, in bytes.
@@ -252,6 +322,20 @@ function bboss_draft_user_total_max_size() {
 
 	return $size > 0 ? $size : 300 * KB_IN_BYTES;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_draft_user_total_max_size' ) && ! function_exists( 'bb_draft_user_total_max_size' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_user_total_max_size()}.
+	 *
+	 * @deprecated Use bboss_draft_user_total_max_size() instead.
+	 */
+	function bb_draft_user_total_max_size() {
+		return bboss_draft_user_total_max_size();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Total user-meta budget a draft save must not push the user past, in bytes.
@@ -281,6 +365,20 @@ function bboss_draft_user_meta_budget() {
 
 	return $size > 0 ? $size : 800 * KB_IN_BYTES;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_draft_user_meta_budget' ) && ! function_exists( 'bb_draft_user_meta_budget' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_user_meta_budget()}.
+	 *
+	 * @deprecated Use bboss_draft_user_meta_budget() instead.
+	 */
+	function bb_draft_user_meta_budget() {
+		return bboss_draft_user_meta_budget();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Strip inline data-URL images from draft content.
@@ -392,6 +490,20 @@ function bboss_draft_strip_data_urls( $content ) {
 	// function silently discarding the member's text.
 	return $content;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_draft_strip_data_urls' ) && ! function_exists( 'bb_draft_strip_data_urls' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_strip_data_urls()}.
+	 *
+	 * @deprecated Use bboss_draft_strip_data_urls() instead.
+	 */
+	function bb_draft_strip_data_urls( $content ) {
+		return bboss_draft_strip_data_urls( $content );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Most attachments of one type a draft payload may carry.
@@ -445,6 +557,20 @@ function bboss_draft_max_attachments_per_type( $type = 'media' ) {
 	 */
 	return (int) apply_filters( 'bb_draft_max_attachments_per_type', max( 50, $configured ), $type );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_draft_max_attachments_per_type' ) && ! function_exists( 'bb_draft_max_attachments_per_type' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_max_attachments_per_type()}.
+	 *
+	 * @deprecated Use bboss_draft_max_attachments_per_type() instead.
+	 */
+	function bb_draft_max_attachments_per_type( $type = 'media' ) {
+		return bboss_draft_max_attachments_per_type( $type );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Stamp every attachment a draft payload claims, before any size cap can refuse it.
@@ -548,6 +674,20 @@ function bboss_draft_protect_payload_attachments( $lists, $user_id ) {
 	// ages past retention.
 	return array_keys( $stamped );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_draft_protect_payload_attachments' ) && ! function_exists( 'bb_draft_protect_payload_attachments' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_protect_payload_attachments()}.
+	 *
+	 * @deprecated Use bboss_draft_protect_payload_attachments() instead.
+	 */
+	function bb_draft_protect_payload_attachments( $lists, $user_id ) {
+		return bboss_draft_protect_payload_attachments( $lists, $user_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get the stored byte sizes of a user's meta, split into drafts and total.
@@ -637,6 +777,20 @@ function bboss_draft_get_user_meta_sizes( $user_id, $flush = false ) {
 
 	return $sizes;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_draft_get_user_meta_sizes' ) && ! function_exists( 'bb_draft_get_user_meta_sizes' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_get_user_meta_sizes()}.
+	 *
+	 * @deprecated Use bboss_draft_get_user_meta_sizes() instead.
+	 */
+	function bb_draft_get_user_meta_sizes( $user_id, $flush = false ) {
+		return bboss_draft_get_user_meta_sizes( $user_id, $flush );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Serialized width of one array key, as `serialize()` writes it.
@@ -670,6 +824,20 @@ function bboss_draft_serialized_key_bytes( $key ) {
 	// terminators, which is what this reproduces.
 	return strlen( 's:' . strlen( $key ) . ':"' . $key . '";' );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_draft_serialized_key_bytes' ) && ! function_exists( 'bb_draft_serialized_key_bytes' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_serialized_key_bytes()}.
+	 *
+	 * @deprecated Use bboss_draft_serialized_key_bytes() instead.
+	 */
+	function bb_draft_serialized_key_bytes( $key ) {
+		return bboss_draft_serialized_key_bytes( $key );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Drop the memoized meta sizes for a user after a draft write.
@@ -686,6 +854,20 @@ function bboss_draft_serialized_key_bytes( $key ) {
 function bboss_draft_flush_user_meta_sizes( $user_id ) {
 	bboss_draft_get_user_meta_sizes( (int) $user_id, true );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_draft_flush_user_meta_sizes' ) && ! function_exists( 'bb_draft_flush_user_meta_sizes' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_flush_user_meta_sizes()}.
+	 *
+	 * @deprecated Use bboss_draft_flush_user_meta_sizes() instead.
+	 */
+	function bb_draft_flush_user_meta_sizes( $user_id ) {
+		return bboss_draft_flush_user_meta_sizes( $user_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 
 /**
@@ -738,6 +920,20 @@ function bboss_draft_collect_attachment_ids( $draft ) {
 
 	return array_values( array_unique( array_filter( $ids ) ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_draft_collect_attachment_ids' ) && ! function_exists( 'bb_draft_collect_attachment_ids' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_collect_attachment_ids()}.
+	 *
+	 * @deprecated Use bboss_draft_collect_attachment_ids() instead.
+	 */
+	function bb_draft_collect_attachment_ids( $draft ) {
+		return bboss_draft_collect_attachment_ids( $draft );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Strip the video poster frames a stored draft does not need to keep.
@@ -836,6 +1032,20 @@ function bboss_draft_shed_preview_frames( $draft ) {
 
 	return $draft;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_draft_shed_preview_frames' ) && ! function_exists( 'bb_draft_shed_preview_frames' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_shed_preview_frames()}.
+	 *
+	 * @deprecated Use bboss_draft_shed_preview_frames() instead.
+	 */
+	function bb_draft_shed_preview_frames( $draft ) {
+		return bboss_draft_shed_preview_frames( $draft );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Remove render-only fields from a draft's document attachments.
@@ -894,6 +1104,20 @@ function bboss_draft_strip_document_render_fields( $draft ) {
 
 	return $draft;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_draft_strip_document_render_fields' ) && ! function_exists( 'bb_draft_strip_document_render_fields' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_strip_document_render_fields()}.
+	 *
+	 * @deprecated Use bboss_draft_strip_document_render_fields() instead.
+	 */
+	function bb_draft_strip_document_render_fields( $draft ) {
+		return bboss_draft_strip_document_render_fields( $draft );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Whether a draft row still holds what a healing pass read from it.
@@ -913,6 +1137,20 @@ function bboss_draft_strip_document_render_fields( $draft ) {
 function bboss_draft_row_unchanged( $user_id, $meta_key, $read ) {
 	return maybe_serialize( bboss_draft_fresh_value( $user_id, $meta_key ) ) === maybe_serialize( $read );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_draft_row_unchanged' ) && ! function_exists( 'bb_draft_row_unchanged' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_row_unchanged()}.
+	 *
+	 * @deprecated Use bboss_draft_row_unchanged() instead.
+	 */
+	function bb_draft_row_unchanged( $user_id, $meta_key, $read ) {
+		return bboss_draft_row_unchanged( $user_id, $meta_key, $read );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Try to bring an oversized single-draft row under the cap by shedding.
@@ -985,6 +1223,20 @@ function bboss_draft_salvage_oversized_draft( $user_id, $meta_key ) {
 
 	return true;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_draft_salvage_oversized_draft' ) && ! function_exists( 'bb_draft_salvage_oversized_draft' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_salvage_oversized_draft()}.
+	 *
+	 * @deprecated Use bboss_draft_salvage_oversized_draft() instead.
+	 */
+	function bb_draft_salvage_oversized_draft( $user_id, $meta_key ) {
+		return bboss_draft_salvage_oversized_draft( $user_id, $meta_key );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Remove a draft that is over the per-draft cap even without its images, and
@@ -1039,6 +1291,20 @@ function bboss_draft_hold_oversized_draft( $user_id, $meta_key ) {
 
 	return true;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_draft_hold_oversized_draft' ) && ! function_exists( 'bb_draft_hold_oversized_draft' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_hold_oversized_draft()}.
+	 *
+	 * @deprecated Use bboss_draft_hold_oversized_draft() instead.
+	 */
+	function bb_draft_hold_oversized_draft( $user_id, $meta_key ) {
+		return bboss_draft_hold_oversized_draft( $user_id, $meta_key );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Strip pasted images and poster frames from every draft a member holds.
@@ -1107,6 +1373,20 @@ function bboss_draft_shed_user_drafts( $user_id ) {
 
 	return $rewritten;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_draft_shed_user_drafts' ) && ! function_exists( 'bb_draft_shed_user_drafts' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_shed_user_drafts()}.
+	 *
+	 * @deprecated Use bboss_draft_shed_user_drafts() instead.
+	 */
+	function bb_draft_shed_user_drafts( $user_id ) {
+		return bboss_draft_shed_user_drafts( $user_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Collect every attachment ID the user's OTHER stored drafts still reference.
@@ -1191,6 +1471,20 @@ function bboss_draft_collect_other_referenced_ids( $user_id, $exclude_key, $excl
 
 	return array_values( array_unique( array_map( 'intval', $ids ) ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_draft_collect_other_referenced_ids' ) && ! function_exists( 'bb_draft_collect_other_referenced_ids' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_collect_other_referenced_ids()}.
+	 *
+	 * @deprecated Use bboss_draft_collect_other_referenced_ids() instead.
+	 */
+	function bb_draft_collect_other_referenced_ids( $user_id, $exclude_key, $exclude_inner = '' ) {
+		return bboss_draft_collect_other_referenced_ids( $user_id, $exclude_key, $exclude_inner );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Collect attachment IDs referenced by the user's draft rows OTHER than one row.
@@ -1218,6 +1512,20 @@ function bboss_draft_collect_other_referenced_ids( $user_id, $exclude_key, $excl
 function bboss_draft_collect_other_row_referenced_ids( $user_id, $exclude_meta_key ) {
 	return bboss_draft_collect_other_referenced_ids( $user_id, $exclude_meta_key, null );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_draft_collect_other_row_referenced_ids' ) && ! function_exists( 'bb_draft_collect_other_row_referenced_ids' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_collect_other_row_referenced_ids()}.
+	 *
+	 * @deprecated Use bboss_draft_collect_other_row_referenced_ids() instead.
+	 */
+	function bb_draft_collect_other_row_referenced_ids( $user_id, $exclude_meta_key ) {
+		return bboss_draft_collect_other_row_referenced_ids( $user_id, $exclude_meta_key );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Release the draft protection stamps from a draft's attachments.
@@ -1280,6 +1588,20 @@ function bboss_draft_unstamp_attachments( $draft, $user_id, $retain_entries = ar
 		delete_post_meta( $attachment_id, 'bb_activity_post_feature_image_draft' );
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_draft_unstamp_attachments' ) && ! function_exists( 'bb_draft_unstamp_attachments' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_unstamp_attachments()}.
+	 *
+	 * @deprecated Use bboss_draft_unstamp_attachments() instead.
+	 */
+	function bb_draft_unstamp_attachments( $draft, $user_id, $retain_entries = array(), $retain_ids = array() ) {
+		return bboss_draft_unstamp_attachments( $draft, $user_id, $retain_entries, $retain_ids );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Release the draft stamps a replaced draft entry no longer needs.
@@ -1344,6 +1666,20 @@ function bboss_draft_release_replaced_attachments( $previous_entry, $current_ent
 
 	return $affected;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_draft_release_replaced_attachments' ) && ! function_exists( 'bb_draft_release_replaced_attachments' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_release_replaced_attachments()}.
+	 *
+	 * @deprecated Use bboss_draft_release_replaced_attachments() instead.
+	 */
+	function bb_draft_release_replaced_attachments( $previous_entry, $current_entry, $user_id, $retain_entries = array(), $retain_ids = array() ) {
+		return bboss_draft_release_replaced_attachments( $previous_entry, $current_entry, $user_id, $retain_entries, $retain_ids );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Dispose of one stored draft: release its attachment stamps and remove it.
@@ -1506,6 +1842,20 @@ function bboss_draft_dispose( $user_id, $meta_key, $inner_key = '', $defer_attac
 
 	return true;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_draft_dispose' ) && ! function_exists( 'bb_draft_dispose' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_dispose()}.
+	 *
+	 * @deprecated Use bboss_draft_dispose() instead.
+	 */
+	function bb_draft_dispose( $user_id, $meta_key, $inner_key = '', $defer_attachment_release = false ) {
+		return bboss_draft_dispose( $user_id, $meta_key, $inner_key, $defer_attachment_release );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Remove several expired inner drafts from the aggregate forum row in ONE write.
@@ -1600,6 +1950,20 @@ function bboss_draft_dispose_forum_inner_keys( $user_id, $inner_keys, $defer_att
 
 	return count( $removed );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_draft_dispose_forum_inner_keys' ) && ! function_exists( 'bb_draft_dispose_forum_inner_keys' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_dispose_forum_inner_keys()}.
+	 *
+	 * @deprecated Use bboss_draft_dispose_forum_inner_keys() instead.
+	 */
+	function bb_draft_dispose_forum_inner_keys( $user_id, $inner_keys, $defer_attachment_release = false ) {
+		return bboss_draft_dispose_forum_inner_keys( $user_id, $inner_keys, $defer_attachment_release );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Normalise a client-generated draft revision id.
@@ -1621,6 +1985,20 @@ function bboss_draft_sanitize_rev( $rev ) {
 
 	return wp_generate_password( 16, false, false );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_draft_sanitize_rev' ) && ! function_exists( 'bb_draft_sanitize_rev' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_sanitize_rev()}.
+	 *
+	 * @deprecated Use bboss_draft_sanitize_rev() instead.
+	 */
+	function bb_draft_sanitize_rev( $rev ) {
+		return bboss_draft_sanitize_rev( $rev );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Read a draft "base" list: the revisions the composer's content was built on.
@@ -1652,6 +2030,20 @@ function bboss_draft_parse_base( $raw ) {
 
 	return $base;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_draft_parse_base' ) && ! function_exists( 'bb_draft_parse_base' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_parse_base()}.
+	 *
+	 * @deprecated Use bboss_draft_parse_base() instead.
+	 */
+	function bb_draft_parse_base( $raw ) {
+		return bboss_draft_parse_base( $raw );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * The draft base the current request was built on.
@@ -1664,6 +2056,20 @@ function bboss_draft_request_base() {
 	// phpcs:ignore WordPress.Security.NonceVerification.Missing -- read inside nonce-checked handlers.
 	return isset( $_POST['bb_draft_base'] ) ? bboss_draft_parse_base( wp_unslash( $_POST['bb_draft_base'] ) ) : null;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_draft_request_base' ) && ! function_exists( 'bb_draft_request_base' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_request_base()}.
+	 *
+	 * @deprecated Use bboss_draft_request_base() instead.
+	 */
+	function bb_draft_request_base() {
+		return bboss_draft_request_base();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Whether a write based on `$base` may replace the stored draft entry.
@@ -1690,6 +2096,20 @@ function bboss_draft_base_matches( $stored, $base ) {
 
 	return in_array( $stored_rev, $base, true );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_draft_base_matches' ) && ! function_exists( 'bb_draft_base_matches' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_base_matches()}.
+	 *
+	 * @deprecated Use bboss_draft_base_matches() instead.
+	 */
+	function bb_draft_base_matches( $stored, $base ) {
+		return bboss_draft_base_matches( $stored, $base );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * The activity draft key a successful publish may clear.
@@ -1732,6 +2152,20 @@ function bboss_draft_activity_publish_key( $fallback_key, $user_id ) {
 
 	return $data_key;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_draft_activity_publish_key' ) && ! function_exists( 'bb_draft_activity_publish_key' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_activity_publish_key()}.
+	 *
+	 * @deprecated Use bboss_draft_activity_publish_key() instead.
+	 */
+	function bb_draft_activity_publish_key( $fallback_key, $user_id ) {
+		return bboss_draft_activity_publish_key( $fallback_key, $user_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * The member-facing message for a refused, conflicting draft save.
@@ -1743,6 +2177,20 @@ function bboss_draft_activity_publish_key( $fallback_key, $user_id ) {
 function bboss_draft_conflict_message() {
 	return __( 'A different version of this draft is already saved. Copy your text, then reload the page to see it.', 'buddyboss' );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_draft_conflict_message' ) && ! function_exists( 'bb_draft_conflict_message' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_conflict_message()}.
+	 *
+	 * @deprecated Use bboss_draft_conflict_message() instead.
+	 */
+	function bb_draft_conflict_message() {
+		return bboss_draft_conflict_message();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Name of the option holding a member's recently evicted drafts.
@@ -1755,6 +2203,20 @@ function bboss_draft_conflict_message() {
 function bboss_draft_evicted_hold_option( $user_id ) {
 	return 'bb_draft_evicted_' . (int) $user_id;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_draft_evicted_hold_option' ) && ! function_exists( 'bb_draft_evicted_hold_option' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_evicted_hold_option()}.
+	 *
+	 * @deprecated Use bboss_draft_evicted_hold_option() instead.
+	 */
+	function bb_draft_evicted_hold_option( $user_id ) {
+		return bboss_draft_evicted_hold_option( $user_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * How long an evicted draft is held for a hand-back that did not arrive.
@@ -1775,6 +2237,20 @@ function bboss_draft_evicted_hold_seconds() {
 	 */
 	return max( HOUR_IN_SECONDS, (int) apply_filters( 'bb_draft_evicted_hold_seconds', 7 * DAY_IN_SECONDS ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_draft_evicted_hold_seconds' ) && ! function_exists( 'bb_draft_evicted_hold_seconds' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_evicted_hold_seconds()}.
+	 *
+	 * @deprecated Use bboss_draft_evicted_hold_seconds() instead.
+	 */
+	function bb_draft_evicted_hold_seconds() {
+		return bboss_draft_evicted_hold_seconds();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Read a member's held evicted drafts.
@@ -1794,6 +2270,20 @@ function bboss_draft_get_evicted_hold( $user_id ) {
 
 	return is_array( $hold ) ? $hold : array();
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_draft_get_evicted_hold' ) && ! function_exists( 'bb_draft_get_evicted_hold' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_get_evicted_hold()}.
+	 *
+	 * @deprecated Use bboss_draft_get_evicted_hold() instead.
+	 */
+	function bb_draft_get_evicted_hold( $user_id ) {
+		return bboss_draft_get_evicted_hold( $user_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Name of the option holding a member's held drafts that did not fit the hold.
@@ -1806,6 +2296,20 @@ function bboss_draft_get_evicted_hold( $user_id ) {
 function bboss_draft_evicted_overflow_option( $user_id ) {
 	return 'bb_draft_evicted_' . (int) $user_id . '_overflow';
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_draft_evicted_overflow_option' ) && ! function_exists( 'bb_draft_evicted_overflow_option' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_evicted_overflow_option()}.
+	 *
+	 * @deprecated Use bboss_draft_evicted_overflow_option() instead.
+	 */
+	function bb_draft_evicted_overflow_option( $user_id ) {
+		return bboss_draft_evicted_overflow_option( $user_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Name of the option listing the keys in a member's overflow hold.
@@ -1818,6 +2322,20 @@ function bboss_draft_evicted_overflow_option( $user_id ) {
 function bboss_draft_evicted_overflow_keys_option( $user_id ) {
 	return 'bb_draft_evicted_' . (int) $user_id . '_overflow_keys';
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_draft_evicted_overflow_keys_option' ) && ! function_exists( 'bb_draft_evicted_overflow_keys_option' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_evicted_overflow_keys_option()}.
+	 *
+	 * @deprecated Use bboss_draft_evicted_overflow_keys_option() instead.
+	 */
+	function bb_draft_evicted_overflow_keys_option( $user_id ) {
+		return bboss_draft_evicted_overflow_keys_option( $user_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Keys of a member's held drafts waiting in the overflow.
@@ -1841,6 +2359,20 @@ function bboss_draft_get_evicted_overflow_keys( $user_id ) {
 
 	return is_array( $keys ) ? array_map( 'strval', $keys ) : array();
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_draft_get_evicted_overflow_keys' ) && ! function_exists( 'bb_draft_get_evicted_overflow_keys' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_get_evicted_overflow_keys()}.
+	 *
+	 * @deprecated Use bboss_draft_get_evicted_overflow_keys() instead.
+	 */
+	function bb_draft_get_evicted_overflow_keys( $user_id ) {
+		return bboss_draft_get_evicted_overflow_keys( $user_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Read a member's held drafts that wait for room in the hold.
@@ -1864,6 +2396,20 @@ function bboss_draft_get_evicted_overflow( $user_id, $force = false ) {
 
 	return is_array( $overflow ) ? $overflow : array();
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_draft_get_evicted_overflow' ) && ! function_exists( 'bb_draft_get_evicted_overflow' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_get_evicted_overflow()}.
+	 *
+	 * @deprecated Use bboss_draft_get_evicted_overflow() instead.
+	 */
+	function bb_draft_get_evicted_overflow( $user_id, $force = false ) {
+		return bboss_draft_get_evicted_overflow( $user_id, $force );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Write a member's held evicted drafts.
@@ -1926,6 +2472,20 @@ function bboss_draft_set_evicted_hold( $user_id, $hold, $overflow = null ) {
 	// some held drafts also wait in the overflow option.
 	update_user_meta( (int) $user_id, 'bb_draft_has_evicted_hold', $has_overflow ? 2 : 1 );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_draft_set_evicted_hold' ) && ! function_exists( 'bb_draft_set_evicted_hold' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_set_evicted_hold()}.
+	 *
+	 * @deprecated Use bboss_draft_set_evicted_hold() instead.
+	 */
+	function bb_draft_set_evicted_hold( $user_id, $hold, $overflow = null ) {
+		return bboss_draft_set_evicted_hold( $user_id, $hold, $overflow );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Store a member's held drafts, keeping the newest within the hold's size cap
@@ -1942,6 +2502,20 @@ function bboss_draft_store_evicted_hold( $user_id, $held ) {
 
 	bboss_draft_set_evicted_hold( $user_id, $split['hold'], $split['overflow'] );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_draft_store_evicted_hold' ) && ! function_exists( 'bb_draft_store_evicted_hold' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_store_evicted_hold()}.
+	 *
+	 * @deprecated Use bboss_draft_store_evicted_hold() instead.
+	 */
+	function bb_draft_store_evicted_hold( $user_id, $held ) {
+		return bboss_draft_store_evicted_hold( $user_id, $held );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * A held evicted draft for one key, if the member has one.
@@ -1977,6 +2551,20 @@ function bboss_draft_get_held_entry( $user_id, $key ) {
 
 	return isset( $overflow[ $key ]['entry'] ) && is_array( $overflow[ $key ]['entry'] ) ? $overflow[ $key ]['entry'] : false;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_draft_get_held_entry' ) && ! function_exists( 'bb_draft_get_held_entry' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_get_held_entry()}.
+	 *
+	 * @deprecated Use bboss_draft_get_held_entry() instead.
+	 */
+	function bb_draft_get_held_entry( $user_id, $key ) {
+		return bboss_draft_get_held_entry( $user_id, $key );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Whether a save to a key must wait because a held draft for it was not
@@ -2028,6 +2616,20 @@ function bboss_draft_save_waits_for_handback( $user_id, $evicted_key ) {
 
 	return true;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_draft_save_waits_for_handback' ) && ! function_exists( 'bb_draft_save_waits_for_handback' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_save_waits_for_handback()}.
+	 *
+	 * @deprecated Use bboss_draft_save_waits_for_handback() instead.
+	 */
+	function bb_draft_save_waits_for_handback( $user_id, $evicted_key ) {
+		return bboss_draft_save_waits_for_handback( $user_id, $evicted_key );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Keep the current request's acknowledgement of a key from ending its hold.
@@ -2053,6 +2655,20 @@ function bboss_draft_withhold_request_ack( $evicted_key ) {
 
 	$_POST['bb_draft_evicted_ack'] = implode( ',', array_diff( bboss_draft_request_acked_evictions(), array( (string) $evicted_key ) ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_draft_withhold_request_ack' ) && ! function_exists( 'bb_draft_withhold_request_ack' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_withhold_request_ack()}.
+	 *
+	 * @deprecated Use bboss_draft_withhold_request_ack() instead.
+	 */
+	function bb_draft_withhold_request_ack( $evicted_key ) {
+		return bboss_draft_withhold_request_ack( $evicted_key );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * The hand-back for a save refused by {@see bboss_draft_save_waits_for_handback()}.
@@ -2082,6 +2698,20 @@ function bboss_draft_handback_for_key( $user_id, $evicted_key ) {
 
 	return $owed;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_draft_handback_for_key' ) && ! function_exists( 'bb_draft_handback_for_key' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_handback_for_key()}.
+	 *
+	 * @deprecated Use bboss_draft_handback_for_key() instead.
+	 */
+	function bb_draft_handback_for_key( $user_id, $evicted_key ) {
+		return bboss_draft_handback_for_key( $user_id, $evicted_key );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Move a member's waiting held drafts into the hold because a composer asked
@@ -2132,6 +2762,20 @@ function bboss_draft_promote_evicted( $user_id, $wanted ) {
 
 	return wp_list_pluck( $moved, 'entry' );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_draft_promote_evicted' ) && ! function_exists( 'bb_draft_promote_evicted' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_promote_evicted()}.
+	 *
+	 * @deprecated Use bboss_draft_promote_evicted() instead.
+	 */
+	function bb_draft_promote_evicted( $user_id, $wanted ) {
+		return bboss_draft_promote_evicted( $user_id, $wanted );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Take the per-member lock around a change to their held drafts.
@@ -2160,6 +2804,20 @@ function bboss_draft_lock_evicted_hold( $user_id ) {
 
 	return false;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_draft_lock_evicted_hold' ) && ! function_exists( 'bb_draft_lock_evicted_hold' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_lock_evicted_hold()}.
+	 *
+	 * @deprecated Use bboss_draft_lock_evicted_hold() instead.
+	 */
+	function bb_draft_lock_evicted_hold( $user_id ) {
+		return bboss_draft_lock_evicted_hold( $user_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Release the lock taken by {@see bboss_draft_lock_evicted_hold()}.
@@ -2175,6 +2833,20 @@ function bboss_draft_unlock_evicted_hold( $user_id, $locked ) {
 		bboss_draft_release_lock( 'bb_draft_hold_lock_' . (int) $user_id, is_multisite() );
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_draft_unlock_evicted_hold' ) && ! function_exists( 'bb_draft_unlock_evicted_hold' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_unlock_evicted_hold()}.
+	 *
+	 * @deprecated Use bboss_draft_unlock_evicted_hold() instead.
+	 */
+	function bb_draft_unlock_evicted_hold( $user_id, $locked ) {
+		return bboss_draft_unlock_evicted_hold( $user_id, $locked );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Hold freshly evicted drafts until the browser acknowledges the hand-back.
@@ -2225,6 +2897,20 @@ function bboss_draft_hold_evicted( $user_id, $entries ) {
 
 	bboss_draft_invalidate_referenced_cache( $held_ids );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_draft_hold_evicted' ) && ! function_exists( 'bb_draft_hold_evicted' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_hold_evicted()}.
+	 *
+	 * @deprecated Use bboss_draft_hold_evicted() instead.
+	 */
+	function bb_draft_hold_evicted( $user_id, $entries ) {
+		return bboss_draft_hold_evicted( $user_id, $entries );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 
 /**
@@ -2251,6 +2937,20 @@ function bboss_draft_stamp_handback_revs( $entries ) {
 
 	return (array) $entries;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_draft_stamp_handback_revs' ) && ! function_exists( 'bb_draft_stamp_handback_revs' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_stamp_handback_revs()}.
+	 *
+	 * @deprecated Use bboss_draft_stamp_handback_revs() instead.
+	 */
+	function bb_draft_stamp_handback_revs( $entries ) {
+		return bboss_draft_stamp_handback_revs( $entries );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Split a member's held evicted drafts into the hold and its overflow, newest
@@ -2330,6 +3030,20 @@ function bboss_draft_split_evicted_hold( $hold ) {
 		'overflow' => $overflow,
 	);
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_draft_split_evicted_hold' ) && ! function_exists( 'bb_draft_split_evicted_hold' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_split_evicted_hold()}.
+	 *
+	 * @deprecated Use bboss_draft_split_evicted_hold() instead.
+	 */
+	function bb_draft_split_evicted_hold( $hold ) {
+		return bboss_draft_split_evicted_hold( $hold );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Evicted drafts still owed to the browser, after applying its acknowledgement.
@@ -2389,6 +3103,20 @@ function bboss_draft_pending_evicted( $user_id, $acked = array() ) {
 
 	return wp_list_pluck( $hold, 'entry' );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_draft_pending_evicted' ) && ! function_exists( 'bb_draft_pending_evicted' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_pending_evicted()}.
+	 *
+	 * @deprecated Use bboss_draft_pending_evicted() instead.
+	 */
+	function bb_draft_pending_evicted( $user_id, $acked = array() ) {
+		return bboss_draft_pending_evicted( $user_id, $acked );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Remove held drafts the member no longer needs back.
@@ -2431,6 +3159,20 @@ function bboss_draft_drop_settled_evicted( $user_id, $hold, $acked = array() ) {
 
 	return $hold;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_draft_drop_settled_evicted' ) && ! function_exists( 'bb_draft_drop_settled_evicted' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_drop_settled_evicted()}.
+	 *
+	 * @deprecated Use bboss_draft_drop_settled_evicted() instead.
+	 */
+	function bb_draft_drop_settled_evicted( $user_id, $hold, $acked = array() ) {
+		return bboss_draft_drop_settled_evicted( $user_id, $hold, $acked );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Keys the browser reports it stored from a hand-back.
@@ -2449,6 +3191,20 @@ function bboss_draft_request_acked_evictions() {
 
 	return array_filter( array_map( 'trim', explode( ',', sanitize_text_field( (string) $raw ) ) ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_draft_request_acked_evictions' ) && ! function_exists( 'bb_draft_request_acked_evictions' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_request_acked_evictions()}.
+	 *
+	 * @deprecated Use bboss_draft_request_acked_evictions() instead.
+	 */
+	function bb_draft_request_acked_evictions() {
+		return bboss_draft_request_acked_evictions();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Drop a member's held drafts past the hold time.
@@ -2470,6 +3226,20 @@ function bboss_draft_prune_expired_hold_entries( $hold, $cutoff ) {
 
 	return count( $kept ) === count( (array) $hold ) ? null : $kept;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_draft_prune_expired_hold_entries' ) && ! function_exists( 'bb_draft_prune_expired_hold_entries' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_prune_expired_hold_entries()}.
+	 *
+	 * @deprecated Use bboss_draft_prune_expired_hold_entries() instead.
+	 */
+	function bb_draft_prune_expired_hold_entries( $hold, $cutoff ) {
+		return bboss_draft_prune_expired_hold_entries( $hold, $cutoff );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Delete held evicted drafts past the hold time, for every member.
@@ -2560,6 +3330,20 @@ function bboss_drafts_prune_evicted_holds() {
 		}
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_drafts_prune_evicted_holds' ) && ! function_exists( 'bb_drafts_prune_evicted_holds' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_drafts_prune_evicted_holds()}.
+	 *
+	 * @deprecated Use bboss_drafts_prune_evicted_holds() instead.
+	 */
+	function bb_drafts_prune_evicted_holds() {
+		return bboss_drafts_prune_evicted_holds();
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'bb_draft_cleanup_hook', 'bb_drafts_prune_evicted_holds', 20 );
 
 /**
@@ -2577,6 +3361,20 @@ add_action( 'bb_draft_cleanup_hook', 'bb_drafts_prune_evicted_holds', 20 );
 function bboss_draft_delete_user_evicted_hold( $user_id ) {
 	bboss_draft_set_evicted_hold( (int) $user_id, array(), array() );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_draft_delete_user_evicted_hold' ) && ! function_exists( 'bb_draft_delete_user_evicted_hold' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_delete_user_evicted_hold()}.
+	 *
+	 * @deprecated Use bboss_draft_delete_user_evicted_hold() instead.
+	 */
+	function bb_draft_delete_user_evicted_hold( $user_id ) {
+		return bboss_draft_delete_user_evicted_hold( $user_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'wpmu_delete_user', 'bb_draft_delete_user_evicted_hold' );
 
 // On multisite wp_delete_user() only removes the member from one site.
@@ -2608,6 +3406,20 @@ function bboss_draft_handback( $user_id, $fresh = array() ) {
 
 	return array_merge( $owed, (array) $fresh );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_draft_handback' ) && ! function_exists( 'bb_draft_handback' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_handback()}.
+	 *
+	 * @deprecated Use bboss_draft_handback() instead.
+	 */
+	function bb_draft_handback( $user_id, $fresh = array() ) {
+		return bboss_draft_handback( $user_id, $fresh );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Read a draft meta value bypassing the object cache.
@@ -2644,6 +3456,20 @@ function bboss_draft_fresh_value( $user_id, $meta_key, $refresh_cache = false ) 
 
 	return null === $raw ? null : bboss_draft_safe_unserialize( $raw );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_draft_fresh_value' ) && ! function_exists( 'bb_draft_fresh_value' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_fresh_value()}.
+	 *
+	 * @deprecated Use bboss_draft_fresh_value() instead.
+	 */
+	function bb_draft_fresh_value( $user_id, $meta_key, $refresh_cache = false ) {
+		return bboss_draft_fresh_value( $user_id, $meta_key, $refresh_cache );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Record when an evicted draft's attachments were evicted.
@@ -2669,6 +3495,20 @@ function bboss_draft_mark_evicted_attachments( $entries, $user_id ) {
 		}
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_draft_mark_evicted_attachments' ) && ! function_exists( 'bb_draft_mark_evicted_attachments' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_mark_evicted_attachments()}.
+	 *
+	 * @deprecated Use bboss_draft_mark_evicted_attachments() instead.
+	 */
+	function bb_draft_mark_evicted_attachments( $entries, $user_id ) {
+		return bboss_draft_mark_evicted_attachments( $entries, $user_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Name of the network option listing files of drafts evicted by the upgrade
@@ -2681,6 +3521,20 @@ function bboss_draft_mark_evicted_attachments( $entries, $user_id ) {
 function bboss_draft_eviction_file_ledger_option() {
 	return 'bb_draft_eviction_file_ledger';
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_draft_eviction_file_ledger_option' ) && ! function_exists( 'bb_draft_eviction_file_ledger_option' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_eviction_file_ledger_option()}.
+	 *
+	 * @deprecated Use bboss_draft_eviction_file_ledger_option() instead.
+	 */
+	function bb_draft_eviction_file_ledger_option() {
+		return bboss_draft_eviction_file_ledger_option();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Keep the files of evicted drafts protected for the retention window.
@@ -2733,6 +3587,20 @@ function bboss_draft_protect_evicted_attachments( $entries, $user_id, $from_root
 	// The sweep's cached reference set must include these files now.
 	bboss_draft_invalidate_referenced_cache( $ids );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_draft_protect_evicted_attachments' ) && ! function_exists( 'bb_draft_protect_evicted_attachments' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_protect_evicted_attachments()}.
+	 *
+	 * @deprecated Use bboss_draft_protect_evicted_attachments() instead.
+	 */
+	function bb_draft_protect_evicted_attachments( $entries, $user_id, $from_root = false ) {
+		return bboss_draft_protect_evicted_attachments( $entries, $user_id, $from_root );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Attachment IDs in the eviction file ledger that are still in their window.
@@ -2760,6 +3628,20 @@ function bboss_draft_get_evicted_attachment_ledger_ids() {
 
 	return $ids;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_draft_get_evicted_attachment_ledger_ids' ) && ! function_exists( 'bb_draft_get_evicted_attachment_ledger_ids' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_get_evicted_attachment_ledger_ids()}.
+	 *
+	 * @deprecated Use bboss_draft_get_evicted_attachment_ledger_ids() instead.
+	 */
+	function bb_draft_get_evicted_attachment_ledger_ids() {
+		return bboss_draft_get_evicted_attachment_ledger_ids();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Whether an attachment is still protected because an evicted draft uses it.
@@ -2807,6 +3689,20 @@ function bboss_draft_attachment_is_eviction_protected( $attachment_id ) {
 
 	return 1 > $retention_seconds || (int) $ledger[ $attachment_id ] >= $cutoff;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_draft_attachment_is_eviction_protected' ) && ! function_exists( 'bb_draft_attachment_is_eviction_protected' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_attachment_is_eviction_protected()}.
+	 *
+	 * @deprecated Use bboss_draft_attachment_is_eviction_protected() instead.
+	 */
+	function bb_draft_attachment_is_eviction_protected( $attachment_id ) {
+		return bboss_draft_attachment_is_eviction_protected( $attachment_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Whether the current draft save was sent by the page-unload beacon.
@@ -2822,6 +3718,20 @@ function bboss_draft_attachment_is_eviction_protected( $attachment_id ) {
 function bboss_draft_is_beacon_request() {
 	return ! empty( $_POST['bb_draft_beacon'] ); // phpcs:ignore WordPress.Security.NonceVerification.Missing -- read inside nonce-checked handlers.
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_draft_is_beacon_request' ) && ! function_exists( 'bb_draft_is_beacon_request' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_is_beacon_request()}.
+	 *
+	 * @deprecated Use bboss_draft_is_beacon_request() instead.
+	 */
+	function bb_draft_is_beacon_request() {
+		return bboss_draft_is_beacon_request();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Enforce the per-user draft and meta budgets before storing a draft.
@@ -3139,6 +4049,20 @@ function bboss_draft_enforce_user_budget( $user_id, $current_key, $new_size, $co
 
 	return $result;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_draft_enforce_user_budget' ) && ! function_exists( 'bb_draft_enforce_user_budget' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_enforce_user_budget()}.
+	 *
+	 * @deprecated Use bboss_draft_enforce_user_budget() instead.
+	 */
+	function bb_draft_enforce_user_budget( $user_id, $current_key, $new_size, $context = 'save' ) {
+		return bboss_draft_enforce_user_budget( $user_id, $current_key, $new_size, $context );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Validate an activity draft data key against server-derived rules.
@@ -3218,6 +4142,20 @@ function bboss_draft_validate_activity_data_key( $data_key, $draft_object, $item
 
 	return false;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_draft_validate_activity_data_key' ) && ! function_exists( 'bb_draft_validate_activity_data_key' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_validate_activity_data_key()}.
+	 *
+	 * @deprecated Use bboss_draft_validate_activity_data_key() instead.
+	 */
+	function bb_draft_validate_activity_data_key( $data_key, $draft_object, $item_id, $user_id, $context = 'save' ) {
+		return bboss_draft_validate_activity_data_key( $data_key, $draft_object, $item_id, $user_id, $context );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Whether a forum, topic or reply is in a state a member could draft against.
@@ -3234,6 +4172,20 @@ function bboss_draft_validate_activity_data_key( $data_key, $draft_object, $item
 function bboss_draft_post_accepts_drafts( $post ) {
 	return ! in_array( get_post_status( $post ), array( 'trash', 'spam', 'pending', 'draft', 'auto-draft', 'future', 'inherit' ), true );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_draft_post_accepts_drafts' ) && ! function_exists( 'bb_draft_post_accepts_drafts' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_post_accepts_drafts()}.
+	 *
+	 * @deprecated Use bboss_draft_post_accepts_drafts() instead.
+	 */
+	function bb_draft_post_accepts_drafts( $post ) {
+		return bboss_draft_post_accepts_drafts( $post );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Resolve a forum draft inner data key into the object and IDs it addresses.
@@ -3333,6 +4285,20 @@ function bboss_draft_topic_reply_key_context( $data_key ) {
 
 	return false;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_draft_topic_reply_key_context' ) && ! function_exists( 'bb_draft_topic_reply_key_context' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_topic_reply_key_context()}.
+	 *
+	 * @deprecated Use bboss_draft_topic_reply_key_context() instead.
+	 */
+	function bb_draft_topic_reply_key_context( $data_key ) {
+		return bboss_draft_topic_reply_key_context( $data_key );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Prime the post and meta caches for a batch of forum draft keys.
@@ -3391,6 +4357,20 @@ function bboss_draft_prime_topic_reply_key_posts( $data_keys ) {
 	// the N+1 from the post table to the meta table.
 	_prime_post_caches( $post_ids, false, true );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_draft_prime_topic_reply_key_posts' ) && ! function_exists( 'bb_draft_prime_topic_reply_key_posts' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_prime_topic_reply_key_posts()}.
+	 *
+	 * @deprecated Use bboss_draft_prime_topic_reply_key_posts() instead.
+	 */
+	function bb_draft_prime_topic_reply_key_posts( $data_keys ) {
+		return bboss_draft_prime_topic_reply_key_posts( $data_keys );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Whether a member may SAVE a forum draft for one resolved draft key.
@@ -3437,6 +4417,20 @@ function bboss_draft_user_can_save_topic_reply_draft( $key_context, $user_id ) {
 	 */
 	return (bool) apply_filters( 'bb_draft_user_can_save_topic_reply_draft', $can_save, $key_context, $user_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_draft_user_can_save_topic_reply_draft' ) && ! function_exists( 'bb_draft_user_can_save_topic_reply_draft' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_user_can_save_topic_reply_draft()}.
+	 *
+	 * @deprecated Use bboss_draft_user_can_save_topic_reply_draft() instead.
+	 */
+	function bb_draft_user_can_save_topic_reply_draft( $key_context, $user_id ) {
+		return bboss_draft_user_can_save_topic_reply_draft( $key_context, $user_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Whether a stored forum draft entry actually holds something to restore.
@@ -3525,6 +4519,20 @@ function bboss_draft_topic_reply_entry_has_payload( $entry ) {
 
 	return false;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_draft_topic_reply_entry_has_payload' ) && ! function_exists( 'bb_draft_topic_reply_entry_has_payload' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_topic_reply_entry_has_payload()}.
+	 *
+	 * @deprecated Use bboss_draft_topic_reply_entry_has_payload() instead.
+	 */
+	function bb_draft_topic_reply_entry_has_payload( $entry ) {
+		return bboss_draft_topic_reply_entry_has_payload( $entry );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Draft retention window in days.
@@ -3553,6 +4561,20 @@ function bboss_draft_retention_days() {
 
 	return ( 1 > $days ) ? 0 : $days;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_draft_retention_days' ) && ! function_exists( 'bb_draft_retention_days' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_retention_days()}.
+	 *
+	 * @deprecated Use bboss_draft_retention_days() instead.
+	 */
+	function bb_draft_retention_days() {
+		return bboss_draft_retention_days();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Draft retention window in seconds.
@@ -3564,6 +4586,20 @@ function bboss_draft_retention_days() {
 function bboss_draft_retention_seconds() {
 	return bboss_draft_retention_days() * DAY_IN_SECONDS;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_draft_retention_seconds' ) && ! function_exists( 'bb_draft_retention_seconds' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_retention_seconds()}.
+	 *
+	 * @deprecated Use bboss_draft_retention_seconds() instead.
+	 */
+	function bb_draft_retention_seconds() {
+		return bboss_draft_retention_seconds();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Unserialize a stored draft value without instantiating objects.
@@ -3583,6 +4619,20 @@ function bboss_draft_safe_unserialize( $value ) {
 
 	return unserialize( trim( $value ), array( 'allowed_classes' => false ) ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.serialize_unserialize,PHPCompatibility.FunctionUse.NewFunctionParameters.unserialize_optionsFound -- objects disallowed; the platform minimum is PHP 7.4 where the options parameter exists.
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_draft_safe_unserialize' ) && ! function_exists( 'bb_draft_safe_unserialize' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_safe_unserialize()}.
+	 *
+	 * @deprecated Use bboss_draft_safe_unserialize() instead.
+	 */
+	function bb_draft_safe_unserialize( $value ) {
+		return bboss_draft_safe_unserialize( $value );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Byte budget for one maintenance window's `meta_value` payload.
@@ -3610,6 +4660,20 @@ function bboss_draft_batch_max_bytes() {
 	 */
 	return (int) apply_filters( 'bb_draft_batch_max_bytes', 10 * MB_IN_BYTES );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_draft_batch_max_bytes' ) && ! function_exists( 'bb_draft_batch_max_bytes' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_batch_max_bytes()}.
+	 *
+	 * @deprecated Use bboss_draft_batch_max_bytes() instead.
+	 */
+	function bb_draft_batch_max_bytes() {
+		return bboss_draft_batch_max_bytes();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Fetch one cursor-advanced batch of BuddyBoss draft usermeta rows.
@@ -3826,6 +4890,20 @@ function bboss_draft_get_rows_batch( $last_umeta_id = 0, $limit = 200, $with_val
 		'declined' => false,
 	);
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_draft_get_rows_batch' ) && ! function_exists( 'bb_draft_get_rows_batch' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_get_rows_batch()}.
+	 *
+	 * @deprecated Use bboss_draft_get_rows_batch() instead.
+	 */
+	function bb_draft_get_rows_batch( $last_umeta_id = 0, $limit = 200, $with_values = true, $max_bytes = 0 ) {
+		return bboss_draft_get_rows_batch( $last_umeta_id, $limit, $with_values, $max_bytes );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Delete drafts whose last save is older than the retention window.
@@ -4097,6 +5175,20 @@ function bboss_drafts_delete_expired( $time_budget = 10 ) {
 		'complete' => $complete,
 	);
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_drafts_delete_expired' ) && ! function_exists( 'bb_drafts_delete_expired' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_drafts_delete_expired()}.
+	 *
+	 * @deprecated Use bboss_drafts_delete_expired() instead.
+	 */
+	function bb_drafts_delete_expired( $time_budget = 10 ) {
+		return bboss_drafts_delete_expired( $time_budget );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Heal one aggregated forum draft row without destroying legal drafts.
@@ -4317,6 +5409,20 @@ function bboss_draft_heal_forum_row( $user_id, $defer_attachment_release = false
 	// total would otherwise report a row it did rewrite as untouched.
 	return $disposed + $salvaged;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_draft_heal_forum_row' ) && ! function_exists( 'bb_draft_heal_forum_row' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_heal_forum_row()}.
+	 *
+	 * @deprecated Use bboss_draft_heal_forum_row() instead.
+	 */
+	function bb_draft_heal_forum_row( $user_id, $defer_attachment_release = false ) {
+		return bboss_draft_heal_forum_row( $user_id, $defer_attachment_release );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * One-shot healing pass for sites already carrying oversized draft rows.
@@ -4627,6 +5733,20 @@ function bboss_drafts_oneshot_batch( $time_budget = 10 ) {
 		'complete' => $complete,
 	);
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_drafts_oneshot_batch' ) && ! function_exists( 'bb_drafts_oneshot_batch' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_drafts_oneshot_batch()}.
+	 *
+	 * @deprecated Use bboss_drafts_oneshot_batch() instead.
+	 */
+	function bb_drafts_oneshot_batch( $time_budget = 10 ) {
+		return bboss_drafts_oneshot_batch( $time_budget );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 
 /**
@@ -4663,6 +5783,20 @@ function bboss_draft_oneshot_schedule( $delay ) {
 		restore_current_blog();
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_draft_oneshot_schedule' ) && ! function_exists( 'bb_draft_oneshot_schedule' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_oneshot_schedule()}.
+	 *
+	 * @deprecated Use bboss_draft_oneshot_schedule() instead.
+	 */
+	function bb_draft_oneshot_schedule( $delay ) {
+		return bboss_draft_oneshot_schedule( $delay );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Cancel the root-blog one-shot healing continuation.
@@ -4691,6 +5825,20 @@ function bboss_draft_oneshot_unschedule() {
 		restore_current_blog();
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_draft_oneshot_unschedule' ) && ! function_exists( 'bb_draft_oneshot_unschedule' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_oneshot_unschedule()}.
+	 *
+	 * @deprecated Use bboss_draft_oneshot_unschedule() instead.
+	 */
+	function bb_draft_oneshot_unschedule() {
+		return bboss_draft_oneshot_unschedule();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Acquire the orphan-stamp sweep lock, atomically where that is possible.
@@ -4743,6 +5891,20 @@ function bboss_draft_oneshot_unschedule() {
 function bboss_draft_acquire_stamp_sweep_lock( $timeout ) {
 	return bboss_draft_acquire_lock( 'bb_draft_stamp_sweep_lock', $timeout );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_draft_acquire_stamp_sweep_lock' ) && ! function_exists( 'bb_draft_acquire_stamp_sweep_lock' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_acquire_stamp_sweep_lock()}.
+	 *
+	 * @deprecated Use bboss_draft_acquire_stamp_sweep_lock() instead.
+	 */
+	function bb_draft_acquire_stamp_sweep_lock( $timeout ) {
+		return bboss_draft_acquire_stamp_sweep_lock( $timeout );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Acquire a draft-maintenance lock, atomically where that is possible.
@@ -4790,6 +5952,20 @@ function bboss_draft_acquire_lock( $key, $timeout, $network = false ) {
 
 	return true;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_draft_acquire_lock' ) && ! function_exists( 'bb_draft_acquire_lock' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_acquire_lock()}.
+	 *
+	 * @deprecated Use bboss_draft_acquire_lock() instead.
+	 */
+	function bb_draft_acquire_lock( $key, $timeout, $network = false ) {
+		return bboss_draft_acquire_lock( $key, $timeout, $network );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Release a lock taken with {@see bboss_draft_acquire_lock()}.
@@ -4811,6 +5987,20 @@ function bboss_draft_release_lock( $key, $network = false ) {
 		delete_transient( $key );
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_draft_release_lock' ) && ! function_exists( 'bb_draft_release_lock' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_release_lock()}.
+	 *
+	 * @deprecated Use bboss_draft_release_lock() instead.
+	 */
+	function bb_draft_release_lock( $key, $network = false ) {
+		return bboss_draft_release_lock( $key, $network );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Maximum attachment IDs the pending-reference ledger will hold for one scan.
@@ -4862,6 +6052,20 @@ const BBOSS_DRAFT_REFERENCED_CACHE_MAX_IDS = 50000;
 function bboss_draft_reference_scan_is_active() {
 	return (bool) get_site_transient( 'bb_draft_reference_scan_active' );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_draft_reference_scan_is_active' ) && ! function_exists( 'bb_draft_reference_scan_is_active' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_reference_scan_is_active()}.
+	 *
+	 * @deprecated Use bboss_draft_reference_scan_is_active() instead.
+	 */
+	function bb_draft_reference_scan_is_active() {
+		return bboss_draft_reference_scan_is_active();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Record attachment IDs referenced by a draft written DURING a reference scan.
@@ -4934,6 +6138,20 @@ function bboss_draft_record_pending_reference_ids( $attachment_ids ) {
 
 	update_site_option( 'bb_draft_pending_reference_ids', array( 'ids' => $ids ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_draft_record_pending_reference_ids' ) && ! function_exists( 'bb_draft_record_pending_reference_ids' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_record_pending_reference_ids()}.
+	 *
+	 * @deprecated Use bboss_draft_record_pending_reference_ids() instead.
+	 */
+	function bb_draft_record_pending_reference_ids( $attachment_ids ) {
+		return bboss_draft_record_pending_reference_ids( $attachment_ids );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Open a reference-scan window: start recording concurrent additions.
@@ -4958,6 +6176,20 @@ function bboss_draft_reference_scan_begin() {
 
 	return $token;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_draft_reference_scan_begin' ) && ! function_exists( 'bb_draft_reference_scan_begin' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_reference_scan_begin()}.
+	 *
+	 * @deprecated Use bboss_draft_reference_scan_begin() instead.
+	 */
+	function bb_draft_reference_scan_begin() {
+		return bboss_draft_reference_scan_begin();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Read the identity of the reference-scan window that is currently open.
@@ -4982,6 +6214,20 @@ function bboss_draft_reference_scan_token() {
 
 	return is_string( $token ) ? $token : '';
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_draft_reference_scan_token' ) && ! function_exists( 'bb_draft_reference_scan_token' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_reference_scan_token()}.
+	 *
+	 * @deprecated Use bboss_draft_reference_scan_token() instead.
+	 */
+	function bb_draft_reference_scan_token() {
+		return bboss_draft_reference_scan_token();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Extend the reference-scan window, but only while this caller still owns it.
@@ -5014,6 +6260,20 @@ function bboss_draft_reference_scan_refresh( $token ) {
 
 	return true;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_draft_reference_scan_refresh' ) && ! function_exists( 'bb_draft_reference_scan_refresh' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_reference_scan_refresh()}.
+	 *
+	 * @deprecated Use bboss_draft_reference_scan_refresh() instead.
+	 */
+	function bb_draft_reference_scan_refresh( $token ) {
+		return bboss_draft_reference_scan_refresh( $token );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Read the pending-reference ledger WITHOUT closing the window.
@@ -5041,6 +6301,20 @@ function bboss_draft_peek_pending_reference_ids() {
 		'overflow' => ! empty( $ledger['overflow'] ),
 	);
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_draft_peek_pending_reference_ids' ) && ! function_exists( 'bb_draft_peek_pending_reference_ids' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_peek_pending_reference_ids()}.
+	 *
+	 * @deprecated Use bboss_draft_peek_pending_reference_ids() instead.
+	 */
+	function bb_draft_peek_pending_reference_ids() {
+		return bboss_draft_peek_pending_reference_ids();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Close a reference-scan window and return what was recorded during it.
@@ -5085,6 +6359,20 @@ function bboss_draft_reference_scan_end( $token = '' ) {
 		'overflow' => ! empty( $ledger['overflow'] ),
 	);
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_draft_reference_scan_end' ) && ! function_exists( 'bb_draft_reference_scan_end' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_reference_scan_end()}.
+	 *
+	 * @deprecated Use bboss_draft_reference_scan_end() instead.
+	 */
+	function bb_draft_reference_scan_end( $token = '' ) {
+		return bboss_draft_reference_scan_end( $token );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Read the referenced-attachment cache's change token.
@@ -5105,6 +6393,20 @@ function bboss_draft_reference_scan_end( $token = '' ) {
 function bboss_draft_get_referenced_cache_token() {
 	return (string) get_site_option( 'bb_draft_referenced_stamp_ids_token', '' );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_draft_get_referenced_cache_token' ) && ! function_exists( 'bb_draft_get_referenced_cache_token' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_get_referenced_cache_token()}.
+	 *
+	 * @deprecated Use bboss_draft_get_referenced_cache_token() instead.
+	 */
+	function bb_draft_get_referenced_cache_token() {
+		return bboss_draft_get_referenced_cache_token();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Invalidate the shared referenced-attachment cache after a draft write adds a
@@ -5232,6 +6534,20 @@ function bboss_draft_invalidate_referenced_cache( $kept_attachment_ids = null ) 
 	delete_site_transient( 'bb_draft_referenced_stamp_ids' );
 	update_site_option( 'bb_draft_referenced_stamp_ids_token', uniqid( (string) wp_rand(), true ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_draft_invalidate_referenced_cache' ) && ! function_exists( 'bb_draft_invalidate_referenced_cache' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_invalidate_referenced_cache()}.
+	 *
+	 * @deprecated Use bboss_draft_invalidate_referenced_cache() instead.
+	 */
+	function bb_draft_invalidate_referenced_cache( $kept_attachment_ids = null ) {
+		return bboss_draft_invalidate_referenced_cache( $kept_attachment_ids );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Collect every attachment ID any STORED draft still references.
@@ -5345,6 +6661,20 @@ function bboss_drafts_collect_referenced_attachment_ids( $time_budget = 0, $star
 
 	return $referenced;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_drafts_collect_referenced_attachment_ids' ) && ! function_exists( 'bb_drafts_collect_referenced_attachment_ids' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_drafts_collect_referenced_attachment_ids()}.
+	 *
+	 * @deprecated Use bboss_drafts_collect_referenced_attachment_ids() instead.
+	 */
+	function bb_drafts_collect_referenced_attachment_ids( $time_budget = 0, $started_at = 0, $keep_alive = null ) {
+		return bboss_drafts_collect_referenced_attachment_ids( $time_budget, $started_at, $keep_alive );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Collect the attachment IDs of every member's unexpired held evicted drafts.
@@ -5399,6 +6729,20 @@ function bboss_drafts_collect_held_attachment_ids() {
 
 	return array_values( array_unique( array_map( 'intval', $ids ) ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_drafts_collect_held_attachment_ids' ) && ! function_exists( 'bb_drafts_collect_held_attachment_ids' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_drafts_collect_held_attachment_ids()}.
+	 *
+	 * @deprecated Use bboss_drafts_collect_held_attachment_ids() instead.
+	 */
+	function bb_drafts_collect_held_attachment_ids() {
+		return bboss_drafts_collect_held_attachment_ids();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Release draft-protection stamps from attachments no stored draft references.
@@ -5963,6 +7307,20 @@ function bboss_drafts_release_orphaned_draft_stamps( $time_budget = 10 ) {
 		'reason'    => $abstain_reason,
 	);
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_drafts_release_orphaned_draft_stamps' ) && ! function_exists( 'bb_drafts_release_orphaned_draft_stamps' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_drafts_release_orphaned_draft_stamps()}.
+	 *
+	 * @deprecated Use bboss_drafts_release_orphaned_draft_stamps() instead.
+	 */
+	function bb_drafts_release_orphaned_draft_stamps( $time_budget = 10 ) {
+		return bboss_drafts_release_orphaned_draft_stamps( $time_budget );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 // The cleanup runs inline in cron requests (see bb_drafts_delete_expired
 // for why the background-process classes are not used here).
@@ -6043,6 +7401,20 @@ function bboss_draft_reschedule_stamp_sweep() {
 		wp_schedule_single_event( time() + 15 * MINUTE_IN_SECONDS, 'bb_draft_stamp_release_retry' );
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_draft_reschedule_stamp_sweep' ) && ! function_exists( 'bb_draft_reschedule_stamp_sweep' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_draft_reschedule_stamp_sweep()}.
+	 *
+	 * @deprecated Use bboss_draft_reschedule_stamp_sweep() instead.
+	 */
+	function bb_draft_reschedule_stamp_sweep() {
+		return bboss_draft_reschedule_stamp_sweep();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Schedule the daily draft cleanup events.
@@ -6082,6 +7454,20 @@ function bboss_drafts_schedule_cleanup() {
 		wp_schedule_event( time() + HOUR_IN_SECONDS, 'bb_schedule_24hours', 'bb_draft_cleanup_hook' );
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_drafts_schedule_cleanup' ) && ! function_exists( 'bb_drafts_schedule_cleanup' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_drafts_schedule_cleanup()}.
+	 *
+	 * @deprecated Use bboss_drafts_schedule_cleanup() instead.
+	 */
+	function bb_drafts_schedule_cleanup() {
+		return bboss_drafts_schedule_cleanup();
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'bp_init', 'bb_drafts_schedule_cleanup' );
 
 /**
@@ -6101,6 +7487,20 @@ function bboss_drafts_unschedule_cleanup() {
 	wp_clear_scheduled_hook( 'bb_draft_stamp_release_hook' );
 	wp_clear_scheduled_hook( 'bb_draft_cleanup_hook' );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_drafts_unschedule_cleanup' ) && ! function_exists( 'bb_drafts_unschedule_cleanup' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_drafts_unschedule_cleanup()}.
+	 *
+	 * @deprecated Use bboss_drafts_unschedule_cleanup() instead.
+	 */
+	function bb_drafts_unschedule_cleanup() {
+		return bboss_drafts_unschedule_cleanup();
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'bp_deactivation', 'bb_drafts_unschedule_cleanup' );
 
 if ( defined( 'WP_CLI' ) && WP_CLI ) {
@@ -6307,1008 +7707,3 @@ if ( defined( 'WP_CLI' ) && WP_CLI ) {
 		}
 	);
 }
-
-// @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
-if ( function_exists( 'bboss_draft_acquire_lock' ) && ! function_exists( 'bb_draft_acquire_lock' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_draft_acquire_lock()}.
-	 *
-	 * @deprecated Use bboss_draft_acquire_lock() instead.
-	 */
-	function bb_draft_acquire_lock( $key, $timeout, $network = false ) {
-		return bboss_draft_acquire_lock( $key, $timeout, $network );
-	}
-}
-if ( function_exists( 'bboss_draft_acquire_stamp_sweep_lock' ) && ! function_exists( 'bb_draft_acquire_stamp_sweep_lock' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_draft_acquire_stamp_sweep_lock()}.
-	 *
-	 * @deprecated Use bboss_draft_acquire_stamp_sweep_lock() instead.
-	 */
-	function bb_draft_acquire_stamp_sweep_lock( $timeout ) {
-		return bboss_draft_acquire_stamp_sweep_lock( $timeout );
-	}
-}
-if ( function_exists( 'bboss_draft_activity_publish_key' ) && ! function_exists( 'bb_draft_activity_publish_key' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_draft_activity_publish_key()}.
-	 *
-	 * @deprecated Use bboss_draft_activity_publish_key() instead.
-	 */
-	function bb_draft_activity_publish_key( $fallback_key, $user_id ) {
-		return bboss_draft_activity_publish_key( $fallback_key, $user_id );
-	}
-}
-if ( function_exists( 'bboss_draft_attachment_is_eviction_protected' ) && ! function_exists( 'bb_draft_attachment_is_eviction_protected' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_draft_attachment_is_eviction_protected()}.
-	 *
-	 * @deprecated Use bboss_draft_attachment_is_eviction_protected() instead.
-	 */
-	function bb_draft_attachment_is_eviction_protected( $attachment_id ) {
-		return bboss_draft_attachment_is_eviction_protected( $attachment_id );
-	}
-}
-if ( function_exists( 'bboss_draft_base_matches' ) && ! function_exists( 'bb_draft_base_matches' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_draft_base_matches()}.
-	 *
-	 * @deprecated Use bboss_draft_base_matches() instead.
-	 */
-	function bb_draft_base_matches( $stored, $base ) {
-		return bboss_draft_base_matches( $stored, $base );
-	}
-}
-if ( function_exists( 'bboss_draft_batch_max_bytes' ) && ! function_exists( 'bb_draft_batch_max_bytes' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_draft_batch_max_bytes()}.
-	 *
-	 * @deprecated Use bboss_draft_batch_max_bytes() instead.
-	 */
-	function bb_draft_batch_max_bytes() {
-		return bboss_draft_batch_max_bytes();
-	}
-}
-if ( function_exists( 'bboss_draft_collect_attachment_ids' ) && ! function_exists( 'bb_draft_collect_attachment_ids' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_draft_collect_attachment_ids()}.
-	 *
-	 * @deprecated Use bboss_draft_collect_attachment_ids() instead.
-	 */
-	function bb_draft_collect_attachment_ids( $draft ) {
-		return bboss_draft_collect_attachment_ids( $draft );
-	}
-}
-if ( function_exists( 'bboss_draft_collect_other_referenced_ids' ) && ! function_exists( 'bb_draft_collect_other_referenced_ids' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_draft_collect_other_referenced_ids()}.
-	 *
-	 * @deprecated Use bboss_draft_collect_other_referenced_ids() instead.
-	 */
-	function bb_draft_collect_other_referenced_ids( $user_id, $exclude_key, $exclude_inner = '' ) {
-		return bboss_draft_collect_other_referenced_ids( $user_id, $exclude_key, $exclude_inner );
-	}
-}
-if ( function_exists( 'bboss_draft_collect_other_row_referenced_ids' ) && ! function_exists( 'bb_draft_collect_other_row_referenced_ids' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_draft_collect_other_row_referenced_ids()}.
-	 *
-	 * @deprecated Use bboss_draft_collect_other_row_referenced_ids() instead.
-	 */
-	function bb_draft_collect_other_row_referenced_ids( $user_id, $exclude_meta_key ) {
-		return bboss_draft_collect_other_row_referenced_ids( $user_id, $exclude_meta_key );
-	}
-}
-if ( function_exists( 'bboss_draft_conflict_message' ) && ! function_exists( 'bb_draft_conflict_message' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_draft_conflict_message()}.
-	 *
-	 * @deprecated Use bboss_draft_conflict_message() instead.
-	 */
-	function bb_draft_conflict_message() {
-		return bboss_draft_conflict_message();
-	}
-}
-if ( function_exists( 'bboss_draft_delete_user_evicted_hold' ) && ! function_exists( 'bb_draft_delete_user_evicted_hold' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_draft_delete_user_evicted_hold()}.
-	 *
-	 * @deprecated Use bboss_draft_delete_user_evicted_hold() instead.
-	 */
-	function bb_draft_delete_user_evicted_hold( $user_id ) {
-		return bboss_draft_delete_user_evicted_hold( $user_id );
-	}
-}
-if ( function_exists( 'bboss_draft_dispose' ) && ! function_exists( 'bb_draft_dispose' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_draft_dispose()}.
-	 *
-	 * @deprecated Use bboss_draft_dispose() instead.
-	 */
-	function bb_draft_dispose( $user_id, $meta_key, $inner_key = '', $defer_attachment_release = false ) {
-		return bboss_draft_dispose( $user_id, $meta_key, $inner_key, $defer_attachment_release );
-	}
-}
-if ( function_exists( 'bboss_draft_dispose_forum_inner_keys' ) && ! function_exists( 'bb_draft_dispose_forum_inner_keys' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_draft_dispose_forum_inner_keys()}.
-	 *
-	 * @deprecated Use bboss_draft_dispose_forum_inner_keys() instead.
-	 */
-	function bb_draft_dispose_forum_inner_keys( $user_id, $inner_keys, $defer_attachment_release = false ) {
-		return bboss_draft_dispose_forum_inner_keys( $user_id, $inner_keys, $defer_attachment_release );
-	}
-}
-if ( function_exists( 'bboss_draft_drop_settled_evicted' ) && ! function_exists( 'bb_draft_drop_settled_evicted' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_draft_drop_settled_evicted()}.
-	 *
-	 * @deprecated Use bboss_draft_drop_settled_evicted() instead.
-	 */
-	function bb_draft_drop_settled_evicted( $user_id, $hold, $acked = array() ) {
-		return bboss_draft_drop_settled_evicted( $user_id, $hold, $acked );
-	}
-}
-if ( function_exists( 'bboss_draft_enforce_user_budget' ) && ! function_exists( 'bb_draft_enforce_user_budget' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_draft_enforce_user_budget()}.
-	 *
-	 * @deprecated Use bboss_draft_enforce_user_budget() instead.
-	 */
-	function bb_draft_enforce_user_budget( $user_id, $current_key, $new_size, $context = 'save' ) {
-		return bboss_draft_enforce_user_budget( $user_id, $current_key, $new_size, $context );
-	}
-}
-if ( function_exists( 'bboss_draft_evicted_hold_option' ) && ! function_exists( 'bb_draft_evicted_hold_option' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_draft_evicted_hold_option()}.
-	 *
-	 * @deprecated Use bboss_draft_evicted_hold_option() instead.
-	 */
-	function bb_draft_evicted_hold_option( $user_id ) {
-		return bboss_draft_evicted_hold_option( $user_id );
-	}
-}
-if ( function_exists( 'bboss_draft_evicted_hold_seconds' ) && ! function_exists( 'bb_draft_evicted_hold_seconds' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_draft_evicted_hold_seconds()}.
-	 *
-	 * @deprecated Use bboss_draft_evicted_hold_seconds() instead.
-	 */
-	function bb_draft_evicted_hold_seconds() {
-		return bboss_draft_evicted_hold_seconds();
-	}
-}
-if ( function_exists( 'bboss_draft_evicted_overflow_keys_option' ) && ! function_exists( 'bb_draft_evicted_overflow_keys_option' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_draft_evicted_overflow_keys_option()}.
-	 *
-	 * @deprecated Use bboss_draft_evicted_overflow_keys_option() instead.
-	 */
-	function bb_draft_evicted_overflow_keys_option( $user_id ) {
-		return bboss_draft_evicted_overflow_keys_option( $user_id );
-	}
-}
-if ( function_exists( 'bboss_draft_evicted_overflow_option' ) && ! function_exists( 'bb_draft_evicted_overflow_option' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_draft_evicted_overflow_option()}.
-	 *
-	 * @deprecated Use bboss_draft_evicted_overflow_option() instead.
-	 */
-	function bb_draft_evicted_overflow_option( $user_id ) {
-		return bboss_draft_evicted_overflow_option( $user_id );
-	}
-}
-if ( function_exists( 'bboss_draft_eviction_file_ledger_option' ) && ! function_exists( 'bb_draft_eviction_file_ledger_option' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_draft_eviction_file_ledger_option()}.
-	 *
-	 * @deprecated Use bboss_draft_eviction_file_ledger_option() instead.
-	 */
-	function bb_draft_eviction_file_ledger_option() {
-		return bboss_draft_eviction_file_ledger_option();
-	}
-}
-if ( function_exists( 'bboss_draft_flush_user_meta_sizes' ) && ! function_exists( 'bb_draft_flush_user_meta_sizes' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_draft_flush_user_meta_sizes()}.
-	 *
-	 * @deprecated Use bboss_draft_flush_user_meta_sizes() instead.
-	 */
-	function bb_draft_flush_user_meta_sizes( $user_id ) {
-		return bboss_draft_flush_user_meta_sizes( $user_id );
-	}
-}
-if ( function_exists( 'bboss_draft_fresh_value' ) && ! function_exists( 'bb_draft_fresh_value' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_draft_fresh_value()}.
-	 *
-	 * @deprecated Use bboss_draft_fresh_value() instead.
-	 */
-	function bb_draft_fresh_value( $user_id, $meta_key, $refresh_cache = false ) {
-		return bboss_draft_fresh_value( $user_id, $meta_key, $refresh_cache );
-	}
-}
-if ( function_exists( 'bboss_draft_get_evicted_attachment_ledger_ids' ) && ! function_exists( 'bb_draft_get_evicted_attachment_ledger_ids' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_draft_get_evicted_attachment_ledger_ids()}.
-	 *
-	 * @deprecated Use bboss_draft_get_evicted_attachment_ledger_ids() instead.
-	 */
-	function bb_draft_get_evicted_attachment_ledger_ids() {
-		return bboss_draft_get_evicted_attachment_ledger_ids();
-	}
-}
-if ( function_exists( 'bboss_draft_get_evicted_hold' ) && ! function_exists( 'bb_draft_get_evicted_hold' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_draft_get_evicted_hold()}.
-	 *
-	 * @deprecated Use bboss_draft_get_evicted_hold() instead.
-	 */
-	function bb_draft_get_evicted_hold( $user_id ) {
-		return bboss_draft_get_evicted_hold( $user_id );
-	}
-}
-if ( function_exists( 'bboss_draft_get_evicted_overflow' ) && ! function_exists( 'bb_draft_get_evicted_overflow' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_draft_get_evicted_overflow()}.
-	 *
-	 * @deprecated Use bboss_draft_get_evicted_overflow() instead.
-	 */
-	function bb_draft_get_evicted_overflow( $user_id, $force = false ) {
-		return bboss_draft_get_evicted_overflow( $user_id, $force );
-	}
-}
-if ( function_exists( 'bboss_draft_get_evicted_overflow_keys' ) && ! function_exists( 'bb_draft_get_evicted_overflow_keys' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_draft_get_evicted_overflow_keys()}.
-	 *
-	 * @deprecated Use bboss_draft_get_evicted_overflow_keys() instead.
-	 */
-	function bb_draft_get_evicted_overflow_keys( $user_id ) {
-		return bboss_draft_get_evicted_overflow_keys( $user_id );
-	}
-}
-if ( function_exists( 'bboss_draft_get_held_entry' ) && ! function_exists( 'bb_draft_get_held_entry' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_draft_get_held_entry()}.
-	 *
-	 * @deprecated Use bboss_draft_get_held_entry() instead.
-	 */
-	function bb_draft_get_held_entry( $user_id, $key ) {
-		return bboss_draft_get_held_entry( $user_id, $key );
-	}
-}
-if ( function_exists( 'bboss_draft_get_referenced_cache_token' ) && ! function_exists( 'bb_draft_get_referenced_cache_token' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_draft_get_referenced_cache_token()}.
-	 *
-	 * @deprecated Use bboss_draft_get_referenced_cache_token() instead.
-	 */
-	function bb_draft_get_referenced_cache_token() {
-		return bboss_draft_get_referenced_cache_token();
-	}
-}
-if ( function_exists( 'bboss_draft_get_rows_batch' ) && ! function_exists( 'bb_draft_get_rows_batch' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_draft_get_rows_batch()}.
-	 *
-	 * @deprecated Use bboss_draft_get_rows_batch() instead.
-	 */
-	function bb_draft_get_rows_batch( $last_umeta_id = 0, $limit = 200, $with_values = true, $max_bytes = 0 ) {
-		return bboss_draft_get_rows_batch( $last_umeta_id, $limit, $with_values, $max_bytes );
-	}
-}
-if ( function_exists( 'bboss_draft_get_user_meta_sizes' ) && ! function_exists( 'bb_draft_get_user_meta_sizes' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_draft_get_user_meta_sizes()}.
-	 *
-	 * @deprecated Use bboss_draft_get_user_meta_sizes() instead.
-	 */
-	function bb_draft_get_user_meta_sizes( $user_id, $flush = false ) {
-		return bboss_draft_get_user_meta_sizes( $user_id, $flush );
-	}
-}
-if ( function_exists( 'bboss_draft_handback' ) && ! function_exists( 'bb_draft_handback' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_draft_handback()}.
-	 *
-	 * @deprecated Use bboss_draft_handback() instead.
-	 */
-	function bb_draft_handback( $user_id, $fresh = array() ) {
-		return bboss_draft_handback( $user_id, $fresh );
-	}
-}
-if ( function_exists( 'bboss_draft_handback_for_key' ) && ! function_exists( 'bb_draft_handback_for_key' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_draft_handback_for_key()}.
-	 *
-	 * @deprecated Use bboss_draft_handback_for_key() instead.
-	 */
-	function bb_draft_handback_for_key( $user_id, $evicted_key ) {
-		return bboss_draft_handback_for_key( $user_id, $evicted_key );
-	}
-}
-if ( function_exists( 'bboss_draft_heal_forum_row' ) && ! function_exists( 'bb_draft_heal_forum_row' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_draft_heal_forum_row()}.
-	 *
-	 * @deprecated Use bboss_draft_heal_forum_row() instead.
-	 */
-	function bb_draft_heal_forum_row( $user_id, $defer_attachment_release = false ) {
-		return bboss_draft_heal_forum_row( $user_id, $defer_attachment_release );
-	}
-}
-if ( function_exists( 'bboss_draft_hold_evicted' ) && ! function_exists( 'bb_draft_hold_evicted' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_draft_hold_evicted()}.
-	 *
-	 * @deprecated Use bboss_draft_hold_evicted() instead.
-	 */
-	function bb_draft_hold_evicted( $user_id, $entries ) {
-		return bboss_draft_hold_evicted( $user_id, $entries );
-	}
-}
-if ( function_exists( 'bboss_draft_hold_oversized_draft' ) && ! function_exists( 'bb_draft_hold_oversized_draft' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_draft_hold_oversized_draft()}.
-	 *
-	 * @deprecated Use bboss_draft_hold_oversized_draft() instead.
-	 */
-	function bb_draft_hold_oversized_draft( $user_id, $meta_key ) {
-		return bboss_draft_hold_oversized_draft( $user_id, $meta_key );
-	}
-}
-if ( function_exists( 'bboss_draft_invalidate_referenced_cache' ) && ! function_exists( 'bb_draft_invalidate_referenced_cache' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_draft_invalidate_referenced_cache()}.
-	 *
-	 * @deprecated Use bboss_draft_invalidate_referenced_cache() instead.
-	 */
-	function bb_draft_invalidate_referenced_cache( $kept_attachment_ids = null ) {
-		return bboss_draft_invalidate_referenced_cache( $kept_attachment_ids );
-	}
-}
-if ( function_exists( 'bboss_draft_is_beacon_request' ) && ! function_exists( 'bb_draft_is_beacon_request' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_draft_is_beacon_request()}.
-	 *
-	 * @deprecated Use bboss_draft_is_beacon_request() instead.
-	 */
-	function bb_draft_is_beacon_request() {
-		return bboss_draft_is_beacon_request();
-	}
-}
-if ( function_exists( 'bboss_draft_is_draft_meta_key' ) && ! function_exists( 'bb_draft_is_draft_meta_key' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_draft_is_draft_meta_key()}.
-	 *
-	 * @deprecated Use bboss_draft_is_draft_meta_key() instead.
-	 */
-	function bb_draft_is_draft_meta_key( $meta_key ) {
-		return bboss_draft_is_draft_meta_key( $meta_key );
-	}
-}
-if ( function_exists( 'bboss_draft_lock_evicted_hold' ) && ! function_exists( 'bb_draft_lock_evicted_hold' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_draft_lock_evicted_hold()}.
-	 *
-	 * @deprecated Use bboss_draft_lock_evicted_hold() instead.
-	 */
-	function bb_draft_lock_evicted_hold( $user_id ) {
-		return bboss_draft_lock_evicted_hold( $user_id );
-	}
-}
-if ( function_exists( 'bboss_draft_logical_meta_key' ) && ! function_exists( 'bb_draft_logical_meta_key' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_draft_logical_meta_key()}.
-	 *
-	 * @deprecated Use bboss_draft_logical_meta_key() instead.
-	 */
-	function bb_draft_logical_meta_key( $stored_key ) {
-		return bboss_draft_logical_meta_key( $stored_key );
-	}
-}
-if ( function_exists( 'bboss_draft_mark_evicted_attachments' ) && ! function_exists( 'bb_draft_mark_evicted_attachments' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_draft_mark_evicted_attachments()}.
-	 *
-	 * @deprecated Use bboss_draft_mark_evicted_attachments() instead.
-	 */
-	function bb_draft_mark_evicted_attachments( $entries, $user_id ) {
-		return bboss_draft_mark_evicted_attachments( $entries, $user_id );
-	}
-}
-if ( function_exists( 'bboss_draft_max_attachments_per_type' ) && ! function_exists( 'bb_draft_max_attachments_per_type' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_draft_max_attachments_per_type()}.
-	 *
-	 * @deprecated Use bboss_draft_max_attachments_per_type() instead.
-	 */
-	function bb_draft_max_attachments_per_type( $type = 'media' ) {
-		return bboss_draft_max_attachments_per_type( $type );
-	}
-}
-if ( function_exists( 'bboss_draft_max_size' ) && ! function_exists( 'bb_draft_max_size' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_draft_max_size()}.
-	 *
-	 * @deprecated Use bboss_draft_max_size() instead.
-	 */
-	function bb_draft_max_size() {
-		return bboss_draft_max_size();
-	}
-}
-if ( function_exists( 'bboss_draft_meta_key_sql' ) && ! function_exists( 'bb_draft_meta_key_sql' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_draft_meta_key_sql()}.
-	 *
-	 * @deprecated Use bboss_draft_meta_key_sql() instead.
-	 */
-	function bb_draft_meta_key_sql() {
-		return bboss_draft_meta_key_sql();
-	}
-}
-if ( function_exists( 'bboss_draft_meta_key_wrap' ) && ! function_exists( 'bb_draft_meta_key_wrap' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_draft_meta_key_wrap()}.
-	 *
-	 * @deprecated Use bboss_draft_meta_key_wrap() instead.
-	 */
-	function bb_draft_meta_key_wrap() {
-		return bboss_draft_meta_key_wrap();
-	}
-}
-if ( function_exists( 'bboss_draft_oneshot_schedule' ) && ! function_exists( 'bb_draft_oneshot_schedule' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_draft_oneshot_schedule()}.
-	 *
-	 * @deprecated Use bboss_draft_oneshot_schedule() instead.
-	 */
-	function bb_draft_oneshot_schedule( $delay ) {
-		return bboss_draft_oneshot_schedule( $delay );
-	}
-}
-if ( function_exists( 'bboss_draft_oneshot_unschedule' ) && ! function_exists( 'bb_draft_oneshot_unschedule' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_draft_oneshot_unschedule()}.
-	 *
-	 * @deprecated Use bboss_draft_oneshot_unschedule() instead.
-	 */
-	function bb_draft_oneshot_unschedule() {
-		return bboss_draft_oneshot_unschedule();
-	}
-}
-if ( function_exists( 'bboss_draft_parse_base' ) && ! function_exists( 'bb_draft_parse_base' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_draft_parse_base()}.
-	 *
-	 * @deprecated Use bboss_draft_parse_base() instead.
-	 */
-	function bb_draft_parse_base( $raw ) {
-		return bboss_draft_parse_base( $raw );
-	}
-}
-if ( function_exists( 'bboss_draft_peek_pending_reference_ids' ) && ! function_exists( 'bb_draft_peek_pending_reference_ids' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_draft_peek_pending_reference_ids()}.
-	 *
-	 * @deprecated Use bboss_draft_peek_pending_reference_ids() instead.
-	 */
-	function bb_draft_peek_pending_reference_ids() {
-		return bboss_draft_peek_pending_reference_ids();
-	}
-}
-if ( function_exists( 'bboss_draft_pending_evicted' ) && ! function_exists( 'bb_draft_pending_evicted' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_draft_pending_evicted()}.
-	 *
-	 * @deprecated Use bboss_draft_pending_evicted() instead.
-	 */
-	function bb_draft_pending_evicted( $user_id, $acked = array() ) {
-		return bboss_draft_pending_evicted( $user_id, $acked );
-	}
-}
-if ( function_exists( 'bboss_draft_post_accepts_drafts' ) && ! function_exists( 'bb_draft_post_accepts_drafts' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_draft_post_accepts_drafts()}.
-	 *
-	 * @deprecated Use bboss_draft_post_accepts_drafts() instead.
-	 */
-	function bb_draft_post_accepts_drafts( $post ) {
-		return bboss_draft_post_accepts_drafts( $post );
-	}
-}
-if ( function_exists( 'bboss_draft_prime_topic_reply_key_posts' ) && ! function_exists( 'bb_draft_prime_topic_reply_key_posts' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_draft_prime_topic_reply_key_posts()}.
-	 *
-	 * @deprecated Use bboss_draft_prime_topic_reply_key_posts() instead.
-	 */
-	function bb_draft_prime_topic_reply_key_posts( $data_keys ) {
-		return bboss_draft_prime_topic_reply_key_posts( $data_keys );
-	}
-}
-if ( function_exists( 'bboss_draft_promote_evicted' ) && ! function_exists( 'bb_draft_promote_evicted' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_draft_promote_evicted()}.
-	 *
-	 * @deprecated Use bboss_draft_promote_evicted() instead.
-	 */
-	function bb_draft_promote_evicted( $user_id, $wanted ) {
-		return bboss_draft_promote_evicted( $user_id, $wanted );
-	}
-}
-if ( function_exists( 'bboss_draft_protect_evicted_attachments' ) && ! function_exists( 'bb_draft_protect_evicted_attachments' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_draft_protect_evicted_attachments()}.
-	 *
-	 * @deprecated Use bboss_draft_protect_evicted_attachments() instead.
-	 */
-	function bb_draft_protect_evicted_attachments( $entries, $user_id, $from_root = false ) {
-		return bboss_draft_protect_evicted_attachments( $entries, $user_id, $from_root );
-	}
-}
-if ( function_exists( 'bboss_draft_protect_payload_attachments' ) && ! function_exists( 'bb_draft_protect_payload_attachments' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_draft_protect_payload_attachments()}.
-	 *
-	 * @deprecated Use bboss_draft_protect_payload_attachments() instead.
-	 */
-	function bb_draft_protect_payload_attachments( $lists, $user_id ) {
-		return bboss_draft_protect_payload_attachments( $lists, $user_id );
-	}
-}
-if ( function_exists( 'bboss_draft_prune_expired_hold_entries' ) && ! function_exists( 'bb_draft_prune_expired_hold_entries' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_draft_prune_expired_hold_entries()}.
-	 *
-	 * @deprecated Use bboss_draft_prune_expired_hold_entries() instead.
-	 */
-	function bb_draft_prune_expired_hold_entries( $hold, $cutoff ) {
-		return bboss_draft_prune_expired_hold_entries( $hold, $cutoff );
-	}
-}
-if ( function_exists( 'bboss_draft_record_pending_reference_ids' ) && ! function_exists( 'bb_draft_record_pending_reference_ids' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_draft_record_pending_reference_ids()}.
-	 *
-	 * @deprecated Use bboss_draft_record_pending_reference_ids() instead.
-	 */
-	function bb_draft_record_pending_reference_ids( $attachment_ids ) {
-		return bboss_draft_record_pending_reference_ids( $attachment_ids );
-	}
-}
-if ( function_exists( 'bboss_draft_reference_scan_begin' ) && ! function_exists( 'bb_draft_reference_scan_begin' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_draft_reference_scan_begin()}.
-	 *
-	 * @deprecated Use bboss_draft_reference_scan_begin() instead.
-	 */
-	function bb_draft_reference_scan_begin() {
-		return bboss_draft_reference_scan_begin();
-	}
-}
-if ( function_exists( 'bboss_draft_reference_scan_end' ) && ! function_exists( 'bb_draft_reference_scan_end' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_draft_reference_scan_end()}.
-	 *
-	 * @deprecated Use bboss_draft_reference_scan_end() instead.
-	 */
-	function bb_draft_reference_scan_end( $token = '' ) {
-		return bboss_draft_reference_scan_end( $token );
-	}
-}
-if ( function_exists( 'bboss_draft_reference_scan_is_active' ) && ! function_exists( 'bb_draft_reference_scan_is_active' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_draft_reference_scan_is_active()}.
-	 *
-	 * @deprecated Use bboss_draft_reference_scan_is_active() instead.
-	 */
-	function bb_draft_reference_scan_is_active() {
-		return bboss_draft_reference_scan_is_active();
-	}
-}
-if ( function_exists( 'bboss_draft_reference_scan_refresh' ) && ! function_exists( 'bb_draft_reference_scan_refresh' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_draft_reference_scan_refresh()}.
-	 *
-	 * @deprecated Use bboss_draft_reference_scan_refresh() instead.
-	 */
-	function bb_draft_reference_scan_refresh( $token ) {
-		return bboss_draft_reference_scan_refresh( $token );
-	}
-}
-if ( function_exists( 'bboss_draft_reference_scan_token' ) && ! function_exists( 'bb_draft_reference_scan_token' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_draft_reference_scan_token()}.
-	 *
-	 * @deprecated Use bboss_draft_reference_scan_token() instead.
-	 */
-	function bb_draft_reference_scan_token() {
-		return bboss_draft_reference_scan_token();
-	}
-}
-if ( function_exists( 'bboss_draft_release_lock' ) && ! function_exists( 'bb_draft_release_lock' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_draft_release_lock()}.
-	 *
-	 * @deprecated Use bboss_draft_release_lock() instead.
-	 */
-	function bb_draft_release_lock( $key, $network = false ) {
-		return bboss_draft_release_lock( $key, $network );
-	}
-}
-if ( function_exists( 'bboss_draft_release_replaced_attachments' ) && ! function_exists( 'bb_draft_release_replaced_attachments' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_draft_release_replaced_attachments()}.
-	 *
-	 * @deprecated Use bboss_draft_release_replaced_attachments() instead.
-	 */
-	function bb_draft_release_replaced_attachments( $previous_entry, $current_entry, $user_id, $retain_entries = array(), $retain_ids = array() ) {
-		return bboss_draft_release_replaced_attachments( $previous_entry, $current_entry, $user_id, $retain_entries, $retain_ids );
-	}
-}
-if ( function_exists( 'bboss_draft_request_acked_evictions' ) && ! function_exists( 'bb_draft_request_acked_evictions' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_draft_request_acked_evictions()}.
-	 *
-	 * @deprecated Use bboss_draft_request_acked_evictions() instead.
-	 */
-	function bb_draft_request_acked_evictions() {
-		return bboss_draft_request_acked_evictions();
-	}
-}
-if ( function_exists( 'bboss_draft_request_base' ) && ! function_exists( 'bb_draft_request_base' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_draft_request_base()}.
-	 *
-	 * @deprecated Use bboss_draft_request_base() instead.
-	 */
-	function bb_draft_request_base() {
-		return bboss_draft_request_base();
-	}
-}
-if ( function_exists( 'bboss_draft_reschedule_stamp_sweep' ) && ! function_exists( 'bb_draft_reschedule_stamp_sweep' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_draft_reschedule_stamp_sweep()}.
-	 *
-	 * @deprecated Use bboss_draft_reschedule_stamp_sweep() instead.
-	 */
-	function bb_draft_reschedule_stamp_sweep() {
-		return bboss_draft_reschedule_stamp_sweep();
-	}
-}
-if ( function_exists( 'bboss_draft_retention_days' ) && ! function_exists( 'bb_draft_retention_days' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_draft_retention_days()}.
-	 *
-	 * @deprecated Use bboss_draft_retention_days() instead.
-	 */
-	function bb_draft_retention_days() {
-		return bboss_draft_retention_days();
-	}
-}
-if ( function_exists( 'bboss_draft_retention_seconds' ) && ! function_exists( 'bb_draft_retention_seconds' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_draft_retention_seconds()}.
-	 *
-	 * @deprecated Use bboss_draft_retention_seconds() instead.
-	 */
-	function bb_draft_retention_seconds() {
-		return bboss_draft_retention_seconds();
-	}
-}
-if ( function_exists( 'bboss_draft_row_unchanged' ) && ! function_exists( 'bb_draft_row_unchanged' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_draft_row_unchanged()}.
-	 *
-	 * @deprecated Use bboss_draft_row_unchanged() instead.
-	 */
-	function bb_draft_row_unchanged( $user_id, $meta_key, $read ) {
-		return bboss_draft_row_unchanged( $user_id, $meta_key, $read );
-	}
-}
-if ( function_exists( 'bboss_draft_safe_unserialize' ) && ! function_exists( 'bb_draft_safe_unserialize' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_draft_safe_unserialize()}.
-	 *
-	 * @deprecated Use bboss_draft_safe_unserialize() instead.
-	 */
-	function bb_draft_safe_unserialize( $value ) {
-		return bboss_draft_safe_unserialize( $value );
-	}
-}
-if ( function_exists( 'bboss_draft_salvage_oversized_draft' ) && ! function_exists( 'bb_draft_salvage_oversized_draft' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_draft_salvage_oversized_draft()}.
-	 *
-	 * @deprecated Use bboss_draft_salvage_oversized_draft() instead.
-	 */
-	function bb_draft_salvage_oversized_draft( $user_id, $meta_key ) {
-		return bboss_draft_salvage_oversized_draft( $user_id, $meta_key );
-	}
-}
-if ( function_exists( 'bboss_draft_sanitize_rev' ) && ! function_exists( 'bb_draft_sanitize_rev' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_draft_sanitize_rev()}.
-	 *
-	 * @deprecated Use bboss_draft_sanitize_rev() instead.
-	 */
-	function bb_draft_sanitize_rev( $rev ) {
-		return bboss_draft_sanitize_rev( $rev );
-	}
-}
-if ( function_exists( 'bboss_draft_save_waits_for_handback' ) && ! function_exists( 'bb_draft_save_waits_for_handback' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_draft_save_waits_for_handback()}.
-	 *
-	 * @deprecated Use bboss_draft_save_waits_for_handback() instead.
-	 */
-	function bb_draft_save_waits_for_handback( $user_id, $evicted_key ) {
-		return bboss_draft_save_waits_for_handback( $user_id, $evicted_key );
-	}
-}
-if ( function_exists( 'bboss_draft_serialized_key_bytes' ) && ! function_exists( 'bb_draft_serialized_key_bytes' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_draft_serialized_key_bytes()}.
-	 *
-	 * @deprecated Use bboss_draft_serialized_key_bytes() instead.
-	 */
-	function bb_draft_serialized_key_bytes( $key ) {
-		return bboss_draft_serialized_key_bytes( $key );
-	}
-}
-if ( function_exists( 'bboss_draft_set_evicted_hold' ) && ! function_exists( 'bb_draft_set_evicted_hold' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_draft_set_evicted_hold()}.
-	 *
-	 * @deprecated Use bboss_draft_set_evicted_hold() instead.
-	 */
-	function bb_draft_set_evicted_hold( $user_id, $hold, $overflow = null ) {
-		return bboss_draft_set_evicted_hold( $user_id, $hold, $overflow );
-	}
-}
-if ( function_exists( 'bboss_draft_shed_preview_frames' ) && ! function_exists( 'bb_draft_shed_preview_frames' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_draft_shed_preview_frames()}.
-	 *
-	 * @deprecated Use bboss_draft_shed_preview_frames() instead.
-	 */
-	function bb_draft_shed_preview_frames( $draft ) {
-		return bboss_draft_shed_preview_frames( $draft );
-	}
-}
-if ( function_exists( 'bboss_draft_shed_user_drafts' ) && ! function_exists( 'bb_draft_shed_user_drafts' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_draft_shed_user_drafts()}.
-	 *
-	 * @deprecated Use bboss_draft_shed_user_drafts() instead.
-	 */
-	function bb_draft_shed_user_drafts( $user_id ) {
-		return bboss_draft_shed_user_drafts( $user_id );
-	}
-}
-if ( function_exists( 'bboss_draft_split_evicted_hold' ) && ! function_exists( 'bb_draft_split_evicted_hold' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_draft_split_evicted_hold()}.
-	 *
-	 * @deprecated Use bboss_draft_split_evicted_hold() instead.
-	 */
-	function bb_draft_split_evicted_hold( $hold ) {
-		return bboss_draft_split_evicted_hold( $hold );
-	}
-}
-if ( function_exists( 'bboss_draft_stamp_handback_revs' ) && ! function_exists( 'bb_draft_stamp_handback_revs' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_draft_stamp_handback_revs()}.
-	 *
-	 * @deprecated Use bboss_draft_stamp_handback_revs() instead.
-	 */
-	function bb_draft_stamp_handback_revs( $entries ) {
-		return bboss_draft_stamp_handback_revs( $entries );
-	}
-}
-if ( function_exists( 'bboss_draft_store_evicted_hold' ) && ! function_exists( 'bb_draft_store_evicted_hold' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_draft_store_evicted_hold()}.
-	 *
-	 * @deprecated Use bboss_draft_store_evicted_hold() instead.
-	 */
-	function bb_draft_store_evicted_hold( $user_id, $held ) {
-		return bboss_draft_store_evicted_hold( $user_id, $held );
-	}
-}
-if ( function_exists( 'bboss_draft_strip_data_urls' ) && ! function_exists( 'bb_draft_strip_data_urls' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_draft_strip_data_urls()}.
-	 *
-	 * @deprecated Use bboss_draft_strip_data_urls() instead.
-	 */
-	function bb_draft_strip_data_urls( $content ) {
-		return bboss_draft_strip_data_urls( $content );
-	}
-}
-if ( function_exists( 'bboss_draft_strip_document_render_fields' ) && ! function_exists( 'bb_draft_strip_document_render_fields' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_draft_strip_document_render_fields()}.
-	 *
-	 * @deprecated Use bboss_draft_strip_document_render_fields() instead.
-	 */
-	function bb_draft_strip_document_render_fields( $draft ) {
-		return bboss_draft_strip_document_render_fields( $draft );
-	}
-}
-if ( function_exists( 'bboss_draft_topic_reply_entry_has_payload' ) && ! function_exists( 'bb_draft_topic_reply_entry_has_payload' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_draft_topic_reply_entry_has_payload()}.
-	 *
-	 * @deprecated Use bboss_draft_topic_reply_entry_has_payload() instead.
-	 */
-	function bb_draft_topic_reply_entry_has_payload( $entry ) {
-		return bboss_draft_topic_reply_entry_has_payload( $entry );
-	}
-}
-if ( function_exists( 'bboss_draft_topic_reply_key_context' ) && ! function_exists( 'bb_draft_topic_reply_key_context' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_draft_topic_reply_key_context()}.
-	 *
-	 * @deprecated Use bboss_draft_topic_reply_key_context() instead.
-	 */
-	function bb_draft_topic_reply_key_context( $data_key ) {
-		return bboss_draft_topic_reply_key_context( $data_key );
-	}
-}
-if ( function_exists( 'bboss_draft_unlock_evicted_hold' ) && ! function_exists( 'bb_draft_unlock_evicted_hold' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_draft_unlock_evicted_hold()}.
-	 *
-	 * @deprecated Use bboss_draft_unlock_evicted_hold() instead.
-	 */
-	function bb_draft_unlock_evicted_hold( $user_id, $locked ) {
-		return bboss_draft_unlock_evicted_hold( $user_id, $locked );
-	}
-}
-if ( function_exists( 'bboss_draft_unstamp_attachments' ) && ! function_exists( 'bb_draft_unstamp_attachments' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_draft_unstamp_attachments()}.
-	 *
-	 * @deprecated Use bboss_draft_unstamp_attachments() instead.
-	 */
-	function bb_draft_unstamp_attachments( $draft, $user_id, $retain_entries = array(), $retain_ids = array() ) {
-		return bboss_draft_unstamp_attachments( $draft, $user_id, $retain_entries, $retain_ids );
-	}
-}
-if ( function_exists( 'bboss_draft_user_can_save_topic_reply_draft' ) && ! function_exists( 'bb_draft_user_can_save_topic_reply_draft' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_draft_user_can_save_topic_reply_draft()}.
-	 *
-	 * @deprecated Use bboss_draft_user_can_save_topic_reply_draft() instead.
-	 */
-	function bb_draft_user_can_save_topic_reply_draft( $key_context, $user_id ) {
-		return bboss_draft_user_can_save_topic_reply_draft( $key_context, $user_id );
-	}
-}
-if ( function_exists( 'bboss_draft_user_meta_budget' ) && ! function_exists( 'bb_draft_user_meta_budget' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_draft_user_meta_budget()}.
-	 *
-	 * @deprecated Use bboss_draft_user_meta_budget() instead.
-	 */
-	function bb_draft_user_meta_budget() {
-		return bboss_draft_user_meta_budget();
-	}
-}
-if ( function_exists( 'bboss_draft_user_total_max_size' ) && ! function_exists( 'bb_draft_user_total_max_size' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_draft_user_total_max_size()}.
-	 *
-	 * @deprecated Use bboss_draft_user_total_max_size() instead.
-	 */
-	function bb_draft_user_total_max_size() {
-		return bboss_draft_user_total_max_size();
-	}
-}
-if ( function_exists( 'bboss_draft_validate_activity_data_key' ) && ! function_exists( 'bb_draft_validate_activity_data_key' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_draft_validate_activity_data_key()}.
-	 *
-	 * @deprecated Use bboss_draft_validate_activity_data_key() instead.
-	 */
-	function bb_draft_validate_activity_data_key( $data_key, $draft_object, $item_id, $user_id, $context = 'save' ) {
-		return bboss_draft_validate_activity_data_key( $data_key, $draft_object, $item_id, $user_id, $context );
-	}
-}
-if ( function_exists( 'bboss_draft_withhold_request_ack' ) && ! function_exists( 'bb_draft_withhold_request_ack' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_draft_withhold_request_ack()}.
-	 *
-	 * @deprecated Use bboss_draft_withhold_request_ack() instead.
-	 */
-	function bb_draft_withhold_request_ack( $evicted_key ) {
-		return bboss_draft_withhold_request_ack( $evicted_key );
-	}
-}
-if ( function_exists( 'bboss_drafts_collect_held_attachment_ids' ) && ! function_exists( 'bb_drafts_collect_held_attachment_ids' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_drafts_collect_held_attachment_ids()}.
-	 *
-	 * @deprecated Use bboss_drafts_collect_held_attachment_ids() instead.
-	 */
-	function bb_drafts_collect_held_attachment_ids() {
-		return bboss_drafts_collect_held_attachment_ids();
-	}
-}
-if ( function_exists( 'bboss_drafts_collect_referenced_attachment_ids' ) && ! function_exists( 'bb_drafts_collect_referenced_attachment_ids' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_drafts_collect_referenced_attachment_ids()}.
-	 *
-	 * @deprecated Use bboss_drafts_collect_referenced_attachment_ids() instead.
-	 */
-	function bb_drafts_collect_referenced_attachment_ids( $time_budget = 0, $started_at = 0, $keep_alive = null ) {
-		return bboss_drafts_collect_referenced_attachment_ids( $time_budget, $started_at, $keep_alive );
-	}
-}
-if ( function_exists( 'bboss_drafts_delete_expired' ) && ! function_exists( 'bb_drafts_delete_expired' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_drafts_delete_expired()}.
-	 *
-	 * @deprecated Use bboss_drafts_delete_expired() instead.
-	 */
-	function bb_drafts_delete_expired( $time_budget = 10 ) {
-		return bboss_drafts_delete_expired( $time_budget );
-	}
-}
-if ( function_exists( 'bboss_drafts_oneshot_batch' ) && ! function_exists( 'bb_drafts_oneshot_batch' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_drafts_oneshot_batch()}.
-	 *
-	 * @deprecated Use bboss_drafts_oneshot_batch() instead.
-	 */
-	function bb_drafts_oneshot_batch( $time_budget = 10 ) {
-		return bboss_drafts_oneshot_batch( $time_budget );
-	}
-}
-if ( function_exists( 'bboss_drafts_prune_evicted_holds' ) && ! function_exists( 'bb_drafts_prune_evicted_holds' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_drafts_prune_evicted_holds()}.
-	 *
-	 * @deprecated Use bboss_drafts_prune_evicted_holds() instead.
-	 */
-	function bb_drafts_prune_evicted_holds() {
-		return bboss_drafts_prune_evicted_holds();
-	}
-}
-if ( function_exists( 'bboss_drafts_release_orphaned_draft_stamps' ) && ! function_exists( 'bb_drafts_release_orphaned_draft_stamps' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_drafts_release_orphaned_draft_stamps()}.
-	 *
-	 * @deprecated Use bboss_drafts_release_orphaned_draft_stamps() instead.
-	 */
-	function bb_drafts_release_orphaned_draft_stamps( $time_budget = 10 ) {
-		return bboss_drafts_release_orphaned_draft_stamps( $time_budget );
-	}
-}
-if ( function_exists( 'bboss_drafts_schedule_cleanup' ) && ! function_exists( 'bb_drafts_schedule_cleanup' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_drafts_schedule_cleanup()}.
-	 *
-	 * @deprecated Use bboss_drafts_schedule_cleanup() instead.
-	 */
-	function bb_drafts_schedule_cleanup() {
-		return bboss_drafts_schedule_cleanup();
-	}
-}
-if ( function_exists( 'bboss_drafts_unschedule_cleanup' ) && ! function_exists( 'bb_drafts_unschedule_cleanup' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_drafts_unschedule_cleanup()}.
-	 *
-	 * @deprecated Use bboss_drafts_unschedule_cleanup() instead.
-	 */
-	function bb_drafts_unschedule_cleanup() {
-		return bboss_drafts_unschedule_cleanup();
-	}
-}
-// @bbwt-com-end compat-layer

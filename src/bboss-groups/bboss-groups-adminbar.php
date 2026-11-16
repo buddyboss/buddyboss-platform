@@ -98,6 +98,20 @@ function bboss_groups_group_admin_menu() {
 		}
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_groups_group_admin_menu' ) && ! function_exists( 'bp_groups_group_admin_menu' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_group_admin_menu()}.
+	 *
+	 * @deprecated Use bboss_groups_group_admin_menu() instead.
+	 */
+	function bp_groups_group_admin_menu() {
+		return bboss_groups_group_admin_menu();
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'admin_bar_menu', 'bp_groups_group_admin_menu', 99 );
 
 /**
@@ -110,21 +124,8 @@ function bboss_groups_remove_edit_page_menu() {
 		remove_action( 'admin_bar_menu', 'wp_admin_bar_edit_menu', 80 );
 	}
 }
-add_action( 'add_admin_bar_menus', 'bp_groups_remove_edit_page_menu' );
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
-if ( function_exists( 'bboss_groups_group_admin_menu' ) && ! function_exists( 'bp_groups_group_admin_menu' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_groups_group_admin_menu()}.
-	 *
-	 * @deprecated Use bboss_groups_group_admin_menu() instead.
-	 */
-	function bp_groups_group_admin_menu() {
-		return bboss_groups_group_admin_menu();
-	}
-}
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_groups_remove_edit_page_menu' ) && ! function_exists( 'bp_groups_remove_edit_page_menu' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_groups_remove_edit_page_menu()}.
@@ -136,3 +137,5 @@ if ( function_exists( 'bboss_groups_remove_edit_page_menu' ) && ! function_exist
 	}
 }
 // @bbwt-com-end compat-layer
+
+add_action( 'add_admin_bar_menus', 'bp_groups_remove_edit_page_menu' );

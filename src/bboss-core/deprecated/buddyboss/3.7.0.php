@@ -50,19 +50,18 @@ if ( ! function_exists( 'bboss_enable_group_subscriptions' ) ) {
 		 */
 		return (bool) apply_filters( 'bb_enable_group_subscriptions', (bool) bboss_get_option( 'bb_enable_group_subscriptions', $default ) );
 	}
-}
-
-// @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
-if ( function_exists( 'bboss_enable_group_subscriptions' ) && ! function_exists( 'bb_enable_group_subscriptions' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_enable_group_subscriptions()}.
-	 *
-	 * @deprecated Use bboss_enable_group_subscriptions() instead.
-	 */
-	function bb_enable_group_subscriptions( $default = true ) {
-		return bboss_enable_group_subscriptions( $default );
+	// @bbwt-com-start compat-layer
+	// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+	if ( function_exists( 'bboss_enable_group_subscriptions' ) && ! function_exists( 'bb_enable_group_subscriptions' ) ) {
+		/**
+		 * Backward-compatible alias of {@see bboss_enable_group_subscriptions()}.
+		 *
+		 * @deprecated Use bboss_enable_group_subscriptions() instead.
+		 */
+		function bb_enable_group_subscriptions( $default = true ) {
+			return bboss_enable_group_subscriptions( $default );
+		}
 	}
+	// @bbwt-com-end compat-layer
+
 }
-// @bbwt-com-end compat-layer

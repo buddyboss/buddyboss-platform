@@ -60,6 +60,20 @@ function bboss_two_factor_plugin_basename() {
 	 */
 	return (string) apply_filters( 'bb_two_factor_plugin_basename', BBOSS_TWO_FACTOR_PLUGIN_BASENAME );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_two_factor_plugin_basename' ) && ! function_exists( 'bb_two_factor_plugin_basename' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_two_factor_plugin_basename()}.
+	 *
+	 * @deprecated Use bboss_two_factor_plugin_basename() instead.
+	 */
+	function bb_two_factor_plugin_basename() {
+		return bboss_two_factor_plugin_basename();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get the minimum Two Factor version this integration supports.
@@ -90,10 +104,8 @@ function bboss_two_factor_min_plugin_version() {
 
 	return $version;
 }
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_two_factor_min_plugin_version' ) && ! function_exists( 'bb_two_factor_min_plugin_version' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_two_factor_min_plugin_version()}.
@@ -104,14 +116,5 @@ if ( function_exists( 'bboss_two_factor_min_plugin_version' ) && ! function_exis
 		return bboss_two_factor_min_plugin_version();
 	}
 }
-if ( function_exists( 'bboss_two_factor_plugin_basename' ) && ! function_exists( 'bb_two_factor_plugin_basename' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_two_factor_plugin_basename()}.
-	 *
-	 * @deprecated Use bboss_two_factor_plugin_basename() instead.
-	 */
-	function bb_two_factor_plugin_basename() {
-		return bboss_two_factor_plugin_basename();
-	}
-}
 // @bbwt-com-end compat-layer
+

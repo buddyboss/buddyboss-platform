@@ -116,11 +116,8 @@ function bboss_groups_group_access_protection() {
 	}
 
 }
-add_action( 'bp_actions', 'bp_groups_group_access_protection' );
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_groups_group_access_protection' ) && ! function_exists( 'bp_groups_group_access_protection' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_groups_group_access_protection()}.
@@ -132,3 +129,5 @@ if ( function_exists( 'bboss_groups_group_access_protection' ) && ! function_exi
 	}
 }
 // @bbwt-com-end compat-layer
+
+add_action( 'bp_actions', 'bp_groups_group_access_protection' );

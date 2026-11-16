@@ -32,6 +32,20 @@ function bboss_notifications_sanitize_position( $value ) {
 
 	return $value;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_notifications_sanitize_position' ) && ! function_exists( 'bb_notifications_sanitize_position' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_notifications_sanitize_position()}.
+	 *
+	 * @deprecated Use bboss_notifications_sanitize_position() instead.
+	 */
+	function bb_notifications_sanitize_position( $value ) {
+		return bboss_notifications_sanitize_position( $value );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Sanitize on-screen notifications visibility (auto-hide) setting.
@@ -54,6 +68,20 @@ function bboss_notifications_sanitize_visibility( $value ) {
 
 	return $value;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_notifications_sanitize_visibility' ) && ! function_exists( 'bb_notifications_sanitize_visibility' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_notifications_sanitize_visibility()}.
+	 *
+	 * @deprecated Use bboss_notifications_sanitize_visibility() instead.
+	 */
+	function bb_notifications_sanitize_visibility( $value ) {
+		return bboss_notifications_sanitize_visibility( $value );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Sanitize notification types (bb_enabled_notification).
@@ -148,20 +176,8 @@ function bboss_notifications_sanitize_types( $value ) {
 
 	return $enabled_notification;
 }
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
-if ( function_exists( 'bboss_notifications_sanitize_position' ) && ! function_exists( 'bb_notifications_sanitize_position' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_notifications_sanitize_position()}.
-	 *
-	 * @deprecated Use bboss_notifications_sanitize_position() instead.
-	 */
-	function bb_notifications_sanitize_position( $value ) {
-		return bboss_notifications_sanitize_position( $value );
-	}
-}
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_notifications_sanitize_types' ) && ! function_exists( 'bb_notifications_sanitize_types' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_notifications_sanitize_types()}.
@@ -172,14 +188,5 @@ if ( function_exists( 'bboss_notifications_sanitize_types' ) && ! function_exist
 		return bboss_notifications_sanitize_types( $value );
 	}
 }
-if ( function_exists( 'bboss_notifications_sanitize_visibility' ) && ! function_exists( 'bb_notifications_sanitize_visibility' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_notifications_sanitize_visibility()}.
-	 *
-	 * @deprecated Use bboss_notifications_sanitize_visibility() instead.
-	 */
-	function bb_notifications_sanitize_visibility( $value ) {
-		return bboss_notifications_sanitize_visibility( $value );
-	}
-}
 // @bbwt-com-end compat-layer
+

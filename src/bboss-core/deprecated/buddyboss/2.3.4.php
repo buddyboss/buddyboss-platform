@@ -24,6 +24,20 @@ function bboss_activity_media_sideload_attachment( $file ) {
 
 	return bboss_bb_media_sideload_attachment( $file );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_activity_media_sideload_attachment' ) && ! function_exists( 'bp_activity_media_sideload_attachment' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_activity_media_sideload_attachment()}.
+	 *
+	 * @deprecated Use bboss_activity_media_sideload_attachment() instead.
+	 */
+	function bp_activity_media_sideload_attachment( $file ) {
+		return bboss_activity_media_sideload_attachment( $file );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * This handles a sideloaded file in the same way as an uploaded file is handled by {@link media_handle_upload()}
@@ -42,10 +56,8 @@ function bboss_activity_media_handle_sideload( $file_array, $post_data = array()
 
 	return bboss_bb_media_handle_sideload( $file_array, $post_data );
 }
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_activity_media_handle_sideload' ) && ! function_exists( 'bp_activity_media_handle_sideload' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_activity_media_handle_sideload()}.
@@ -56,14 +68,5 @@ if ( function_exists( 'bboss_activity_media_handle_sideload' ) && ! function_exi
 		return bboss_activity_media_handle_sideload( $file_array, $post_data );
 	}
 }
-if ( function_exists( 'bboss_activity_media_sideload_attachment' ) && ! function_exists( 'bp_activity_media_sideload_attachment' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_activity_media_sideload_attachment()}.
-	 *
-	 * @deprecated Use bboss_activity_media_sideload_attachment() instead.
-	 */
-	function bp_activity_media_sideload_attachment( $file ) {
-		return bboss_activity_media_sideload_attachment( $file );
-	}
-}
 // @bbwt-com-end compat-layer
+

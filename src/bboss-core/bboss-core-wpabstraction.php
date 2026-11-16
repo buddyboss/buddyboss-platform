@@ -29,6 +29,20 @@ function bboss_get_major_wp_version() {
 
 	return (float) $wp_version;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_major_wp_version' ) && ! function_exists( 'bp_get_major_wp_version' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_major_wp_version()}.
+	 *
+	 * @deprecated Use bboss_get_major_wp_version() instead.
+	 */
+	function bp_get_major_wp_version() {
+		return bboss_get_major_wp_version();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /*
  * Only add MS-specific abstraction functions if WordPress is not in multisite mode.
@@ -223,6 +237,20 @@ function bboss_core_get_status_sql( $prefix = false ) {
 		return "{$prefix}spam = 0 AND {$prefix}deleted = 0 AND {$prefix}user_status = 0";
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_core_get_status_sql' ) && ! function_exists( 'bp_core_get_status_sql' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_get_status_sql()}.
+	 *
+	 * @deprecated Use bboss_core_get_status_sql() instead.
+	 */
+	function bp_core_get_status_sql( $prefix = false ) {
+		return bboss_core_get_status_sql( $prefix );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Multibyte encoding fallback functions.
@@ -308,28 +336,3 @@ if ( ! function_exists( 'mb_strrpos' ) ) {
 		}
 	}
 }
-
-// @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
-if ( function_exists( 'bboss_core_get_status_sql' ) && ! function_exists( 'bp_core_get_status_sql' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_core_get_status_sql()}.
-	 *
-	 * @deprecated Use bboss_core_get_status_sql() instead.
-	 */
-	function bp_core_get_status_sql( $prefix = false ) {
-		return bboss_core_get_status_sql( $prefix );
-	}
-}
-if ( function_exists( 'bboss_get_major_wp_version' ) && ! function_exists( 'bp_get_major_wp_version' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_major_wp_version()}.
-	 *
-	 * @deprecated Use bboss_get_major_wp_version() instead.
-	 */
-	function bp_get_major_wp_version() {
-		return bboss_get_major_wp_version();
-	}
-}
-// @bbwt-com-end compat-layer

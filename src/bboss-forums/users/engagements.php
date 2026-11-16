@@ -33,6 +33,20 @@ function bboss_bbp_add_user_to_object( $object_id = 0, $user_id = 0, $rel_key = 
 	// Filter & return.
 	return (bool) apply_filters( 'bbp_add_user_to_object', $retval, $object_id, $user_id, $rel_key, $rel_type, $unique );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_add_user_to_object' ) && ! function_exists( 'bbp_add_user_to_object' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_add_user_to_object()}.
+	 *
+	 * @deprecated Use bboss_bbp_add_user_to_object() instead.
+	 */
+	function bbp_add_user_to_object( $object_id = 0, $user_id = 0, $rel_key = '', $rel_type = 'post', $unique = false ) {
+		return bboss_bbp_add_user_to_object( $object_id, $user_id, $rel_key, $rel_type, $unique );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Remove a user id from an object.
@@ -53,6 +67,20 @@ function bboss_bbp_remove_user_from_object( $object_id = 0, $user_id = 0, $rel_k
 	// Filter & return.
 	return (bool) apply_filters( 'bbp_remove_user_from_object', $retval, $object_id, $user_id, $rel_key, $rel_type );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_remove_user_from_object' ) && ! function_exists( 'bbp_remove_user_from_object' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_remove_user_from_object()}.
+	 *
+	 * @deprecated Use bboss_bbp_remove_user_from_object() instead.
+	 */
+	function bbp_remove_user_from_object( $object_id = 0, $user_id = 0, $rel_key = '', $rel_type = 'post' ) {
+		return bboss_bbp_remove_user_from_object( $object_id, $user_id, $rel_key, $rel_type );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Remove a user id from all objects.
@@ -73,6 +101,20 @@ function bboss_bbp_remove_user_from_all_objects( $user_id = 0, $rel_key = '', $r
 	// Filter & return.
 	return (bool) apply_filters( 'bbp_remove_user_from_all_objects', $retval, $user_id, $rel_key, $rel_type );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_remove_user_from_all_objects' ) && ! function_exists( 'bbp_remove_user_from_all_objects' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_remove_user_from_all_objects()}.
+	 *
+	 * @deprecated Use bboss_bbp_remove_user_from_all_objects() instead.
+	 */
+	function bbp_remove_user_from_all_objects( $user_id = 0, $rel_key = '', $rel_type = 'post' ) {
+		return bboss_bbp_remove_user_from_all_objects( $user_id, $rel_key, $rel_type );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Remove an object from all users.
@@ -93,6 +135,20 @@ function bboss_bbp_remove_object_from_all_users( $object_id = 0, $rel_key = '', 
 	// Filter & return.
 	return (bool) apply_filters( 'bbp_remove_object_from_all_users', $retval, $object_id, $rel_key, $rel_type );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_remove_object_from_all_users' ) && ! function_exists( 'bbp_remove_object_from_all_users' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_remove_object_from_all_users()}.
+	 *
+	 * @deprecated Use bboss_bbp_remove_object_from_all_users() instead.
+	 */
+	function bbp_remove_object_from_all_users( $object_id = 0, $rel_key = '', $rel_type = 'post' ) {
+		return bboss_bbp_remove_object_from_all_users( $object_id, $rel_key, $rel_type );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Remove all users from all objects.
@@ -111,6 +167,20 @@ function bboss_bbp_remove_all_users_from_all_objects( $rel_key = '', $rel_type =
 	// Filter & return.
 	return (bool) apply_filters( 'bbp_remove_all_users_from_all_objects', $retval, $rel_key, $rel_type );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_remove_all_users_from_all_objects' ) && ! function_exists( 'bbp_remove_all_users_from_all_objects' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_remove_all_users_from_all_objects()}.
+	 *
+	 * @deprecated Use bboss_bbp_remove_all_users_from_all_objects() instead.
+	 */
+	function bbp_remove_all_users_from_all_objects( $rel_key = '', $rel_type = 'post' ) {
+		return bboss_bbp_remove_all_users_from_all_objects( $rel_key, $rel_type );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get users of an object.
@@ -131,6 +201,20 @@ function bboss_bbp_get_users_for_object( $object_id = 0, $rel_key = '', $rel_typ
 	// Filter & return.
 	return (array) apply_filters( 'bbp_get_users_for_object', $retval, $object_id, $rel_key, $rel_type );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_users_for_object' ) && ! function_exists( 'bbp_get_users_for_object' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_users_for_object()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_users_for_object() instead.
+	 */
+	function bbp_get_users_for_object( $object_id = 0, $rel_key = '', $rel_type = 'post' ) {
+		return bboss_bbp_get_users_for_object( $object_id, $rel_key, $rel_type );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Check if an object has a specific user.
@@ -154,6 +238,20 @@ function bboss_bbp_is_object_of_user( $object_id = 0, $user_id = 0, $rel_key = '
 	// Filter & return.
 	return (bool) apply_filters( 'bbp_is_object_of_user', $retval, $object_id, $user_id, $rel_key, $rel_type );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_is_object_of_user' ) && ! function_exists( 'bbp_is_object_of_user' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_is_object_of_user()}.
+	 *
+	 * @deprecated Use bboss_bbp_is_object_of_user() instead.
+	 */
+	function bbp_is_object_of_user( $object_id = 0, $user_id = 0, $rel_key = '', $rel_type = 'post' ) {
+		return bboss_bbp_is_object_of_user( $object_id, $user_id, $rel_key, $rel_type );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get the query part responsible for JOINing objects to user IDs.
@@ -174,6 +272,20 @@ function bboss_bbp_get_user_object_query( $args = array(), $context = '', $rel_k
 	// Filter & return.
 	return (array) apply_filters( 'bbp_get_user_object_query', $retval, $args, $context, $rel_key, $rel_type );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_user_object_query' ) && ! function_exists( 'bbp_get_user_object_query' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_user_object_query()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_user_object_query() instead.
+	 */
+	function bbp_get_user_object_query( $args = array(), $context = '', $rel_key = '', $rel_type = 'post' ) {
+		return bboss_bbp_get_user_object_query( $args, $context, $rel_key, $rel_type );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /** Engagements ***************************************************************/
 
@@ -194,6 +306,20 @@ function bboss_bbp_get_topic_engagements( $topic_id = 0 ) {
 	// Filter & return.
 	return (array) apply_filters( 'bbp_get_topic_engagements', $users, $topic_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_topic_engagements' ) && ! function_exists( 'bbp_get_topic_engagements' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_topic_engagements()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_topic_engagements() instead.
+	 */
+	function bbp_get_topic_engagements( $topic_id = 0 ) {
+		return bboss_bbp_get_topic_engagements( $topic_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return the users who have engaged in a topic, directly with a database query.
@@ -236,6 +362,20 @@ UNION
 	// Filter & return.
 	return (array) apply_filters( 'bbp_get_topic_engagements_raw', $engagements, $topic_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_topic_engagements_raw' ) && ! function_exists( 'bbp_get_topic_engagements_raw' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_topic_engagements_raw()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_topic_engagements_raw() instead.
+	 */
+	function bbp_get_topic_engagements_raw( $topic_id = 0 ) {
+		return bboss_bbp_get_topic_engagements_raw( $topic_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get a user's topic engagements.
@@ -255,6 +395,20 @@ function bboss_bbp_get_user_engagements( $args = array() ) {
 	// Filter & return.
 	return apply_filters( 'bbp_get_user_engagements', $query, 0, $r, $args );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_user_engagements' ) && ! function_exists( 'bbp_get_user_engagements' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_user_engagements()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_user_engagements() instead.
+	 */
+	function bbp_get_user_engagements( $args = array() ) {
+		return bboss_bbp_get_user_engagements( $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Check if a user is engaged in a topic or not.
@@ -275,6 +429,20 @@ function bboss_bbp_is_user_engaged( $user_id = 0, $topic_id = 0 ) {
 	// Filter & return.
 	return (bool) apply_filters( 'bbp_is_user_engaged', $retval, $user_id, $topic_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_is_user_engaged' ) && ! function_exists( 'bbp_is_user_engaged' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_is_user_engaged()}.
+	 *
+	 * @deprecated Use bboss_bbp_is_user_engaged() instead.
+	 */
+	function bbp_is_user_engaged( $user_id = 0, $topic_id = 0 ) {
+		return bboss_bbp_is_user_engaged( $user_id, $topic_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Add a topic to user's engagements.
@@ -313,6 +481,20 @@ function bboss_bbp_add_user_engagement( $user_id = 0, $topic_id = 0 ) {
 
 	return true;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_add_user_engagement' ) && ! function_exists( 'bbp_add_user_engagement' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_add_user_engagement()}.
+	 *
+	 * @deprecated Use bboss_bbp_add_user_engagement() instead.
+	 */
+	function bbp_add_user_engagement( $user_id = 0, $topic_id = 0 ) {
+		return bboss_bbp_add_user_engagement( $user_id, $topic_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Remove a topic from user's engagements.
@@ -346,6 +528,20 @@ function bboss_bbp_remove_user_engagement( $user_id = 0, $topic_id = 0 ) {
 
 	return true;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_remove_user_engagement' ) && ! function_exists( 'bbp_remove_user_engagement' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_remove_user_engagement()}.
+	 *
+	 * @deprecated Use bboss_bbp_remove_user_engagement() instead.
+	 */
+	function bbp_remove_user_engagement( $user_id = 0, $topic_id = 0 ) {
+		return bboss_bbp_remove_user_engagement( $user_id, $topic_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Recalculate all of the users who have engaged in a topic.
@@ -402,6 +598,20 @@ function bboss_bbp_recalculate_topic_engagements( $topic_id = 0, $force = false 
 	// Filter & return.
 	return (bool) apply_filters( 'bbp_recalculate_user_engagements', $retval, $topic_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_recalculate_topic_engagements' ) && ! function_exists( 'bbp_recalculate_topic_engagements' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_recalculate_topic_engagements()}.
+	 *
+	 * @deprecated Use bboss_bbp_recalculate_topic_engagements() instead.
+	 */
+	function bbp_recalculate_topic_engagements( $topic_id = 0, $force = false ) {
+		return bboss_bbp_recalculate_topic_engagements( $topic_id, $force );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Update the engagements of a topic.
@@ -453,6 +663,20 @@ function bboss_bbp_update_topic_engagements( $topic_id = 0 ) {
 	// Return whether engagement was added.
 	return bboss_bbp_add_user_engagement( $author_id, $topic_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_update_topic_engagements' ) && ! function_exists( 'bbp_update_topic_engagements' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_update_topic_engagements()}.
+	 *
+	 * @deprecated Use bboss_bbp_update_topic_engagements() instead.
+	 */
+	function bbp_update_topic_engagements( $topic_id = 0 ) {
+		return bboss_bbp_update_topic_engagements( $topic_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /** Favorites *****************************************************************/
 
@@ -473,6 +697,20 @@ function bboss_bbp_get_topic_favoriters( $topic_id = 0 ) {
 	// Filter & return.
 	return (array) apply_filters( 'bbp_get_topic_favoriters', $users, $topic_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_topic_favoriters' ) && ! function_exists( 'bbp_get_topic_favoriters' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_topic_favoriters()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_topic_favoriters() instead.
+	 */
+	function bbp_get_topic_favoriters( $topic_id = 0 ) {
+		return bboss_bbp_get_topic_favoriters( $topic_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get a user's favorite topics.
@@ -494,6 +732,20 @@ function bboss_bbp_get_user_favorites( $args = array() ) {
 	// Filter & return.
 	return apply_filters( 'bbp_get_user_favorites', $query, 0, $r, $args );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_user_favorites' ) && ! function_exists( 'bbp_get_user_favorites' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_user_favorites()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_user_favorites() instead.
+	 */
+	function bbp_get_user_favorites( $args = array() ) {
+		return bboss_bbp_get_user_favorites( $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Check if a topic is in user's favorites or not.
@@ -512,6 +764,20 @@ function bboss_bbp_is_user_favorite( $user_id = 0, $topic_id = 0 ) {
 	// Filter & return.
 	return (bool) apply_filters( 'bbp_is_user_favorite', $retval, $user_id, $topic_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_is_user_favorite' ) && ! function_exists( 'bbp_is_user_favorite' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_is_user_favorite()}.
+	 *
+	 * @deprecated Use bboss_bbp_is_user_favorite() instead.
+	 */
+	function bbp_is_user_favorite( $user_id = 0, $topic_id = 0 ) {
+		return bboss_bbp_is_user_favorite( $user_id, $topic_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Add a topic to user's favorites.
@@ -552,6 +818,20 @@ function bboss_bbp_add_user_favorite( $user_id = 0, $topic_id = 0 ) {
 
 	return true;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_add_user_favorite' ) && ! function_exists( 'bbp_add_user_favorite' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_add_user_favorite()}.
+	 *
+	 * @deprecated Use bboss_bbp_add_user_favorite() instead.
+	 */
+	function bbp_add_user_favorite( $user_id = 0, $topic_id = 0 ) {
+		return bboss_bbp_add_user_favorite( $user_id, $topic_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Remove a topic from user's favorites.
@@ -587,6 +867,20 @@ function bboss_bbp_remove_user_favorite( $user_id, $topic_id ) {
 
 	return true;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_remove_user_favorite' ) && ! function_exists( 'bbp_remove_user_favorite' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_remove_user_favorite()}.
+	 *
+	 * @deprecated Use bboss_bbp_remove_user_favorite() instead.
+	 */
+	function bbp_remove_user_favorite( $user_id, $topic_id ) {
+		return bboss_bbp_remove_user_favorite( $user_id, $topic_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Handles the front end adding and removing of favorite topics.
@@ -688,6 +982,20 @@ function bboss_bbp_favorites_handler( $action = '' ) {
 
 	return (bool) $success;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_favorites_handler' ) && ! function_exists( 'bbp_favorites_handler' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_favorites_handler()}.
+	 *
+	 * @deprecated Use bboss_bbp_favorites_handler() instead.
+	 */
+	function bbp_favorites_handler( $action = '' ) {
+		return bboss_bbp_favorites_handler( $action );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /** Query Helpers *************************************************************/
 
@@ -773,6 +1081,20 @@ function bboss_bbp_get_user_object_ids( $args = array() ) {
 	// Filter & return.
 	return (array) apply_filters( "bbp_get_{$r['filter']}", $object_ids, $r, $args );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_user_object_ids' ) && ! function_exists( 'bbp_get_user_object_ids' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_user_object_ids()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_user_object_ids() instead.
+	 */
+	function bbp_get_user_object_ids( $args = array() ) {
+		return bboss_bbp_get_user_object_ids( $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get array of forum IDs that a user can moderate.
@@ -794,6 +1116,20 @@ function bboss_bbp_get_moderator_forum_ids( $user_id = 0 ) {
 		)
 	);
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_moderator_forum_ids' ) && ! function_exists( 'bbp_get_moderator_forum_ids' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_moderator_forum_ids()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_moderator_forum_ids() instead.
+	 */
+	function bbp_get_moderator_forum_ids( $user_id = 0 ) {
+		return bboss_bbp_get_moderator_forum_ids( $user_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get a user's engaged topic ids.
@@ -814,6 +1150,20 @@ function bboss_bbp_get_user_engaged_topic_ids( $user_id = 0 ) {
 		)
 	);
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_user_engaged_topic_ids' ) && ! function_exists( 'bbp_get_user_engaged_topic_ids' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_user_engaged_topic_ids()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_user_engaged_topic_ids() instead.
+	 */
+	function bbp_get_user_engaged_topic_ids( $user_id = 0 ) {
+		return bboss_bbp_get_user_engaged_topic_ids( $user_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get a user's favorite topic ids.
@@ -834,120 +1184,8 @@ function bboss_bbp_get_user_favorites_topic_ids( $user_id = 0 ) {
 		)
 	);
 }
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
-if ( function_exists( 'bboss_bbp_add_user_engagement' ) && ! function_exists( 'bbp_add_user_engagement' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_add_user_engagement()}.
-	 *
-	 * @deprecated Use bboss_bbp_add_user_engagement() instead.
-	 */
-	function bbp_add_user_engagement( $user_id = 0, $topic_id = 0 ) {
-		return bboss_bbp_add_user_engagement( $user_id, $topic_id );
-	}
-}
-if ( function_exists( 'bboss_bbp_add_user_favorite' ) && ! function_exists( 'bbp_add_user_favorite' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_add_user_favorite()}.
-	 *
-	 * @deprecated Use bboss_bbp_add_user_favorite() instead.
-	 */
-	function bbp_add_user_favorite( $user_id = 0, $topic_id = 0 ) {
-		return bboss_bbp_add_user_favorite( $user_id, $topic_id );
-	}
-}
-if ( function_exists( 'bboss_bbp_add_user_to_object' ) && ! function_exists( 'bbp_add_user_to_object' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_add_user_to_object()}.
-	 *
-	 * @deprecated Use bboss_bbp_add_user_to_object() instead.
-	 */
-	function bbp_add_user_to_object( $object_id = 0, $user_id = 0, $rel_key = '', $rel_type = 'post', $unique = false ) {
-		return bboss_bbp_add_user_to_object( $object_id, $user_id, $rel_key, $rel_type, $unique );
-	}
-}
-if ( function_exists( 'bboss_bbp_favorites_handler' ) && ! function_exists( 'bbp_favorites_handler' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_favorites_handler()}.
-	 *
-	 * @deprecated Use bboss_bbp_favorites_handler() instead.
-	 */
-	function bbp_favorites_handler( $action = '' ) {
-		return bboss_bbp_favorites_handler( $action );
-	}
-}
-if ( function_exists( 'bboss_bbp_get_moderator_forum_ids' ) && ! function_exists( 'bbp_get_moderator_forum_ids' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_moderator_forum_ids()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_moderator_forum_ids() instead.
-	 */
-	function bbp_get_moderator_forum_ids( $user_id = 0 ) {
-		return bboss_bbp_get_moderator_forum_ids( $user_id );
-	}
-}
-if ( function_exists( 'bboss_bbp_get_topic_engagements' ) && ! function_exists( 'bbp_get_topic_engagements' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_topic_engagements()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_topic_engagements() instead.
-	 */
-	function bbp_get_topic_engagements( $topic_id = 0 ) {
-		return bboss_bbp_get_topic_engagements( $topic_id );
-	}
-}
-if ( function_exists( 'bboss_bbp_get_topic_engagements_raw' ) && ! function_exists( 'bbp_get_topic_engagements_raw' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_topic_engagements_raw()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_topic_engagements_raw() instead.
-	 */
-	function bbp_get_topic_engagements_raw( $topic_id = 0 ) {
-		return bboss_bbp_get_topic_engagements_raw( $topic_id );
-	}
-}
-if ( function_exists( 'bboss_bbp_get_topic_favoriters' ) && ! function_exists( 'bbp_get_topic_favoriters' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_topic_favoriters()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_topic_favoriters() instead.
-	 */
-	function bbp_get_topic_favoriters( $topic_id = 0 ) {
-		return bboss_bbp_get_topic_favoriters( $topic_id );
-	}
-}
-if ( function_exists( 'bboss_bbp_get_user_engaged_topic_ids' ) && ! function_exists( 'bbp_get_user_engaged_topic_ids' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_user_engaged_topic_ids()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_user_engaged_topic_ids() instead.
-	 */
-	function bbp_get_user_engaged_topic_ids( $user_id = 0 ) {
-		return bboss_bbp_get_user_engaged_topic_ids( $user_id );
-	}
-}
-if ( function_exists( 'bboss_bbp_get_user_engagements' ) && ! function_exists( 'bbp_get_user_engagements' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_user_engagements()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_user_engagements() instead.
-	 */
-	function bbp_get_user_engagements( $args = array() ) {
-		return bboss_bbp_get_user_engagements( $args );
-	}
-}
-if ( function_exists( 'bboss_bbp_get_user_favorites' ) && ! function_exists( 'bbp_get_user_favorites' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_user_favorites()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_user_favorites() instead.
-	 */
-	function bbp_get_user_favorites( $args = array() ) {
-		return bboss_bbp_get_user_favorites( $args );
-	}
-}
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_bbp_get_user_favorites_topic_ids' ) && ! function_exists( 'bbp_get_user_favorites_topic_ids' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_bbp_get_user_favorites_topic_ids()}.
@@ -958,144 +1196,5 @@ if ( function_exists( 'bboss_bbp_get_user_favorites_topic_ids' ) && ! function_e
 		return bboss_bbp_get_user_favorites_topic_ids( $user_id );
 	}
 }
-if ( function_exists( 'bboss_bbp_get_user_object_ids' ) && ! function_exists( 'bbp_get_user_object_ids' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_user_object_ids()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_user_object_ids() instead.
-	 */
-	function bbp_get_user_object_ids( $args = array() ) {
-		return bboss_bbp_get_user_object_ids( $args );
-	}
-}
-if ( function_exists( 'bboss_bbp_get_user_object_query' ) && ! function_exists( 'bbp_get_user_object_query' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_user_object_query()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_user_object_query() instead.
-	 */
-	function bbp_get_user_object_query( $args = array(), $context = '', $rel_key = '', $rel_type = 'post' ) {
-		return bboss_bbp_get_user_object_query( $args, $context, $rel_key, $rel_type );
-	}
-}
-if ( function_exists( 'bboss_bbp_get_users_for_object' ) && ! function_exists( 'bbp_get_users_for_object' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_users_for_object()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_users_for_object() instead.
-	 */
-	function bbp_get_users_for_object( $object_id = 0, $rel_key = '', $rel_type = 'post' ) {
-		return bboss_bbp_get_users_for_object( $object_id, $rel_key, $rel_type );
-	}
-}
-if ( function_exists( 'bboss_bbp_is_object_of_user' ) && ! function_exists( 'bbp_is_object_of_user' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_is_object_of_user()}.
-	 *
-	 * @deprecated Use bboss_bbp_is_object_of_user() instead.
-	 */
-	function bbp_is_object_of_user( $object_id = 0, $user_id = 0, $rel_key = '', $rel_type = 'post' ) {
-		return bboss_bbp_is_object_of_user( $object_id, $user_id, $rel_key, $rel_type );
-	}
-}
-if ( function_exists( 'bboss_bbp_is_user_engaged' ) && ! function_exists( 'bbp_is_user_engaged' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_is_user_engaged()}.
-	 *
-	 * @deprecated Use bboss_bbp_is_user_engaged() instead.
-	 */
-	function bbp_is_user_engaged( $user_id = 0, $topic_id = 0 ) {
-		return bboss_bbp_is_user_engaged( $user_id, $topic_id );
-	}
-}
-if ( function_exists( 'bboss_bbp_is_user_favorite' ) && ! function_exists( 'bbp_is_user_favorite' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_is_user_favorite()}.
-	 *
-	 * @deprecated Use bboss_bbp_is_user_favorite() instead.
-	 */
-	function bbp_is_user_favorite( $user_id = 0, $topic_id = 0 ) {
-		return bboss_bbp_is_user_favorite( $user_id, $topic_id );
-	}
-}
-if ( function_exists( 'bboss_bbp_recalculate_topic_engagements' ) && ! function_exists( 'bbp_recalculate_topic_engagements' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_recalculate_topic_engagements()}.
-	 *
-	 * @deprecated Use bboss_bbp_recalculate_topic_engagements() instead.
-	 */
-	function bbp_recalculate_topic_engagements( $topic_id = 0, $force = false ) {
-		return bboss_bbp_recalculate_topic_engagements( $topic_id, $force );
-	}
-}
-if ( function_exists( 'bboss_bbp_remove_all_users_from_all_objects' ) && ! function_exists( 'bbp_remove_all_users_from_all_objects' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_remove_all_users_from_all_objects()}.
-	 *
-	 * @deprecated Use bboss_bbp_remove_all_users_from_all_objects() instead.
-	 */
-	function bbp_remove_all_users_from_all_objects( $rel_key = '', $rel_type = 'post' ) {
-		return bboss_bbp_remove_all_users_from_all_objects( $rel_key, $rel_type );
-	}
-}
-if ( function_exists( 'bboss_bbp_remove_object_from_all_users' ) && ! function_exists( 'bbp_remove_object_from_all_users' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_remove_object_from_all_users()}.
-	 *
-	 * @deprecated Use bboss_bbp_remove_object_from_all_users() instead.
-	 */
-	function bbp_remove_object_from_all_users( $object_id = 0, $rel_key = '', $rel_type = 'post' ) {
-		return bboss_bbp_remove_object_from_all_users( $object_id, $rel_key, $rel_type );
-	}
-}
-if ( function_exists( 'bboss_bbp_remove_user_engagement' ) && ! function_exists( 'bbp_remove_user_engagement' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_remove_user_engagement()}.
-	 *
-	 * @deprecated Use bboss_bbp_remove_user_engagement() instead.
-	 */
-	function bbp_remove_user_engagement( $user_id = 0, $topic_id = 0 ) {
-		return bboss_bbp_remove_user_engagement( $user_id, $topic_id );
-	}
-}
-if ( function_exists( 'bboss_bbp_remove_user_favorite' ) && ! function_exists( 'bbp_remove_user_favorite' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_remove_user_favorite()}.
-	 *
-	 * @deprecated Use bboss_bbp_remove_user_favorite() instead.
-	 */
-	function bbp_remove_user_favorite( $user_id, $topic_id ) {
-		return bboss_bbp_remove_user_favorite( $user_id, $topic_id );
-	}
-}
-if ( function_exists( 'bboss_bbp_remove_user_from_all_objects' ) && ! function_exists( 'bbp_remove_user_from_all_objects' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_remove_user_from_all_objects()}.
-	 *
-	 * @deprecated Use bboss_bbp_remove_user_from_all_objects() instead.
-	 */
-	function bbp_remove_user_from_all_objects( $user_id = 0, $rel_key = '', $rel_type = 'post' ) {
-		return bboss_bbp_remove_user_from_all_objects( $user_id, $rel_key, $rel_type );
-	}
-}
-if ( function_exists( 'bboss_bbp_remove_user_from_object' ) && ! function_exists( 'bbp_remove_user_from_object' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_remove_user_from_object()}.
-	 *
-	 * @deprecated Use bboss_bbp_remove_user_from_object() instead.
-	 */
-	function bbp_remove_user_from_object( $object_id = 0, $user_id = 0, $rel_key = '', $rel_type = 'post' ) {
-		return bboss_bbp_remove_user_from_object( $object_id, $user_id, $rel_key, $rel_type );
-	}
-}
-if ( function_exists( 'bboss_bbp_update_topic_engagements' ) && ! function_exists( 'bbp_update_topic_engagements' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_update_topic_engagements()}.
-	 *
-	 * @deprecated Use bboss_bbp_update_topic_engagements() instead.
-	 */
-	function bbp_update_topic_engagements( $topic_id = 0 ) {
-		return bboss_bbp_update_topic_engagements( $topic_id );
-	}
-}
 // @bbwt-com-end compat-layer
+

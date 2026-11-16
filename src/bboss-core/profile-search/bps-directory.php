@@ -52,6 +52,20 @@ function bboss_ps_directories() {
 
 	return $dirs;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_ps_directories' ) && ! function_exists( 'bp_ps_directories' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_ps_directories()}.
+	 *
+	 * @deprecated Use bboss_ps_directories() instead.
+	 */
+	function bp_ps_directories() {
+		return bboss_ps_directories();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 add_action( 'wp_enqueue_scripts', 'bp_ps_clear_directory', 1 );
 /**
@@ -77,6 +91,20 @@ function bboss_ps_clear_directory() {
 		}
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_ps_clear_directory' ) && ! function_exists( 'bp_ps_clear_directory' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_ps_clear_directory()}.
+	 *
+	 * @deprecated Use bboss_ps_clear_directory() instead.
+	 */
+	function bp_ps_clear_directory() {
+		return bboss_ps_clear_directory();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 // add_shortcode ('bp_ps_directory', 'bp_ps_show_directory');
 /**
@@ -111,6 +139,20 @@ function bboss_ps_show_directory( $attr, $content ) {
 
 	return ob_get_clean();
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_ps_show_directory' ) && ! function_exists( 'bp_ps_show_directory' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_ps_show_directory()}.
+	 *
+	 * @deprecated Use bboss_ps_show_directory() instead.
+	 */
+	function bp_ps_show_directory( $attr, $content ) {
+		return bboss_ps_show_directory( $attr, $content );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Set BuddyBoss Profile Search sort options.
@@ -151,6 +193,20 @@ function bboss_ps_set_sort_options( $options ) {
 
 	add_action( 'bp_members_directory_order_options', 'bp_ps_display_sort_options' );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_ps_set_sort_options' ) && ! function_exists( 'bp_ps_set_sort_options' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_ps_set_sort_options()}.
+	 *
+	 * @deprecated Use bboss_ps_set_sort_options() instead.
+	 */
+	function bp_ps_set_sort_options( $options ) {
+		return bboss_ps_set_sort_options( $options );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output BuddyBoss Profile Search sort options.
@@ -174,6 +230,20 @@ function bboss_ps_display_sort_options() {
 
 	echo "\n<!-- BP Profile Search end -->\n";
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_ps_display_sort_options' ) && ! function_exists( 'bp_ps_display_sort_options' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_ps_display_sort_options()}.
+	 *
+	 * @deprecated Use bboss_ps_display_sort_options() instead.
+	 */
+	function bp_ps_display_sort_options() {
+		return bboss_ps_display_sort_options();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 add_filter( 'bp_user_query_uid_clauses', 'bp_ps_uid_clauses', 99, 2 );
 
@@ -200,6 +270,20 @@ function bboss_ps_uid_clauses( $sql, $object ) {
 
 	return $sql;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_ps_uid_clauses' ) && ! function_exists( 'bp_ps_uid_clauses' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_ps_uid_clauses()}.
+	 *
+	 * @deprecated Use bboss_ps_uid_clauses() instead.
+	 */
+	function bp_ps_uid_clauses( $sql, $object ) {
+		return bboss_ps_uid_clauses( $sql, $object );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Out BuddyBoss Profile Search field value template.
@@ -222,30 +306,8 @@ function bboss_ps_directory_members_item() {
 		bp_ps_call_template( 'members/bps-field-value', array( $name, $value ) );
 	}
 }
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
-if ( function_exists( 'bboss_ps_clear_directory' ) && ! function_exists( 'bp_ps_clear_directory' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_ps_clear_directory()}.
-	 *
-	 * @deprecated Use bboss_ps_clear_directory() instead.
-	 */
-	function bp_ps_clear_directory() {
-		return bboss_ps_clear_directory();
-	}
-}
-if ( function_exists( 'bboss_ps_directories' ) && ! function_exists( 'bp_ps_directories' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_ps_directories()}.
-	 *
-	 * @deprecated Use bboss_ps_directories() instead.
-	 */
-	function bp_ps_directories() {
-		return bboss_ps_directories();
-	}
-}
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_ps_directory_members_item' ) && ! function_exists( 'bp_ps_directory_members_item' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_ps_directory_members_item()}.
@@ -256,44 +318,5 @@ if ( function_exists( 'bboss_ps_directory_members_item' ) && ! function_exists( 
 		return bboss_ps_directory_members_item();
 	}
 }
-if ( function_exists( 'bboss_ps_display_sort_options' ) && ! function_exists( 'bp_ps_display_sort_options' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_ps_display_sort_options()}.
-	 *
-	 * @deprecated Use bboss_ps_display_sort_options() instead.
-	 */
-	function bp_ps_display_sort_options() {
-		return bboss_ps_display_sort_options();
-	}
-}
-if ( function_exists( 'bboss_ps_set_sort_options' ) && ! function_exists( 'bp_ps_set_sort_options' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_ps_set_sort_options()}.
-	 *
-	 * @deprecated Use bboss_ps_set_sort_options() instead.
-	 */
-	function bp_ps_set_sort_options( $options ) {
-		return bboss_ps_set_sort_options( $options );
-	}
-}
-if ( function_exists( 'bboss_ps_show_directory' ) && ! function_exists( 'bp_ps_show_directory' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_ps_show_directory()}.
-	 *
-	 * @deprecated Use bboss_ps_show_directory() instead.
-	 */
-	function bp_ps_show_directory( $attr, $content ) {
-		return bboss_ps_show_directory( $attr, $content );
-	}
-}
-if ( function_exists( 'bboss_ps_uid_clauses' ) && ! function_exists( 'bp_ps_uid_clauses' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_ps_uid_clauses()}.
-	 *
-	 * @deprecated Use bboss_ps_uid_clauses() instead.
-	 */
-	function bp_ps_uid_clauses( $sql, $object ) {
-		return bboss_ps_uid_clauses( $sql, $object );
-	}
-}
 // @bbwt-com-end compat-layer
+

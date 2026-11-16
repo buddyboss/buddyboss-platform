@@ -28,6 +28,20 @@ function bboss_get_messages_starred_slug() {
 	 */
 	return sanitize_title( apply_filters( 'bp_get_messages_starred_slug', 'starred' ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_messages_starred_slug' ) && ! function_exists( 'bp_get_messages_starred_slug' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_messages_starred_slug()}.
+	 *
+	 * @deprecated Use bboss_get_messages_starred_slug() instead.
+	 */
+	function bp_get_messages_starred_slug() {
+		return bboss_get_messages_starred_slug();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Function to determine if a message ID is starred.
@@ -55,6 +69,20 @@ function bboss_messages_is_message_starred( $mid = 0, $user_id = 0 ) {
 		return false;
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_messages_is_message_starred' ) && ! function_exists( 'bp_messages_is_message_starred' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_messages_is_message_starred()}.
+	 *
+	 * @deprecated Use bboss_messages_is_message_starred() instead.
+	 */
+	function bp_messages_is_message_starred( $mid = 0, $user_id = 0 ) {
+		return bboss_messages_is_message_starred( $mid, $user_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output the link or raw URL for starring or unstarring a message.
@@ -66,6 +94,20 @@ function bboss_messages_is_message_starred( $mid = 0, $user_id = 0 ) {
 function bboss_the_message_star_action_link( $args = array() ) {
 	echo wp_kses_post( bboss_get_the_message_star_action_link( $args ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_the_message_star_action_link' ) && ! function_exists( 'bp_the_message_star_action_link' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_the_message_star_action_link()}.
+	 *
+	 * @deprecated Use bboss_the_message_star_action_link() instead.
+	 */
+	function bp_the_message_star_action_link( $args = array() ) {
+		return bboss_the_message_star_action_link( $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 	/**
 	 * Return the link or raw URL for starring or unstarring a message.
 	 *
@@ -234,6 +276,20 @@ function bboss_get_the_message_star_action_link( $args = array() ) {
 	 */
 	return apply_filters( 'bp_get_the_message_star_action_link', '<a data-bp-tooltip-pos="up" data-bp-tooltip="' . esc_attr( $title ) . '" class="bp-tooltip message-action-' . esc_attr( $action ) . '" data-star-status="' . esc_attr( $action ) . '" data-star-nonce="' . esc_attr( $nonce ) . '"' . $bulk_attr . ' data-message-id="' . esc_attr( (int) $message_id ) . '" href="' . $retval . '" role="button" data-pressed="false"><span class="icon"></span> <span class="bp-screen-reader-text">' . $r[ 'text_' . $action ] . '</span></a>', $r );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_the_message_star_action_link' ) && ! function_exists( 'bp_get_the_message_star_action_link' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_the_message_star_action_link()}.
+	 *
+	 * @deprecated Use bboss_get_the_message_star_action_link() instead.
+	 */
+	function bp_get_the_message_star_action_link( $args = array() ) {
+		return bboss_get_the_message_star_action_link( $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Save or delete star message meta according to a message's star status.
@@ -315,6 +371,20 @@ function bboss_messages_star_set_action( $args = array() ) {
 		}
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_messages_star_set_action' ) && ! function_exists( 'bp_messages_star_set_action' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_messages_star_set_action()}.
+	 *
+	 * @deprecated Use bboss_messages_star_set_action() instead.
+	 */
+	function bp_messages_star_set_action( $args = array() ) {
+		return bboss_messages_star_set_action( $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /** HOOKS ****************************************************************/
 
@@ -332,6 +402,20 @@ function bboss_messages_star_enqueue_scripts() {
 
 	wp_enqueue_style( 'dashicons' );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_messages_star_enqueue_scripts' ) && ! function_exists( 'bp_messages_star_enqueue_scripts' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_messages_star_enqueue_scripts()}.
+	 *
+	 * @deprecated Use bboss_messages_star_enqueue_scripts() instead.
+	 */
+	function bp_messages_star_enqueue_scripts() {
+		return bboss_messages_star_enqueue_scripts();
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'bp_enqueue_scripts', 'bp_messages_star_enqueue_scripts' );
 
 /**
@@ -347,6 +431,20 @@ function bboss_messages_star_bulk_management_dropdown() {
 
 	<?php
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_messages_star_bulk_management_dropdown' ) && ! function_exists( 'bp_messages_star_bulk_management_dropdown' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_messages_star_bulk_management_dropdown()}.
+	 *
+	 * @deprecated Use bboss_messages_star_bulk_management_dropdown() instead.
+	 */
+	function bp_messages_star_bulk_management_dropdown() {
+		return bboss_messages_star_bulk_management_dropdown();
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'bp_messages_bulk_management_dropdown', 'bp_messages_star_bulk_management_dropdown', 1 );
 
 /**
@@ -369,6 +467,20 @@ function bboss_messages_star_message_css_class( $retval = array() ) {
 
 	return $retval;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_messages_star_message_css_class' ) && ! function_exists( 'bp_messages_star_message_css_class' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_messages_star_message_css_class()}.
+	 *
+	 * @deprecated Use bboss_messages_star_message_css_class() instead.
+	 */
+	function bp_messages_star_message_css_class( $retval = array() ) {
+		return bboss_messages_star_message_css_class( $retval );
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_filter( 'bp_get_the_thread_message_css_class', 'bp_messages_star_message_css_class' );
 
 /**
@@ -390,30 +502,8 @@ function bboss_messages_filter_starred_message_threads( $r = array() ) {
 
 	return $r;
 }
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
-if ( function_exists( 'bboss_get_messages_starred_slug' ) && ! function_exists( 'bp_get_messages_starred_slug' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_messages_starred_slug()}.
-	 *
-	 * @deprecated Use bboss_get_messages_starred_slug() instead.
-	 */
-	function bp_get_messages_starred_slug() {
-		return bboss_get_messages_starred_slug();
-	}
-}
-if ( function_exists( 'bboss_get_the_message_star_action_link' ) && ! function_exists( 'bp_get_the_message_star_action_link' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_the_message_star_action_link()}.
-	 *
-	 * @deprecated Use bboss_get_the_message_star_action_link() instead.
-	 */
-	function bp_get_the_message_star_action_link( $args = array() ) {
-		return bboss_get_the_message_star_action_link( $args );
-	}
-}
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_messages_filter_starred_message_threads' ) && ! function_exists( 'bp_messages_filter_starred_message_threads' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_messages_filter_starred_message_threads()}.
@@ -424,64 +514,5 @@ if ( function_exists( 'bboss_messages_filter_starred_message_threads' ) && ! fun
 		return bboss_messages_filter_starred_message_threads( $r );
 	}
 }
-if ( function_exists( 'bboss_messages_is_message_starred' ) && ! function_exists( 'bp_messages_is_message_starred' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_messages_is_message_starred()}.
-	 *
-	 * @deprecated Use bboss_messages_is_message_starred() instead.
-	 */
-	function bp_messages_is_message_starred( $mid = 0, $user_id = 0 ) {
-		return bboss_messages_is_message_starred( $mid, $user_id );
-	}
-}
-if ( function_exists( 'bboss_messages_star_bulk_management_dropdown' ) && ! function_exists( 'bp_messages_star_bulk_management_dropdown' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_messages_star_bulk_management_dropdown()}.
-	 *
-	 * @deprecated Use bboss_messages_star_bulk_management_dropdown() instead.
-	 */
-	function bp_messages_star_bulk_management_dropdown() {
-		return bboss_messages_star_bulk_management_dropdown();
-	}
-}
-if ( function_exists( 'bboss_messages_star_enqueue_scripts' ) && ! function_exists( 'bp_messages_star_enqueue_scripts' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_messages_star_enqueue_scripts()}.
-	 *
-	 * @deprecated Use bboss_messages_star_enqueue_scripts() instead.
-	 */
-	function bp_messages_star_enqueue_scripts() {
-		return bboss_messages_star_enqueue_scripts();
-	}
-}
-if ( function_exists( 'bboss_messages_star_message_css_class' ) && ! function_exists( 'bp_messages_star_message_css_class' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_messages_star_message_css_class()}.
-	 *
-	 * @deprecated Use bboss_messages_star_message_css_class() instead.
-	 */
-	function bp_messages_star_message_css_class( $retval = array() ) {
-		return bboss_messages_star_message_css_class( $retval );
-	}
-}
-if ( function_exists( 'bboss_messages_star_set_action' ) && ! function_exists( 'bp_messages_star_set_action' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_messages_star_set_action()}.
-	 *
-	 * @deprecated Use bboss_messages_star_set_action() instead.
-	 */
-	function bp_messages_star_set_action( $args = array() ) {
-		return bboss_messages_star_set_action( $args );
-	}
-}
-if ( function_exists( 'bboss_the_message_star_action_link' ) && ! function_exists( 'bp_the_message_star_action_link' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_the_message_star_action_link()}.
-	 *
-	 * @deprecated Use bboss_the_message_star_action_link() instead.
-	 */
-	function bp_the_message_star_action_link( $args = array() ) {
-		return bboss_the_message_star_action_link( $args );
-	}
-}
 // @bbwt-com-end compat-layer
+

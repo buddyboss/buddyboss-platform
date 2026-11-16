@@ -74,6 +74,20 @@ function bboss_settings_update_notification_settings( $user_id, $settings ) {
 		bboss_update_user_meta( $user_id, $setting_key, $setting_value );
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_settings_update_notification_settings' ) && ! function_exists( 'bp_settings_update_notification_settings' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_settings_update_notification_settings()}.
+	 *
+	 * @deprecated Use bboss_settings_update_notification_settings() instead.
+	 */
+	function bp_settings_update_notification_settings( $user_id, $settings ) {
+		return bboss_settings_update_notification_settings( $user_id, $settings );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Sanitize email notification settings as submitted by a user.
@@ -130,6 +144,20 @@ function bboss_settings_sanitize_notification_settings( $settings = array() ) {
 
 	return apply_filters( 'bp_settings_sanitize_notification_settings', $sanitized_settings );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_settings_sanitize_notification_settings' ) && ! function_exists( 'bp_settings_sanitize_notification_settings' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_settings_sanitize_notification_settings()}.
+	 *
+	 * @deprecated Use bboss_settings_sanitize_notification_settings() instead.
+	 */
+	function bp_settings_sanitize_notification_settings( $settings = array() ) {
+		return bboss_settings_sanitize_notification_settings( $settings );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Build a dynamic whitelist of notification keys, based on what's hooked to 'bp_notification_settings'.
@@ -159,6 +187,20 @@ function bboss_settings_get_registered_notification_keys() {
 
 	return $key_whitelist;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_settings_get_registered_notification_keys' ) && ! function_exists( 'bp_settings_get_registered_notification_keys' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_settings_get_registered_notification_keys()}.
+	 *
+	 * @deprecated Use bboss_settings_get_registered_notification_keys() instead.
+	 */
+	function bp_settings_get_registered_notification_keys() {
+		return bboss_settings_get_registered_notification_keys();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Whether the Settings component supports plugin-registered notification
@@ -179,10 +221,8 @@ function bboss_settings_get_registered_notification_keys() {
 function bboss_settings_supports_notification_subnav() {
 	return true;
 }
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_settings_supports_notification_subnav' ) && ! function_exists( 'bb_settings_supports_notification_subnav' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_settings_supports_notification_subnav()}.
@@ -193,34 +233,5 @@ if ( function_exists( 'bboss_settings_supports_notification_subnav' ) && ! funct
 		return bboss_settings_supports_notification_subnav();
 	}
 }
-if ( function_exists( 'bboss_settings_get_registered_notification_keys' ) && ! function_exists( 'bp_settings_get_registered_notification_keys' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_settings_get_registered_notification_keys()}.
-	 *
-	 * @deprecated Use bboss_settings_get_registered_notification_keys() instead.
-	 */
-	function bp_settings_get_registered_notification_keys() {
-		return bboss_settings_get_registered_notification_keys();
-	}
-}
-if ( function_exists( 'bboss_settings_sanitize_notification_settings' ) && ! function_exists( 'bp_settings_sanitize_notification_settings' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_settings_sanitize_notification_settings()}.
-	 *
-	 * @deprecated Use bboss_settings_sanitize_notification_settings() instead.
-	 */
-	function bp_settings_sanitize_notification_settings( $settings = array() ) {
-		return bboss_settings_sanitize_notification_settings( $settings );
-	}
-}
-if ( function_exists( 'bboss_settings_update_notification_settings' ) && ! function_exists( 'bp_settings_update_notification_settings' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_settings_update_notification_settings()}.
-	 *
-	 * @deprecated Use bboss_settings_update_notification_settings() instead.
-	 */
-	function bp_settings_update_notification_settings( $user_id, $settings ) {
-		return bboss_settings_update_notification_settings( $user_id, $settings );
-	}
-}
 // @bbwt-com-end compat-layer
+

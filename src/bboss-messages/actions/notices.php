@@ -93,11 +93,8 @@ function bboss_messages_action_edit_notice() {
 
 	bboss_core_redirect( $redirect_to );
 }
-add_action( 'bp_actions', 'bp_messages_action_edit_notice' );
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_messages_action_edit_notice' ) && ! function_exists( 'bp_messages_action_edit_notice' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_messages_action_edit_notice()}.
@@ -109,3 +106,5 @@ if ( function_exists( 'bboss_messages_action_edit_notice' ) && ! function_exists
 	}
 }
 // @bbwt-com-end compat-layer
+
+add_action( 'bp_actions', 'bp_messages_action_edit_notice' );

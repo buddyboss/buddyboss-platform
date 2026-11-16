@@ -37,10 +37,8 @@ function bboss_bbp_setup_akismet() {
 	// Instantiate Akismet for Forums
 	bboss_forums()->extend->akismet = new BBoss_BBP_Akismet();
 }
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_bbp_setup_akismet' ) && ! function_exists( 'bbp_setup_akismet' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_bbp_setup_akismet()}.
@@ -52,3 +50,4 @@ if ( function_exists( 'bboss_bbp_setup_akismet' ) && ! function_exists( 'bbp_set
 	}
 }
 // @bbwt-com-end compat-layer
+

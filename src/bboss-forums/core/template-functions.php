@@ -42,6 +42,20 @@ function bboss_bbp_get_template_part( $slug, $name = null ) {
 	// Return the part that is found
 	return bboss_bbp_locate_template( $templates, true, false );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_template_part' ) && ! function_exists( 'bbp_get_template_part' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_template_part()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_template_part() instead.
+	 */
+	function bbp_get_template_part( $slug, $name = null ) {
+		return bboss_bbp_get_template_part( $slug, $name );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Retrieve the name of the highest priority template file that exists.
@@ -116,6 +130,20 @@ function bboss_bbp_locate_template( $template_names, $load = false, $require_onc
 
 	return $located;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_locate_template' ) && ! function_exists( 'bbp_locate_template' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_locate_template()}.
+	 *
+	 * @deprecated Use bboss_bbp_locate_template() instead.
+	 */
+	function bbp_locate_template( $template_names, $load = false, $require_once = true ) {
+		return bboss_bbp_locate_template( $template_names, $load, $require_once );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Locate an enqueueable file on the server. Used before being enqueued.
@@ -174,6 +202,20 @@ function bboss_bbp_locate_enqueueable( $file = '' ) {
 	// Return first found file location in the stack.
 	return bboss_bbp_locate_template( $files, false, false );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_locate_enqueueable' ) && ! function_exists( 'bbp_locate_enqueueable' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_locate_enqueueable()}.
+	 *
+	 * @deprecated Use bboss_bbp_locate_enqueueable() instead.
+	 */
+	function bbp_locate_enqueueable( $file = '' ) {
+		return bboss_bbp_locate_enqueueable( $file );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Convert an enqueueable file path to a URL.
@@ -201,6 +243,20 @@ function bboss_bbp_urlize_enqueueable( $file = '' ) {
 	// Return path to file relative to site URL.
 	return str_replace( $content_dir, $content_url, $file );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_urlize_enqueueable' ) && ! function_exists( 'bbp_urlize_enqueueable' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_urlize_enqueueable()}.
+	 *
+	 * @deprecated Use bboss_bbp_urlize_enqueueable() instead.
+	 */
+	function bbp_urlize_enqueueable( $file = '' ) {
+		return bboss_bbp_urlize_enqueueable( $file );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Enqueue a script from the highest priority location in the template stack.
@@ -246,6 +302,20 @@ function bboss_bbp_enqueue_style( $handle = '', $file = '', $deps = array(), $ve
 
 	return $located;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_enqueue_style' ) && ! function_exists( 'bbp_enqueue_style' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_enqueue_style()}.
+	 *
+	 * @deprecated Use bboss_bbp_enqueue_style() instead.
+	 */
+	function bbp_enqueue_style( $handle = '', $file = '', $deps = array(), $ver = false, $media = 'all' ) {
+		return bboss_bbp_enqueue_style( $handle, $file, $deps, $ver, $media );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Enqueue a script from the highest priority location in the template stack.
@@ -290,6 +360,20 @@ function bboss_bbp_enqueue_script( $handle = '', $file = '', $deps = array(), $v
 
 	return $located;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_enqueue_script' ) && ! function_exists( 'bbp_enqueue_script' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_enqueue_script()}.
+	 *
+	 * @deprecated Use bboss_bbp_enqueue_script() instead.
+	 */
+	function bbp_enqueue_script( $handle = '', $file = '', $deps = array(), $ver = false, $in_footer = 'all' ) {
+		return bboss_bbp_enqueue_script( $handle, $file, $deps, $ver, $in_footer );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * This is really cool. This function registers a new template stack location,
@@ -314,6 +398,20 @@ function bboss_bbp_register_template_stack( $location_callback = '', $priority =
 	// Add location callback to template stack
 	return add_filter( 'bbp_template_stack', $location_callback, (int) $priority );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_register_template_stack' ) && ! function_exists( 'bbp_register_template_stack' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_register_template_stack()}.
+	 *
+	 * @deprecated Use bboss_bbp_register_template_stack() instead.
+	 */
+	function bbp_register_template_stack( $location_callback = '', $priority = 10 ) {
+		return bboss_bbp_register_template_stack( $location_callback, $priority );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Deregisters a previously registered template stack location.
@@ -334,6 +432,20 @@ function bboss_bbp_deregister_template_stack( $location_callback = '', $priority
 	// Remove location callback to template stack
 	return remove_filter( 'bbp_template_stack', $location_callback, (int) $priority );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_deregister_template_stack' ) && ! function_exists( 'bbp_deregister_template_stack' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_deregister_template_stack()}.
+	 *
+	 * @deprecated Use bboss_bbp_deregister_template_stack() instead.
+	 */
+	function bbp_deregister_template_stack( $location_callback = '', $priority = 10 ) {
+		return bboss_bbp_deregister_template_stack( $location_callback, $priority );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Call the functions added to the 'bbp_template_stack' filter hook, and return
@@ -397,6 +509,20 @@ function bboss_bbp_get_template_stack() {
 
 	return (array) apply_filters( 'bbp_get_template_stack', $stack );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_template_stack' ) && ! function_exists( 'bbp_get_template_stack' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_template_stack()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_template_stack() instead.
+	 */
+	function bbp_get_template_stack() {
+		return bboss_bbp_get_template_stack();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get a template part in an output buffer, and return it
@@ -422,6 +548,20 @@ function bboss_bbp_buffer_template_part( $slug, $name = null, $echo = true ) {
 		return $output;
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_buffer_template_part' ) && ! function_exists( 'bbp_buffer_template_part' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_buffer_template_part()}.
+	 *
+	 * @deprecated Use bboss_bbp_buffer_template_part() instead.
+	 */
+	function bbp_buffer_template_part( $slug, $name = null, $echo = true ) {
+		return bboss_bbp_buffer_template_part( $slug, $name, $echo );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Retrieve path to a template
@@ -475,6 +615,20 @@ function bboss_bbp_get_query_template( $type, $templates = array() ) {
 	// Filter & return.
 	return apply_filters( "bbp_{$type}_template", $template );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_query_template' ) && ! function_exists( 'bbp_get_query_template' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_query_template()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_query_template() instead.
+	 */
+	function bbp_get_query_template( $type, $templates = array() ) {
+		return bboss_bbp_get_query_template( $type, $templates );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get the possible subdirectories to check for templates in
@@ -491,6 +645,20 @@ function bboss_bbp_get_template_locations( $templates = array() ) {
 	);
 	return apply_filters( 'bbp_get_template_locations', $locations, $templates );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_template_locations' ) && ! function_exists( 'bbp_get_template_locations' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_template_locations()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_template_locations() instead.
+	 */
+	function bbp_get_template_locations( $templates = array() ) {
+		return bboss_bbp_get_template_locations( $templates );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Add template locations to template files being searched for
@@ -515,6 +683,20 @@ function bboss_bbp_add_template_stack_locations( $stacks = array() ) {
 
 	return apply_filters( 'bbp_add_template_stack_locations', array_unique( $retval ), $stacks );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_add_template_stack_locations' ) && ! function_exists( 'bbp_add_template_stack_locations' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_add_template_stack_locations()}.
+	 *
+	 * @deprecated Use bboss_bbp_add_template_stack_locations() instead.
+	 */
+	function bbp_add_template_stack_locations( $stacks = array() ) {
+		return bboss_bbp_add_template_stack_locations( $stacks );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Add checks for Forums conditions to parse_query action
@@ -760,120 +942,8 @@ function bboss_bbp_parse_query( $posts_query ) {
 		$posts_query->set( 'posts_per_page', bboss_bbp_get_topics_per_page() );
 	}
 }
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
-if ( function_exists( 'bboss_bbp_add_template_stack_locations' ) && ! function_exists( 'bbp_add_template_stack_locations' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_add_template_stack_locations()}.
-	 *
-	 * @deprecated Use bboss_bbp_add_template_stack_locations() instead.
-	 */
-	function bbp_add_template_stack_locations( $stacks = array() ) {
-		return bboss_bbp_add_template_stack_locations( $stacks );
-	}
-}
-if ( function_exists( 'bboss_bbp_buffer_template_part' ) && ! function_exists( 'bbp_buffer_template_part' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_buffer_template_part()}.
-	 *
-	 * @deprecated Use bboss_bbp_buffer_template_part() instead.
-	 */
-	function bbp_buffer_template_part( $slug, $name = null, $echo = true ) {
-		return bboss_bbp_buffer_template_part( $slug, $name, $echo );
-	}
-}
-if ( function_exists( 'bboss_bbp_deregister_template_stack' ) && ! function_exists( 'bbp_deregister_template_stack' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_deregister_template_stack()}.
-	 *
-	 * @deprecated Use bboss_bbp_deregister_template_stack() instead.
-	 */
-	function bbp_deregister_template_stack( $location_callback = '', $priority = 10 ) {
-		return bboss_bbp_deregister_template_stack( $location_callback, $priority );
-	}
-}
-if ( function_exists( 'bboss_bbp_enqueue_script' ) && ! function_exists( 'bbp_enqueue_script' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_enqueue_script()}.
-	 *
-	 * @deprecated Use bboss_bbp_enqueue_script() instead.
-	 */
-	function bbp_enqueue_script( $handle = '', $file = '', $deps = array(), $ver = false, $in_footer = 'all' ) {
-		return bboss_bbp_enqueue_script( $handle, $file, $deps, $ver, $in_footer );
-	}
-}
-if ( function_exists( 'bboss_bbp_enqueue_style' ) && ! function_exists( 'bbp_enqueue_style' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_enqueue_style()}.
-	 *
-	 * @deprecated Use bboss_bbp_enqueue_style() instead.
-	 */
-	function bbp_enqueue_style( $handle = '', $file = '', $deps = array(), $ver = false, $media = 'all' ) {
-		return bboss_bbp_enqueue_style( $handle, $file, $deps, $ver, $media );
-	}
-}
-if ( function_exists( 'bboss_bbp_get_query_template' ) && ! function_exists( 'bbp_get_query_template' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_query_template()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_query_template() instead.
-	 */
-	function bbp_get_query_template( $type, $templates = array() ) {
-		return bboss_bbp_get_query_template( $type, $templates );
-	}
-}
-if ( function_exists( 'bboss_bbp_get_template_locations' ) && ! function_exists( 'bbp_get_template_locations' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_template_locations()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_template_locations() instead.
-	 */
-	function bbp_get_template_locations( $templates = array() ) {
-		return bboss_bbp_get_template_locations( $templates );
-	}
-}
-if ( function_exists( 'bboss_bbp_get_template_part' ) && ! function_exists( 'bbp_get_template_part' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_template_part()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_template_part() instead.
-	 */
-	function bbp_get_template_part( $slug, $name = null ) {
-		return bboss_bbp_get_template_part( $slug, $name );
-	}
-}
-if ( function_exists( 'bboss_bbp_get_template_stack' ) && ! function_exists( 'bbp_get_template_stack' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_template_stack()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_template_stack() instead.
-	 */
-	function bbp_get_template_stack() {
-		return bboss_bbp_get_template_stack();
-	}
-}
-if ( function_exists( 'bboss_bbp_locate_enqueueable' ) && ! function_exists( 'bbp_locate_enqueueable' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_locate_enqueueable()}.
-	 *
-	 * @deprecated Use bboss_bbp_locate_enqueueable() instead.
-	 */
-	function bbp_locate_enqueueable( $file = '' ) {
-		return bboss_bbp_locate_enqueueable( $file );
-	}
-}
-if ( function_exists( 'bboss_bbp_locate_template' ) && ! function_exists( 'bbp_locate_template' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_locate_template()}.
-	 *
-	 * @deprecated Use bboss_bbp_locate_template() instead.
-	 */
-	function bbp_locate_template( $template_names, $load = false, $require_once = true ) {
-		return bboss_bbp_locate_template( $template_names, $load, $require_once );
-	}
-}
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_bbp_parse_query' ) && ! function_exists( 'bbp_parse_query' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_bbp_parse_query()}.
@@ -884,24 +954,5 @@ if ( function_exists( 'bboss_bbp_parse_query' ) && ! function_exists( 'bbp_parse
 		return bboss_bbp_parse_query( $posts_query );
 	}
 }
-if ( function_exists( 'bboss_bbp_register_template_stack' ) && ! function_exists( 'bbp_register_template_stack' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_register_template_stack()}.
-	 *
-	 * @deprecated Use bboss_bbp_register_template_stack() instead.
-	 */
-	function bbp_register_template_stack( $location_callback = '', $priority = 10 ) {
-		return bboss_bbp_register_template_stack( $location_callback, $priority );
-	}
-}
-if ( function_exists( 'bboss_bbp_urlize_enqueueable' ) && ! function_exists( 'bbp_urlize_enqueueable' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_urlize_enqueueable()}.
-	 *
-	 * @deprecated Use bboss_bbp_urlize_enqueueable() instead.
-	 */
-	function bbp_urlize_enqueueable( $file = '' ) {
-		return bboss_bbp_urlize_enqueueable( $file );
-	}
-}
 // @bbwt-com-end compat-layer
+

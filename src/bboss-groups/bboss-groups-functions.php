@@ -26,6 +26,20 @@ function bboss_groups_has_directory() {
 
 	return (bool) ! empty( $bp->pages->groups->id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_groups_has_directory' ) && ! function_exists( 'bp_groups_has_directory' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_has_directory()}.
+	 *
+	 * @deprecated Use bboss_groups_has_directory() instead.
+	 */
+	function bp_groups_has_directory() {
+		return bboss_groups_has_directory();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Fetch a single group object.
@@ -71,6 +85,20 @@ function bboss_groups_get_group( $group_id ) {
 	 */
 	return apply_filters( 'groups_get_group', $group );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_groups_get_group' ) && ! function_exists( 'groups_get_group' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_get_group()}.
+	 *
+	 * @deprecated Use bboss_groups_get_group() instead.
+	 */
+	function groups_get_group( $group_id ) {
+		return bboss_groups_get_group( $group_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /** Group Creation, Editing & Deletion ****************************************/
 
@@ -228,6 +256,20 @@ function bboss_groups_create_group( $args = '' ) {
 
 	return $group->id;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_groups_create_group' ) && ! function_exists( 'groups_create_group' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_create_group()}.
+	 *
+	 * @deprecated Use bboss_groups_create_group() instead.
+	 */
+	function groups_create_group( $args = '' ) {
+		return bboss_groups_create_group( $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Edit the base details for a group.
@@ -354,6 +396,20 @@ function bboss_groups_edit_base_group_details( $args = array() ) {
 
 	return true;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_groups_edit_base_group_details' ) && ! function_exists( 'groups_edit_base_group_details' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_edit_base_group_details()}.
+	 *
+	 * @deprecated Use bboss_groups_edit_base_group_details() instead.
+	 */
+	function groups_edit_base_group_details( $args = array() ) {
+		return bboss_groups_edit_base_group_details( ...func_get_args() );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Edit the base details for a group.
@@ -484,6 +540,20 @@ function bboss_groups_edit_group_settings( $group_id, $enable_forum, $status, $i
 
 	return true;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_groups_edit_group_settings' ) && ! function_exists( 'groups_edit_group_settings' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_edit_group_settings()}.
+	 *
+	 * @deprecated Use bboss_groups_edit_group_settings() instead.
+	 */
+	function groups_edit_group_settings( $group_id, $enable_forum, $status, $invite_status = false, $activity_feed_status = false, $parent_id = false, $media_status = false, $document_status = false, $video_status = false, $album_status = false, $message_status = false ) {
+		return bboss_groups_edit_group_settings( $group_id, $enable_forum, $status, $invite_status, $activity_feed_status, $parent_id, $media_status, $document_status, $video_status, $album_status, $message_status );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Delete a group and all of its associated metadata.
@@ -526,6 +596,20 @@ function bboss_groups_delete_group( $group_id ) {
 
 	return true;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_groups_delete_group' ) && ! function_exists( 'groups_delete_group' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_delete_group()}.
+	 *
+	 * @deprecated Use bboss_groups_delete_group() instead.
+	 */
+	function groups_delete_group( $group_id ) {
+		return bboss_groups_delete_group( $group_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Check a group status (eg 'private') against the whitelist of registered statuses.
@@ -540,6 +624,20 @@ function bboss_groups_is_valid_status( $status ) {
 
 	return in_array( $status, (array) $bp->groups->valid_status );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_groups_is_valid_status' ) && ! function_exists( 'groups_is_valid_status' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_is_valid_status()}.
+	 *
+	 * @deprecated Use bboss_groups_is_valid_status() instead.
+	 */
+	function groups_is_valid_status( $status ) {
+		return bboss_groups_is_valid_status( $status );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Provide a unique, sanitized version of a group slug.
@@ -571,6 +669,20 @@ function bboss_groups_check_slug( $slug ) {
 
 	return $slug;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_groups_check_slug' ) && ! function_exists( 'groups_check_slug' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_check_slug()}.
+	 *
+	 * @deprecated Use bboss_groups_check_slug() instead.
+	 */
+	function groups_check_slug( $slug ) {
+		return bboss_groups_check_slug( $slug );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get a group slug by its ID.
@@ -584,6 +696,20 @@ function bboss_groups_get_slug( $group_id ) {
 	$group = bboss_groups_get_group( $group_id );
 	return ! empty( $group->slug ) ? $group->slug : '';
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_groups_get_slug' ) && ! function_exists( 'groups_get_slug' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_get_slug()}.
+	 *
+	 * @deprecated Use bboss_groups_get_slug() instead.
+	 */
+	function groups_get_slug( $group_id ) {
+		return bboss_groups_get_slug( $group_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get a group ID by its slug.
@@ -596,6 +722,20 @@ function bboss_groups_get_slug( $group_id ) {
 function bboss_groups_get_id( $group_slug ) {
 	return BBoss_Groups_Group::group_exists( $group_slug );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_groups_get_id' ) && ! function_exists( 'groups_get_id' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_get_id()}.
+	 *
+	 * @deprecated Use bboss_groups_get_id() instead.
+	 */
+	function groups_get_id( $group_slug ) {
+		return bboss_groups_get_id( $group_slug );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get a group ID by checking against old (not currently active) slugs.
@@ -608,6 +748,20 @@ function bboss_groups_get_id( $group_slug ) {
 function bboss_groups_get_id_by_previous_slug( $group_slug ) {
 	return BBoss_Groups_Group::get_id_by_previous_slug( $group_slug );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_groups_get_id_by_previous_slug' ) && ! function_exists( 'groups_get_id_by_previous_slug' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_get_id_by_previous_slug()}.
+	 *
+	 * @deprecated Use bboss_groups_get_id_by_previous_slug() instead.
+	 */
+	function groups_get_id_by_previous_slug( $group_slug ) {
+		return bboss_groups_get_id_by_previous_slug( $group_slug );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /** User Actions **************************************************************/
 
@@ -668,6 +822,20 @@ function bboss_groups_leave_group( $group_id, $user_id = 0 ) {
 
 	return true;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_groups_leave_group' ) && ! function_exists( 'groups_leave_group' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_leave_group()}.
+	 *
+	 * @deprecated Use bboss_groups_leave_group() instead.
+	 */
+	function groups_leave_group( $group_id, $user_id = 0 ) {
+		return bboss_groups_leave_group( $group_id, $user_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Add a user to a group.
@@ -764,6 +932,20 @@ function bboss_groups_join_group( $group_id, $user_id = 0 ) {
 
 	return true;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_groups_join_group' ) && ! function_exists( 'groups_join_group' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_join_group()}.
+	 *
+	 * @deprecated Use bboss_groups_join_group() instead.
+	 */
+	function groups_join_group( $group_id, $user_id = 0 ) {
+		return bboss_groups_join_group( $group_id, $user_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Update the last_activity meta value for a given group.
@@ -786,6 +968,20 @@ function bboss_groups_update_last_activity( $group_id = 0 ) {
 
 	bboss_groups_update_groupmeta( $group_id, 'last_activity', bboss_core_current_time() );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_groups_update_last_activity' ) && ! function_exists( 'groups_update_last_activity' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_update_last_activity()}.
+	 *
+	 * @deprecated Use bboss_groups_update_last_activity() instead.
+	 */
+	function groups_update_last_activity( $group_id = 0 ) {
+		return bboss_groups_update_last_activity( $group_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'groups_join_group', 'groups_update_last_activity' );
 add_action( 'groups_leave_group', 'groups_update_last_activity' );
 add_action( 'groups_created_group', 'groups_update_last_activity' );
@@ -803,6 +999,20 @@ add_action( 'groups_created_group', 'groups_update_last_activity' );
 function bboss_groups_get_group_admins( $group_id ) {
 	return BBoss_Groups_Member::get_group_administrator_ids( $group_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_groups_get_group_admins' ) && ! function_exists( 'groups_get_group_admins' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_get_group_admins()}.
+	 *
+	 * @deprecated Use bboss_groups_get_group_admins() instead.
+	 */
+	function groups_get_group_admins( $group_id ) {
+		return bboss_groups_get_group_admins( $group_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get a list of group moderators.
@@ -815,6 +1025,20 @@ function bboss_groups_get_group_admins( $group_id ) {
 function bboss_groups_get_group_mods( $group_id ) {
 	return BBoss_Groups_Member::get_group_moderator_ids( $group_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_groups_get_group_mods' ) && ! function_exists( 'groups_get_group_mods' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_get_group_mods()}.
+	 *
+	 * @deprecated Use bboss_groups_get_group_mods() instead.
+	 */
+	function groups_get_group_mods( $group_id ) {
+		return bboss_groups_get_group_mods( $group_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Fetch the members of a group.
@@ -939,6 +1163,20 @@ function bboss_groups_get_group_members( $args = array() ) {
 
 	return $retval;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_groups_get_group_members' ) && ! function_exists( 'groups_get_group_members' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_get_group_members()}.
+	 *
+	 * @deprecated Use bboss_groups_get_group_members() instead.
+	 */
+	function groups_get_group_members( $args = array() ) {
+		return bboss_groups_get_group_members( ...func_get_args() );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get the member count for a group.
@@ -951,6 +1189,20 @@ function bboss_groups_get_group_members( $args = array() ) {
 function bboss_groups_get_total_member_count( $group_id ) {
 	return BBoss_Groups_Group::get_total_member_count( $group_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_groups_get_total_member_count' ) && ! function_exists( 'groups_get_total_member_count' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_get_total_member_count()}.
+	 *
+	 * @deprecated Use bboss_groups_get_total_member_count() instead.
+	 */
+	function groups_get_total_member_count( $group_id ) {
+		return bboss_groups_get_total_member_count( $group_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /** Group Fetching, Filtering & Searching  ************************************/
 
@@ -1044,6 +1296,20 @@ function bboss_groups_get_groups( $args = '' ) {
 	 */
 	return apply_filters_ref_array( 'groups_get_groups', array( &$groups, &$r ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_groups_get_groups' ) && ! function_exists( 'groups_get_groups' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_get_groups()}.
+	 *
+	 * @deprecated Use bboss_groups_get_groups() instead.
+	 */
+	function groups_get_groups( $args = '' ) {
+		return bboss_groups_get_groups( $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get the total group count for the site.
@@ -1060,6 +1326,20 @@ function bboss_groups_get_total_group_count() {
 
 	return $count;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_groups_get_total_group_count' ) && ! function_exists( 'groups_get_total_group_count' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_get_total_group_count()}.
+	 *
+	 * @deprecated Use bboss_groups_get_total_group_count() instead.
+	 */
+	function groups_get_total_group_count() {
+		return bboss_groups_get_total_group_count();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Object template results members group all scope.
@@ -1083,6 +1363,20 @@ function bboss_group_object_template_results_groups_all_scope( $querystring, $ob
 
 	return http_build_query( $querystring );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_group_object_template_results_groups_all_scope' ) && ! function_exists( 'bp_group_object_template_results_groups_all_scope' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_group_object_template_results_groups_all_scope()}.
+	 *
+	 * @deprecated Use bboss_group_object_template_results_groups_all_scope() instead.
+	 */
+	function bp_group_object_template_results_groups_all_scope( $querystring, $object ) {
+		return bboss_group_object_template_results_groups_all_scope( $querystring, $object );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get the IDs of the groups of which a specified user is a member.
@@ -1107,6 +1401,20 @@ function bboss_groups_get_user_groups( $user_id = 0, $pag_num = 0, $pag_page = 0
 
 	return BBoss_Groups_Member::get_group_ids( $user_id, $pag_num, $pag_page );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_groups_get_user_groups' ) && ! function_exists( 'groups_get_user_groups' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_get_user_groups()}.
+	 *
+	 * @deprecated Use bboss_groups_get_user_groups() instead.
+	 */
+	function groups_get_user_groups( $user_id = 0, $pag_num = 0, $pag_page = 0 ) {
+		return bboss_groups_get_user_groups( $user_id, $pag_num, $pag_page );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get a list of groups of which the specified user is a member.
@@ -1314,6 +1622,20 @@ function bboss_get_user_groups( $user_id, $args = array() ) {
 
 	return $groups;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_user_groups' ) && ! function_exists( 'bp_get_user_groups' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_user_groups()}.
+	 *
+	 * @deprecated Use bboss_get_user_groups() instead.
+	 */
+	function bp_get_user_groups( $user_id, $args = array() ) {
+		return bboss_get_user_groups( $user_id, $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get the count of groups of which the specified user is a member.
@@ -1338,6 +1660,20 @@ function bboss_groups_total_groups_for_user( $user_id = 0 ) {
 
 	return (int) $count;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_groups_total_groups_for_user' ) && ! function_exists( 'groups_total_groups_for_user' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_total_groups_for_user()}.
+	 *
+	 * @deprecated Use bboss_groups_total_groups_for_user() instead.
+	 */
+	function groups_total_groups_for_user( $user_id = 0 ) {
+		return bboss_groups_total_groups_for_user( $user_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get the BBoss_Groups_Group object corresponding to the current group.
@@ -1362,6 +1698,20 @@ function bboss_groups_get_current_group() {
 	 */
 	return apply_filters( 'groups_get_current_group', $current_group );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_groups_get_current_group' ) && ! function_exists( 'groups_get_current_group' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_get_current_group()}.
+	 *
+	 * @deprecated Use bboss_groups_get_current_group() instead.
+	 */
+	function groups_get_current_group() {
+		return bboss_groups_get_current_group();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /** Group Avatars *************************************************************/
 
@@ -1405,6 +1755,20 @@ function bboss_groups_avatar_upload_dir( $group_id = 0 ) {
 		)
 	);
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_groups_avatar_upload_dir' ) && ! function_exists( 'groups_avatar_upload_dir' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_avatar_upload_dir()}.
+	 *
+	 * @deprecated Use bboss_groups_avatar_upload_dir() instead.
+	 */
+	function groups_avatar_upload_dir( $group_id = 0 ) {
+		return bboss_groups_avatar_upload_dir( $group_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /** Group Member Status Checks ************************************************/
 
@@ -1452,6 +1816,20 @@ function bboss_groups_get_group_roles() {
 		),
 	);
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_groups_get_group_roles' ) && ! function_exists( 'bp_groups_get_group_roles' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_get_group_roles()}.
+	 *
+	 * @deprecated Use bboss_groups_get_group_roles() instead.
+	 */
+	function bp_groups_get_group_roles() {
+		return bboss_groups_get_group_roles();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Check whether a user is an admin of a given group.
@@ -1478,6 +1856,20 @@ function bboss_groups_is_user_admin( $user_id, $group_id ) {
 
 	return $is_admin;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_groups_is_user_admin' ) && ! function_exists( 'groups_is_user_admin' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_is_user_admin()}.
+	 *
+	 * @deprecated Use bboss_groups_is_user_admin() instead.
+	 */
+	function groups_is_user_admin( $user_id, $group_id ) {
+		return bboss_groups_is_user_admin( $user_id, $group_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Check whether a user is a mod of a given group.
@@ -1504,6 +1896,20 @@ function bboss_groups_is_user_mod( $user_id, $group_id ) {
 
 	return $is_mod;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_groups_is_user_mod' ) && ! function_exists( 'groups_is_user_mod' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_is_user_mod()}.
+	 *
+	 * @deprecated Use bboss_groups_is_user_mod() instead.
+	 */
+	function groups_is_user_mod( $user_id, $group_id ) {
+		return bboss_groups_is_user_mod( $user_id, $group_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Check whether a user is a member of a given group.
@@ -1531,6 +1937,20 @@ function bboss_groups_is_user_member( $user_id, $group_id ) {
 
 	return $is_member;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_groups_is_user_member' ) && ! function_exists( 'groups_is_user_member' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_is_user_member()}.
+	 *
+	 * @deprecated Use bboss_groups_is_user_member() instead.
+	 */
+	function groups_is_user_member( $user_id, $group_id ) {
+		return bboss_groups_is_user_member( $user_id, $group_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Check whether a user is allowed to post in a given group.
@@ -1686,6 +2106,20 @@ function bboss_groups_is_user_banned( $user_id, $group_id ) {
 
 	return $is_banned;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_groups_is_user_banned' ) && ! function_exists( 'groups_is_user_banned' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_is_user_banned()}.
+	 *
+	 * @deprecated Use bboss_groups_is_user_banned() instead.
+	 */
+	function groups_is_user_banned( $user_id, $group_id ) {
+		return bboss_groups_is_user_banned( $user_id, $group_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Check whether a user has an outstanding invitation to a group.
@@ -1703,6 +2137,20 @@ function bboss_groups_is_user_banned( $user_id, $group_id ) {
 function bboss_groups_is_user_invited( $user_id, $group_id, $type = 'sent' ) {
 	return bboss_groups_check_has_invite_from_user( $user_id, $group_id, false, $type );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_groups_is_user_invited' ) && ! function_exists( 'groups_is_user_invited' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_is_user_invited()}.
+	 *
+	 * @deprecated Use bboss_groups_is_user_invited() instead.
+	 */
+	function groups_is_user_invited( $user_id, $group_id, $type = 'sent' ) {
+		return bboss_groups_is_user_invited( $user_id, $group_id, $type );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Check whether a user has a pending membership request for a group.
@@ -1726,6 +2174,20 @@ function bboss_groups_is_user_pending( $user_id, $group_id ) {
 
 	return $invites_class->request_exists( $args );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_groups_is_user_pending' ) && ! function_exists( 'groups_is_user_pending' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_is_user_pending()}.
+	 *
+	 * @deprecated Use bboss_groups_is_user_pending() instead.
+	 */
+	function groups_is_user_pending( $user_id, $group_id ) {
+		return bboss_groups_is_user_pending( $user_id, $group_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Is the specified user the creator of the group?
@@ -1739,6 +2201,20 @@ function bboss_groups_is_user_pending( $user_id, $group_id ) {
 function bboss_groups_is_user_creator( $user_id, $group_id ) {
 	return BBoss_Groups_Member::check_is_creator( $user_id, $group_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_groups_is_user_creator' ) && ! function_exists( 'groups_is_user_creator' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_is_user_creator()}.
+	 *
+	 * @deprecated Use bboss_groups_is_user_creator() instead.
+	 */
+	function groups_is_user_creator( $user_id, $group_id ) {
+		return bboss_groups_is_user_creator( $user_id, $group_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /** Group Activity Posting ****************************************************/
 
@@ -1874,6 +2350,20 @@ function bboss_groups_post_update( $args = '' ) {
 
 	return $activity_id;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_groups_post_update' ) && ! function_exists( 'groups_post_update' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_post_update()}.
+	 *
+	 * @deprecated Use bboss_groups_post_update() instead.
+	 */
+	function groups_post_update( $args = '' ) {
+		return bboss_groups_post_update( $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /** Group Invitations *********************************************************/
 
@@ -1923,6 +2413,20 @@ function bboss_groups_get_invites_for_user( $user_id = 0, $limit = false, $page 
 		'total'  => bboss_groups_get_invite_count_for_user( $user_id ),
 	);
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_groups_get_invites_for_user' ) && ! function_exists( 'groups_get_invites_for_user' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_get_invites_for_user()}.
+	 *
+	 * @deprecated Use bboss_groups_get_invites_for_user() instead.
+	 */
+	function groups_get_invites_for_user( $user_id = 0, $limit = false, $page = false, $exclude = false ) {
+		return bboss_groups_get_invites_for_user( $user_id, $limit, $page, $exclude );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get the total group invite count for a user.
@@ -1939,6 +2443,20 @@ function bboss_groups_get_invite_count_for_user( $user_id = 0 ) {
 
 	return count( bboss_groups_get_invited_to_group_ids( $user_id ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_groups_get_invite_count_for_user' ) && ! function_exists( 'groups_get_invite_count_for_user' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_get_invite_count_for_user()}.
+	 *
+	 * @deprecated Use bboss_groups_get_invite_count_for_user() instead.
+	 */
+	function groups_get_invite_count_for_user( $user_id = 0 ) {
+		return bboss_groups_get_invite_count_for_user( $user_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get an array of group IDs to which a user is invited.
@@ -1965,6 +2483,20 @@ function bboss_groups_get_invited_to_group_ids( $user_id = 0 ) {
 
 	return array_unique( $group_ids );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_groups_get_invited_to_group_ids' ) && ! function_exists( 'groups_get_invited_to_group_ids' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_get_invited_to_group_ids()}.
+	 *
+	 * @deprecated Use bboss_groups_get_invited_to_group_ids() instead.
+	 */
+	function groups_get_invited_to_group_ids( $user_id = 0 ) {
+		return bboss_groups_get_invited_to_group_ids( $user_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Invite a user to a group.
@@ -2027,6 +2559,20 @@ function bboss_groups_invite_user( $args = '' ) {
 
 	return $created;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_groups_invite_user' ) && ! function_exists( 'groups_invite_user' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_invite_user()}.
+	 *
+	 * @deprecated Use bboss_groups_invite_user() instead.
+	 */
+	function groups_invite_user( $args = '' ) {
+		return bboss_groups_invite_user( $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Uninvite a user from a group.
@@ -2070,6 +2616,20 @@ function bboss_groups_uninvite_user( $user_id, $group_id, $inviter_id = false ) 
 
 	return $success;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_groups_uninvite_user' ) && ! function_exists( 'groups_uninvite_user' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_uninvite_user()}.
+	 *
+	 * @deprecated Use bboss_groups_uninvite_user() instead.
+	 */
+	function groups_uninvite_user( $user_id, $group_id, $inviter_id = false ) {
+		return bboss_groups_uninvite_user( $user_id, $group_id, $inviter_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Process the acceptance of a group invitation.
@@ -2093,6 +2653,20 @@ function bboss_groups_accept_invite( $user_id, $group_id ) {
 
 	return $invites_class->accept_invitation( $args );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_groups_accept_invite' ) && ! function_exists( 'groups_accept_invite' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_accept_invite()}.
+	 *
+	 * @deprecated Use bboss_groups_accept_invite() instead.
+	 */
+	function groups_accept_invite( $user_id, $group_id ) {
+		return bboss_groups_accept_invite( $user_id, $group_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Reject a group invitation.
@@ -2134,6 +2708,20 @@ function bboss_groups_reject_invite( $user_id, $group_id, $inviter_id = false ) 
 
 	return $success;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_groups_reject_invite' ) && ! function_exists( 'groups_reject_invite' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_reject_invite()}.
+	 *
+	 * @deprecated Use bboss_groups_reject_invite() instead.
+	 */
+	function groups_reject_invite( $user_id, $group_id, $inviter_id = false ) {
+		return bboss_groups_reject_invite( $user_id, $group_id, $inviter_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Delete a group invitation.
@@ -2175,6 +2763,20 @@ function bboss_groups_delete_invite( $user_id, $group_id, $inviter_id = false ) 
 
 	return true;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_groups_delete_invite' ) && ! function_exists( 'groups_delete_invite' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_delete_invite()}.
+	 *
+	 * @deprecated Use bboss_groups_delete_invite() instead.
+	 */
+	function groups_delete_invite( $user_id, $group_id, $inviter_id = false ) {
+		return bboss_groups_delete_invite( $user_id, $group_id, $inviter_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Send all pending invites by a single user to a specific group.
@@ -2259,6 +2861,20 @@ function bboss_groups_send_invites( $args = array() ) {
 	 */
 	do_action( 'groups_send_invites', $r['group_id'], $invited_users, $r['inviter_id'] );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_groups_send_invites' ) && ! function_exists( 'groups_send_invites' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_send_invites()}.
+	 *
+	 * @deprecated Use bboss_groups_send_invites() instead.
+	 */
+	function groups_send_invites( $args = array() ) {
+		return bboss_groups_send_invites( ...func_get_args() );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get IDs of users with outstanding invites to a given group from a specified user.
@@ -2278,6 +2894,20 @@ function bboss_groups_send_invites( $args = array() ) {
 function bboss_groups_get_invites_for_group( $user_id, $group_id, $sent = null ) {
 	return BBoss_Groups_Group::get_invites( $user_id, $group_id, $sent );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_groups_get_invites_for_group' ) && ! function_exists( 'groups_get_invites_for_group' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_get_invites_for_group()}.
+	 *
+	 * @deprecated Use bboss_groups_get_invites_for_group() instead.
+	 */
+	function groups_get_invites_for_group( $user_id, $group_id, $sent = null ) {
+		return bboss_groups_get_invites_for_group( $user_id, $group_id, $sent );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get invitations to a given group filtered by arguments.
@@ -2295,6 +2925,20 @@ function bboss_groups_get_invites( $args = array() ) {
 	$invites_class = new BBoss_Groups_Invitation_Manager();
 	return $invites_class->get_invitations( $args );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_groups_get_invites' ) && ! function_exists( 'groups_get_invites' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_get_invites()}.
+	 *
+	 * @deprecated Use bboss_groups_get_invites() instead.
+	 */
+	function groups_get_invites( $args = array() ) {
+		return bboss_groups_get_invites( $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Check to see whether a user has already been invited to a group.
@@ -2314,6 +2958,20 @@ function bboss_groups_get_invites( $args = array() ) {
 function bboss_groups_check_user_has_invite( $user_id, $group_id, $type = 'sent' ) {
 	return bboss_groups_check_has_invite_from_user( $user_id, $group_id, false, $type );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_groups_check_user_has_invite' ) && ! function_exists( 'groups_check_user_has_invite' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_check_user_has_invite()}.
+	 *
+	 * @deprecated Use bboss_groups_check_user_has_invite() instead.
+	 */
+	function groups_check_user_has_invite( $user_id, $group_id, $type = 'sent' ) {
+		return bboss_groups_check_user_has_invite( $user_id, $group_id, $type );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Check to see whether a user has already been invited to a group by a particular user.
@@ -2354,6 +3012,20 @@ function bboss_groups_check_has_invite_from_user( $user_id, $group_id, $inviter_
 
 	return $invites_class->invitation_exists( $args );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_groups_check_has_invite_from_user' ) && ! function_exists( 'groups_check_has_invite_from_user' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_check_has_invite_from_user()}.
+	 *
+	 * @deprecated Use bboss_groups_check_has_invite_from_user() instead.
+	 */
+	function groups_check_has_invite_from_user( $user_id, $group_id, $inviter_id = false, $type = 'sent' ) {
+		return bboss_groups_check_has_invite_from_user( $user_id, $group_id, $inviter_id, $type );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Delete all invitations to a given group.
@@ -2366,6 +3038,20 @@ function bboss_groups_check_has_invite_from_user( $user_id, $group_id, $inviter_
 function bboss_groups_delete_all_group_invites( $group_id ) {
 	return BBoss_Groups_Group::delete_all_invites( $group_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_groups_delete_all_group_invites' ) && ! function_exists( 'groups_delete_all_group_invites' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_delete_all_group_invites()}.
+	 *
+	 * @deprecated Use bboss_groups_delete_all_group_invites() instead.
+	 */
+	function groups_delete_all_group_invites( $group_id ) {
+		return bboss_groups_delete_all_group_invites( $group_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /** Group Promotion & Banning *************************************************/
 
@@ -2411,6 +3097,20 @@ function bboss_groups_promote_member( $user_id, $group_id, $status ) {
 
 	return $status_updated;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_groups_promote_member' ) && ! function_exists( 'groups_promote_member' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_promote_member()}.
+	 *
+	 * @deprecated Use bboss_groups_promote_member() instead.
+	 */
+	function groups_promote_member( $user_id, $group_id, $status ) {
+		return bboss_groups_promote_member( $user_id, $group_id, $status );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Demote a user to 'member' status within a group.
@@ -2449,6 +3149,20 @@ function bboss_groups_demote_member( $user_id, $group_id ) {
 
 	return $status_updated;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_groups_demote_member' ) && ! function_exists( 'groups_demote_member' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_demote_member()}.
+	 *
+	 * @deprecated Use bboss_groups_demote_member() instead.
+	 */
+	function groups_demote_member( $user_id, $group_id ) {
+		return bboss_groups_demote_member( $user_id, $group_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Ban a member from a group.
@@ -2487,6 +3201,20 @@ function bboss_groups_ban_member( $user_id, $group_id ) {
 
 	return $status_updated;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_groups_ban_member' ) && ! function_exists( 'groups_ban_member' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_ban_member()}.
+	 *
+	 * @deprecated Use bboss_groups_ban_member() instead.
+	 */
+	function groups_ban_member( $user_id, $group_id ) {
+		return bboss_groups_ban_member( $user_id, $group_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Unban a member from a group.
@@ -2525,6 +3253,20 @@ function bboss_groups_unban_member( $user_id, $group_id ) {
 
 	return $status_updated;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_groups_unban_member' ) && ! function_exists( 'groups_unban_member' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_unban_member()}.
+	 *
+	 * @deprecated Use bboss_groups_unban_member() instead.
+	 */
+	function groups_unban_member( $user_id, $group_id ) {
+		return bboss_groups_unban_member( $user_id, $group_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /** Group Removal *************************************************************/
 
@@ -2557,6 +3299,20 @@ function bboss_groups_remove_member( $user_id, $group_id ) {
 
 	return $member->remove();
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_groups_remove_member' ) && ! function_exists( 'groups_remove_member' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_remove_member()}.
+	 *
+	 * @deprecated Use bboss_groups_remove_member() instead.
+	 */
+	function groups_remove_member( $user_id, $group_id ) {
+		return bboss_groups_remove_member( $user_id, $group_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /** Group Membership **********************************************************/
 
@@ -2661,6 +3417,20 @@ function bboss_groups_send_membership_request( $args = array() ) {
 
 	return false;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_groups_send_membership_request' ) && ! function_exists( 'groups_send_membership_request' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_send_membership_request()}.
+	 *
+	 * @deprecated Use bboss_groups_send_membership_request() instead.
+	 */
+	function groups_send_membership_request( $args = array() ) {
+		return bboss_groups_send_membership_request( ...func_get_args() );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Accept a pending group membership request.
@@ -2696,6 +3466,20 @@ function bboss_groups_accept_membership_request( $membership_id, $user_id = 0, $
 
 	return $invites_class->accept_request( $args );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_groups_accept_membership_request' ) && ! function_exists( 'groups_accept_membership_request' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_accept_membership_request()}.
+	 *
+	 * @deprecated Use bboss_groups_accept_membership_request() instead.
+	 */
+	function groups_accept_membership_request( $membership_id, $user_id = 0, $group_id = 0 ) {
+		return bboss_groups_accept_membership_request( $membership_id, $user_id, $group_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Reject a pending group membership request.
@@ -2735,6 +3519,20 @@ function bboss_groups_reject_membership_request( $membership_id, $user_id = 0, $
 
 	return true;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_groups_reject_membership_request' ) && ! function_exists( 'groups_reject_membership_request' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_reject_membership_request()}.
+	 *
+	 * @deprecated Use bboss_groups_reject_membership_request() instead.
+	 */
+	function groups_reject_membership_request( $membership_id, $user_id = 0, $group_id = 0 ) {
+		return bboss_groups_reject_membership_request( $membership_id, $user_id, $group_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Delete a pending group membership request.
@@ -2770,6 +3568,20 @@ function bboss_groups_delete_membership_request( $membership_id, $user_id = 0, $
 
 	return $success;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_groups_delete_membership_request' ) && ! function_exists( 'groups_delete_membership_request' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_delete_membership_request()}.
+	 *
+	 * @deprecated Use bboss_groups_delete_membership_request() instead.
+	 */
+	function groups_delete_membership_request( $membership_id, $user_id = 0, $group_id = 0 ) {
+		return bboss_groups_delete_membership_request( $membership_id, $user_id, $group_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get group membership requests filtered by arguments.
@@ -2787,6 +3599,20 @@ function bboss_groups_get_requests( $args = array() ) {
 	$invites_class = new BBoss_Groups_Invitation_Manager();
 	return $invites_class->get_requests( $args );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_groups_get_requests' ) && ! function_exists( 'groups_get_requests' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_get_requests()}.
+	 *
+	 * @deprecated Use bboss_groups_get_requests() instead.
+	 */
+	function groups_get_requests( $args = array() ) {
+		return bboss_groups_get_requests( $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Check whether a user has an outstanding membership request for a given group.
@@ -2810,6 +3636,20 @@ function bboss_groups_check_for_membership_request( $user_id, $group_id ) {
 
 	return $invites_class->request_exists( $args );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_groups_check_for_membership_request' ) && ! function_exists( 'groups_check_for_membership_request' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_check_for_membership_request()}.
+	 *
+	 * @deprecated Use bboss_groups_check_for_membership_request() instead.
+	 */
+	function groups_check_for_membership_request( $user_id, $group_id ) {
+		return bboss_groups_check_for_membership_request( $user_id, $group_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get an array of group IDs to which a user has requested membership.
@@ -2835,6 +3675,20 @@ function bboss_groups_get_membership_requested_group_ids( $user_id = 0 ) {
 
 	return $group_ids;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_groups_get_membership_requested_group_ids' ) && ! function_exists( 'groups_get_membership_requested_group_ids' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_get_membership_requested_group_ids()}.
+	 *
+	 * @deprecated Use bboss_groups_get_membership_requested_group_ids() instead.
+	 */
+	function groups_get_membership_requested_group_ids( $user_id = 0 ) {
+		return bboss_groups_get_membership_requested_group_ids( $user_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get an array of group IDs to which a user has requested membership.
@@ -2860,6 +3714,20 @@ function bboss_groups_get_membership_requested_user_ids( $group_id = 0 ) {
 
 	return $requests;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_groups_get_membership_requested_user_ids' ) && ! function_exists( 'groups_get_membership_requested_user_ids' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_get_membership_requested_user_ids()}.
+	 *
+	 * @deprecated Use bboss_groups_get_membership_requested_user_ids() instead.
+	 */
+	function groups_get_membership_requested_user_ids( $group_id = 0 ) {
+		return bboss_groups_get_membership_requested_user_ids( $group_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Change all activity feed status for a group.
@@ -2930,6 +3798,20 @@ function bboss_groups_accept_all_pending_membership_requests( $group_id = 0 ) {
 
 	return true;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_groups_accept_all_pending_membership_requests' ) && ! function_exists( 'groups_accept_all_pending_membership_requests' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_accept_all_pending_membership_requests()}.
+	 *
+	 * @deprecated Use bboss_groups_accept_all_pending_membership_requests() instead.
+	 */
+	function groups_accept_all_pending_membership_requests( $group_id = 0 ) {
+		return bboss_groups_accept_all_pending_membership_requests( $group_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /** Group Meta ****************************************************************/
 
@@ -2975,6 +3857,20 @@ function bboss_groups_delete_groupmeta( $group_id, $meta_key = false, $meta_valu
 
 	return $retval;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_groups_delete_groupmeta' ) && ! function_exists( 'groups_delete_groupmeta' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_delete_groupmeta()}.
+	 *
+	 * @deprecated Use bboss_groups_delete_groupmeta() instead.
+	 */
+	function groups_delete_groupmeta( $group_id, $meta_key = false, $meta_value = false, $delete_all = false ) {
+		return bboss_groups_delete_groupmeta( $group_id, $meta_key, $meta_value, $delete_all );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get a piece of group metadata.
@@ -2995,6 +3891,20 @@ function bboss_groups_get_groupmeta( $group_id, $meta_key = '', $single = true )
 
 	return $retval;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_groups_get_groupmeta' ) && ! function_exists( 'groups_get_groupmeta' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_get_groupmeta()}.
+	 *
+	 * @deprecated Use bboss_groups_get_groupmeta() instead.
+	 */
+	function groups_get_groupmeta( $group_id, $meta_key = '', $single = true ) {
+		return bboss_groups_get_groupmeta( $group_id, $meta_key, $single );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Update a piece of group metadata.
@@ -3018,6 +3928,20 @@ function bboss_groups_update_groupmeta( $group_id, $meta_key, $meta_value, $prev
 
 	return $retval;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_groups_update_groupmeta' ) && ! function_exists( 'groups_update_groupmeta' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_update_groupmeta()}.
+	 *
+	 * @deprecated Use bboss_groups_update_groupmeta() instead.
+	 */
+	function groups_update_groupmeta( $group_id, $meta_key, $meta_value, $prev_value = '' ) {
+		return bboss_groups_update_groupmeta( $group_id, $meta_key, $meta_value, $prev_value );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Add a piece of group metadata.
@@ -3040,6 +3964,20 @@ function bboss_groups_add_groupmeta( $group_id, $meta_key, $meta_value, $unique 
 
 	return $retval;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_groups_add_groupmeta' ) && ! function_exists( 'groups_add_groupmeta' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_add_groupmeta()}.
+	 *
+	 * @deprecated Use bboss_groups_add_groupmeta() instead.
+	 */
+	function groups_add_groupmeta( $group_id, $meta_key, $meta_value, $unique = false ) {
+		return bboss_groups_add_groupmeta( $group_id, $meta_key, $meta_value, $unique );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /** Group Member Meta ****************************************************************/
 
@@ -3176,6 +4114,20 @@ function bboss_groups_remove_data_for_user( $user_id ) {
 	 */
 	do_action( 'groups_remove_data_for_user', $user_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_groups_remove_data_for_user' ) && ! function_exists( 'groups_remove_data_for_user' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_remove_data_for_user()}.
+	 *
+	 * @deprecated Use bboss_groups_remove_data_for_user() instead.
+	 */
+	function groups_remove_data_for_user( $user_id ) {
+		return bboss_groups_remove_data_for_user( $user_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'wpmu_delete_user', 'groups_remove_data_for_user' );
 add_action( 'delete_user', 'groups_remove_data_for_user' );
 add_action( 'bp_make_spam_user', 'groups_remove_data_for_user' );
@@ -3204,6 +4156,20 @@ function bboss_groups_update_orphaned_groups_on_group_delete( $group ) {
 		$cgroup->save();
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_groups_update_orphaned_groups_on_group_delete' ) && ! function_exists( 'bp_groups_update_orphaned_groups_on_group_delete' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_update_orphaned_groups_on_group_delete()}.
+	 *
+	 * @deprecated Use bboss_groups_update_orphaned_groups_on_group_delete() instead.
+	 */
+	function bp_groups_update_orphaned_groups_on_group_delete( $group ) {
+		return bboss_groups_update_orphaned_groups_on_group_delete( $group );
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'bp_groups_delete_group', 'bp_groups_update_orphaned_groups_on_group_delete', 10, 2 );
 
 /** Group Types ***************************************************************/
@@ -3221,6 +4187,20 @@ function bboss_groups_register_group_types() {
 	 */
 	do_action( 'bp_groups_register_group_types' );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_groups_register_group_types' ) && ! function_exists( 'bp_groups_register_group_types' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_register_group_types()}.
+	 *
+	 * @deprecated Use bboss_groups_register_group_types() instead.
+	 */
+	function bp_groups_register_group_types() {
+		return bboss_groups_register_group_types();
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'bp_register_taxonomies', 'bp_groups_register_group_types' );
 
 /**
@@ -3347,6 +4327,20 @@ function bboss_groups_register_group_type( $group_type, $args = array() ) {
 
 	return $type;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_groups_register_group_type' ) && ! function_exists( 'bp_groups_register_group_type' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_register_group_type()}.
+	 *
+	 * @deprecated Use bboss_groups_register_group_type() instead.
+	 */
+	function bp_groups_register_group_type( $group_type, $args = array() ) {
+		return bboss_groups_register_group_type( $group_type, $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get a list of all registered group type objects.
@@ -3389,6 +4383,20 @@ function bboss_groups_get_group_types( $args = array(), $output = 'names', $oper
 
 	return $types;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_groups_get_group_types' ) && ! function_exists( 'bp_groups_get_group_types' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_get_group_types()}.
+	 *
+	 * @deprecated Use bboss_groups_get_group_types() instead.
+	 */
+	function bp_groups_get_group_types( $args = array(), $output = 'names', $operator = 'and' ) {
+		return bboss_groups_get_group_types( $args, $output, $operator );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Retrieve a group type object by name.
@@ -3407,6 +4415,20 @@ function bboss_groups_get_group_type_object( $group_type ) {
 
 	return $types[ $group_type ];
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_groups_get_group_type_object' ) && ! function_exists( 'bp_groups_get_group_type_object' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_get_group_type_object()}.
+	 *
+	 * @deprecated Use bboss_groups_get_group_type_object() instead.
+	 */
+	function bp_groups_get_group_type_object( $group_type ) {
+		return bboss_groups_get_group_type_object( $group_type );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Set type for a group.
@@ -3457,6 +4479,20 @@ function bboss_groups_set_group_type( $group_id, $group_type, $append = false ) 
 
 	return $retval;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_groups_set_group_type' ) && ! function_exists( 'bp_groups_set_group_type' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_set_group_type()}.
+	 *
+	 * @deprecated Use bboss_groups_set_group_type() instead.
+	 */
+	function bp_groups_set_group_type( $group_id, $group_type, $append = false ) {
+		return bboss_groups_set_group_type( $group_id, $group_type, $append );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get type for a group.
@@ -3509,6 +4545,20 @@ function bboss_groups_get_group_type( $group_id, $single = true ) {
 	 */
 	return apply_filters( 'bp_groups_get_group_type', $type, $group_id, $single );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_groups_get_group_type' ) && ! function_exists( 'bp_groups_get_group_type' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_get_group_type()}.
+	 *
+	 * @deprecated Use bboss_groups_get_group_type() instead.
+	 */
+	function bp_groups_get_group_type( $group_id, $single = true ) {
+		return bboss_groups_get_group_type( $group_id, $single );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Remove type for a group.
@@ -3549,6 +4599,20 @@ function bboss_groups_remove_group_type( $group_id, $group_type ) {
 
 	return $deleted;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_groups_remove_group_type' ) && ! function_exists( 'bp_groups_remove_group_type' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_remove_group_type()}.
+	 *
+	 * @deprecated Use bboss_groups_remove_group_type() instead.
+	 */
+	function bp_groups_remove_group_type( $group_id, $group_type ) {
+		return bboss_groups_remove_group_type( $group_id, $group_type );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Check whether the given group has a certain group type.
@@ -3573,6 +4637,20 @@ function bboss_groups_has_group_type( $group_id, $group_type ) {
 
 	return in_array( $group_type, $types );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_groups_has_group_type' ) && ! function_exists( 'bp_groups_has_group_type' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_has_group_type()}.
+	 *
+	 * @deprecated Use bboss_groups_has_group_type() instead.
+	 */
+	function bp_groups_has_group_type( $group_id, $group_type ) {
+		return bboss_groups_has_group_type( $group_id, $group_type );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get the "current" group type, if one is provided, in group directories.
@@ -3592,6 +4670,20 @@ function bboss_get_current_group_directory_type() {
 	 */
 	return apply_filters( 'bp_get_current_group_directory_type', bboss()->groups->current_directory_type );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_current_group_directory_type' ) && ! function_exists( 'bp_get_current_group_directory_type' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_current_group_directory_type()}.
+	 *
+	 * @deprecated Use bboss_get_current_group_directory_type() instead.
+	 */
+	function bp_get_current_group_directory_type() {
+		return bboss_get_current_group_directory_type();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Check if this is a user's "My Groups" view? This can happen on the main directory or
@@ -3615,6 +4707,20 @@ function bboss_is_my_groups_view() {
 
 	return $retval;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_my_groups_view' ) && ! function_exists( 'bp_is_my_groups_view' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_my_groups_view()}.
+	 *
+	 * @deprecated Use bboss_is_my_groups_view() instead.
+	 */
+	function bp_is_my_groups_view() {
+		return bboss_is_my_groups_view();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Delete a group's type when the group is deleted.
@@ -3627,6 +4733,20 @@ function bboss_is_my_groups_view() {
 function bboss_remove_group_type_on_group_delete( $group_id = 0 ) {
 	bboss_groups_set_group_type( $group_id, '' );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_remove_group_type_on_group_delete' ) && ! function_exists( 'bp_remove_group_type_on_group_delete' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_remove_group_type_on_group_delete()}.
+	 *
+	 * @deprecated Use bboss_remove_group_type_on_group_delete() instead.
+	 */
+	function bp_remove_group_type_on_group_delete( $group_id = 0 ) {
+		return bboss_remove_group_type_on_group_delete( $group_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'groups_delete_group', 'bp_remove_group_type_on_group_delete' );
 
 /**
@@ -3663,6 +4783,20 @@ function bboss_get_user_group_role_title( $user_id = false, $group_id = false ) 
 	 */
 	return apply_filters( 'bp_get_user_group_role_title', $role_title );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_user_group_role_title' ) && ! function_exists( 'bp_get_user_group_role_title' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_user_group_role_title()}.
+	 *
+	 * @deprecated Use bboss_get_user_group_role_title() instead.
+	 */
+	function bp_get_user_group_role_title( $user_id = false, $group_id = false ) {
+		return bboss_get_user_group_role_title( $user_id, $group_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get inviter for member's group invitation
@@ -3709,6 +4843,20 @@ function bboss_groups_get_invited_by( $user_id = false, $group_id = false ) {
 
 	return apply_filters( 'bp_groups_get_invited_by', $inviter, $group->id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_groups_get_invited_by' ) && ! function_exists( 'bp_groups_get_invited_by' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_get_invited_by()}.
+	 *
+	 * @deprecated Use bboss_groups_get_invited_by() instead.
+	 */
+	function bp_groups_get_invited_by( $user_id = false, $group_id = false ) {
+		return bboss_groups_get_invited_by( $user_id, $group_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get user's invite message.
@@ -3757,6 +4905,20 @@ function bboss_groups_get_invite_messsage_for_user( $user_id, $group_id ) {
 	 */
 	return apply_filters( 'bp_groups_get_invite_messsage_for_user', $message, $group_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_groups_get_invite_messsage_for_user' ) && ! function_exists( 'bp_groups_get_invite_messsage_for_user' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_get_invite_messsage_for_user()}.
+	 *
+	 * @deprecated Use bboss_groups_get_invite_messsage_for_user() instead.
+	 */
+	function bp_groups_get_invite_messsage_for_user( $user_id, $group_id ) {
+		return bboss_groups_get_invite_messsage_for_user( $user_id, $group_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Clear user's invite message.
@@ -3771,6 +4933,20 @@ function bboss_groups_get_invite_messsage_for_user( $user_id, $group_id ) {
 function bboss_groups_clear_invite_message_for_user( $user_id, $group_id ) {
 	delete_user_meta( $user_id, 'bp_group_invite_message_' . $group_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_groups_clear_invite_message_for_user' ) && ! function_exists( 'bp_groups_clear_invite_message_for_user' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_clear_invite_message_for_user()}.
+	 *
+	 * @deprecated Use bboss_groups_clear_invite_message_for_user() instead.
+	 */
+	function bp_groups_clear_invite_message_for_user( $user_id, $group_id ) {
+		return bboss_groups_clear_invite_message_for_user( $user_id, $group_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'groups_accept_invite', 'bp_groups_clear_invite_message_for_user', 10, 2 );
 add_action( 'groups_reject_invite', 'bp_groups_clear_invite_message_for_user', 10, 2 );
 add_action( 'groups_delete_invite', 'bp_groups_clear_invite_message_for_user', 10, 2 );
@@ -3786,6 +4962,20 @@ add_action( 'groups_delete_invite', 'bp_groups_clear_invite_message_for_user', 1
 function bboss_groups_clear_invite_message_on_uninvite( $group_id, $user_id ) {
 	bboss_groups_clear_invite_message_for_user( $user_id, $group_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_groups_clear_invite_message_on_uninvite' ) && ! function_exists( 'bp_groups_clear_invite_message_on_uninvite' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_clear_invite_message_on_uninvite()}.
+	 *
+	 * @deprecated Use bboss_groups_clear_invite_message_on_uninvite() instead.
+	 */
+	function bp_groups_clear_invite_message_on_uninvite( $group_id, $user_id ) {
+		return bboss_groups_clear_invite_message_on_uninvite( $group_id, $user_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'groups_uninvite_user', 'bp_groups_clear_invite_message_on_uninvite', 10, 2 );
 add_action( 'groups_remove_member', 'bp_groups_clear_invite_message_on_uninvite', 10, 2 );
 
@@ -3799,6 +4989,20 @@ add_action( 'groups_remove_member', 'bp_groups_clear_invite_message_on_uninvite'
 function bboss_groups_group_type_post_type() {
 	echo esc_attr( bboss_groups_get_group_type_post_type() );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_groups_group_type_post_type' ) && ! function_exists( 'bp_groups_group_type_post_type' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_group_type_post_type()}.
+	 *
+	 * @deprecated Use bboss_groups_group_type_post_type() instead.
+	 */
+	function bp_groups_group_type_post_type() {
+		return bboss_groups_group_type_post_type();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Returns the name of the group type post type.
@@ -3818,6 +5022,20 @@ function bboss_groups_get_group_type_post_type() {
 	 */
 	return apply_filters( 'bp_groups_get_group_type_post_type', bboss()->group_type_post_type );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_groups_get_group_type_post_type' ) && ! function_exists( 'bp_groups_get_group_type_post_type' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_get_group_type_post_type()}.
+	 *
+	 * @deprecated Use bboss_groups_get_group_type_post_type() instead.
+	 */
+	function bp_groups_get_group_type_post_type() {
+		return bboss_groups_get_group_type_post_type();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return labels used by the group type post type.
@@ -3853,6 +5071,20 @@ function bboss_groups_get_group_type_post_type_labels() {
 		)
 	);
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_groups_get_group_type_post_type_labels' ) && ! function_exists( 'bp_groups_get_group_type_post_type_labels' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_get_group_type_post_type_labels()}.
+	 *
+	 * @deprecated Use bboss_groups_get_group_type_post_type_labels() instead.
+	 */
+	function bp_groups_get_group_type_post_type_labels() {
+		return bboss_groups_get_group_type_post_type_labels();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return array of features that the group type post type supports.
@@ -3878,6 +5110,20 @@ function bboss_groups_get_group_type_post_type_supports() {
 		)
 	);
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_groups_get_group_type_post_type_supports' ) && ! function_exists( 'bp_groups_get_group_type_post_type_supports' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_get_group_type_post_type_supports()}.
+	 *
+	 * @deprecated Use bboss_groups_get_group_type_post_type_supports() instead.
+	 */
+	function bp_groups_get_group_type_post_type_supports() {
+		return bboss_groups_get_group_type_post_type_supports();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return group type key.
@@ -3910,6 +5156,20 @@ function bboss_group_get_group_type_key( $post_id ) {
 
 	return apply_filters( 'bp_group_get_group_type_key', $key );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_group_get_group_type_key' ) && ! function_exists( 'bp_group_get_group_type_key' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_group_get_group_type_key()}.
+	 *
+	 * @deprecated Use bboss_group_get_group_type_key() instead.
+	 */
+	function bp_group_get_group_type_key( $post_id ) {
+		return bboss_group_get_group_type_key( $post_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get all active group types.
@@ -3959,6 +5219,20 @@ function bboss_get_active_group_types( $args = array() ) {
 
 	return $bp_active_group_types;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_active_group_types' ) && ! function_exists( 'bp_get_active_group_types' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_active_group_types()}.
+	 *
+	 * @deprecated Use bboss_get_active_group_types() instead.
+	 */
+	function bp_get_active_group_types( $args = array() ) {
+		return bboss_get_active_group_types( $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 if ( true === bboss_disable_group_type_creation() ) {
 
@@ -4010,6 +5284,20 @@ function bboss_register_active_group_types() {
 		}
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_register_active_group_types' ) && ! function_exists( 'bp_register_active_group_types' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_register_active_group_types()}.
+	 *
+	 * @deprecated Use bboss_register_active_group_types() instead.
+	 */
+	function bp_register_active_group_types() {
+		return bboss_register_active_group_types();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get group count of group type tabs groups.
@@ -4047,6 +5335,20 @@ function bboss_group_get_count_by_group_type( $group_type = '', $taxonomy = 'bp_
 	}
 	return (int) $bp_group_type_count[0];
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_group_get_count_by_group_type' ) && ! function_exists( 'bp_group_get_count_by_group_type' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_group_get_count_by_group_type()}.
+	 *
+	 * @deprecated Use bboss_group_get_count_by_group_type() instead.
+	 */
+	function bp_group_get_count_by_group_type( $group_type = '', $taxonomy = 'bp_group_type' ) {
+		return bboss_group_get_count_by_group_type( $group_type, $taxonomy );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Displays shortcode data.
@@ -4107,6 +5409,20 @@ function bboss_group_type_short_code_callback( $atts ) {
 	}
 	return ob_get_clean();
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_group_type_short_code_callback' ) && ! function_exists( 'bp_group_type_short_code_callback' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_group_type_short_code_callback()}.
+	 *
+	 * @deprecated Use bboss_group_type_short_code_callback() instead.
+	 */
+	function bp_group_type_short_code_callback( $atts ) {
+		return bboss_group_type_short_code_callback( $atts );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Add body class to group type shortcode.
@@ -4130,6 +5446,20 @@ function bboss_group_type_short_code_add_body_class( $class ) {
 	}
 	return $class;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_group_type_short_code_add_body_class' ) && ! function_exists( 'bp_group_type_short_code_add_body_class' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_group_type_short_code_add_body_class()}.
+	 *
+	 * @deprecated Use bboss_group_type_short_code_add_body_class() instead.
+	 */
+	function bp_group_type_short_code_add_body_class( $class ) {
+		return bboss_group_type_short_code_add_body_class( $class );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Excludes specific group types from search and listing.
@@ -4177,6 +5507,20 @@ function bboss_groups_exclude_group_type( $qs = false, $object = false ) {
 
 	return $qs;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_groups_exclude_group_type' ) && ! function_exists( 'bp_groups_exclude_group_type' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_exclude_group_type()}.
+	 *
+	 * @deprecated Use bboss_groups_exclude_group_type() instead.
+	 */
+	function bp_groups_exclude_group_type( $qs = false, $object = false ) {
+		return bboss_groups_exclude_group_type( $qs, $object );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get groups removed from group type.
@@ -4216,6 +5560,20 @@ function bboss_groups_get_excluded_group_ids_by_type() {
 	return bboss_group_ids_array_flatten( $group_id );
 
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_groups_get_excluded_group_ids_by_type' ) && ! function_exists( 'bp_groups_get_excluded_group_ids_by_type' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_get_excluded_group_ids_by_type()}.
+	 *
+	 * @deprecated Use bboss_groups_get_excluded_group_ids_by_type() instead.
+	 */
+	function bp_groups_get_excluded_group_ids_by_type() {
+		return bboss_groups_get_excluded_group_ids_by_type();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Flatten array.
@@ -4240,6 +5598,20 @@ function bboss_group_ids_array_flatten( $array ) {
 	}
 	return $result;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_group_ids_array_flatten' ) && ! function_exists( 'bp_group_ids_array_flatten' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_group_ids_array_flatten()}.
+	 *
+	 * @deprecated Use bboss_group_ids_array_flatten() instead.
+	 */
+	function bp_group_ids_array_flatten( $array ) {
+		return bboss_group_ids_array_flatten( $array );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get excluded group types.
@@ -4285,6 +5657,20 @@ function bboss_groups_get_excluded_group_types() {
 	wp_reset_postdata();
 	return $bp_group_type_ids;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_groups_get_excluded_group_types' ) && ! function_exists( 'bp_groups_get_excluded_group_types' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_get_excluded_group_types()}.
+	 *
+	 * @deprecated Use bboss_groups_get_excluded_group_types() instead.
+	 */
+	function bp_groups_get_excluded_group_types() {
+		return bboss_groups_get_excluded_group_types();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get group count of group type tabs groups.
@@ -4323,6 +5709,20 @@ function bboss_get_group_ids_by_group_types( $group_type = '', $taxonomy = 'bp_g
 
 	return $results;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_group_ids_by_group_types' ) && ! function_exists( 'bp_get_group_ids_by_group_types' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_group_ids_by_group_types()}.
+	 *
+	 * @deprecated Use bboss_get_group_ids_by_group_types() instead.
+	 */
+	function bp_get_group_ids_by_group_types( $group_type = '', $taxonomy = 'bp_group_type' ) {
+		return bboss_get_group_ids_by_group_types( $group_type, $taxonomy );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Gets the post id of particular group type.
@@ -4360,6 +5760,20 @@ function bboss_group_get_group_type_id( $group_type = '' ) {
 
 	return $id;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_group_get_group_type_id' ) && ! function_exists( 'bp_group_get_group_type_id' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_group_get_group_type_id()}.
+	 *
+	 * @deprecated Use bboss_group_get_group_type_id() instead.
+	 */
+	function bp_group_get_group_type_id( $group_type = '' ) {
+		return bboss_group_get_group_type_id( $group_type );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get group roles labels.
@@ -4438,6 +5852,20 @@ function bboss_get_group_role_label( $group_id, $label_name ) {
 	return apply_filters( 'bp_' . $label_name, $label, $group_id, $label_name );
 
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_group_role_label' ) && ! function_exists( 'get_group_role_label' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_group_role_label()}.
+	 *
+	 * @deprecated Use bboss_get_group_role_label() instead.
+	 */
+	function get_group_role_label( $group_id, $label_name ) {
+		return bboss_get_group_role_label( $group_id, $label_name );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Function to add the content on top of group listing
@@ -4453,6 +5881,20 @@ function bboss_group_directory_page_content() {
 		echo apply_filters( 'the_content', $group_page_content ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- page content run through the_content (kses on save); wp_kses_post() strips oEmbed <iframe>s and block <svg>s.
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_group_directory_page_content' ) && ! function_exists( 'bp_group_directory_page_content' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_group_directory_page_content()}.
+	 *
+	 * @deprecated Use bboss_group_directory_page_content() instead.
+	 */
+	function bp_group_directory_page_content() {
+		return bboss_group_directory_page_content();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 add_action( 'bp_before_directory_groups_page', 'bp_group_directory_page_content' );
 
@@ -4643,6 +6085,20 @@ function bboss_groups_prime_mentions_results() {
 		);
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_groups_prime_mentions_results' ) && ! function_exists( 'bp_groups_prime_mentions_results' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_prime_mentions_results()}.
+	 *
+	 * @deprecated Use bboss_groups_prime_mentions_results() instead.
+	 */
+	function bp_groups_prime_mentions_results() {
+		return bboss_groups_prime_mentions_results();
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'bp_activity_mentions_prime_results', 'bp_groups_prime_mentions_results' );
 add_action( 'bbp_forums_mentions_prime_results', 'bp_groups_prime_mentions_results' );
 
@@ -4693,6 +6149,20 @@ function bboss_groups_migrate_invitations() {
 		$wpdb->query( "DELETE FROM {$bp->groups->table_name_members} WHERE ID IN ($ids_to_delete)" );
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_groups_migrate_invitations' ) && ! function_exists( 'bp_groups_migrate_invitations' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_migrate_invitations()}.
+	 *
+	 * @deprecated Use bboss_groups_migrate_invitations() instead.
+	 */
+	function bp_groups_migrate_invitations() {
+		return bboss_groups_migrate_invitations();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 
 /**
@@ -4707,6 +6177,20 @@ function bboss_groups_reset_cover_image_position( $group_id ) {
 		bboss_groups_delete_groupmeta( $group_id, 'bp_cover_position' );
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_groups_reset_cover_image_position' ) && ! function_exists( 'bp_groups_reset_cover_image_position' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_reset_cover_image_position()}.
+	 *
+	 * @deprecated Use bboss_groups_reset_cover_image_position() instead.
+	 */
+	function bp_groups_reset_cover_image_position( $group_id ) {
+		return bboss_groups_reset_cover_image_position( $group_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 add_action( 'groups_cover_image_uploaded', 'bp_groups_reset_cover_image_position', 10, 1 );
 add_action( 'groups_cover_image_deleted', 'bp_groups_reset_cover_image_position', 10, 1 );
@@ -4874,6 +6358,20 @@ function bboss_groups_loop_members( $group_id = 0, $role = array( 'member', 'mod
 	}
 
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_groups_loop_members' ) && ! function_exists( 'bb_groups_loop_members' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_loop_members()}.
+	 *
+	 * @deprecated Use bboss_groups_loop_members() instead.
+	 */
+	function bb_groups_loop_members( $group_id = 0, $role = array( 'member', 'mod', 'admin' ) ) {
+		return bboss_groups_loop_members( $group_id, $role );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get group cover image width.
@@ -4888,6 +6386,20 @@ function bboss_groups_loop_members( $group_id = 0, $role = array( 'member', 'mod
 function bboss_get_group_cover_image_width( $default = 'default' ) {
 	return bboss_get_option( 'bb-pro-cover-group-width', $default );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_group_cover_image_width' ) && ! function_exists( 'bb_get_group_cover_image_width' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_group_cover_image_width()}.
+	 *
+	 * @deprecated Use bboss_get_group_cover_image_width() instead.
+	 */
+	function bb_get_group_cover_image_width( $default = 'default' ) {
+		return bboss_get_group_cover_image_width( $default );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get group cover image height.
@@ -4902,6 +6414,20 @@ function bboss_get_group_cover_image_width( $default = 'default' ) {
 function bboss_get_group_cover_image_height( $default = 'small' ) {
 	return bboss_get_option( 'bb-pro-cover-group-height', $default );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_group_cover_image_height' ) && ! function_exists( 'bb_get_group_cover_image_height' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_group_cover_image_height()}.
+	 *
+	 * @deprecated Use bboss_get_group_cover_image_height() instead.
+	 */
+	function bb_get_group_cover_image_height( $default = 'small' ) {
+		return bboss_get_group_cover_image_height( $default );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Function will return label background and text color's for specific group type.
@@ -4941,6 +6467,20 @@ function bboss_get_group_type_label_colors( $type ) {
 
 	return apply_filters( 'bb_get_group_type_label_colors', $bp_group_type_label_color );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_group_type_label_colors' ) && ! function_exists( 'bb_get_group_type_label_colors' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_group_type_label_colors()}.
+	 *
+	 * @deprecated Use bboss_get_group_type_label_colors() instead.
+	 */
+	function bb_get_group_type_label_colors( $type ) {
+		return bboss_get_group_type_label_colors( $type );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Function will fetch all members.
@@ -5011,6 +6551,20 @@ function bboss_get_all_members_for_groups( $args = array() ) {
 
 	return apply_filters( 'bb_get_all_members_for_groups', array_map( 'intval', $results ), $results );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_all_members_for_groups' ) && ! function_exists( 'bb_get_all_members_for_groups' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_all_members_for_groups()}.
+	 *
+	 * @deprecated Use bboss_get_all_members_for_groups() instead.
+	 */
+	function bb_get_all_members_for_groups( $args = array() ) {
+		return bboss_get_all_members_for_groups( $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Function to display group action buttons.
@@ -5036,6 +6590,20 @@ function bboss_group_single_header_actions() {
 	<div class="group-actions-absolute"><?php echo $actions; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></div>
 	<?php
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_group_single_header_actions' ) && ! function_exists( 'bb_group_single_header_actions' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_group_single_header_actions()}.
+	 *
+	 * @deprecated Use bboss_group_single_header_actions() instead.
+	 */
+	function bb_group_single_header_actions() {
+		return bboss_group_single_header_actions();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Update the group member count.
@@ -5058,6 +6626,20 @@ function bboss_update_group_member_count( $group_ids = array() ) {
 		BBoss_Groups_Member::refresh_total_member_count_for_group( $group_id );
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_update_group_member_count' ) && ! function_exists( 'bb_update_group_member_count' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_update_group_member_count()}.
+	 *
+	 * @deprecated Use bboss_update_group_member_count() instead.
+	 */
+	function bb_update_group_member_count( $group_ids = array() ) {
+		return bboss_update_group_member_count( $group_ids );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Function to return groups settings statues.
@@ -5087,6 +6669,20 @@ function bboss_groups_get_settings_status( $setting_type ) {
 	 */
 	return apply_filters( 'groups_allowed_' . $setting_type . '_status', $statuses, $setting_type );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_groups_get_settings_status' ) && ! function_exists( 'bb_groups_get_settings_status' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_get_settings_status()}.
+	 *
+	 * @deprecated Use bboss_groups_get_settings_status() instead.
+	 */
+	function bb_groups_get_settings_status( $setting_type ) {
+		return bboss_groups_get_settings_status( $setting_type );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Default group settings fallback function.
@@ -5115,6 +6711,20 @@ function bboss_groups_settings_default_fallback( $setting_type, $val = '' ) {
 	 */
 	return apply_filters( 'bp_group_' . $setting_type . '_status_fallback', $val );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_groups_settings_default_fallback' ) && ! function_exists( 'bb_groups_settings_default_fallback' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_settings_default_fallback()}.
+	 *
+	 * @deprecated Use bboss_groups_settings_default_fallback() instead.
+	 */
+	function bb_groups_settings_default_fallback( $setting_type, $val = '' ) {
+		return bboss_groups_settings_default_fallback( $setting_type, $val );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Run migration for resolving the issue related to the groups.
@@ -5133,6 +6743,20 @@ function bboss_group_migration() {
 	// When 'group restrict invites' is on, remove subgroup members not in the parent group.
 	bboss_groups_migrate_subgroup_member();
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_group_migration' ) && ! function_exists( 'bb_group_migration' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_group_migration()}.
+	 *
+	 * @deprecated Use bboss_group_migration() instead.
+	 */
+	function bb_group_migration() {
+		return bboss_group_migration();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Migrate subgroup members.
@@ -5221,6 +6845,20 @@ function bboss_groups_migrate_subgroup_member() {
 		$bb_background_updater->save()->schedule_event();
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_groups_migrate_subgroup_member' ) && ! function_exists( 'bb_groups_migrate_subgroup_member' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_migrate_subgroup_member()}.
+	 *
+	 * @deprecated Use bboss_groups_migrate_subgroup_member() instead.
+	 */
+	function bb_groups_migrate_subgroup_member() {
+		return bboss_groups_migrate_subgroup_member();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Function to run subgroup membership removal within background process.
@@ -5293,6 +6931,20 @@ function bboss_update_groups_subgroup_membership_background_process() {
 
 	$bb_background_updater->save()->schedule_event();
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_update_groups_subgroup_membership_background_process' ) && ! function_exists( 'bb_update_groups_subgroup_membership_background_process' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_update_groups_subgroup_membership_background_process()}.
+	 *
+	 * @deprecated Use bboss_update_groups_subgroup_membership_background_process() instead.
+	 */
+	function bb_update_groups_subgroup_membership_background_process() {
+		return bboss_update_groups_subgroup_membership_background_process();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 
 /**
@@ -5371,6 +7023,20 @@ function bboss_update_groups_invitation_background_process() {
 
 	$bb_background_updater->save()->schedule_event();
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_update_groups_invitation_background_process' ) && ! function_exists( 'bb_update_groups_invitation_background_process' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_update_groups_invitation_background_process()}.
+	 *
+	 * @deprecated Use bboss_update_groups_invitation_background_process() instead.
+	 */
+	function bb_update_groups_invitation_background_process() {
+		return bboss_update_groups_invitation_background_process();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Fetch all top level parent group ids.
@@ -5408,6 +7074,20 @@ function bboss_get_parent_group_ids( $group_id ) {
 
 	return $parent_groups;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_parent_group_ids' ) && ! function_exists( 'bb_get_parent_group_ids' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_parent_group_ids()}.
+	 *
+	 * @deprecated Use bboss_get_parent_group_ids() instead.
+	 */
+	function bb_get_parent_group_ids( $group_id ) {
+		return bboss_get_parent_group_ids( $group_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Function to add child group members to the parent groups.
@@ -5441,6 +7121,20 @@ function bboss_groups_add_subgroup_members( $group_id, $parent_group_ids ) {
 		}
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_groups_add_subgroup_members' ) && ! function_exists( 'bb_groups_add_subgroup_members' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_add_subgroup_members()}.
+	 *
+	 * @deprecated Use bboss_groups_add_subgroup_members() instead.
+	 */
+	function bb_groups_add_subgroup_members( $group_id, $parent_group_ids ) {
+		return bboss_groups_add_subgroup_members( $group_id, $parent_group_ids );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Function to add child group members to the parent group.
@@ -5499,6 +7193,20 @@ function bboss_update_groups_members_background_process( $group_id, $parent_id )
 	);
 	$bb_background_updater->save()->schedule_event();
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_update_groups_members_background_process' ) && ! function_exists( 'bb_update_groups_members_background_process' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_update_groups_members_background_process()}.
+	 *
+	 * @deprecated Use bboss_update_groups_members_background_process() instead.
+	 */
+	function bb_update_groups_members_background_process( $group_id, $parent_id ) {
+		return bboss_update_groups_members_background_process( $group_id, $parent_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 
 function bboss_groups_members( $group_id = 0, $role = array( 'member', 'mod', 'admin' ) ) {
@@ -5574,6 +7282,20 @@ function bboss_groups_members( $group_id = 0, $role = array( 'member', 'mod', 'a
 		<?php
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_groups_members' ) && ! function_exists( 'bb_groups_members' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_members()}.
+	 *
+	 * @deprecated Use bboss_groups_members() instead.
+	 */
+	function bb_groups_members( $group_id = 0, $role = array( 'member', 'mod', 'admin' ) ) {
+		return bboss_groups_members( $group_id, $role );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Resolves a group type key from a provided value for use in the group shortcode.
@@ -5623,6 +7345,20 @@ function bboss_group_type_shortcode_resolve_key( $type ) {
 	 */
 	return apply_filters( 'bb_group_type_shortcode_resolve_key', $key, $type );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_group_type_shortcode_resolve_key' ) && ! function_exists( 'bb_group_type_shortcode_resolve_key' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_group_type_shortcode_resolve_key()}.
+	 *
+	 * @deprecated Use bboss_group_type_shortcode_resolve_key() instead.
+	 */
+	function bb_group_type_shortcode_resolve_key( $type ) {
+		return bboss_group_type_shortcode_resolve_key( $type );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Whether group membership changes should be recorded for BuddyBoss Add-ons to replay.
@@ -5686,6 +7422,20 @@ function bboss_groups_should_record_subscription_gap() {
 
 	return (int) bboss_get_option( 'bb_group_subscription_gap_count', 0 ) < $limit;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_groups_should_record_subscription_gap' ) && ! function_exists( 'bb_groups_should_record_subscription_gap' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_should_record_subscription_gap()}.
+	 *
+	 * @deprecated Use bboss_groups_should_record_subscription_gap() instead.
+	 */
+	function bb_groups_should_record_subscription_gap() {
+		return bboss_groups_should_record_subscription_gap();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Record a group membership change for BuddyBoss Add-ons to replay.
@@ -5724,140 +7474,8 @@ function bboss_groups_record_subscription_gap( $group_id, $user_id, $action, $is
 
 	bboss_update_option( 'bb_group_subscription_gap_count', (int) bboss_get_option( 'bb_group_subscription_gap_count', 0 ) + 1 );
 }
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
-if ( function_exists( 'bboss_get_all_members_for_groups' ) && ! function_exists( 'bb_get_all_members_for_groups' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_all_members_for_groups()}.
-	 *
-	 * @deprecated Use bboss_get_all_members_for_groups() instead.
-	 */
-	function bb_get_all_members_for_groups( $args = array() ) {
-		return bboss_get_all_members_for_groups( $args );
-	}
-}
-if ( function_exists( 'bboss_get_group_cover_image_height' ) && ! function_exists( 'bb_get_group_cover_image_height' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_group_cover_image_height()}.
-	 *
-	 * @deprecated Use bboss_get_group_cover_image_height() instead.
-	 */
-	function bb_get_group_cover_image_height( $default = 'small' ) {
-		return bboss_get_group_cover_image_height( $default );
-	}
-}
-if ( function_exists( 'bboss_get_group_cover_image_width' ) && ! function_exists( 'bb_get_group_cover_image_width' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_group_cover_image_width()}.
-	 *
-	 * @deprecated Use bboss_get_group_cover_image_width() instead.
-	 */
-	function bb_get_group_cover_image_width( $default = 'default' ) {
-		return bboss_get_group_cover_image_width( $default );
-	}
-}
-if ( function_exists( 'bboss_get_group_type_label_colors' ) && ! function_exists( 'bb_get_group_type_label_colors' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_group_type_label_colors()}.
-	 *
-	 * @deprecated Use bboss_get_group_type_label_colors() instead.
-	 */
-	function bb_get_group_type_label_colors( $type ) {
-		return bboss_get_group_type_label_colors( $type );
-	}
-}
-if ( function_exists( 'bboss_get_parent_group_ids' ) && ! function_exists( 'bb_get_parent_group_ids' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_parent_group_ids()}.
-	 *
-	 * @deprecated Use bboss_get_parent_group_ids() instead.
-	 */
-	function bb_get_parent_group_ids( $group_id ) {
-		return bboss_get_parent_group_ids( $group_id );
-	}
-}
-if ( function_exists( 'bboss_group_migration' ) && ! function_exists( 'bb_group_migration' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_group_migration()}.
-	 *
-	 * @deprecated Use bboss_group_migration() instead.
-	 */
-	function bb_group_migration() {
-		return bboss_group_migration();
-	}
-}
-if ( function_exists( 'bboss_group_single_header_actions' ) && ! function_exists( 'bb_group_single_header_actions' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_group_single_header_actions()}.
-	 *
-	 * @deprecated Use bboss_group_single_header_actions() instead.
-	 */
-	function bb_group_single_header_actions() {
-		return bboss_group_single_header_actions();
-	}
-}
-if ( function_exists( 'bboss_group_type_shortcode_resolve_key' ) && ! function_exists( 'bb_group_type_shortcode_resolve_key' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_group_type_shortcode_resolve_key()}.
-	 *
-	 * @deprecated Use bboss_group_type_shortcode_resolve_key() instead.
-	 */
-	function bb_group_type_shortcode_resolve_key( $type ) {
-		return bboss_group_type_shortcode_resolve_key( $type );
-	}
-}
-if ( function_exists( 'bboss_groups_add_subgroup_members' ) && ! function_exists( 'bb_groups_add_subgroup_members' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_groups_add_subgroup_members()}.
-	 *
-	 * @deprecated Use bboss_groups_add_subgroup_members() instead.
-	 */
-	function bb_groups_add_subgroup_members( $group_id, $parent_group_ids ) {
-		return bboss_groups_add_subgroup_members( $group_id, $parent_group_ids );
-	}
-}
-if ( function_exists( 'bboss_groups_get_settings_status' ) && ! function_exists( 'bb_groups_get_settings_status' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_groups_get_settings_status()}.
-	 *
-	 * @deprecated Use bboss_groups_get_settings_status() instead.
-	 */
-	function bb_groups_get_settings_status( $setting_type ) {
-		return bboss_groups_get_settings_status( $setting_type );
-	}
-}
-if ( function_exists( 'bboss_groups_loop_members' ) && ! function_exists( 'bb_groups_loop_members' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_groups_loop_members()}.
-	 *
-	 * @deprecated Use bboss_groups_loop_members() instead.
-	 */
-	function bb_groups_loop_members( $group_id = 0, $role = array( 'member', 'mod', 'admin' ) ) {
-		return bboss_groups_loop_members( $group_id, $role );
-	}
-}
-if ( function_exists( 'bboss_groups_members' ) && ! function_exists( 'bb_groups_members' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_groups_members()}.
-	 *
-	 * @deprecated Use bboss_groups_members() instead.
-	 */
-	function bb_groups_members( $group_id = 0, $role = array( 'member', 'mod', 'admin' ) ) {
-		return bboss_groups_members( $group_id, $role );
-	}
-}
-if ( function_exists( 'bboss_groups_migrate_subgroup_member' ) && ! function_exists( 'bb_groups_migrate_subgroup_member' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_groups_migrate_subgroup_member()}.
-	 *
-	 * @deprecated Use bboss_groups_migrate_subgroup_member() instead.
-	 */
-	function bb_groups_migrate_subgroup_member() {
-		return bboss_groups_migrate_subgroup_member();
-	}
-}
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_groups_record_subscription_gap' ) && ! function_exists( 'bb_groups_record_subscription_gap' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_groups_record_subscription_gap()}.
@@ -5868,1124 +7486,5 @@ if ( function_exists( 'bboss_groups_record_subscription_gap' ) && ! function_exi
 		return bboss_groups_record_subscription_gap( $group_id, $user_id, $action, $is_member_add, $is_confirmed, $is_banned );
 	}
 }
-if ( function_exists( 'bboss_groups_settings_default_fallback' ) && ! function_exists( 'bb_groups_settings_default_fallback' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_groups_settings_default_fallback()}.
-	 *
-	 * @deprecated Use bboss_groups_settings_default_fallback() instead.
-	 */
-	function bb_groups_settings_default_fallback( $setting_type, $val = '' ) {
-		return bboss_groups_settings_default_fallback( $setting_type, $val );
-	}
-}
-if ( function_exists( 'bboss_groups_should_record_subscription_gap' ) && ! function_exists( 'bb_groups_should_record_subscription_gap' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_groups_should_record_subscription_gap()}.
-	 *
-	 * @deprecated Use bboss_groups_should_record_subscription_gap() instead.
-	 */
-	function bb_groups_should_record_subscription_gap() {
-		return bboss_groups_should_record_subscription_gap();
-	}
-}
-if ( function_exists( 'bboss_update_group_member_count' ) && ! function_exists( 'bb_update_group_member_count' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_update_group_member_count()}.
-	 *
-	 * @deprecated Use bboss_update_group_member_count() instead.
-	 */
-	function bb_update_group_member_count( $group_ids = array() ) {
-		return bboss_update_group_member_count( $group_ids );
-	}
-}
-if ( function_exists( 'bboss_update_groups_invitation_background_process' ) && ! function_exists( 'bb_update_groups_invitation_background_process' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_update_groups_invitation_background_process()}.
-	 *
-	 * @deprecated Use bboss_update_groups_invitation_background_process() instead.
-	 */
-	function bb_update_groups_invitation_background_process() {
-		return bboss_update_groups_invitation_background_process();
-	}
-}
-if ( function_exists( 'bboss_update_groups_members_background_process' ) && ! function_exists( 'bb_update_groups_members_background_process' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_update_groups_members_background_process()}.
-	 *
-	 * @deprecated Use bboss_update_groups_members_background_process() instead.
-	 */
-	function bb_update_groups_members_background_process( $group_id, $parent_id ) {
-		return bboss_update_groups_members_background_process( $group_id, $parent_id );
-	}
-}
-if ( function_exists( 'bboss_update_groups_subgroup_membership_background_process' ) && ! function_exists( 'bb_update_groups_subgroup_membership_background_process' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_update_groups_subgroup_membership_background_process()}.
-	 *
-	 * @deprecated Use bboss_update_groups_subgroup_membership_background_process() instead.
-	 */
-	function bb_update_groups_subgroup_membership_background_process() {
-		return bboss_update_groups_subgroup_membership_background_process();
-	}
-}
-if ( function_exists( 'bboss_get_active_group_types' ) && ! function_exists( 'bp_get_active_group_types' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_active_group_types()}.
-	 *
-	 * @deprecated Use bboss_get_active_group_types() instead.
-	 */
-	function bp_get_active_group_types( $args = array() ) {
-		return bboss_get_active_group_types( $args );
-	}
-}
-if ( function_exists( 'bboss_get_current_group_directory_type' ) && ! function_exists( 'bp_get_current_group_directory_type' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_current_group_directory_type()}.
-	 *
-	 * @deprecated Use bboss_get_current_group_directory_type() instead.
-	 */
-	function bp_get_current_group_directory_type() {
-		return bboss_get_current_group_directory_type();
-	}
-}
-if ( function_exists( 'bboss_get_group_ids_by_group_types' ) && ! function_exists( 'bp_get_group_ids_by_group_types' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_group_ids_by_group_types()}.
-	 *
-	 * @deprecated Use bboss_get_group_ids_by_group_types() instead.
-	 */
-	function bp_get_group_ids_by_group_types( $group_type = '', $taxonomy = 'bp_group_type' ) {
-		return bboss_get_group_ids_by_group_types( $group_type, $taxonomy );
-	}
-}
-if ( function_exists( 'bboss_get_user_group_role_title' ) && ! function_exists( 'bp_get_user_group_role_title' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_user_group_role_title()}.
-	 *
-	 * @deprecated Use bboss_get_user_group_role_title() instead.
-	 */
-	function bp_get_user_group_role_title( $user_id = false, $group_id = false ) {
-		return bboss_get_user_group_role_title( $user_id, $group_id );
-	}
-}
-if ( function_exists( 'bboss_get_user_groups' ) && ! function_exists( 'bp_get_user_groups' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_user_groups()}.
-	 *
-	 * @deprecated Use bboss_get_user_groups() instead.
-	 */
-	function bp_get_user_groups( $user_id, $args = array() ) {
-		return bboss_get_user_groups( $user_id, $args );
-	}
-}
-if ( function_exists( 'bboss_group_directory_page_content' ) && ! function_exists( 'bp_group_directory_page_content' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_group_directory_page_content()}.
-	 *
-	 * @deprecated Use bboss_group_directory_page_content() instead.
-	 */
-	function bp_group_directory_page_content() {
-		return bboss_group_directory_page_content();
-	}
-}
-if ( function_exists( 'bboss_group_get_count_by_group_type' ) && ! function_exists( 'bp_group_get_count_by_group_type' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_group_get_count_by_group_type()}.
-	 *
-	 * @deprecated Use bboss_group_get_count_by_group_type() instead.
-	 */
-	function bp_group_get_count_by_group_type( $group_type = '', $taxonomy = 'bp_group_type' ) {
-		return bboss_group_get_count_by_group_type( $group_type, $taxonomy );
-	}
-}
-if ( function_exists( 'bboss_group_get_group_type_id' ) && ! function_exists( 'bp_group_get_group_type_id' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_group_get_group_type_id()}.
-	 *
-	 * @deprecated Use bboss_group_get_group_type_id() instead.
-	 */
-	function bp_group_get_group_type_id( $group_type = '' ) {
-		return bboss_group_get_group_type_id( $group_type );
-	}
-}
-if ( function_exists( 'bboss_group_get_group_type_key' ) && ! function_exists( 'bp_group_get_group_type_key' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_group_get_group_type_key()}.
-	 *
-	 * @deprecated Use bboss_group_get_group_type_key() instead.
-	 */
-	function bp_group_get_group_type_key( $post_id ) {
-		return bboss_group_get_group_type_key( $post_id );
-	}
-}
-if ( function_exists( 'bboss_group_ids_array_flatten' ) && ! function_exists( 'bp_group_ids_array_flatten' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_group_ids_array_flatten()}.
-	 *
-	 * @deprecated Use bboss_group_ids_array_flatten() instead.
-	 */
-	function bp_group_ids_array_flatten( $array ) {
-		return bboss_group_ids_array_flatten( $array );
-	}
-}
-if ( function_exists( 'bboss_group_object_template_results_groups_all_scope' ) && ! function_exists( 'bp_group_object_template_results_groups_all_scope' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_group_object_template_results_groups_all_scope()}.
-	 *
-	 * @deprecated Use bboss_group_object_template_results_groups_all_scope() instead.
-	 */
-	function bp_group_object_template_results_groups_all_scope( $querystring, $object ) {
-		return bboss_group_object_template_results_groups_all_scope( $querystring, $object );
-	}
-}
-if ( function_exists( 'bboss_group_type_short_code_add_body_class' ) && ! function_exists( 'bp_group_type_short_code_add_body_class' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_group_type_short_code_add_body_class()}.
-	 *
-	 * @deprecated Use bboss_group_type_short_code_add_body_class() instead.
-	 */
-	function bp_group_type_short_code_add_body_class( $class ) {
-		return bboss_group_type_short_code_add_body_class( $class );
-	}
-}
-if ( function_exists( 'bboss_group_type_short_code_callback' ) && ! function_exists( 'bp_group_type_short_code_callback' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_group_type_short_code_callback()}.
-	 *
-	 * @deprecated Use bboss_group_type_short_code_callback() instead.
-	 */
-	function bp_group_type_short_code_callback( $atts ) {
-		return bboss_group_type_short_code_callback( $atts );
-	}
-}
-if ( function_exists( 'bboss_groups_clear_invite_message_for_user' ) && ! function_exists( 'bp_groups_clear_invite_message_for_user' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_groups_clear_invite_message_for_user()}.
-	 *
-	 * @deprecated Use bboss_groups_clear_invite_message_for_user() instead.
-	 */
-	function bp_groups_clear_invite_message_for_user( $user_id, $group_id ) {
-		return bboss_groups_clear_invite_message_for_user( $user_id, $group_id );
-	}
-}
-if ( function_exists( 'bboss_groups_clear_invite_message_on_uninvite' ) && ! function_exists( 'bp_groups_clear_invite_message_on_uninvite' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_groups_clear_invite_message_on_uninvite()}.
-	 *
-	 * @deprecated Use bboss_groups_clear_invite_message_on_uninvite() instead.
-	 */
-	function bp_groups_clear_invite_message_on_uninvite( $group_id, $user_id ) {
-		return bboss_groups_clear_invite_message_on_uninvite( $group_id, $user_id );
-	}
-}
-if ( function_exists( 'bboss_groups_exclude_group_type' ) && ! function_exists( 'bp_groups_exclude_group_type' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_groups_exclude_group_type()}.
-	 *
-	 * @deprecated Use bboss_groups_exclude_group_type() instead.
-	 */
-	function bp_groups_exclude_group_type( $qs = false, $object = false ) {
-		return bboss_groups_exclude_group_type( $qs, $object );
-	}
-}
-if ( function_exists( 'bboss_groups_get_excluded_group_ids_by_type' ) && ! function_exists( 'bp_groups_get_excluded_group_ids_by_type' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_groups_get_excluded_group_ids_by_type()}.
-	 *
-	 * @deprecated Use bboss_groups_get_excluded_group_ids_by_type() instead.
-	 */
-	function bp_groups_get_excluded_group_ids_by_type() {
-		return bboss_groups_get_excluded_group_ids_by_type();
-	}
-}
-if ( function_exists( 'bboss_groups_get_excluded_group_types' ) && ! function_exists( 'bp_groups_get_excluded_group_types' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_groups_get_excluded_group_types()}.
-	 *
-	 * @deprecated Use bboss_groups_get_excluded_group_types() instead.
-	 */
-	function bp_groups_get_excluded_group_types() {
-		return bboss_groups_get_excluded_group_types();
-	}
-}
-if ( function_exists( 'bboss_groups_get_group_roles' ) && ! function_exists( 'bp_groups_get_group_roles' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_groups_get_group_roles()}.
-	 *
-	 * @deprecated Use bboss_groups_get_group_roles() instead.
-	 */
-	function bp_groups_get_group_roles() {
-		return bboss_groups_get_group_roles();
-	}
-}
-if ( function_exists( 'bboss_groups_get_group_type' ) && ! function_exists( 'bp_groups_get_group_type' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_groups_get_group_type()}.
-	 *
-	 * @deprecated Use bboss_groups_get_group_type() instead.
-	 */
-	function bp_groups_get_group_type( $group_id, $single = true ) {
-		return bboss_groups_get_group_type( $group_id, $single );
-	}
-}
-if ( function_exists( 'bboss_groups_get_group_type_object' ) && ! function_exists( 'bp_groups_get_group_type_object' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_groups_get_group_type_object()}.
-	 *
-	 * @deprecated Use bboss_groups_get_group_type_object() instead.
-	 */
-	function bp_groups_get_group_type_object( $group_type ) {
-		return bboss_groups_get_group_type_object( $group_type );
-	}
-}
-if ( function_exists( 'bboss_groups_get_group_type_post_type' ) && ! function_exists( 'bp_groups_get_group_type_post_type' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_groups_get_group_type_post_type()}.
-	 *
-	 * @deprecated Use bboss_groups_get_group_type_post_type() instead.
-	 */
-	function bp_groups_get_group_type_post_type() {
-		return bboss_groups_get_group_type_post_type();
-	}
-}
-if ( function_exists( 'bboss_groups_get_group_type_post_type_labels' ) && ! function_exists( 'bp_groups_get_group_type_post_type_labels' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_groups_get_group_type_post_type_labels()}.
-	 *
-	 * @deprecated Use bboss_groups_get_group_type_post_type_labels() instead.
-	 */
-	function bp_groups_get_group_type_post_type_labels() {
-		return bboss_groups_get_group_type_post_type_labels();
-	}
-}
-if ( function_exists( 'bboss_groups_get_group_type_post_type_supports' ) && ! function_exists( 'bp_groups_get_group_type_post_type_supports' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_groups_get_group_type_post_type_supports()}.
-	 *
-	 * @deprecated Use bboss_groups_get_group_type_post_type_supports() instead.
-	 */
-	function bp_groups_get_group_type_post_type_supports() {
-		return bboss_groups_get_group_type_post_type_supports();
-	}
-}
-if ( function_exists( 'bboss_groups_get_group_types' ) && ! function_exists( 'bp_groups_get_group_types' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_groups_get_group_types()}.
-	 *
-	 * @deprecated Use bboss_groups_get_group_types() instead.
-	 */
-	function bp_groups_get_group_types( $args = array(), $output = 'names', $operator = 'and' ) {
-		return bboss_groups_get_group_types( $args, $output, $operator );
-	}
-}
-if ( function_exists( 'bboss_groups_get_invite_messsage_for_user' ) && ! function_exists( 'bp_groups_get_invite_messsage_for_user' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_groups_get_invite_messsage_for_user()}.
-	 *
-	 * @deprecated Use bboss_groups_get_invite_messsage_for_user() instead.
-	 */
-	function bp_groups_get_invite_messsage_for_user( $user_id, $group_id ) {
-		return bboss_groups_get_invite_messsage_for_user( $user_id, $group_id );
-	}
-}
-if ( function_exists( 'bboss_groups_get_invited_by' ) && ! function_exists( 'bp_groups_get_invited_by' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_groups_get_invited_by()}.
-	 *
-	 * @deprecated Use bboss_groups_get_invited_by() instead.
-	 */
-	function bp_groups_get_invited_by( $user_id = false, $group_id = false ) {
-		return bboss_groups_get_invited_by( $user_id, $group_id );
-	}
-}
-if ( function_exists( 'bboss_groups_group_type_post_type' ) && ! function_exists( 'bp_groups_group_type_post_type' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_groups_group_type_post_type()}.
-	 *
-	 * @deprecated Use bboss_groups_group_type_post_type() instead.
-	 */
-	function bp_groups_group_type_post_type() {
-		return bboss_groups_group_type_post_type();
-	}
-}
-if ( function_exists( 'bboss_groups_has_directory' ) && ! function_exists( 'bp_groups_has_directory' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_groups_has_directory()}.
-	 *
-	 * @deprecated Use bboss_groups_has_directory() instead.
-	 */
-	function bp_groups_has_directory() {
-		return bboss_groups_has_directory();
-	}
-}
-if ( function_exists( 'bboss_groups_has_group_type' ) && ! function_exists( 'bp_groups_has_group_type' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_groups_has_group_type()}.
-	 *
-	 * @deprecated Use bboss_groups_has_group_type() instead.
-	 */
-	function bp_groups_has_group_type( $group_id, $group_type ) {
-		return bboss_groups_has_group_type( $group_id, $group_type );
-	}
-}
-if ( function_exists( 'bboss_groups_migrate_invitations' ) && ! function_exists( 'bp_groups_migrate_invitations' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_groups_migrate_invitations()}.
-	 *
-	 * @deprecated Use bboss_groups_migrate_invitations() instead.
-	 */
-	function bp_groups_migrate_invitations() {
-		return bboss_groups_migrate_invitations();
-	}
-}
-if ( function_exists( 'bboss_groups_prime_mentions_results' ) && ! function_exists( 'bp_groups_prime_mentions_results' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_groups_prime_mentions_results()}.
-	 *
-	 * @deprecated Use bboss_groups_prime_mentions_results() instead.
-	 */
-	function bp_groups_prime_mentions_results() {
-		return bboss_groups_prime_mentions_results();
-	}
-}
-if ( function_exists( 'bboss_groups_register_group_type' ) && ! function_exists( 'bp_groups_register_group_type' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_groups_register_group_type()}.
-	 *
-	 * @deprecated Use bboss_groups_register_group_type() instead.
-	 */
-	function bp_groups_register_group_type( $group_type, $args = array() ) {
-		return bboss_groups_register_group_type( $group_type, $args );
-	}
-}
-if ( function_exists( 'bboss_groups_register_group_types' ) && ! function_exists( 'bp_groups_register_group_types' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_groups_register_group_types()}.
-	 *
-	 * @deprecated Use bboss_groups_register_group_types() instead.
-	 */
-	function bp_groups_register_group_types() {
-		return bboss_groups_register_group_types();
-	}
-}
-if ( function_exists( 'bboss_groups_remove_group_type' ) && ! function_exists( 'bp_groups_remove_group_type' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_groups_remove_group_type()}.
-	 *
-	 * @deprecated Use bboss_groups_remove_group_type() instead.
-	 */
-	function bp_groups_remove_group_type( $group_id, $group_type ) {
-		return bboss_groups_remove_group_type( $group_id, $group_type );
-	}
-}
-if ( function_exists( 'bboss_groups_reset_cover_image_position' ) && ! function_exists( 'bp_groups_reset_cover_image_position' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_groups_reset_cover_image_position()}.
-	 *
-	 * @deprecated Use bboss_groups_reset_cover_image_position() instead.
-	 */
-	function bp_groups_reset_cover_image_position( $group_id ) {
-		return bboss_groups_reset_cover_image_position( $group_id );
-	}
-}
-if ( function_exists( 'bboss_groups_set_group_type' ) && ! function_exists( 'bp_groups_set_group_type' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_groups_set_group_type()}.
-	 *
-	 * @deprecated Use bboss_groups_set_group_type() instead.
-	 */
-	function bp_groups_set_group_type( $group_id, $group_type, $append = false ) {
-		return bboss_groups_set_group_type( $group_id, $group_type, $append );
-	}
-}
-if ( function_exists( 'bboss_groups_update_orphaned_groups_on_group_delete' ) && ! function_exists( 'bp_groups_update_orphaned_groups_on_group_delete' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_groups_update_orphaned_groups_on_group_delete()}.
-	 *
-	 * @deprecated Use bboss_groups_update_orphaned_groups_on_group_delete() instead.
-	 */
-	function bp_groups_update_orphaned_groups_on_group_delete( $group ) {
-		return bboss_groups_update_orphaned_groups_on_group_delete( $group );
-	}
-}
-if ( function_exists( 'bboss_is_my_groups_view' ) && ! function_exists( 'bp_is_my_groups_view' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_my_groups_view()}.
-	 *
-	 * @deprecated Use bboss_is_my_groups_view() instead.
-	 */
-	function bp_is_my_groups_view() {
-		return bboss_is_my_groups_view();
-	}
-}
-if ( function_exists( 'bboss_register_active_group_types' ) && ! function_exists( 'bp_register_active_group_types' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_register_active_group_types()}.
-	 *
-	 * @deprecated Use bboss_register_active_group_types() instead.
-	 */
-	function bp_register_active_group_types() {
-		return bboss_register_active_group_types();
-	}
-}
-if ( function_exists( 'bboss_remove_group_type_on_group_delete' ) && ! function_exists( 'bp_remove_group_type_on_group_delete' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_remove_group_type_on_group_delete()}.
-	 *
-	 * @deprecated Use bboss_remove_group_type_on_group_delete() instead.
-	 */
-	function bp_remove_group_type_on_group_delete( $group_id = 0 ) {
-		return bboss_remove_group_type_on_group_delete( $group_id );
-	}
-}
-if ( function_exists( 'bboss_get_group_role_label' ) && ! function_exists( 'get_group_role_label' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_group_role_label()}.
-	 *
-	 * @deprecated Use bboss_get_group_role_label() instead.
-	 */
-	function get_group_role_label( $group_id, $label_name ) {
-		return bboss_get_group_role_label( $group_id, $label_name );
-	}
-}
-if ( function_exists( 'bboss_groups_accept_all_pending_membership_requests' ) && ! function_exists( 'groups_accept_all_pending_membership_requests' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_groups_accept_all_pending_membership_requests()}.
-	 *
-	 * @deprecated Use bboss_groups_accept_all_pending_membership_requests() instead.
-	 */
-	function groups_accept_all_pending_membership_requests( $group_id = 0 ) {
-		return bboss_groups_accept_all_pending_membership_requests( $group_id );
-	}
-}
-if ( function_exists( 'bboss_groups_accept_invite' ) && ! function_exists( 'groups_accept_invite' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_groups_accept_invite()}.
-	 *
-	 * @deprecated Use bboss_groups_accept_invite() instead.
-	 */
-	function groups_accept_invite( $user_id, $group_id ) {
-		return bboss_groups_accept_invite( $user_id, $group_id );
-	}
-}
-if ( function_exists( 'bboss_groups_accept_membership_request' ) && ! function_exists( 'groups_accept_membership_request' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_groups_accept_membership_request()}.
-	 *
-	 * @deprecated Use bboss_groups_accept_membership_request() instead.
-	 */
-	function groups_accept_membership_request( $membership_id, $user_id = 0, $group_id = 0 ) {
-		return bboss_groups_accept_membership_request( $membership_id, $user_id, $group_id );
-	}
-}
-if ( function_exists( 'bboss_groups_add_groupmeta' ) && ! function_exists( 'groups_add_groupmeta' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_groups_add_groupmeta()}.
-	 *
-	 * @deprecated Use bboss_groups_add_groupmeta() instead.
-	 */
-	function groups_add_groupmeta( $group_id, $meta_key, $meta_value, $unique = false ) {
-		return bboss_groups_add_groupmeta( $group_id, $meta_key, $meta_value, $unique );
-	}
-}
-if ( function_exists( 'bboss_groups_avatar_upload_dir' ) && ! function_exists( 'groups_avatar_upload_dir' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_groups_avatar_upload_dir()}.
-	 *
-	 * @deprecated Use bboss_groups_avatar_upload_dir() instead.
-	 */
-	function groups_avatar_upload_dir( $group_id = 0 ) {
-		return bboss_groups_avatar_upload_dir( $group_id );
-	}
-}
-if ( function_exists( 'bboss_groups_ban_member' ) && ! function_exists( 'groups_ban_member' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_groups_ban_member()}.
-	 *
-	 * @deprecated Use bboss_groups_ban_member() instead.
-	 */
-	function groups_ban_member( $user_id, $group_id ) {
-		return bboss_groups_ban_member( $user_id, $group_id );
-	}
-}
-if ( function_exists( 'bboss_groups_check_for_membership_request' ) && ! function_exists( 'groups_check_for_membership_request' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_groups_check_for_membership_request()}.
-	 *
-	 * @deprecated Use bboss_groups_check_for_membership_request() instead.
-	 */
-	function groups_check_for_membership_request( $user_id, $group_id ) {
-		return bboss_groups_check_for_membership_request( $user_id, $group_id );
-	}
-}
-if ( function_exists( 'bboss_groups_check_has_invite_from_user' ) && ! function_exists( 'groups_check_has_invite_from_user' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_groups_check_has_invite_from_user()}.
-	 *
-	 * @deprecated Use bboss_groups_check_has_invite_from_user() instead.
-	 */
-	function groups_check_has_invite_from_user( $user_id, $group_id, $inviter_id = false, $type = 'sent' ) {
-		return bboss_groups_check_has_invite_from_user( $user_id, $group_id, $inviter_id, $type );
-	}
-}
-if ( function_exists( 'bboss_groups_check_slug' ) && ! function_exists( 'groups_check_slug' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_groups_check_slug()}.
-	 *
-	 * @deprecated Use bboss_groups_check_slug() instead.
-	 */
-	function groups_check_slug( $slug ) {
-		return bboss_groups_check_slug( $slug );
-	}
-}
-if ( function_exists( 'bboss_groups_check_user_has_invite' ) && ! function_exists( 'groups_check_user_has_invite' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_groups_check_user_has_invite()}.
-	 *
-	 * @deprecated Use bboss_groups_check_user_has_invite() instead.
-	 */
-	function groups_check_user_has_invite( $user_id, $group_id, $type = 'sent' ) {
-		return bboss_groups_check_user_has_invite( $user_id, $group_id, $type );
-	}
-}
-if ( function_exists( 'bboss_groups_create_group' ) && ! function_exists( 'groups_create_group' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_groups_create_group()}.
-	 *
-	 * @deprecated Use bboss_groups_create_group() instead.
-	 */
-	function groups_create_group( $args = '' ) {
-		return bboss_groups_create_group( $args );
-	}
-}
-if ( function_exists( 'bboss_groups_delete_all_group_invites' ) && ! function_exists( 'groups_delete_all_group_invites' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_groups_delete_all_group_invites()}.
-	 *
-	 * @deprecated Use bboss_groups_delete_all_group_invites() instead.
-	 */
-	function groups_delete_all_group_invites( $group_id ) {
-		return bboss_groups_delete_all_group_invites( $group_id );
-	}
-}
-if ( function_exists( 'bboss_groups_delete_group' ) && ! function_exists( 'groups_delete_group' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_groups_delete_group()}.
-	 *
-	 * @deprecated Use bboss_groups_delete_group() instead.
-	 */
-	function groups_delete_group( $group_id ) {
-		return bboss_groups_delete_group( $group_id );
-	}
-}
-if ( function_exists( 'bboss_groups_delete_groupmeta' ) && ! function_exists( 'groups_delete_groupmeta' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_groups_delete_groupmeta()}.
-	 *
-	 * @deprecated Use bboss_groups_delete_groupmeta() instead.
-	 */
-	function groups_delete_groupmeta( $group_id, $meta_key = false, $meta_value = false, $delete_all = false ) {
-		return bboss_groups_delete_groupmeta( $group_id, $meta_key, $meta_value, $delete_all );
-	}
-}
-if ( function_exists( 'bboss_groups_delete_invite' ) && ! function_exists( 'groups_delete_invite' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_groups_delete_invite()}.
-	 *
-	 * @deprecated Use bboss_groups_delete_invite() instead.
-	 */
-	function groups_delete_invite( $user_id, $group_id, $inviter_id = false ) {
-		return bboss_groups_delete_invite( $user_id, $group_id, $inviter_id );
-	}
-}
-if ( function_exists( 'bboss_groups_delete_membership_request' ) && ! function_exists( 'groups_delete_membership_request' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_groups_delete_membership_request()}.
-	 *
-	 * @deprecated Use bboss_groups_delete_membership_request() instead.
-	 */
-	function groups_delete_membership_request( $membership_id, $user_id = 0, $group_id = 0 ) {
-		return bboss_groups_delete_membership_request( $membership_id, $user_id, $group_id );
-	}
-}
-if ( function_exists( 'bboss_groups_demote_member' ) && ! function_exists( 'groups_demote_member' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_groups_demote_member()}.
-	 *
-	 * @deprecated Use bboss_groups_demote_member() instead.
-	 */
-	function groups_demote_member( $user_id, $group_id ) {
-		return bboss_groups_demote_member( $user_id, $group_id );
-	}
-}
-if ( function_exists( 'bboss_groups_edit_base_group_details' ) && ! function_exists( 'groups_edit_base_group_details' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_groups_edit_base_group_details()}.
-	 *
-	 * @deprecated Use bboss_groups_edit_base_group_details() instead.
-	 */
-	function groups_edit_base_group_details( $args = array() ) {
-		return bboss_groups_edit_base_group_details( ...func_get_args() );
-	}
-}
-if ( function_exists( 'bboss_groups_edit_group_settings' ) && ! function_exists( 'groups_edit_group_settings' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_groups_edit_group_settings()}.
-	 *
-	 * @deprecated Use bboss_groups_edit_group_settings() instead.
-	 */
-	function groups_edit_group_settings( $group_id, $enable_forum, $status, $invite_status = false, $activity_feed_status = false, $parent_id = false, $media_status = false, $document_status = false, $video_status = false, $album_status = false, $message_status = false ) {
-		return bboss_groups_edit_group_settings( $group_id, $enable_forum, $status, $invite_status, $activity_feed_status, $parent_id, $media_status, $document_status, $video_status, $album_status, $message_status );
-	}
-}
-if ( function_exists( 'bboss_groups_get_current_group' ) && ! function_exists( 'groups_get_current_group' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_groups_get_current_group()}.
-	 *
-	 * @deprecated Use bboss_groups_get_current_group() instead.
-	 */
-	function groups_get_current_group() {
-		return bboss_groups_get_current_group();
-	}
-}
-if ( function_exists( 'bboss_groups_get_group' ) && ! function_exists( 'groups_get_group' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_groups_get_group()}.
-	 *
-	 * @deprecated Use bboss_groups_get_group() instead.
-	 */
-	function groups_get_group( $group_id ) {
-		return bboss_groups_get_group( $group_id );
-	}
-}
-if ( function_exists( 'bboss_groups_get_group_admins' ) && ! function_exists( 'groups_get_group_admins' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_groups_get_group_admins()}.
-	 *
-	 * @deprecated Use bboss_groups_get_group_admins() instead.
-	 */
-	function groups_get_group_admins( $group_id ) {
-		return bboss_groups_get_group_admins( $group_id );
-	}
-}
-if ( function_exists( 'bboss_groups_get_group_members' ) && ! function_exists( 'groups_get_group_members' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_groups_get_group_members()}.
-	 *
-	 * @deprecated Use bboss_groups_get_group_members() instead.
-	 */
-	function groups_get_group_members( $args = array() ) {
-		return bboss_groups_get_group_members( ...func_get_args() );
-	}
-}
-if ( function_exists( 'bboss_groups_get_group_mods' ) && ! function_exists( 'groups_get_group_mods' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_groups_get_group_mods()}.
-	 *
-	 * @deprecated Use bboss_groups_get_group_mods() instead.
-	 */
-	function groups_get_group_mods( $group_id ) {
-		return bboss_groups_get_group_mods( $group_id );
-	}
-}
-if ( function_exists( 'bboss_groups_get_groupmeta' ) && ! function_exists( 'groups_get_groupmeta' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_groups_get_groupmeta()}.
-	 *
-	 * @deprecated Use bboss_groups_get_groupmeta() instead.
-	 */
-	function groups_get_groupmeta( $group_id, $meta_key = '', $single = true ) {
-		return bboss_groups_get_groupmeta( $group_id, $meta_key, $single );
-	}
-}
-if ( function_exists( 'bboss_groups_get_groups' ) && ! function_exists( 'groups_get_groups' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_groups_get_groups()}.
-	 *
-	 * @deprecated Use bboss_groups_get_groups() instead.
-	 */
-	function groups_get_groups( $args = '' ) {
-		return bboss_groups_get_groups( $args );
-	}
-}
-if ( function_exists( 'bboss_groups_get_id' ) && ! function_exists( 'groups_get_id' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_groups_get_id()}.
-	 *
-	 * @deprecated Use bboss_groups_get_id() instead.
-	 */
-	function groups_get_id( $group_slug ) {
-		return bboss_groups_get_id( $group_slug );
-	}
-}
-if ( function_exists( 'bboss_groups_get_id_by_previous_slug' ) && ! function_exists( 'groups_get_id_by_previous_slug' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_groups_get_id_by_previous_slug()}.
-	 *
-	 * @deprecated Use bboss_groups_get_id_by_previous_slug() instead.
-	 */
-	function groups_get_id_by_previous_slug( $group_slug ) {
-		return bboss_groups_get_id_by_previous_slug( $group_slug );
-	}
-}
-if ( function_exists( 'bboss_groups_get_invite_count_for_user' ) && ! function_exists( 'groups_get_invite_count_for_user' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_groups_get_invite_count_for_user()}.
-	 *
-	 * @deprecated Use bboss_groups_get_invite_count_for_user() instead.
-	 */
-	function groups_get_invite_count_for_user( $user_id = 0 ) {
-		return bboss_groups_get_invite_count_for_user( $user_id );
-	}
-}
-if ( function_exists( 'bboss_groups_get_invited_to_group_ids' ) && ! function_exists( 'groups_get_invited_to_group_ids' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_groups_get_invited_to_group_ids()}.
-	 *
-	 * @deprecated Use bboss_groups_get_invited_to_group_ids() instead.
-	 */
-	function groups_get_invited_to_group_ids( $user_id = 0 ) {
-		return bboss_groups_get_invited_to_group_ids( $user_id );
-	}
-}
-if ( function_exists( 'bboss_groups_get_invites' ) && ! function_exists( 'groups_get_invites' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_groups_get_invites()}.
-	 *
-	 * @deprecated Use bboss_groups_get_invites() instead.
-	 */
-	function groups_get_invites( $args = array() ) {
-		return bboss_groups_get_invites( $args );
-	}
-}
-if ( function_exists( 'bboss_groups_get_invites_for_group' ) && ! function_exists( 'groups_get_invites_for_group' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_groups_get_invites_for_group()}.
-	 *
-	 * @deprecated Use bboss_groups_get_invites_for_group() instead.
-	 */
-	function groups_get_invites_for_group( $user_id, $group_id, $sent = null ) {
-		return bboss_groups_get_invites_for_group( $user_id, $group_id, $sent );
-	}
-}
-if ( function_exists( 'bboss_groups_get_invites_for_user' ) && ! function_exists( 'groups_get_invites_for_user' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_groups_get_invites_for_user()}.
-	 *
-	 * @deprecated Use bboss_groups_get_invites_for_user() instead.
-	 */
-	function groups_get_invites_for_user( $user_id = 0, $limit = false, $page = false, $exclude = false ) {
-		return bboss_groups_get_invites_for_user( $user_id, $limit, $page, $exclude );
-	}
-}
-if ( function_exists( 'bboss_groups_get_membership_requested_group_ids' ) && ! function_exists( 'groups_get_membership_requested_group_ids' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_groups_get_membership_requested_group_ids()}.
-	 *
-	 * @deprecated Use bboss_groups_get_membership_requested_group_ids() instead.
-	 */
-	function groups_get_membership_requested_group_ids( $user_id = 0 ) {
-		return bboss_groups_get_membership_requested_group_ids( $user_id );
-	}
-}
-if ( function_exists( 'bboss_groups_get_membership_requested_user_ids' ) && ! function_exists( 'groups_get_membership_requested_user_ids' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_groups_get_membership_requested_user_ids()}.
-	 *
-	 * @deprecated Use bboss_groups_get_membership_requested_user_ids() instead.
-	 */
-	function groups_get_membership_requested_user_ids( $group_id = 0 ) {
-		return bboss_groups_get_membership_requested_user_ids( $group_id );
-	}
-}
-if ( function_exists( 'bboss_groups_get_requests' ) && ! function_exists( 'groups_get_requests' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_groups_get_requests()}.
-	 *
-	 * @deprecated Use bboss_groups_get_requests() instead.
-	 */
-	function groups_get_requests( $args = array() ) {
-		return bboss_groups_get_requests( $args );
-	}
-}
-if ( function_exists( 'bboss_groups_get_slug' ) && ! function_exists( 'groups_get_slug' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_groups_get_slug()}.
-	 *
-	 * @deprecated Use bboss_groups_get_slug() instead.
-	 */
-	function groups_get_slug( $group_id ) {
-		return bboss_groups_get_slug( $group_id );
-	}
-}
-if ( function_exists( 'bboss_groups_get_total_group_count' ) && ! function_exists( 'groups_get_total_group_count' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_groups_get_total_group_count()}.
-	 *
-	 * @deprecated Use bboss_groups_get_total_group_count() instead.
-	 */
-	function groups_get_total_group_count() {
-		return bboss_groups_get_total_group_count();
-	}
-}
-if ( function_exists( 'bboss_groups_get_total_member_count' ) && ! function_exists( 'groups_get_total_member_count' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_groups_get_total_member_count()}.
-	 *
-	 * @deprecated Use bboss_groups_get_total_member_count() instead.
-	 */
-	function groups_get_total_member_count( $group_id ) {
-		return bboss_groups_get_total_member_count( $group_id );
-	}
-}
-if ( function_exists( 'bboss_groups_get_user_groups' ) && ! function_exists( 'groups_get_user_groups' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_groups_get_user_groups()}.
-	 *
-	 * @deprecated Use bboss_groups_get_user_groups() instead.
-	 */
-	function groups_get_user_groups( $user_id = 0, $pag_num = 0, $pag_page = 0 ) {
-		return bboss_groups_get_user_groups( $user_id, $pag_num, $pag_page );
-	}
-}
-if ( function_exists( 'bboss_groups_invite_user' ) && ! function_exists( 'groups_invite_user' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_groups_invite_user()}.
-	 *
-	 * @deprecated Use bboss_groups_invite_user() instead.
-	 */
-	function groups_invite_user( $args = '' ) {
-		return bboss_groups_invite_user( $args );
-	}
-}
-if ( function_exists( 'bboss_groups_is_user_admin' ) && ! function_exists( 'groups_is_user_admin' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_groups_is_user_admin()}.
-	 *
-	 * @deprecated Use bboss_groups_is_user_admin() instead.
-	 */
-	function groups_is_user_admin( $user_id, $group_id ) {
-		return bboss_groups_is_user_admin( $user_id, $group_id );
-	}
-}
-if ( function_exists( 'bboss_groups_is_user_banned' ) && ! function_exists( 'groups_is_user_banned' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_groups_is_user_banned()}.
-	 *
-	 * @deprecated Use bboss_groups_is_user_banned() instead.
-	 */
-	function groups_is_user_banned( $user_id, $group_id ) {
-		return bboss_groups_is_user_banned( $user_id, $group_id );
-	}
-}
-if ( function_exists( 'bboss_groups_is_user_creator' ) && ! function_exists( 'groups_is_user_creator' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_groups_is_user_creator()}.
-	 *
-	 * @deprecated Use bboss_groups_is_user_creator() instead.
-	 */
-	function groups_is_user_creator( $user_id, $group_id ) {
-		return bboss_groups_is_user_creator( $user_id, $group_id );
-	}
-}
-if ( function_exists( 'bboss_groups_is_user_invited' ) && ! function_exists( 'groups_is_user_invited' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_groups_is_user_invited()}.
-	 *
-	 * @deprecated Use bboss_groups_is_user_invited() instead.
-	 */
-	function groups_is_user_invited( $user_id, $group_id, $type = 'sent' ) {
-		return bboss_groups_is_user_invited( $user_id, $group_id, $type );
-	}
-}
-if ( function_exists( 'bboss_groups_is_user_member' ) && ! function_exists( 'groups_is_user_member' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_groups_is_user_member()}.
-	 *
-	 * @deprecated Use bboss_groups_is_user_member() instead.
-	 */
-	function groups_is_user_member( $user_id, $group_id ) {
-		return bboss_groups_is_user_member( $user_id, $group_id );
-	}
-}
-if ( function_exists( 'bboss_groups_is_user_mod' ) && ! function_exists( 'groups_is_user_mod' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_groups_is_user_mod()}.
-	 *
-	 * @deprecated Use bboss_groups_is_user_mod() instead.
-	 */
-	function groups_is_user_mod( $user_id, $group_id ) {
-		return bboss_groups_is_user_mod( $user_id, $group_id );
-	}
-}
-if ( function_exists( 'bboss_groups_is_user_pending' ) && ! function_exists( 'groups_is_user_pending' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_groups_is_user_pending()}.
-	 *
-	 * @deprecated Use bboss_groups_is_user_pending() instead.
-	 */
-	function groups_is_user_pending( $user_id, $group_id ) {
-		return bboss_groups_is_user_pending( $user_id, $group_id );
-	}
-}
-if ( function_exists( 'bboss_groups_is_valid_status' ) && ! function_exists( 'groups_is_valid_status' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_groups_is_valid_status()}.
-	 *
-	 * @deprecated Use bboss_groups_is_valid_status() instead.
-	 */
-	function groups_is_valid_status( $status ) {
-		return bboss_groups_is_valid_status( $status );
-	}
-}
-if ( function_exists( 'bboss_groups_join_group' ) && ! function_exists( 'groups_join_group' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_groups_join_group()}.
-	 *
-	 * @deprecated Use bboss_groups_join_group() instead.
-	 */
-	function groups_join_group( $group_id, $user_id = 0 ) {
-		return bboss_groups_join_group( $group_id, $user_id );
-	}
-}
-if ( function_exists( 'bboss_groups_leave_group' ) && ! function_exists( 'groups_leave_group' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_groups_leave_group()}.
-	 *
-	 * @deprecated Use bboss_groups_leave_group() instead.
-	 */
-	function groups_leave_group( $group_id, $user_id = 0 ) {
-		return bboss_groups_leave_group( $group_id, $user_id );
-	}
-}
-if ( function_exists( 'bboss_groups_post_update' ) && ! function_exists( 'groups_post_update' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_groups_post_update()}.
-	 *
-	 * @deprecated Use bboss_groups_post_update() instead.
-	 */
-	function groups_post_update( $args = '' ) {
-		return bboss_groups_post_update( $args );
-	}
-}
-if ( function_exists( 'bboss_groups_promote_member' ) && ! function_exists( 'groups_promote_member' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_groups_promote_member()}.
-	 *
-	 * @deprecated Use bboss_groups_promote_member() instead.
-	 */
-	function groups_promote_member( $user_id, $group_id, $status ) {
-		return bboss_groups_promote_member( $user_id, $group_id, $status );
-	}
-}
-if ( function_exists( 'bboss_groups_reject_invite' ) && ! function_exists( 'groups_reject_invite' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_groups_reject_invite()}.
-	 *
-	 * @deprecated Use bboss_groups_reject_invite() instead.
-	 */
-	function groups_reject_invite( $user_id, $group_id, $inviter_id = false ) {
-		return bboss_groups_reject_invite( $user_id, $group_id, $inviter_id );
-	}
-}
-if ( function_exists( 'bboss_groups_reject_membership_request' ) && ! function_exists( 'groups_reject_membership_request' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_groups_reject_membership_request()}.
-	 *
-	 * @deprecated Use bboss_groups_reject_membership_request() instead.
-	 */
-	function groups_reject_membership_request( $membership_id, $user_id = 0, $group_id = 0 ) {
-		return bboss_groups_reject_membership_request( $membership_id, $user_id, $group_id );
-	}
-}
-if ( function_exists( 'bboss_groups_remove_data_for_user' ) && ! function_exists( 'groups_remove_data_for_user' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_groups_remove_data_for_user()}.
-	 *
-	 * @deprecated Use bboss_groups_remove_data_for_user() instead.
-	 */
-	function groups_remove_data_for_user( $user_id ) {
-		return bboss_groups_remove_data_for_user( $user_id );
-	}
-}
-if ( function_exists( 'bboss_groups_remove_member' ) && ! function_exists( 'groups_remove_member' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_groups_remove_member()}.
-	 *
-	 * @deprecated Use bboss_groups_remove_member() instead.
-	 */
-	function groups_remove_member( $user_id, $group_id ) {
-		return bboss_groups_remove_member( $user_id, $group_id );
-	}
-}
-if ( function_exists( 'bboss_groups_send_invites' ) && ! function_exists( 'groups_send_invites' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_groups_send_invites()}.
-	 *
-	 * @deprecated Use bboss_groups_send_invites() instead.
-	 */
-	function groups_send_invites( $args = array() ) {
-		return bboss_groups_send_invites( ...func_get_args() );
-	}
-}
-if ( function_exists( 'bboss_groups_send_membership_request' ) && ! function_exists( 'groups_send_membership_request' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_groups_send_membership_request()}.
-	 *
-	 * @deprecated Use bboss_groups_send_membership_request() instead.
-	 */
-	function groups_send_membership_request( $args = array() ) {
-		return bboss_groups_send_membership_request( ...func_get_args() );
-	}
-}
-if ( function_exists( 'bboss_groups_total_groups_for_user' ) && ! function_exists( 'groups_total_groups_for_user' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_groups_total_groups_for_user()}.
-	 *
-	 * @deprecated Use bboss_groups_total_groups_for_user() instead.
-	 */
-	function groups_total_groups_for_user( $user_id = 0 ) {
-		return bboss_groups_total_groups_for_user( $user_id );
-	}
-}
-if ( function_exists( 'bboss_groups_unban_member' ) && ! function_exists( 'groups_unban_member' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_groups_unban_member()}.
-	 *
-	 * @deprecated Use bboss_groups_unban_member() instead.
-	 */
-	function groups_unban_member( $user_id, $group_id ) {
-		return bboss_groups_unban_member( $user_id, $group_id );
-	}
-}
-if ( function_exists( 'bboss_groups_uninvite_user' ) && ! function_exists( 'groups_uninvite_user' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_groups_uninvite_user()}.
-	 *
-	 * @deprecated Use bboss_groups_uninvite_user() instead.
-	 */
-	function groups_uninvite_user( $user_id, $group_id, $inviter_id = false ) {
-		return bboss_groups_uninvite_user( $user_id, $group_id, $inviter_id );
-	}
-}
-if ( function_exists( 'bboss_groups_update_groupmeta' ) && ! function_exists( 'groups_update_groupmeta' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_groups_update_groupmeta()}.
-	 *
-	 * @deprecated Use bboss_groups_update_groupmeta() instead.
-	 */
-	function groups_update_groupmeta( $group_id, $meta_key, $meta_value, $prev_value = '' ) {
-		return bboss_groups_update_groupmeta( $group_id, $meta_key, $meta_value, $prev_value );
-	}
-}
-if ( function_exists( 'bboss_groups_update_last_activity' ) && ! function_exists( 'groups_update_last_activity' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_groups_update_last_activity()}.
-	 *
-	 * @deprecated Use bboss_groups_update_last_activity() instead.
-	 */
-	function groups_update_last_activity( $group_id = 0 ) {
-		return bboss_groups_update_last_activity( $group_id );
-	}
-}
 // @bbwt-com-end compat-layer
+

@@ -17,6 +17,20 @@ defined( 'ABSPATH' ) || exit;
 function bboss_friends_slug() {
 	echo esc_attr( bboss_get_friends_slug() );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_friends_slug' ) && ! function_exists( 'bp_friends_slug' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_friends_slug()}.
+	 *
+	 * @deprecated Use bboss_friends_slug() instead.
+	 */
+	function bp_friends_slug() {
+		return bboss_friends_slug();
+	}
+}
+// @bbwt-com-end compat-layer
+
 	/**
 	 * Return the friends component slug.
 	 *
@@ -35,6 +49,20 @@ function bboss_get_friends_slug() {
 	 */
 	return apply_filters( 'bp_get_friends_slug', bboss()->friends->slug );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_friends_slug' ) && ! function_exists( 'bp_get_friends_slug' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_friends_slug()}.
+	 *
+	 * @deprecated Use bboss_get_friends_slug() instead.
+	 */
+	function bp_get_friends_slug() {
+		return bboss_get_friends_slug();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output the friends component root slug.
@@ -44,6 +72,20 @@ function bboss_get_friends_slug() {
 function bboss_friends_root_slug() {
 	echo esc_attr( bboss_get_friends_root_slug() );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_friends_root_slug' ) && ! function_exists( 'bp_friends_root_slug' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_friends_root_slug()}.
+	 *
+	 * @deprecated Use bboss_friends_root_slug() instead.
+	 */
+	function bp_friends_root_slug() {
+		return bboss_friends_root_slug();
+	}
+}
+// @bbwt-com-end compat-layer
+
 	/**
 	 * Return the friends component root slug.
 	 *
@@ -62,6 +104,20 @@ function bboss_get_friends_root_slug() {
 	 */
 	return apply_filters( 'bp_get_friends_root_slug', bboss()->friends->root_slug );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_friends_root_slug' ) && ! function_exists( 'bp_get_friends_root_slug' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_friends_root_slug()}.
+	 *
+	 * @deprecated Use bboss_get_friends_root_slug() instead.
+	 */
+	function bp_get_friends_root_slug() {
+		return bboss_get_friends_root_slug();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output a block of random friends.
@@ -117,6 +173,20 @@ function bboss_friends_random_friends() {
 
 	<?php
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_friends_random_friends' ) && ! function_exists( 'bp_friends_random_friends' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_friends_random_friends()}.
+	 *
+	 * @deprecated Use bboss_friends_random_friends() instead.
+	 */
+	function bp_friends_random_friends() {
+		return bboss_friends_random_friends();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Pull up a group of random members, and display some profile data about them.
@@ -192,6 +262,20 @@ function bboss_friends_random_members( $total_members = 5 ) {
 	<?php } ?>
 	<?php
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_friends_random_members' ) && ! function_exists( 'bp_friends_random_members' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_friends_random_members()}.
+	 *
+	 * @deprecated Use bboss_friends_random_members() instead.
+	 */
+	function bp_friends_random_members( $total_members = 5 ) {
+		return bboss_friends_random_members( $total_members );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Display a Connections search form.
@@ -219,6 +303,20 @@ function bboss_friend_search_form() {
 
 	<?php
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_friend_search_form' ) && ! function_exists( 'bp_friend_search_form' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_friend_search_form()}.
+	 *
+	 * @deprecated Use bboss_friend_search_form() instead.
+	 */
+	function bp_friend_search_form() {
+		return bboss_friend_search_form();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output the "Connect" button in the member loop.
@@ -228,6 +326,20 @@ function bboss_friend_search_form() {
 function bboss_member_add_friend_button() {
 	bboss_add_friend_button( bboss_get_member_user_id() );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_member_add_friend_button' ) && ! function_exists( 'bp_member_add_friend_button' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_member_add_friend_button()}.
+	 *
+	 * @deprecated Use bboss_member_add_friend_button() instead.
+	 */
+	function bp_member_add_friend_button() {
+		return bboss_member_add_friend_button();
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'bp_directory_members_actions', 'bp_member_add_friend_button' );
 
 /**
@@ -238,6 +350,20 @@ add_action( 'bp_directory_members_actions', 'bp_member_add_friend_button' );
 function bboss_member_total_friend_count() {
 	echo esc_html( bboss_get_member_total_friend_count() );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_member_total_friend_count' ) && ! function_exists( 'bp_member_total_friend_count' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_member_total_friend_count()}.
+	 *
+	 * @deprecated Use bboss_member_total_friend_count() instead.
+	 */
+	function bp_member_total_friend_count() {
+		return bboss_member_total_friend_count();
+	}
+}
+// @bbwt-com-end compat-layer
+
 	/**
 	 * Return the friend count for the current member in the loop.
 	 *
@@ -270,6 +396,20 @@ function bboss_get_member_total_friend_count() {
 		return apply_filters( 'bp_get_member_total_friend_count', sprintf( __( '%d connections', 'buddyboss' ), (int) $members_template->member->total_friend_count ) );
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_member_total_friend_count' ) && ! function_exists( 'bp_get_member_total_friend_count' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_member_total_friend_count()}.
+	 *
+	 * @deprecated Use bboss_get_member_total_friend_count() instead.
+	 */
+	function bp_get_member_total_friend_count() {
+		return bboss_get_member_total_friend_count();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output the ID of the current user in the friend request loop.
@@ -283,6 +423,20 @@ function bboss_get_member_total_friend_count() {
 function bboss_potential_friend_id( $user_id = 0 ) {
 	echo esc_attr( bboss_get_potential_friend_id( $user_id ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_potential_friend_id' ) && ! function_exists( 'bp_potential_friend_id' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_potential_friend_id()}.
+	 *
+	 * @deprecated Use bboss_potential_friend_id() instead.
+	 */
+	function bp_potential_friend_id( $user_id = 0 ) {
+		return bboss_potential_friend_id( $user_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 	/**
 	 * Return the ID of current user in the friend request loop.
 	 *
@@ -312,6 +466,20 @@ function bboss_get_potential_friend_id( $user_id = 0 ) {
 	 */
 	return apply_filters( 'bp_get_potential_friend_id', (int) $user_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_potential_friend_id' ) && ! function_exists( 'bp_get_potential_friend_id' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_potential_friend_id()}.
+	 *
+	 * @deprecated Use bboss_get_potential_friend_id() instead.
+	 */
+	function bp_get_potential_friend_id( $user_id = 0 ) {
+		return bboss_get_potential_friend_id( $user_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Check whether a given user is a friend of the logged-in user.
@@ -347,6 +515,20 @@ function bboss_is_friend( $user_id = 0 ) {
 	 */
 	return apply_filters( 'bp_is_friend', bboss_friends_check_friendship_status( bboss_loggedin_user_id(), $user_id ), $user_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_friend' ) && ! function_exists( 'bp_is_friend' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_friend()}.
+	 *
+	 * @deprecated Use bboss_is_friend() instead.
+	 */
+	function bp_is_friend( $user_id = 0 ) {
+		return bboss_is_friend( $user_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output the Connect button.
@@ -362,6 +544,20 @@ function bboss_is_friend( $user_id = 0 ) {
 function bboss_add_friend_button( $potential_friend_id = 0, $friend_status = false, $button_args = array() ) {
 	echo wp_kses_post( bboss_get_add_friend_button( $potential_friend_id, $friend_status, $button_args ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_add_friend_button' ) && ! function_exists( 'bp_add_friend_button' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_add_friend_button()}.
+	 *
+	 * @deprecated Use bboss_add_friend_button() instead.
+	 */
+	function bp_add_friend_button( $potential_friend_id = 0, $friend_status = false, $button_args = array() ) {
+		return bboss_add_friend_button( $potential_friend_id, $friend_status, $button_args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Create the Connect button.
@@ -500,6 +696,20 @@ function bboss_get_add_friend_button( $potential_friend_id = 0, $friend_status =
 	 */
 	return bboss_get_button( apply_filters( 'bp_get_add_friend_button', $button ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_add_friend_button' ) && ! function_exists( 'bp_get_add_friend_button' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_add_friend_button()}.
+	 *
+	 * @deprecated Use bboss_get_add_friend_button() instead.
+	 */
+	function bp_get_add_friend_button( $potential_friend_id = 0, $friend_status = false, $button_args = array() ) {
+		return bboss_get_add_friend_button( $potential_friend_id, $friend_status, $button_args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get a comma-separated list of IDs of a user's friends.
@@ -525,6 +735,20 @@ function bboss_get_friend_ids( $user_id = 0 ) {
 
 	return implode( ',', bboss_friends_get_friend_user_ids( $user_id ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_friend_ids' ) && ! function_exists( 'bp_get_friend_ids' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_friend_ids()}.
+	 *
+	 * @deprecated Use bboss_get_friend_ids() instead.
+	 */
+	function bp_get_friend_ids( $user_id = 0 ) {
+		return bboss_get_friend_ids( $user_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get a user's connection requests.
@@ -566,6 +790,20 @@ function bboss_get_friendship_requests( $user_id = 0 ) {
 	 */
 	return apply_filters( 'bp_get_friendship_requests', $requests, $user_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_friendship_requests' ) && ! function_exists( 'bp_get_friendship_requests' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_friendship_requests()}.
+	 *
+	 * @deprecated Use bboss_get_friendship_requests() instead.
+	 */
+	function bp_get_friendship_requests( $user_id = 0 ) {
+		return bboss_get_friendship_requests( $user_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get a user's mutual connections with logged in user.
@@ -617,6 +855,20 @@ function bboss_get_mutual_friendships( $user_id = 0 ) {
 	 */
 	return apply_filters( 'bp_get_mutual_friendships', $mutual_friends, $user_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_mutual_friendships' ) && ! function_exists( 'bp_get_mutual_friendships' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_mutual_friendships()}.
+	 *
+	 * @deprecated Use bboss_get_mutual_friendships() instead.
+	 */
+	function bp_get_mutual_friendships( $user_id = 0 ) {
+		return bboss_get_mutual_friendships( $user_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output the ID of the friendship between the logged-in user and the current user in the loop.
@@ -626,6 +878,20 @@ function bboss_get_mutual_friendships( $user_id = 0 ) {
 function bboss_friend_friendship_id() {
 	echo esc_attr( bboss_get_friend_friendship_id() );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_friend_friendship_id' ) && ! function_exists( 'bp_friend_friendship_id' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_friend_friendship_id()}.
+	 *
+	 * @deprecated Use bboss_friend_friendship_id() instead.
+	 */
+	function bp_friend_friendship_id() {
+		return bboss_friend_friendship_id();
+	}
+}
+// @bbwt-com-end compat-layer
+
 	/**
 	 * Return the ID of the friendship between the logged-in user and the current user in the loop.
 	 *
@@ -680,6 +946,20 @@ function bboss_get_friend_friendship_id() {
 	 */
 	return apply_filters( 'bp_get_friend_friendship_id', $friendship_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_friend_friendship_id' ) && ! function_exists( 'bp_get_friend_friendship_id' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_friend_friendship_id()}.
+	 *
+	 * @deprecated Use bboss_get_friend_friendship_id() instead.
+	 */
+	function bp_get_friend_friendship_id() {
+		return bboss_get_friend_friendship_id();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output the URL for accepting the current friendship request in the loop.
@@ -689,6 +969,20 @@ function bboss_get_friend_friendship_id() {
 function bboss_friend_accept_request_link() {
 	echo wp_kses_post( bboss_get_friend_accept_request_link() );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_friend_accept_request_link' ) && ! function_exists( 'bp_friend_accept_request_link' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_friend_accept_request_link()}.
+	 *
+	 * @deprecated Use bboss_friend_accept_request_link() instead.
+	 */
+	function bp_friend_accept_request_link() {
+		return bboss_friend_accept_request_link();
+	}
+}
+// @bbwt-com-end compat-layer
+
 	/**
 	 * Return the URL for accepting the current friendship request in the loop.
 	 *
@@ -715,6 +1009,20 @@ function bboss_get_friend_accept_request_link() {
 	 */
 	return apply_filters( 'bp_get_friend_accept_request_link', wp_nonce_url( trailingslashit( bboss_loggedin_user_domain() . bboss_get_friends_slug() . '/requests/accept/' . $friendship_id ), 'friends_accept_friendship' ), $friendship_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_friend_accept_request_link' ) && ! function_exists( 'bp_get_friend_accept_request_link' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_friend_accept_request_link()}.
+	 *
+	 * @deprecated Use bboss_get_friend_accept_request_link() instead.
+	 */
+	function bp_get_friend_accept_request_link() {
+		return bboss_get_friend_accept_request_link();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output the URL for rejecting the current friendship request in the loop.
@@ -724,6 +1032,20 @@ function bboss_get_friend_accept_request_link() {
 function bboss_friend_reject_request_link() {
 	echo wp_kses_post( bboss_get_friend_reject_request_link() );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_friend_reject_request_link' ) && ! function_exists( 'bp_friend_reject_request_link' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_friend_reject_request_link()}.
+	 *
+	 * @deprecated Use bboss_friend_reject_request_link() instead.
+	 */
+	function bp_friend_reject_request_link() {
+		return bboss_friend_reject_request_link();
+	}
+}
+// @bbwt-com-end compat-layer
+
 	/**
 	 * Return the URL for rejecting the current friendship request in the loop.
 	 *
@@ -750,6 +1072,20 @@ function bboss_get_friend_reject_request_link() {
 	 */
 	return apply_filters( 'bp_get_friend_reject_request_link', wp_nonce_url( trailingslashit( bboss_loggedin_user_domain() . bboss_get_friends_slug() . '/requests/reject/' . $friendship_id ), 'friends_reject_friendship' ), $friendship_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_friend_reject_request_link' ) && ! function_exists( 'bp_get_friend_reject_request_link' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_friend_reject_request_link()}.
+	 *
+	 * @deprecated Use bboss_get_friend_reject_request_link() instead.
+	 */
+	function bp_get_friend_reject_request_link() {
+		return bboss_get_friend_reject_request_link();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output the total friend count for a given user.
@@ -761,6 +1097,20 @@ function bboss_get_friend_reject_request_link() {
 function bboss_total_friend_count( $user_id = 0 ) {
 	echo esc_html( bboss_get_total_friend_count( $user_id ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_total_friend_count' ) && ! function_exists( 'bp_total_friend_count' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_total_friend_count()}.
+	 *
+	 * @deprecated Use bboss_total_friend_count() instead.
+	 */
+	function bp_total_friend_count( $user_id = 0 ) {
+		return bboss_total_friend_count( $user_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 	/**
 	 * Return the total friend count for a given user.
 	 *
@@ -782,6 +1132,20 @@ function bboss_get_total_friend_count( $user_id = 0 ) {
 	 */
 	return apply_filters( 'bp_get_total_friend_count', bboss_friends_get_total_friend_count( $user_id ), $user_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_total_friend_count' ) && ! function_exists( 'bp_get_total_friend_count' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_total_friend_count()}.
+	 *
+	 * @deprecated Use bboss_get_total_friend_count() instead.
+	 */
+	function bp_get_total_friend_count( $user_id = 0 ) {
+		return bboss_get_total_friend_count( $user_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output the total friendship request count for a given user.
@@ -795,6 +1159,20 @@ function bboss_get_total_friend_count( $user_id = 0 ) {
 function bboss_friend_total_requests_count( $user_id = 0 ) {
 	echo esc_html( bboss_friend_get_total_requests_count( $user_id ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_friend_total_requests_count' ) && ! function_exists( 'bp_friend_total_requests_count' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_friend_total_requests_count()}.
+	 *
+	 * @deprecated Use bboss_friend_total_requests_count() instead.
+	 */
+	function bp_friend_total_requests_count( $user_id = 0 ) {
+		return bboss_friend_total_requests_count( $user_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 	/**
 	 * Return the total friendship request count for a given user.
 	 *
@@ -820,6 +1198,20 @@ function bboss_friend_get_total_requests_count( $user_id = 0 ) {
 	 */
 	return apply_filters( 'bp_friend_get_total_requests_count', count( BBoss_Friends_Friendship::get_friend_user_ids( $user_id, true ) ), $user_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_friend_get_total_requests_count' ) && ! function_exists( 'bp_friend_get_total_requests_count' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_friend_get_total_requests_count()}.
+	 *
+	 * @deprecated Use bboss_friend_get_total_requests_count() instead.
+	 */
+	function bp_friend_get_total_requests_count( $user_id = 0 ) {
+		return bboss_friend_get_total_requests_count( $user_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /** Stats **********************************************************************/
 
@@ -833,6 +1225,20 @@ function bboss_friend_get_total_requests_count( $user_id = 0 ) {
 function bboss_friends_profile_stats( $args = '' ) {
 	echo wp_kses_post( bboss_friends_get_profile_stats( $args ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_friends_profile_stats' ) && ! function_exists( 'bp_friends_profile_stats' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_friends_profile_stats()}.
+	 *
+	 * @deprecated Use bboss_friends_profile_stats() instead.
+	 */
+	function bp_friends_profile_stats( $args = '' ) {
+		return bboss_friends_profile_stats( $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'bp_members_admin_user_stats', 'bp_friends_profile_stats', 7, 1 );
 
 /**
@@ -885,80 +1291,8 @@ function bboss_friends_get_profile_stats( $args = '' ) {
 	 */
 	return apply_filters( 'bp_friends_get_profile_stats', $r['output'], $r );
 }
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
-if ( function_exists( 'bboss_add_friend_button' ) && ! function_exists( 'bp_add_friend_button' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_add_friend_button()}.
-	 *
-	 * @deprecated Use bboss_add_friend_button() instead.
-	 */
-	function bp_add_friend_button( $potential_friend_id = 0, $friend_status = false, $button_args = array() ) {
-		return bboss_add_friend_button( $potential_friend_id, $friend_status, $button_args );
-	}
-}
-if ( function_exists( 'bboss_friend_accept_request_link' ) && ! function_exists( 'bp_friend_accept_request_link' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_friend_accept_request_link()}.
-	 *
-	 * @deprecated Use bboss_friend_accept_request_link() instead.
-	 */
-	function bp_friend_accept_request_link() {
-		return bboss_friend_accept_request_link();
-	}
-}
-if ( function_exists( 'bboss_friend_friendship_id' ) && ! function_exists( 'bp_friend_friendship_id' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_friend_friendship_id()}.
-	 *
-	 * @deprecated Use bboss_friend_friendship_id() instead.
-	 */
-	function bp_friend_friendship_id() {
-		return bboss_friend_friendship_id();
-	}
-}
-if ( function_exists( 'bboss_friend_get_total_requests_count' ) && ! function_exists( 'bp_friend_get_total_requests_count' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_friend_get_total_requests_count()}.
-	 *
-	 * @deprecated Use bboss_friend_get_total_requests_count() instead.
-	 */
-	function bp_friend_get_total_requests_count( $user_id = 0 ) {
-		return bboss_friend_get_total_requests_count( $user_id );
-	}
-}
-if ( function_exists( 'bboss_friend_reject_request_link' ) && ! function_exists( 'bp_friend_reject_request_link' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_friend_reject_request_link()}.
-	 *
-	 * @deprecated Use bboss_friend_reject_request_link() instead.
-	 */
-	function bp_friend_reject_request_link() {
-		return bboss_friend_reject_request_link();
-	}
-}
-if ( function_exists( 'bboss_friend_search_form' ) && ! function_exists( 'bp_friend_search_form' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_friend_search_form()}.
-	 *
-	 * @deprecated Use bboss_friend_search_form() instead.
-	 */
-	function bp_friend_search_form() {
-		return bboss_friend_search_form();
-	}
-}
-if ( function_exists( 'bboss_friend_total_requests_count' ) && ! function_exists( 'bp_friend_total_requests_count' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_friend_total_requests_count()}.
-	 *
-	 * @deprecated Use bboss_friend_total_requests_count() instead.
-	 */
-	function bp_friend_total_requests_count( $user_id = 0 ) {
-		return bboss_friend_total_requests_count( $user_id );
-	}
-}
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_friends_get_profile_stats' ) && ! function_exists( 'bp_friends_get_profile_stats' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_friends_get_profile_stats()}.
@@ -969,224 +1303,5 @@ if ( function_exists( 'bboss_friends_get_profile_stats' ) && ! function_exists( 
 		return bboss_friends_get_profile_stats( $args );
 	}
 }
-if ( function_exists( 'bboss_friends_profile_stats' ) && ! function_exists( 'bp_friends_profile_stats' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_friends_profile_stats()}.
-	 *
-	 * @deprecated Use bboss_friends_profile_stats() instead.
-	 */
-	function bp_friends_profile_stats( $args = '' ) {
-		return bboss_friends_profile_stats( $args );
-	}
-}
-if ( function_exists( 'bboss_friends_random_friends' ) && ! function_exists( 'bp_friends_random_friends' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_friends_random_friends()}.
-	 *
-	 * @deprecated Use bboss_friends_random_friends() instead.
-	 */
-	function bp_friends_random_friends() {
-		return bboss_friends_random_friends();
-	}
-}
-if ( function_exists( 'bboss_friends_random_members' ) && ! function_exists( 'bp_friends_random_members' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_friends_random_members()}.
-	 *
-	 * @deprecated Use bboss_friends_random_members() instead.
-	 */
-	function bp_friends_random_members( $total_members = 5 ) {
-		return bboss_friends_random_members( $total_members );
-	}
-}
-if ( function_exists( 'bboss_friends_root_slug' ) && ! function_exists( 'bp_friends_root_slug' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_friends_root_slug()}.
-	 *
-	 * @deprecated Use bboss_friends_root_slug() instead.
-	 */
-	function bp_friends_root_slug() {
-		return bboss_friends_root_slug();
-	}
-}
-if ( function_exists( 'bboss_friends_slug' ) && ! function_exists( 'bp_friends_slug' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_friends_slug()}.
-	 *
-	 * @deprecated Use bboss_friends_slug() instead.
-	 */
-	function bp_friends_slug() {
-		return bboss_friends_slug();
-	}
-}
-if ( function_exists( 'bboss_get_add_friend_button' ) && ! function_exists( 'bp_get_add_friend_button' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_add_friend_button()}.
-	 *
-	 * @deprecated Use bboss_get_add_friend_button() instead.
-	 */
-	function bp_get_add_friend_button( $potential_friend_id = 0, $friend_status = false, $button_args = array() ) {
-		return bboss_get_add_friend_button( $potential_friend_id, $friend_status, $button_args );
-	}
-}
-if ( function_exists( 'bboss_get_friend_accept_request_link' ) && ! function_exists( 'bp_get_friend_accept_request_link' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_friend_accept_request_link()}.
-	 *
-	 * @deprecated Use bboss_get_friend_accept_request_link() instead.
-	 */
-	function bp_get_friend_accept_request_link() {
-		return bboss_get_friend_accept_request_link();
-	}
-}
-if ( function_exists( 'bboss_get_friend_friendship_id' ) && ! function_exists( 'bp_get_friend_friendship_id' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_friend_friendship_id()}.
-	 *
-	 * @deprecated Use bboss_get_friend_friendship_id() instead.
-	 */
-	function bp_get_friend_friendship_id() {
-		return bboss_get_friend_friendship_id();
-	}
-}
-if ( function_exists( 'bboss_get_friend_ids' ) && ! function_exists( 'bp_get_friend_ids' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_friend_ids()}.
-	 *
-	 * @deprecated Use bboss_get_friend_ids() instead.
-	 */
-	function bp_get_friend_ids( $user_id = 0 ) {
-		return bboss_get_friend_ids( $user_id );
-	}
-}
-if ( function_exists( 'bboss_get_friend_reject_request_link' ) && ! function_exists( 'bp_get_friend_reject_request_link' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_friend_reject_request_link()}.
-	 *
-	 * @deprecated Use bboss_get_friend_reject_request_link() instead.
-	 */
-	function bp_get_friend_reject_request_link() {
-		return bboss_get_friend_reject_request_link();
-	}
-}
-if ( function_exists( 'bboss_get_friends_root_slug' ) && ! function_exists( 'bp_get_friends_root_slug' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_friends_root_slug()}.
-	 *
-	 * @deprecated Use bboss_get_friends_root_slug() instead.
-	 */
-	function bp_get_friends_root_slug() {
-		return bboss_get_friends_root_slug();
-	}
-}
-if ( function_exists( 'bboss_get_friends_slug' ) && ! function_exists( 'bp_get_friends_slug' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_friends_slug()}.
-	 *
-	 * @deprecated Use bboss_get_friends_slug() instead.
-	 */
-	function bp_get_friends_slug() {
-		return bboss_get_friends_slug();
-	}
-}
-if ( function_exists( 'bboss_get_friendship_requests' ) && ! function_exists( 'bp_get_friendship_requests' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_friendship_requests()}.
-	 *
-	 * @deprecated Use bboss_get_friendship_requests() instead.
-	 */
-	function bp_get_friendship_requests( $user_id = 0 ) {
-		return bboss_get_friendship_requests( $user_id );
-	}
-}
-if ( function_exists( 'bboss_get_member_total_friend_count' ) && ! function_exists( 'bp_get_member_total_friend_count' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_member_total_friend_count()}.
-	 *
-	 * @deprecated Use bboss_get_member_total_friend_count() instead.
-	 */
-	function bp_get_member_total_friend_count() {
-		return bboss_get_member_total_friend_count();
-	}
-}
-if ( function_exists( 'bboss_get_mutual_friendships' ) && ! function_exists( 'bp_get_mutual_friendships' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_mutual_friendships()}.
-	 *
-	 * @deprecated Use bboss_get_mutual_friendships() instead.
-	 */
-	function bp_get_mutual_friendships( $user_id = 0 ) {
-		return bboss_get_mutual_friendships( $user_id );
-	}
-}
-if ( function_exists( 'bboss_get_potential_friend_id' ) && ! function_exists( 'bp_get_potential_friend_id' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_potential_friend_id()}.
-	 *
-	 * @deprecated Use bboss_get_potential_friend_id() instead.
-	 */
-	function bp_get_potential_friend_id( $user_id = 0 ) {
-		return bboss_get_potential_friend_id( $user_id );
-	}
-}
-if ( function_exists( 'bboss_get_total_friend_count' ) && ! function_exists( 'bp_get_total_friend_count' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_total_friend_count()}.
-	 *
-	 * @deprecated Use bboss_get_total_friend_count() instead.
-	 */
-	function bp_get_total_friend_count( $user_id = 0 ) {
-		return bboss_get_total_friend_count( $user_id );
-	}
-}
-if ( function_exists( 'bboss_is_friend' ) && ! function_exists( 'bp_is_friend' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_friend()}.
-	 *
-	 * @deprecated Use bboss_is_friend() instead.
-	 */
-	function bp_is_friend( $user_id = 0 ) {
-		return bboss_is_friend( $user_id );
-	}
-}
-if ( function_exists( 'bboss_member_add_friend_button' ) && ! function_exists( 'bp_member_add_friend_button' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_member_add_friend_button()}.
-	 *
-	 * @deprecated Use bboss_member_add_friend_button() instead.
-	 */
-	function bp_member_add_friend_button() {
-		return bboss_member_add_friend_button();
-	}
-}
-if ( function_exists( 'bboss_member_total_friend_count' ) && ! function_exists( 'bp_member_total_friend_count' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_member_total_friend_count()}.
-	 *
-	 * @deprecated Use bboss_member_total_friend_count() instead.
-	 */
-	function bp_member_total_friend_count() {
-		return bboss_member_total_friend_count();
-	}
-}
-if ( function_exists( 'bboss_potential_friend_id' ) && ! function_exists( 'bp_potential_friend_id' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_potential_friend_id()}.
-	 *
-	 * @deprecated Use bboss_potential_friend_id() instead.
-	 */
-	function bp_potential_friend_id( $user_id = 0 ) {
-		return bboss_potential_friend_id( $user_id );
-	}
-}
-if ( function_exists( 'bboss_total_friend_count' ) && ! function_exists( 'bp_total_friend_count' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_total_friend_count()}.
-	 *
-	 * @deprecated Use bboss_total_friend_count() instead.
-	 */
-	function bp_total_friend_count( $user_id = 0 ) {
-		return bboss_total_friend_count( $user_id );
-	}
-}
 // @bbwt-com-end compat-layer
+

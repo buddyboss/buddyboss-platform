@@ -117,6 +117,20 @@ function bboss_helper_plugins_loaded_callback() {
 
 			return $exclude_posts;
 		}
+		// @bbwt-com-start compat-layer
+		// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+		if ( function_exists( 'bboss_core_instructor_role_post_exclude' ) && ! function_exists( 'bp_core_instructor_role_post_exclude' ) ) {
+			/**
+			 * Backward-compatible alias of {@see bboss_core_instructor_role_post_exclude()}.
+			 *
+			 * @deprecated Use bboss_core_instructor_role_post_exclude() instead.
+			 */
+			function bp_core_instructor_role_post_exclude( $exclude_posts ) {
+				return bboss_core_instructor_role_post_exclude( $exclude_posts );
+			}
+		}
+		// @bbwt-com-end compat-layer
+
 
 		add_filter( 'wdmir_exclude_post_types', 'bp_core_instructor_role_post_exclude', 10, 1 );
 	}
@@ -139,6 +153,20 @@ function bboss_helper_plugins_loaded_callback() {
 				add_action( 'wp_print_styles', 'bp_deregister_geodirectory_styles' );
 			}
 		}
+		// @bbwt-com-start compat-layer
+		// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+		if ( function_exists( 'bboss_exclude_geodirectory_scripts' ) && ! function_exists( 'bp_exclude_geodirectory_scripts' ) ) {
+			/**
+			 * Backward-compatible alias of {@see bboss_exclude_geodirectory_scripts()}.
+			 *
+			 * @deprecated Use bboss_exclude_geodirectory_scripts() instead.
+			 */
+			function bp_exclude_geodirectory_scripts() {
+				return bboss_exclude_geodirectory_scripts();
+			}
+		}
+		// @bbwt-com-end compat-layer
+
 
 		add_action( 'bp_init', 'bp_exclude_geodirectory_scripts' );
 
@@ -155,6 +183,20 @@ function bboss_helper_plugins_loaded_callback() {
 			wp_dequeue_script( 'bootstrap-js-bundle' );
 			wp_deregister_script( 'bootstrap-js-bundle' );
 		}
+		// @bbwt-com-start compat-layer
+		// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+		if ( function_exists( 'bboss_deregister_geodirectory_script_select2' ) && ! function_exists( 'bp_deregister_geodirectory_script_select2' ) ) {
+			/**
+			 * Backward-compatible alias of {@see bboss_deregister_geodirectory_script_select2()}.
+			 *
+			 * @deprecated Use bboss_deregister_geodirectory_script_select2() instead.
+			 */
+			function bp_deregister_geodirectory_script_select2() {
+				return bboss_deregister_geodirectory_script_select2();
+			}
+		}
+		// @bbwt-com-end compat-layer
+
 
 		/**
 		 * Deregister and dequeue styles from all component pages.
@@ -167,6 +209,20 @@ function bboss_helper_plugins_loaded_callback() {
 			wp_dequeue_style( 'ayecode-ui' );
 			wp_deregister_style( 'ayecode-ui' );
 		}
+		// @bbwt-com-start compat-layer
+		// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+		if ( function_exists( 'bboss_deregister_geodirectory_styles' ) && ! function_exists( 'bp_deregister_geodirectory_styles' ) ) {
+			/**
+			 * Backward-compatible alias of {@see bboss_deregister_geodirectory_styles()}.
+			 *
+			 * @deprecated Use bboss_deregister_geodirectory_styles() instead.
+			 */
+			function bp_deregister_geodirectory_styles() {
+				return bboss_deregister_geodirectory_styles();
+			}
+		}
+		// @bbwt-com-end compat-layer
+
 	}
 
 	/**
@@ -343,6 +399,20 @@ function bboss_helper_plugins_loaded_callback() {
 		add_filter( 'request', 'bb_core_wordfence_rest_author_scan_compatibility', 5 );
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_helper_plugins_loaded_callback' ) && ! function_exists( 'bp_helper_plugins_loaded_callback' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_helper_plugins_loaded_callback()}.
+	 *
+	 * @deprecated Use bboss_helper_plugins_loaded_callback() instead.
+	 */
+	function bp_helper_plugins_loaded_callback() {
+		return bboss_helper_plugins_loaded_callback();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 add_action( 'init', 'bp_helper_plugins_loaded_callback', 0 );
 
@@ -356,6 +426,20 @@ function bboss_wp_offload_media_compatibility_helper() {
 	}
 
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_wp_offload_media_compatibility_helper' ) && ! function_exists( 'bb_wp_offload_media_compatibility_helper' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_wp_offload_media_compatibility_helper()}.
+	 *
+	 * @deprecated Use bboss_wp_offload_media_compatibility_helper() instead.
+	 */
+	function bb_wp_offload_media_compatibility_helper() {
+		return bboss_wp_offload_media_compatibility_helper();
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'init', 'bb_wp_offload_media_compatibility_helper', 10 );
 
 /**
@@ -385,6 +469,20 @@ function bboss_seo_press_compatibility_helper() {
 	}
 
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_seo_press_compatibility_helper' ) && ! function_exists( 'bb_seo_press_compatibility_helper' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_seo_press_compatibility_helper()}.
+	 *
+	 * @deprecated Use bboss_seo_press_compatibility_helper() instead.
+	 */
+	function bb_seo_press_compatibility_helper() {
+		return bboss_seo_press_compatibility_helper();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 add_action( 'wp', 'bb_seo_press_compatibility_helper', 9999 );
 
@@ -402,6 +500,20 @@ function bboss_core_allow_activity_page_content_restriction_memberpress() {
 	}
 
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_core_allow_activity_page_content_restriction_memberpress' ) && ! function_exists( 'bb_core_allow_activity_page_content_restriction_memberpress' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_allow_activity_page_content_restriction_memberpress()}.
+	 *
+	 * @deprecated Use bboss_core_allow_activity_page_content_restriction_memberpress() instead.
+	 */
+	function bb_core_allow_activity_page_content_restriction_memberpress() {
+		return bboss_core_allow_activity_page_content_restriction_memberpress();
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'bp_init', 'bb_core_allow_activity_page_content_restriction_memberpress' );
 
 /**
@@ -415,6 +527,20 @@ function bboss_core_updated_flname_memberpress_buddypress( $user_id ) {
 	$user_id = empty( $user_id ) ? bboss_loggedin_user_id() : $user_id;
 	update_user_meta( $user_id, 'bp_flname_sync', 1 );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_core_updated_flname_memberpress_buddypress' ) && ! function_exists( 'bp_core_updated_flname_memberpress_buddypress' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_updated_flname_memberpress_buddypress()}.
+	 *
+	 * @deprecated Use bboss_core_updated_flname_memberpress_buddypress() instead.
+	 */
+	function bp_core_updated_flname_memberpress_buddypress( $user_id ) {
+		return bboss_core_updated_flname_memberpress_buddypress( $user_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Add Menu in Admin section for MemberPress + BuddyPress Integration plugin
@@ -476,6 +602,20 @@ function bboss_core_add_admin_menu_for_memberpress_buddypress( $menus ) {
 	);
 
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_core_add_admin_menu_for_memberpress_buddypress' ) && ! function_exists( 'bp_core_add_admin_menu_for_memberpress_buddypress' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_add_admin_menu_for_memberpress_buddypress()}.
+	 *
+	 * @deprecated Use bboss_core_add_admin_menu_for_memberpress_buddypress() instead.
+	 */
+	function bp_core_add_admin_menu_for_memberpress_buddypress( $menus ) {
+		return bboss_core_add_admin_menu_for_memberpress_buddypress( $menus );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * On BuddyPress update
@@ -547,6 +687,20 @@ function bboss_core_update_group_fields_id_in_db() {
 		update_site_option( 'bp-xprofile-field-ids-updated', 1 );
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_core_update_group_fields_id_in_db' ) && ! function_exists( 'bp_core_update_group_fields_id_in_db' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_update_group_fields_id_in_db()}.
+	 *
+	 * @deprecated Use bboss_core_update_group_fields_id_in_db() instead.
+	 */
+	function bp_core_update_group_fields_id_in_db() {
+		return bboss_core_update_group_fields_id_in_db();
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'xprofile_admin_group_action', 'bp_core_update_group_fields_id_in_db', 100 );
 
 /**
@@ -566,6 +720,20 @@ function bboss_core_remove_authors_taxonomy_for_co_authors_plus( $taxonomies, $p
 	delete_blog_option( bboss_get_root_blog_id(), "bp_search_{$post_type}_tax_author" );
 	return array_diff( $taxonomies, array( 'author' ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_core_remove_authors_taxonomy_for_co_authors_plus' ) && ! function_exists( 'bp_core_remove_authors_taxonomy_for_co_authors_plus' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_remove_authors_taxonomy_for_co_authors_plus()}.
+	 *
+	 * @deprecated Use bboss_core_remove_authors_taxonomy_for_co_authors_plus() instead.
+	 */
+	function bp_core_remove_authors_taxonomy_for_co_authors_plus( $taxonomies, $post_type ) {
+		return bboss_core_remove_authors_taxonomy_for_co_authors_plus( $taxonomies, $post_type );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Include plugin when plugin is activated
@@ -596,6 +764,20 @@ function bboss_core_add_support_for_google_captcha_pro( $section_notice, $sectio
 	return $section_notice;
 
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_core_add_support_for_google_captcha_pro' ) && ! function_exists( 'bp_core_add_support_for_google_captcha_pro' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_add_support_for_google_captcha_pro()}.
+	 *
+	 * @deprecated Use bboss_core_add_support_for_google_captcha_pro() instead.
+	 */
+	function bp_core_add_support_for_google_captcha_pro( $section_notice, $section_slug ) {
+		return bboss_core_add_support_for_google_captcha_pro( $section_notice, $section_slug );
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_filter( 'gglcptch_section_notice', 'bp_core_add_support_for_google_captcha_pro', 100, 2 );
 
 /**
@@ -610,6 +792,20 @@ function bboss_core_add_support_mepr_signup_map_user_fields( $txn ) {
 		bboss_core_map_user_registration( $txn->user_id, true );
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_core_add_support_mepr_signup_map_user_fields' ) && ! function_exists( 'bb_core_add_support_mepr_signup_map_user_fields' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_add_support_mepr_signup_map_user_fields()}.
+	 *
+	 * @deprecated Use bboss_core_add_support_mepr_signup_map_user_fields() instead.
+	 */
+	function bb_core_add_support_mepr_signup_map_user_fields( $txn ) {
+		return bboss_core_add_support_mepr_signup_map_user_fields( $txn );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 add_action( 'mepr-signup', 'bb_core_add_support_mepr_signup_map_user_fields', 100 );
 
@@ -637,6 +833,20 @@ function bboss_core_learndash_bbpress_notices() {
 		<?php
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_core_learndash_bbpress_notices' ) && ! function_exists( 'bp_core_learndash_bbpress_notices' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_learndash_bbpress_notices()}.
+	 *
+	 * @deprecated Use bboss_core_learndash_bbpress_notices() instead.
+	 */
+	function bp_core_learndash_bbpress_notices() {
+		return bboss_core_learndash_bbpress_notices();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Fix PHP notices in WooCommerce status Menu
@@ -653,6 +863,20 @@ function bboss_core_fix_notices_woocommerce_admin_status( $tabs ) {
 	}
 	return $tabs;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_core_fix_notices_woocommerce_admin_status' ) && ! function_exists( 'bp_core_fix_notices_woocommerce_admin_status' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_fix_notices_woocommerce_admin_status()}.
+	 *
+	 * @deprecated Use bboss_core_fix_notices_woocommerce_admin_status() instead.
+	 */
+	function bp_core_fix_notices_woocommerce_admin_status( $tabs ) {
+		return bboss_core_fix_notices_woocommerce_admin_status( $tabs );
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_filter( 'woocommerce_admin_status_tabs', 'bp_core_fix_notices_woocommerce_admin_status' );
 
 /**
@@ -673,6 +897,20 @@ function bboss_core_fix_forums_subscriptions_tab( $passed ) {
 
 	return $passed;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_core_fix_forums_subscriptions_tab' ) && ! function_exists( 'bp_core_fix_forums_subscriptions_tab' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_fix_forums_subscriptions_tab()}.
+	 *
+	 * @deprecated Use bboss_core_fix_forums_subscriptions_tab() instead.
+	 */
+	function bp_core_fix_forums_subscriptions_tab( $passed ) {
+		return bboss_core_fix_forums_subscriptions_tab( $passed );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 add_filter( 'woocommerce_account_endpoint_page_not_found', 'bp_core_fix_forums_subscriptions_tab' );
 
@@ -719,6 +957,20 @@ function bboss_core_memberpress_the_content( $content ) {
 
 	return $content;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_core_memberpress_the_content' ) && ! function_exists( 'bp_core_memberpress_the_content' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_memberpress_the_content()}.
+	 *
+	 * @deprecated Use bboss_core_memberpress_the_content() instead.
+	 */
+	function bp_core_memberpress_the_content( $content ) {
+		return bboss_core_memberpress_the_content( $content );
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_filter( 'the_content', 'bp_core_memberpress_the_content', 999 );
 
 /**
@@ -731,6 +983,20 @@ function bboss_remove_user_blog_disable_medium_editor_js() {
 		wp_dequeue_script( 'buddyboss-bower-medium-editor' );
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_remove_user_blog_disable_medium_editor_js' ) && ! function_exists( 'bp_remove_user_blog_disable_medium_editor_js' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_remove_user_blog_disable_medium_editor_js()}.
+	 *
+	 * @deprecated Use bboss_remove_user_blog_disable_medium_editor_js() instead.
+	 */
+	function bp_remove_user_blog_disable_medium_editor_js() {
+		return bboss_remove_user_blog_disable_medium_editor_js();
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'wp_enqueue_scripts', 'bp_remove_user_blog_disable_medium_editor_js', 100 );
 
 /**
@@ -743,6 +1009,20 @@ function bboss_settings_remove_wc_lostpassword_url() {
 		remove_filter( 'lostpassword_url', 'wc_lostpassword_url', 10, 1 );
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_settings_remove_wc_lostpassword_url' ) && ! function_exists( 'bp_settings_remove_wc_lostpassword_url' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_settings_remove_wc_lostpassword_url()}.
+	 *
+	 * @deprecated Use bboss_settings_remove_wc_lostpassword_url() instead.
+	 */
+	function bp_settings_remove_wc_lostpassword_url() {
+		return bboss_settings_remove_wc_lostpassword_url();
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'bp_before_member_settings_template', 'bp_settings_remove_wc_lostpassword_url' );
 add_action( 'login_form_login', 'bp_settings_remove_wc_lostpassword_url' );
 
@@ -763,6 +1043,20 @@ function bboss_get_forum_page_id() {
 	// Set the page id if page exists and in publish otherwise set false.
 	return ( '' !== $status && 'publish' === $status ) ? $id : false;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_forum_page_id' ) && ! function_exists( 'bp_get_forum_page_id' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_forum_page_id()}.
+	 *
+	 * @deprecated Use bboss_get_forum_page_id() instead.
+	 */
+	function bp_get_forum_page_id() {
+		return bboss_get_forum_page_id();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Generate Yoast SEO title.
@@ -792,6 +1086,20 @@ function bboss_wpseo_title( $title, $presentation ) {
 
 	return $title;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_wpseo_title' ) && ! function_exists( 'bp_wpseo_title' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_wpseo_title()}.
+	 *
+	 * @deprecated Use bboss_wpseo_title() instead.
+	 */
+	function bp_wpseo_title( $title, $presentation ) {
+		return bboss_wpseo_title( $title, $presentation );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Generate Yoast SEO description.
@@ -821,6 +1129,20 @@ function bboss_wpseo_meta_description( $meta_description, $presentation ) {
 
 	return $meta_description;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_wpseo_meta_description' ) && ! function_exists( 'bp_wpseo_meta_description' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_wpseo_meta_description()}.
+	 *
+	 * @deprecated Use bboss_wpseo_meta_description() instead.
+	 */
+	function bp_wpseo_meta_description( $meta_description, $presentation ) {
+		return bboss_wpseo_meta_description( $meta_description, $presentation );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Generate Yoast SEO meta.
@@ -844,6 +1166,20 @@ function bboss_set_yoast_meta_tags() {
 		add_filter( 'wpseo_metadesc', 'bp_wpseo_meta_description', 10, 2 );
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_set_yoast_meta_tags' ) && ! function_exists( 'set_yoast_meta_tags' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_set_yoast_meta_tags()}.
+	 *
+	 * @deprecated Use bboss_set_yoast_meta_tags() instead.
+	 */
+	function set_yoast_meta_tags() {
+		return bboss_set_yoast_meta_tags();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 // Trigger before template load.
 add_action( 'bp_template_redirect', 'set_yoast_meta_tags' );
@@ -859,6 +1195,20 @@ function bboss_rest_compatibility_loader() {
 		require_once dirname( __FILE__ ) . '/bboss-rest-groups-tabs-creator-pro.php';
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_rest_compatibility_loader' ) && ! function_exists( 'bb_rest_compatibility_loader' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_rest_compatibility_loader()}.
+	 *
+	 * @deprecated Use bboss_rest_compatibility_loader() instead.
+	 */
+	function bb_rest_compatibility_loader() {
+		return bboss_rest_compatibility_loader();
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'bp_rest_api_init', 'bb_rest_compatibility_loader', 5 );
 
 // The LearnDash-aware `group_leader` role sync used to live here as three
@@ -897,6 +1247,20 @@ function bboss_wp_stateless_do_symlink( $can, $id, $attachment_id, $size ) {
 
 	return $can;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_wp_stateless_do_symlink' ) && ! function_exists( 'bb_wp_stateless_do_symlink' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_wp_stateless_do_symlink()}.
+	 *
+	 * @deprecated Use bboss_wp_stateless_do_symlink() instead.
+	 */
+	function bb_wp_stateless_do_symlink( $can, $id, $attachment_id, $size ) {
+		return bboss_wp_stateless_do_symlink( $can, $id, $attachment_id, $size );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 add_filter( 'bb_media_do_symlink', 'bb_wp_stateless_do_symlink', PHP_INT_MAX, 4 );
 add_filter( 'bb_document_do_symlink', 'bb_wp_stateless_do_symlink', PHP_INT_MAX, 4 );
@@ -922,6 +1286,20 @@ function bboss_video_wp_stateless_get_video_url( $attachment_url, $video_id, $at
 
 	return $attachment_url;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_video_wp_stateless_get_video_url' ) && ! function_exists( 'bp_video_wp_stateless_get_video_url' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_video_wp_stateless_get_video_url()}.
+	 *
+	 * @deprecated Use bboss_video_wp_stateless_get_video_url() instead.
+	 */
+	function bp_video_wp_stateless_get_video_url( $attachment_url, $video_id, $attachment_id ) {
+		return bboss_video_wp_stateless_get_video_url( $attachment_url, $video_id, $attachment_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 add_filter( 'bb_video_get_symlink', 'bp_video_wp_stateless_get_video_url', PHP_INT_MAX, 3 );
 
@@ -949,6 +1327,20 @@ function bboss_video_wp_stateless_get_thumb_preview_url( $attachment_url, $video
 
 	return $attachment_url;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_video_wp_stateless_get_thumb_preview_url' ) && ! function_exists( 'bp_video_wp_stateless_get_thumb_preview_url' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_video_wp_stateless_get_thumb_preview_url()}.
+	 *
+	 * @deprecated Use bboss_video_wp_stateless_get_thumb_preview_url() instead.
+	 */
+	function bp_video_wp_stateless_get_thumb_preview_url( $attachment_url, $video_id, $size, $attachment_id ) {
+		return bboss_video_wp_stateless_get_thumb_preview_url( $attachment_url, $video_id, $size, $attachment_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 add_filter( 'bb_video_get_thumb_url', 'bp_video_wp_stateless_get_thumb_preview_url', PHP_INT_MAX, 4 );
 
@@ -972,6 +1364,20 @@ function bboss_media_wp_stateless_get_preview_url( $attachment_url, $media_id, $
 
 	return $attachment_url;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_media_wp_stateless_get_preview_url' ) && ! function_exists( 'bp_media_wp_stateless_get_preview_url' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_media_wp_stateless_get_preview_url()}.
+	 *
+	 * @deprecated Use bboss_media_wp_stateless_get_preview_url() instead.
+	 */
+	function bp_media_wp_stateless_get_preview_url( $attachment_url, $media_id, $attachment_id, $size ) {
+		return bboss_media_wp_stateless_get_preview_url( $attachment_url, $media_id, $attachment_id, $size );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 add_filter( 'bp_media_get_preview_image_url', 'bp_media_wp_stateless_get_preview_url', PHP_INT_MAX, 4 );
 
@@ -1019,6 +1425,20 @@ function bboss_document_wp_stateless_get_preview_url( $attachment_url, $document
 
 	return $attachment_url;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_document_wp_stateless_get_preview_url' ) && ! function_exists( 'bp_document_wp_stateless_get_preview_url' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_document_wp_stateless_get_preview_url()}.
+	 *
+	 * @deprecated Use bboss_document_wp_stateless_get_preview_url() instead.
+	 */
+	function bp_document_wp_stateless_get_preview_url( $attachment_url, $document_id, $extension, $size, $attachment_id ) {
+		return bboss_document_wp_stateless_get_preview_url( $attachment_url, $document_id, $extension, $size, $attachment_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 add_filter( 'bp_document_get_preview_url', 'bp_document_wp_stateless_get_preview_url', PHP_INT_MAX, 5 );
 
@@ -1040,6 +1460,20 @@ function bboss_bbp_remove_page_attributes_metabox_for_forum() {
 	}
 
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_remove_page_attributes_metabox_for_forum' ) && ! function_exists( 'bbp_remove_page_attributes_metabox_for_forum' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_remove_page_attributes_metabox_for_forum()}.
+	 *
+	 * @deprecated Use bboss_bbp_remove_page_attributes_metabox_for_forum() instead.
+	 */
+	function bbp_remove_page_attributes_metabox_for_forum() {
+		return bboss_bbp_remove_page_attributes_metabox_for_forum();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 add_action( 'admin_menu' , 'bbp_remove_page_attributes_metabox_for_forum' );
 
@@ -1058,6 +1492,20 @@ function bboss_elementor_library_template() {
 		remove_action( 'template_redirect', 'bp_template_redirect', 10 );
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_elementor_library_template' ) && ! function_exists( 'bb_elementor_library_template' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_elementor_library_template()}.
+	 *
+	 * @deprecated Use bboss_elementor_library_template() instead.
+	 */
+	function bb_elementor_library_template() {
+		return bboss_elementor_library_template();
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'bp_loaded', 'bb_elementor_library_template' );
 
 /**
@@ -1072,6 +1520,20 @@ function bboss_wp_gravity_forms_compatibility_helper() {
 	}
 
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_wp_gravity_forms_compatibility_helper' ) && ! function_exists( 'bb_wp_gravity_forms_compatibility_helper' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_wp_gravity_forms_compatibility_helper()}.
+	 *
+	 * @deprecated Use bboss_wp_gravity_forms_compatibility_helper() instead.
+	 */
+	function bb_wp_gravity_forms_compatibility_helper() {
+		return bboss_wp_gravity_forms_compatibility_helper();
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'init', 'bb_wp_gravity_forms_compatibility_helper', 999 );
 
 /**
@@ -1091,6 +1553,20 @@ function bboss_mpcs_add_buddyboss_style( $allow_handle ) {
 	return $allow_handle;
 
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_mpcs_add_buddyboss_style' ) && ! function_exists( 'mpcs_add_buddyboss_style' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_mpcs_add_buddyboss_style()}.
+	 *
+	 * @deprecated Use bboss_mpcs_add_buddyboss_style() instead.
+	 */
+	function mpcs_add_buddyboss_style( $allow_handle ) {
+		return bboss_mpcs_add_buddyboss_style( $allow_handle );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 add_filter( 'mpcs_classroom_style_handles', 'mpcs_add_buddyboss_style' );
 
@@ -1149,6 +1625,20 @@ function bboss_is_elementor_maintenance_mode_enabled() {
 		return false;
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_elementor_maintenance_mode_enabled' ) && ! function_exists( 'bb_is_elementor_maintenance_mode_enabled' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_elementor_maintenance_mode_enabled()}.
+	 *
+	 * @deprecated Use bboss_is_elementor_maintenance_mode_enabled() instead.
+	 */
+	function bb_is_elementor_maintenance_mode_enabled() {
+		return bboss_is_elementor_maintenance_mode_enabled();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Function to get the user enrolled course or all courses.
@@ -1217,6 +1707,20 @@ function bboss_readylaunch_middle_content_llms_courses( $args = array() ) {
 
 	return $args;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_readylaunch_middle_content_llms_courses' ) && ! function_exists( 'bb_readylaunch_middle_content_llms_courses' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_readylaunch_middle_content_llms_courses()}.
+	 *
+	 * @deprecated Use bboss_readylaunch_middle_content_llms_courses() instead.
+	 */
+	function bb_readylaunch_middle_content_llms_courses( $args = array() ) {
+		return bboss_readylaunch_middle_content_llms_courses( $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Helper functions for the buddyboss offload media compatibility.
@@ -1229,6 +1733,20 @@ function bboss_om_compatibility_helper() {
 		require bboss()->compatibility_dir . '/class-bboss-om-helpers.php';
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_om_compatibility_helper' ) && ! function_exists( 'bb_om_compatibility_helper' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_om_compatibility_helper()}.
+	 *
+	 * @deprecated Use bboss_om_compatibility_helper() instead.
+	 */
+	function bb_om_compatibility_helper() {
+		return bboss_om_compatibility_helper();
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'init', 'bb_om_compatibility_helper', 10 );
 
 /**
@@ -1279,6 +1797,20 @@ function bboss_core_wordfence_rest_author_scan_compatibility( $query_vars ) {
 
 	return $query_vars;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_core_wordfence_rest_author_scan_compatibility' ) && ! function_exists( 'bb_core_wordfence_rest_author_scan_compatibility' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_wordfence_rest_author_scan_compatibility()}.
+	 *
+	 * @deprecated Use bboss_core_wordfence_rest_author_scan_compatibility() instead.
+	 */
+	function bb_core_wordfence_rest_author_scan_compatibility( $query_vars ) {
+		return bboss_core_wordfence_rest_author_scan_compatibility( $query_vars );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Minimum BuddyBoss Theme version for this Platform.
@@ -1296,6 +1828,20 @@ function bboss_core_wordfence_rest_author_scan_compatibility( $query_vars ) {
 function bboss_platform_3_theme_required_version() {
 	return '2.23.0';
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_platform_3_theme_required_version' ) && ! function_exists( 'bb_platform_3_theme_required_version' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_platform_3_theme_required_version()}.
+	 *
+	 * @deprecated Use bboss_platform_3_theme_required_version() instead.
+	 */
+	function bb_platform_3_theme_required_version() {
+		return bboss_platform_3_theme_required_version();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get the version of the active BuddyBoss Theme, or the parent of the active child theme.
@@ -1315,6 +1861,20 @@ function bboss_get_active_buddyboss_theme_version() {
 
 	return (string) ( $parent ? $parent->get( 'Version' ) : $theme->get( 'Version' ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_active_buddyboss_theme_version' ) && ! function_exists( 'bb_get_active_buddyboss_theme_version' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_active_buddyboss_theme_version()}.
+	 *
+	 * @deprecated Use bboss_get_active_buddyboss_theme_version() instead.
+	 */
+	function bb_get_active_buddyboss_theme_version() {
+		return bboss_get_active_buddyboss_theme_version();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Activity meta keys that older BuddyBoss Theme builds turn into `BP_Document` objects.
@@ -1326,6 +1886,20 @@ function bboss_get_active_buddyboss_theme_version() {
 function bboss_theme_document_activity_meta_keys() {
 	return array( 'bp_document_ids', 'bp_document_folder_activity', 'bp_document_id' );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_theme_document_activity_meta_keys' ) && ! function_exists( 'bb_theme_document_activity_meta_keys' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_theme_document_activity_meta_keys()}.
+	 *
+	 * @deprecated Use bboss_theme_document_activity_meta_keys() instead.
+	 */
+	function bb_theme_document_activity_meta_keys() {
+		return bboss_theme_document_activity_meta_keys();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Hide document activity meta from BuddyBoss Theme builds that cannot handle a missing Documents component.
@@ -1358,6 +1932,20 @@ function bboss_theme_document_activity_meta_compat( $value, $object_id, $meta_ke
 
 	return $single ? array( '' ) : array();
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_theme_document_activity_meta_compat' ) && ! function_exists( 'bb_theme_document_activity_meta_compat' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_theme_document_activity_meta_compat()}.
+	 *
+	 * @deprecated Use bboss_theme_document_activity_meta_compat() instead.
+	 */
+	function bb_theme_document_activity_meta_compat( $value, $object_id, $meta_key, $single ) {
+		return bboss_theme_document_activity_meta_compat( $value, $object_id, $meta_key, $single );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Register the document meta compatibility filter for older BuddyBoss Theme builds.
@@ -1398,6 +1986,20 @@ function bboss_register_theme_document_meta_compat() {
 		}
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_register_theme_document_meta_compat' ) && ! function_exists( 'bb_register_theme_document_meta_compat' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_register_theme_document_meta_compat()}.
+	 *
+	 * @deprecated Use bboss_register_theme_document_meta_compat() instead.
+	 */
+	function bb_register_theme_document_meta_compat() {
+		return bboss_register_theme_document_meta_compat();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Hide document activity meta from older BuddyBoss Theme builds on full reads.
@@ -1423,6 +2025,20 @@ function bboss_theme_document_activity_cached_meta_compat( $meta_data, $activity
 
 	return array_diff_key( $meta_data, array_flip( bboss_theme_document_activity_meta_keys() ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_theme_document_activity_cached_meta_compat' ) && ! function_exists( 'bb_theme_document_activity_cached_meta_compat' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_theme_document_activity_cached_meta_compat()}.
+	 *
+	 * @deprecated Use bboss_theme_document_activity_cached_meta_compat() instead.
+	 */
+	function bb_theme_document_activity_cached_meta_compat( $meta_data, $activity_id ) {
+		return bboss_theme_document_activity_cached_meta_compat( $meta_data, $activity_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'after_setup_theme', 'bb_register_theme_document_meta_compat', 1 );
 
 /**
@@ -1466,72 +2082,23 @@ function bboss_maybe_define_group_subscription_send_fallback() {
 	 */
 	function bboss_subscription_send_subscribe_group_notifications( $content, $user_id, $group_id, $activity_id ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
 	}
-}
-add_action( 'bp_loaded', 'bb_maybe_define_group_subscription_send_fallback', 99 );
+	// @bbwt-com-start compat-layer
+	// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+	if ( function_exists( 'bboss_subscription_send_subscribe_group_notifications' ) && ! function_exists( 'bb_subscription_send_subscribe_group_notifications' ) ) {
+		/**
+		 * Backward-compatible alias of {@see bboss_subscription_send_subscribe_group_notifications()}.
+		 *
+		 * @deprecated Use bboss_subscription_send_subscribe_group_notifications() instead.
+		 */
+		function bb_subscription_send_subscribe_group_notifications( $content, $user_id, $group_id, $activity_id ) {
+			return bboss_subscription_send_subscribe_group_notifications( $content, $user_id, $group_id, $activity_id );
+		}
+	}
+	// @bbwt-com-end compat-layer
 
+}
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
-if ( function_exists( 'bboss_core_add_support_mepr_signup_map_user_fields' ) && ! function_exists( 'bb_core_add_support_mepr_signup_map_user_fields' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_core_add_support_mepr_signup_map_user_fields()}.
-	 *
-	 * @deprecated Use bboss_core_add_support_mepr_signup_map_user_fields() instead.
-	 */
-	function bb_core_add_support_mepr_signup_map_user_fields( $txn ) {
-		return bboss_core_add_support_mepr_signup_map_user_fields( $txn );
-	}
-}
-if ( function_exists( 'bboss_core_allow_activity_page_content_restriction_memberpress' ) && ! function_exists( 'bb_core_allow_activity_page_content_restriction_memberpress' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_core_allow_activity_page_content_restriction_memberpress()}.
-	 *
-	 * @deprecated Use bboss_core_allow_activity_page_content_restriction_memberpress() instead.
-	 */
-	function bb_core_allow_activity_page_content_restriction_memberpress() {
-		return bboss_core_allow_activity_page_content_restriction_memberpress();
-	}
-}
-if ( function_exists( 'bboss_core_wordfence_rest_author_scan_compatibility' ) && ! function_exists( 'bb_core_wordfence_rest_author_scan_compatibility' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_core_wordfence_rest_author_scan_compatibility()}.
-	 *
-	 * @deprecated Use bboss_core_wordfence_rest_author_scan_compatibility() instead.
-	 */
-	function bb_core_wordfence_rest_author_scan_compatibility( $query_vars ) {
-		return bboss_core_wordfence_rest_author_scan_compatibility( $query_vars );
-	}
-}
-if ( function_exists( 'bboss_elementor_library_template' ) && ! function_exists( 'bb_elementor_library_template' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_elementor_library_template()}.
-	 *
-	 * @deprecated Use bboss_elementor_library_template() instead.
-	 */
-	function bb_elementor_library_template() {
-		return bboss_elementor_library_template();
-	}
-}
-if ( function_exists( 'bboss_get_active_buddyboss_theme_version' ) && ! function_exists( 'bb_get_active_buddyboss_theme_version' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_active_buddyboss_theme_version()}.
-	 *
-	 * @deprecated Use bboss_get_active_buddyboss_theme_version() instead.
-	 */
-	function bb_get_active_buddyboss_theme_version() {
-		return bboss_get_active_buddyboss_theme_version();
-	}
-}
-if ( function_exists( 'bboss_is_elementor_maintenance_mode_enabled' ) && ! function_exists( 'bb_is_elementor_maintenance_mode_enabled' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_elementor_maintenance_mode_enabled()}.
-	 *
-	 * @deprecated Use bboss_is_elementor_maintenance_mode_enabled() instead.
-	 */
-	function bb_is_elementor_maintenance_mode_enabled() {
-		return bboss_is_elementor_maintenance_mode_enabled();
-	}
-}
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_maybe_define_group_subscription_send_fallback' ) && ! function_exists( 'bb_maybe_define_group_subscription_send_fallback' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_maybe_define_group_subscription_send_fallback()}.
@@ -1542,394 +2109,6 @@ if ( function_exists( 'bboss_maybe_define_group_subscription_send_fallback' ) &&
 		return bboss_maybe_define_group_subscription_send_fallback();
 	}
 }
-if ( function_exists( 'bboss_om_compatibility_helper' ) && ! function_exists( 'bb_om_compatibility_helper' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_om_compatibility_helper()}.
-	 *
-	 * @deprecated Use bboss_om_compatibility_helper() instead.
-	 */
-	function bb_om_compatibility_helper() {
-		return bboss_om_compatibility_helper();
-	}
-}
-if ( function_exists( 'bboss_platform_3_theme_required_version' ) && ! function_exists( 'bb_platform_3_theme_required_version' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_platform_3_theme_required_version()}.
-	 *
-	 * @deprecated Use bboss_platform_3_theme_required_version() instead.
-	 */
-	function bb_platform_3_theme_required_version() {
-		return bboss_platform_3_theme_required_version();
-	}
-}
-if ( function_exists( 'bboss_readylaunch_middle_content_llms_courses' ) && ! function_exists( 'bb_readylaunch_middle_content_llms_courses' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_readylaunch_middle_content_llms_courses()}.
-	 *
-	 * @deprecated Use bboss_readylaunch_middle_content_llms_courses() instead.
-	 */
-	function bb_readylaunch_middle_content_llms_courses( $args = array() ) {
-		return bboss_readylaunch_middle_content_llms_courses( $args );
-	}
-}
-if ( function_exists( 'bboss_register_theme_document_meta_compat' ) && ! function_exists( 'bb_register_theme_document_meta_compat' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_register_theme_document_meta_compat()}.
-	 *
-	 * @deprecated Use bboss_register_theme_document_meta_compat() instead.
-	 */
-	function bb_register_theme_document_meta_compat() {
-		return bboss_register_theme_document_meta_compat();
-	}
-}
-if ( function_exists( 'bboss_rest_compatibility_loader' ) && ! function_exists( 'bb_rest_compatibility_loader' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_rest_compatibility_loader()}.
-	 *
-	 * @deprecated Use bboss_rest_compatibility_loader() instead.
-	 */
-	function bb_rest_compatibility_loader() {
-		return bboss_rest_compatibility_loader();
-	}
-}
-if ( function_exists( 'bboss_seo_press_compatibility_helper' ) && ! function_exists( 'bb_seo_press_compatibility_helper' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_seo_press_compatibility_helper()}.
-	 *
-	 * @deprecated Use bboss_seo_press_compatibility_helper() instead.
-	 */
-	function bb_seo_press_compatibility_helper() {
-		return bboss_seo_press_compatibility_helper();
-	}
-}
-if ( function_exists( 'bboss_subscription_send_subscribe_group_notifications' ) && ! function_exists( 'bb_subscription_send_subscribe_group_notifications' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_subscription_send_subscribe_group_notifications()}.
-	 *
-	 * @deprecated Use bboss_subscription_send_subscribe_group_notifications() instead.
-	 */
-	function bb_subscription_send_subscribe_group_notifications( $content, $user_id, $group_id, $activity_id ) {
-		return bboss_subscription_send_subscribe_group_notifications( $content, $user_id, $group_id, $activity_id );
-	}
-}
-if ( function_exists( 'bboss_theme_document_activity_cached_meta_compat' ) && ! function_exists( 'bb_theme_document_activity_cached_meta_compat' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_theme_document_activity_cached_meta_compat()}.
-	 *
-	 * @deprecated Use bboss_theme_document_activity_cached_meta_compat() instead.
-	 */
-	function bb_theme_document_activity_cached_meta_compat( $meta_data, $activity_id ) {
-		return bboss_theme_document_activity_cached_meta_compat( $meta_data, $activity_id );
-	}
-}
-if ( function_exists( 'bboss_theme_document_activity_meta_compat' ) && ! function_exists( 'bb_theme_document_activity_meta_compat' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_theme_document_activity_meta_compat()}.
-	 *
-	 * @deprecated Use bboss_theme_document_activity_meta_compat() instead.
-	 */
-	function bb_theme_document_activity_meta_compat( $value, $object_id, $meta_key, $single ) {
-		return bboss_theme_document_activity_meta_compat( $value, $object_id, $meta_key, $single );
-	}
-}
-if ( function_exists( 'bboss_theme_document_activity_meta_keys' ) && ! function_exists( 'bb_theme_document_activity_meta_keys' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_theme_document_activity_meta_keys()}.
-	 *
-	 * @deprecated Use bboss_theme_document_activity_meta_keys() instead.
-	 */
-	function bb_theme_document_activity_meta_keys() {
-		return bboss_theme_document_activity_meta_keys();
-	}
-}
-if ( function_exists( 'bboss_wp_gravity_forms_compatibility_helper' ) && ! function_exists( 'bb_wp_gravity_forms_compatibility_helper' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_wp_gravity_forms_compatibility_helper()}.
-	 *
-	 * @deprecated Use bboss_wp_gravity_forms_compatibility_helper() instead.
-	 */
-	function bb_wp_gravity_forms_compatibility_helper() {
-		return bboss_wp_gravity_forms_compatibility_helper();
-	}
-}
-if ( function_exists( 'bboss_wp_offload_media_compatibility_helper' ) && ! function_exists( 'bb_wp_offload_media_compatibility_helper' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_wp_offload_media_compatibility_helper()}.
-	 *
-	 * @deprecated Use bboss_wp_offload_media_compatibility_helper() instead.
-	 */
-	function bb_wp_offload_media_compatibility_helper() {
-		return bboss_wp_offload_media_compatibility_helper();
-	}
-}
-if ( function_exists( 'bboss_wp_stateless_do_symlink' ) && ! function_exists( 'bb_wp_stateless_do_symlink' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_wp_stateless_do_symlink()}.
-	 *
-	 * @deprecated Use bboss_wp_stateless_do_symlink() instead.
-	 */
-	function bb_wp_stateless_do_symlink( $can, $id, $attachment_id, $size ) {
-		return bboss_wp_stateless_do_symlink( $can, $id, $attachment_id, $size );
-	}
-}
-if ( function_exists( 'bboss_bbp_remove_page_attributes_metabox_for_forum' ) && ! function_exists( 'bbp_remove_page_attributes_metabox_for_forum' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_remove_page_attributes_metabox_for_forum()}.
-	 *
-	 * @deprecated Use bboss_bbp_remove_page_attributes_metabox_for_forum() instead.
-	 */
-	function bbp_remove_page_attributes_metabox_for_forum() {
-		return bboss_bbp_remove_page_attributes_metabox_for_forum();
-	}
-}
-if ( function_exists( 'bboss_core_add_admin_menu_for_memberpress_buddypress' ) && ! function_exists( 'bp_core_add_admin_menu_for_memberpress_buddypress' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_core_add_admin_menu_for_memberpress_buddypress()}.
-	 *
-	 * @deprecated Use bboss_core_add_admin_menu_for_memberpress_buddypress() instead.
-	 */
-	function bp_core_add_admin_menu_for_memberpress_buddypress( $menus ) {
-		return bboss_core_add_admin_menu_for_memberpress_buddypress( $menus );
-	}
-}
-if ( function_exists( 'bboss_core_add_support_for_google_captcha_pro' ) && ! function_exists( 'bp_core_add_support_for_google_captcha_pro' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_core_add_support_for_google_captcha_pro()}.
-	 *
-	 * @deprecated Use bboss_core_add_support_for_google_captcha_pro() instead.
-	 */
-	function bp_core_add_support_for_google_captcha_pro( $section_notice, $section_slug ) {
-		return bboss_core_add_support_for_google_captcha_pro( $section_notice, $section_slug );
-	}
-}
-if ( function_exists( 'bboss_core_fix_forums_subscriptions_tab' ) && ! function_exists( 'bp_core_fix_forums_subscriptions_tab' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_core_fix_forums_subscriptions_tab()}.
-	 *
-	 * @deprecated Use bboss_core_fix_forums_subscriptions_tab() instead.
-	 */
-	function bp_core_fix_forums_subscriptions_tab( $passed ) {
-		return bboss_core_fix_forums_subscriptions_tab( $passed );
-	}
-}
-if ( function_exists( 'bboss_core_fix_notices_woocommerce_admin_status' ) && ! function_exists( 'bp_core_fix_notices_woocommerce_admin_status' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_core_fix_notices_woocommerce_admin_status()}.
-	 *
-	 * @deprecated Use bboss_core_fix_notices_woocommerce_admin_status() instead.
-	 */
-	function bp_core_fix_notices_woocommerce_admin_status( $tabs ) {
-		return bboss_core_fix_notices_woocommerce_admin_status( $tabs );
-	}
-}
-if ( function_exists( 'bboss_core_instructor_role_post_exclude' ) && ! function_exists( 'bp_core_instructor_role_post_exclude' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_core_instructor_role_post_exclude()}.
-	 *
-	 * @deprecated Use bboss_core_instructor_role_post_exclude() instead.
-	 */
-	function bp_core_instructor_role_post_exclude( $exclude_posts ) {
-		return bboss_core_instructor_role_post_exclude( $exclude_posts );
-	}
-}
-if ( function_exists( 'bboss_core_learndash_bbpress_notices' ) && ! function_exists( 'bp_core_learndash_bbpress_notices' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_core_learndash_bbpress_notices()}.
-	 *
-	 * @deprecated Use bboss_core_learndash_bbpress_notices() instead.
-	 */
-	function bp_core_learndash_bbpress_notices() {
-		return bboss_core_learndash_bbpress_notices();
-	}
-}
-if ( function_exists( 'bboss_core_memberpress_the_content' ) && ! function_exists( 'bp_core_memberpress_the_content' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_core_memberpress_the_content()}.
-	 *
-	 * @deprecated Use bboss_core_memberpress_the_content() instead.
-	 */
-	function bp_core_memberpress_the_content( $content ) {
-		return bboss_core_memberpress_the_content( $content );
-	}
-}
-if ( function_exists( 'bboss_core_remove_authors_taxonomy_for_co_authors_plus' ) && ! function_exists( 'bp_core_remove_authors_taxonomy_for_co_authors_plus' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_core_remove_authors_taxonomy_for_co_authors_plus()}.
-	 *
-	 * @deprecated Use bboss_core_remove_authors_taxonomy_for_co_authors_plus() instead.
-	 */
-	function bp_core_remove_authors_taxonomy_for_co_authors_plus( $taxonomies, $post_type ) {
-		return bboss_core_remove_authors_taxonomy_for_co_authors_plus( $taxonomies, $post_type );
-	}
-}
-if ( function_exists( 'bboss_core_update_group_fields_id_in_db' ) && ! function_exists( 'bp_core_update_group_fields_id_in_db' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_core_update_group_fields_id_in_db()}.
-	 *
-	 * @deprecated Use bboss_core_update_group_fields_id_in_db() instead.
-	 */
-	function bp_core_update_group_fields_id_in_db() {
-		return bboss_core_update_group_fields_id_in_db();
-	}
-}
-if ( function_exists( 'bboss_core_updated_flname_memberpress_buddypress' ) && ! function_exists( 'bp_core_updated_flname_memberpress_buddypress' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_core_updated_flname_memberpress_buddypress()}.
-	 *
-	 * @deprecated Use bboss_core_updated_flname_memberpress_buddypress() instead.
-	 */
-	function bp_core_updated_flname_memberpress_buddypress( $user_id ) {
-		return bboss_core_updated_flname_memberpress_buddypress( $user_id );
-	}
-}
-if ( function_exists( 'bboss_deregister_geodirectory_script_select2' ) && ! function_exists( 'bp_deregister_geodirectory_script_select2' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_deregister_geodirectory_script_select2()}.
-	 *
-	 * @deprecated Use bboss_deregister_geodirectory_script_select2() instead.
-	 */
-	function bp_deregister_geodirectory_script_select2() {
-		return bboss_deregister_geodirectory_script_select2();
-	}
-}
-if ( function_exists( 'bboss_deregister_geodirectory_styles' ) && ! function_exists( 'bp_deregister_geodirectory_styles' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_deregister_geodirectory_styles()}.
-	 *
-	 * @deprecated Use bboss_deregister_geodirectory_styles() instead.
-	 */
-	function bp_deregister_geodirectory_styles() {
-		return bboss_deregister_geodirectory_styles();
-	}
-}
-if ( function_exists( 'bboss_document_wp_stateless_get_preview_url' ) && ! function_exists( 'bp_document_wp_stateless_get_preview_url' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_document_wp_stateless_get_preview_url()}.
-	 *
-	 * @deprecated Use bboss_document_wp_stateless_get_preview_url() instead.
-	 */
-	function bp_document_wp_stateless_get_preview_url( $attachment_url, $document_id, $extension, $size, $attachment_id ) {
-		return bboss_document_wp_stateless_get_preview_url( $attachment_url, $document_id, $extension, $size, $attachment_id );
-	}
-}
-if ( function_exists( 'bboss_exclude_geodirectory_scripts' ) && ! function_exists( 'bp_exclude_geodirectory_scripts' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_exclude_geodirectory_scripts()}.
-	 *
-	 * @deprecated Use bboss_exclude_geodirectory_scripts() instead.
-	 */
-	function bp_exclude_geodirectory_scripts() {
-		return bboss_exclude_geodirectory_scripts();
-	}
-}
-if ( function_exists( 'bboss_get_forum_page_id' ) && ! function_exists( 'bp_get_forum_page_id' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_forum_page_id()}.
-	 *
-	 * @deprecated Use bboss_get_forum_page_id() instead.
-	 */
-	function bp_get_forum_page_id() {
-		return bboss_get_forum_page_id();
-	}
-}
-if ( function_exists( 'bboss_helper_plugins_loaded_callback' ) && ! function_exists( 'bp_helper_plugins_loaded_callback' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_helper_plugins_loaded_callback()}.
-	 *
-	 * @deprecated Use bboss_helper_plugins_loaded_callback() instead.
-	 */
-	function bp_helper_plugins_loaded_callback() {
-		return bboss_helper_plugins_loaded_callback();
-	}
-}
-if ( function_exists( 'bboss_media_wp_stateless_get_preview_url' ) && ! function_exists( 'bp_media_wp_stateless_get_preview_url' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_media_wp_stateless_get_preview_url()}.
-	 *
-	 * @deprecated Use bboss_media_wp_stateless_get_preview_url() instead.
-	 */
-	function bp_media_wp_stateless_get_preview_url( $attachment_url, $media_id, $attachment_id, $size ) {
-		return bboss_media_wp_stateless_get_preview_url( $attachment_url, $media_id, $attachment_id, $size );
-	}
-}
-if ( function_exists( 'bboss_remove_user_blog_disable_medium_editor_js' ) && ! function_exists( 'bp_remove_user_blog_disable_medium_editor_js' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_remove_user_blog_disable_medium_editor_js()}.
-	 *
-	 * @deprecated Use bboss_remove_user_blog_disable_medium_editor_js() instead.
-	 */
-	function bp_remove_user_blog_disable_medium_editor_js() {
-		return bboss_remove_user_blog_disable_medium_editor_js();
-	}
-}
-if ( function_exists( 'bboss_settings_remove_wc_lostpassword_url' ) && ! function_exists( 'bp_settings_remove_wc_lostpassword_url' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_settings_remove_wc_lostpassword_url()}.
-	 *
-	 * @deprecated Use bboss_settings_remove_wc_lostpassword_url() instead.
-	 */
-	function bp_settings_remove_wc_lostpassword_url() {
-		return bboss_settings_remove_wc_lostpassword_url();
-	}
-}
-if ( function_exists( 'bboss_video_wp_stateless_get_thumb_preview_url' ) && ! function_exists( 'bp_video_wp_stateless_get_thumb_preview_url' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_video_wp_stateless_get_thumb_preview_url()}.
-	 *
-	 * @deprecated Use bboss_video_wp_stateless_get_thumb_preview_url() instead.
-	 */
-	function bp_video_wp_stateless_get_thumb_preview_url( $attachment_url, $video_id, $size, $attachment_id ) {
-		return bboss_video_wp_stateless_get_thumb_preview_url( $attachment_url, $video_id, $size, $attachment_id );
-	}
-}
-if ( function_exists( 'bboss_video_wp_stateless_get_video_url' ) && ! function_exists( 'bp_video_wp_stateless_get_video_url' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_video_wp_stateless_get_video_url()}.
-	 *
-	 * @deprecated Use bboss_video_wp_stateless_get_video_url() instead.
-	 */
-	function bp_video_wp_stateless_get_video_url( $attachment_url, $video_id, $attachment_id ) {
-		return bboss_video_wp_stateless_get_video_url( $attachment_url, $video_id, $attachment_id );
-	}
-}
-if ( function_exists( 'bboss_wpseo_meta_description' ) && ! function_exists( 'bp_wpseo_meta_description' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_wpseo_meta_description()}.
-	 *
-	 * @deprecated Use bboss_wpseo_meta_description() instead.
-	 */
-	function bp_wpseo_meta_description( $meta_description, $presentation ) {
-		return bboss_wpseo_meta_description( $meta_description, $presentation );
-	}
-}
-if ( function_exists( 'bboss_wpseo_title' ) && ! function_exists( 'bp_wpseo_title' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_wpseo_title()}.
-	 *
-	 * @deprecated Use bboss_wpseo_title() instead.
-	 */
-	function bp_wpseo_title( $title, $presentation ) {
-		return bboss_wpseo_title( $title, $presentation );
-	}
-}
-if ( function_exists( 'bboss_mpcs_add_buddyboss_style' ) && ! function_exists( 'mpcs_add_buddyboss_style' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_mpcs_add_buddyboss_style()}.
-	 *
-	 * @deprecated Use bboss_mpcs_add_buddyboss_style() instead.
-	 */
-	function mpcs_add_buddyboss_style( $allow_handle ) {
-		return bboss_mpcs_add_buddyboss_style( $allow_handle );
-	}
-}
-if ( function_exists( 'bboss_set_yoast_meta_tags' ) && ! function_exists( 'set_yoast_meta_tags' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_set_yoast_meta_tags()}.
-	 *
-	 * @deprecated Use bboss_set_yoast_meta_tags() instead.
-	 */
-	function set_yoast_meta_tags() {
-		return bboss_set_yoast_meta_tags();
-	}
-}
 // @bbwt-com-end compat-layer
+
+add_action( 'bp_loaded', 'bb_maybe_define_group_subscription_send_fallback', 99 );

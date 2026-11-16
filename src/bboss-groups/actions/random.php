@@ -22,11 +22,8 @@ function bboss_groups_action_redirect_to_random_group() {
 		bboss_core_redirect( trailingslashit( bboss_get_groups_directory_permalink() . $group['groups'][0]->slug ) );
 	}
 }
-add_action( 'bp_actions', 'groups_action_redirect_to_random_group' );
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_groups_action_redirect_to_random_group' ) && ! function_exists( 'groups_action_redirect_to_random_group' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_groups_action_redirect_to_random_group()}.
@@ -38,3 +35,5 @@ if ( function_exists( 'bboss_groups_action_redirect_to_random_group' ) && ! func
 	}
 }
 // @bbwt-com-end compat-layer
+
+add_action( 'bp_actions', 'groups_action_redirect_to_random_group' );

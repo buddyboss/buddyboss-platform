@@ -38,11 +38,8 @@ function bboss_messages_action_delete_message() {
 		bboss_core_redirect( trailingslashit( bboss_displayed_user_domain() . bboss_get_messages_slug() . '/' . bboss_current_action() ) );
 	}
 }
-add_action( 'bp_actions', 'messages_action_delete_message' );
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_messages_action_delete_message' ) && ! function_exists( 'messages_action_delete_message' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_messages_action_delete_message()}.
@@ -54,3 +51,5 @@ if ( function_exists( 'bboss_messages_action_delete_message' ) && ! function_exi
 	}
 }
 // @bbwt-com-end compat-layer
+
+add_action( 'bp_actions', 'messages_action_delete_message' );

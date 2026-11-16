@@ -48,11 +48,8 @@ function bboss_activity_admin_menu() {
 		)
 	);
 }
-add_action( 'admin_bar_menu', 'bp_activity_admin_menu', 99 );
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_activity_admin_menu' ) && ! function_exists( 'bp_activity_admin_menu' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_activity_admin_menu()}.
@@ -64,3 +61,5 @@ if ( function_exists( 'bboss_activity_admin_menu' ) && ! function_exists( 'bp_ac
 	}
 }
 // @bbwt-com-end compat-layer
+
+add_action( 'admin_bar_menu', 'bp_activity_admin_menu', 99 );

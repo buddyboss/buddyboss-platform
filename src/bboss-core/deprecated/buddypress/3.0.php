@@ -34,6 +34,20 @@ function bboss_is_group_forums_active( $default = false ) {
 	 */
 	return (bool) apply_filters( 'bp_is_group_forums_active', $is_active );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_group_forums_active' ) && ! function_exists( 'bp_is_group_forums_active' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_group_forums_active()}.
+	 *
+	 * @deprecated Use bboss_is_group_forums_active() instead.
+	 */
+	function bp_is_group_forums_active( $default = false ) {
+		return bboss_is_group_forums_active( $default );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Is this a user's forums page?
@@ -49,6 +63,20 @@ function bboss_is_user_forums() {
 	_deprecated_function( __FUNCTION__, '3.0', 'legacy forum support removed' );
 	return false;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_user_forums' ) && ! function_exists( 'bp_is_user_forums' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_user_forums()}.
+	 *
+	 * @deprecated Use bboss_is_user_forums() instead.
+	 */
+	function bp_is_user_forums() {
+		return bboss_is_user_forums();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Is the current page a group's (legacy bbPress) forum page?
@@ -63,6 +91,20 @@ function bboss_is_group_forum() {
 	_deprecated_function( __FUNCTION__, '3.0', 'legacy forum support removed' );
 	return false;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_group_forum' ) && ! function_exists( 'bp_is_group_forum' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_group_forum()}.
+	 *
+	 * @deprecated Use bboss_is_group_forum() instead.
+	 */
+	function bp_is_group_forum() {
+		return bboss_is_group_forum();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 
 /**
@@ -76,6 +118,20 @@ function bboss_is_group_forum() {
 function bboss_group_new_topic_button( $group = false ) {
 	_deprecated_function( __FUNCTION__, '3.0', 'legacy forum support removed' );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_group_new_topic_button' ) && ! function_exists( 'bp_group_new_topic_button' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_group_new_topic_button()}.
+	 *
+	 * @deprecated Use bboss_group_new_topic_button() instead.
+	 */
+	function bp_group_new_topic_button( $group = false ) {
+		return bboss_group_new_topic_button( $group );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 	/**
 	 * Return a 'New Topic' button for a group.
@@ -91,6 +147,20 @@ function bboss_get_group_new_topic_button( $group = false ) {
 	_deprecated_function( __FUNCTION__, '3.0', 'legacy forum support removed' );
 	return false;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_group_new_topic_button' ) && ! function_exists( 'bp_get_group_new_topic_button' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_group_new_topic_button()}.
+	 *
+	 * @deprecated Use bboss_get_group_new_topic_button() instead.
+	 */
+	function bp_get_group_new_topic_button( $group = false ) {
+		return bboss_get_group_new_topic_button( $group );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Catch a "Mark as Spammer/Not Spammer" click from the toolbar.
@@ -147,6 +217,20 @@ function bboss_core_action_set_spammer_status( $user_id = 0 ) {
 		bboss_core_redirect( wp_get_referer() );
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_core_action_set_spammer_status' ) && ! function_exists( 'bp_core_action_set_spammer_status' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_action_set_spammer_status()}.
+	 *
+	 * @deprecated Use bboss_core_action_set_spammer_status() instead.
+	 */
+	function bp_core_action_set_spammer_status( $user_id = 0 ) {
+		return bboss_core_action_set_spammer_status( $user_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Process user deletion requests.
@@ -190,10 +274,8 @@ function bboss_core_action_delete_user() {
 		}
 	}
 }
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_core_action_delete_user' ) && ! function_exists( 'bp_core_action_delete_user' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_core_action_delete_user()}.
@@ -204,64 +286,5 @@ if ( function_exists( 'bboss_core_action_delete_user' ) && ! function_exists( 'b
 		return bboss_core_action_delete_user();
 	}
 }
-if ( function_exists( 'bboss_core_action_set_spammer_status' ) && ! function_exists( 'bp_core_action_set_spammer_status' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_core_action_set_spammer_status()}.
-	 *
-	 * @deprecated Use bboss_core_action_set_spammer_status() instead.
-	 */
-	function bp_core_action_set_spammer_status( $user_id = 0 ) {
-		return bboss_core_action_set_spammer_status( $user_id );
-	}
-}
-if ( function_exists( 'bboss_get_group_new_topic_button' ) && ! function_exists( 'bp_get_group_new_topic_button' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_group_new_topic_button()}.
-	 *
-	 * @deprecated Use bboss_get_group_new_topic_button() instead.
-	 */
-	function bp_get_group_new_topic_button( $group = false ) {
-		return bboss_get_group_new_topic_button( $group );
-	}
-}
-if ( function_exists( 'bboss_group_new_topic_button' ) && ! function_exists( 'bp_group_new_topic_button' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_group_new_topic_button()}.
-	 *
-	 * @deprecated Use bboss_group_new_topic_button() instead.
-	 */
-	function bp_group_new_topic_button( $group = false ) {
-		return bboss_group_new_topic_button( $group );
-	}
-}
-if ( function_exists( 'bboss_is_group_forum' ) && ! function_exists( 'bp_is_group_forum' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_group_forum()}.
-	 *
-	 * @deprecated Use bboss_is_group_forum() instead.
-	 */
-	function bp_is_group_forum() {
-		return bboss_is_group_forum();
-	}
-}
-if ( function_exists( 'bboss_is_group_forums_active' ) && ! function_exists( 'bp_is_group_forums_active' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_group_forums_active()}.
-	 *
-	 * @deprecated Use bboss_is_group_forums_active() instead.
-	 */
-	function bp_is_group_forums_active( $default = false ) {
-		return bboss_is_group_forums_active( $default );
-	}
-}
-if ( function_exists( 'bboss_is_user_forums' ) && ! function_exists( 'bp_is_user_forums' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_user_forums()}.
-	 *
-	 * @deprecated Use bboss_is_user_forums() instead.
-	 */
-	function bp_is_user_forums() {
-		return bboss_is_user_forums();
-	}
-}
 // @bbwt-com-end compat-layer
+

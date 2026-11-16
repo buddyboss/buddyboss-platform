@@ -66,6 +66,20 @@ function bboss_admin_settings_register_emails_feature() {
 		)
 	);
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_admin_settings_register_emails_feature' ) && ! function_exists( 'bb_admin_settings_register_emails_feature' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_admin_settings_register_emails_feature()}.
+	 *
+	 * @deprecated Use bboss_admin_settings_register_emails_feature() instead.
+	 */
+	function bb_admin_settings_register_emails_feature() {
+		return bboss_admin_settings_register_emails_feature();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 add_action( 'bb_register_features', 'bb_admin_settings_register_emails_feature', 25 );
 
@@ -89,18 +103,3 @@ add_action( 'bb_register_features', 'bb_admin_settings_register_emails_feature',
 // @bbwt-com-start remote-upsell-features
 require_once __DIR__ . '/settings/emails/email-digest-placeholder.php';
 // @bbwt-com-end remote-upsell-features
-
-// @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
-if ( function_exists( 'bboss_admin_settings_register_emails_feature' ) && ! function_exists( 'bb_admin_settings_register_emails_feature' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_admin_settings_register_emails_feature()}.
-	 *
-	 * @deprecated Use bboss_admin_settings_register_emails_feature() instead.
-	 */
-	function bb_admin_settings_register_emails_feature() {
-		return bboss_admin_settings_register_emails_feature();
-	}
-}
-// @bbwt-com-end compat-layer

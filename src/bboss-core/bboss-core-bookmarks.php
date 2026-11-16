@@ -52,6 +52,20 @@ function bboss_bookmark_register_types( $type = '' ) {
 
 	return $types;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bookmark_register_types' ) && ! function_exists( 'bb_bookmark_register_types' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bookmark_register_types()}.
+	 *
+	 * @deprecated Use bboss_bookmark_register_types() instead.
+	 */
+	function bb_bookmark_register_types( $type = '' ) {
+		return bboss_bookmark_register_types( $type );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Add a bookmark, or return the existing one.
@@ -147,6 +161,20 @@ function bboss_bookmark_add( $args ) {
 
 	return (int) $bookmark_id;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bookmark_add' ) && ! function_exists( 'bb_bookmark_add' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bookmark_add()}.
+	 *
+	 * @deprecated Use bboss_bookmark_add() instead.
+	 */
+	function bb_bookmark_add( $args ) {
+		return bboss_bookmark_add( $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Delete a bookmark by row ID.
@@ -190,6 +218,20 @@ function bboss_bookmark_delete( $bookmark_id ) {
 
 	return true;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bookmark_delete' ) && ! function_exists( 'bb_bookmark_delete' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bookmark_delete()}.
+	 *
+	 * @deprecated Use bboss_bookmark_delete() instead.
+	 */
+	function bb_bookmark_delete( $bookmark_id ) {
+		return bboss_bookmark_delete( $bookmark_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Query bookmarks.
@@ -208,6 +250,20 @@ function bboss_bookmark_query( $args = array(), $bypass_cache = false ) {
 
 	return BBoss_Bookmarks::get( $args );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bookmark_query' ) && ! function_exists( 'bb_bookmark_query' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bookmark_query()}.
+	 *
+	 * @deprecated Use bboss_bookmark_query() instead.
+	 */
+	function bb_bookmark_query( $args = array(), $bypass_cache = false ) {
+		return bboss_bookmark_query( $args, $bypass_cache );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get a user's bookmarks.
@@ -228,6 +284,20 @@ function bboss_bookmark_get_user_items( $args = array(), $bypass_cache = false )
 
 	return bboss_bookmark_query( $args, $bypass_cache );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bookmark_get_user_items' ) && ! function_exists( 'bb_bookmark_get_user_items' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bookmark_get_user_items()}.
+	 *
+	 * @deprecated Use bboss_bookmark_get_user_items() instead.
+	 */
+	function bb_bookmark_get_user_items( $args = array(), $bypass_cache = false ) {
+		return bboss_bookmark_get_user_items( $args, $bypass_cache );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get a user's bookmark row for one item.
@@ -264,6 +334,20 @@ function bboss_bookmark_get_by_item( $type, $item_id, $user_id = 0, $blog_id = 0
 
 	return ! empty( $result['bookmarks'] ) ? current( $result['bookmarks'] ) : null;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bookmark_get_by_item' ) && ! function_exists( 'bb_bookmark_get_by_item' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bookmark_get_by_item()}.
+	 *
+	 * @deprecated Use bboss_bookmark_get_by_item() instead.
+	 */
+	function bb_bookmark_get_by_item( $type, $item_id, $user_id = 0, $blog_id = 0 ) {
+		return bboss_bookmark_get_by_item( $type, $item_id, $user_id, $blog_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Delete every bookmark for an item, across all users.
@@ -327,6 +411,20 @@ function bboss_bookmark_delete_by_item( $type, $item_id ) {
 
 	return $deleted;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bookmark_delete_by_item' ) && ! function_exists( 'bb_bookmark_delete_by_item' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bookmark_delete_by_item()}.
+	 *
+	 * @deprecated Use bboss_bookmark_delete_by_item() instead.
+	 */
+	function bb_bookmark_delete_by_item( $type, $item_id ) {
+		return bboss_bookmark_delete_by_item( $type, $item_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Whether a user has bookmarked an item.
@@ -371,6 +469,20 @@ function bboss_bookmark_is_bookmarked( $type, $item_id, $user_id = 0 ) {
 
 	return $bookmarked;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bookmark_is_bookmarked' ) && ! function_exists( 'bb_bookmark_is_bookmarked' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bookmark_is_bookmarked()}.
+	 *
+	 * @deprecated Use bboss_bookmark_is_bookmarked() instead.
+	 */
+	function bb_bookmark_is_bookmarked( $type, $item_id, $user_id = 0 ) {
+		return bboss_bookmark_is_bookmarked( $type, $item_id, $user_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Toggle a user's bookmark for an item.
@@ -431,6 +543,20 @@ function bboss_bookmark_toggle( $type, $item_id, $user_id = 0 ) {
 
 	return true;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bookmark_toggle' ) && ! function_exists( 'bb_bookmark_toggle' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bookmark_toggle()}.
+	 *
+	 * @deprecated Use bboss_bookmark_toggle() instead.
+	 */
+	function bb_bookmark_toggle( $type, $item_id, $user_id = 0 ) {
+		return bboss_bookmark_toggle( $type, $item_id, $user_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * How many users have bookmarked an item.
@@ -465,6 +591,20 @@ function bboss_bookmark_get_count( $type, $item_id ) {
 
 	return ! empty( $result['total'] ) ? (int) $result['total'] : 0;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bookmark_get_count' ) && ! function_exists( 'bb_bookmark_get_count' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bookmark_get_count()}.
+	 *
+	 * @deprecated Use bboss_bookmark_get_count() instead.
+	 */
+	function bb_bookmark_get_count( $type, $item_id ) {
+		return bboss_bookmark_get_count( $type, $item_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Warm the bookmark cache for a page of items in one query.
@@ -513,6 +653,20 @@ function bboss_bookmark_prime_cache( $type, $item_ids, $user_id = 0 ) {
 		bboss_core_set_incremented_cache( $key, BBoss_Bookmarks::CACHE_GROUP, array( $bookmarked ? 1 : 0 ) );
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bookmark_prime_cache' ) && ! function_exists( 'bb_bookmark_prime_cache' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bookmark_prime_cache()}.
+	 *
+	 * @deprecated Use bboss_bookmark_prime_cache() instead.
+	 */
+	function bb_bookmark_prime_cache( $type, $item_ids, $user_id = 0 ) {
+		return bboss_bookmark_prime_cache( $type, $item_ids, $user_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Purge an item's bookmarks when the underlying post is deleted.
@@ -536,6 +690,20 @@ function bboss_bookmark_delete_post_items( $post_id ) {
 
 	bboss_bookmark_delete_by_item( $post_type, (int) $post_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bookmark_delete_post_items' ) && ! function_exists( 'bb_bookmark_delete_post_items' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bookmark_delete_post_items()}.
+	 *
+	 * @deprecated Use bboss_bookmark_delete_post_items() instead.
+	 */
+	function bb_bookmark_delete_post_items( $post_id ) {
+		return bboss_bookmark_delete_post_items( $post_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'before_delete_post', 'bb_bookmark_delete_post_items' );
 
 /**
@@ -589,6 +757,20 @@ function bboss_bookmark_delete_user_items( $user_id ) {
 		}
 	} while ( BBOSS_BOOKMARK_DELETE_CHUNK === $fetched );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bookmark_delete_user_items' ) && ! function_exists( 'bb_bookmark_delete_user_items' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bookmark_delete_user_items()}.
+	 *
+	 * @deprecated Use bboss_bookmark_delete_user_items() instead.
+	 */
+	function bb_bookmark_delete_user_items( $user_id ) {
+		return bboss_bookmark_delete_user_items( $user_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'deleted_user', 'bb_bookmark_delete_user_items' );
 add_action( 'wpmu_delete_user', 'bb_bookmark_delete_user_items' );
 
@@ -643,31 +825,8 @@ function bboss_bookmark_delete_blog_items( $blog_id ) {
 		}
 	} while ( BBOSS_BOOKMARK_DELETE_CHUNK === $fetched );
 }
-add_action( 'delete_blog', 'bb_bookmark_delete_blog_items' );
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
-if ( function_exists( 'bboss_bookmark_add' ) && ! function_exists( 'bb_bookmark_add' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bookmark_add()}.
-	 *
-	 * @deprecated Use bboss_bookmark_add() instead.
-	 */
-	function bb_bookmark_add( $args ) {
-		return bboss_bookmark_add( $args );
-	}
-}
-if ( function_exists( 'bboss_bookmark_delete' ) && ! function_exists( 'bb_bookmark_delete' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bookmark_delete()}.
-	 *
-	 * @deprecated Use bboss_bookmark_delete() instead.
-	 */
-	function bb_bookmark_delete( $bookmark_id ) {
-		return bboss_bookmark_delete( $bookmark_id );
-	}
-}
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_bookmark_delete_blog_items' ) && ! function_exists( 'bb_bookmark_delete_blog_items' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_bookmark_delete_blog_items()}.
@@ -678,114 +837,6 @@ if ( function_exists( 'bboss_bookmark_delete_blog_items' ) && ! function_exists(
 		return bboss_bookmark_delete_blog_items( $blog_id );
 	}
 }
-if ( function_exists( 'bboss_bookmark_delete_by_item' ) && ! function_exists( 'bb_bookmark_delete_by_item' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bookmark_delete_by_item()}.
-	 *
-	 * @deprecated Use bboss_bookmark_delete_by_item() instead.
-	 */
-	function bb_bookmark_delete_by_item( $type, $item_id ) {
-		return bboss_bookmark_delete_by_item( $type, $item_id );
-	}
-}
-if ( function_exists( 'bboss_bookmark_delete_post_items' ) && ! function_exists( 'bb_bookmark_delete_post_items' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bookmark_delete_post_items()}.
-	 *
-	 * @deprecated Use bboss_bookmark_delete_post_items() instead.
-	 */
-	function bb_bookmark_delete_post_items( $post_id ) {
-		return bboss_bookmark_delete_post_items( $post_id );
-	}
-}
-if ( function_exists( 'bboss_bookmark_delete_user_items' ) && ! function_exists( 'bb_bookmark_delete_user_items' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bookmark_delete_user_items()}.
-	 *
-	 * @deprecated Use bboss_bookmark_delete_user_items() instead.
-	 */
-	function bb_bookmark_delete_user_items( $user_id ) {
-		return bboss_bookmark_delete_user_items( $user_id );
-	}
-}
-if ( function_exists( 'bboss_bookmark_get_by_item' ) && ! function_exists( 'bb_bookmark_get_by_item' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bookmark_get_by_item()}.
-	 *
-	 * @deprecated Use bboss_bookmark_get_by_item() instead.
-	 */
-	function bb_bookmark_get_by_item( $type, $item_id, $user_id = 0, $blog_id = 0 ) {
-		return bboss_bookmark_get_by_item( $type, $item_id, $user_id, $blog_id );
-	}
-}
-if ( function_exists( 'bboss_bookmark_get_count' ) && ! function_exists( 'bb_bookmark_get_count' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bookmark_get_count()}.
-	 *
-	 * @deprecated Use bboss_bookmark_get_count() instead.
-	 */
-	function bb_bookmark_get_count( $type, $item_id ) {
-		return bboss_bookmark_get_count( $type, $item_id );
-	}
-}
-if ( function_exists( 'bboss_bookmark_get_user_items' ) && ! function_exists( 'bb_bookmark_get_user_items' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bookmark_get_user_items()}.
-	 *
-	 * @deprecated Use bboss_bookmark_get_user_items() instead.
-	 */
-	function bb_bookmark_get_user_items( $args = array(), $bypass_cache = false ) {
-		return bboss_bookmark_get_user_items( $args, $bypass_cache );
-	}
-}
-if ( function_exists( 'bboss_bookmark_is_bookmarked' ) && ! function_exists( 'bb_bookmark_is_bookmarked' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bookmark_is_bookmarked()}.
-	 *
-	 * @deprecated Use bboss_bookmark_is_bookmarked() instead.
-	 */
-	function bb_bookmark_is_bookmarked( $type, $item_id, $user_id = 0 ) {
-		return bboss_bookmark_is_bookmarked( $type, $item_id, $user_id );
-	}
-}
-if ( function_exists( 'bboss_bookmark_prime_cache' ) && ! function_exists( 'bb_bookmark_prime_cache' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bookmark_prime_cache()}.
-	 *
-	 * @deprecated Use bboss_bookmark_prime_cache() instead.
-	 */
-	function bb_bookmark_prime_cache( $type, $item_ids, $user_id = 0 ) {
-		return bboss_bookmark_prime_cache( $type, $item_ids, $user_id );
-	}
-}
-if ( function_exists( 'bboss_bookmark_query' ) && ! function_exists( 'bb_bookmark_query' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bookmark_query()}.
-	 *
-	 * @deprecated Use bboss_bookmark_query() instead.
-	 */
-	function bb_bookmark_query( $args = array(), $bypass_cache = false ) {
-		return bboss_bookmark_query( $args, $bypass_cache );
-	}
-}
-if ( function_exists( 'bboss_bookmark_register_types' ) && ! function_exists( 'bb_bookmark_register_types' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bookmark_register_types()}.
-	 *
-	 * @deprecated Use bboss_bookmark_register_types() instead.
-	 */
-	function bb_bookmark_register_types( $type = '' ) {
-		return bboss_bookmark_register_types( $type );
-	}
-}
-if ( function_exists( 'bboss_bookmark_toggle' ) && ! function_exists( 'bb_bookmark_toggle' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bookmark_toggle()}.
-	 *
-	 * @deprecated Use bboss_bookmark_toggle() instead.
-	 */
-	function bb_bookmark_toggle( $type, $item_id, $user_id = 0 ) {
-		return bboss_bookmark_toggle( $type, $item_id, $user_id );
-	}
-}
 // @bbwt-com-end compat-layer
+
+add_action( 'delete_blog', 'bb_bookmark_delete_blog_items' );

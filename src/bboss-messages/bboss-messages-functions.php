@@ -453,6 +453,20 @@ function bboss_messages_new_message( $args = '' ) {
 	// Return the thread ID.
 	return $message->thread_id;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_messages_new_message' ) && ! function_exists( 'messages_new_message' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_messages_new_message()}.
+	 *
+	 * @deprecated Use bboss_messages_new_message() instead.
+	 */
+	function messages_new_message( $args = '' ) {
+		return bboss_messages_new_message( $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Create New Group Message.
@@ -503,6 +517,20 @@ function bboss_groups_messages_new_message( $args = '' ) {
 
 	return $send;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_groups_messages_new_message' ) && ! function_exists( 'bp_groups_messages_new_message' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_messages_new_message()}.
+	 *
+	 * @deprecated Use bboss_groups_messages_new_message() instead.
+	 */
+	function bp_groups_messages_new_message( $args = '' ) {
+		return bboss_groups_messages_new_message( $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Send a notice.
@@ -538,6 +566,20 @@ function bboss_messages_send_notice( $subject, $message ) {
 		return true;
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_messages_send_notice' ) && ! function_exists( 'messages_send_notice' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_messages_send_notice()}.
+	 *
+	 * @deprecated Use bboss_messages_send_notice() instead.
+	 */
+	function messages_send_notice( $subject, $message ) {
+		return bboss_messages_send_notice( $subject, $message );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Deletes message thread(s) for a given user.
@@ -610,6 +652,20 @@ function bboss_messages_delete_thread( $thread_ids, $user_id = 0 ) {
 		return true;
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_messages_delete_thread' ) && ! function_exists( 'messages_delete_thread' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_messages_delete_thread()}.
+	 *
+	 * @deprecated Use bboss_messages_delete_thread() instead.
+	 */
+	function messages_delete_thread( $thread_ids, $user_id = 0 ) {
+		return bboss_messages_delete_thread( $thread_ids, $user_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Check whether a user has access to a thread.
@@ -622,6 +678,20 @@ function bboss_messages_delete_thread( $thread_ids, $user_id = 0 ) {
 function bboss_messages_check_thread_access( $thread_id, $user_id = 0 ) {
 	return BBoss_Messages_Thread::check_access( $thread_id, $user_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_messages_check_thread_access' ) && ! function_exists( 'messages_check_thread_access' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_messages_check_thread_access()}.
+	 *
+	 * @deprecated Use bboss_messages_check_thread_access() instead.
+	 */
+	function messages_check_thread_access( $thread_id, $user_id = 0 ) {
+		return bboss_messages_check_thread_access( $thread_id, $user_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Mark a thread as read.
@@ -636,6 +706,20 @@ function bboss_messages_check_thread_access( $thread_id, $user_id = 0 ) {
 function bboss_messages_mark_thread_read( $thread_id, $user_id = 0  ) {
 	return BBoss_Messages_Thread::mark_as_read( $thread_id, $user_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_messages_mark_thread_read' ) && ! function_exists( 'messages_mark_thread_read' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_messages_mark_thread_read()}.
+	 *
+	 * @deprecated Use bboss_messages_mark_thread_read() instead.
+	 */
+	function messages_mark_thread_read( $thread_id, $user_id = 0 ) {
+		return bboss_messages_mark_thread_read( $thread_id, $user_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Mark a thread as unread.
@@ -649,6 +733,20 @@ function bboss_messages_mark_thread_read( $thread_id, $user_id = 0  ) {
 function bboss_messages_mark_thread_unread( $thread_id ) {
 	return BBoss_Messages_Thread::mark_as_unread( $thread_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_messages_mark_thread_unread' ) && ! function_exists( 'messages_mark_thread_unread' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_messages_mark_thread_unread()}.
+	 *
+	 * @deprecated Use bboss_messages_mark_thread_unread() instead.
+	 */
+	function messages_mark_thread_unread( $thread_id ) {
+		return bboss_messages_mark_thread_unread( $thread_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Set messages-related cookies.
@@ -666,6 +764,20 @@ function bboss_messages_add_callback_values( $recipients, $subject, $content ) {
 	@setcookie( 'bp_messages_subject', $subject, time() + 60 * 60 * 24, COOKIEPATH, COOKIE_DOMAIN, is_ssl() );
 	@setcookie( 'bp_messages_content', $content, time() + 60 * 60 * 24, COOKIEPATH, COOKIE_DOMAIN, is_ssl() );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_messages_add_callback_values' ) && ! function_exists( 'messages_add_callback_values' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_messages_add_callback_values()}.
+	 *
+	 * @deprecated Use bboss_messages_add_callback_values() instead.
+	 */
+	function messages_add_callback_values( $recipients, $subject, $content ) {
+		return bboss_messages_add_callback_values( $recipients, $subject, $content );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Unset messages-related cookies.
@@ -677,6 +789,20 @@ function bboss_messages_remove_callback_values() {
 	@setcookie( 'bp_messages_subject', false, time() - 1000, COOKIEPATH, COOKIE_DOMAIN, is_ssl() );
 	@setcookie( 'bp_messages_content', false, time() - 1000, COOKIEPATH, COOKIE_DOMAIN, is_ssl() );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_messages_remove_callback_values' ) && ! function_exists( 'messages_remove_callback_values' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_messages_remove_callback_values()}.
+	 *
+	 * @deprecated Use bboss_messages_remove_callback_values() instead.
+	 */
+	function messages_remove_callback_values() {
+		return bboss_messages_remove_callback_values();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get the unread messages count for a user.
@@ -688,6 +814,20 @@ function bboss_messages_remove_callback_values() {
 function bboss_messages_get_unread_count( $user_id = 0 ) {
 	return BBoss_Messages_Thread::get_inbox_count( $user_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_messages_get_unread_count' ) && ! function_exists( 'messages_get_unread_count' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_messages_get_unread_count()}.
+	 *
+	 * @deprecated Use bboss_messages_get_unread_count() instead.
+	 */
+	function messages_get_unread_count( $user_id = 0 ) {
+		return bboss_messages_get_unread_count( $user_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get the thread unread messages count for a user.
@@ -720,6 +860,20 @@ function bboss_get_thread_messages_unread_count( $thread_id, $user_id = 0 ) {
 	}
 	return $unread_count;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_thread_messages_unread_count' ) && ! function_exists( 'bb_get_thread_messages_unread_count' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_thread_messages_unread_count()}.
+	 *
+	 * @deprecated Use bboss_get_thread_messages_unread_count() instead.
+	 */
+	function bb_get_thread_messages_unread_count( $thread_id, $user_id = 0 ) {
+		return bboss_get_thread_messages_unread_count( $thread_id, $user_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Check whether a user is the sender of a message.
@@ -733,6 +887,20 @@ function bboss_get_thread_messages_unread_count( $thread_id, $user_id = 0 ) {
 function bboss_messages_is_user_sender( $user_id, $message_id ) {
 	return BBoss_Messages_Message::is_user_sender( $user_id, $message_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_messages_is_user_sender' ) && ! function_exists( 'messages_is_user_sender' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_messages_is_user_sender()}.
+	 *
+	 * @deprecated Use bboss_messages_is_user_sender() instead.
+	 */
+	function messages_is_user_sender( $user_id, $message_id ) {
+		return bboss_messages_is_user_sender( $user_id, $message_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get the ID of the sender of a message.
@@ -744,6 +912,20 @@ function bboss_messages_is_user_sender( $user_id, $message_id ) {
 function bboss_messages_get_message_sender( $message_id ) {
 	return BBoss_Messages_Message::get_message_sender( $message_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_messages_get_message_sender' ) && ! function_exists( 'messages_get_message_sender' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_messages_get_message_sender()}.
+	 *
+	 * @deprecated Use bboss_messages_get_message_sender() instead.
+	 */
+	function messages_get_message_sender( $message_id ) {
+		return bboss_messages_get_message_sender( $message_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Check whether a message thread exists.
@@ -755,6 +937,20 @@ function bboss_messages_get_message_sender( $message_id ) {
 function bboss_messages_is_valid_thread( $thread_id ) {
 	return BBoss_Messages_Thread::is_valid( $thread_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_messages_is_valid_thread' ) && ! function_exists( 'messages_is_valid_thread' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_messages_is_valid_thread()}.
+	 *
+	 * @deprecated Use bboss_messages_is_valid_thread() instead.
+	 */
+	function messages_is_valid_thread( $thread_id ) {
+		return bboss_messages_is_valid_thread( $thread_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get the thread ID from a message ID.
@@ -777,6 +973,20 @@ function bboss_messages_get_message_thread_id( $message_id = 0 ) {
 
 	return (int) ( ! empty( $messages['messages'] ) ? current( $messages['messages'] ) : 0 );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_messages_get_message_thread_id' ) && ! function_exists( 'messages_get_message_thread_id' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_messages_get_message_thread_id()}.
+	 *
+	 * @deprecated Use bboss_messages_get_message_thread_id() instead.
+	 */
+	function messages_get_message_thread_id( $message_id = 0 ) {
+		return bboss_messages_get_message_thread_id( $message_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Filter default message length. (30 characters)
@@ -834,6 +1044,20 @@ function bboss_messages_delete_meta( $message_id, $meta_key = false, $meta_value
 
 	return $retval;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_messages_delete_meta' ) && ! function_exists( 'bp_messages_delete_meta' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_messages_delete_meta()}.
+	 *
+	 * @deprecated Use bboss_messages_delete_meta() instead.
+	 */
+	function bp_messages_delete_meta( $message_id, $meta_key = false, $meta_value = false, $delete_all = false ) {
+		return bboss_messages_delete_meta( $message_id, $meta_key, $meta_value, $delete_all );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get a piece of message metadata.
@@ -854,6 +1078,20 @@ function bboss_messages_get_meta( $message_id, $meta_key = '', $single = true ) 
 
 	return $retval;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_messages_get_meta' ) && ! function_exists( 'bp_messages_get_meta' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_messages_get_meta()}.
+	 *
+	 * @deprecated Use bboss_messages_get_meta() instead.
+	 */
+	function bp_messages_get_meta( $message_id, $meta_key = '', $single = true ) {
+		return bboss_messages_get_meta( $message_id, $meta_key, $single );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Update a piece of message metadata.
@@ -876,6 +1114,20 @@ function bboss_messages_update_meta( $message_id, $meta_key, $meta_value, $prev_
 
 	return $retval;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_messages_update_meta' ) && ! function_exists( 'bp_messages_update_meta' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_messages_update_meta()}.
+	 *
+	 * @deprecated Use bboss_messages_update_meta() instead.
+	 */
+	function bp_messages_update_meta( $message_id, $meta_key, $meta_value, $prev_value = '' ) {
+		return bboss_messages_update_meta( $message_id, $meta_key, $meta_value, $prev_value );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Add a piece of message metadata.
@@ -900,6 +1152,20 @@ function bboss_messages_add_meta( $message_id, $meta_key, $meta_value, $unique =
 
 	return $retval;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_messages_add_meta' ) && ! function_exists( 'bp_messages_add_meta' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_messages_add_meta()}.
+	 *
+	 * @deprecated Use bboss_messages_add_meta() instead.
+	 */
+	function bp_messages_add_meta( $message_id, $meta_key, $meta_value, $unique = false ) {
+		return bboss_messages_add_meta( $message_id, $meta_key, $meta_value, $unique );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /** Email *********************************************************************/
 
@@ -1045,6 +1311,20 @@ function bboss_messages_notification_new_message( $raw_args = array() ) {
 	 */
 	do_action( 'bp_messages_sent_notification_email', $recipients, '', '', $args );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_messages_notification_new_message' ) && ! function_exists( 'messages_notification_new_message' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_messages_notification_new_message()}.
+	 *
+	 * @deprecated Use bboss_messages_notification_new_message() instead.
+	 */
+	function messages_notification_new_message( $raw_args = array() ) {
+		return bboss_messages_notification_new_message( $raw_args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 add_action( 'messages_message_sent', 'messages_notification_new_message', 10 );
 
@@ -1224,6 +1504,20 @@ function bboss_group_messages_notification_new_message( $raw_args = array() ) {
 	 */
 	do_action( 'group_messages_notification_new_message', $recipients, '', '', $args );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_group_messages_notification_new_message' ) && ! function_exists( 'group_messages_notification_new_message' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_group_messages_notification_new_message()}.
+	 *
+	 * @deprecated Use bboss_group_messages_notification_new_message() instead.
+	 */
+	function group_messages_notification_new_message( $raw_args = array() ) {
+		return bboss_group_messages_notification_new_message( $raw_args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 
 /**
@@ -1236,6 +1530,20 @@ function bboss_group_messages_notification_new_message( $raw_args = array() ) {
 function bboss_messages_thread_delete_completely() {
 	return true;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_messages_thread_delete_completely' ) && ! function_exists( 'bp_messages_thread_delete_completely' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_messages_thread_delete_completely()}.
+	 *
+	 * @deprecated Use bboss_messages_thread_delete_completely() instead.
+	 */
+	function bp_messages_thread_delete_completely() {
+		return bboss_messages_thread_delete_completely();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * When a user is deleted, we need to clean up the database and remove all the
@@ -1249,6 +1557,20 @@ function bboss_messages_remove_data( $user_id ) {
 	// Delete all the messages and there meta
 	BBoss_Messages_Message::delete_user_message( $user_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_messages_remove_data' ) && ! function_exists( 'bp_messages_remove_data' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_messages_remove_data()}.
+	 *
+	 * @deprecated Use bboss_messages_remove_data() instead.
+	 */
+	function bp_messages_remove_data( $user_id ) {
+		return bboss_messages_remove_data( $user_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 add_action( 'wpmu_delete_user', 'bp_messages_remove_data' );
 add_action( 'delete_user', 'bp_messages_remove_data' );
@@ -1268,6 +1590,20 @@ function bboss_messages_show_sites_notices() {
 		wp_enqueue_script( 'bp-nouveau' );
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_messages_show_sites_notices' ) && ! function_exists( 'bp_messages_show_sites_notices' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_messages_show_sites_notices()}.
+	 *
+	 * @deprecated Use bboss_messages_show_sites_notices() instead.
+	 */
+	function bp_messages_show_sites_notices() {
+		return bboss_messages_show_sites_notices();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 add_action( 'wp_footer', 'bp_messages_show_sites_notices' );
 
@@ -1476,6 +1812,20 @@ function bboss_messages_get_avatars( $thread_id, $user_id ) {
 	 */
 	return apply_filters( 'bp_messages_get_avatars', $avatar_urls, $thread_id, $user_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_messages_get_avatars' ) && ! function_exists( 'bp_messages_get_avatars' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_messages_get_avatars()}.
+	 *
+	 * @deprecated Use bboss_messages_get_avatars() instead.
+	 */
+	function bp_messages_get_avatars( $thread_id, $user_id ) {
+		return bboss_messages_get_avatars( $thread_id, $user_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Check whether given thread is group thread or not.
@@ -1505,6 +1855,20 @@ function bboss_messages_is_group_thread( $thread_id ) {
 
 	return $is_group_message_thread;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_messages_is_group_thread' ) && ! function_exists( 'bb_messages_is_group_thread' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_messages_is_group_thread()}.
+	 *
+	 * @deprecated Use bboss_messages_is_group_thread() instead.
+	 */
+	function bb_messages_is_group_thread( $thread_id ) {
+		return bboss_messages_is_group_thread( $thread_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get the group threads that cannot be opened while "Group Messages" is disabled.
@@ -1562,6 +1926,20 @@ function bboss_messages_get_disabled_group_thread_ids() {
 
 	return array_values( array_filter( wp_parse_id_list( $thread_ids ) ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_messages_get_disabled_group_thread_ids' ) && ! function_exists( 'bb_messages_get_disabled_group_thread_ids' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_messages_get_disabled_group_thread_ids()}.
+	 *
+	 * @deprecated Use bboss_messages_get_disabled_group_thread_ids() instead.
+	 */
+	function bb_messages_get_disabled_group_thread_ids() {
+		return bboss_messages_get_disabled_group_thread_ids();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Read the disabled group threads from the messages tables.
@@ -1630,6 +2008,20 @@ function bboss_messages_query_disabled_group_thread_ids() {
 
 	return $thread_ids;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_messages_query_disabled_group_thread_ids' ) && ! function_exists( 'bb_messages_query_disabled_group_thread_ids' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_messages_query_disabled_group_thread_ids()}.
+	 *
+	 * @deprecated Use bboss_messages_query_disabled_group_thread_ids() instead.
+	 */
+	function bb_messages_query_disabled_group_thread_ids() {
+		return bboss_messages_query_disabled_group_thread_ids();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Cache key of the disabled group threads.
@@ -1647,6 +2039,20 @@ function bboss_messages_disabled_group_thread_ids_cache_key() {
 
 	return 'thread_ids_' . md5( $table );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_messages_disabled_group_thread_ids_cache_key' ) && ! function_exists( 'bb_messages_disabled_group_thread_ids_cache_key' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_messages_disabled_group_thread_ids_cache_key()}.
+	 *
+	 * @deprecated Use bboss_messages_disabled_group_thread_ids_cache_key() instead.
+	 */
+	function bb_messages_disabled_group_thread_ids_cache_key() {
+		return bboss_messages_disabled_group_thread_ids_cache_key();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get the cached disabled group threads.
@@ -1669,6 +2075,20 @@ function bboss_messages_get_cached_disabled_group_thread_ids() {
 
 	return bboss_messages_is_valid_disabled_group_thread_ids_entry( $entry ) ? array_map( 'intval', $entry['ids'] ) : false;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_messages_get_cached_disabled_group_thread_ids' ) && ! function_exists( 'bb_messages_get_cached_disabled_group_thread_ids' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_messages_get_cached_disabled_group_thread_ids()}.
+	 *
+	 * @deprecated Use bboss_messages_get_cached_disabled_group_thread_ids() instead.
+	 */
+	function bb_messages_get_cached_disabled_group_thread_ids() {
+		return bboss_messages_get_cached_disabled_group_thread_ids();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * How long the cached disabled group threads stay valid, in seconds.
@@ -1692,6 +2112,20 @@ function bboss_messages_disabled_group_thread_ids_ttl() {
 	 */
 	return max( 0, (int) apply_filters( 'bb_messages_disabled_group_thread_ids_ttl', DAY_IN_SECONDS ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_messages_disabled_group_thread_ids_ttl' ) && ! function_exists( 'bb_messages_disabled_group_thread_ids_ttl' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_messages_disabled_group_thread_ids_ttl()}.
+	 *
+	 * @deprecated Use bboss_messages_disabled_group_thread_ids_ttl() instead.
+	 */
+	function bb_messages_disabled_group_thread_ids_ttl() {
+		return bboss_messages_disabled_group_thread_ids_ttl();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Check whether a stored disabled-group-threads entry is usable: the expected shape and not expired.
@@ -1714,6 +2148,20 @@ function bboss_messages_is_valid_disabled_group_thread_ids_entry( $entry ) {
 
 	return 0 === $ttl || ( (int) $entry['time'] + $ttl ) > time();
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_messages_is_valid_disabled_group_thread_ids_entry' ) && ! function_exists( 'bb_messages_is_valid_disabled_group_thread_ids_entry' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_messages_is_valid_disabled_group_thread_ids_entry()}.
+	 *
+	 * @deprecated Use bboss_messages_is_valid_disabled_group_thread_ids_entry() instead.
+	 */
+	function bb_messages_is_valid_disabled_group_thread_ids_entry( $entry ) {
+		return bboss_messages_is_valid_disabled_group_thread_ids_entry( $entry );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Cache the disabled group threads.
@@ -1749,6 +2197,20 @@ function bboss_messages_set_cached_disabled_group_thread_ids( $thread_ids ) {
 		restore_current_blog();
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_messages_set_cached_disabled_group_thread_ids' ) && ! function_exists( 'bb_messages_set_cached_disabled_group_thread_ids' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_messages_set_cached_disabled_group_thread_ids()}.
+	 *
+	 * @deprecated Use bboss_messages_set_cached_disabled_group_thread_ids() instead.
+	 */
+	function bb_messages_set_cached_disabled_group_thread_ids( $thread_ids ) {
+		return bboss_messages_set_cached_disabled_group_thread_ids( $thread_ids );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Reset the cached disabled group threads.
@@ -1768,6 +2230,20 @@ function bboss_messages_reset_disabled_group_thread_ids_cache() {
 		bboss_delete_option( '_bb_messages_disabled_group_thread_ids' );
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_messages_reset_disabled_group_thread_ids_cache' ) && ! function_exists( 'bb_messages_reset_disabled_group_thread_ids_cache' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_messages_reset_disabled_group_thread_ids_cache()}.
+	 *
+	 * @deprecated Use bboss_messages_reset_disabled_group_thread_ids_cache() instead.
+	 */
+	function bb_messages_reset_disabled_group_thread_ids_cache() {
+		return bboss_messages_reset_disabled_group_thread_ids_cache();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Check whether a thread is a group thread that cannot be used while "Group Messages" is disabled.
@@ -1783,6 +2259,20 @@ function bboss_messages_is_disabled_group_thread( $thread_id ) {
 
 	return $thread_id > 0 && in_array( $thread_id, bboss_messages_get_disabled_group_thread_ids(), true );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_messages_is_disabled_group_thread' ) && ! function_exists( 'bb_messages_is_disabled_group_thread' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_messages_is_disabled_group_thread()}.
+	 *
+	 * @deprecated Use bboss_messages_is_disabled_group_thread() instead.
+	 */
+	function bb_messages_is_disabled_group_thread( $thread_id ) {
+		return bboss_messages_is_disabled_group_thread( $thread_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get where to send the logged-in member who tried to open or reply to a disabled group thread.
@@ -1825,6 +2315,20 @@ function bboss_messages_get_disabled_group_thread_redirect_url( $thread_id, $arc
 
 	return $redirect;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_messages_get_disabled_group_thread_redirect_url' ) && ! function_exists( 'bb_messages_get_disabled_group_thread_redirect_url' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_messages_get_disabled_group_thread_redirect_url()}.
+	 *
+	 * @deprecated Use bboss_messages_get_disabled_group_thread_redirect_url() instead.
+	 */
+	function bb_messages_get_disabled_group_thread_redirect_url( $thread_id, $archived = false ) {
+		return bboss_messages_get_disabled_group_thread_redirect_url( $thread_id, $archived );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Check whether a user is an active (not deleted) recipient of a thread with a one-row lookup.
@@ -1868,6 +2372,20 @@ function bboss_messages_is_active_thread_recipient( $thread_id, $user_id = 0 ) {
 
 	return ! empty( $recipient['recipients'] );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_messages_is_active_thread_recipient' ) && ! function_exists( 'bb_messages_is_active_thread_recipient' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_messages_is_active_thread_recipient()}.
+	 *
+	 * @deprecated Use bboss_messages_is_active_thread_recipient() instead.
+	 */
+	function bb_messages_is_active_thread_recipient( $thread_id, $user_id = 0 ) {
+		return bboss_messages_is_active_thread_recipient( $thread_id, $user_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Recipients per page list.
@@ -1879,6 +2397,20 @@ function bboss_messages_is_active_thread_recipient( $thread_id, $user_id = 0 ) {
 function bboss_messages_recipients_per_page() {
 	return apply_filters( 'bb_messages_recipients_per_page', 20 );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_messages_recipients_per_page' ) && ! function_exists( 'bb_messages_recipients_per_page' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_messages_recipients_per_page()}.
+	 *
+	 * @deprecated Use bboss_messages_recipients_per_page() instead.
+	 */
+	function bb_messages_recipients_per_page() {
+		return bboss_messages_recipients_per_page();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Send bulk group message to the members.
@@ -2017,6 +2549,20 @@ function bboss_send_group_message_background( $post_data, $members = array(), $c
 
 	return $message;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_send_group_message_background' ) && ! function_exists( 'bb_send_group_message_background' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_send_group_message_background()}.
+	 *
+	 * @deprecated Use bboss_send_group_message_background() instead.
+	 */
+	function bb_send_group_message_background( $post_data, $members = array(), $current_user_id = 0, $content = '', $is_background = false ) {
+		return bboss_send_group_message_background( $post_data, $members, $current_user_id, $content, $is_background );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Send Group email into background.
@@ -2102,6 +2648,20 @@ function bboss_render_messages_recipients( $recipients, $email_type, $message_sl
 		);
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_render_messages_recipients' ) && ! function_exists( 'bb_render_messages_recipients' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_render_messages_recipients()}.
+	 *
+	 * @deprecated Use bboss_render_messages_recipients() instead.
+	 */
+	function bb_render_messages_recipients( $recipients, $email_type, $message_slug, $thread_id, $sender_id, $tokens = array() ) {
+		return bboss_render_messages_recipients( $recipients, $email_type, $message_slug, $thread_id, $sender_id, $tokens );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Check last message is a joined group message.
@@ -2135,6 +2695,20 @@ function bboss_is_last_message_group_join_message( $thread_id, $user_id ) {
 	}
 	return false;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_last_message_group_join_message' ) && ! function_exists( 'bb_is_last_message_group_join_message' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_last_message_group_join_message()}.
+	 *
+	 * @deprecated Use bboss_is_last_message_group_join_message() instead.
+	 */
+	function bb_is_last_message_group_join_message( $thread_id, $user_id ) {
+		return bboss_is_last_message_group_join_message( $thread_id, $user_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Check last message is a left group message.
@@ -2168,6 +2742,20 @@ function bboss_is_last_message_group_left_message( $thread_id, $user_id ) {
 	}
 	return false;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_last_message_group_left_message' ) && ! function_exists( 'bb_is_last_message_group_left_message' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_last_message_group_left_message()}.
+	 *
+	 * @deprecated Use bboss_is_last_message_group_left_message() instead.
+	 */
+	function bb_is_last_message_group_left_message( $thread_id, $user_id ) {
+		return bboss_is_last_message_group_left_message( $thread_id, $user_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Change friend button arguments.
@@ -2192,6 +2780,20 @@ function bboss_messaged_set_friend_button_args( $args = array() ) {
 
 	return $args;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_messaged_set_friend_button_args' ) && ! function_exists( 'bb_messaged_set_friend_button_args' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_messaged_set_friend_button_args()}.
+	 *
+	 * @deprecated Use bboss_messaged_set_friend_button_args() instead.
+	 */
+	function bb_messaged_set_friend_button_args( $args = array() ) {
+		return bboss_messaged_set_friend_button_args( $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Update meta query when fetching the threads for user unread count.
@@ -2232,6 +2834,20 @@ function bboss_messages_update_unread_count( $sub_query, $r ) {
 
 	return $sub_query;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_messages_update_unread_count' ) && ! function_exists( 'bb_messages_update_unread_count' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_messages_update_unread_count()}.
+	 *
+	 * @deprecated Use bboss_messages_update_unread_count() instead.
+	 */
+	function bb_messages_update_unread_count( $sub_query, $r ) {
+		return bboss_messages_update_unread_count( $sub_query, $r );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Checks whether a message thread is archived or not.
@@ -2320,6 +2936,20 @@ function bboss_messages_is_thread_exists_by_recipients( $recipients = array(), $
 
 	return BBoss_Messages_Message::get_existing_threads( $recipient_ids, $user_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_messages_is_thread_exists_by_recipients' ) && ! function_exists( 'bb_messages_is_thread_exists_by_recipients' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_messages_is_thread_exists_by_recipients()}.
+	 *
+	 * @deprecated Use bboss_messages_is_thread_exists_by_recipients() instead.
+	 */
+	function bb_messages_is_thread_exists_by_recipients( $recipients = array(), $user_id = 0 ) {
+		return bboss_messages_is_thread_exists_by_recipients( $recipients, $user_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Send digest email into background.
@@ -2467,6 +3097,20 @@ function bboss_render_digest_messages_template( $recipient_messages, $thread_id 
 		);
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_render_digest_messages_template' ) && ! function_exists( 'bb_render_digest_messages_template' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_render_digest_messages_template()}.
+	 *
+	 * @deprecated Use bboss_render_digest_messages_template() instead.
+	 */
+	function bb_render_digest_messages_template( $recipient_messages, $thread_id ) {
+		return bboss_render_digest_messages_template( $recipient_messages, $thread_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get thread id from message id.
@@ -2491,6 +3135,20 @@ function bboss_get_thread_id_by_message_id( $message_id ) {
 	// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 	return $wpdb->get_var( $sql );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_thread_id_by_message_id' ) && ! function_exists( 'bb_get_thread_id_by_message_id' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_thread_id_by_message_id()}.
+	 *
+	 * @deprecated Use bboss_get_thread_id_by_message_id() instead.
+	 */
+	function bb_get_thread_id_by_message_id( $message_id ) {
+		return bboss_get_thread_id_by_message_id( $message_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Function to search value by minutes from the bb_get_delay_notification_times function.
@@ -2511,6 +3169,20 @@ function bboss_get_delay_notification_time_by_minutes( $time = 15 ) {
 
 	return array();
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_delay_notification_time_by_minutes' ) && ! function_exists( 'bb_get_delay_notification_time_by_minutes' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_delay_notification_time_by_minutes()}.
+	 *
+	 * @deprecated Use bboss_get_delay_notification_time_by_minutes() instead.
+	 */
+	function bb_get_delay_notification_time_by_minutes( $time = 15 ) {
+		return bboss_get_delay_notification_time_by_minutes( $time );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Schedule digest notification action times.
@@ -2589,6 +3261,20 @@ function bboss_notification_get_digest_cron_times() {
 
 	return apply_filters( 'bb_notification_get_digest_cron_times', $delay_times );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_notification_get_digest_cron_times' ) && ! function_exists( 'bb_notification_get_digest_cron_times' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_notification_get_digest_cron_times()}.
+	 *
+	 * @deprecated Use bboss_notification_get_digest_cron_times() instead.
+	 */
+	function bb_notification_get_digest_cron_times() {
+		return bboss_notification_get_digest_cron_times();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Prepare the object for the Messsage response.
@@ -3012,6 +3698,20 @@ function bboss_get_message_response_object( $message ) {
 		'type'                          => 'success',
 	);
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_message_response_object' ) && ! function_exists( 'bb_get_message_response_object' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_message_response_object()}.
+	 *
+	 * @deprecated Use bboss_get_message_response_object() instead.
+	 */
+	function bb_get_message_response_object( $message ) {
+		return bboss_get_message_response_object( $message );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Prepare the string to display list member joined or left the group in the message screen.
@@ -3178,6 +3878,20 @@ function bboss_messages_get_group_join_leave_text( $args ) {
 
 	return '<p class="joined">' . $content . '</p>';
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_messages_get_group_join_leave_text' ) && ! function_exists( 'bb_messages_get_group_join_leave_text' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_messages_get_group_join_leave_text()}.
+	 *
+	 * @deprecated Use bboss_messages_get_group_join_leave_text() instead.
+	 */
+	function bb_messages_get_group_join_leave_text( $args ) {
+		return bboss_messages_get_group_join_leave_text( $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 
 /**
@@ -3298,6 +4012,20 @@ function bboss_messages_user_can_send_message( $args = array() ) {
 
 	return apply_filters( 'bb_messages_user_can_send_message', $can_send_message, $r );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_messages_user_can_send_message' ) && ! function_exists( 'bb_messages_user_can_send_message' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_messages_user_can_send_message()}.
+	 *
+	 * @deprecated Use bboss_messages_user_can_send_message() instead.
+	 */
+	function bb_messages_user_can_send_message( $args = array() ) {
+		return bboss_messages_user_can_send_message( $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Check if sender can send message without connection.
@@ -3331,6 +4059,20 @@ function bboss_messages_allowed_messaging_without_connection( $user_id = 0 ) {
 
 	return false;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_messages_allowed_messaging_without_connection' ) && ! function_exists( 'bb_messages_allowed_messaging_without_connection' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_messages_allowed_messaging_without_connection()}.
+	 *
+	 * @deprecated Use bboss_messages_allowed_messaging_without_connection() instead.
+	 */
+	function bb_messages_allowed_messaging_without_connection( $user_id = 0 ) {
+		return bboss_messages_allowed_messaging_without_connection( $user_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Filter only those message recipients to those are allowed to send message.
@@ -3382,6 +4124,20 @@ function bboss_messages_update_recipient_user_query_uid_clauses( $sql, BBoss_Use
 
 	return $sql;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_messages_update_recipient_user_query_uid_clauses' ) && ! function_exists( 'bb_messages_update_recipient_user_query_uid_clauses' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_messages_update_recipient_user_query_uid_clauses()}.
+	 *
+	 * @deprecated Use bboss_messages_update_recipient_user_query_uid_clauses() instead.
+	 */
+	function bb_messages_update_recipient_user_query_uid_clauses( $sql, BBoss_User_Query $query ) {
+		return bboss_messages_update_recipient_user_query_uid_clauses( $sql, $query );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Run migration for resolving the issue related to the messages.
@@ -3422,6 +4178,20 @@ function bboss_messages_migration() {
 		}
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_messages_migration' ) && ! function_exists( 'bb_messages_migration' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_messages_migration()}.
+	 *
+	 * @deprecated Use bboss_messages_migration() instead.
+	 */
+	function bb_messages_migration() {
+		return bboss_messages_migration();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Whether the current user can delete an entire conversation for every participant.
@@ -3461,6 +4231,20 @@ function bboss_messages_user_can_delete_conversation() {
 	 */
 	return (bool) apply_filters( 'bb_messages_user_can_delete_conversation', $can_delete );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_messages_user_can_delete_conversation' ) && ! function_exists( 'bb_messages_user_can_delete_conversation' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_messages_user_can_delete_conversation()}.
+	 *
+	 * @deprecated Use bboss_messages_user_can_delete_conversation() instead.
+	 */
+	function bb_messages_user_can_delete_conversation() {
+		return bboss_messages_user_can_delete_conversation();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get the attachment IDs that messages in other threads still use.
@@ -3506,110 +4290,8 @@ function bboss_messages_get_attachment_ids_used_elsewhere( $meta_key, $item_ids,
 
 	return array_values( array_intersect( $item_ids, $used_ids ) );
 }
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
-if ( function_exists( 'bboss_get_delay_notification_time_by_minutes' ) && ! function_exists( 'bb_get_delay_notification_time_by_minutes' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_delay_notification_time_by_minutes()}.
-	 *
-	 * @deprecated Use bboss_get_delay_notification_time_by_minutes() instead.
-	 */
-	function bb_get_delay_notification_time_by_minutes( $time = 15 ) {
-		return bboss_get_delay_notification_time_by_minutes( $time );
-	}
-}
-if ( function_exists( 'bboss_get_message_response_object' ) && ! function_exists( 'bb_get_message_response_object' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_message_response_object()}.
-	 *
-	 * @deprecated Use bboss_get_message_response_object() instead.
-	 */
-	function bb_get_message_response_object( $message ) {
-		return bboss_get_message_response_object( $message );
-	}
-}
-if ( function_exists( 'bboss_get_thread_id_by_message_id' ) && ! function_exists( 'bb_get_thread_id_by_message_id' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_thread_id_by_message_id()}.
-	 *
-	 * @deprecated Use bboss_get_thread_id_by_message_id() instead.
-	 */
-	function bb_get_thread_id_by_message_id( $message_id ) {
-		return bboss_get_thread_id_by_message_id( $message_id );
-	}
-}
-if ( function_exists( 'bboss_get_thread_messages_unread_count' ) && ! function_exists( 'bb_get_thread_messages_unread_count' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_thread_messages_unread_count()}.
-	 *
-	 * @deprecated Use bboss_get_thread_messages_unread_count() instead.
-	 */
-	function bb_get_thread_messages_unread_count( $thread_id, $user_id = 0 ) {
-		return bboss_get_thread_messages_unread_count( $thread_id, $user_id );
-	}
-}
-if ( function_exists( 'bboss_is_last_message_group_join_message' ) && ! function_exists( 'bb_is_last_message_group_join_message' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_last_message_group_join_message()}.
-	 *
-	 * @deprecated Use bboss_is_last_message_group_join_message() instead.
-	 */
-	function bb_is_last_message_group_join_message( $thread_id, $user_id ) {
-		return bboss_is_last_message_group_join_message( $thread_id, $user_id );
-	}
-}
-if ( function_exists( 'bboss_is_last_message_group_left_message' ) && ! function_exists( 'bb_is_last_message_group_left_message' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_last_message_group_left_message()}.
-	 *
-	 * @deprecated Use bboss_is_last_message_group_left_message() instead.
-	 */
-	function bb_is_last_message_group_left_message( $thread_id, $user_id ) {
-		return bboss_is_last_message_group_left_message( $thread_id, $user_id );
-	}
-}
-if ( function_exists( 'bboss_messaged_set_friend_button_args' ) && ! function_exists( 'bb_messaged_set_friend_button_args' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_messaged_set_friend_button_args()}.
-	 *
-	 * @deprecated Use bboss_messaged_set_friend_button_args() instead.
-	 */
-	function bb_messaged_set_friend_button_args( $args = array() ) {
-		return bboss_messaged_set_friend_button_args( $args );
-	}
-}
-if ( function_exists( 'bboss_messages_allowed_messaging_without_connection' ) && ! function_exists( 'bb_messages_allowed_messaging_without_connection' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_messages_allowed_messaging_without_connection()}.
-	 *
-	 * @deprecated Use bboss_messages_allowed_messaging_without_connection() instead.
-	 */
-	function bb_messages_allowed_messaging_without_connection( $user_id = 0 ) {
-		return bboss_messages_allowed_messaging_without_connection( $user_id );
-	}
-}
-if ( function_exists( 'bboss_messages_disabled_group_thread_ids_cache_key' ) && ! function_exists( 'bb_messages_disabled_group_thread_ids_cache_key' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_messages_disabled_group_thread_ids_cache_key()}.
-	 *
-	 * @deprecated Use bboss_messages_disabled_group_thread_ids_cache_key() instead.
-	 */
-	function bb_messages_disabled_group_thread_ids_cache_key() {
-		return bboss_messages_disabled_group_thread_ids_cache_key();
-	}
-}
-if ( function_exists( 'bboss_messages_disabled_group_thread_ids_ttl' ) && ! function_exists( 'bb_messages_disabled_group_thread_ids_ttl' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_messages_disabled_group_thread_ids_ttl()}.
-	 *
-	 * @deprecated Use bboss_messages_disabled_group_thread_ids_ttl() instead.
-	 */
-	function bb_messages_disabled_group_thread_ids_ttl() {
-		return bboss_messages_disabled_group_thread_ids_ttl();
-	}
-}
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_messages_get_attachment_ids_used_elsewhere' ) && ! function_exists( 'bb_messages_get_attachment_ids_used_elsewhere' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_messages_get_attachment_ids_used_elsewhere()}.
@@ -3620,464 +4302,5 @@ if ( function_exists( 'bboss_messages_get_attachment_ids_used_elsewhere' ) && ! 
 		return bboss_messages_get_attachment_ids_used_elsewhere( $meta_key, $item_ids, $thread_id );
 	}
 }
-if ( function_exists( 'bboss_messages_get_cached_disabled_group_thread_ids' ) && ! function_exists( 'bb_messages_get_cached_disabled_group_thread_ids' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_messages_get_cached_disabled_group_thread_ids()}.
-	 *
-	 * @deprecated Use bboss_messages_get_cached_disabled_group_thread_ids() instead.
-	 */
-	function bb_messages_get_cached_disabled_group_thread_ids() {
-		return bboss_messages_get_cached_disabled_group_thread_ids();
-	}
-}
-if ( function_exists( 'bboss_messages_get_disabled_group_thread_ids' ) && ! function_exists( 'bb_messages_get_disabled_group_thread_ids' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_messages_get_disabled_group_thread_ids()}.
-	 *
-	 * @deprecated Use bboss_messages_get_disabled_group_thread_ids() instead.
-	 */
-	function bb_messages_get_disabled_group_thread_ids() {
-		return bboss_messages_get_disabled_group_thread_ids();
-	}
-}
-if ( function_exists( 'bboss_messages_get_disabled_group_thread_redirect_url' ) && ! function_exists( 'bb_messages_get_disabled_group_thread_redirect_url' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_messages_get_disabled_group_thread_redirect_url()}.
-	 *
-	 * @deprecated Use bboss_messages_get_disabled_group_thread_redirect_url() instead.
-	 */
-	function bb_messages_get_disabled_group_thread_redirect_url( $thread_id, $archived = false ) {
-		return bboss_messages_get_disabled_group_thread_redirect_url( $thread_id, $archived );
-	}
-}
-if ( function_exists( 'bboss_messages_get_group_join_leave_text' ) && ! function_exists( 'bb_messages_get_group_join_leave_text' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_messages_get_group_join_leave_text()}.
-	 *
-	 * @deprecated Use bboss_messages_get_group_join_leave_text() instead.
-	 */
-	function bb_messages_get_group_join_leave_text( $args ) {
-		return bboss_messages_get_group_join_leave_text( $args );
-	}
-}
-if ( function_exists( 'bboss_messages_is_active_thread_recipient' ) && ! function_exists( 'bb_messages_is_active_thread_recipient' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_messages_is_active_thread_recipient()}.
-	 *
-	 * @deprecated Use bboss_messages_is_active_thread_recipient() instead.
-	 */
-	function bb_messages_is_active_thread_recipient( $thread_id, $user_id = 0 ) {
-		return bboss_messages_is_active_thread_recipient( $thread_id, $user_id );
-	}
-}
-if ( function_exists( 'bboss_messages_is_disabled_group_thread' ) && ! function_exists( 'bb_messages_is_disabled_group_thread' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_messages_is_disabled_group_thread()}.
-	 *
-	 * @deprecated Use bboss_messages_is_disabled_group_thread() instead.
-	 */
-	function bb_messages_is_disabled_group_thread( $thread_id ) {
-		return bboss_messages_is_disabled_group_thread( $thread_id );
-	}
-}
-if ( function_exists( 'bboss_messages_is_group_thread' ) && ! function_exists( 'bb_messages_is_group_thread' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_messages_is_group_thread()}.
-	 *
-	 * @deprecated Use bboss_messages_is_group_thread() instead.
-	 */
-	function bb_messages_is_group_thread( $thread_id ) {
-		return bboss_messages_is_group_thread( $thread_id );
-	}
-}
-if ( function_exists( 'bboss_messages_is_thread_exists_by_recipients' ) && ! function_exists( 'bb_messages_is_thread_exists_by_recipients' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_messages_is_thread_exists_by_recipients()}.
-	 *
-	 * @deprecated Use bboss_messages_is_thread_exists_by_recipients() instead.
-	 */
-	function bb_messages_is_thread_exists_by_recipients( $recipients = array(), $user_id = 0 ) {
-		return bboss_messages_is_thread_exists_by_recipients( $recipients, $user_id );
-	}
-}
-if ( function_exists( 'bboss_messages_is_valid_disabled_group_thread_ids_entry' ) && ! function_exists( 'bb_messages_is_valid_disabled_group_thread_ids_entry' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_messages_is_valid_disabled_group_thread_ids_entry()}.
-	 *
-	 * @deprecated Use bboss_messages_is_valid_disabled_group_thread_ids_entry() instead.
-	 */
-	function bb_messages_is_valid_disabled_group_thread_ids_entry( $entry ) {
-		return bboss_messages_is_valid_disabled_group_thread_ids_entry( $entry );
-	}
-}
-if ( function_exists( 'bboss_messages_migration' ) && ! function_exists( 'bb_messages_migration' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_messages_migration()}.
-	 *
-	 * @deprecated Use bboss_messages_migration() instead.
-	 */
-	function bb_messages_migration() {
-		return bboss_messages_migration();
-	}
-}
-if ( function_exists( 'bboss_messages_query_disabled_group_thread_ids' ) && ! function_exists( 'bb_messages_query_disabled_group_thread_ids' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_messages_query_disabled_group_thread_ids()}.
-	 *
-	 * @deprecated Use bboss_messages_query_disabled_group_thread_ids() instead.
-	 */
-	function bb_messages_query_disabled_group_thread_ids() {
-		return bboss_messages_query_disabled_group_thread_ids();
-	}
-}
-if ( function_exists( 'bboss_messages_recipients_per_page' ) && ! function_exists( 'bb_messages_recipients_per_page' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_messages_recipients_per_page()}.
-	 *
-	 * @deprecated Use bboss_messages_recipients_per_page() instead.
-	 */
-	function bb_messages_recipients_per_page() {
-		return bboss_messages_recipients_per_page();
-	}
-}
-if ( function_exists( 'bboss_messages_reset_disabled_group_thread_ids_cache' ) && ! function_exists( 'bb_messages_reset_disabled_group_thread_ids_cache' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_messages_reset_disabled_group_thread_ids_cache()}.
-	 *
-	 * @deprecated Use bboss_messages_reset_disabled_group_thread_ids_cache() instead.
-	 */
-	function bb_messages_reset_disabled_group_thread_ids_cache() {
-		return bboss_messages_reset_disabled_group_thread_ids_cache();
-	}
-}
-if ( function_exists( 'bboss_messages_set_cached_disabled_group_thread_ids' ) && ! function_exists( 'bb_messages_set_cached_disabled_group_thread_ids' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_messages_set_cached_disabled_group_thread_ids()}.
-	 *
-	 * @deprecated Use bboss_messages_set_cached_disabled_group_thread_ids() instead.
-	 */
-	function bb_messages_set_cached_disabled_group_thread_ids( $thread_ids ) {
-		return bboss_messages_set_cached_disabled_group_thread_ids( $thread_ids );
-	}
-}
-if ( function_exists( 'bboss_messages_update_recipient_user_query_uid_clauses' ) && ! function_exists( 'bb_messages_update_recipient_user_query_uid_clauses' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_messages_update_recipient_user_query_uid_clauses()}.
-	 *
-	 * @deprecated Use bboss_messages_update_recipient_user_query_uid_clauses() instead.
-	 */
-	function bb_messages_update_recipient_user_query_uid_clauses( $sql, BBoss_User_Query $query ) {
-		return bboss_messages_update_recipient_user_query_uid_clauses( $sql, $query );
-	}
-}
-if ( function_exists( 'bboss_messages_update_unread_count' ) && ! function_exists( 'bb_messages_update_unread_count' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_messages_update_unread_count()}.
-	 *
-	 * @deprecated Use bboss_messages_update_unread_count() instead.
-	 */
-	function bb_messages_update_unread_count( $sub_query, $r ) {
-		return bboss_messages_update_unread_count( $sub_query, $r );
-	}
-}
-if ( function_exists( 'bboss_messages_user_can_delete_conversation' ) && ! function_exists( 'bb_messages_user_can_delete_conversation' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_messages_user_can_delete_conversation()}.
-	 *
-	 * @deprecated Use bboss_messages_user_can_delete_conversation() instead.
-	 */
-	function bb_messages_user_can_delete_conversation() {
-		return bboss_messages_user_can_delete_conversation();
-	}
-}
-if ( function_exists( 'bboss_messages_user_can_send_message' ) && ! function_exists( 'bb_messages_user_can_send_message' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_messages_user_can_send_message()}.
-	 *
-	 * @deprecated Use bboss_messages_user_can_send_message() instead.
-	 */
-	function bb_messages_user_can_send_message( $args = array() ) {
-		return bboss_messages_user_can_send_message( $args );
-	}
-}
-if ( function_exists( 'bboss_notification_get_digest_cron_times' ) && ! function_exists( 'bb_notification_get_digest_cron_times' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_notification_get_digest_cron_times()}.
-	 *
-	 * @deprecated Use bboss_notification_get_digest_cron_times() instead.
-	 */
-	function bb_notification_get_digest_cron_times() {
-		return bboss_notification_get_digest_cron_times();
-	}
-}
-if ( function_exists( 'bboss_render_digest_messages_template' ) && ! function_exists( 'bb_render_digest_messages_template' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_render_digest_messages_template()}.
-	 *
-	 * @deprecated Use bboss_render_digest_messages_template() instead.
-	 */
-	function bb_render_digest_messages_template( $recipient_messages, $thread_id ) {
-		return bboss_render_digest_messages_template( $recipient_messages, $thread_id );
-	}
-}
-if ( function_exists( 'bboss_render_messages_recipients' ) && ! function_exists( 'bb_render_messages_recipients' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_render_messages_recipients()}.
-	 *
-	 * @deprecated Use bboss_render_messages_recipients() instead.
-	 */
-	function bb_render_messages_recipients( $recipients, $email_type, $message_slug, $thread_id, $sender_id, $tokens = array() ) {
-		return bboss_render_messages_recipients( $recipients, $email_type, $message_slug, $thread_id, $sender_id, $tokens );
-	}
-}
-if ( function_exists( 'bboss_send_group_message_background' ) && ! function_exists( 'bb_send_group_message_background' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_send_group_message_background()}.
-	 *
-	 * @deprecated Use bboss_send_group_message_background() instead.
-	 */
-	function bb_send_group_message_background( $post_data, $members = array(), $current_user_id = 0, $content = '', $is_background = false ) {
-		return bboss_send_group_message_background( $post_data, $members, $current_user_id, $content, $is_background );
-	}
-}
-if ( function_exists( 'bboss_groups_messages_new_message' ) && ! function_exists( 'bp_groups_messages_new_message' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_groups_messages_new_message()}.
-	 *
-	 * @deprecated Use bboss_groups_messages_new_message() instead.
-	 */
-	function bp_groups_messages_new_message( $args = '' ) {
-		return bboss_groups_messages_new_message( $args );
-	}
-}
-if ( function_exists( 'bboss_messages_add_meta' ) && ! function_exists( 'bp_messages_add_meta' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_messages_add_meta()}.
-	 *
-	 * @deprecated Use bboss_messages_add_meta() instead.
-	 */
-	function bp_messages_add_meta( $message_id, $meta_key, $meta_value, $unique = false ) {
-		return bboss_messages_add_meta( $message_id, $meta_key, $meta_value, $unique );
-	}
-}
-if ( function_exists( 'bboss_messages_delete_meta' ) && ! function_exists( 'bp_messages_delete_meta' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_messages_delete_meta()}.
-	 *
-	 * @deprecated Use bboss_messages_delete_meta() instead.
-	 */
-	function bp_messages_delete_meta( $message_id, $meta_key = false, $meta_value = false, $delete_all = false ) {
-		return bboss_messages_delete_meta( $message_id, $meta_key, $meta_value, $delete_all );
-	}
-}
-if ( function_exists( 'bboss_messages_get_avatars' ) && ! function_exists( 'bp_messages_get_avatars' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_messages_get_avatars()}.
-	 *
-	 * @deprecated Use bboss_messages_get_avatars() instead.
-	 */
-	function bp_messages_get_avatars( $thread_id, $user_id ) {
-		return bboss_messages_get_avatars( $thread_id, $user_id );
-	}
-}
-if ( function_exists( 'bboss_messages_get_meta' ) && ! function_exists( 'bp_messages_get_meta' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_messages_get_meta()}.
-	 *
-	 * @deprecated Use bboss_messages_get_meta() instead.
-	 */
-	function bp_messages_get_meta( $message_id, $meta_key = '', $single = true ) {
-		return bboss_messages_get_meta( $message_id, $meta_key, $single );
-	}
-}
-if ( function_exists( 'bboss_messages_remove_data' ) && ! function_exists( 'bp_messages_remove_data' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_messages_remove_data()}.
-	 *
-	 * @deprecated Use bboss_messages_remove_data() instead.
-	 */
-	function bp_messages_remove_data( $user_id ) {
-		return bboss_messages_remove_data( $user_id );
-	}
-}
-if ( function_exists( 'bboss_messages_show_sites_notices' ) && ! function_exists( 'bp_messages_show_sites_notices' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_messages_show_sites_notices()}.
-	 *
-	 * @deprecated Use bboss_messages_show_sites_notices() instead.
-	 */
-	function bp_messages_show_sites_notices() {
-		return bboss_messages_show_sites_notices();
-	}
-}
-if ( function_exists( 'bboss_messages_thread_delete_completely' ) && ! function_exists( 'bp_messages_thread_delete_completely' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_messages_thread_delete_completely()}.
-	 *
-	 * @deprecated Use bboss_messages_thread_delete_completely() instead.
-	 */
-	function bp_messages_thread_delete_completely() {
-		return bboss_messages_thread_delete_completely();
-	}
-}
-if ( function_exists( 'bboss_messages_update_meta' ) && ! function_exists( 'bp_messages_update_meta' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_messages_update_meta()}.
-	 *
-	 * @deprecated Use bboss_messages_update_meta() instead.
-	 */
-	function bp_messages_update_meta( $message_id, $meta_key, $meta_value, $prev_value = '' ) {
-		return bboss_messages_update_meta( $message_id, $meta_key, $meta_value, $prev_value );
-	}
-}
-if ( function_exists( 'bboss_group_messages_notification_new_message' ) && ! function_exists( 'group_messages_notification_new_message' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_group_messages_notification_new_message()}.
-	 *
-	 * @deprecated Use bboss_group_messages_notification_new_message() instead.
-	 */
-	function group_messages_notification_new_message( $raw_args = array() ) {
-		return bboss_group_messages_notification_new_message( $raw_args );
-	}
-}
-if ( function_exists( 'bboss_messages_add_callback_values' ) && ! function_exists( 'messages_add_callback_values' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_messages_add_callback_values()}.
-	 *
-	 * @deprecated Use bboss_messages_add_callback_values() instead.
-	 */
-	function messages_add_callback_values( $recipients, $subject, $content ) {
-		return bboss_messages_add_callback_values( $recipients, $subject, $content );
-	}
-}
-if ( function_exists( 'bboss_messages_check_thread_access' ) && ! function_exists( 'messages_check_thread_access' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_messages_check_thread_access()}.
-	 *
-	 * @deprecated Use bboss_messages_check_thread_access() instead.
-	 */
-	function messages_check_thread_access( $thread_id, $user_id = 0 ) {
-		return bboss_messages_check_thread_access( $thread_id, $user_id );
-	}
-}
-if ( function_exists( 'bboss_messages_delete_thread' ) && ! function_exists( 'messages_delete_thread' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_messages_delete_thread()}.
-	 *
-	 * @deprecated Use bboss_messages_delete_thread() instead.
-	 */
-	function messages_delete_thread( $thread_ids, $user_id = 0 ) {
-		return bboss_messages_delete_thread( $thread_ids, $user_id );
-	}
-}
-if ( function_exists( 'bboss_messages_get_message_sender' ) && ! function_exists( 'messages_get_message_sender' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_messages_get_message_sender()}.
-	 *
-	 * @deprecated Use bboss_messages_get_message_sender() instead.
-	 */
-	function messages_get_message_sender( $message_id ) {
-		return bboss_messages_get_message_sender( $message_id );
-	}
-}
-if ( function_exists( 'bboss_messages_get_message_thread_id' ) && ! function_exists( 'messages_get_message_thread_id' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_messages_get_message_thread_id()}.
-	 *
-	 * @deprecated Use bboss_messages_get_message_thread_id() instead.
-	 */
-	function messages_get_message_thread_id( $message_id = 0 ) {
-		return bboss_messages_get_message_thread_id( $message_id );
-	}
-}
-if ( function_exists( 'bboss_messages_get_unread_count' ) && ! function_exists( 'messages_get_unread_count' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_messages_get_unread_count()}.
-	 *
-	 * @deprecated Use bboss_messages_get_unread_count() instead.
-	 */
-	function messages_get_unread_count( $user_id = 0 ) {
-		return bboss_messages_get_unread_count( $user_id );
-	}
-}
-if ( function_exists( 'bboss_messages_is_user_sender' ) && ! function_exists( 'messages_is_user_sender' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_messages_is_user_sender()}.
-	 *
-	 * @deprecated Use bboss_messages_is_user_sender() instead.
-	 */
-	function messages_is_user_sender( $user_id, $message_id ) {
-		return bboss_messages_is_user_sender( $user_id, $message_id );
-	}
-}
-if ( function_exists( 'bboss_messages_is_valid_thread' ) && ! function_exists( 'messages_is_valid_thread' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_messages_is_valid_thread()}.
-	 *
-	 * @deprecated Use bboss_messages_is_valid_thread() instead.
-	 */
-	function messages_is_valid_thread( $thread_id ) {
-		return bboss_messages_is_valid_thread( $thread_id );
-	}
-}
-if ( function_exists( 'bboss_messages_mark_thread_read' ) && ! function_exists( 'messages_mark_thread_read' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_messages_mark_thread_read()}.
-	 *
-	 * @deprecated Use bboss_messages_mark_thread_read() instead.
-	 */
-	function messages_mark_thread_read( $thread_id, $user_id = 0 ) {
-		return bboss_messages_mark_thread_read( $thread_id, $user_id );
-	}
-}
-if ( function_exists( 'bboss_messages_mark_thread_unread' ) && ! function_exists( 'messages_mark_thread_unread' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_messages_mark_thread_unread()}.
-	 *
-	 * @deprecated Use bboss_messages_mark_thread_unread() instead.
-	 */
-	function messages_mark_thread_unread( $thread_id ) {
-		return bboss_messages_mark_thread_unread( $thread_id );
-	}
-}
-if ( function_exists( 'bboss_messages_new_message' ) && ! function_exists( 'messages_new_message' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_messages_new_message()}.
-	 *
-	 * @deprecated Use bboss_messages_new_message() instead.
-	 */
-	function messages_new_message( $args = '' ) {
-		return bboss_messages_new_message( $args );
-	}
-}
-if ( function_exists( 'bboss_messages_notification_new_message' ) && ! function_exists( 'messages_notification_new_message' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_messages_notification_new_message()}.
-	 *
-	 * @deprecated Use bboss_messages_notification_new_message() instead.
-	 */
-	function messages_notification_new_message( $raw_args = array() ) {
-		return bboss_messages_notification_new_message( $raw_args );
-	}
-}
-if ( function_exists( 'bboss_messages_remove_callback_values' ) && ! function_exists( 'messages_remove_callback_values' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_messages_remove_callback_values()}.
-	 *
-	 * @deprecated Use bboss_messages_remove_callback_values() instead.
-	 */
-	function messages_remove_callback_values() {
-		return bboss_messages_remove_callback_values();
-	}
-}
-if ( function_exists( 'bboss_messages_send_notice' ) && ! function_exists( 'messages_send_notice' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_messages_send_notice()}.
-	 *
-	 * @deprecated Use bboss_messages_send_notice() instead.
-	 */
-	function messages_send_notice( $subject, $message ) {
-		return bboss_messages_send_notice( $subject, $message );
-	}
-}
 // @bbwt-com-end compat-layer
+

@@ -615,7 +615,7 @@ class BBoss_REST_Reply_Actions_Endpoint extends BBoss_REST_Reply_Endpoint {
 }
 
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
+// bbwt-rename:compat-aliases — the pre-rename names of this file's classes (decision 0013): declared
 // here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
 if ( ( class_exists( 'BBoss_REST_Reply_Actions_Endpoint', false ) || interface_exists( 'BBoss_REST_Reply_Actions_Endpoint', false ) || trait_exists( 'BBoss_REST_Reply_Actions_Endpoint', false ) ) && ! class_exists( 'BP_REST_Reply_Actions_Endpoint', false ) && ! interface_exists( 'BP_REST_Reply_Actions_Endpoint', false ) ) {
 	class_alias( 'BBoss_REST_Reply_Actions_Endpoint', 'BP_REST_Reply_Actions_Endpoint' ); // Backward-compatible name (also declared by another BuddyBoss product).

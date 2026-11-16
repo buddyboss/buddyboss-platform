@@ -69,6 +69,20 @@ function bboss_ps_xprofile_setup( $fields ) {
 
 	return $fields;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_ps_xprofile_setup' ) && ! function_exists( 'bp_ps_xprofile_setup' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_ps_xprofile_setup()}.
+	 *
+	 * @deprecated Use bboss_ps_xprofile_setup() instead.
+	 */
+	function bp_ps_xprofile_setup( $fields ) {
+		return bboss_ps_xprofile_setup( $fields );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return results from BuddyBoss Profile Search Extended.
@@ -263,6 +277,20 @@ function bboss_ps_xprofile_search( $f ) {
 	// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
 	return $wpdb->get_col( $query );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_ps_xprofile_search' ) && ! function_exists( 'bp_ps_xprofile_search' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_ps_xprofile_search()}.
+	 *
+	 * @deprecated Use bboss_ps_xprofile_search() instead.
+	 */
+	function bp_ps_xprofile_search( $f ) {
+		return bboss_ps_xprofile_search( $f );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return $sql of BuddyBoss Profile Search Extended sort directory.
@@ -284,6 +312,20 @@ function bboss_ps_xprofile_sort_directory( $sql, $object, $f, $order ) {
 
 	return $sql;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_ps_xprofile_sort_directory' ) && ! function_exists( 'bp_ps_xprofile_sort_directory' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_ps_xprofile_sort_directory()}.
+	 *
+	 * @deprecated Use bboss_ps_xprofile_sort_directory() instead.
+	 */
+	function bp_ps_xprofile_sort_directory( $sql, $object, $f, $order ) {
+		return bboss_ps_xprofile_sort_directory( $sql, $object, $f, $order );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return xprofile value from BuddyBoss Profile Search Extended field.
@@ -301,6 +343,20 @@ function bboss_ps_xprofile_get_value( $f ) {
 	$value = BBoss_XProfile_ProfileData::get_value_byid( $f->id, $members_template->member->ID );
 	return stripslashes( $value );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_ps_xprofile_get_value' ) && ! function_exists( 'bp_ps_xprofile_get_value' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_ps_xprofile_get_value()}.
+	 *
+	 * @deprecated Use bboss_ps_xprofile_get_value() instead.
+	 */
+	function bp_ps_xprofile_get_value( $f ) {
+		return bboss_ps_xprofile_get_value( $f );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return array of BuddyBoss Profile Search input field formats.
@@ -331,6 +387,20 @@ function bboss_ps_xprofile_format( $type, $field_id ) {
 
 	return in_array( $format, $formats ) ? $format : $default;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_ps_xprofile_format' ) && ! function_exists( 'bp_ps_xprofile_format' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_ps_xprofile_format()}.
+	 *
+	 * @deprecated Use bboss_ps_xprofile_format() instead.
+	 */
+	function bp_ps_xprofile_format( $type, $field_id ) {
+		return bboss_ps_xprofile_format( $type, $field_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Returns array of BuddyBoss Profile Search profile options.
@@ -353,6 +423,20 @@ function bboss_ps_xprofile_options( $field_id ) {
 
 	return $options;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_ps_xprofile_options' ) && ! function_exists( 'bp_ps_xprofile_options' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_ps_xprofile_options()}.
+	 *
+	 * @deprecated Use bboss_ps_xprofile_options() instead.
+	 */
+	function bp_ps_xprofile_options( $field_id ) {
+		return bboss_ps_xprofile_options( $field_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 add_filter( 'bp_ps_add_fields', 'bp_ps_anyfield_setup', 12 );
 /**
@@ -374,6 +458,20 @@ function bboss_ps_anyfield_setup( $fields ) {
 	$fields[] = $f;
 	return $fields;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_ps_anyfield_setup' ) && ! function_exists( 'bp_ps_anyfield_setup' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_ps_anyfield_setup()}.
+	 *
+	 * @deprecated Use bboss_ps_anyfield_setup() instead.
+	 */
+	function bp_ps_anyfield_setup( $fields ) {
+		return bboss_ps_anyfield_setup( $fields );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 // The LearnDash course field used to be registered here via
 // add_filter( 'bp_ps_add_fields', 'bp_ps_learndash_course_setup' ).
@@ -444,6 +542,20 @@ function bboss_ps_gender_setup( $fields ) {
 
 	return $fields;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_ps_gender_setup' ) && ! function_exists( 'bp_ps_gender_setup' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_ps_gender_setup()}.
+	 *
+	 * @deprecated Use bboss_ps_gender_setup() instead.
+	 */
+	function bp_ps_gender_setup( $fields ) {
+		return bboss_ps_gender_setup( $fields );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 // Hook for registering a Gender field in frontend and backend in advance search.
 add_filter( 'bp_ps_add_fields', 'bp_ps_gender_setup' );
@@ -504,6 +616,20 @@ function bboss_ps_xprofile_gender_users_search( $f ) {
 
 	return array();
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_ps_xprofile_gender_users_search' ) && ! function_exists( 'bp_ps_xprofile_gender_users_search' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_ps_xprofile_gender_users_search()}.
+	 *
+	 * @deprecated Use bboss_ps_xprofile_gender_users_search() instead.
+	 */
+	function bp_ps_xprofile_gender_users_search( $f ) {
+		return bboss_ps_xprofile_gender_users_search( $f );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 // `bp_ps_learndash_course_users_search()` and
 // `bp_ps_learndash_get_users_for_course()` moved to buddyboss-learndash/
@@ -640,6 +766,20 @@ function bboss_ps_anyfield_search( $f ) {
 
 	return $user_ids;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_ps_anyfield_search' ) && ! function_exists( 'bp_ps_anyfield_search' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_ps_anyfield_search()}.
+	 *
+	 * @deprecated Use bboss_ps_anyfield_search() instead.
+	 */
+	function bp_ps_anyfield_search( $f ) {
+		return bboss_ps_anyfield_search( $f );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 add_filter( 'bp_ps_add_fields', 'bp_ps_heading_field_setup', 11 );
 /**
@@ -661,6 +801,20 @@ function bboss_ps_heading_field_setup( $fields ) {
 	$fields[] = $f;
 	return $fields;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_ps_heading_field_setup' ) && ! function_exists( 'bp_ps_heading_field_setup' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_ps_heading_field_setup()}.
+	 *
+	 * @deprecated Use bboss_ps_heading_field_setup() instead.
+	 */
+	function bp_ps_heading_field_setup( $fields ) {
+		return bboss_ps_heading_field_setup( $fields );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Search BuddyBoss Profile Search dummy fields.
@@ -670,6 +824,20 @@ function bboss_ps_heading_field_setup( $fields ) {
 function bboss_ps_search_dummy_fields( $f ) {
 	return array();
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_ps_search_dummy_fields' ) && ! function_exists( 'bp_ps_search_dummy_fields' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_ps_search_dummy_fields()}.
+	 *
+	 * @deprecated Use bboss_ps_search_dummy_fields() instead.
+	 */
+	function bp_ps_search_dummy_fields( $f ) {
+		return bboss_ps_search_dummy_fields( $f );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Registers Email Address field in frontend and backend in advance search.
@@ -696,6 +864,20 @@ function bboss_ps_email_setup( $fields ) {
 
 	return $fields;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_ps_email_setup' ) && ! function_exists( 'bb_ps_email_setup' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_ps_email_setup()}.
+	 *
+	 * @deprecated Use bboss_ps_email_setup() instead.
+	 */
+	function bb_ps_email_setup( $fields ) {
+		return bboss_ps_email_setup( $fields );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 // Hook for registering a Gender field in frontend and backend in advance search.
 add_filter( 'bp_ps_add_fields', 'bb_ps_email_setup' );
@@ -738,20 +920,8 @@ function bboss_ps_xprofile_email_users_search( $f ) {
 
 	return $wpdb->get_col( $sql_query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- literal SELECT on $wpdb->users plus the WHERE clause from $wpdb->prepare() (email value bound as %s).
 }
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
-if ( function_exists( 'bboss_ps_email_setup' ) && ! function_exists( 'bb_ps_email_setup' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_ps_email_setup()}.
-	 *
-	 * @deprecated Use bboss_ps_email_setup() instead.
-	 */
-	function bb_ps_email_setup( $fields ) {
-		return bboss_ps_email_setup( $fields );
-	}
-}
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_ps_xprofile_email_users_search' ) && ! function_exists( 'bb_ps_xprofile_email_users_search' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_ps_xprofile_email_users_search()}.
@@ -762,124 +932,5 @@ if ( function_exists( 'bboss_ps_xprofile_email_users_search' ) && ! function_exi
 		return bboss_ps_xprofile_email_users_search( $f );
 	}
 }
-if ( function_exists( 'bboss_ps_anyfield_search' ) && ! function_exists( 'bp_ps_anyfield_search' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_ps_anyfield_search()}.
-	 *
-	 * @deprecated Use bboss_ps_anyfield_search() instead.
-	 */
-	function bp_ps_anyfield_search( $f ) {
-		return bboss_ps_anyfield_search( $f );
-	}
-}
-if ( function_exists( 'bboss_ps_anyfield_setup' ) && ! function_exists( 'bp_ps_anyfield_setup' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_ps_anyfield_setup()}.
-	 *
-	 * @deprecated Use bboss_ps_anyfield_setup() instead.
-	 */
-	function bp_ps_anyfield_setup( $fields ) {
-		return bboss_ps_anyfield_setup( $fields );
-	}
-}
-if ( function_exists( 'bboss_ps_gender_setup' ) && ! function_exists( 'bp_ps_gender_setup' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_ps_gender_setup()}.
-	 *
-	 * @deprecated Use bboss_ps_gender_setup() instead.
-	 */
-	function bp_ps_gender_setup( $fields ) {
-		return bboss_ps_gender_setup( $fields );
-	}
-}
-if ( function_exists( 'bboss_ps_heading_field_setup' ) && ! function_exists( 'bp_ps_heading_field_setup' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_ps_heading_field_setup()}.
-	 *
-	 * @deprecated Use bboss_ps_heading_field_setup() instead.
-	 */
-	function bp_ps_heading_field_setup( $fields ) {
-		return bboss_ps_heading_field_setup( $fields );
-	}
-}
-if ( function_exists( 'bboss_ps_search_dummy_fields' ) && ! function_exists( 'bp_ps_search_dummy_fields' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_ps_search_dummy_fields()}.
-	 *
-	 * @deprecated Use bboss_ps_search_dummy_fields() instead.
-	 */
-	function bp_ps_search_dummy_fields( $f ) {
-		return bboss_ps_search_dummy_fields( $f );
-	}
-}
-if ( function_exists( 'bboss_ps_xprofile_format' ) && ! function_exists( 'bp_ps_xprofile_format' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_ps_xprofile_format()}.
-	 *
-	 * @deprecated Use bboss_ps_xprofile_format() instead.
-	 */
-	function bp_ps_xprofile_format( $type, $field_id ) {
-		return bboss_ps_xprofile_format( $type, $field_id );
-	}
-}
-if ( function_exists( 'bboss_ps_xprofile_gender_users_search' ) && ! function_exists( 'bp_ps_xprofile_gender_users_search' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_ps_xprofile_gender_users_search()}.
-	 *
-	 * @deprecated Use bboss_ps_xprofile_gender_users_search() instead.
-	 */
-	function bp_ps_xprofile_gender_users_search( $f ) {
-		return bboss_ps_xprofile_gender_users_search( $f );
-	}
-}
-if ( function_exists( 'bboss_ps_xprofile_get_value' ) && ! function_exists( 'bp_ps_xprofile_get_value' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_ps_xprofile_get_value()}.
-	 *
-	 * @deprecated Use bboss_ps_xprofile_get_value() instead.
-	 */
-	function bp_ps_xprofile_get_value( $f ) {
-		return bboss_ps_xprofile_get_value( $f );
-	}
-}
-if ( function_exists( 'bboss_ps_xprofile_options' ) && ! function_exists( 'bp_ps_xprofile_options' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_ps_xprofile_options()}.
-	 *
-	 * @deprecated Use bboss_ps_xprofile_options() instead.
-	 */
-	function bp_ps_xprofile_options( $field_id ) {
-		return bboss_ps_xprofile_options( $field_id );
-	}
-}
-if ( function_exists( 'bboss_ps_xprofile_search' ) && ! function_exists( 'bp_ps_xprofile_search' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_ps_xprofile_search()}.
-	 *
-	 * @deprecated Use bboss_ps_xprofile_search() instead.
-	 */
-	function bp_ps_xprofile_search( $f ) {
-		return bboss_ps_xprofile_search( $f );
-	}
-}
-if ( function_exists( 'bboss_ps_xprofile_setup' ) && ! function_exists( 'bp_ps_xprofile_setup' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_ps_xprofile_setup()}.
-	 *
-	 * @deprecated Use bboss_ps_xprofile_setup() instead.
-	 */
-	function bp_ps_xprofile_setup( $fields ) {
-		return bboss_ps_xprofile_setup( $fields );
-	}
-}
-if ( function_exists( 'bboss_ps_xprofile_sort_directory' ) && ! function_exists( 'bp_ps_xprofile_sort_directory' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_ps_xprofile_sort_directory()}.
-	 *
-	 * @deprecated Use bboss_ps_xprofile_sort_directory() instead.
-	 */
-	function bp_ps_xprofile_sort_directory( $sql, $object, $f, $order ) {
-		return bboss_ps_xprofile_sort_directory( $sql, $object, $f, $order );
-	}
-}
 // @bbwt-com-end compat-layer
+

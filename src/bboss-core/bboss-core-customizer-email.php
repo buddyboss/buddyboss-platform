@@ -86,6 +86,20 @@ function bboss_email_init_customizer( WP_Customize_Manager $wp_customize ) {
 		remove_action( 'wp_footer', 'bb_on_screen_notification_template' );
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_email_init_customizer' ) && ! function_exists( 'bp_email_init_customizer' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_email_init_customizer()}.
+	 *
+	 * @deprecated Use bboss_email_init_customizer() instead.
+	 */
+	function bp_email_init_customizer( WP_Customize_Manager $wp_customize ) {
+		return bboss_email_init_customizer( $wp_customize );
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'bp_customize_register', 'bp_email_init_customizer' );
 
 /**
@@ -98,6 +112,20 @@ add_action( 'bp_customize_register', 'bp_email_init_customizer' );
 function bboss_is_email_customizer() {
 	return isset( $_GET['bp_customizer'] ) && 'email' === $_GET['bp_customizer']; //phpcs:ignore WordPress.Security.NonceVerification.Recommended
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_email_customizer' ) && ! function_exists( 'bp_is_email_customizer' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_email_customizer()}.
+	 *
+	 * @deprecated Use bboss_is_email_customizer() instead.
+	 */
+	function bp_is_email_customizer() {
+		return bboss_is_email_customizer();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Only show email sections in the Customizer.
@@ -115,6 +143,20 @@ function bboss_email_customizer_hide_sections( $active, $section ) {
 
 	return in_array( $section->id, array_keys( bboss_email_get_customizer_sections() ), true );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_email_customizer_hide_sections' ) && ! function_exists( 'bp_email_customizer_hide_sections' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_email_customizer_hide_sections()}.
+	 *
+	 * @deprecated Use bboss_email_customizer_hide_sections() instead.
+	 */
+	function bp_email_customizer_hide_sections( $active, $section ) {
+		return bboss_email_customizer_hide_sections( $active, $section );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get Customizer sections for emails.
@@ -153,6 +195,20 @@ function bboss_email_get_customizer_sections() {
 		)
 	);
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_email_get_customizer_sections' ) && ! function_exists( 'bp_email_get_customizer_sections' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_email_get_customizer_sections()}.
+	 *
+	 * @deprecated Use bboss_email_get_customizer_sections() instead.
+	 */
+	function bp_email_get_customizer_sections() {
+		return bboss_email_get_customizer_sections();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get Customizer settings for emails.
@@ -296,6 +352,20 @@ function bboss_email_get_customizer_settings() {
 		)
 	);
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_email_get_customizer_settings' ) && ! function_exists( 'bp_email_get_customizer_settings' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_email_get_customizer_settings()}.
+	 *
+	 * @deprecated Use bboss_email_get_customizer_settings() instead.
+	 */
+	function bp_email_get_customizer_settings() {
+		return bboss_email_get_customizer_settings();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get Customizer controls for emails.
@@ -476,6 +546,20 @@ function bboss_email_get_customizer_controls() {
 		)
 	);
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_email_get_customizer_controls' ) && ! function_exists( 'bp_email_get_customizer_controls' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_email_get_customizer_controls()}.
+	 *
+	 * @deprecated Use bboss_email_get_customizer_controls() instead.
+	 */
+	function bp_email_get_customizer_controls() {
+		return bboss_email_get_customizer_controls();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return a redirect url to the Customizer, previewing a randomly selected email.
@@ -533,6 +617,20 @@ function bboss_email_get_redirect_to_customizer_url() {
 
 	return $redirect_url;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_email_get_redirect_to_customizer_url' ) && ! function_exists( 'bp_email_get_redirect_to_customizer_url' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_email_get_redirect_to_customizer_url()}.
+	 *
+	 * @deprecated Use bboss_email_get_redirect_to_customizer_url() instead.
+	 */
+	function bp_email_get_redirect_to_customizer_url() {
+		return bboss_email_get_redirect_to_customizer_url();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Implements a JS redirect to the Customizer, previewing a randomly selected email.
@@ -550,6 +648,20 @@ function bboss_email_redirect_to_customizer() {
 
 	exit;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_email_redirect_to_customizer' ) && ! function_exists( 'bp_email_redirect_to_customizer' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_email_redirect_to_customizer()}.
+	 *
+	 * @deprecated Use bboss_email_redirect_to_customizer() instead.
+	 */
+	function bp_email_redirect_to_customizer() {
+		return bboss_email_redirect_to_customizer();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Removes the core 'Widgets' panel from the Email Customizer.
@@ -568,6 +680,20 @@ function bboss_email_remove_widgets_panel( $components ) {
 
 	return $components;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_email_remove_widgets_panel' ) && ! function_exists( 'bp_email_remove_widgets_panel' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_email_remove_widgets_panel()}.
+	 *
+	 * @deprecated Use bboss_email_remove_widgets_panel() instead.
+	 */
+	function bp_email_remove_widgets_panel( $components ) {
+		return bboss_email_remove_widgets_panel( $components );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 add_filter( 'customize_loaded_components', 'bp_email_remove_widgets_panel' );
 
@@ -598,13 +724,8 @@ function bboss_email_customizer_default_avatar( $avatar = '' ) {
 
 	return $avatar;
 }
-
-add_filter( 'bp_email_customizer_default_avatar', 'bb_email_customizer_default_avatar', 10 );
-add_filter( 'bp_email_default_avatar', 'bb_email_customizer_default_avatar', 10 );
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_email_customizer_default_avatar' ) && ! function_exists( 'bb_email_customizer_default_avatar' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_email_customizer_default_avatar()}.
@@ -615,94 +736,8 @@ if ( function_exists( 'bboss_email_customizer_default_avatar' ) && ! function_ex
 		return bboss_email_customizer_default_avatar( $avatar );
 	}
 }
-if ( function_exists( 'bboss_email_customizer_hide_sections' ) && ! function_exists( 'bp_email_customizer_hide_sections' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_email_customizer_hide_sections()}.
-	 *
-	 * @deprecated Use bboss_email_customizer_hide_sections() instead.
-	 */
-	function bp_email_customizer_hide_sections( $active, $section ) {
-		return bboss_email_customizer_hide_sections( $active, $section );
-	}
-}
-if ( function_exists( 'bboss_email_get_customizer_controls' ) && ! function_exists( 'bp_email_get_customizer_controls' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_email_get_customizer_controls()}.
-	 *
-	 * @deprecated Use bboss_email_get_customizer_controls() instead.
-	 */
-	function bp_email_get_customizer_controls() {
-		return bboss_email_get_customizer_controls();
-	}
-}
-if ( function_exists( 'bboss_email_get_customizer_sections' ) && ! function_exists( 'bp_email_get_customizer_sections' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_email_get_customizer_sections()}.
-	 *
-	 * @deprecated Use bboss_email_get_customizer_sections() instead.
-	 */
-	function bp_email_get_customizer_sections() {
-		return bboss_email_get_customizer_sections();
-	}
-}
-if ( function_exists( 'bboss_email_get_customizer_settings' ) && ! function_exists( 'bp_email_get_customizer_settings' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_email_get_customizer_settings()}.
-	 *
-	 * @deprecated Use bboss_email_get_customizer_settings() instead.
-	 */
-	function bp_email_get_customizer_settings() {
-		return bboss_email_get_customizer_settings();
-	}
-}
-if ( function_exists( 'bboss_email_get_redirect_to_customizer_url' ) && ! function_exists( 'bp_email_get_redirect_to_customizer_url' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_email_get_redirect_to_customizer_url()}.
-	 *
-	 * @deprecated Use bboss_email_get_redirect_to_customizer_url() instead.
-	 */
-	function bp_email_get_redirect_to_customizer_url() {
-		return bboss_email_get_redirect_to_customizer_url();
-	}
-}
-if ( function_exists( 'bboss_email_init_customizer' ) && ! function_exists( 'bp_email_init_customizer' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_email_init_customizer()}.
-	 *
-	 * @deprecated Use bboss_email_init_customizer() instead.
-	 */
-	function bp_email_init_customizer( WP_Customize_Manager $wp_customize ) {
-		return bboss_email_init_customizer( $wp_customize );
-	}
-}
-if ( function_exists( 'bboss_email_redirect_to_customizer' ) && ! function_exists( 'bp_email_redirect_to_customizer' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_email_redirect_to_customizer()}.
-	 *
-	 * @deprecated Use bboss_email_redirect_to_customizer() instead.
-	 */
-	function bp_email_redirect_to_customizer() {
-		return bboss_email_redirect_to_customizer();
-	}
-}
-if ( function_exists( 'bboss_email_remove_widgets_panel' ) && ! function_exists( 'bp_email_remove_widgets_panel' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_email_remove_widgets_panel()}.
-	 *
-	 * @deprecated Use bboss_email_remove_widgets_panel() instead.
-	 */
-	function bp_email_remove_widgets_panel( $components ) {
-		return bboss_email_remove_widgets_panel( $components );
-	}
-}
-if ( function_exists( 'bboss_is_email_customizer' ) && ! function_exists( 'bp_is_email_customizer' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_email_customizer()}.
-	 *
-	 * @deprecated Use bboss_is_email_customizer() instead.
-	 */
-	function bp_is_email_customizer() {
-		return bboss_is_email_customizer();
-	}
-}
 // @bbwt-com-end compat-layer
+
+
+add_filter( 'bp_email_customizer_default_avatar', 'bb_email_customizer_default_avatar', 10 );
+add_filter( 'bp_email_default_avatar', 'bb_email_customizer_default_avatar', 10 );

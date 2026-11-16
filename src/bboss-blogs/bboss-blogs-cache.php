@@ -33,6 +33,20 @@ function bboss_blogs_update_meta_cache( $blog_ids = false ) {
 
 	bboss_update_meta_cache( $cache_args );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_blogs_update_meta_cache' ) && ! function_exists( 'bp_blogs_update_meta_cache' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_blogs_update_meta_cache()}.
+	 *
+	 * @deprecated Use bboss_blogs_update_meta_cache() instead.
+	 */
+	function bp_blogs_update_meta_cache( $blog_ids = false ) {
+		return bboss_blogs_update_meta_cache( $blog_ids );
+	}
+}
+// @bbwt-com-end compat-layer
+
 /**
  * Clear the blog object cache.
  *
@@ -50,6 +64,20 @@ function bboss_blogs_clear_blog_object_cache( $blog_id = 0, $user_id = 0 ) {
 	wp_cache_delete( 'bp_total_blogs', 'bp' );
 	wp_cache_delete( $blog_id, 'bp_blogs' );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_blogs_clear_blog_object_cache' ) && ! function_exists( 'bp_blogs_clear_blog_object_cache' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_blogs_clear_blog_object_cache()}.
+	 *
+	 * @deprecated Use bboss_blogs_clear_blog_object_cache() instead.
+	 */
+	function bp_blogs_clear_blog_object_cache( $blog_id = 0, $user_id = 0 ) {
+		return bboss_blogs_clear_blog_object_cache( $blog_id, $user_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 // List actions to clear object caches on.
 add_action( 'bp_blogs_remove_blog_for_user', 'bp_blogs_clear_blog_object_cache', 10, 2 );
@@ -84,12 +112,8 @@ function bboss_blogs_clear_cache( $blog ) {
 		wp_cache_delete( $blog->id, 'bp_blogs' );
 	}
 }
-
-add_action( 'bp_blogs_blog_after_save', 'bb_blogs_clear_cache' );
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_blogs_clear_cache' ) && ! function_exists( 'bb_blogs_clear_cache' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_blogs_clear_cache()}.
@@ -100,24 +124,7 @@ if ( function_exists( 'bboss_blogs_clear_cache' ) && ! function_exists( 'bb_blog
 		return bboss_blogs_clear_cache( $blog );
 	}
 }
-if ( function_exists( 'bboss_blogs_clear_blog_object_cache' ) && ! function_exists( 'bp_blogs_clear_blog_object_cache' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_blogs_clear_blog_object_cache()}.
-	 *
-	 * @deprecated Use bboss_blogs_clear_blog_object_cache() instead.
-	 */
-	function bp_blogs_clear_blog_object_cache( $blog_id = 0, $user_id = 0 ) {
-		return bboss_blogs_clear_blog_object_cache( $blog_id, $user_id );
-	}
-}
-if ( function_exists( 'bboss_blogs_update_meta_cache' ) && ! function_exists( 'bp_blogs_update_meta_cache' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_blogs_update_meta_cache()}.
-	 *
-	 * @deprecated Use bboss_blogs_update_meta_cache() instead.
-	 */
-	function bp_blogs_update_meta_cache( $blog_ids = false ) {
-		return bboss_blogs_update_meta_cache( $blog_ids );
-	}
-}
 // @bbwt-com-end compat-layer
+
+
+add_action( 'bp_blogs_blog_after_save', 'bb_blogs_clear_cache' );

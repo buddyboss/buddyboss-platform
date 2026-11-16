@@ -32,6 +32,20 @@ function bboss_members_sanitize_display_name_format( $value ) {
 
 	return $value;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_members_sanitize_display_name_format' ) && ! function_exists( 'bb_members_sanitize_display_name_format' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_members_sanitize_display_name_format()}.
+	 *
+	 * @deprecated Use bboss_members_sanitize_display_name_format() instead.
+	 */
+	function bb_members_sanitize_display_name_format( $value ) {
+		return bboss_members_sanitize_display_name_format( $value );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Sanitize profile slug format setting.
@@ -54,6 +68,20 @@ function bboss_members_sanitize_slug_format( $value ) {
 
 	return $value;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_members_sanitize_slug_format' ) && ! function_exists( 'bb_members_sanitize_slug_format' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_members_sanitize_slug_format()}.
+	 *
+	 * @deprecated Use bboss_members_sanitize_slug_format() instead.
+	 */
+	function bb_members_sanitize_slug_format( $value ) {
+		return bboss_members_sanitize_slug_format( $value );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Sanitize profile avatar type setting.
@@ -76,6 +104,20 @@ function bboss_members_sanitize_avatar_type( $value ) {
 
 	return $value;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_members_sanitize_avatar_type' ) && ! function_exists( 'bb_members_sanitize_avatar_type' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_members_sanitize_avatar_type()}.
+	 *
+	 * @deprecated Use bboss_members_sanitize_avatar_type() instead.
+	 */
+	function bb_members_sanitize_avatar_type( $value ) {
+		return bboss_members_sanitize_avatar_type( $value );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Sanitize default profile avatar type setting.
@@ -98,6 +140,20 @@ function bboss_members_sanitize_default_avatar_type( $value ) {
 
 	return $value;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_members_sanitize_default_avatar_type' ) && ! function_exists( 'bb_members_sanitize_default_avatar_type' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_members_sanitize_default_avatar_type()}.
+	 *
+	 * @deprecated Use bboss_members_sanitize_default_avatar_type() instead.
+	 */
+	function bb_members_sanitize_default_avatar_type( $value ) {
+		return bboss_members_sanitize_default_avatar_type( $value );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Sanitize default profile cover type setting.
@@ -120,6 +176,20 @@ function bboss_members_sanitize_default_cover_type( $value ) {
 
 	return $value;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_members_sanitize_default_cover_type' ) && ! function_exists( 'bb_members_sanitize_default_cover_type' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_members_sanitize_default_cover_type()}.
+	 *
+	 * @deprecated Use bboss_members_sanitize_default_cover_type() instead.
+	 */
+	function bb_members_sanitize_default_cover_type( $value ) {
+		return bboss_members_sanitize_default_cover_type( $value );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Sanitize member layout format setting.
@@ -142,6 +212,20 @@ function bboss_members_sanitize_layout_format( $value ) {
 
 	return $value;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_members_sanitize_layout_format' ) && ! function_exists( 'bb_members_sanitize_layout_format' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_members_sanitize_layout_format()}.
+	 *
+	 * @deprecated Use bboss_members_sanitize_layout_format() instead.
+	 */
+	function bb_members_sanitize_layout_format( $value ) {
+		return bboss_members_sanitize_layout_format( $value );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Sanitize member layout default format setting.
@@ -164,6 +248,20 @@ function bboss_members_sanitize_default_format( $value ) {
 
 	return $value;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_members_sanitize_default_format' ) && ! function_exists( 'bb_members_sanitize_default_format' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_members_sanitize_default_format()}.
+	 *
+	 * @deprecated Use bboss_members_sanitize_default_format() instead.
+	 */
+	function bb_members_sanitize_default_format( $value ) {
+		return bboss_members_sanitize_default_format( $value );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Sanitize member toggle list elements.
@@ -188,6 +286,20 @@ function bboss_members_sanitize_toggle_list( $value ) {
 
 	return $sanitized;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_members_sanitize_toggle_list' ) && ! function_exists( 'bb_members_sanitize_toggle_list' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_members_sanitize_toggle_list()}.
+	 *
+	 * @deprecated Use bboss_members_sanitize_toggle_list() instead.
+	 */
+	function bb_members_sanitize_toggle_list( $value ) {
+		return bboss_members_sanitize_toggle_list( $value );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Sanitize profile header style setting.
@@ -210,6 +322,20 @@ function bboss_members_sanitize_header_style( $value ) {
 
 	return $value;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_members_sanitize_header_style' ) && ! function_exists( 'bb_members_sanitize_header_style' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_members_sanitize_header_style()}.
+	 *
+	 * @deprecated Use bboss_members_sanitize_header_style() instead.
+	 */
+	function bb_members_sanitize_header_style( $value ) {
+		return bboss_members_sanitize_header_style( $value );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Sanitize profile cover image width setting.
@@ -232,6 +358,20 @@ function bboss_members_sanitize_cover_width( $value ) {
 
 	return $value;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_members_sanitize_cover_width' ) && ! function_exists( 'bb_members_sanitize_cover_width' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_members_sanitize_cover_width()}.
+	 *
+	 * @deprecated Use bboss_members_sanitize_cover_width() instead.
+	 */
+	function bb_members_sanitize_cover_width( $value ) {
+		return bboss_members_sanitize_cover_width( $value );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Sanitize profile cover image height setting.
@@ -254,6 +394,20 @@ function bboss_members_sanitize_cover_height( $value ) {
 
 	return $value;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_members_sanitize_cover_height' ) && ! function_exists( 'bb_members_sanitize_cover_height' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_members_sanitize_cover_height()}.
+	 *
+	 * @deprecated Use bboss_members_sanitize_cover_height() instead.
+	 */
+	function bb_members_sanitize_cover_height( $value ) {
+		return bboss_members_sanitize_cover_height( $value );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 // =========================================================================
 // POST-SAVE HOOKS (bb_admin_save_feature_settings_after)
@@ -340,6 +494,20 @@ function bboss_members_sync_connection_component( $feature_id, $settings, $saved
 	$active_features['friends'] = $enable ? 1 : 0;
 	bboss_update_option( 'bb-active-features', $active_features );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_members_sync_connection_component' ) && ! function_exists( 'bb_members_sync_connection_component' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_members_sync_connection_component()}.
+	 *
+	 * @deprecated Use bboss_members_sync_connection_component() instead.
+	 */
+	function bb_members_sync_connection_component( $feature_id, $settings, $saved ) {
+		return bboss_members_sync_connection_component( $feature_id, $settings, $saved );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 add_action( 'bb_admin_save_feature_settings_after', 'bb_members_sync_connection_component', 2, 3 );
 
@@ -364,6 +532,20 @@ function bboss_members_get_pre_save_state( $state = null ) {
 
 	return $saved_state;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_members_get_pre_save_state' ) && ! function_exists( 'bb_members_get_pre_save_state' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_members_get_pre_save_state()}.
+	 *
+	 * @deprecated Use bboss_members_get_pre_save_state() instead.
+	 */
+	function bb_members_get_pre_save_state( $state = null ) {
+		return bboss_members_get_pre_save_state( $state );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Capture members settings state before save for post-save comparison.
@@ -394,6 +576,20 @@ function bboss_members_capture_pre_save_state( $feature_id ) {
 		)
 	);
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_members_capture_pre_save_state' ) && ! function_exists( 'bb_members_capture_pre_save_state' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_members_capture_pre_save_state()}.
+	 *
+	 * @deprecated Use bboss_members_capture_pre_save_state() instead.
+	 */
+	function bb_members_capture_pre_save_state( $feature_id ) {
+		return bboss_members_capture_pre_save_state( $feature_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 add_action( 'bb_admin_settings_before_save_feature', 'bb_members_capture_pre_save_state', 10, 1 );
 
@@ -452,6 +648,20 @@ function bboss_members_handle_display_name_format_change( $feature_id, $settings
 		bboss_xprofile_update_field_meta( $nickname_field_id, 'allow_custom_visibility', 'disabled' );
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_members_handle_display_name_format_change' ) && ! function_exists( 'bb_members_handle_display_name_format_change' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_members_handle_display_name_format_change()}.
+	 *
+	 * @deprecated Use bboss_members_handle_display_name_format_change() instead.
+	 */
+	function bb_members_handle_display_name_format_change( $feature_id, $settings, $saved ) {
+		return bboss_members_handle_display_name_format_change( $feature_id, $settings, $saved );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 add_action( 'bb_admin_save_feature_settings_after', 'bb_members_handle_display_name_format_change', 10, 3 );
 
@@ -484,6 +694,20 @@ function bboss_members_handle_avatar_type_wordpress( $feature_id, $settings, $sa
 		bboss_update_option( 'bp-enable-profile-gravatar', '' );
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_members_handle_avatar_type_wordpress' ) && ! function_exists( 'bb_members_handle_avatar_type_wordpress' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_members_handle_avatar_type_wordpress()}.
+	 *
+	 * @deprecated Use bboss_members_handle_avatar_type_wordpress() instead.
+	 */
+	function bb_members_handle_avatar_type_wordpress( $feature_id, $settings, $saved ) {
+		return bboss_members_handle_avatar_type_wordpress( $feature_id, $settings, $saved );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 add_action( 'bb_admin_save_feature_settings_after', 'bb_members_handle_avatar_type_wordpress', 3, 3 );
 
@@ -566,6 +790,20 @@ function bboss_members_validate_image_settings_after_save( $feature_id, $setting
 		}
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_members_validate_image_settings_after_save' ) && ! function_exists( 'bb_members_validate_image_settings_after_save' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_members_validate_image_settings_after_save()}.
+	 *
+	 * @deprecated Use bboss_members_validate_image_settings_after_save() instead.
+	 */
+	function bb_members_validate_image_settings_after_save( $feature_id, $settings, $saved ) {
+		return bboss_members_validate_image_settings_after_save( $feature_id, $settings, $saved );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 add_action( 'bb_admin_save_feature_settings_after', 'bb_members_validate_image_settings_after_save', 5, 3 );
 
@@ -610,6 +848,20 @@ function bboss_members_sync_reverted_image_values( $response_data, $feature_id, 
 
 	return $response_data;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_members_sync_reverted_image_values' ) && ! function_exists( 'bb_members_sync_reverted_image_values' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_members_sync_reverted_image_values()}.
+	 *
+	 * @deprecated Use bboss_members_sync_reverted_image_values() instead.
+	 */
+	function bb_members_sync_reverted_image_values( $response_data, $feature_id, $settings, $saved ) {
+		return bboss_members_sync_reverted_image_values( $response_data, $feature_id, $settings, $saved );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 add_filter( 'bb_admin_save_feature_settings_response', 'bb_members_sync_reverted_image_values', 10, 4 );
 
@@ -651,6 +903,20 @@ function bboss_members_handle_slug_format_change( $feature_id, $settings, $saved
 		}
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_members_handle_slug_format_change' ) && ! function_exists( 'bb_members_handle_slug_format_change' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_members_handle_slug_format_change()}.
+	 *
+	 * @deprecated Use bboss_members_handle_slug_format_change() instead.
+	 */
+	function bb_members_handle_slug_format_change( $feature_id, $settings, $saved ) {
+		return bboss_members_handle_slug_format_change( $feature_id, $settings, $saved );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 add_action( 'bb_admin_save_feature_settings_after', 'bb_members_handle_slug_format_change', 10, 3 );
 
@@ -710,6 +976,20 @@ function bboss_members_elements_to_options( $elements ) {
 
 	return $options;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_members_elements_to_options' ) && ! function_exists( 'bb_members_elements_to_options' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_members_elements_to_options()}.
+	 *
+	 * @deprecated Use bboss_members_elements_to_options() instead.
+	 */
+	function bb_members_elements_to_options( $elements ) {
+		return bboss_members_elements_to_options( $elements );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Inject dynamic cover image dimensions into the upload help text at AJAX time.
@@ -761,6 +1041,20 @@ function bboss_members_enrich_cover_upload_help_text( $field_data, $field, $feat
 
 	return $field_data;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_members_enrich_cover_upload_help_text' ) && ! function_exists( 'bb_members_enrich_cover_upload_help_text' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_members_enrich_cover_upload_help_text()}.
+	 *
+	 * @deprecated Use bboss_members_enrich_cover_upload_help_text() instead.
+	 */
+	function bb_members_enrich_cover_upload_help_text( $field_data, $field, $feature_id ) {
+		return bboss_members_enrich_cover_upload_help_text( $field_data, $field, $feature_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 add_filter( 'bb_admin_settings_format_field_data', 'bb_members_enrich_cover_upload_help_text', 10, 3 );
 
@@ -783,6 +1077,20 @@ function bboss_members_allow_image_url_getters( $allowed_url_getters ) {
 
 	return $allowed_url_getters;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_members_allow_image_url_getters' ) && ! function_exists( 'bb_members_allow_image_url_getters' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_members_allow_image_url_getters()}.
+	 *
+	 * @deprecated Use bboss_members_allow_image_url_getters() instead.
+	 */
+	function bb_members_allow_image_url_getters( $allowed_url_getters ) {
+		return bboss_members_allow_image_url_getters( $allowed_url_getters );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 add_filter( 'bb_admin_settings_allowed_url_getters', 'bb_members_allow_image_url_getters' );
 
@@ -817,6 +1125,20 @@ function bboss_members_enrich_avatar_upload_help_text( $field_data, $field, $fea
 
 	return $field_data;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_members_enrich_avatar_upload_help_text' ) && ! function_exists( 'bb_members_enrich_avatar_upload_help_text' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_members_enrich_avatar_upload_help_text()}.
+	 *
+	 * @deprecated Use bboss_members_enrich_avatar_upload_help_text() instead.
+	 */
+	function bb_members_enrich_avatar_upload_help_text( $field_data, $field, $feature_id ) {
+		return bboss_members_enrich_avatar_upload_help_text( $field_data, $field, $feature_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 add_filter( 'bb_admin_settings_format_field_data', 'bb_members_enrich_avatar_upload_help_text', 10, 3 );
 
@@ -875,6 +1197,20 @@ function bboss_members_enrich_profile_type_options( $field_data, $field, $featur
 
 	return $field_data;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_members_enrich_profile_type_options' ) && ! function_exists( 'bb_members_enrich_profile_type_options' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_members_enrich_profile_type_options()}.
+	 *
+	 * @deprecated Use bboss_members_enrich_profile_type_options() instead.
+	 */
+	function bb_members_enrich_profile_type_options( $field_data, $field, $feature_id ) {
+		return bboss_members_enrich_profile_type_options( $field_data, $field, $feature_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 add_filter( 'bb_admin_settings_format_field_data', 'bb_members_enrich_profile_type_options', 10, 3 );
 
@@ -915,112 +1251,8 @@ function bboss_members_push_profile_types_flag_after_save( $response_data, $feat
 
 	return $response_data;
 }
-
-add_filter( 'bb_admin_save_feature_settings_response', 'bb_members_push_profile_types_flag_after_save', 10, 4 );
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
-if ( function_exists( 'bboss_members_allow_image_url_getters' ) && ! function_exists( 'bb_members_allow_image_url_getters' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_members_allow_image_url_getters()}.
-	 *
-	 * @deprecated Use bboss_members_allow_image_url_getters() instead.
-	 */
-	function bb_members_allow_image_url_getters( $allowed_url_getters ) {
-		return bboss_members_allow_image_url_getters( $allowed_url_getters );
-	}
-}
-if ( function_exists( 'bboss_members_capture_pre_save_state' ) && ! function_exists( 'bb_members_capture_pre_save_state' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_members_capture_pre_save_state()}.
-	 *
-	 * @deprecated Use bboss_members_capture_pre_save_state() instead.
-	 */
-	function bb_members_capture_pre_save_state( $feature_id ) {
-		return bboss_members_capture_pre_save_state( $feature_id );
-	}
-}
-if ( function_exists( 'bboss_members_elements_to_options' ) && ! function_exists( 'bb_members_elements_to_options' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_members_elements_to_options()}.
-	 *
-	 * @deprecated Use bboss_members_elements_to_options() instead.
-	 */
-	function bb_members_elements_to_options( $elements ) {
-		return bboss_members_elements_to_options( $elements );
-	}
-}
-if ( function_exists( 'bboss_members_enrich_avatar_upload_help_text' ) && ! function_exists( 'bb_members_enrich_avatar_upload_help_text' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_members_enrich_avatar_upload_help_text()}.
-	 *
-	 * @deprecated Use bboss_members_enrich_avatar_upload_help_text() instead.
-	 */
-	function bb_members_enrich_avatar_upload_help_text( $field_data, $field, $feature_id ) {
-		return bboss_members_enrich_avatar_upload_help_text( $field_data, $field, $feature_id );
-	}
-}
-if ( function_exists( 'bboss_members_enrich_cover_upload_help_text' ) && ! function_exists( 'bb_members_enrich_cover_upload_help_text' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_members_enrich_cover_upload_help_text()}.
-	 *
-	 * @deprecated Use bboss_members_enrich_cover_upload_help_text() instead.
-	 */
-	function bb_members_enrich_cover_upload_help_text( $field_data, $field, $feature_id ) {
-		return bboss_members_enrich_cover_upload_help_text( $field_data, $field, $feature_id );
-	}
-}
-if ( function_exists( 'bboss_members_enrich_profile_type_options' ) && ! function_exists( 'bb_members_enrich_profile_type_options' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_members_enrich_profile_type_options()}.
-	 *
-	 * @deprecated Use bboss_members_enrich_profile_type_options() instead.
-	 */
-	function bb_members_enrich_profile_type_options( $field_data, $field, $feature_id ) {
-		return bboss_members_enrich_profile_type_options( $field_data, $field, $feature_id );
-	}
-}
-if ( function_exists( 'bboss_members_get_pre_save_state' ) && ! function_exists( 'bb_members_get_pre_save_state' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_members_get_pre_save_state()}.
-	 *
-	 * @deprecated Use bboss_members_get_pre_save_state() instead.
-	 */
-	function bb_members_get_pre_save_state( $state = null ) {
-		return bboss_members_get_pre_save_state( $state );
-	}
-}
-if ( function_exists( 'bboss_members_handle_avatar_type_wordpress' ) && ! function_exists( 'bb_members_handle_avatar_type_wordpress' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_members_handle_avatar_type_wordpress()}.
-	 *
-	 * @deprecated Use bboss_members_handle_avatar_type_wordpress() instead.
-	 */
-	function bb_members_handle_avatar_type_wordpress( $feature_id, $settings, $saved ) {
-		return bboss_members_handle_avatar_type_wordpress( $feature_id, $settings, $saved );
-	}
-}
-if ( function_exists( 'bboss_members_handle_display_name_format_change' ) && ! function_exists( 'bb_members_handle_display_name_format_change' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_members_handle_display_name_format_change()}.
-	 *
-	 * @deprecated Use bboss_members_handle_display_name_format_change() instead.
-	 */
-	function bb_members_handle_display_name_format_change( $feature_id, $settings, $saved ) {
-		return bboss_members_handle_display_name_format_change( $feature_id, $settings, $saved );
-	}
-}
-if ( function_exists( 'bboss_members_handle_slug_format_change' ) && ! function_exists( 'bb_members_handle_slug_format_change' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_members_handle_slug_format_change()}.
-	 *
-	 * @deprecated Use bboss_members_handle_slug_format_change() instead.
-	 */
-	function bb_members_handle_slug_format_change( $feature_id, $settings, $saved ) {
-		return bboss_members_handle_slug_format_change( $feature_id, $settings, $saved );
-	}
-}
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_members_push_profile_types_flag_after_save' ) && ! function_exists( 'bb_members_push_profile_types_flag_after_save' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_members_push_profile_types_flag_after_save()}.
@@ -1031,144 +1263,7 @@ if ( function_exists( 'bboss_members_push_profile_types_flag_after_save' ) && ! 
 		return bboss_members_push_profile_types_flag_after_save( $response_data, $feature_id, $settings, $saved );
 	}
 }
-if ( function_exists( 'bboss_members_sanitize_avatar_type' ) && ! function_exists( 'bb_members_sanitize_avatar_type' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_members_sanitize_avatar_type()}.
-	 *
-	 * @deprecated Use bboss_members_sanitize_avatar_type() instead.
-	 */
-	function bb_members_sanitize_avatar_type( $value ) {
-		return bboss_members_sanitize_avatar_type( $value );
-	}
-}
-if ( function_exists( 'bboss_members_sanitize_cover_height' ) && ! function_exists( 'bb_members_sanitize_cover_height' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_members_sanitize_cover_height()}.
-	 *
-	 * @deprecated Use bboss_members_sanitize_cover_height() instead.
-	 */
-	function bb_members_sanitize_cover_height( $value ) {
-		return bboss_members_sanitize_cover_height( $value );
-	}
-}
-if ( function_exists( 'bboss_members_sanitize_cover_width' ) && ! function_exists( 'bb_members_sanitize_cover_width' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_members_sanitize_cover_width()}.
-	 *
-	 * @deprecated Use bboss_members_sanitize_cover_width() instead.
-	 */
-	function bb_members_sanitize_cover_width( $value ) {
-		return bboss_members_sanitize_cover_width( $value );
-	}
-}
-if ( function_exists( 'bboss_members_sanitize_default_avatar_type' ) && ! function_exists( 'bb_members_sanitize_default_avatar_type' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_members_sanitize_default_avatar_type()}.
-	 *
-	 * @deprecated Use bboss_members_sanitize_default_avatar_type() instead.
-	 */
-	function bb_members_sanitize_default_avatar_type( $value ) {
-		return bboss_members_sanitize_default_avatar_type( $value );
-	}
-}
-if ( function_exists( 'bboss_members_sanitize_default_cover_type' ) && ! function_exists( 'bb_members_sanitize_default_cover_type' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_members_sanitize_default_cover_type()}.
-	 *
-	 * @deprecated Use bboss_members_sanitize_default_cover_type() instead.
-	 */
-	function bb_members_sanitize_default_cover_type( $value ) {
-		return bboss_members_sanitize_default_cover_type( $value );
-	}
-}
-if ( function_exists( 'bboss_members_sanitize_default_format' ) && ! function_exists( 'bb_members_sanitize_default_format' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_members_sanitize_default_format()}.
-	 *
-	 * @deprecated Use bboss_members_sanitize_default_format() instead.
-	 */
-	function bb_members_sanitize_default_format( $value ) {
-		return bboss_members_sanitize_default_format( $value );
-	}
-}
-if ( function_exists( 'bboss_members_sanitize_display_name_format' ) && ! function_exists( 'bb_members_sanitize_display_name_format' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_members_sanitize_display_name_format()}.
-	 *
-	 * @deprecated Use bboss_members_sanitize_display_name_format() instead.
-	 */
-	function bb_members_sanitize_display_name_format( $value ) {
-		return bboss_members_sanitize_display_name_format( $value );
-	}
-}
-if ( function_exists( 'bboss_members_sanitize_header_style' ) && ! function_exists( 'bb_members_sanitize_header_style' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_members_sanitize_header_style()}.
-	 *
-	 * @deprecated Use bboss_members_sanitize_header_style() instead.
-	 */
-	function bb_members_sanitize_header_style( $value ) {
-		return bboss_members_sanitize_header_style( $value );
-	}
-}
-if ( function_exists( 'bboss_members_sanitize_layout_format' ) && ! function_exists( 'bb_members_sanitize_layout_format' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_members_sanitize_layout_format()}.
-	 *
-	 * @deprecated Use bboss_members_sanitize_layout_format() instead.
-	 */
-	function bb_members_sanitize_layout_format( $value ) {
-		return bboss_members_sanitize_layout_format( $value );
-	}
-}
-if ( function_exists( 'bboss_members_sanitize_slug_format' ) && ! function_exists( 'bb_members_sanitize_slug_format' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_members_sanitize_slug_format()}.
-	 *
-	 * @deprecated Use bboss_members_sanitize_slug_format() instead.
-	 */
-	function bb_members_sanitize_slug_format( $value ) {
-		return bboss_members_sanitize_slug_format( $value );
-	}
-}
-if ( function_exists( 'bboss_members_sanitize_toggle_list' ) && ! function_exists( 'bb_members_sanitize_toggle_list' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_members_sanitize_toggle_list()}.
-	 *
-	 * @deprecated Use bboss_members_sanitize_toggle_list() instead.
-	 */
-	function bb_members_sanitize_toggle_list( $value ) {
-		return bboss_members_sanitize_toggle_list( $value );
-	}
-}
-if ( function_exists( 'bboss_members_sync_connection_component' ) && ! function_exists( 'bb_members_sync_connection_component' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_members_sync_connection_component()}.
-	 *
-	 * @deprecated Use bboss_members_sync_connection_component() instead.
-	 */
-	function bb_members_sync_connection_component( $feature_id, $settings, $saved ) {
-		return bboss_members_sync_connection_component( $feature_id, $settings, $saved );
-	}
-}
-if ( function_exists( 'bboss_members_sync_reverted_image_values' ) && ! function_exists( 'bb_members_sync_reverted_image_values' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_members_sync_reverted_image_values()}.
-	 *
-	 * @deprecated Use bboss_members_sync_reverted_image_values() instead.
-	 */
-	function bb_members_sync_reverted_image_values( $response_data, $feature_id, $settings, $saved ) {
-		return bboss_members_sync_reverted_image_values( $response_data, $feature_id, $settings, $saved );
-	}
-}
-if ( function_exists( 'bboss_members_validate_image_settings_after_save' ) && ! function_exists( 'bb_members_validate_image_settings_after_save' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_members_validate_image_settings_after_save()}.
-	 *
-	 * @deprecated Use bboss_members_validate_image_settings_after_save() instead.
-	 */
-	function bb_members_validate_image_settings_after_save( $feature_id, $settings, $saved ) {
-		return bboss_members_validate_image_settings_after_save( $feature_id, $settings, $saved );
-	}
-}
 // @bbwt-com-end compat-layer
+
+
+add_filter( 'bb_admin_save_feature_settings_response', 'bb_members_push_profile_types_flag_after_save', 10, 4 );

@@ -35,11 +35,8 @@ function bboss_groups_directory_groups_setup() {
 		bboss_core_load_template( apply_filters( 'groups_template_directory_groups', 'groups/index' ) );
 	}
 }
-add_action( 'bp_screens', 'groups_directory_groups_setup', 2 );
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_groups_directory_groups_setup' ) && ! function_exists( 'groups_directory_groups_setup' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_groups_directory_groups_setup()}.
@@ -51,3 +48,5 @@ if ( function_exists( 'bboss_groups_directory_groups_setup' ) && ! function_exis
 	}
 }
 // @bbwt-com-end compat-layer
+
+add_action( 'bp_screens', 'groups_directory_groups_setup', 2 );

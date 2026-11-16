@@ -16,6 +16,20 @@ defined( 'ABSPATH' ) || exit;
 function bboss_setup_core_email_tokens() {
 	new BBoss_Email_Tokens();
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_setup_core_email_tokens' ) && ! function_exists( 'bp_setup_core_email_tokens' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_setup_core_email_tokens()}.
+	 *
+	 * @deprecated Use bboss_setup_core_email_tokens() instead.
+	 */
+	function bp_setup_core_email_tokens() {
+		return bboss_setup_core_email_tokens();
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'bp_init', 'bp_setup_core_email_tokens', 0 );
 
 /**
@@ -26,6 +40,20 @@ add_action( 'bp_init', 'bp_setup_core_email_tokens', 0 );
 function bboss_email_set_content_type() {
 	return 'text/html';
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_email_set_content_type' ) && ! function_exists( 'bp_email_set_content_type' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_email_set_content_type()}.
+	 *
+	 * @deprecated Use bboss_email_set_content_type() instead.
+	 */
+	function bp_email_set_content_type() {
+		return bboss_email_set_content_type();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output template for email notifications.
@@ -74,6 +102,20 @@ function bboss_email_core_wp_get_template( $content = '', $user = false ) {
 
 	return $output;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_email_core_wp_get_template' ) && ! function_exists( 'bp_email_core_wp_get_template' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_email_core_wp_get_template()}.
+	 *
+	 * @deprecated Use bboss_email_core_wp_get_template() instead.
+	 */
+	function bp_email_core_wp_get_template( $content = '', $user = false ) {
+		return bboss_email_core_wp_get_template( $content, $user );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Function to load the instance of the class BBoss_Email_Queue.
@@ -87,6 +129,20 @@ function bboss_email_queue() {
 		return BBoss_Email_Queue::instance();
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_email_queue' ) && ! function_exists( 'bb_email_queue' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_email_queue()}.
+	 *
+	 * @deprecated Use bboss_email_queue() instead.
+	 */
+	function bb_email_queue() {
+		return bboss_email_queue();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Function to check if bboss_email_queue() and cron enabled
@@ -98,6 +154,20 @@ function bboss_email_queue() {
 function bboss_is_email_queue() {
 	return function_exists( 'bboss_email_queue' ) && class_exists( 'BBoss_BB_Background_Updater' ) && apply_filters( 'bb_is_email_queue', true );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_email_queue' ) && ! function_exists( 'bb_is_email_queue' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_email_queue()}.
+	 *
+	 * @deprecated Use bboss_is_email_queue() instead.
+	 */
+	function bb_is_email_queue() {
+		return bboss_is_email_queue();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Function to used for disabled email queue.
@@ -109,6 +179,20 @@ function bboss_is_email_queue() {
 function bboss_disabled_email_queue() {
 	return false;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_disabled_email_queue' ) && ! function_exists( 'bb_disabled_email_queue' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_disabled_email_queue()}.
+	 *
+	 * @deprecated Use bboss_disabled_email_queue() instead.
+	 */
+	function bb_disabled_email_queue() {
+		return bboss_disabled_email_queue();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Check if there is enough recipients to use batch emails.
@@ -129,6 +213,20 @@ function bboss_email_queue_has_min_count( $recipients ) {
 
 	return $min_recipients;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_email_queue_has_min_count' ) && ! function_exists( 'bb_email_queue_has_min_count' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_email_queue_has_min_count()}.
+	 *
+	 * @deprecated Use bboss_email_queue_has_min_count() instead.
+	 */
+	function bb_email_queue_has_min_count( $recipients ) {
+		return bboss_email_queue_has_min_count( $recipients );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Function to return minimum queue count to chunk large record.
@@ -140,40 +238,8 @@ function bboss_email_queue_has_min_count( $recipients ) {
 function bboss_get_email_queue_min_count() {
 	return (int) apply_filters( 'bb_email_queue_min_count', 20 );
 }
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
-if ( function_exists( 'bboss_disabled_email_queue' ) && ! function_exists( 'bb_disabled_email_queue' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_disabled_email_queue()}.
-	 *
-	 * @deprecated Use bboss_disabled_email_queue() instead.
-	 */
-	function bb_disabled_email_queue() {
-		return bboss_disabled_email_queue();
-	}
-}
-if ( function_exists( 'bboss_email_queue' ) && ! function_exists( 'bb_email_queue' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_email_queue()}.
-	 *
-	 * @deprecated Use bboss_email_queue() instead.
-	 */
-	function bb_email_queue() {
-		return bboss_email_queue();
-	}
-}
-if ( function_exists( 'bboss_email_queue_has_min_count' ) && ! function_exists( 'bb_email_queue_has_min_count' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_email_queue_has_min_count()}.
-	 *
-	 * @deprecated Use bboss_email_queue_has_min_count() instead.
-	 */
-	function bb_email_queue_has_min_count( $recipients ) {
-		return bboss_email_queue_has_min_count( $recipients );
-	}
-}
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_get_email_queue_min_count' ) && ! function_exists( 'bb_get_email_queue_min_count' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_get_email_queue_min_count()}.
@@ -184,44 +250,5 @@ if ( function_exists( 'bboss_get_email_queue_min_count' ) && ! function_exists( 
 		return bboss_get_email_queue_min_count();
 	}
 }
-if ( function_exists( 'bboss_is_email_queue' ) && ! function_exists( 'bb_is_email_queue' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_email_queue()}.
-	 *
-	 * @deprecated Use bboss_is_email_queue() instead.
-	 */
-	function bb_is_email_queue() {
-		return bboss_is_email_queue();
-	}
-}
-if ( function_exists( 'bboss_email_core_wp_get_template' ) && ! function_exists( 'bp_email_core_wp_get_template' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_email_core_wp_get_template()}.
-	 *
-	 * @deprecated Use bboss_email_core_wp_get_template() instead.
-	 */
-	function bp_email_core_wp_get_template( $content = '', $user = false ) {
-		return bboss_email_core_wp_get_template( $content, $user );
-	}
-}
-if ( function_exists( 'bboss_email_set_content_type' ) && ! function_exists( 'bp_email_set_content_type' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_email_set_content_type()}.
-	 *
-	 * @deprecated Use bboss_email_set_content_type() instead.
-	 */
-	function bp_email_set_content_type() {
-		return bboss_email_set_content_type();
-	}
-}
-if ( function_exists( 'bboss_setup_core_email_tokens' ) && ! function_exists( 'bp_setup_core_email_tokens' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_setup_core_email_tokens()}.
-	 *
-	 * @deprecated Use bboss_setup_core_email_tokens() instead.
-	 */
-	function bp_setup_core_email_tokens() {
-		return bboss_setup_core_email_tokens();
-	}
-}
 // @bbwt-com-end compat-layer
+

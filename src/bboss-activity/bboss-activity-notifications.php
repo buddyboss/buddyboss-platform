@@ -190,6 +190,20 @@ function bboss_activity_format_notifications( $action, $item_id, $secondary_item
 
 	return $return;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_activity_format_notifications' ) && ! function_exists( 'bp_activity_format_notifications' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_activity_format_notifications()}.
+	 *
+	 * @deprecated Use bboss_activity_format_notifications() instead.
+	 */
+	function bp_activity_format_notifications( $action, $item_id, $secondary_item_id, $total_items, $format = 'string', $id = 0, $screen = 'web' ) {
+		return bboss_activity_format_notifications( $action, $item_id, $secondary_item_id, $total_items, $format, $id, $screen );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Notify a member when their nicename is mentioned in an activity feed item.
@@ -234,6 +248,20 @@ function bboss_activity_at_mention_add_notification( $activity, $subject, $messa
 	remove_action( 'bp_notification_after_save', 'bb_activity_add_notification_metas', 5 );
 
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_activity_at_mention_add_notification' ) && ! function_exists( 'bp_activity_at_mention_add_notification' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_activity_at_mention_add_notification()}.
+	 *
+	 * @deprecated Use bboss_activity_at_mention_add_notification() instead.
+	 */
+	function bp_activity_at_mention_add_notification( $activity, $subject, $message, $content, $receiver_user_id ) {
+		return bboss_activity_at_mention_add_notification( $activity, $subject, $message, $content, $receiver_user_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'bp_activity_sent_mention_email', 'bp_activity_at_mention_add_notification', 10, 5 );
 
 /**
@@ -303,6 +331,20 @@ function bboss_activity_update_reply_add_notification( $activity, $comment_id, $
 	remove_action( 'bp_notification_after_save', 'bb_activity_add_notification_metas', 5 );
 
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_activity_update_reply_add_notification' ) && ! function_exists( 'bp_activity_update_reply_add_notification' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_activity_update_reply_add_notification()}.
+	 *
+	 * @deprecated Use bboss_activity_update_reply_add_notification() instead.
+	 */
+	function bp_activity_update_reply_add_notification( $activity, $comment_id, $commenter_id, $params ) {
+		return bboss_activity_update_reply_add_notification( $activity, $comment_id, $commenter_id, $params );
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'bp_activity_sent_reply_to_update_notification', 'bp_activity_update_reply_add_notification', 10, 4 );
 
 /**
@@ -373,6 +415,20 @@ function bboss_activity_comment_reply_add_notification( $activity_comment, $comm
 	remove_action( 'bp_notification_after_save', 'bb_notification_after_save_meta', 5, 1 );
 	remove_action( 'bp_notification_after_save', 'bb_activity_add_notification_metas', 5 );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_activity_comment_reply_add_notification' ) && ! function_exists( 'bp_activity_comment_reply_add_notification' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_activity_comment_reply_add_notification()}.
+	 *
+	 * @deprecated Use bboss_activity_comment_reply_add_notification() instead.
+	 */
+	function bp_activity_comment_reply_add_notification( $activity_comment, $comment_id, $commenter_id, $params ) {
+		return bboss_activity_comment_reply_add_notification( $activity_comment, $comment_id, $commenter_id, $params );
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'bp_activity_sent_reply_to_reply_notification', 'bp_activity_comment_reply_add_notification', 10, 4 );
 
 /**
@@ -391,6 +447,20 @@ function bboss_activity_remove_screen_notifications( $user_id = 0 ) {
 
 	bboss_notifications_mark_notifications_by_type( $user_id, bboss()->activity->id, 'new_at_mention' );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_activity_remove_screen_notifications' ) && ! function_exists( 'bp_activity_remove_screen_notifications' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_activity_remove_screen_notifications()}.
+	 *
+	 * @deprecated Use bboss_activity_remove_screen_notifications() instead.
+	 */
+	function bp_activity_remove_screen_notifications( $user_id = 0 ) {
+		return bboss_activity_remove_screen_notifications( $user_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'bp_activity_clear_new_mentions', 'bp_activity_remove_screen_notifications', 10, 1 );
 
 /**
@@ -434,6 +504,20 @@ function bboss_activity_remove_screen_notifications_single_activity_permalink( $
 		);
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_activity_remove_screen_notifications_single_activity_permalink' ) && ! function_exists( 'bp_activity_remove_screen_notifications_single_activity_permalink' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_activity_remove_screen_notifications_single_activity_permalink()}.
+	 *
+	 * @deprecated Use bboss_activity_remove_screen_notifications_single_activity_permalink() instead.
+	 */
+	function bp_activity_remove_screen_notifications_single_activity_permalink( $activity ) {
+		return bboss_activity_remove_screen_notifications_single_activity_permalink( $activity );
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'bp_activity_screen_single_activity_permalink', 'bp_activity_remove_screen_notifications_single_activity_permalink' );
 
 /**
@@ -460,6 +544,20 @@ function bboss_activity_remove_screen_notifications_for_non_mentions() {
 		)
 	);
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_activity_remove_screen_notifications_for_non_mentions' ) && ! function_exists( 'bp_activity_remove_screen_notifications_for_non_mentions' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_activity_remove_screen_notifications_for_non_mentions()}.
+	 *
+	 * @deprecated Use bboss_activity_remove_screen_notifications_for_non_mentions() instead.
+	 */
+	function bp_activity_remove_screen_notifications_for_non_mentions() {
+		return bboss_activity_remove_screen_notifications_for_non_mentions();
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'bp_screens', 'bp_activity_remove_screen_notifications_for_non_mentions' );
 
 /**
@@ -481,6 +579,20 @@ function bboss_activity_at_mention_delete_notification( $activity_ids_deleted = 
 		}
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_activity_at_mention_delete_notification' ) && ! function_exists( 'bp_activity_at_mention_delete_notification' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_activity_at_mention_delete_notification()}.
+	 *
+	 * @deprecated Use bboss_activity_at_mention_delete_notification() instead.
+	 */
+	function bp_activity_at_mention_delete_notification( $activity_ids_deleted = array() ) {
+		return bboss_activity_at_mention_delete_notification( $activity_ids_deleted );
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'bp_activity_deleted_activities', 'bp_activity_at_mention_delete_notification', 10 );
 
 /**
@@ -560,6 +672,20 @@ function bboss_activity_add_notification_for_synced_blog_comment( $activity_id, 
 		}
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_activity_add_notification_for_synced_blog_comment' ) && ! function_exists( 'bp_activity_add_notification_for_synced_blog_comment' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_activity_add_notification_for_synced_blog_comment()}.
+	 *
+	 * @deprecated Use bboss_activity_add_notification_for_synced_blog_comment() instead.
+	 */
+	function bp_activity_add_notification_for_synced_blog_comment( $activity_id, $post_type_comment, $activity_args, $activity_post_object ) {
+		return bboss_activity_add_notification_for_synced_blog_comment( $activity_id, $post_type_comment, $activity_args, $activity_post_object );
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'bp_blogs_comment_sync_activity_comment', 'bp_activity_add_notification_for_synced_blog_comment', 20, 4 );
 
 /**
@@ -649,6 +775,20 @@ function bboss_activity_remove_screen_notifications_single_post() {
 		}
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_activity_remove_screen_notifications_single_post' ) && ! function_exists( 'bp_activity_remove_screen_notifications_single_post' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_activity_remove_screen_notifications_single_post()}.
+	 *
+	 * @deprecated Use bboss_activity_remove_screen_notifications_single_post() instead.
+	 */
+	function bp_activity_remove_screen_notifications_single_post() {
+		return bboss_activity_remove_screen_notifications_single_post();
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'template_redirect', 'bp_activity_remove_screen_notifications_single_post' );
 
 /**
@@ -696,6 +836,20 @@ function bboss_activity_add_notification_metas( $notification ) {
 		bboss_notifications_update_meta( $notification->id, 'type', 'activity_post' );
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_activity_add_notification_metas' ) && ! function_exists( 'bb_activity_add_notification_metas' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_activity_add_notification_metas()}.
+	 *
+	 * @deprecated Use bboss_activity_add_notification_metas() instead.
+	 */
+	function bb_activity_add_notification_metas( $notification ) {
+		return bboss_activity_add_notification_metas( $notification );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Function will remove follow notification when a member withdraws their following.
@@ -718,21 +872,8 @@ function bboss_activity_follow_withdraw_notifications( $follower ) {
 		$follower->follower_id // Current user id.
 	);
 }
-add_action( 'bp_stop_following', 'bb_activity_follow_withdraw_notifications', 10, 1 );
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
-if ( function_exists( 'bboss_activity_add_notification_metas' ) && ! function_exists( 'bb_activity_add_notification_metas' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_activity_add_notification_metas()}.
-	 *
-	 * @deprecated Use bboss_activity_add_notification_metas() instead.
-	 */
-	function bb_activity_add_notification_metas( $notification ) {
-		return bboss_activity_add_notification_metas( $notification );
-	}
-}
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_activity_follow_withdraw_notifications' ) && ! function_exists( 'bb_activity_follow_withdraw_notifications' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_activity_follow_withdraw_notifications()}.
@@ -743,104 +884,6 @@ if ( function_exists( 'bboss_activity_follow_withdraw_notifications' ) && ! func
 		return bboss_activity_follow_withdraw_notifications( $follower );
 	}
 }
-if ( function_exists( 'bboss_activity_add_notification_for_synced_blog_comment' ) && ! function_exists( 'bp_activity_add_notification_for_synced_blog_comment' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_activity_add_notification_for_synced_blog_comment()}.
-	 *
-	 * @deprecated Use bboss_activity_add_notification_for_synced_blog_comment() instead.
-	 */
-	function bp_activity_add_notification_for_synced_blog_comment( $activity_id, $post_type_comment, $activity_args, $activity_post_object ) {
-		return bboss_activity_add_notification_for_synced_blog_comment( $activity_id, $post_type_comment, $activity_args, $activity_post_object );
-	}
-}
-if ( function_exists( 'bboss_activity_at_mention_add_notification' ) && ! function_exists( 'bp_activity_at_mention_add_notification' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_activity_at_mention_add_notification()}.
-	 *
-	 * @deprecated Use bboss_activity_at_mention_add_notification() instead.
-	 */
-	function bp_activity_at_mention_add_notification( $activity, $subject, $message, $content, $receiver_user_id ) {
-		return bboss_activity_at_mention_add_notification( $activity, $subject, $message, $content, $receiver_user_id );
-	}
-}
-if ( function_exists( 'bboss_activity_at_mention_delete_notification' ) && ! function_exists( 'bp_activity_at_mention_delete_notification' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_activity_at_mention_delete_notification()}.
-	 *
-	 * @deprecated Use bboss_activity_at_mention_delete_notification() instead.
-	 */
-	function bp_activity_at_mention_delete_notification( $activity_ids_deleted = array() ) {
-		return bboss_activity_at_mention_delete_notification( $activity_ids_deleted );
-	}
-}
-if ( function_exists( 'bboss_activity_comment_reply_add_notification' ) && ! function_exists( 'bp_activity_comment_reply_add_notification' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_activity_comment_reply_add_notification()}.
-	 *
-	 * @deprecated Use bboss_activity_comment_reply_add_notification() instead.
-	 */
-	function bp_activity_comment_reply_add_notification( $activity_comment, $comment_id, $commenter_id, $params ) {
-		return bboss_activity_comment_reply_add_notification( $activity_comment, $comment_id, $commenter_id, $params );
-	}
-}
-if ( function_exists( 'bboss_activity_format_notifications' ) && ! function_exists( 'bp_activity_format_notifications' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_activity_format_notifications()}.
-	 *
-	 * @deprecated Use bboss_activity_format_notifications() instead.
-	 */
-	function bp_activity_format_notifications( $action, $item_id, $secondary_item_id, $total_items, $format = 'string', $id = 0, $screen = 'web' ) {
-		return bboss_activity_format_notifications( $action, $item_id, $secondary_item_id, $total_items, $format, $id, $screen );
-	}
-}
-if ( function_exists( 'bboss_activity_remove_screen_notifications' ) && ! function_exists( 'bp_activity_remove_screen_notifications' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_activity_remove_screen_notifications()}.
-	 *
-	 * @deprecated Use bboss_activity_remove_screen_notifications() instead.
-	 */
-	function bp_activity_remove_screen_notifications( $user_id = 0 ) {
-		return bboss_activity_remove_screen_notifications( $user_id );
-	}
-}
-if ( function_exists( 'bboss_activity_remove_screen_notifications_for_non_mentions' ) && ! function_exists( 'bp_activity_remove_screen_notifications_for_non_mentions' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_activity_remove_screen_notifications_for_non_mentions()}.
-	 *
-	 * @deprecated Use bboss_activity_remove_screen_notifications_for_non_mentions() instead.
-	 */
-	function bp_activity_remove_screen_notifications_for_non_mentions() {
-		return bboss_activity_remove_screen_notifications_for_non_mentions();
-	}
-}
-if ( function_exists( 'bboss_activity_remove_screen_notifications_single_activity_permalink' ) && ! function_exists( 'bp_activity_remove_screen_notifications_single_activity_permalink' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_activity_remove_screen_notifications_single_activity_permalink()}.
-	 *
-	 * @deprecated Use bboss_activity_remove_screen_notifications_single_activity_permalink() instead.
-	 */
-	function bp_activity_remove_screen_notifications_single_activity_permalink( $activity ) {
-		return bboss_activity_remove_screen_notifications_single_activity_permalink( $activity );
-	}
-}
-if ( function_exists( 'bboss_activity_remove_screen_notifications_single_post' ) && ! function_exists( 'bp_activity_remove_screen_notifications_single_post' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_activity_remove_screen_notifications_single_post()}.
-	 *
-	 * @deprecated Use bboss_activity_remove_screen_notifications_single_post() instead.
-	 */
-	function bp_activity_remove_screen_notifications_single_post() {
-		return bboss_activity_remove_screen_notifications_single_post();
-	}
-}
-if ( function_exists( 'bboss_activity_update_reply_add_notification' ) && ! function_exists( 'bp_activity_update_reply_add_notification' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_activity_update_reply_add_notification()}.
-	 *
-	 * @deprecated Use bboss_activity_update_reply_add_notification() instead.
-	 */
-	function bp_activity_update_reply_add_notification( $activity, $comment_id, $commenter_id, $params ) {
-		return bboss_activity_update_reply_add_notification( $activity, $comment_id, $commenter_id, $params );
-	}
-}
 // @bbwt-com-end compat-layer
+
+add_action( 'bp_stop_following', 'bb_activity_follow_withdraw_notifications', 10, 1 );

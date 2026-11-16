@@ -37,6 +37,20 @@ function bboss_moderation_add_admin_menu() {
 		$settings_url,
 	);
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_moderation_add_admin_menu' ) && ! function_exists( 'bp_moderation_add_admin_menu' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_moderation_add_admin_menu()}.
+	 *
+	 * @deprecated Use bboss_moderation_add_admin_menu() instead.
+	 */
+	function bp_moderation_add_admin_menu() {
+		return bboss_moderation_add_admin_menu();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 add_action( bboss_core_admin_hook(), 'bp_moderation_add_admin_menu', 100 );
 
@@ -58,6 +72,20 @@ function bboss_moderation_admin_menu_order( $custom_menus = array() ) {
 
 	return $custom_menus;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_moderation_admin_menu_order' ) && ! function_exists( 'bp_moderation_admin_menu_order' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_moderation_admin_menu_order()}.
+	 *
+	 * @deprecated Use bboss_moderation_admin_menu_order() instead.
+	 */
+	function bp_moderation_admin_menu_order( $custom_menus = array() ) {
+		return bboss_moderation_admin_menu_order( $custom_menus );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 add_filter( 'bp_admin_menu_order', 'bp_moderation_admin_menu_order' );
 
@@ -151,32 +179,8 @@ JS;
 		echo '<script>' . $inline_js . '</script>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static JS literal. WordPress < 5.7 only.
 	}
 }
-
-add_action( 'admin_head', 'bp_moderation_highlight_admin_menu' );
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
-if ( function_exists( 'bboss_moderation_add_admin_menu' ) && ! function_exists( 'bp_moderation_add_admin_menu' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_moderation_add_admin_menu()}.
-	 *
-	 * @deprecated Use bboss_moderation_add_admin_menu() instead.
-	 */
-	function bp_moderation_add_admin_menu() {
-		return bboss_moderation_add_admin_menu();
-	}
-}
-if ( function_exists( 'bboss_moderation_admin_menu_order' ) && ! function_exists( 'bp_moderation_admin_menu_order' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_moderation_admin_menu_order()}.
-	 *
-	 * @deprecated Use bboss_moderation_admin_menu_order() instead.
-	 */
-	function bp_moderation_admin_menu_order( $custom_menus = array() ) {
-		return bboss_moderation_admin_menu_order( $custom_menus );
-	}
-}
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_moderation_highlight_admin_menu' ) && ! function_exists( 'bp_moderation_highlight_admin_menu' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_moderation_highlight_admin_menu()}.
@@ -188,3 +192,6 @@ if ( function_exists( 'bboss_moderation_highlight_admin_menu' ) && ! function_ex
 	}
 }
 // @bbwt-com-end compat-layer
+
+
+add_action( 'admin_head', 'bp_moderation_highlight_admin_menu' );

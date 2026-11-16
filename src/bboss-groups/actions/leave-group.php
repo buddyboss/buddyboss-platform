@@ -60,6 +60,20 @@ function bboss_groups_action_leave_group() {
 	/** This filter is documented in bboss-groups/bp-groups-actions.php */
 	bboss_core_load_template( apply_filters( 'groups_template_group_home', 'groups/single/home' ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_groups_action_leave_group' ) && ! function_exists( 'groups_action_leave_group' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_groups_action_leave_group()}.
+	 *
+	 * @deprecated Use bboss_groups_action_leave_group() instead.
+	 */
+	function groups_action_leave_group() {
+		return bboss_groups_action_leave_group();
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'bp_actions', 'groups_action_leave_group' );
 
 /**
@@ -92,11 +106,8 @@ function bboss_groups_action_clean_up_invites_requests( $user_id, $group_id ) {
 		}
 	}
 }
-add_action( 'bp_groups_member_after_delete', 'groups_action_clean_up_invites_requests', 10, 2 );
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_groups_action_clean_up_invites_requests' ) && ! function_exists( 'groups_action_clean_up_invites_requests' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_groups_action_clean_up_invites_requests()}.
@@ -107,14 +118,6 @@ if ( function_exists( 'bboss_groups_action_clean_up_invites_requests' ) && ! fun
 		return bboss_groups_action_clean_up_invites_requests( $user_id, $group_id );
 	}
 }
-if ( function_exists( 'bboss_groups_action_leave_group' ) && ! function_exists( 'groups_action_leave_group' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_groups_action_leave_group()}.
-	 *
-	 * @deprecated Use bboss_groups_action_leave_group() instead.
-	 */
-	function groups_action_leave_group() {
-		return bboss_groups_action_leave_group();
-	}
-}
 // @bbwt-com-end compat-layer
+
+add_action( 'bp_groups_member_after_delete', 'groups_action_clean_up_invites_requests', 10, 2 );

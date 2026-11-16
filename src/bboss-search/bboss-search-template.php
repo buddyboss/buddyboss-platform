@@ -44,6 +44,20 @@ function bboss_search_search_page_content( $content ) {
 
 	return $content;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_search_search_page_content' ) && ! function_exists( 'bp_search_search_page_content' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_search_search_page_content()}.
+	 *
+	 * @deprecated Use bboss_search_search_page_content() instead.
+	 */
+	function bp_search_search_page_content( $content ) {
+		return bboss_search_search_page_content( $content );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 add_action( 'wp_loaded', function () {
 	if ( ! is_admin() && isset( $_REQUEST['bp_search'] ) ) {
@@ -65,6 +79,20 @@ function bboss_search_load_template( $template, $variation = false ) {
 
 	bboss_get_template_part( 'search/' . $file );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_search_load_template' ) && ! function_exists( 'bp_search_load_template' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_search_load_template()}.
+	 *
+	 * @deprecated Use bboss_search_load_template() instead.
+	 */
+	function bp_search_load_template( $template, $variation = false ) {
+		return bboss_search_load_template( $template, $variation );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * BuddyBoss Search page content.
@@ -85,6 +113,20 @@ function bboss_search_buffer_template_part( $template, $variation = '', $echo = 
 		return $output;
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_search_buffer_template_part' ) && ! function_exists( 'bp_search_buffer_template_part' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_search_buffer_template_part()}.
+	 *
+	 * @deprecated Use bboss_search_buffer_template_part() instead.
+	 */
+	function bp_search_buffer_template_part( $template, $variation = '', $echo = true ) {
+		return bboss_search_buffer_template_part( $template, $variation, $echo );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output BuddyBoss Search subnavigation tabs.
@@ -94,6 +136,20 @@ function bboss_search_buffer_template_part( $template, $variation = '', $echo = 
 function bboss_search_filters() {
 	BBoss_Search::instance()->print_tabs();
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_search_filters' ) && ! function_exists( 'bp_search_filters' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_search_filters()}.
+	 *
+	 * @deprecated Use bboss_search_filters() instead.
+	 */
+	function bp_search_filters() {
+		return bboss_search_filters();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output BuddyBoss Search results for current subnavigation selection.
@@ -103,6 +159,20 @@ function bboss_search_filters() {
 function bboss_search_results() {
 	BBoss_Search::instance()->print_results();
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_search_results' ) && ! function_exists( 'bp_search_results' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_search_results()}.
+	 *
+	 * @deprecated Use bboss_search_results() instead.
+	 */
+	function bp_search_results() {
+		return bboss_search_results();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Filters the array of queried block templates array after they've been fetched.
@@ -160,6 +230,20 @@ function bboss_search_set_block_template_content( $query_result, $query, $templa
 
 	return $query_result;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_search_set_block_template_content' ) && ! function_exists( 'bb_search_set_block_template_content' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_search_set_block_template_content()}.
+	 *
+	 * @deprecated Use bboss_search_set_block_template_content() instead.
+	 */
+	function bb_search_set_block_template_content( $query_result, $query, $template_type ) {
+		return bboss_search_set_block_template_content( $query_result, $query, $template_type );
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_filter( 'get_block_templates', 'bb_search_set_block_template_content', 10, 3 );
 
 /**
@@ -201,12 +285,8 @@ function bboss_search_posts_search( $search, $wp_query ) {
 
 	return $search;
 }
-
-add_filter( 'posts_search', 'bb_search_posts_search', 10, 2 );
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_search_posts_search' ) && ! function_exists( 'bb_search_posts_search' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_search_posts_search()}.
@@ -217,64 +297,7 @@ if ( function_exists( 'bboss_search_posts_search' ) && ! function_exists( 'bb_se
 		return bboss_search_posts_search( $search, $wp_query );
 	}
 }
-if ( function_exists( 'bboss_search_set_block_template_content' ) && ! function_exists( 'bb_search_set_block_template_content' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_search_set_block_template_content()}.
-	 *
-	 * @deprecated Use bboss_search_set_block_template_content() instead.
-	 */
-	function bb_search_set_block_template_content( $query_result, $query, $template_type ) {
-		return bboss_search_set_block_template_content( $query_result, $query, $template_type );
-	}
-}
-if ( function_exists( 'bboss_search_buffer_template_part' ) && ! function_exists( 'bp_search_buffer_template_part' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_search_buffer_template_part()}.
-	 *
-	 * @deprecated Use bboss_search_buffer_template_part() instead.
-	 */
-	function bp_search_buffer_template_part( $template, $variation = '', $echo = true ) {
-		return bboss_search_buffer_template_part( $template, $variation, $echo );
-	}
-}
-if ( function_exists( 'bboss_search_filters' ) && ! function_exists( 'bp_search_filters' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_search_filters()}.
-	 *
-	 * @deprecated Use bboss_search_filters() instead.
-	 */
-	function bp_search_filters() {
-		return bboss_search_filters();
-	}
-}
-if ( function_exists( 'bboss_search_load_template' ) && ! function_exists( 'bp_search_load_template' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_search_load_template()}.
-	 *
-	 * @deprecated Use bboss_search_load_template() instead.
-	 */
-	function bp_search_load_template( $template, $variation = false ) {
-		return bboss_search_load_template( $template, $variation );
-	}
-}
-if ( function_exists( 'bboss_search_results' ) && ! function_exists( 'bp_search_results' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_search_results()}.
-	 *
-	 * @deprecated Use bboss_search_results() instead.
-	 */
-	function bp_search_results() {
-		return bboss_search_results();
-	}
-}
-if ( function_exists( 'bboss_search_search_page_content' ) && ! function_exists( 'bp_search_search_page_content' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_search_search_page_content()}.
-	 *
-	 * @deprecated Use bboss_search_search_page_content() instead.
-	 */
-	function bp_search_search_page_content( $content ) {
-		return bboss_search_search_page_content( $content );
-	}
-}
 // @bbwt-com-end compat-layer
+
+
+add_filter( 'posts_search', 'bb_search_posts_search', 10, 2 );

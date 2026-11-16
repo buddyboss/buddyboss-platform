@@ -45,6 +45,20 @@ function bboss_xprofile_add_admin_menu() {
 		$settings_url,
 	);
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_xprofile_add_admin_menu' ) && ! function_exists( 'xprofile_add_admin_menu' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_xprofile_add_admin_menu()}.
+	 *
+	 * @deprecated Use bboss_xprofile_add_admin_menu() instead.
+	 */
+	function xprofile_add_admin_menu() {
+		return bboss_xprofile_add_admin_menu();
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( bboss_core_admin_hook(), 'xprofile_add_admin_menu' );
 
 // Load the xprofile user admin.
@@ -62,6 +76,20 @@ function bboss_xprofile_before_save_xprofile_group_details( $xprofile ) {
 	$is_repeater_enabled = BBoss_XProfile_Group::get_group_meta( $xprofile->id, 'is_repeater_enabled' );
 	bboss_update_option( 'xprofile_group_' . $xprofile->id, $is_repeater_enabled );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_xprofile_before_save_xprofile_group_details' ) && ! function_exists( 'bb_xprofile_before_save_xprofile_group_details' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_xprofile_before_save_xprofile_group_details()}.
+	 *
+	 * @deprecated Use bboss_xprofile_before_save_xprofile_group_details() instead.
+	 */
+	function bb_xprofile_before_save_xprofile_group_details( $xprofile ) {
+		return bboss_xprofile_before_save_xprofile_group_details( $xprofile );
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'xprofile_group_before_save', 'bb_xprofile_before_save_xprofile_group_details', 11, 1 );
 
 /**
@@ -128,6 +156,20 @@ function bboss_xprofile_migrate_simple_to_repeater_fields_data( $xprofile ) {
 	// Delete the option.
 	bboss_delete_option( 'xprofile_group_' . $xprofile->id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_xprofile_migrate_simple_to_repeater_fields_data' ) && ! function_exists( 'bb_xprofile_migrate_simple_to_repeater_fields_data' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_xprofile_migrate_simple_to_repeater_fields_data()}.
+	 *
+	 * @deprecated Use bboss_xprofile_migrate_simple_to_repeater_fields_data() instead.
+	 */
+	function bb_xprofile_migrate_simple_to_repeater_fields_data( $xprofile ) {
+		return bboss_xprofile_migrate_simple_to_repeater_fields_data( $xprofile );
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'xprofile_group_after_save', 'bb_xprofile_migrate_simple_to_repeater_fields_data', 11, 1 );
 
 /**
@@ -154,20 +196,8 @@ function bboss_xprofile_mapping_simple_to_repeater_fields_data( $user_ids, $grou
 		}
 	}
 }
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
-if ( function_exists( 'bboss_xprofile_before_save_xprofile_group_details' ) && ! function_exists( 'bb_xprofile_before_save_xprofile_group_details' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_xprofile_before_save_xprofile_group_details()}.
-	 *
-	 * @deprecated Use bboss_xprofile_before_save_xprofile_group_details() instead.
-	 */
-	function bb_xprofile_before_save_xprofile_group_details( $xprofile ) {
-		return bboss_xprofile_before_save_xprofile_group_details( $xprofile );
-	}
-}
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_xprofile_mapping_simple_to_repeater_fields_data' ) && ! function_exists( 'bb_xprofile_mapping_simple_to_repeater_fields_data' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_xprofile_mapping_simple_to_repeater_fields_data()}.
@@ -178,24 +208,5 @@ if ( function_exists( 'bboss_xprofile_mapping_simple_to_repeater_fields_data' ) 
 		return bboss_xprofile_mapping_simple_to_repeater_fields_data( $user_ids, $group_id );
 	}
 }
-if ( function_exists( 'bboss_xprofile_migrate_simple_to_repeater_fields_data' ) && ! function_exists( 'bb_xprofile_migrate_simple_to_repeater_fields_data' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_xprofile_migrate_simple_to_repeater_fields_data()}.
-	 *
-	 * @deprecated Use bboss_xprofile_migrate_simple_to_repeater_fields_data() instead.
-	 */
-	function bb_xprofile_migrate_simple_to_repeater_fields_data( $xprofile ) {
-		return bboss_xprofile_migrate_simple_to_repeater_fields_data( $xprofile );
-	}
-}
-if ( function_exists( 'bboss_xprofile_add_admin_menu' ) && ! function_exists( 'xprofile_add_admin_menu' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_xprofile_add_admin_menu()}.
-	 *
-	 * @deprecated Use bboss_xprofile_add_admin_menu() instead.
-	 */
-	function xprofile_add_admin_menu() {
-		return bboss_xprofile_add_admin_menu();
-	}
-}
 // @bbwt-com-end compat-layer
+

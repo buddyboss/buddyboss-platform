@@ -30,6 +30,20 @@ function bboss_activity_setup_akismet() {
 	// Instantiate Akismet for BuddyPress.
 	bboss()->activity->akismet = new BBoss_Akismet();
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_activity_setup_akismet' ) && ! function_exists( 'bp_activity_setup_akismet' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_activity_setup_akismet()}.
+	 *
+	 * @deprecated Use bboss_activity_setup_akismet() instead.
+	 */
+	function bp_activity_setup_akismet() {
+		return bboss_activity_setup_akismet();
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'bp_activity_setup_globals', 'bp_activity_setup_akismet' );
 
 /**
@@ -69,11 +83,8 @@ function bboss_activity_akismet_delete_old_metadata() {
 		}
 	}
 }
-add_action( 'bp_activity_akismet_delete_old_metadata', 'bp_activity_akismet_delete_old_metadata' );
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_activity_akismet_delete_old_metadata' ) && ! function_exists( 'bp_activity_akismet_delete_old_metadata' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_activity_akismet_delete_old_metadata()}.
@@ -84,14 +95,6 @@ if ( function_exists( 'bboss_activity_akismet_delete_old_metadata' ) && ! functi
 		return bboss_activity_akismet_delete_old_metadata();
 	}
 }
-if ( function_exists( 'bboss_activity_setup_akismet' ) && ! function_exists( 'bp_activity_setup_akismet' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_activity_setup_akismet()}.
-	 *
-	 * @deprecated Use bboss_activity_setup_akismet() instead.
-	 */
-	function bp_activity_setup_akismet() {
-		return bboss_activity_setup_akismet();
-	}
-}
 // @bbwt-com-end compat-layer
+
+add_action( 'bp_activity_akismet_delete_old_metadata', 'bp_activity_akismet_delete_old_metadata' );

@@ -21,6 +21,20 @@ defined( 'ABSPATH' ) || exit;
 function bboss_bbp_topic_post_type() {
 	echo esc_attr( bboss_bbp_get_topic_post_type() );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_topic_post_type' ) && ! function_exists( 'bbp_topic_post_type' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_topic_post_type()}.
+	 *
+	 * @deprecated Use bboss_bbp_topic_post_type() instead.
+	 */
+	function bbp_topic_post_type() {
+		return bboss_bbp_topic_post_type();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return the unique id of the custom post type for topics
@@ -34,6 +48,20 @@ function bboss_bbp_topic_post_type() {
 function bboss_bbp_get_topic_post_type() {
 	return apply_filters( 'bbp_get_topic_post_type', bboss_forums()->topic_post_type );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_topic_post_type' ) && ! function_exists( 'bbp_get_topic_post_type' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_topic_post_type()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_topic_post_type() instead.
+	 */
+	function bbp_get_topic_post_type() {
+		return bboss_bbp_get_topic_post_type();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return array of labels used by the topic post type
@@ -64,6 +92,20 @@ function bboss_bbp_get_topic_post_type_labels() {
 		)
 	);
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_topic_post_type_labels' ) && ! function_exists( 'bbp_get_topic_post_type_labels' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_topic_post_type_labels()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_topic_post_type_labels() instead.
+	 */
+	function bbp_get_topic_post_type_labels() {
+		return bboss_bbp_get_topic_post_type_labels();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return array of topic post type rewrite settings
@@ -81,6 +123,20 @@ function bboss_bbp_get_topic_post_type_rewrite() {
 		)
 	);
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_topic_post_type_rewrite' ) && ! function_exists( 'bbp_get_topic_post_type_rewrite' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_topic_post_type_rewrite()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_topic_post_type_rewrite() instead.
+	 */
+	function bbp_get_topic_post_type_rewrite() {
+		return bboss_bbp_get_topic_post_type_rewrite();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return array of features the topic post type supports
@@ -99,6 +155,20 @@ function bboss_bbp_get_topic_post_type_supports() {
 		)
 	);
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_topic_post_type_supports' ) && ! function_exists( 'bbp_get_topic_post_type_supports' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_topic_post_type_supports()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_topic_post_type_supports() instead.
+	 */
+	function bbp_get_topic_post_type_supports() {
+		return bboss_bbp_get_topic_post_type_supports();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return the base URL used inside of pagination links
@@ -185,6 +255,20 @@ function bboss_bbp_get_topics_pagination_base( $forum_id = 0 ) {
 	// Filter & return.
 	return apply_filters( 'bbp_get_topics_pagination_base', $base, $forum_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_topics_pagination_base' ) && ! function_exists( 'bbp_get_topics_pagination_base' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_topics_pagination_base()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_topics_pagination_base() instead.
+	 */
+	function bbp_get_topics_pagination_base( $forum_id = 0 ) {
+		return bboss_bbp_get_topics_pagination_base( $forum_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * The plugin version of Forums comes with two topic display options:
@@ -206,6 +290,20 @@ function bboss_bbp_show_lead_topic( $show_lead = true ) {
 
 	return (bool) apply_filters( 'bbp_show_lead_topic', (bool) $show_lead );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_show_lead_topic' ) && ! function_exists( 'bbp_show_lead_topic' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_show_lead_topic()}.
+	 *
+	 * @deprecated Use bboss_bbp_show_lead_topic() instead.
+	 */
+	function bbp_show_lead_topic( $show_lead = true ) {
+		return bboss_bbp_show_lead_topic( $show_lead );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /** Topic Loop ****************************************************************/
 
@@ -358,6 +456,20 @@ function bboss_bbp_has_topics( $args = '' ) {
 	// Return object.
 	return apply_filters( 'bbp_has_topics', $bbp->topic_query->have_posts(), $bbp->topic_query );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_has_topics' ) && ! function_exists( 'bbp_has_topics' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_has_topics()}.
+	 *
+	 * @deprecated Use bboss_bbp_has_topics() instead.
+	 */
+	function bbp_has_topics( $args = '' ) {
+		return bboss_bbp_has_topics( $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Whether there are more topics available in the loop
@@ -379,6 +491,20 @@ function bboss_bbp_topics() {
 
 	return $have_posts;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_topics' ) && ! function_exists( 'bbp_topics' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_topics()}.
+	 *
+	 * @deprecated Use bboss_bbp_topics() instead.
+	 */
+	function bbp_topics() {
+		return bboss_bbp_topics();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Loads up the current topic in the loop
@@ -391,6 +517,20 @@ function bboss_bbp_topics() {
 function bboss_bbp_the_topic() {
 	return bboss_forums()->topic_query->the_post();
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_the_topic' ) && ! function_exists( 'bbp_the_topic' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_the_topic()}.
+	 *
+	 * @deprecated Use bboss_bbp_the_topic() instead.
+	 */
+	function bbp_the_topic() {
+		return bboss_bbp_the_topic();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Add sticky topics to a topics query object
@@ -526,6 +666,20 @@ function bboss_bbp_add_sticky_topics( &$query, $args = array() ) {
 	// Update queried posts.
 	$query->posts = array_merge( $sticky_topics, array_values( $query->posts ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_add_sticky_topics' ) && ! function_exists( 'bbp_add_sticky_topics' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_add_sticky_topics()}.
+	 *
+	 * @deprecated Use bboss_bbp_add_sticky_topics() instead.
+	 */
+	function bbp_add_sticky_topics( &$query, $args = array() ) {
+		return bboss_bbp_add_sticky_topics( ...func_get_args() );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output the topic id
@@ -537,6 +691,20 @@ function bboss_bbp_add_sticky_topics( &$query, $args = array() ) {
 function bboss_bbp_topic_id( $topic_id = 0 ) {
 	echo esc_attr( bboss_bbp_get_topic_id( $topic_id ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_topic_id' ) && ! function_exists( 'bbp_topic_id' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_topic_id()}.
+	 *
+	 * @deprecated Use bboss_bbp_topic_id() instead.
+	 */
+	function bbp_topic_id( $topic_id = 0 ) {
+		return bboss_bbp_topic_id( $topic_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return the topic id
@@ -595,6 +763,20 @@ function bboss_bbp_get_topic_id( $topic_id = 0 ) {
 
 	return (int) apply_filters( 'bbp_get_topic_id', (int) $bbp_topic_id, $topic_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_topic_id' ) && ! function_exists( 'bbp_get_topic_id' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_topic_id()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_topic_id() instead.
+	 */
+	function bbp_get_topic_id( $topic_id = 0 ) {
+		return bboss_bbp_get_topic_id( $topic_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Gets a topic
@@ -637,6 +819,20 @@ function bboss_bbp_get_topic( $topic, $output = OBJECT, $filter = 'raw' ) {
 
 	return apply_filters( 'bbp_get_topic', $topic, $output, $filter );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_topic' ) && ! function_exists( 'bbp_get_topic' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_topic()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_topic() instead.
+	 */
+	function bbp_get_topic( $topic, $output = OBJECT, $filter = 'raw' ) {
+		return bboss_bbp_get_topic( $topic, $output, $filter );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output the link to the topic in the topic loop
@@ -652,6 +848,20 @@ function bboss_bbp_get_topic( $topic, $output = OBJECT, $filter = 'raw' ) {
 function bboss_bbp_topic_permalink( $topic_id = 0, $redirect_to = '' ) {
 	echo esc_url( bboss_bbp_get_topic_permalink( $topic_id, $redirect_to ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_topic_permalink' ) && ! function_exists( 'bbp_topic_permalink' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_topic_permalink()}.
+	 *
+	 * @deprecated Use bboss_bbp_topic_permalink() instead.
+	 */
+	function bbp_topic_permalink( $topic_id = 0, $redirect_to = '' ) {
+		return bboss_bbp_topic_permalink( $topic_id, $redirect_to );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return the link to the topic
@@ -683,6 +893,20 @@ function bboss_bbp_get_topic_permalink( $topic_id = 0, $redirect_to = '' ) {
 
 	return apply_filters( 'bbp_get_topic_permalink', $topic_permalink, $topic_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_topic_permalink' ) && ! function_exists( 'bbp_get_topic_permalink' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_topic_permalink()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_topic_permalink() instead.
+	 */
+	function bbp_get_topic_permalink( $topic_id = 0, $redirect_to = '' ) {
+		return bboss_bbp_get_topic_permalink( $topic_id, $redirect_to );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output the title of the topic
@@ -696,6 +920,20 @@ function bboss_bbp_get_topic_permalink( $topic_id = 0, $redirect_to = '' ) {
 function bboss_bbp_topic_title( $topic_id = 0 ) {
 	echo bboss_bbp_get_topic_title( $topic_id ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bbp_get_topic_title() self-escapes its return value.
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_topic_title' ) && ! function_exists( 'bbp_topic_title' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_topic_title()}.
+	 *
+	 * @deprecated Use bboss_bbp_topic_title() instead.
+	 */
+	function bbp_topic_title( $topic_id = 0 ) {
+		return bboss_bbp_topic_title( $topic_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return the title of the topic
@@ -716,6 +954,20 @@ function bboss_bbp_get_topic_title( $topic_id = 0 ) {
 
 	return apply_filters( 'bbp_get_topic_title', $title, $topic_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_topic_title' ) && ! function_exists( 'bbp_get_topic_title' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_topic_title()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_topic_title() instead.
+	 */
+	function bbp_get_topic_title( $topic_id = 0 ) {
+		return bboss_bbp_get_topic_title( $topic_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output the topic archive title
@@ -727,6 +979,20 @@ function bboss_bbp_get_topic_title( $topic_id = 0 ) {
 function bboss_bbp_topic_archive_title( $title = '' ) {
 	echo esc_html( bboss_bbp_get_topic_archive_title( $title ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_topic_archive_title' ) && ! function_exists( 'bbp_topic_archive_title' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_topic_archive_title()}.
+	 *
+	 * @deprecated Use bboss_bbp_topic_archive_title() instead.
+	 */
+	function bbp_topic_archive_title( $title = '' ) {
+		return bboss_bbp_topic_archive_title( $title );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return the topic archive title
@@ -763,6 +1029,20 @@ function bboss_bbp_get_topic_archive_title( $title = '' ) {
 
 	return apply_filters( 'bbp_get_topic_archive_title', $title );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_topic_archive_title' ) && ! function_exists( 'bbp_get_topic_archive_title' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_topic_archive_title()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_topic_archive_title() instead.
+	 */
+	function bbp_get_topic_archive_title( $title = '' ) {
+		return bboss_bbp_get_topic_archive_title( $title );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output the content of the topic
@@ -776,6 +1056,20 @@ function bboss_bbp_get_topic_archive_title( $title = '' ) {
 function bboss_bbp_topic_content( $topic_id = 0 ) {
 	echo wp_kses_post( bboss_bbp_get_topic_content( $topic_id ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_topic_content' ) && ! function_exists( 'bbp_topic_content' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_topic_content()}.
+	 *
+	 * @deprecated Use bboss_bbp_topic_content() instead.
+	 */
+	function bbp_topic_content( $topic_id = 0 ) {
+		return bboss_bbp_topic_content( $topic_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return the content of the topic
@@ -804,6 +1098,20 @@ function bboss_bbp_get_topic_content( $topic_id = 0 ) {
 
 	return apply_filters( 'bbp_get_topic_content', $content, $topic_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_topic_content' ) && ! function_exists( 'bbp_get_topic_content' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_topic_content()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_topic_content() instead.
+	 */
+	function bbp_get_topic_content( $topic_id = 0 ) {
+		return bboss_bbp_get_topic_content( $topic_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output the excerpt of the topic
@@ -818,6 +1126,20 @@ function bboss_bbp_get_topic_content( $topic_id = 0 ) {
 function bboss_bbp_topic_excerpt( $topic_id = 0, $length = 100 ) {
 	echo wp_kses_post( bboss_bbp_get_topic_excerpt( $topic_id, $length ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_topic_excerpt' ) && ! function_exists( 'bbp_topic_excerpt' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_topic_excerpt()}.
+	 *
+	 * @deprecated Use bboss_bbp_topic_excerpt() instead.
+	 */
+	function bbp_topic_excerpt( $topic_id = 0, $length = 100 ) {
+		return bboss_bbp_topic_excerpt( $topic_id, $length );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return the excerpt of the topic
@@ -860,6 +1182,20 @@ function bboss_bbp_get_topic_excerpt( $topic_id = 0, $length = 100 ) {
 
 	return apply_filters( 'bbp_get_topic_excerpt', $excerpt, $topic_id, $length );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_topic_excerpt' ) && ! function_exists( 'bbp_get_topic_excerpt' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_topic_excerpt()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_topic_excerpt() instead.
+	 */
+	function bbp_get_topic_excerpt( $topic_id = 0, $length = 100 ) {
+		return bboss_bbp_get_topic_excerpt( $topic_id, $length );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output the post date and time of a topic
@@ -875,6 +1211,20 @@ function bboss_bbp_get_topic_excerpt( $topic_id = 0, $length = 100 ) {
 function bboss_bbp_topic_post_date( $topic_id = 0, $humanize = false, $gmt = false ) {
 	echo esc_html( bboss_bbp_get_topic_post_date( $topic_id, $humanize, $gmt ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_topic_post_date' ) && ! function_exists( 'bbp_topic_post_date' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_topic_post_date()}.
+	 *
+	 * @deprecated Use bboss_bbp_topic_post_date() instead.
+	 */
+	function bbp_topic_post_date( $topic_id = 0, $humanize = false, $gmt = false ) {
+		return bboss_bbp_topic_post_date( $topic_id, $humanize, $gmt );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return the post date and time of a topic
@@ -910,6 +1260,20 @@ function bboss_bbp_get_topic_post_date( $topic_id = 0, $humanize = false, $gmt =
 
 	return apply_filters( 'bbp_get_topic_post_date', $result, $topic_id, $humanize, $gmt, $date, $time );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_topic_post_date' ) && ! function_exists( 'bbp_get_topic_post_date' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_topic_post_date()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_topic_post_date() instead.
+	 */
+	function bbp_get_topic_post_date( $topic_id = 0, $humanize = false, $gmt = false ) {
+		return bboss_bbp_get_topic_post_date( $topic_id, $humanize, $gmt );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output pagination links of a topic within the topic loop
@@ -923,6 +1287,20 @@ function bboss_bbp_get_topic_post_date( $topic_id = 0, $humanize = false, $gmt =
 function bboss_bbp_topic_pagination( $args = '' ) {
 	echo wp_kses_post( bboss_bbp_get_topic_pagination( $args ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_topic_pagination' ) && ! function_exists( 'bbp_topic_pagination' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_topic_pagination()}.
+	 *
+	 * @deprecated Use bboss_bbp_topic_pagination() instead.
+	 */
+	function bbp_topic_pagination( $args = '' ) {
+		return bboss_bbp_topic_pagination( $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Returns pagination links of a topic within the topic loop
@@ -1009,6 +1387,20 @@ function bboss_bbp_get_topic_pagination( $args = '' ) {
 
 	return apply_filters( 'bbp_get_topic_pagination', $pagination_links, $args );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_topic_pagination' ) && ! function_exists( 'bbp_get_topic_pagination' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_topic_pagination()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_topic_pagination() instead.
+	 */
+	function bbp_get_topic_pagination( $args = '' ) {
+		return bboss_bbp_get_topic_pagination( $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Append revisions to the topic content
@@ -1035,6 +1427,20 @@ function bboss_bbp_topic_content_append_revisions( $content = '', $topic_id = 0 
 
 	return apply_filters( 'bbp_topic_append_revisions', $content . bboss_bbp_get_topic_revision_log( $topic_id ), $content, $topic_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_topic_content_append_revisions' ) && ! function_exists( 'bbp_topic_content_append_revisions' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_topic_content_append_revisions()}.
+	 *
+	 * @deprecated Use bboss_bbp_topic_content_append_revisions() instead.
+	 */
+	function bbp_topic_content_append_revisions( $content = '', $topic_id = 0 ) {
+		return bboss_bbp_topic_content_append_revisions( $content, $topic_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output the revision log of the topic
@@ -1048,6 +1454,20 @@ function bboss_bbp_topic_content_append_revisions( $content = '', $topic_id = 0 
 function bboss_bbp_topic_revision_log( $topic_id = 0 ) {
 	echo wp_kses_post( bboss_bbp_get_topic_revision_log( $topic_id ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_topic_revision_log' ) && ! function_exists( 'bbp_topic_revision_log' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_topic_revision_log()}.
+	 *
+	 * @deprecated Use bboss_bbp_topic_revision_log() instead.
+	 */
+	function bbp_topic_revision_log( $topic_id = 0 ) {
+		return bboss_bbp_topic_revision_log( $topic_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return the formatted revision log of the topic
@@ -1119,6 +1539,20 @@ function bboss_bbp_get_topic_revision_log( $topic_id = 0 ) {
 
 	return apply_filters( 'bbp_get_topic_revision_log', $r, $topic_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_topic_revision_log' ) && ! function_exists( 'bbp_get_topic_revision_log' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_topic_revision_log()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_topic_revision_log() instead.
+	 */
+	function bbp_get_topic_revision_log( $topic_id = 0 ) {
+		return bboss_bbp_get_topic_revision_log( $topic_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return the raw revision log of the topic
@@ -1141,6 +1575,20 @@ function bboss_bbp_get_topic_raw_revision_log( $topic_id = 0 ) {
 
 	return apply_filters( 'bbp_get_topic_raw_revision_log', $revision_log, $topic_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_topic_raw_revision_log' ) && ! function_exists( 'bbp_get_topic_raw_revision_log' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_topic_raw_revision_log()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_topic_raw_revision_log() instead.
+	 */
+	function bbp_get_topic_raw_revision_log( $topic_id = 0 ) {
+		return bboss_bbp_get_topic_raw_revision_log( $topic_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return the revisions of the topic
@@ -1161,6 +1609,20 @@ function bboss_bbp_get_topic_revisions( $topic_id = 0 ) {
 
 	return apply_filters( 'bbp_get_topic_revisions', $revisions, $topic_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_topic_revisions' ) && ! function_exists( 'bbp_get_topic_revisions' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_topic_revisions()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_topic_revisions() instead.
+	 */
+	function bbp_get_topic_revisions( $topic_id = 0 ) {
+		return bboss_bbp_get_topic_revisions( $topic_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return the revision count of the topic
@@ -1180,6 +1642,20 @@ function bboss_bbp_get_topic_revision_count( $topic_id = 0, $integer = false ) {
 
 	return apply_filters( $filter, $count, $topic_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_topic_revision_count' ) && ! function_exists( 'bbp_get_topic_revision_count' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_topic_revision_count()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_topic_revision_count() instead.
+	 */
+	function bbp_get_topic_revision_count( $topic_id = 0, $integer = false ) {
+		return bboss_bbp_get_topic_revision_count( $topic_id, $integer );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output the status of the topic
@@ -1193,6 +1669,20 @@ function bboss_bbp_get_topic_revision_count( $topic_id = 0, $integer = false ) {
 function bboss_bbp_topic_status( $topic_id = 0 ) {
 	echo esc_attr( bboss_bbp_get_topic_status( $topic_id ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_topic_status' ) && ! function_exists( 'bbp_topic_status' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_topic_status()}.
+	 *
+	 * @deprecated Use bboss_bbp_topic_status() instead.
+	 */
+	function bbp_topic_status( $topic_id = 0 ) {
+		return bboss_bbp_topic_status( $topic_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return the status of the topic
@@ -1212,6 +1702,20 @@ function bboss_bbp_get_topic_status( $topic_id = 0 ) {
 
 	return apply_filters( 'bbp_get_topic_status', get_post_status( $topic_id ), $topic_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_topic_status' ) && ! function_exists( 'bbp_get_topic_status' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_topic_status()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_topic_status() instead.
+	 */
+	function bbp_get_topic_status( $topic_id = 0 ) {
+		return bboss_bbp_get_topic_status( $topic_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Is the topic open to new replies?
@@ -1228,6 +1732,20 @@ function bboss_bbp_get_topic_status( $topic_id = 0 ) {
 function bboss_bbp_is_topic_open( $topic_id = 0 ) {
 	return ! bboss_bbp_is_topic_closed( $topic_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_is_topic_open' ) && ! function_exists( 'bbp_is_topic_open' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_is_topic_open()}.
+	 *
+	 * @deprecated Use bboss_bbp_is_topic_open() instead.
+	 */
+	function bbp_is_topic_open( $topic_id = 0 ) {
+		return bboss_bbp_is_topic_open( $topic_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Is the topic closed to new replies?
@@ -1246,6 +1764,20 @@ function bboss_bbp_is_topic_closed( $topic_id = 0 ) {
 
 	return (bool) apply_filters( 'bbp_is_topic_closed', (bool) $closed, $topic_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_is_topic_closed' ) && ! function_exists( 'bbp_is_topic_closed' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_is_topic_closed()}.
+	 *
+	 * @deprecated Use bboss_bbp_is_topic_closed() instead.
+	 */
+	function bbp_is_topic_closed( $topic_id = 0 ) {
+		return bboss_bbp_is_topic_closed( $topic_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Is the topic a sticky or super sticky?
@@ -1274,6 +1806,20 @@ function bboss_bbp_is_topic_sticky( $topic_id = 0, $check_super = true ) {
 
 	return false;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_is_topic_sticky' ) && ! function_exists( 'bbp_is_topic_sticky' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_is_topic_sticky()}.
+	 *
+	 * @deprecated Use bboss_bbp_is_topic_sticky() instead.
+	 */
+	function bbp_is_topic_sticky( $topic_id = 0, $check_super = true ) {
+		return bboss_bbp_is_topic_sticky( $topic_id, $check_super );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Is the topic a super sticky?
@@ -1292,6 +1838,20 @@ function bboss_bbp_is_topic_super_sticky( $topic_id = 0 ) {
 
 	return in_array( $topic_id, $stickies );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_is_topic_super_sticky' ) && ! function_exists( 'bbp_is_topic_super_sticky' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_is_topic_super_sticky()}.
+	 *
+	 * @deprecated Use bboss_bbp_is_topic_super_sticky() instead.
+	 */
+	function bbp_is_topic_super_sticky( $topic_id = 0 ) {
+		return bboss_bbp_is_topic_super_sticky( $topic_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Is the topic not spam or deleted?
@@ -1310,6 +1870,20 @@ function bboss_bbp_is_topic_published( $topic_id = 0 ) {
 
 	return (bool) apply_filters( 'bbp_is_topic_published', (bool) $topic_status, $topic_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_is_topic_published' ) && ! function_exists( 'bbp_is_topic_published' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_is_topic_published()}.
+	 *
+	 * @deprecated Use bboss_bbp_is_topic_published() instead.
+	 */
+	function bbp_is_topic_published( $topic_id = 0 ) {
+		return bboss_bbp_is_topic_published( $topic_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Is the topic marked as spam?
@@ -1328,6 +1902,20 @@ function bboss_bbp_is_topic_spam( $topic_id = 0 ) {
 
 	return (bool) apply_filters( 'bbp_is_topic_spam', (bool) $topic_status, $topic_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_is_topic_spam' ) && ! function_exists( 'bbp_is_topic_spam' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_is_topic_spam()}.
+	 *
+	 * @deprecated Use bboss_bbp_is_topic_spam() instead.
+	 */
+	function bbp_is_topic_spam( $topic_id = 0 ) {
+		return bboss_bbp_is_topic_spam( $topic_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Is the topic trashed?
@@ -1346,6 +1934,20 @@ function bboss_bbp_is_topic_trash( $topic_id = 0 ) {
 
 	return (bool) apply_filters( 'bbp_is_topic_trash', (bool) $topic_status, $topic_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_is_topic_trash' ) && ! function_exists( 'bbp_is_topic_trash' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_is_topic_trash()}.
+	 *
+	 * @deprecated Use bboss_bbp_is_topic_trash() instead.
+	 */
+	function bbp_is_topic_trash( $topic_id = 0 ) {
+		return bboss_bbp_is_topic_trash( $topic_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Is the posted by an anonymous user?
@@ -1377,6 +1979,20 @@ function bboss_bbp_is_topic_anonymous( $topic_id = 0 ) {
 	// The topic is by an anonymous user
 	return (bool) apply_filters( 'bbp_is_topic_anonymous', $retval, $topic_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_is_topic_anonymous' ) && ! function_exists( 'bbp_is_topic_anonymous' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_is_topic_anonymous()}.
+	 *
+	 * @deprecated Use bboss_bbp_is_topic_anonymous() instead.
+	 */
+	function bbp_is_topic_anonymous( $topic_id = 0 ) {
+		return bboss_bbp_is_topic_anonymous( $topic_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Deprecated. Use bboss_bbp_topic_author_display_name() instead.
@@ -1394,6 +2010,20 @@ function bboss_bbp_is_topic_anonymous( $topic_id = 0 ) {
 function bboss_bbp_topic_author( $topic_id = 0 ) {
 	echo esc_html( bboss_bbp_get_topic_author( $topic_id ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_topic_author' ) && ! function_exists( 'bbp_topic_author' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_topic_author()}.
+	 *
+	 * @deprecated Use bboss_bbp_topic_author() instead.
+	 */
+	function bbp_topic_author( $topic_id = 0 ) {
+		return bboss_bbp_topic_author( $topic_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Deprecated. Use bboss_bbp_get_topic_author_display_name() instead.
@@ -1429,6 +2059,20 @@ function bboss_bbp_get_topic_author( $topic_id = 0 ) {
 
 	return apply_filters( 'bbp_get_topic_author', $author, $topic_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_topic_author' ) && ! function_exists( 'bbp_get_topic_author' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_topic_author()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_topic_author() instead.
+	 */
+	function bbp_get_topic_author( $topic_id = 0 ) {
+		return bboss_bbp_get_topic_author( $topic_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output the author ID of the topic
@@ -1442,6 +2086,20 @@ function bboss_bbp_get_topic_author( $topic_id = 0 ) {
 function bboss_bbp_topic_author_id( $topic_id = 0 ) {
 	echo esc_attr( bboss_bbp_get_topic_author_id( $topic_id ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_topic_author_id' ) && ! function_exists( 'bbp_topic_author_id' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_topic_author_id()}.
+	 *
+	 * @deprecated Use bboss_bbp_topic_author_id() instead.
+	 */
+	function bbp_topic_author_id( $topic_id = 0 ) {
+		return bboss_bbp_topic_author_id( $topic_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return the author ID of the topic
@@ -1462,6 +2120,20 @@ function bboss_bbp_get_topic_author_id( $topic_id = 0 ) {
 
 	return (int) apply_filters( 'bbp_get_topic_author_id', (int) $author_id, $topic_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_topic_author_id' ) && ! function_exists( 'bbp_get_topic_author_id' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_topic_author_id()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_topic_author_id() instead.
+	 */
+	function bbp_get_topic_author_id( $topic_id = 0 ) {
+		return bboss_bbp_get_topic_author_id( $topic_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output the author display_name of the topic
@@ -1476,6 +2148,20 @@ function bboss_bbp_get_topic_author_id( $topic_id = 0 ) {
 function bboss_bbp_topic_author_display_name( $topic_id = 0 ) {
 	echo bboss_bbp_get_topic_author_display_name( $topic_id ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bbp_get_topic_author_display_name() self-escapes its return value.
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_topic_author_display_name' ) && ! function_exists( 'bbp_topic_author_display_name' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_topic_author_display_name()}.
+	 *
+	 * @deprecated Use bboss_bbp_topic_author_display_name() instead.
+	 */
+	function bbp_topic_author_display_name( $topic_id = 0 ) {
+		return bboss_bbp_topic_author_display_name( $topic_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return the author display_name of the topic
@@ -1548,6 +2234,20 @@ function bboss_bbp_get_topic_author_display_name( $topic_id = 0, $viewer_user_id
 
 	return apply_filters( 'bbp_get_topic_author_display_name', $author_name, $topic_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_topic_author_display_name' ) && ! function_exists( 'bbp_get_topic_author_display_name' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_topic_author_display_name()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_topic_author_display_name() instead.
+	 */
+	function bbp_get_topic_author_display_name( $topic_id = 0, $viewer_user_id = 0 ) {
+		return bboss_bbp_get_topic_author_display_name( $topic_id, $viewer_user_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output the author avatar of the topic
@@ -1562,6 +2262,20 @@ function bboss_bbp_get_topic_author_display_name( $topic_id = 0, $viewer_user_id
 function bboss_bbp_topic_author_avatar( $topic_id = 0, $size = 40 ) {
 	echo bboss_bbp_get_topic_author_avatar( $topic_id, $size ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- pre-escaped bbPress markup incl. get_avatar() output; wp_kses_post() strips the avatar srcset.
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_topic_author_avatar' ) && ! function_exists( 'bbp_topic_author_avatar' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_topic_author_avatar()}.
+	 *
+	 * @deprecated Use bboss_bbp_topic_author_avatar() instead.
+	 */
+	function bbp_topic_author_avatar( $topic_id = 0, $size = 40 ) {
+		return bboss_bbp_topic_author_avatar( $topic_id, $size );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return the author avatar of the topic
@@ -1595,6 +2309,20 @@ function bboss_bbp_get_topic_author_avatar( $topic_id = 0, $size = 40 ) {
 
 	return apply_filters( 'bbp_get_topic_author_avatar', $author_avatar, $topic_id, $size );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_topic_author_avatar' ) && ! function_exists( 'bbp_get_topic_author_avatar' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_topic_author_avatar()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_topic_author_avatar() instead.
+	 */
+	function bbp_get_topic_author_avatar( $topic_id = 0, $size = 40 ) {
+		return bboss_bbp_get_topic_author_avatar( $topic_id, $size );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output the author link of the topic
@@ -1608,6 +2336,20 @@ function bboss_bbp_get_topic_author_avatar( $topic_id = 0, $size = 40 ) {
 function bboss_bbp_topic_author_link( $args = '' ) {
 	echo bboss_bbp_get_topic_author_link( $args ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- pre-escaped bbPress markup incl. get_avatar() output; wp_kses_post() strips the avatar srcset.
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_topic_author_link' ) && ! function_exists( 'bbp_topic_author_link' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_topic_author_link()}.
+	 *
+	 * @deprecated Use bboss_bbp_topic_author_link() instead.
+	 */
+	function bbp_topic_author_link( $args = '' ) {
+		return bboss_bbp_topic_author_link( $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return the author link of the topic
@@ -1736,6 +2478,20 @@ function bboss_bbp_get_topic_author_link( $args = '' ) {
 	// Filter & return
 	return apply_filters( 'bbp_get_topic_author_link', $author_link, $args );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_topic_author_link' ) && ! function_exists( 'bbp_get_topic_author_link' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_topic_author_link()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_topic_author_link() instead.
+	 */
+	function bbp_get_topic_author_link( $args = '' ) {
+		return bboss_bbp_get_topic_author_link( $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output the author url of the topic
@@ -1749,6 +2505,20 @@ function bboss_bbp_get_topic_author_link( $args = '' ) {
 function bboss_bbp_topic_author_url( $topic_id = 0 ) {
 	echo esc_url( bboss_bbp_get_topic_author_url( $topic_id ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_topic_author_url' ) && ! function_exists( 'bbp_topic_author_url' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_topic_author_url()}.
+	 *
+	 * @deprecated Use bboss_bbp_topic_author_url() instead.
+	 */
+	function bbp_topic_author_url( $topic_id = 0 ) {
+		return bboss_bbp_topic_author_url( $topic_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return the author url of the topic
@@ -1785,6 +2555,20 @@ function bboss_bbp_get_topic_author_url( $topic_id = 0 ) {
 
 	return apply_filters( 'bbp_get_topic_author_url', $author_url, $topic_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_topic_author_url' ) && ! function_exists( 'bbp_get_topic_author_url' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_topic_author_url()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_topic_author_url() instead.
+	 */
+	function bbp_get_topic_author_url( $topic_id = 0 ) {
+		return bboss_bbp_get_topic_author_url( $topic_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output the topic author email address
@@ -1798,6 +2582,20 @@ function bboss_bbp_get_topic_author_url( $topic_id = 0 ) {
 function bboss_bbp_topic_author_email( $topic_id = 0 ) {
 	echo esc_html( bboss_bbp_get_topic_author_email( $topic_id ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_topic_author_email' ) && ! function_exists( 'bbp_topic_author_email' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_topic_author_email()}.
+	 *
+	 * @deprecated Use bboss_bbp_topic_author_email() instead.
+	 */
+	function bbp_topic_author_email( $topic_id = 0 ) {
+		return bboss_bbp_topic_author_email( $topic_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return the topic author email address
@@ -1841,6 +2639,20 @@ function bboss_bbp_get_topic_author_email( $topic_id = 0 ) {
 
 	return apply_filters( 'bbp_get_topic_author_email', $author_email, $topic_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_topic_author_email' ) && ! function_exists( 'bbp_get_topic_author_email' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_topic_author_email()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_topic_author_email() instead.
+	 */
+	function bbp_get_topic_author_email( $topic_id = 0 ) {
+		return bboss_bbp_get_topic_author_email( $topic_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output the topic author role
@@ -1854,6 +2666,20 @@ function bboss_bbp_get_topic_author_email( $topic_id = 0 ) {
 function bboss_bbp_topic_author_role( $args = array() ) {
 	echo bboss_bbp_get_topic_author_role( $args ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- pre-escaped bbPress markup incl. get_avatar() output; wp_kses_post() strips the avatar srcset.
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_topic_author_role' ) && ! function_exists( 'bbp_topic_author_role' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_topic_author_role()}.
+	 *
+	 * @deprecated Use bboss_bbp_topic_author_role() instead.
+	 */
+	function bbp_topic_author_role( $args = array() ) {
+		return bboss_bbp_topic_author_role( $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return the topic author role
@@ -1889,6 +2715,20 @@ function bboss_bbp_get_topic_author_role( $args = array() ) {
 
 	return apply_filters( 'bbp_get_topic_author_role', $author_role, $r );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_topic_author_role' ) && ! function_exists( 'bbp_get_topic_author_role' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_topic_author_role()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_topic_author_role() instead.
+	 */
+	function bbp_get_topic_author_role( $args = array() ) {
+		return bboss_bbp_get_topic_author_role( $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 
 /**
@@ -1903,6 +2743,20 @@ function bboss_bbp_get_topic_author_role( $args = array() ) {
 function bboss_bbp_topic_forum_title( $topic_id = 0 ) {
 	echo esc_html( bboss_bbp_get_topic_forum_title( $topic_id ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_topic_forum_title' ) && ! function_exists( 'bbp_topic_forum_title' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_topic_forum_title()}.
+	 *
+	 * @deprecated Use bboss_bbp_topic_forum_title() instead.
+	 */
+	function bbp_topic_forum_title( $topic_id = 0 ) {
+		return bboss_bbp_topic_forum_title( $topic_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return the title of the forum a topic belongs to
@@ -1923,6 +2777,20 @@ function bboss_bbp_get_topic_forum_title( $topic_id = 0 ) {
 
 	return apply_filters( 'bbp_get_topic_forum', bboss_bbp_get_forum_title( $forum_id ), $topic_id, $forum_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_topic_forum_title' ) && ! function_exists( 'bbp_get_topic_forum_title' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_topic_forum_title()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_topic_forum_title() instead.
+	 */
+	function bbp_get_topic_forum_title( $topic_id = 0 ) {
+		return bboss_bbp_get_topic_forum_title( $topic_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output the forum id a topic belongs to
@@ -1936,6 +2804,20 @@ function bboss_bbp_get_topic_forum_title( $topic_id = 0 ) {
 function bboss_bbp_topic_forum_id( $topic_id = 0 ) {
 	echo esc_attr( bboss_bbp_get_topic_forum_id( $topic_id ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_topic_forum_id' ) && ! function_exists( 'bbp_topic_forum_id' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_topic_forum_id()}.
+	 *
+	 * @deprecated Use bboss_bbp_topic_forum_id() instead.
+	 */
+	function bbp_topic_forum_id( $topic_id = 0 ) {
+		return bboss_bbp_topic_forum_id( $topic_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return the forum id a topic belongs to
@@ -1956,6 +2838,20 @@ function bboss_bbp_get_topic_forum_id( $topic_id = 0 ) {
 
 	return (int) apply_filters( 'bbp_get_topic_forum_id', (int) $forum_id, $topic_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_topic_forum_id' ) && ! function_exists( 'bbp_get_topic_forum_id' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_topic_forum_id()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_topic_forum_id() instead.
+	 */
+	function bbp_get_topic_forum_id( $topic_id = 0 ) {
+		return bboss_bbp_get_topic_forum_id( $topic_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output the topics last active ID
@@ -1969,6 +2865,20 @@ function bboss_bbp_get_topic_forum_id( $topic_id = 0 ) {
 function bboss_bbp_topic_last_active_id( $topic_id = 0 ) {
 	echo esc_attr( bboss_bbp_get_topic_last_active_id( $topic_id ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_topic_last_active_id' ) && ! function_exists( 'bbp_topic_last_active_id' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_topic_last_active_id()}.
+	 *
+	 * @deprecated Use bboss_bbp_topic_last_active_id() instead.
+	 */
+	function bbp_topic_last_active_id( $topic_id = 0 ) {
+		return bboss_bbp_topic_last_active_id( $topic_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return the topics last active ID
@@ -1989,6 +2899,20 @@ function bboss_bbp_get_topic_last_active_id( $topic_id = 0 ) {
 
 	return (int) apply_filters( 'bbp_get_topic_last_active_id', (int) $active_id, $topic_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_topic_last_active_id' ) && ! function_exists( 'bbp_get_topic_last_active_id' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_topic_last_active_id()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_topic_last_active_id() instead.
+	 */
+	function bbp_get_topic_last_active_id( $topic_id = 0 ) {
+		return bboss_bbp_get_topic_last_active_id( $topic_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output the topics last update date/time (aka freshness)
@@ -2002,6 +2926,20 @@ function bboss_bbp_get_topic_last_active_id( $topic_id = 0 ) {
 function bboss_bbp_topic_last_active_time( $topic_id = 0 ) {
 	echo esc_html( bboss_bbp_get_topic_last_active_time( $topic_id ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_topic_last_active_time' ) && ! function_exists( 'bbp_topic_last_active_time' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_topic_last_active_time()}.
+	 *
+	 * @deprecated Use bboss_bbp_topic_last_active_time() instead.
+	 */
+	function bbp_topic_last_active_time( $topic_id = 0 ) {
+		return bboss_bbp_topic_last_active_time( $topic_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return the topics last update date/time (aka freshness)
@@ -2039,6 +2977,20 @@ function bboss_bbp_get_topic_last_active_time( $topic_id = 0 ) {
 	// Return the time since
 	return apply_filters( 'bbp_get_topic_last_active', $last_active, $topic_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_topic_last_active_time' ) && ! function_exists( 'bbp_get_topic_last_active_time' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_topic_last_active_time()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_topic_last_active_time() instead.
+	 */
+	function bbp_get_topic_last_active_time( $topic_id = 0 ) {
+		return bboss_bbp_get_topic_last_active_time( $topic_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /** Topic Subscriptions *******************************************************/
 
@@ -2052,6 +3004,20 @@ function bboss_bbp_get_topic_last_active_time( $topic_id = 0 ) {
 function bboss_bbp_topic_subscription_link( $args = array() ) {
 	echo wp_kses_post( bboss_bbp_get_topic_subscription_link( $args ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_topic_subscription_link' ) && ! function_exists( 'bbp_topic_subscription_link' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_topic_subscription_link()}.
+	 *
+	 * @deprecated Use bboss_bbp_topic_subscription_link() instead.
+	 */
+	function bbp_topic_subscription_link( $args = array() ) {
+		return bboss_bbp_topic_subscription_link( $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get the forum subscription link
@@ -2088,6 +3054,20 @@ function bboss_bbp_get_topic_subscription_link( $args = array() ) {
 
 	return apply_filters( 'bbp_get_topic_subscribe_link', $retval, $r );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_topic_subscription_link' ) && ! function_exists( 'bbp_get_topic_subscription_link' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_topic_subscription_link()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_topic_subscription_link() instead.
+	 */
+	function bbp_get_topic_subscription_link( $args = array() ) {
+		return bboss_bbp_get_topic_subscription_link( $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /** Topic Favorites ***********************************************************/
 
@@ -2101,6 +3081,20 @@ function bboss_bbp_get_topic_subscription_link( $args = array() ) {
 function bboss_bbp_topic_favorite_link( $args = array() ) {
 	echo wp_kses_post( bboss_bbp_get_topic_favorite_link( $args ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_topic_favorite_link' ) && ! function_exists( 'bbp_topic_favorite_link' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_topic_favorite_link()}.
+	 *
+	 * @deprecated Use bboss_bbp_topic_favorite_link() instead.
+	 */
+	function bbp_topic_favorite_link( $args = array() ) {
+		return bboss_bbp_topic_favorite_link( $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get the forum favorite link
@@ -2137,6 +3131,20 @@ function bboss_bbp_get_topic_favorite_link( $args = array() ) {
 
 	return apply_filters( 'bbp_get_topic_favorite_link', $retval, $r );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_topic_favorite_link' ) && ! function_exists( 'bbp_get_topic_favorite_link' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_topic_favorite_link()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_topic_favorite_link() instead.
+	 */
+	function bbp_get_topic_favorite_link( $args = array() ) {
+		return bboss_bbp_get_topic_favorite_link( $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /** Topic Last Reply **********************************************************/
 
@@ -2152,6 +3160,20 @@ function bboss_bbp_get_topic_favorite_link( $args = array() ) {
 function bboss_bbp_topic_last_reply_id( $topic_id = 0 ) {
 	echo esc_attr( bboss_bbp_get_topic_last_reply_id( $topic_id ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_topic_last_reply_id' ) && ! function_exists( 'bbp_topic_last_reply_id' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_topic_last_reply_id()}.
+	 *
+	 * @deprecated Use bboss_bbp_topic_last_reply_id() instead.
+	 */
+	function bbp_topic_last_reply_id( $topic_id = 0 ) {
+		return bboss_bbp_topic_last_reply_id( $topic_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return the topics last update date/time (aka freshness)
@@ -2176,6 +3198,20 @@ function bboss_bbp_get_topic_last_reply_id( $topic_id = 0 ) {
 
 	return (int) apply_filters( 'bbp_get_topic_last_reply_id', (int) $reply_id, $topic_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_topic_last_reply_id' ) && ! function_exists( 'bbp_get_topic_last_reply_id' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_topic_last_reply_id()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_topic_last_reply_id() instead.
+	 */
+	function bbp_get_topic_last_reply_id( $topic_id = 0 ) {
+		return bboss_bbp_get_topic_last_reply_id( $topic_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output the title of the last reply inside a topic
@@ -2187,6 +3223,20 @@ function bboss_bbp_get_topic_last_reply_id( $topic_id = 0 ) {
 function bboss_bbp_topic_last_reply_title( $topic_id = 0 ) {
 	echo esc_html( bboss_bbp_get_topic_last_reply_title( $topic_id ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_topic_last_reply_title' ) && ! function_exists( 'bbp_topic_last_reply_title' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_topic_last_reply_title()}.
+	 *
+	 * @deprecated Use bboss_bbp_topic_last_reply_title() instead.
+	 */
+	function bbp_topic_last_reply_title( $topic_id = 0 ) {
+		return bboss_bbp_topic_last_reply_title( $topic_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return the title of the last reply inside a topic
@@ -2205,6 +3255,20 @@ function bboss_bbp_get_topic_last_reply_title( $topic_id = 0 ) {
 
 	return apply_filters( 'bbp_get_topic_last_topic_title', bboss_bbp_get_reply_title( bboss_bbp_get_topic_last_reply_id( $topic_id ) ), $topic_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_topic_last_reply_title' ) && ! function_exists( 'bbp_get_topic_last_reply_title' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_topic_last_reply_title()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_topic_last_reply_title() instead.
+	 */
+	function bbp_get_topic_last_reply_title( $topic_id = 0 ) {
+		return bboss_bbp_get_topic_last_reply_title( $topic_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output the link to the last reply in a topic
@@ -2218,6 +3282,20 @@ function bboss_bbp_get_topic_last_reply_title( $topic_id = 0 ) {
 function bboss_bbp_topic_last_reply_permalink( $topic_id = 0 ) {
 	echo esc_url( bboss_bbp_get_topic_last_reply_permalink( $topic_id ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_topic_last_reply_permalink' ) && ! function_exists( 'bbp_topic_last_reply_permalink' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_topic_last_reply_permalink()}.
+	 *
+	 * @deprecated Use bboss_bbp_topic_last_reply_permalink() instead.
+	 */
+	function bbp_topic_last_reply_permalink( $topic_id = 0 ) {
+		return bboss_bbp_topic_last_reply_permalink( $topic_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return the link to the last reply in a topic
@@ -2238,6 +3316,20 @@ function bboss_bbp_get_topic_last_reply_permalink( $topic_id = 0 ) {
 
 	return apply_filters( 'bbp_get_topic_last_reply_permalink', bboss_bbp_get_reply_permalink( bboss_bbp_get_topic_last_reply_id( $topic_id ) ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_topic_last_reply_permalink' ) && ! function_exists( 'bbp_get_topic_last_reply_permalink' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_topic_last_reply_permalink()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_topic_last_reply_permalink() instead.
+	 */
+	function bbp_get_topic_last_reply_permalink( $topic_id = 0 ) {
+		return bboss_bbp_get_topic_last_reply_permalink( $topic_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output the link to the last reply in a topic
@@ -2251,6 +3343,20 @@ function bboss_bbp_get_topic_last_reply_permalink( $topic_id = 0 ) {
 function bboss_bbp_topic_last_reply_url( $topic_id = 0 ) {
 	echo esc_url( bboss_bbp_get_topic_last_reply_url( $topic_id ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_topic_last_reply_url' ) && ! function_exists( 'bbp_topic_last_reply_url' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_topic_last_reply_url()}.
+	 *
+	 * @deprecated Use bboss_bbp_topic_last_reply_url() instead.
+	 */
+	function bbp_topic_last_reply_url( $topic_id = 0 ) {
+		return bboss_bbp_topic_last_reply_url( $topic_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return the link to the last reply in a topic
@@ -2279,6 +3385,20 @@ function bboss_bbp_get_topic_last_reply_url( $topic_id = 0 ) {
 
 	return apply_filters( 'bbp_get_topic_last_reply_url', $reply_url );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_topic_last_reply_url' ) && ! function_exists( 'bbp_get_topic_last_reply_url' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_topic_last_reply_url()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_topic_last_reply_url() instead.
+	 */
+	function bbp_get_topic_last_reply_url( $topic_id = 0 ) {
+		return bboss_bbp_get_topic_last_reply_url( $topic_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output link to the most recent activity inside a topic, complete with link
@@ -2293,6 +3413,20 @@ function bboss_bbp_get_topic_last_reply_url( $topic_id = 0 ) {
 function bboss_bbp_topic_freshness_link( $topic_id = 0 ) {
 	echo wp_kses_post( bboss_bbp_get_topic_freshness_link( $topic_id ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_topic_freshness_link' ) && ! function_exists( 'bbp_topic_freshness_link' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_topic_freshness_link()}.
+	 *
+	 * @deprecated Use bboss_bbp_topic_freshness_link() instead.
+	 */
+	function bbp_topic_freshness_link( $topic_id = 0 ) {
+		return bboss_bbp_topic_freshness_link( $topic_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Returns link to the most recent activity inside a topic, complete
@@ -2324,6 +3458,20 @@ function bboss_bbp_get_topic_freshness_link( $topic_id = 0 ) {
 
 	return apply_filters( 'bbp_get_topic_freshness_link', $anchor, $topic_id, $time_since, $link_url, $title );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_topic_freshness_link' ) && ! function_exists( 'bbp_get_topic_freshness_link' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_topic_freshness_link()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_topic_freshness_link() instead.
+	 */
+	function bbp_get_topic_freshness_link( $topic_id = 0 ) {
+		return bboss_bbp_get_topic_freshness_link( $topic_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output the replies link of the topic
@@ -2337,6 +3485,20 @@ function bboss_bbp_get_topic_freshness_link( $topic_id = 0 ) {
 function bboss_bbp_topic_replies_link( $topic_id = 0 ) {
 	echo wp_kses_post( bboss_bbp_get_topic_replies_link( $topic_id ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_topic_replies_link' ) && ! function_exists( 'bbp_topic_replies_link' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_topic_replies_link()}.
+	 *
+	 * @deprecated Use bboss_bbp_topic_replies_link() instead.
+	 */
+	function bbp_topic_replies_link( $topic_id = 0 ) {
+		return bboss_bbp_topic_replies_link( $topic_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return the replies link of the topic
@@ -2391,6 +3553,20 @@ function bboss_bbp_get_topic_replies_link( $topic_id = 0 ) {
 
 	return apply_filters( 'bbp_get_topic_replies_link', $retval, $topic_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_topic_replies_link' ) && ! function_exists( 'bbp_get_topic_replies_link' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_topic_replies_link()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_topic_replies_link() instead.
+	 */
+	function bbp_get_topic_replies_link( $topic_id = 0 ) {
+		return bboss_bbp_get_topic_replies_link( $topic_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output total reply count of a topic
@@ -2405,6 +3581,20 @@ function bboss_bbp_get_topic_replies_link( $topic_id = 0 ) {
 function bboss_bbp_topic_reply_count( $topic_id = 0, $integer = false ) {
 	echo esc_html( bboss_bbp_get_topic_reply_count( $topic_id, $integer ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_topic_reply_count' ) && ! function_exists( 'bbp_topic_reply_count' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_topic_reply_count()}.
+	 *
+	 * @deprecated Use bboss_bbp_topic_reply_count() instead.
+	 */
+	function bbp_topic_reply_count( $topic_id = 0, $integer = false ) {
+		return bboss_bbp_topic_reply_count( $topic_id, $integer );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return total reply count of a topic
@@ -2427,6 +3617,20 @@ function bboss_bbp_get_topic_reply_count( $topic_id = 0, $integer = false ) {
 
 	return apply_filters( $filter, $replies, $topic_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_topic_reply_count' ) && ! function_exists( 'bbp_get_topic_reply_count' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_topic_reply_count()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_topic_reply_count() instead.
+	 */
+	function bbp_get_topic_reply_count( $topic_id = 0, $integer = false ) {
+		return bboss_bbp_get_topic_reply_count( $topic_id, $integer );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output total post count of a topic
@@ -2441,6 +3645,20 @@ function bboss_bbp_get_topic_reply_count( $topic_id = 0, $integer = false ) {
 function bboss_bbp_topic_post_count( $topic_id = 0, $integer = false ) {
 	echo esc_html( bboss_bbp_get_topic_post_count( $topic_id, $integer ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_topic_post_count' ) && ! function_exists( 'bbp_topic_post_count' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_topic_post_count()}.
+	 *
+	 * @deprecated Use bboss_bbp_topic_post_count() instead.
+	 */
+	function bbp_topic_post_count( $topic_id = 0, $integer = false ) {
+		return bboss_bbp_topic_post_count( $topic_id, $integer );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return total post count of a topic
@@ -2463,6 +3681,20 @@ function bboss_bbp_get_topic_post_count( $topic_id = 0, $integer = false ) {
 
 	return apply_filters( $filter, $replies, $topic_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_topic_post_count' ) && ! function_exists( 'bbp_get_topic_post_count' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_topic_post_count()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_topic_post_count() instead.
+	 */
+	function bbp_get_topic_post_count( $topic_id = 0, $integer = false ) {
+		return bboss_bbp_get_topic_post_count( $topic_id, $integer );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output total hidden reply count of a topic (hidden includes trashed and
@@ -2478,6 +3710,20 @@ function bboss_bbp_get_topic_post_count( $topic_id = 0, $integer = false ) {
 function bboss_bbp_topic_reply_count_hidden( $topic_id = 0, $integer = false ) {
 	echo esc_html( bboss_bbp_get_topic_reply_count_hidden( $topic_id, $integer ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_topic_reply_count_hidden' ) && ! function_exists( 'bbp_topic_reply_count_hidden' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_topic_reply_count_hidden()}.
+	 *
+	 * @deprecated Use bboss_bbp_topic_reply_count_hidden() instead.
+	 */
+	function bbp_topic_reply_count_hidden( $topic_id = 0, $integer = false ) {
+		return bboss_bbp_topic_reply_count_hidden( $topic_id, $integer );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return total hidden reply count of a topic (hidden includes trashed
@@ -2501,6 +3747,20 @@ function bboss_bbp_get_topic_reply_count_hidden( $topic_id = 0, $integer = false
 
 	return apply_filters( $filter, $replies, $topic_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_topic_reply_count_hidden' ) && ! function_exists( 'bbp_get_topic_reply_count_hidden' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_topic_reply_count_hidden()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_topic_reply_count_hidden() instead.
+	 */
+	function bbp_get_topic_reply_count_hidden( $topic_id = 0, $integer = false ) {
+		return bboss_bbp_get_topic_reply_count_hidden( $topic_id, $integer );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output total voice count of a topic
@@ -2514,6 +3774,20 @@ function bboss_bbp_get_topic_reply_count_hidden( $topic_id = 0, $integer = false
 function bboss_bbp_topic_voice_count( $topic_id = 0, $integer = false ) {
 	echo esc_html( bboss_bbp_get_topic_voice_count( $topic_id, $integer ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_topic_voice_count' ) && ! function_exists( 'bbp_topic_voice_count' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_topic_voice_count()}.
+	 *
+	 * @deprecated Use bboss_bbp_topic_voice_count() instead.
+	 */
+	function bbp_topic_voice_count( $topic_id = 0, $integer = false ) {
+		return bboss_bbp_topic_voice_count( $topic_id, $integer );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return total voice count of a topic
@@ -2535,6 +3809,20 @@ function bboss_bbp_get_topic_voice_count( $topic_id = 0, $integer = false ) {
 
 	return apply_filters( $filter, $voices, $topic_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_topic_voice_count' ) && ! function_exists( 'bbp_get_topic_voice_count' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_topic_voice_count()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_topic_voice_count() instead.
+	 */
+	function bbp_get_topic_voice_count( $topic_id = 0, $integer = false ) {
+		return bboss_bbp_get_topic_voice_count( $topic_id, $integer );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output a the tags of a topic
@@ -2547,6 +3835,20 @@ function bboss_bbp_get_topic_voice_count( $topic_id = 0, $integer = false ) {
 function bboss_bbp_topic_tag_list( $topic_id = 0, $args = '' ) {
 	echo wp_kses_post( bboss_bbp_get_topic_tag_list( $topic_id, $args ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_topic_tag_list' ) && ! function_exists( 'bbp_topic_tag_list' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_topic_tag_list()}.
+	 *
+	 * @deprecated Use bboss_bbp_topic_tag_list() instead.
+	 */
+	function bbp_topic_tag_list( $topic_id = 0, $args = '' ) {
+		return bboss_bbp_topic_tag_list( $topic_id, $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return the tags of a topic
@@ -2604,6 +3906,20 @@ function bboss_bbp_get_topic_tag_list( $topic_id = 0, $args = '' ) {
 
 	return $retval;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_topic_tag_list' ) && ! function_exists( 'bbp_get_topic_tag_list' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_topic_tag_list()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_topic_tag_list() instead.
+	 */
+	function bbp_get_topic_tag_list( $topic_id = 0, $args = '' ) {
+		return bboss_bbp_get_topic_tag_list( $topic_id, $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output the row class of a topic
@@ -2618,6 +3934,20 @@ function bboss_bbp_get_topic_tag_list( $topic_id = 0, $args = '' ) {
 function bboss_bbp_topic_class( $topic_id = 0, $classes = array() ) {
 	echo bboss_bbp_get_topic_class( $topic_id, $classes ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bbp_get_topic_class returns class="..." attribute markup; esc_attr would corrupt it.
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_topic_class' ) && ! function_exists( 'bbp_topic_class' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_topic_class()}.
+	 *
+	 * @deprecated Use bboss_bbp_topic_class() instead.
+	 */
+	function bbp_topic_class( $topic_id = 0, $classes = array() ) {
+		return bboss_bbp_topic_class( $topic_id, $classes );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return the row class of a topic
@@ -2652,6 +3982,20 @@ function bboss_bbp_get_topic_class( $topic_id = 0, $classes = array() ) {
 
 	return $retval;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_topic_class' ) && ! function_exists( 'bbp_get_topic_class' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_topic_class()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_topic_class() instead.
+	 */
+	function bbp_get_topic_class( $topic_id = 0, $classes = array() ) {
+		return bboss_bbp_get_topic_class( $topic_id, $classes );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /** Topic Admin Links *********************************************************/
 
@@ -2665,6 +4009,20 @@ function bboss_bbp_get_topic_class( $topic_id = 0, $classes = array() ) {
 function bboss_bbp_topic_admin_links( $args = array() ) {
 	echo wp_kses_post( bboss_bbp_get_topic_admin_links( $args ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_topic_admin_links' ) && ! function_exists( 'bbp_topic_admin_links' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_topic_admin_links()}.
+	 *
+	 * @deprecated Use bboss_bbp_topic_admin_links() instead.
+	 */
+	function bbp_topic_admin_links( $args = array() ) {
+		return bboss_bbp_topic_admin_links( $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return admin links for topic.
@@ -2749,6 +4107,20 @@ function bboss_bbp_get_topic_admin_links( $args = array() ) {
 
 	return apply_filters( 'bbp_get_topic_admin_links', $retval, $r, $args );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_topic_admin_links' ) && ! function_exists( 'bbp_get_topic_admin_links' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_topic_admin_links()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_topic_admin_links() instead.
+	 */
+	function bbp_get_topic_admin_links( $args = array() ) {
+		return bboss_bbp_get_topic_admin_links( $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output the edit link of the topic
@@ -2762,6 +4134,20 @@ function bboss_bbp_get_topic_admin_links( $args = array() ) {
 function bboss_bbp_topic_edit_link( $args = '' ) {
 	echo wp_kses_post( bboss_bbp_get_topic_edit_link( $args ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_topic_edit_link' ) && ! function_exists( 'bbp_topic_edit_link' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_topic_edit_link()}.
+	 *
+	 * @deprecated Use bboss_bbp_topic_edit_link() instead.
+	 */
+	function bbp_topic_edit_link( $args = '' ) {
+		return bboss_bbp_topic_edit_link( $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return the edit link of the topic
@@ -2820,6 +4206,20 @@ function bboss_bbp_get_topic_edit_link( $args = '' ) {
 
 	return apply_filters( 'bbp_get_topic_edit_link', $retval, $r );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_topic_edit_link' ) && ! function_exists( 'bbp_get_topic_edit_link' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_topic_edit_link()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_topic_edit_link() instead.
+	 */
+	function bbp_get_topic_edit_link( $args = '' ) {
+		return bboss_bbp_get_topic_edit_link( $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output URL to the topic edit page
@@ -2833,6 +4233,20 @@ function bboss_bbp_get_topic_edit_link( $args = '' ) {
 function bboss_bbp_topic_edit_url( $topic_id = 0 ) {
 	echo esc_url( bboss_bbp_get_topic_edit_url( $topic_id ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_topic_edit_url' ) && ! function_exists( 'bbp_topic_edit_url' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_topic_edit_url()}.
+	 *
+	 * @deprecated Use bboss_bbp_topic_edit_url() instead.
+	 */
+	function bbp_topic_edit_url( $topic_id = 0 ) {
+		return bboss_bbp_topic_edit_url( $topic_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return URL to the topic edit page
@@ -2882,6 +4296,20 @@ function bboss_bbp_get_topic_edit_url( $topic_id = 0 ) {
 
 	return apply_filters( 'bbp_get_topic_edit_url', $url, $topic_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_topic_edit_url' ) && ! function_exists( 'bbp_get_topic_edit_url' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_topic_edit_url()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_topic_edit_url() instead.
+	 */
+	function bbp_get_topic_edit_url( $topic_id = 0 ) {
+		return bboss_bbp_get_topic_edit_url( $topic_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output the trash link of the topic
@@ -2895,6 +4323,20 @@ function bboss_bbp_get_topic_edit_url( $topic_id = 0 ) {
 function bboss_bbp_topic_trash_link( $args = '' ) {
 	echo wp_kses_post( bboss_bbp_get_topic_trash_link( $args ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_topic_trash_link' ) && ! function_exists( 'bbp_topic_trash_link' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_topic_trash_link()}.
+	 *
+	 * @deprecated Use bboss_bbp_topic_trash_link() instead.
+	 */
+	function bbp_topic_trash_link( $args = '' ) {
+		return bboss_bbp_topic_trash_link( $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return the trash link of the topic
@@ -3009,6 +4451,20 @@ function bboss_bbp_get_topic_trash_link( $args = '' ) {
 
 	return apply_filters( 'bbp_get_topic_trash_link', $retval, $r );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_topic_trash_link' ) && ! function_exists( 'bbp_get_topic_trash_link' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_topic_trash_link()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_topic_trash_link() instead.
+	 */
+	function bbp_get_topic_trash_link( $args = '' ) {
+		return bboss_bbp_get_topic_trash_link( $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output the close link of the topic
@@ -3022,6 +4478,20 @@ function bboss_bbp_get_topic_trash_link( $args = '' ) {
 function bboss_bbp_topic_close_link( $args = '' ) {
 	echo wp_kses_post( bboss_bbp_get_topic_close_link( $args ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_topic_close_link' ) && ! function_exists( 'bbp_topic_close_link' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_topic_close_link()}.
+	 *
+	 * @deprecated Use bboss_bbp_topic_close_link() instead.
+	 */
+	function bbp_topic_close_link( $args = '' ) {
+		return bboss_bbp_topic_close_link( $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return the close link of the topic
@@ -3080,6 +4550,20 @@ function bboss_bbp_get_topic_close_link( $args = '' ) {
 
 	return apply_filters( 'bbp_get_topic_close_link', $retval, $r );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_topic_close_link' ) && ! function_exists( 'bbp_get_topic_close_link' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_topic_close_link()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_topic_close_link() instead.
+	 */
+	function bbp_get_topic_close_link( $args = '' ) {
+		return bboss_bbp_get_topic_close_link( $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output the stick link of the topic
@@ -3093,6 +4577,20 @@ function bboss_bbp_get_topic_close_link( $args = '' ) {
 function bboss_bbp_topic_stick_link( $args = '' ) {
 	echo wp_kses_post( bboss_bbp_get_topic_stick_link( $args ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_topic_stick_link' ) && ! function_exists( 'bbp_topic_stick_link' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_topic_stick_link()}.
+	 *
+	 * @deprecated Use bboss_bbp_topic_stick_link() instead.
+	 */
+	function bbp_topic_stick_link( $args = '' ) {
+		return bboss_bbp_topic_stick_link( $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return the stick link of the topic
@@ -3174,6 +4672,20 @@ function bboss_bbp_get_topic_stick_link( $args = '' ) {
 
 	return apply_filters( 'bbp_get_topic_stick_link', $retval, $r );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_topic_stick_link' ) && ! function_exists( 'bbp_get_topic_stick_link' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_topic_stick_link()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_topic_stick_link() instead.
+	 */
+	function bbp_get_topic_stick_link( $args = '' ) {
+		return bboss_bbp_get_topic_stick_link( $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output the merge link of the topic
@@ -3187,6 +4699,20 @@ function bboss_bbp_get_topic_stick_link( $args = '' ) {
 function bboss_bbp_topic_merge_link( $args = '' ) {
 	echo wp_kses_post( bboss_bbp_get_topic_merge_link( $args ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_topic_merge_link' ) && ! function_exists( 'bbp_topic_merge_link' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_topic_merge_link()}.
+	 *
+	 * @deprecated Use bboss_bbp_topic_merge_link() instead.
+	 */
+	function bbp_topic_merge_link( $args = '' ) {
+		return bboss_bbp_topic_merge_link( $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return the merge link of the topic
@@ -3233,6 +4759,20 @@ function bboss_bbp_get_topic_merge_link( $args = '' ) {
 
 	return apply_filters( 'bbp_get_topic_merge_link', $retval, $args );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_topic_merge_link' ) && ! function_exists( 'bbp_get_topic_merge_link' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_topic_merge_link()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_topic_merge_link() instead.
+	 */
+	function bbp_get_topic_merge_link( $args = '' ) {
+		return bboss_bbp_get_topic_merge_link( $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output the spam link of the topic
@@ -3246,6 +4786,20 @@ function bboss_bbp_get_topic_merge_link( $args = '' ) {
 function bboss_bbp_topic_spam_link( $args = '' ) {
 	echo wp_kses_post( bboss_bbp_get_topic_spam_link( $args ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_topic_spam_link' ) && ! function_exists( 'bbp_topic_spam_link' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_topic_spam_link()}.
+	 *
+	 * @deprecated Use bboss_bbp_topic_spam_link() instead.
+	 */
+	function bbp_topic_spam_link( $args = '' ) {
+		return bboss_bbp_topic_spam_link( $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return the spam link of the topic
@@ -3304,6 +4858,20 @@ function bboss_bbp_get_topic_spam_link( $args = '' ) {
 
 	return apply_filters( 'bbp_get_topic_spam_link', $retval, $r );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_topic_spam_link' ) && ! function_exists( 'bbp_get_topic_spam_link' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_topic_spam_link()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_topic_spam_link() instead.
+	 */
+	function bbp_get_topic_spam_link( $args = '' ) {
+		return bboss_bbp_get_topic_spam_link( $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return the spam link of the topic
@@ -3352,6 +4920,20 @@ function bboss_bbp_get_topic_report_link( $args = '' ) {
 
 	return apply_filters( 'bbp_get_topic_report_link', $report_btn_arr, $args );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_topic_report_link' ) && ! function_exists( 'bbp_get_topic_report_link' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_topic_report_link()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_topic_report_link() instead.
+	 */
+	function bbp_get_topic_report_link( $args = '' ) {
+		return bboss_bbp_get_topic_report_link( $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output the link to go directly to the reply form
@@ -3365,6 +4947,20 @@ function bboss_bbp_get_topic_report_link( $args = '' ) {
 function bboss_bbp_topic_reply_link( $args = array() ) {
 	echo wp_kses_post( bboss_bbp_get_topic_reply_link( $args ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_topic_reply_link' ) && ! function_exists( 'bbp_topic_reply_link' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_topic_reply_link()}.
+	 *
+	 * @deprecated Use bboss_bbp_topic_reply_link() instead.
+	 */
+	function bbp_topic_reply_link( $args = array() ) {
+		return bboss_bbp_topic_reply_link( $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return the link to go directly to the reply form
@@ -3410,6 +5006,20 @@ function bboss_bbp_get_topic_reply_link( $args = array() ) {
 
 	return apply_filters( 'bbp_get_topic_reply_link', $retval, $r, $args );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_topic_reply_link' ) && ! function_exists( 'bbp_get_topic_reply_link' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_topic_reply_link()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_topic_reply_link() instead.
+	 */
+	function bbp_get_topic_reply_link( $args = array() ) {
+		return bboss_bbp_get_topic_reply_link( $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return the link to report reply
@@ -3446,6 +5056,20 @@ function bboss_bbp_get_reply_report_link( $args = array() ) {
 	return apply_filters( 'bbp_get_reply_report_link', $report_btn_arr, $args );
 
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_reply_report_link' ) && ! function_exists( 'bbp_get_reply_report_link' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_reply_report_link()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_reply_report_link() instead.
+	 */
+	function bbp_get_reply_report_link( $args = array() ) {
+		return bboss_bbp_get_reply_report_link( $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /** Topic Pagination **********************************************************/
 
@@ -3459,6 +5083,20 @@ function bboss_bbp_get_reply_report_link( $args = array() ) {
 function bboss_bbp_forum_pagination_count() {
 	echo bboss_bbp_get_forum_pagination_count(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bbp_get_forum_pagination_count() self-escapes its return value.
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_forum_pagination_count' ) && ! function_exists( 'bbp_forum_pagination_count' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_forum_pagination_count()}.
+	 *
+	 * @deprecated Use bboss_bbp_forum_pagination_count() instead.
+	 */
+	function bbp_forum_pagination_count() {
+		return bboss_bbp_forum_pagination_count();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return the pagination count
@@ -3498,6 +5136,20 @@ function bboss_bbp_get_forum_pagination_count() {
 	// Filter and return
 	return apply_filters( 'bbp_get_forum_pagination_count', esc_html( $retstr ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_forum_pagination_count' ) && ! function_exists( 'bbp_get_forum_pagination_count' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_forum_pagination_count()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_forum_pagination_count() instead.
+	 */
+	function bbp_get_forum_pagination_count() {
+		return bboss_bbp_get_forum_pagination_count();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output pagination links
@@ -3509,6 +5161,20 @@ function bboss_bbp_get_forum_pagination_count() {
 function bboss_bbp_forum_pagination_links() {
 	echo bboss_bbp_get_forum_pagination_links(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bbp_forum_pagination_links() itself echoes esc_attr()'d output and returns void.
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_forum_pagination_links' ) && ! function_exists( 'bbp_forum_pagination_links' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_forum_pagination_links()}.
+	 *
+	 * @deprecated Use bboss_bbp_forum_pagination_links() instead.
+	 */
+	function bbp_forum_pagination_links() {
+		return bboss_bbp_forum_pagination_links();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return pagination links
@@ -3527,6 +5193,20 @@ function bboss_bbp_get_forum_pagination_links() {
 
 	return apply_filters( 'bbp_get_forum_pagination_links', $bbp->topic_query->pagination_links );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_forum_pagination_links' ) && ! function_exists( 'bbp_get_forum_pagination_links' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_forum_pagination_links()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_forum_pagination_links() instead.
+	 */
+	function bbp_get_forum_pagination_links() {
+		return bboss_bbp_get_forum_pagination_links();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Displays topic notices
@@ -3577,6 +5257,20 @@ function bboss_bbp_topic_notices() {
 
 	bboss_bbp_add_error( 'topic_notice', $notice_text, 'message' );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_topic_notices' ) && ! function_exists( 'bbp_topic_notices' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_topic_notices()}.
+	 *
+	 * @deprecated Use bboss_bbp_topic_notices() instead.
+	 */
+	function bbp_topic_notices() {
+		return bboss_bbp_topic_notices();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Displays topic type select box (normal/sticky/super sticky)
@@ -3595,6 +5289,20 @@ function bboss_bbp_topic_notices() {
 function bboss_bbp_topic_type_select( $args = '' ) {
 	echo bboss_bbp_get_form_topic_type_dropdown( $args ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- markup built and per-value escaped (esc_attr/esc_html) in bbp_get_form_topic_type_dropdown().
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_topic_type_select' ) && ! function_exists( 'bbp_topic_type_select' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_topic_type_select()}.
+	 *
+	 * @deprecated Use bboss_bbp_topic_type_select() instead.
+	 */
+	function bbp_topic_type_select( $args = '' ) {
+		return bboss_bbp_topic_type_select( $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Displays topic type select box (normal/sticky/super sticky)
@@ -3610,6 +5318,20 @@ function bboss_bbp_topic_type_select( $args = '' ) {
 function bboss_bbp_form_topic_type_dropdown( $args = '' ) {
 	echo bboss_bbp_get_form_topic_type_dropdown( $args ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- markup built and per-value escaped (esc_attr/esc_html) in bbp_get_form_topic_type_dropdown().
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_form_topic_type_dropdown' ) && ! function_exists( 'bbp_form_topic_type_dropdown' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_form_topic_type_dropdown()}.
+	 *
+	 * @deprecated Use bboss_bbp_form_topic_type_dropdown() instead.
+	 */
+	function bbp_form_topic_type_dropdown( $args = '' ) {
+		return bboss_bbp_form_topic_type_dropdown( $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Returns topic type select box (normal/sticky/super sticky)
@@ -3698,6 +5420,20 @@ function bboss_bbp_get_form_topic_type_dropdown( $args = '' ) {
 	// Return the results
 	return apply_filters( 'bbp_get_form_topic_type_dropdown', ob_get_clean(), $r );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_form_topic_type_dropdown' ) && ! function_exists( 'bbp_get_form_topic_type_dropdown' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_form_topic_type_dropdown()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_form_topic_type_dropdown() instead.
+	 */
+	function bbp_get_form_topic_type_dropdown( $args = '' ) {
+		return bboss_bbp_get_form_topic_type_dropdown( $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output value topic status dropdown
@@ -3709,6 +5445,20 @@ function bboss_bbp_get_form_topic_type_dropdown( $args = '' ) {
 function bboss_bbp_form_topic_status_dropdown( $args = '' ) {
 	echo bboss_bbp_get_form_topic_status_dropdown( $args ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- returns form-control markup (<select>/<option>/<input>) pre-escaped per value at construction; wp_kses_post strips the controls.
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_form_topic_status_dropdown' ) && ! function_exists( 'bbp_form_topic_status_dropdown' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_form_topic_status_dropdown()}.
+	 *
+	 * @deprecated Use bboss_bbp_form_topic_status_dropdown() instead.
+	 */
+	function bbp_form_topic_status_dropdown( $args = '' ) {
+		return bboss_bbp_form_topic_status_dropdown( $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Returns topic status downdown
@@ -3784,6 +5534,20 @@ function bboss_bbp_get_form_topic_status_dropdown( $args = '' ) {
 	// Return the results
 	return apply_filters( 'bbp_get_form_topic_status_dropdown', ob_get_clean(), $r );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_form_topic_status_dropdown' ) && ! function_exists( 'bbp_get_form_topic_status_dropdown' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_form_topic_status_dropdown()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_form_topic_status_dropdown() instead.
+	 */
+	function bbp_get_form_topic_status_dropdown( $args = '' ) {
+		return bboss_bbp_get_form_topic_status_dropdown( $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /** Topic Tags ****************************************************************/
 
@@ -3797,6 +5561,20 @@ function bboss_bbp_get_form_topic_status_dropdown( $args = '' ) {
 function bboss_bbp_topic_tag_tax_id() {
 	echo esc_attr( bboss_bbp_get_topic_tag_tax_id() );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_topic_tag_tax_id' ) && ! function_exists( 'bbp_topic_tag_tax_id' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_topic_tag_tax_id()}.
+	 *
+	 * @deprecated Use bboss_bbp_topic_tag_tax_id() instead.
+	 */
+	function bbp_topic_tag_tax_id() {
+		return bboss_bbp_topic_tag_tax_id();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return the unique id of the topic tag taxonomy
@@ -3809,6 +5587,20 @@ function bboss_bbp_topic_tag_tax_id() {
 function bboss_bbp_get_topic_tag_tax_id() {
 	return apply_filters( 'bbp_get_topic_tag_tax_id', bboss_forums()->topic_tag_tax_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_topic_tag_tax_id' ) && ! function_exists( 'bbp_get_topic_tag_tax_id' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_topic_tag_tax_id()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_topic_tag_tax_id() instead.
+	 */
+	function bbp_get_topic_tag_tax_id() {
+		return bboss_bbp_get_topic_tag_tax_id();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return array of labels used by the topic-tag taxonomy
@@ -3834,6 +5626,20 @@ function bboss_bbp_get_topic_tag_tax_labels() {
 		)
 	);
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_topic_tag_tax_labels' ) && ! function_exists( 'bbp_get_topic_tag_tax_labels' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_topic_tag_tax_labels()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_topic_tag_tax_labels() instead.
+	 */
+	function bbp_get_topic_tag_tax_labels() {
+		return bboss_bbp_get_topic_tag_tax_labels();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return an array of topic-tag taxonomy rewrite settings
@@ -3851,6 +5657,20 @@ function bboss_bbp_get_topic_tag_tax_rewrite() {
 		)
 	);
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_topic_tag_tax_rewrite' ) && ! function_exists( 'bbp_get_topic_tag_tax_rewrite' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_topic_tag_tax_rewrite()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_topic_tag_tax_rewrite() instead.
+	 */
+	function bbp_get_topic_tag_tax_rewrite() {
+		return bboss_bbp_get_topic_tag_tax_rewrite();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output the id of the current tag
@@ -3862,6 +5682,20 @@ function bboss_bbp_get_topic_tag_tax_rewrite() {
 function bboss_bbp_topic_tag_id( $tag = '' ) {
 	echo esc_attr( bboss_bbp_get_topic_tag_id( $tag ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_topic_tag_id' ) && ! function_exists( 'bbp_topic_tag_id' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_topic_tag_id()}.
+	 *
+	 * @deprecated Use bboss_bbp_topic_tag_id() instead.
+	 */
+	function bbp_topic_tag_id( $tag = '' ) {
+		return bboss_bbp_topic_tag_id( $tag );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return the id of the current tag
@@ -3896,6 +5730,20 @@ function bboss_bbp_get_topic_tag_id( $tag = '' ) {
 
 	return (int) apply_filters( 'bbp_get_topic_tag_id', (int) $retval, $tag );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_topic_tag_id' ) && ! function_exists( 'bbp_get_topic_tag_id' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_topic_tag_id()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_topic_tag_id() instead.
+	 */
+	function bbp_get_topic_tag_id( $tag = '' ) {
+		return bboss_bbp_get_topic_tag_id( $tag );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output the name of the current tag
@@ -3907,6 +5755,20 @@ function bboss_bbp_get_topic_tag_id( $tag = '' ) {
 function bboss_bbp_topic_tag_name( $tag = '' ) {
 	echo esc_html( bboss_bbp_get_topic_tag_name( $tag ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_topic_tag_name' ) && ! function_exists( 'bbp_topic_tag_name' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_topic_tag_name()}.
+	 *
+	 * @deprecated Use bboss_bbp_topic_tag_name() instead.
+	 */
+	function bbp_topic_tag_name( $tag = '' ) {
+		return bboss_bbp_topic_tag_name( $tag );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return the name of the current tag
@@ -3941,6 +5803,20 @@ function bboss_bbp_get_topic_tag_name( $tag = '' ) {
 
 	return apply_filters( 'bbp_get_topic_tag_name', $retval );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_topic_tag_name' ) && ! function_exists( 'bbp_get_topic_tag_name' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_topic_tag_name()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_topic_tag_name() instead.
+	 */
+	function bbp_get_topic_tag_name( $tag = '' ) {
+		return bboss_bbp_get_topic_tag_name( $tag );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output the slug of the current tag
@@ -3952,6 +5828,20 @@ function bboss_bbp_get_topic_tag_name( $tag = '' ) {
 function bboss_bbp_topic_tag_slug( $tag = '' ) {
 	echo esc_attr( bboss_bbp_get_topic_tag_slug( $tag ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_topic_tag_slug' ) && ! function_exists( 'bbp_topic_tag_slug' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_topic_tag_slug()}.
+	 *
+	 * @deprecated Use bboss_bbp_topic_tag_slug() instead.
+	 */
+	function bbp_topic_tag_slug( $tag = '' ) {
+		return bboss_bbp_topic_tag_slug( $tag );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return the slug of the current tag
@@ -3986,6 +5876,20 @@ function bboss_bbp_get_topic_tag_slug( $tag = '' ) {
 
 	return apply_filters( 'bbp_get_topic_tag_slug', $retval );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_topic_tag_slug' ) && ! function_exists( 'bbp_get_topic_tag_slug' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_topic_tag_slug()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_topic_tag_slug() instead.
+	 */
+	function bbp_get_topic_tag_slug( $tag = '' ) {
+		return bboss_bbp_get_topic_tag_slug( $tag );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output the link of the current tag
@@ -3997,6 +5901,20 @@ function bboss_bbp_get_topic_tag_slug( $tag = '' ) {
 function bboss_bbp_topic_tag_link( $tag = '' ) {
 	echo esc_url( bboss_bbp_get_topic_tag_link( $tag ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_topic_tag_link' ) && ! function_exists( 'bbp_topic_tag_link' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_topic_tag_link()}.
+	 *
+	 * @deprecated Use bboss_bbp_topic_tag_link() instead.
+	 */
+	function bbp_topic_tag_link( $tag = '' ) {
+		return bboss_bbp_topic_tag_link( $tag );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return the link of the current tag
@@ -4031,6 +5949,20 @@ function bboss_bbp_get_topic_tag_link( $tag = '' ) {
 
 	return apply_filters( 'bbp_get_topic_tag_link', $retval, $tag );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_topic_tag_link' ) && ! function_exists( 'bbp_get_topic_tag_link' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_topic_tag_link()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_topic_tag_link() instead.
+	 */
+	function bbp_get_topic_tag_link( $tag = '' ) {
+		return bboss_bbp_get_topic_tag_link( $tag );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output the link of the current tag
@@ -4042,6 +5974,20 @@ function bboss_bbp_get_topic_tag_link( $tag = '' ) {
 function bboss_bbp_topic_tag_edit_link( $tag = '' ) {
 	echo esc_url( bboss_bbp_get_topic_tag_edit_link( $tag ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_topic_tag_edit_link' ) && ! function_exists( 'bbp_topic_tag_edit_link' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_topic_tag_edit_link()}.
+	 *
+	 * @deprecated Use bboss_bbp_topic_tag_edit_link() instead.
+	 */
+	function bbp_topic_tag_edit_link( $tag = '' ) {
+		return bboss_bbp_topic_tag_edit_link( $tag );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return the link of the current tag
@@ -4081,6 +6027,20 @@ function bboss_bbp_get_topic_tag_edit_link( $tag = '' ) {
 
 	return apply_filters( 'bbp_get_topic_tag_edit_link', $retval, $tag );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_topic_tag_edit_link' ) && ! function_exists( 'bbp_get_topic_tag_edit_link' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_topic_tag_edit_link()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_topic_tag_edit_link() instead.
+	 */
+	function bbp_get_topic_tag_edit_link( $tag = '' ) {
+		return bboss_bbp_get_topic_tag_edit_link( $tag );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output the description of the current tag
@@ -4092,6 +6052,20 @@ function bboss_bbp_get_topic_tag_edit_link( $tag = '' ) {
 function bboss_bbp_topic_tag_description( $args = array() ) {
 	echo wp_kses_post( bboss_bbp_get_topic_tag_description( $args ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_topic_tag_description' ) && ! function_exists( 'bbp_topic_tag_description' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_topic_tag_description()}.
+	 *
+	 * @deprecated Use bboss_bbp_topic_tag_description() instead.
+	 */
+	function bbp_topic_tag_description( $args = array() ) {
+		return bboss_bbp_topic_tag_description( $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return the description of the current tag
@@ -4139,6 +6113,20 @@ function bboss_bbp_get_topic_tag_description( $args = array() ) {
 
 	return apply_filters( 'bbp_get_topic_tag_description', $retval, $r );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_topic_tag_description' ) && ! function_exists( 'bbp_get_topic_tag_description' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_topic_tag_description()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_topic_tag_description() instead.
+	 */
+	function bbp_get_topic_tag_description( $args = array() ) {
+		return bboss_bbp_get_topic_tag_description( $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /** Forms *********************************************************************/
 
@@ -4152,6 +6140,20 @@ function bboss_bbp_get_topic_tag_description( $args = array() ) {
 function bboss_bbp_form_topic_title() {
 	echo bboss_bbp_get_form_topic_title(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bbp_get_form_topic_title() returns esc_html()'d value.
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_form_topic_title' ) && ! function_exists( 'bbp_form_topic_title' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_form_topic_title()}.
+	 *
+	 * @deprecated Use bboss_bbp_form_topic_title() instead.
+	 */
+	function bbp_form_topic_title() {
+		return bboss_bbp_form_topic_title();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return the value of topic title field
@@ -4177,6 +6179,20 @@ function bboss_bbp_get_form_topic_title() {
 
 	return apply_filters( 'bbp_get_form_topic_title', esc_html( $topic_title ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_form_topic_title' ) && ! function_exists( 'bbp_get_form_topic_title' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_form_topic_title()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_form_topic_title() instead.
+	 */
+	function bbp_get_form_topic_title() {
+		return bboss_bbp_get_form_topic_title();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output the value of topic content field
@@ -4188,6 +6204,20 @@ function bboss_bbp_get_form_topic_title() {
 function bboss_bbp_form_topic_content() {
 	echo wp_kses_post( bboss_bbp_get_form_topic_content() );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_form_topic_content' ) && ! function_exists( 'bbp_form_topic_content' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_form_topic_content()}.
+	 *
+	 * @deprecated Use bboss_bbp_form_topic_content() instead.
+	 */
+	function bbp_form_topic_content() {
+		return bboss_bbp_form_topic_content();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return the value of topic content field
@@ -4220,6 +6250,20 @@ function bboss_bbp_get_form_topic_content() {
 
 	return apply_filters( 'bbp_get_form_topic_content', $topic_content );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_form_topic_content' ) && ! function_exists( 'bbp_get_form_topic_content' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_form_topic_content()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_form_topic_content() instead.
+	 */
+	function bbp_get_form_topic_content() {
+		return bboss_bbp_get_form_topic_content();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Allow topic rows to have adminstrative actions
@@ -4231,6 +6275,20 @@ function bboss_bbp_get_form_topic_content() {
 function bboss_bbp_topic_row_actions() {
 	do_action( 'bbp_topic_row_actions' );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_topic_row_actions' ) && ! function_exists( 'bbp_topic_row_actions' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_topic_row_actions()}.
+	 *
+	 * @deprecated Use bboss_bbp_topic_row_actions() instead.
+	 */
+	function bbp_topic_row_actions() {
+		return bboss_bbp_topic_row_actions();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output value of topic tags field
@@ -4241,6 +6299,20 @@ function bboss_bbp_topic_row_actions() {
 function bboss_bbp_form_topic_tags() {
 	echo bboss_bbp_get_form_topic_tags(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bbp_get_form_topic_tags() returns esc_attr()'d value.
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_form_topic_tags' ) && ! function_exists( 'bbp_form_topic_tags' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_form_topic_tags()}.
+	 *
+	 * @deprecated Use bboss_bbp_form_topic_tags() instead.
+	 */
+	function bbp_form_topic_tags() {
+		return bboss_bbp_form_topic_tags();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return value of topic tags field
@@ -4304,6 +6376,20 @@ function bboss_bbp_get_form_topic_tags() {
 
 	return apply_filters( 'bbp_get_form_topic_tags', esc_attr( $topic_tags ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_form_topic_tags' ) && ! function_exists( 'bbp_get_form_topic_tags' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_form_topic_tags()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_form_topic_tags() instead.
+	 */
+	function bbp_get_form_topic_tags() {
+		return bboss_bbp_get_form_topic_tags();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output value of topic forum
@@ -4315,6 +6401,20 @@ function bboss_bbp_get_form_topic_tags() {
 function bboss_bbp_form_topic_forum() {
 	echo esc_html( bboss_bbp_get_form_topic_forum() );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_form_topic_forum' ) && ! function_exists( 'bbp_form_topic_forum' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_form_topic_forum()}.
+	 *
+	 * @deprecated Use bboss_bbp_form_topic_forum() instead.
+	 */
+	function bbp_form_topic_forum() {
+		return bboss_bbp_form_topic_forum();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return value of topic forum
@@ -4343,6 +6443,20 @@ function bboss_bbp_get_form_topic_forum() {
 
 	return apply_filters( 'bbp_get_form_topic_forum', $topic_forum );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_form_topic_forum' ) && ! function_exists( 'bbp_get_form_topic_forum' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_form_topic_forum()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_form_topic_forum() instead.
+	 */
+	function bbp_get_form_topic_forum() {
+		return bboss_bbp_get_form_topic_forum();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output checked value of topic subscription
@@ -4354,6 +6468,20 @@ function bboss_bbp_get_form_topic_forum() {
 function bboss_bbp_form_topic_subscribed() {
 	echo bboss_bbp_get_form_topic_subscribed(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bbp_get_form_topic_subscribed() returns checked() attribute markup.
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_form_topic_subscribed' ) && ! function_exists( 'bbp_form_topic_subscribed' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_form_topic_subscribed()}.
+	 *
+	 * @deprecated Use bboss_bbp_form_topic_subscribed() instead.
+	 */
+	function bbp_form_topic_subscribed() {
+		return bboss_bbp_form_topic_subscribed();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return checked value of topic subscription
@@ -4393,6 +6521,20 @@ function bboss_bbp_get_form_topic_subscribed() {
 
 	return apply_filters( 'bbp_get_form_topic_subscribed', $checked, $topic_subscribed );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_form_topic_subscribed' ) && ! function_exists( 'bbp_get_form_topic_subscribed' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_form_topic_subscribed()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_form_topic_subscribed() instead.
+	 */
+	function bbp_get_form_topic_subscribed() {
+		return bboss_bbp_get_form_topic_subscribed();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output checked value of topic log edit field
@@ -4404,6 +6546,20 @@ function bboss_bbp_get_form_topic_subscribed() {
 function bboss_bbp_form_topic_log_edit() {
 	echo bboss_bbp_get_form_topic_log_edit(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bbp_get_form_topic_log_edit() returns checked() attribute markup.
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_form_topic_log_edit' ) && ! function_exists( 'bbp_form_topic_log_edit' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_form_topic_log_edit()}.
+	 *
+	 * @deprecated Use bboss_bbp_form_topic_log_edit() instead.
+	 */
+	function bbp_form_topic_log_edit() {
+		return bboss_bbp_form_topic_log_edit();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return checked value of topic log edit field
@@ -4430,6 +6586,20 @@ function bboss_bbp_get_form_topic_log_edit() {
 
 	return apply_filters( 'bbp_get_form_topic_log_edit', $checked, $topic_revision );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_form_topic_log_edit' ) && ! function_exists( 'bbp_get_form_topic_log_edit' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_form_topic_log_edit()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_form_topic_log_edit() instead.
+	 */
+	function bbp_get_form_topic_log_edit() {
+		return bboss_bbp_get_form_topic_log_edit();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output the value of the topic edit reason
@@ -4441,6 +6611,20 @@ function bboss_bbp_get_form_topic_log_edit() {
 function bboss_bbp_form_topic_edit_reason() {
 	echo bboss_bbp_get_form_topic_edit_reason(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bbp_get_form_topic_edit_reason() returns esc_attr()'d value.
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_form_topic_edit_reason' ) && ! function_exists( 'bbp_form_topic_edit_reason' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_form_topic_edit_reason()}.
+	 *
+	 * @deprecated Use bboss_bbp_form_topic_edit_reason() instead.
+	 */
+	function bbp_form_topic_edit_reason() {
+		return bboss_bbp_form_topic_edit_reason();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return the value of the topic edit reason
@@ -4464,6 +6648,20 @@ function bboss_bbp_get_form_topic_edit_reason() {
 
 	return apply_filters( 'bbp_get_form_topic_edit_reason', esc_attr( $topic_edit_reason ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_get_form_topic_edit_reason' ) && ! function_exists( 'bbp_get_form_topic_edit_reason' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_get_form_topic_edit_reason()}.
+	 *
+	 * @deprecated Use bboss_bbp_get_form_topic_edit_reason() instead.
+	 */
+	function bbp_get_form_topic_edit_reason() {
+		return bboss_bbp_get_form_topic_edit_reason();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return the topics created date/time.
@@ -4492,390 +6690,8 @@ function bboss_bbp_get_topic_created_time( $topic_id = 0 ) {
 	// Return the time since.
 	return apply_filters( 'bbp_get_topic_created_time', $last_active, $topic_id );
 }
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
-if ( function_exists( 'bboss_bbp_add_sticky_topics' ) && ! function_exists( 'bbp_add_sticky_topics' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_add_sticky_topics()}.
-	 *
-	 * @deprecated Use bboss_bbp_add_sticky_topics() instead.
-	 */
-	function bbp_add_sticky_topics( &$query, $args = array() ) {
-		return bboss_bbp_add_sticky_topics( ...func_get_args() );
-	}
-}
-if ( function_exists( 'bboss_bbp_form_topic_content' ) && ! function_exists( 'bbp_form_topic_content' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_form_topic_content()}.
-	 *
-	 * @deprecated Use bboss_bbp_form_topic_content() instead.
-	 */
-	function bbp_form_topic_content() {
-		return bboss_bbp_form_topic_content();
-	}
-}
-if ( function_exists( 'bboss_bbp_form_topic_edit_reason' ) && ! function_exists( 'bbp_form_topic_edit_reason' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_form_topic_edit_reason()}.
-	 *
-	 * @deprecated Use bboss_bbp_form_topic_edit_reason() instead.
-	 */
-	function bbp_form_topic_edit_reason() {
-		return bboss_bbp_form_topic_edit_reason();
-	}
-}
-if ( function_exists( 'bboss_bbp_form_topic_forum' ) && ! function_exists( 'bbp_form_topic_forum' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_form_topic_forum()}.
-	 *
-	 * @deprecated Use bboss_bbp_form_topic_forum() instead.
-	 */
-	function bbp_form_topic_forum() {
-		return bboss_bbp_form_topic_forum();
-	}
-}
-if ( function_exists( 'bboss_bbp_form_topic_log_edit' ) && ! function_exists( 'bbp_form_topic_log_edit' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_form_topic_log_edit()}.
-	 *
-	 * @deprecated Use bboss_bbp_form_topic_log_edit() instead.
-	 */
-	function bbp_form_topic_log_edit() {
-		return bboss_bbp_form_topic_log_edit();
-	}
-}
-if ( function_exists( 'bboss_bbp_form_topic_status_dropdown' ) && ! function_exists( 'bbp_form_topic_status_dropdown' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_form_topic_status_dropdown()}.
-	 *
-	 * @deprecated Use bboss_bbp_form_topic_status_dropdown() instead.
-	 */
-	function bbp_form_topic_status_dropdown( $args = '' ) {
-		return bboss_bbp_form_topic_status_dropdown( $args );
-	}
-}
-if ( function_exists( 'bboss_bbp_form_topic_subscribed' ) && ! function_exists( 'bbp_form_topic_subscribed' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_form_topic_subscribed()}.
-	 *
-	 * @deprecated Use bboss_bbp_form_topic_subscribed() instead.
-	 */
-	function bbp_form_topic_subscribed() {
-		return bboss_bbp_form_topic_subscribed();
-	}
-}
-if ( function_exists( 'bboss_bbp_form_topic_tags' ) && ! function_exists( 'bbp_form_topic_tags' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_form_topic_tags()}.
-	 *
-	 * @deprecated Use bboss_bbp_form_topic_tags() instead.
-	 */
-	function bbp_form_topic_tags() {
-		return bboss_bbp_form_topic_tags();
-	}
-}
-if ( function_exists( 'bboss_bbp_form_topic_title' ) && ! function_exists( 'bbp_form_topic_title' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_form_topic_title()}.
-	 *
-	 * @deprecated Use bboss_bbp_form_topic_title() instead.
-	 */
-	function bbp_form_topic_title() {
-		return bboss_bbp_form_topic_title();
-	}
-}
-if ( function_exists( 'bboss_bbp_form_topic_type_dropdown' ) && ! function_exists( 'bbp_form_topic_type_dropdown' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_form_topic_type_dropdown()}.
-	 *
-	 * @deprecated Use bboss_bbp_form_topic_type_dropdown() instead.
-	 */
-	function bbp_form_topic_type_dropdown( $args = '' ) {
-		return bboss_bbp_form_topic_type_dropdown( $args );
-	}
-}
-if ( function_exists( 'bboss_bbp_forum_pagination_count' ) && ! function_exists( 'bbp_forum_pagination_count' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_forum_pagination_count()}.
-	 *
-	 * @deprecated Use bboss_bbp_forum_pagination_count() instead.
-	 */
-	function bbp_forum_pagination_count() {
-		return bboss_bbp_forum_pagination_count();
-	}
-}
-if ( function_exists( 'bboss_bbp_forum_pagination_links' ) && ! function_exists( 'bbp_forum_pagination_links' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_forum_pagination_links()}.
-	 *
-	 * @deprecated Use bboss_bbp_forum_pagination_links() instead.
-	 */
-	function bbp_forum_pagination_links() {
-		return bboss_bbp_forum_pagination_links();
-	}
-}
-if ( function_exists( 'bboss_bbp_get_form_topic_content' ) && ! function_exists( 'bbp_get_form_topic_content' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_form_topic_content()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_form_topic_content() instead.
-	 */
-	function bbp_get_form_topic_content() {
-		return bboss_bbp_get_form_topic_content();
-	}
-}
-if ( function_exists( 'bboss_bbp_get_form_topic_edit_reason' ) && ! function_exists( 'bbp_get_form_topic_edit_reason' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_form_topic_edit_reason()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_form_topic_edit_reason() instead.
-	 */
-	function bbp_get_form_topic_edit_reason() {
-		return bboss_bbp_get_form_topic_edit_reason();
-	}
-}
-if ( function_exists( 'bboss_bbp_get_form_topic_forum' ) && ! function_exists( 'bbp_get_form_topic_forum' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_form_topic_forum()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_form_topic_forum() instead.
-	 */
-	function bbp_get_form_topic_forum() {
-		return bboss_bbp_get_form_topic_forum();
-	}
-}
-if ( function_exists( 'bboss_bbp_get_form_topic_log_edit' ) && ! function_exists( 'bbp_get_form_topic_log_edit' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_form_topic_log_edit()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_form_topic_log_edit() instead.
-	 */
-	function bbp_get_form_topic_log_edit() {
-		return bboss_bbp_get_form_topic_log_edit();
-	}
-}
-if ( function_exists( 'bboss_bbp_get_form_topic_status_dropdown' ) && ! function_exists( 'bbp_get_form_topic_status_dropdown' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_form_topic_status_dropdown()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_form_topic_status_dropdown() instead.
-	 */
-	function bbp_get_form_topic_status_dropdown( $args = '' ) {
-		return bboss_bbp_get_form_topic_status_dropdown( $args );
-	}
-}
-if ( function_exists( 'bboss_bbp_get_form_topic_subscribed' ) && ! function_exists( 'bbp_get_form_topic_subscribed' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_form_topic_subscribed()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_form_topic_subscribed() instead.
-	 */
-	function bbp_get_form_topic_subscribed() {
-		return bboss_bbp_get_form_topic_subscribed();
-	}
-}
-if ( function_exists( 'bboss_bbp_get_form_topic_tags' ) && ! function_exists( 'bbp_get_form_topic_tags' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_form_topic_tags()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_form_topic_tags() instead.
-	 */
-	function bbp_get_form_topic_tags() {
-		return bboss_bbp_get_form_topic_tags();
-	}
-}
-if ( function_exists( 'bboss_bbp_get_form_topic_title' ) && ! function_exists( 'bbp_get_form_topic_title' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_form_topic_title()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_form_topic_title() instead.
-	 */
-	function bbp_get_form_topic_title() {
-		return bboss_bbp_get_form_topic_title();
-	}
-}
-if ( function_exists( 'bboss_bbp_get_form_topic_type_dropdown' ) && ! function_exists( 'bbp_get_form_topic_type_dropdown' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_form_topic_type_dropdown()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_form_topic_type_dropdown() instead.
-	 */
-	function bbp_get_form_topic_type_dropdown( $args = '' ) {
-		return bboss_bbp_get_form_topic_type_dropdown( $args );
-	}
-}
-if ( function_exists( 'bboss_bbp_get_forum_pagination_count' ) && ! function_exists( 'bbp_get_forum_pagination_count' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_forum_pagination_count()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_forum_pagination_count() instead.
-	 */
-	function bbp_get_forum_pagination_count() {
-		return bboss_bbp_get_forum_pagination_count();
-	}
-}
-if ( function_exists( 'bboss_bbp_get_forum_pagination_links' ) && ! function_exists( 'bbp_get_forum_pagination_links' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_forum_pagination_links()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_forum_pagination_links() instead.
-	 */
-	function bbp_get_forum_pagination_links() {
-		return bboss_bbp_get_forum_pagination_links();
-	}
-}
-if ( function_exists( 'bboss_bbp_get_reply_report_link' ) && ! function_exists( 'bbp_get_reply_report_link' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_reply_report_link()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_reply_report_link() instead.
-	 */
-	function bbp_get_reply_report_link( $args = array() ) {
-		return bboss_bbp_get_reply_report_link( $args );
-	}
-}
-if ( function_exists( 'bboss_bbp_get_topic' ) && ! function_exists( 'bbp_get_topic' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_topic()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_topic() instead.
-	 */
-	function bbp_get_topic( $topic, $output = OBJECT, $filter = 'raw' ) {
-		return bboss_bbp_get_topic( $topic, $output, $filter );
-	}
-}
-if ( function_exists( 'bboss_bbp_get_topic_admin_links' ) && ! function_exists( 'bbp_get_topic_admin_links' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_topic_admin_links()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_topic_admin_links() instead.
-	 */
-	function bbp_get_topic_admin_links( $args = array() ) {
-		return bboss_bbp_get_topic_admin_links( $args );
-	}
-}
-if ( function_exists( 'bboss_bbp_get_topic_archive_title' ) && ! function_exists( 'bbp_get_topic_archive_title' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_topic_archive_title()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_topic_archive_title() instead.
-	 */
-	function bbp_get_topic_archive_title( $title = '' ) {
-		return bboss_bbp_get_topic_archive_title( $title );
-	}
-}
-if ( function_exists( 'bboss_bbp_get_topic_author' ) && ! function_exists( 'bbp_get_topic_author' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_topic_author()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_topic_author() instead.
-	 */
-	function bbp_get_topic_author( $topic_id = 0 ) {
-		return bboss_bbp_get_topic_author( $topic_id );
-	}
-}
-if ( function_exists( 'bboss_bbp_get_topic_author_avatar' ) && ! function_exists( 'bbp_get_topic_author_avatar' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_topic_author_avatar()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_topic_author_avatar() instead.
-	 */
-	function bbp_get_topic_author_avatar( $topic_id = 0, $size = 40 ) {
-		return bboss_bbp_get_topic_author_avatar( $topic_id, $size );
-	}
-}
-if ( function_exists( 'bboss_bbp_get_topic_author_display_name' ) && ! function_exists( 'bbp_get_topic_author_display_name' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_topic_author_display_name()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_topic_author_display_name() instead.
-	 */
-	function bbp_get_topic_author_display_name( $topic_id = 0, $viewer_user_id = 0 ) {
-		return bboss_bbp_get_topic_author_display_name( $topic_id, $viewer_user_id );
-	}
-}
-if ( function_exists( 'bboss_bbp_get_topic_author_email' ) && ! function_exists( 'bbp_get_topic_author_email' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_topic_author_email()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_topic_author_email() instead.
-	 */
-	function bbp_get_topic_author_email( $topic_id = 0 ) {
-		return bboss_bbp_get_topic_author_email( $topic_id );
-	}
-}
-if ( function_exists( 'bboss_bbp_get_topic_author_id' ) && ! function_exists( 'bbp_get_topic_author_id' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_topic_author_id()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_topic_author_id() instead.
-	 */
-	function bbp_get_topic_author_id( $topic_id = 0 ) {
-		return bboss_bbp_get_topic_author_id( $topic_id );
-	}
-}
-if ( function_exists( 'bboss_bbp_get_topic_author_link' ) && ! function_exists( 'bbp_get_topic_author_link' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_topic_author_link()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_topic_author_link() instead.
-	 */
-	function bbp_get_topic_author_link( $args = '' ) {
-		return bboss_bbp_get_topic_author_link( $args );
-	}
-}
-if ( function_exists( 'bboss_bbp_get_topic_author_role' ) && ! function_exists( 'bbp_get_topic_author_role' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_topic_author_role()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_topic_author_role() instead.
-	 */
-	function bbp_get_topic_author_role( $args = array() ) {
-		return bboss_bbp_get_topic_author_role( $args );
-	}
-}
-if ( function_exists( 'bboss_bbp_get_topic_author_url' ) && ! function_exists( 'bbp_get_topic_author_url' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_topic_author_url()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_topic_author_url() instead.
-	 */
-	function bbp_get_topic_author_url( $topic_id = 0 ) {
-		return bboss_bbp_get_topic_author_url( $topic_id );
-	}
-}
-if ( function_exists( 'bboss_bbp_get_topic_class' ) && ! function_exists( 'bbp_get_topic_class' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_topic_class()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_topic_class() instead.
-	 */
-	function bbp_get_topic_class( $topic_id = 0, $classes = array() ) {
-		return bboss_bbp_get_topic_class( $topic_id, $classes );
-	}
-}
-if ( function_exists( 'bboss_bbp_get_topic_close_link' ) && ! function_exists( 'bbp_get_topic_close_link' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_topic_close_link()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_topic_close_link() instead.
-	 */
-	function bbp_get_topic_close_link( $args = '' ) {
-		return bboss_bbp_get_topic_close_link( $args );
-	}
-}
-if ( function_exists( 'bboss_bbp_get_topic_content' ) && ! function_exists( 'bbp_get_topic_content' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_topic_content()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_topic_content() instead.
-	 */
-	function bbp_get_topic_content( $topic_id = 0 ) {
-		return bboss_bbp_get_topic_content( $topic_id );
-	}
-}
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_bbp_get_topic_created_time' ) && ! function_exists( 'bbp_get_topic_created_time' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_bbp_get_topic_created_time()}.
@@ -4886,1194 +6702,5 @@ if ( function_exists( 'bboss_bbp_get_topic_created_time' ) && ! function_exists(
 		return bboss_bbp_get_topic_created_time( $topic_id );
 	}
 }
-if ( function_exists( 'bboss_bbp_get_topic_edit_link' ) && ! function_exists( 'bbp_get_topic_edit_link' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_topic_edit_link()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_topic_edit_link() instead.
-	 */
-	function bbp_get_topic_edit_link( $args = '' ) {
-		return bboss_bbp_get_topic_edit_link( $args );
-	}
-}
-if ( function_exists( 'bboss_bbp_get_topic_edit_url' ) && ! function_exists( 'bbp_get_topic_edit_url' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_topic_edit_url()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_topic_edit_url() instead.
-	 */
-	function bbp_get_topic_edit_url( $topic_id = 0 ) {
-		return bboss_bbp_get_topic_edit_url( $topic_id );
-	}
-}
-if ( function_exists( 'bboss_bbp_get_topic_excerpt' ) && ! function_exists( 'bbp_get_topic_excerpt' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_topic_excerpt()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_topic_excerpt() instead.
-	 */
-	function bbp_get_topic_excerpt( $topic_id = 0, $length = 100 ) {
-		return bboss_bbp_get_topic_excerpt( $topic_id, $length );
-	}
-}
-if ( function_exists( 'bboss_bbp_get_topic_favorite_link' ) && ! function_exists( 'bbp_get_topic_favorite_link' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_topic_favorite_link()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_topic_favorite_link() instead.
-	 */
-	function bbp_get_topic_favorite_link( $args = array() ) {
-		return bboss_bbp_get_topic_favorite_link( $args );
-	}
-}
-if ( function_exists( 'bboss_bbp_get_topic_forum_id' ) && ! function_exists( 'bbp_get_topic_forum_id' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_topic_forum_id()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_topic_forum_id() instead.
-	 */
-	function bbp_get_topic_forum_id( $topic_id = 0 ) {
-		return bboss_bbp_get_topic_forum_id( $topic_id );
-	}
-}
-if ( function_exists( 'bboss_bbp_get_topic_forum_title' ) && ! function_exists( 'bbp_get_topic_forum_title' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_topic_forum_title()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_topic_forum_title() instead.
-	 */
-	function bbp_get_topic_forum_title( $topic_id = 0 ) {
-		return bboss_bbp_get_topic_forum_title( $topic_id );
-	}
-}
-if ( function_exists( 'bboss_bbp_get_topic_freshness_link' ) && ! function_exists( 'bbp_get_topic_freshness_link' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_topic_freshness_link()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_topic_freshness_link() instead.
-	 */
-	function bbp_get_topic_freshness_link( $topic_id = 0 ) {
-		return bboss_bbp_get_topic_freshness_link( $topic_id );
-	}
-}
-if ( function_exists( 'bboss_bbp_get_topic_id' ) && ! function_exists( 'bbp_get_topic_id' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_topic_id()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_topic_id() instead.
-	 */
-	function bbp_get_topic_id( $topic_id = 0 ) {
-		return bboss_bbp_get_topic_id( $topic_id );
-	}
-}
-if ( function_exists( 'bboss_bbp_get_topic_last_active_id' ) && ! function_exists( 'bbp_get_topic_last_active_id' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_topic_last_active_id()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_topic_last_active_id() instead.
-	 */
-	function bbp_get_topic_last_active_id( $topic_id = 0 ) {
-		return bboss_bbp_get_topic_last_active_id( $topic_id );
-	}
-}
-if ( function_exists( 'bboss_bbp_get_topic_last_active_time' ) && ! function_exists( 'bbp_get_topic_last_active_time' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_topic_last_active_time()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_topic_last_active_time() instead.
-	 */
-	function bbp_get_topic_last_active_time( $topic_id = 0 ) {
-		return bboss_bbp_get_topic_last_active_time( $topic_id );
-	}
-}
-if ( function_exists( 'bboss_bbp_get_topic_last_reply_id' ) && ! function_exists( 'bbp_get_topic_last_reply_id' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_topic_last_reply_id()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_topic_last_reply_id() instead.
-	 */
-	function bbp_get_topic_last_reply_id( $topic_id = 0 ) {
-		return bboss_bbp_get_topic_last_reply_id( $topic_id );
-	}
-}
-if ( function_exists( 'bboss_bbp_get_topic_last_reply_permalink' ) && ! function_exists( 'bbp_get_topic_last_reply_permalink' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_topic_last_reply_permalink()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_topic_last_reply_permalink() instead.
-	 */
-	function bbp_get_topic_last_reply_permalink( $topic_id = 0 ) {
-		return bboss_bbp_get_topic_last_reply_permalink( $topic_id );
-	}
-}
-if ( function_exists( 'bboss_bbp_get_topic_last_reply_title' ) && ! function_exists( 'bbp_get_topic_last_reply_title' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_topic_last_reply_title()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_topic_last_reply_title() instead.
-	 */
-	function bbp_get_topic_last_reply_title( $topic_id = 0 ) {
-		return bboss_bbp_get_topic_last_reply_title( $topic_id );
-	}
-}
-if ( function_exists( 'bboss_bbp_get_topic_last_reply_url' ) && ! function_exists( 'bbp_get_topic_last_reply_url' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_topic_last_reply_url()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_topic_last_reply_url() instead.
-	 */
-	function bbp_get_topic_last_reply_url( $topic_id = 0 ) {
-		return bboss_bbp_get_topic_last_reply_url( $topic_id );
-	}
-}
-if ( function_exists( 'bboss_bbp_get_topic_merge_link' ) && ! function_exists( 'bbp_get_topic_merge_link' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_topic_merge_link()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_topic_merge_link() instead.
-	 */
-	function bbp_get_topic_merge_link( $args = '' ) {
-		return bboss_bbp_get_topic_merge_link( $args );
-	}
-}
-if ( function_exists( 'bboss_bbp_get_topic_pagination' ) && ! function_exists( 'bbp_get_topic_pagination' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_topic_pagination()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_topic_pagination() instead.
-	 */
-	function bbp_get_topic_pagination( $args = '' ) {
-		return bboss_bbp_get_topic_pagination( $args );
-	}
-}
-if ( function_exists( 'bboss_bbp_get_topic_permalink' ) && ! function_exists( 'bbp_get_topic_permalink' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_topic_permalink()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_topic_permalink() instead.
-	 */
-	function bbp_get_topic_permalink( $topic_id = 0, $redirect_to = '' ) {
-		return bboss_bbp_get_topic_permalink( $topic_id, $redirect_to );
-	}
-}
-if ( function_exists( 'bboss_bbp_get_topic_post_count' ) && ! function_exists( 'bbp_get_topic_post_count' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_topic_post_count()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_topic_post_count() instead.
-	 */
-	function bbp_get_topic_post_count( $topic_id = 0, $integer = false ) {
-		return bboss_bbp_get_topic_post_count( $topic_id, $integer );
-	}
-}
-if ( function_exists( 'bboss_bbp_get_topic_post_date' ) && ! function_exists( 'bbp_get_topic_post_date' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_topic_post_date()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_topic_post_date() instead.
-	 */
-	function bbp_get_topic_post_date( $topic_id = 0, $humanize = false, $gmt = false ) {
-		return bboss_bbp_get_topic_post_date( $topic_id, $humanize, $gmt );
-	}
-}
-if ( function_exists( 'bboss_bbp_get_topic_post_type' ) && ! function_exists( 'bbp_get_topic_post_type' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_topic_post_type()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_topic_post_type() instead.
-	 */
-	function bbp_get_topic_post_type() {
-		return bboss_bbp_get_topic_post_type();
-	}
-}
-if ( function_exists( 'bboss_bbp_get_topic_post_type_labels' ) && ! function_exists( 'bbp_get_topic_post_type_labels' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_topic_post_type_labels()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_topic_post_type_labels() instead.
-	 */
-	function bbp_get_topic_post_type_labels() {
-		return bboss_bbp_get_topic_post_type_labels();
-	}
-}
-if ( function_exists( 'bboss_bbp_get_topic_post_type_rewrite' ) && ! function_exists( 'bbp_get_topic_post_type_rewrite' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_topic_post_type_rewrite()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_topic_post_type_rewrite() instead.
-	 */
-	function bbp_get_topic_post_type_rewrite() {
-		return bboss_bbp_get_topic_post_type_rewrite();
-	}
-}
-if ( function_exists( 'bboss_bbp_get_topic_post_type_supports' ) && ! function_exists( 'bbp_get_topic_post_type_supports' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_topic_post_type_supports()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_topic_post_type_supports() instead.
-	 */
-	function bbp_get_topic_post_type_supports() {
-		return bboss_bbp_get_topic_post_type_supports();
-	}
-}
-if ( function_exists( 'bboss_bbp_get_topic_raw_revision_log' ) && ! function_exists( 'bbp_get_topic_raw_revision_log' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_topic_raw_revision_log()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_topic_raw_revision_log() instead.
-	 */
-	function bbp_get_topic_raw_revision_log( $topic_id = 0 ) {
-		return bboss_bbp_get_topic_raw_revision_log( $topic_id );
-	}
-}
-if ( function_exists( 'bboss_bbp_get_topic_replies_link' ) && ! function_exists( 'bbp_get_topic_replies_link' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_topic_replies_link()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_topic_replies_link() instead.
-	 */
-	function bbp_get_topic_replies_link( $topic_id = 0 ) {
-		return bboss_bbp_get_topic_replies_link( $topic_id );
-	}
-}
-if ( function_exists( 'bboss_bbp_get_topic_reply_count' ) && ! function_exists( 'bbp_get_topic_reply_count' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_topic_reply_count()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_topic_reply_count() instead.
-	 */
-	function bbp_get_topic_reply_count( $topic_id = 0, $integer = false ) {
-		return bboss_bbp_get_topic_reply_count( $topic_id, $integer );
-	}
-}
-if ( function_exists( 'bboss_bbp_get_topic_reply_count_hidden' ) && ! function_exists( 'bbp_get_topic_reply_count_hidden' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_topic_reply_count_hidden()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_topic_reply_count_hidden() instead.
-	 */
-	function bbp_get_topic_reply_count_hidden( $topic_id = 0, $integer = false ) {
-		return bboss_bbp_get_topic_reply_count_hidden( $topic_id, $integer );
-	}
-}
-if ( function_exists( 'bboss_bbp_get_topic_reply_link' ) && ! function_exists( 'bbp_get_topic_reply_link' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_topic_reply_link()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_topic_reply_link() instead.
-	 */
-	function bbp_get_topic_reply_link( $args = array() ) {
-		return bboss_bbp_get_topic_reply_link( $args );
-	}
-}
-if ( function_exists( 'bboss_bbp_get_topic_report_link' ) && ! function_exists( 'bbp_get_topic_report_link' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_topic_report_link()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_topic_report_link() instead.
-	 */
-	function bbp_get_topic_report_link( $args = '' ) {
-		return bboss_bbp_get_topic_report_link( $args );
-	}
-}
-if ( function_exists( 'bboss_bbp_get_topic_revision_count' ) && ! function_exists( 'bbp_get_topic_revision_count' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_topic_revision_count()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_topic_revision_count() instead.
-	 */
-	function bbp_get_topic_revision_count( $topic_id = 0, $integer = false ) {
-		return bboss_bbp_get_topic_revision_count( $topic_id, $integer );
-	}
-}
-if ( function_exists( 'bboss_bbp_get_topic_revision_log' ) && ! function_exists( 'bbp_get_topic_revision_log' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_topic_revision_log()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_topic_revision_log() instead.
-	 */
-	function bbp_get_topic_revision_log( $topic_id = 0 ) {
-		return bboss_bbp_get_topic_revision_log( $topic_id );
-	}
-}
-if ( function_exists( 'bboss_bbp_get_topic_revisions' ) && ! function_exists( 'bbp_get_topic_revisions' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_topic_revisions()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_topic_revisions() instead.
-	 */
-	function bbp_get_topic_revisions( $topic_id = 0 ) {
-		return bboss_bbp_get_topic_revisions( $topic_id );
-	}
-}
-if ( function_exists( 'bboss_bbp_get_topic_spam_link' ) && ! function_exists( 'bbp_get_topic_spam_link' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_topic_spam_link()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_topic_spam_link() instead.
-	 */
-	function bbp_get_topic_spam_link( $args = '' ) {
-		return bboss_bbp_get_topic_spam_link( $args );
-	}
-}
-if ( function_exists( 'bboss_bbp_get_topic_status' ) && ! function_exists( 'bbp_get_topic_status' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_topic_status()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_topic_status() instead.
-	 */
-	function bbp_get_topic_status( $topic_id = 0 ) {
-		return bboss_bbp_get_topic_status( $topic_id );
-	}
-}
-if ( function_exists( 'bboss_bbp_get_topic_stick_link' ) && ! function_exists( 'bbp_get_topic_stick_link' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_topic_stick_link()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_topic_stick_link() instead.
-	 */
-	function bbp_get_topic_stick_link( $args = '' ) {
-		return bboss_bbp_get_topic_stick_link( $args );
-	}
-}
-if ( function_exists( 'bboss_bbp_get_topic_subscription_link' ) && ! function_exists( 'bbp_get_topic_subscription_link' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_topic_subscription_link()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_topic_subscription_link() instead.
-	 */
-	function bbp_get_topic_subscription_link( $args = array() ) {
-		return bboss_bbp_get_topic_subscription_link( $args );
-	}
-}
-if ( function_exists( 'bboss_bbp_get_topic_tag_description' ) && ! function_exists( 'bbp_get_topic_tag_description' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_topic_tag_description()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_topic_tag_description() instead.
-	 */
-	function bbp_get_topic_tag_description( $args = array() ) {
-		return bboss_bbp_get_topic_tag_description( $args );
-	}
-}
-if ( function_exists( 'bboss_bbp_get_topic_tag_edit_link' ) && ! function_exists( 'bbp_get_topic_tag_edit_link' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_topic_tag_edit_link()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_topic_tag_edit_link() instead.
-	 */
-	function bbp_get_topic_tag_edit_link( $tag = '' ) {
-		return bboss_bbp_get_topic_tag_edit_link( $tag );
-	}
-}
-if ( function_exists( 'bboss_bbp_get_topic_tag_id' ) && ! function_exists( 'bbp_get_topic_tag_id' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_topic_tag_id()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_topic_tag_id() instead.
-	 */
-	function bbp_get_topic_tag_id( $tag = '' ) {
-		return bboss_bbp_get_topic_tag_id( $tag );
-	}
-}
-if ( function_exists( 'bboss_bbp_get_topic_tag_link' ) && ! function_exists( 'bbp_get_topic_tag_link' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_topic_tag_link()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_topic_tag_link() instead.
-	 */
-	function bbp_get_topic_tag_link( $tag = '' ) {
-		return bboss_bbp_get_topic_tag_link( $tag );
-	}
-}
-if ( function_exists( 'bboss_bbp_get_topic_tag_list' ) && ! function_exists( 'bbp_get_topic_tag_list' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_topic_tag_list()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_topic_tag_list() instead.
-	 */
-	function bbp_get_topic_tag_list( $topic_id = 0, $args = '' ) {
-		return bboss_bbp_get_topic_tag_list( $topic_id, $args );
-	}
-}
-if ( function_exists( 'bboss_bbp_get_topic_tag_name' ) && ! function_exists( 'bbp_get_topic_tag_name' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_topic_tag_name()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_topic_tag_name() instead.
-	 */
-	function bbp_get_topic_tag_name( $tag = '' ) {
-		return bboss_bbp_get_topic_tag_name( $tag );
-	}
-}
-if ( function_exists( 'bboss_bbp_get_topic_tag_slug' ) && ! function_exists( 'bbp_get_topic_tag_slug' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_topic_tag_slug()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_topic_tag_slug() instead.
-	 */
-	function bbp_get_topic_tag_slug( $tag = '' ) {
-		return bboss_bbp_get_topic_tag_slug( $tag );
-	}
-}
-if ( function_exists( 'bboss_bbp_get_topic_tag_tax_id' ) && ! function_exists( 'bbp_get_topic_tag_tax_id' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_topic_tag_tax_id()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_topic_tag_tax_id() instead.
-	 */
-	function bbp_get_topic_tag_tax_id() {
-		return bboss_bbp_get_topic_tag_tax_id();
-	}
-}
-if ( function_exists( 'bboss_bbp_get_topic_tag_tax_labels' ) && ! function_exists( 'bbp_get_topic_tag_tax_labels' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_topic_tag_tax_labels()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_topic_tag_tax_labels() instead.
-	 */
-	function bbp_get_topic_tag_tax_labels() {
-		return bboss_bbp_get_topic_tag_tax_labels();
-	}
-}
-if ( function_exists( 'bboss_bbp_get_topic_tag_tax_rewrite' ) && ! function_exists( 'bbp_get_topic_tag_tax_rewrite' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_topic_tag_tax_rewrite()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_topic_tag_tax_rewrite() instead.
-	 */
-	function bbp_get_topic_tag_tax_rewrite() {
-		return bboss_bbp_get_topic_tag_tax_rewrite();
-	}
-}
-if ( function_exists( 'bboss_bbp_get_topic_title' ) && ! function_exists( 'bbp_get_topic_title' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_topic_title()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_topic_title() instead.
-	 */
-	function bbp_get_topic_title( $topic_id = 0 ) {
-		return bboss_bbp_get_topic_title( $topic_id );
-	}
-}
-if ( function_exists( 'bboss_bbp_get_topic_trash_link' ) && ! function_exists( 'bbp_get_topic_trash_link' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_topic_trash_link()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_topic_trash_link() instead.
-	 */
-	function bbp_get_topic_trash_link( $args = '' ) {
-		return bboss_bbp_get_topic_trash_link( $args );
-	}
-}
-if ( function_exists( 'bboss_bbp_get_topic_voice_count' ) && ! function_exists( 'bbp_get_topic_voice_count' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_topic_voice_count()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_topic_voice_count() instead.
-	 */
-	function bbp_get_topic_voice_count( $topic_id = 0, $integer = false ) {
-		return bboss_bbp_get_topic_voice_count( $topic_id, $integer );
-	}
-}
-if ( function_exists( 'bboss_bbp_get_topics_pagination_base' ) && ! function_exists( 'bbp_get_topics_pagination_base' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_get_topics_pagination_base()}.
-	 *
-	 * @deprecated Use bboss_bbp_get_topics_pagination_base() instead.
-	 */
-	function bbp_get_topics_pagination_base( $forum_id = 0 ) {
-		return bboss_bbp_get_topics_pagination_base( $forum_id );
-	}
-}
-if ( function_exists( 'bboss_bbp_has_topics' ) && ! function_exists( 'bbp_has_topics' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_has_topics()}.
-	 *
-	 * @deprecated Use bboss_bbp_has_topics() instead.
-	 */
-	function bbp_has_topics( $args = '' ) {
-		return bboss_bbp_has_topics( $args );
-	}
-}
-if ( function_exists( 'bboss_bbp_is_topic_anonymous' ) && ! function_exists( 'bbp_is_topic_anonymous' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_is_topic_anonymous()}.
-	 *
-	 * @deprecated Use bboss_bbp_is_topic_anonymous() instead.
-	 */
-	function bbp_is_topic_anonymous( $topic_id = 0 ) {
-		return bboss_bbp_is_topic_anonymous( $topic_id );
-	}
-}
-if ( function_exists( 'bboss_bbp_is_topic_closed' ) && ! function_exists( 'bbp_is_topic_closed' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_is_topic_closed()}.
-	 *
-	 * @deprecated Use bboss_bbp_is_topic_closed() instead.
-	 */
-	function bbp_is_topic_closed( $topic_id = 0 ) {
-		return bboss_bbp_is_topic_closed( $topic_id );
-	}
-}
-if ( function_exists( 'bboss_bbp_is_topic_open' ) && ! function_exists( 'bbp_is_topic_open' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_is_topic_open()}.
-	 *
-	 * @deprecated Use bboss_bbp_is_topic_open() instead.
-	 */
-	function bbp_is_topic_open( $topic_id = 0 ) {
-		return bboss_bbp_is_topic_open( $topic_id );
-	}
-}
-if ( function_exists( 'bboss_bbp_is_topic_published' ) && ! function_exists( 'bbp_is_topic_published' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_is_topic_published()}.
-	 *
-	 * @deprecated Use bboss_bbp_is_topic_published() instead.
-	 */
-	function bbp_is_topic_published( $topic_id = 0 ) {
-		return bboss_bbp_is_topic_published( $topic_id );
-	}
-}
-if ( function_exists( 'bboss_bbp_is_topic_spam' ) && ! function_exists( 'bbp_is_topic_spam' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_is_topic_spam()}.
-	 *
-	 * @deprecated Use bboss_bbp_is_topic_spam() instead.
-	 */
-	function bbp_is_topic_spam( $topic_id = 0 ) {
-		return bboss_bbp_is_topic_spam( $topic_id );
-	}
-}
-if ( function_exists( 'bboss_bbp_is_topic_sticky' ) && ! function_exists( 'bbp_is_topic_sticky' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_is_topic_sticky()}.
-	 *
-	 * @deprecated Use bboss_bbp_is_topic_sticky() instead.
-	 */
-	function bbp_is_topic_sticky( $topic_id = 0, $check_super = true ) {
-		return bboss_bbp_is_topic_sticky( $topic_id, $check_super );
-	}
-}
-if ( function_exists( 'bboss_bbp_is_topic_super_sticky' ) && ! function_exists( 'bbp_is_topic_super_sticky' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_is_topic_super_sticky()}.
-	 *
-	 * @deprecated Use bboss_bbp_is_topic_super_sticky() instead.
-	 */
-	function bbp_is_topic_super_sticky( $topic_id = 0 ) {
-		return bboss_bbp_is_topic_super_sticky( $topic_id );
-	}
-}
-if ( function_exists( 'bboss_bbp_is_topic_trash' ) && ! function_exists( 'bbp_is_topic_trash' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_is_topic_trash()}.
-	 *
-	 * @deprecated Use bboss_bbp_is_topic_trash() instead.
-	 */
-	function bbp_is_topic_trash( $topic_id = 0 ) {
-		return bboss_bbp_is_topic_trash( $topic_id );
-	}
-}
-if ( function_exists( 'bboss_bbp_show_lead_topic' ) && ! function_exists( 'bbp_show_lead_topic' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_show_lead_topic()}.
-	 *
-	 * @deprecated Use bboss_bbp_show_lead_topic() instead.
-	 */
-	function bbp_show_lead_topic( $show_lead = true ) {
-		return bboss_bbp_show_lead_topic( $show_lead );
-	}
-}
-if ( function_exists( 'bboss_bbp_the_topic' ) && ! function_exists( 'bbp_the_topic' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_the_topic()}.
-	 *
-	 * @deprecated Use bboss_bbp_the_topic() instead.
-	 */
-	function bbp_the_topic() {
-		return bboss_bbp_the_topic();
-	}
-}
-if ( function_exists( 'bboss_bbp_topic_admin_links' ) && ! function_exists( 'bbp_topic_admin_links' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_topic_admin_links()}.
-	 *
-	 * @deprecated Use bboss_bbp_topic_admin_links() instead.
-	 */
-	function bbp_topic_admin_links( $args = array() ) {
-		return bboss_bbp_topic_admin_links( $args );
-	}
-}
-if ( function_exists( 'bboss_bbp_topic_archive_title' ) && ! function_exists( 'bbp_topic_archive_title' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_topic_archive_title()}.
-	 *
-	 * @deprecated Use bboss_bbp_topic_archive_title() instead.
-	 */
-	function bbp_topic_archive_title( $title = '' ) {
-		return bboss_bbp_topic_archive_title( $title );
-	}
-}
-if ( function_exists( 'bboss_bbp_topic_author' ) && ! function_exists( 'bbp_topic_author' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_topic_author()}.
-	 *
-	 * @deprecated Use bboss_bbp_topic_author() instead.
-	 */
-	function bbp_topic_author( $topic_id = 0 ) {
-		return bboss_bbp_topic_author( $topic_id );
-	}
-}
-if ( function_exists( 'bboss_bbp_topic_author_avatar' ) && ! function_exists( 'bbp_topic_author_avatar' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_topic_author_avatar()}.
-	 *
-	 * @deprecated Use bboss_bbp_topic_author_avatar() instead.
-	 */
-	function bbp_topic_author_avatar( $topic_id = 0, $size = 40 ) {
-		return bboss_bbp_topic_author_avatar( $topic_id, $size );
-	}
-}
-if ( function_exists( 'bboss_bbp_topic_author_display_name' ) && ! function_exists( 'bbp_topic_author_display_name' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_topic_author_display_name()}.
-	 *
-	 * @deprecated Use bboss_bbp_topic_author_display_name() instead.
-	 */
-	function bbp_topic_author_display_name( $topic_id = 0 ) {
-		return bboss_bbp_topic_author_display_name( $topic_id );
-	}
-}
-if ( function_exists( 'bboss_bbp_topic_author_email' ) && ! function_exists( 'bbp_topic_author_email' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_topic_author_email()}.
-	 *
-	 * @deprecated Use bboss_bbp_topic_author_email() instead.
-	 */
-	function bbp_topic_author_email( $topic_id = 0 ) {
-		return bboss_bbp_topic_author_email( $topic_id );
-	}
-}
-if ( function_exists( 'bboss_bbp_topic_author_id' ) && ! function_exists( 'bbp_topic_author_id' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_topic_author_id()}.
-	 *
-	 * @deprecated Use bboss_bbp_topic_author_id() instead.
-	 */
-	function bbp_topic_author_id( $topic_id = 0 ) {
-		return bboss_bbp_topic_author_id( $topic_id );
-	}
-}
-if ( function_exists( 'bboss_bbp_topic_author_link' ) && ! function_exists( 'bbp_topic_author_link' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_topic_author_link()}.
-	 *
-	 * @deprecated Use bboss_bbp_topic_author_link() instead.
-	 */
-	function bbp_topic_author_link( $args = '' ) {
-		return bboss_bbp_topic_author_link( $args );
-	}
-}
-if ( function_exists( 'bboss_bbp_topic_author_role' ) && ! function_exists( 'bbp_topic_author_role' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_topic_author_role()}.
-	 *
-	 * @deprecated Use bboss_bbp_topic_author_role() instead.
-	 */
-	function bbp_topic_author_role( $args = array() ) {
-		return bboss_bbp_topic_author_role( $args );
-	}
-}
-if ( function_exists( 'bboss_bbp_topic_author_url' ) && ! function_exists( 'bbp_topic_author_url' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_topic_author_url()}.
-	 *
-	 * @deprecated Use bboss_bbp_topic_author_url() instead.
-	 */
-	function bbp_topic_author_url( $topic_id = 0 ) {
-		return bboss_bbp_topic_author_url( $topic_id );
-	}
-}
-if ( function_exists( 'bboss_bbp_topic_class' ) && ! function_exists( 'bbp_topic_class' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_topic_class()}.
-	 *
-	 * @deprecated Use bboss_bbp_topic_class() instead.
-	 */
-	function bbp_topic_class( $topic_id = 0, $classes = array() ) {
-		return bboss_bbp_topic_class( $topic_id, $classes );
-	}
-}
-if ( function_exists( 'bboss_bbp_topic_close_link' ) && ! function_exists( 'bbp_topic_close_link' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_topic_close_link()}.
-	 *
-	 * @deprecated Use bboss_bbp_topic_close_link() instead.
-	 */
-	function bbp_topic_close_link( $args = '' ) {
-		return bboss_bbp_topic_close_link( $args );
-	}
-}
-if ( function_exists( 'bboss_bbp_topic_content' ) && ! function_exists( 'bbp_topic_content' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_topic_content()}.
-	 *
-	 * @deprecated Use bboss_bbp_topic_content() instead.
-	 */
-	function bbp_topic_content( $topic_id = 0 ) {
-		return bboss_bbp_topic_content( $topic_id );
-	}
-}
-if ( function_exists( 'bboss_bbp_topic_content_append_revisions' ) && ! function_exists( 'bbp_topic_content_append_revisions' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_topic_content_append_revisions()}.
-	 *
-	 * @deprecated Use bboss_bbp_topic_content_append_revisions() instead.
-	 */
-	function bbp_topic_content_append_revisions( $content = '', $topic_id = 0 ) {
-		return bboss_bbp_topic_content_append_revisions( $content, $topic_id );
-	}
-}
-if ( function_exists( 'bboss_bbp_topic_edit_link' ) && ! function_exists( 'bbp_topic_edit_link' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_topic_edit_link()}.
-	 *
-	 * @deprecated Use bboss_bbp_topic_edit_link() instead.
-	 */
-	function bbp_topic_edit_link( $args = '' ) {
-		return bboss_bbp_topic_edit_link( $args );
-	}
-}
-if ( function_exists( 'bboss_bbp_topic_edit_url' ) && ! function_exists( 'bbp_topic_edit_url' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_topic_edit_url()}.
-	 *
-	 * @deprecated Use bboss_bbp_topic_edit_url() instead.
-	 */
-	function bbp_topic_edit_url( $topic_id = 0 ) {
-		return bboss_bbp_topic_edit_url( $topic_id );
-	}
-}
-if ( function_exists( 'bboss_bbp_topic_excerpt' ) && ! function_exists( 'bbp_topic_excerpt' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_topic_excerpt()}.
-	 *
-	 * @deprecated Use bboss_bbp_topic_excerpt() instead.
-	 */
-	function bbp_topic_excerpt( $topic_id = 0, $length = 100 ) {
-		return bboss_bbp_topic_excerpt( $topic_id, $length );
-	}
-}
-if ( function_exists( 'bboss_bbp_topic_favorite_link' ) && ! function_exists( 'bbp_topic_favorite_link' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_topic_favorite_link()}.
-	 *
-	 * @deprecated Use bboss_bbp_topic_favorite_link() instead.
-	 */
-	function bbp_topic_favorite_link( $args = array() ) {
-		return bboss_bbp_topic_favorite_link( $args );
-	}
-}
-if ( function_exists( 'bboss_bbp_topic_forum_id' ) && ! function_exists( 'bbp_topic_forum_id' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_topic_forum_id()}.
-	 *
-	 * @deprecated Use bboss_bbp_topic_forum_id() instead.
-	 */
-	function bbp_topic_forum_id( $topic_id = 0 ) {
-		return bboss_bbp_topic_forum_id( $topic_id );
-	}
-}
-if ( function_exists( 'bboss_bbp_topic_forum_title' ) && ! function_exists( 'bbp_topic_forum_title' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_topic_forum_title()}.
-	 *
-	 * @deprecated Use bboss_bbp_topic_forum_title() instead.
-	 */
-	function bbp_topic_forum_title( $topic_id = 0 ) {
-		return bboss_bbp_topic_forum_title( $topic_id );
-	}
-}
-if ( function_exists( 'bboss_bbp_topic_freshness_link' ) && ! function_exists( 'bbp_topic_freshness_link' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_topic_freshness_link()}.
-	 *
-	 * @deprecated Use bboss_bbp_topic_freshness_link() instead.
-	 */
-	function bbp_topic_freshness_link( $topic_id = 0 ) {
-		return bboss_bbp_topic_freshness_link( $topic_id );
-	}
-}
-if ( function_exists( 'bboss_bbp_topic_id' ) && ! function_exists( 'bbp_topic_id' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_topic_id()}.
-	 *
-	 * @deprecated Use bboss_bbp_topic_id() instead.
-	 */
-	function bbp_topic_id( $topic_id = 0 ) {
-		return bboss_bbp_topic_id( $topic_id );
-	}
-}
-if ( function_exists( 'bboss_bbp_topic_last_active_id' ) && ! function_exists( 'bbp_topic_last_active_id' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_topic_last_active_id()}.
-	 *
-	 * @deprecated Use bboss_bbp_topic_last_active_id() instead.
-	 */
-	function bbp_topic_last_active_id( $topic_id = 0 ) {
-		return bboss_bbp_topic_last_active_id( $topic_id );
-	}
-}
-if ( function_exists( 'bboss_bbp_topic_last_active_time' ) && ! function_exists( 'bbp_topic_last_active_time' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_topic_last_active_time()}.
-	 *
-	 * @deprecated Use bboss_bbp_topic_last_active_time() instead.
-	 */
-	function bbp_topic_last_active_time( $topic_id = 0 ) {
-		return bboss_bbp_topic_last_active_time( $topic_id );
-	}
-}
-if ( function_exists( 'bboss_bbp_topic_last_reply_id' ) && ! function_exists( 'bbp_topic_last_reply_id' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_topic_last_reply_id()}.
-	 *
-	 * @deprecated Use bboss_bbp_topic_last_reply_id() instead.
-	 */
-	function bbp_topic_last_reply_id( $topic_id = 0 ) {
-		return bboss_bbp_topic_last_reply_id( $topic_id );
-	}
-}
-if ( function_exists( 'bboss_bbp_topic_last_reply_permalink' ) && ! function_exists( 'bbp_topic_last_reply_permalink' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_topic_last_reply_permalink()}.
-	 *
-	 * @deprecated Use bboss_bbp_topic_last_reply_permalink() instead.
-	 */
-	function bbp_topic_last_reply_permalink( $topic_id = 0 ) {
-		return bboss_bbp_topic_last_reply_permalink( $topic_id );
-	}
-}
-if ( function_exists( 'bboss_bbp_topic_last_reply_title' ) && ! function_exists( 'bbp_topic_last_reply_title' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_topic_last_reply_title()}.
-	 *
-	 * @deprecated Use bboss_bbp_topic_last_reply_title() instead.
-	 */
-	function bbp_topic_last_reply_title( $topic_id = 0 ) {
-		return bboss_bbp_topic_last_reply_title( $topic_id );
-	}
-}
-if ( function_exists( 'bboss_bbp_topic_last_reply_url' ) && ! function_exists( 'bbp_topic_last_reply_url' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_topic_last_reply_url()}.
-	 *
-	 * @deprecated Use bboss_bbp_topic_last_reply_url() instead.
-	 */
-	function bbp_topic_last_reply_url( $topic_id = 0 ) {
-		return bboss_bbp_topic_last_reply_url( $topic_id );
-	}
-}
-if ( function_exists( 'bboss_bbp_topic_merge_link' ) && ! function_exists( 'bbp_topic_merge_link' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_topic_merge_link()}.
-	 *
-	 * @deprecated Use bboss_bbp_topic_merge_link() instead.
-	 */
-	function bbp_topic_merge_link( $args = '' ) {
-		return bboss_bbp_topic_merge_link( $args );
-	}
-}
-if ( function_exists( 'bboss_bbp_topic_notices' ) && ! function_exists( 'bbp_topic_notices' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_topic_notices()}.
-	 *
-	 * @deprecated Use bboss_bbp_topic_notices() instead.
-	 */
-	function bbp_topic_notices() {
-		return bboss_bbp_topic_notices();
-	}
-}
-if ( function_exists( 'bboss_bbp_topic_pagination' ) && ! function_exists( 'bbp_topic_pagination' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_topic_pagination()}.
-	 *
-	 * @deprecated Use bboss_bbp_topic_pagination() instead.
-	 */
-	function bbp_topic_pagination( $args = '' ) {
-		return bboss_bbp_topic_pagination( $args );
-	}
-}
-if ( function_exists( 'bboss_bbp_topic_permalink' ) && ! function_exists( 'bbp_topic_permalink' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_topic_permalink()}.
-	 *
-	 * @deprecated Use bboss_bbp_topic_permalink() instead.
-	 */
-	function bbp_topic_permalink( $topic_id = 0, $redirect_to = '' ) {
-		return bboss_bbp_topic_permalink( $topic_id, $redirect_to );
-	}
-}
-if ( function_exists( 'bboss_bbp_topic_post_count' ) && ! function_exists( 'bbp_topic_post_count' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_topic_post_count()}.
-	 *
-	 * @deprecated Use bboss_bbp_topic_post_count() instead.
-	 */
-	function bbp_topic_post_count( $topic_id = 0, $integer = false ) {
-		return bboss_bbp_topic_post_count( $topic_id, $integer );
-	}
-}
-if ( function_exists( 'bboss_bbp_topic_post_date' ) && ! function_exists( 'bbp_topic_post_date' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_topic_post_date()}.
-	 *
-	 * @deprecated Use bboss_bbp_topic_post_date() instead.
-	 */
-	function bbp_topic_post_date( $topic_id = 0, $humanize = false, $gmt = false ) {
-		return bboss_bbp_topic_post_date( $topic_id, $humanize, $gmt );
-	}
-}
-if ( function_exists( 'bboss_bbp_topic_post_type' ) && ! function_exists( 'bbp_topic_post_type' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_topic_post_type()}.
-	 *
-	 * @deprecated Use bboss_bbp_topic_post_type() instead.
-	 */
-	function bbp_topic_post_type() {
-		return bboss_bbp_topic_post_type();
-	}
-}
-if ( function_exists( 'bboss_bbp_topic_replies_link' ) && ! function_exists( 'bbp_topic_replies_link' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_topic_replies_link()}.
-	 *
-	 * @deprecated Use bboss_bbp_topic_replies_link() instead.
-	 */
-	function bbp_topic_replies_link( $topic_id = 0 ) {
-		return bboss_bbp_topic_replies_link( $topic_id );
-	}
-}
-if ( function_exists( 'bboss_bbp_topic_reply_count' ) && ! function_exists( 'bbp_topic_reply_count' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_topic_reply_count()}.
-	 *
-	 * @deprecated Use bboss_bbp_topic_reply_count() instead.
-	 */
-	function bbp_topic_reply_count( $topic_id = 0, $integer = false ) {
-		return bboss_bbp_topic_reply_count( $topic_id, $integer );
-	}
-}
-if ( function_exists( 'bboss_bbp_topic_reply_count_hidden' ) && ! function_exists( 'bbp_topic_reply_count_hidden' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_topic_reply_count_hidden()}.
-	 *
-	 * @deprecated Use bboss_bbp_topic_reply_count_hidden() instead.
-	 */
-	function bbp_topic_reply_count_hidden( $topic_id = 0, $integer = false ) {
-		return bboss_bbp_topic_reply_count_hidden( $topic_id, $integer );
-	}
-}
-if ( function_exists( 'bboss_bbp_topic_reply_link' ) && ! function_exists( 'bbp_topic_reply_link' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_topic_reply_link()}.
-	 *
-	 * @deprecated Use bboss_bbp_topic_reply_link() instead.
-	 */
-	function bbp_topic_reply_link( $args = array() ) {
-		return bboss_bbp_topic_reply_link( $args );
-	}
-}
-if ( function_exists( 'bboss_bbp_topic_revision_log' ) && ! function_exists( 'bbp_topic_revision_log' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_topic_revision_log()}.
-	 *
-	 * @deprecated Use bboss_bbp_topic_revision_log() instead.
-	 */
-	function bbp_topic_revision_log( $topic_id = 0 ) {
-		return bboss_bbp_topic_revision_log( $topic_id );
-	}
-}
-if ( function_exists( 'bboss_bbp_topic_row_actions' ) && ! function_exists( 'bbp_topic_row_actions' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_topic_row_actions()}.
-	 *
-	 * @deprecated Use bboss_bbp_topic_row_actions() instead.
-	 */
-	function bbp_topic_row_actions() {
-		return bboss_bbp_topic_row_actions();
-	}
-}
-if ( function_exists( 'bboss_bbp_topic_spam_link' ) && ! function_exists( 'bbp_topic_spam_link' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_topic_spam_link()}.
-	 *
-	 * @deprecated Use bboss_bbp_topic_spam_link() instead.
-	 */
-	function bbp_topic_spam_link( $args = '' ) {
-		return bboss_bbp_topic_spam_link( $args );
-	}
-}
-if ( function_exists( 'bboss_bbp_topic_status' ) && ! function_exists( 'bbp_topic_status' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_topic_status()}.
-	 *
-	 * @deprecated Use bboss_bbp_topic_status() instead.
-	 */
-	function bbp_topic_status( $topic_id = 0 ) {
-		return bboss_bbp_topic_status( $topic_id );
-	}
-}
-if ( function_exists( 'bboss_bbp_topic_stick_link' ) && ! function_exists( 'bbp_topic_stick_link' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_topic_stick_link()}.
-	 *
-	 * @deprecated Use bboss_bbp_topic_stick_link() instead.
-	 */
-	function bbp_topic_stick_link( $args = '' ) {
-		return bboss_bbp_topic_stick_link( $args );
-	}
-}
-if ( function_exists( 'bboss_bbp_topic_subscription_link' ) && ! function_exists( 'bbp_topic_subscription_link' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_topic_subscription_link()}.
-	 *
-	 * @deprecated Use bboss_bbp_topic_subscription_link() instead.
-	 */
-	function bbp_topic_subscription_link( $args = array() ) {
-		return bboss_bbp_topic_subscription_link( $args );
-	}
-}
-if ( function_exists( 'bboss_bbp_topic_tag_description' ) && ! function_exists( 'bbp_topic_tag_description' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_topic_tag_description()}.
-	 *
-	 * @deprecated Use bboss_bbp_topic_tag_description() instead.
-	 */
-	function bbp_topic_tag_description( $args = array() ) {
-		return bboss_bbp_topic_tag_description( $args );
-	}
-}
-if ( function_exists( 'bboss_bbp_topic_tag_edit_link' ) && ! function_exists( 'bbp_topic_tag_edit_link' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_topic_tag_edit_link()}.
-	 *
-	 * @deprecated Use bboss_bbp_topic_tag_edit_link() instead.
-	 */
-	function bbp_topic_tag_edit_link( $tag = '' ) {
-		return bboss_bbp_topic_tag_edit_link( $tag );
-	}
-}
-if ( function_exists( 'bboss_bbp_topic_tag_id' ) && ! function_exists( 'bbp_topic_tag_id' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_topic_tag_id()}.
-	 *
-	 * @deprecated Use bboss_bbp_topic_tag_id() instead.
-	 */
-	function bbp_topic_tag_id( $tag = '' ) {
-		return bboss_bbp_topic_tag_id( $tag );
-	}
-}
-if ( function_exists( 'bboss_bbp_topic_tag_link' ) && ! function_exists( 'bbp_topic_tag_link' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_topic_tag_link()}.
-	 *
-	 * @deprecated Use bboss_bbp_topic_tag_link() instead.
-	 */
-	function bbp_topic_tag_link( $tag = '' ) {
-		return bboss_bbp_topic_tag_link( $tag );
-	}
-}
-if ( function_exists( 'bboss_bbp_topic_tag_list' ) && ! function_exists( 'bbp_topic_tag_list' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_topic_tag_list()}.
-	 *
-	 * @deprecated Use bboss_bbp_topic_tag_list() instead.
-	 */
-	function bbp_topic_tag_list( $topic_id = 0, $args = '' ) {
-		return bboss_bbp_topic_tag_list( $topic_id, $args );
-	}
-}
-if ( function_exists( 'bboss_bbp_topic_tag_name' ) && ! function_exists( 'bbp_topic_tag_name' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_topic_tag_name()}.
-	 *
-	 * @deprecated Use bboss_bbp_topic_tag_name() instead.
-	 */
-	function bbp_topic_tag_name( $tag = '' ) {
-		return bboss_bbp_topic_tag_name( $tag );
-	}
-}
-if ( function_exists( 'bboss_bbp_topic_tag_slug' ) && ! function_exists( 'bbp_topic_tag_slug' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_topic_tag_slug()}.
-	 *
-	 * @deprecated Use bboss_bbp_topic_tag_slug() instead.
-	 */
-	function bbp_topic_tag_slug( $tag = '' ) {
-		return bboss_bbp_topic_tag_slug( $tag );
-	}
-}
-if ( function_exists( 'bboss_bbp_topic_tag_tax_id' ) && ! function_exists( 'bbp_topic_tag_tax_id' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_topic_tag_tax_id()}.
-	 *
-	 * @deprecated Use bboss_bbp_topic_tag_tax_id() instead.
-	 */
-	function bbp_topic_tag_tax_id() {
-		return bboss_bbp_topic_tag_tax_id();
-	}
-}
-if ( function_exists( 'bboss_bbp_topic_title' ) && ! function_exists( 'bbp_topic_title' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_topic_title()}.
-	 *
-	 * @deprecated Use bboss_bbp_topic_title() instead.
-	 */
-	function bbp_topic_title( $topic_id = 0 ) {
-		return bboss_bbp_topic_title( $topic_id );
-	}
-}
-if ( function_exists( 'bboss_bbp_topic_trash_link' ) && ! function_exists( 'bbp_topic_trash_link' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_topic_trash_link()}.
-	 *
-	 * @deprecated Use bboss_bbp_topic_trash_link() instead.
-	 */
-	function bbp_topic_trash_link( $args = '' ) {
-		return bboss_bbp_topic_trash_link( $args );
-	}
-}
-if ( function_exists( 'bboss_bbp_topic_type_select' ) && ! function_exists( 'bbp_topic_type_select' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_topic_type_select()}.
-	 *
-	 * @deprecated Use bboss_bbp_topic_type_select() instead.
-	 */
-	function bbp_topic_type_select( $args = '' ) {
-		return bboss_bbp_topic_type_select( $args );
-	}
-}
-if ( function_exists( 'bboss_bbp_topic_voice_count' ) && ! function_exists( 'bbp_topic_voice_count' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_topic_voice_count()}.
-	 *
-	 * @deprecated Use bboss_bbp_topic_voice_count() instead.
-	 */
-	function bbp_topic_voice_count( $topic_id = 0, $integer = false ) {
-		return bboss_bbp_topic_voice_count( $topic_id, $integer );
-	}
-}
-if ( function_exists( 'bboss_bbp_topics' ) && ! function_exists( 'bbp_topics' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_topics()}.
-	 *
-	 * @deprecated Use bboss_bbp_topics() instead.
-	 */
-	function bbp_topics() {
-		return bboss_bbp_topics();
-	}
-}
 // @bbwt-com-end compat-layer
+

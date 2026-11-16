@@ -373,6 +373,20 @@ function bboss_core_screen_signup() {
 	 */
 	bboss_core_load_template( apply_filters( 'bp_core_template_register', array( 'register', 'registration/register' ) ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_core_screen_signup' ) && ! function_exists( 'bp_core_screen_signup' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_screen_signup()}.
+	 *
+	 * @deprecated Use bboss_core_screen_signup() instead.
+	 */
+	function bp_core_screen_signup() {
+		return bboss_core_screen_signup();
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'bp_screens', 'bp_core_screen_signup' );
 
 /**
@@ -418,22 +432,8 @@ function bboss_signup_check_email_username() {
 
 	wp_send_json( $return, true );
 }
-
-add_action( 'wp_ajax_nopriv_check_email', 'bp_signup_check_email_username' );
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
-if ( function_exists( 'bboss_core_screen_signup' ) && ! function_exists( 'bp_core_screen_signup' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_core_screen_signup()}.
-	 *
-	 * @deprecated Use bboss_core_screen_signup() instead.
-	 */
-	function bp_core_screen_signup() {
-		return bboss_core_screen_signup();
-	}
-}
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_signup_check_email_username' ) && ! function_exists( 'bp_signup_check_email_username' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_signup_check_email_username()}.
@@ -445,3 +445,6 @@ if ( function_exists( 'bboss_signup_check_email_username' ) && ! function_exists
 	}
 }
 // @bbwt-com-end compat-layer
+
+
+add_action( 'wp_ajax_nopriv_check_email', 'bp_signup_check_email_username' );

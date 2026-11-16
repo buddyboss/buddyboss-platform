@@ -453,11 +453,8 @@ function bboss_groups_register_core_meta_fields( $registry, $component ) {
 		)
 	);
 }
-add_action( 'bb_register_groups_meta_fields', 'bb_groups_register_core_meta_fields', 1, 2 );
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_groups_register_core_meta_fields' ) && ! function_exists( 'bb_groups_register_core_meta_fields' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_groups_register_core_meta_fields()}.
@@ -469,3 +466,5 @@ if ( function_exists( 'bboss_groups_register_core_meta_fields' ) && ! function_e
 	}
 }
 // @bbwt-com-end compat-layer
+
+add_action( 'bb_register_groups_meta_fields', 'bb_groups_register_core_meta_fields', 1, 2 );

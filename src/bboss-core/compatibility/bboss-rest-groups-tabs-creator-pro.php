@@ -92,6 +92,20 @@ if ( ! function_exists( 'bboss_rest_group_tabs_creator_pro' ) ) {
 
 		return $navigation;
 	}
+	// @bbwt-com-start compat-layer
+	// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+	if ( function_exists( 'bboss_rest_group_tabs_creator_pro' ) && ! function_exists( 'bp_rest_group_tabs_creator_pro' ) ) {
+		/**
+		 * Backward-compatible alias of {@see bboss_rest_group_tabs_creator_pro()}.
+		 *
+		 * @deprecated Use bboss_rest_group_tabs_creator_pro() instead.
+		 */
+		function bp_rest_group_tabs_creator_pro( $navigation ) {
+			return bboss_rest_group_tabs_creator_pro( $navigation );
+		}
+	}
+	// @bbwt-com-end compat-layer
+
 }
 
 /**
@@ -151,29 +165,18 @@ if ( ! function_exists( 'bboss_array_msort' ) ) {
 		return $arr;
 
 	}
-}
+	// @bbwt-com-start compat-layer
+	// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+	if ( function_exists( 'bboss_array_msort' ) && ! function_exists( 'array_msort' ) ) {
+		/**
+		 * Backward-compatible alias of {@see bboss_array_msort()}.
+		 *
+		 * @deprecated Use bboss_array_msort() instead.
+		 */
+		function array_msort( $array, $cols ) {
+			return bboss_array_msort( $array, $cols );
+		}
+	}
+	// @bbwt-com-end compat-layer
 
-// @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
-if ( function_exists( 'bboss_array_msort' ) && ! function_exists( 'array_msort' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_array_msort()}.
-	 *
-	 * @deprecated Use bboss_array_msort() instead.
-	 */
-	function array_msort( $array, $cols ) {
-		return bboss_array_msort( $array, $cols );
-	}
 }
-if ( function_exists( 'bboss_rest_group_tabs_creator_pro' ) && ! function_exists( 'bp_rest_group_tabs_creator_pro' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_rest_group_tabs_creator_pro()}.
-	 *
-	 * @deprecated Use bboss_rest_group_tabs_creator_pro() instead.
-	 */
-	function bp_rest_group_tabs_creator_pro( $navigation ) {
-		return bboss_rest_group_tabs_creator_pro( $navigation );
-	}
-}
-// @bbwt-com-end compat-layer

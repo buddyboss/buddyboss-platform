@@ -98,6 +98,20 @@ function bboss_admin_cover_crop_resolve_dir( $object ) {
 		'url'     => $url,
 	);
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_admin_cover_crop_resolve_dir' ) && ! function_exists( 'bb_admin_cover_crop_resolve_dir' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_admin_cover_crop_resolve_dir()}.
+	 *
+	 * @deprecated Use bboss_admin_cover_crop_resolve_dir() instead.
+	 */
+	function bb_admin_cover_crop_resolve_dir( $object ) {
+		return bboss_admin_cover_crop_resolve_dir( $object );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Common request validation for both phase-1 (temp upload) and phase-2
@@ -135,6 +149,20 @@ function bboss_admin_cover_crop_validate_request() {
 		'object' => $object,
 	);
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_admin_cover_crop_validate_request' ) && ! function_exists( 'bb_admin_cover_crop_validate_request' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_admin_cover_crop_validate_request()}.
+	 *
+	 * @deprecated Use bboss_admin_cover_crop_validate_request() instead.
+	 */
+	function bb_admin_cover_crop_validate_request() {
+		return bboss_admin_cover_crop_validate_request();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Phase 1: receive an uploaded file and stage it at the admin-default cover
@@ -272,6 +300,20 @@ function bboss_admin_cover_image_upload_temp_ajax() {
 		)
 	);
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_admin_cover_image_upload_temp_ajax' ) && ! function_exists( 'bb_admin_cover_image_upload_temp_ajax' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_admin_cover_image_upload_temp_ajax()}.
+	 *
+	 * @deprecated Use bboss_admin_cover_image_upload_temp_ajax() instead.
+	 */
+	function bb_admin_cover_image_upload_temp_ajax() {
+		return bboss_admin_cover_image_upload_temp_ajax();
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'wp_ajax_bb_admin_cover_image_upload_temp', 'bb_admin_cover_image_upload_temp_ajax' );
 
 /**
@@ -536,31 +578,8 @@ function bboss_admin_cover_image_set_ajax() {
 		)
 	);
 }
-add_action( 'wp_ajax_bb_admin_cover_image_set', 'bb_admin_cover_image_set_ajax' );
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
-if ( function_exists( 'bboss_admin_cover_crop_resolve_dir' ) && ! function_exists( 'bb_admin_cover_crop_resolve_dir' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_admin_cover_crop_resolve_dir()}.
-	 *
-	 * @deprecated Use bboss_admin_cover_crop_resolve_dir() instead.
-	 */
-	function bb_admin_cover_crop_resolve_dir( $object ) {
-		return bboss_admin_cover_crop_resolve_dir( $object );
-	}
-}
-if ( function_exists( 'bboss_admin_cover_crop_validate_request' ) && ! function_exists( 'bb_admin_cover_crop_validate_request' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_admin_cover_crop_validate_request()}.
-	 *
-	 * @deprecated Use bboss_admin_cover_crop_validate_request() instead.
-	 */
-	function bb_admin_cover_crop_validate_request() {
-		return bboss_admin_cover_crop_validate_request();
-	}
-}
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_admin_cover_image_set_ajax' ) && ! function_exists( 'bb_admin_cover_image_set_ajax' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_admin_cover_image_set_ajax()}.
@@ -571,14 +590,6 @@ if ( function_exists( 'bboss_admin_cover_image_set_ajax' ) && ! function_exists(
 		return bboss_admin_cover_image_set_ajax();
 	}
 }
-if ( function_exists( 'bboss_admin_cover_image_upload_temp_ajax' ) && ! function_exists( 'bb_admin_cover_image_upload_temp_ajax' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_admin_cover_image_upload_temp_ajax()}.
-	 *
-	 * @deprecated Use bboss_admin_cover_image_upload_temp_ajax() instead.
-	 */
-	function bb_admin_cover_image_upload_temp_ajax() {
-		return bboss_admin_cover_image_upload_temp_ajax();
-	}
-}
 // @bbwt-com-end compat-layer
+
+add_action( 'wp_ajax_bb_admin_cover_image_set', 'bb_admin_cover_image_set_ajax' );

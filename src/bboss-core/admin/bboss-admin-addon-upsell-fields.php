@@ -38,6 +38,20 @@ function bboss_admin_addon_upsell_feature_ids() {
 		array( 'reaction', 'reactions', 'polls', 'sso' )
 	);
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_admin_addon_upsell_feature_ids' ) && ! function_exists( 'bb_admin_addon_upsell_feature_ids' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_admin_addon_upsell_feature_ids()}.
+	 *
+	 * @deprecated Use bboss_admin_addon_upsell_feature_ids() instead.
+	 */
+	function bb_admin_addon_upsell_feature_ids() {
+		return bboss_admin_addon_upsell_feature_ids();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Field names whose upsell should point at the BuddyBoss Addons plan.
@@ -62,6 +76,20 @@ function bboss_admin_addon_upsell_field_names() {
 		array( 'bb-social-login', '_bb-sso-providers', '_bb_enable_activity_post_polls', '_bb_enable_activity_pinned_posts', 'bb_enable_group_subscriptions' )
 	);
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_admin_addon_upsell_field_names' ) && ! function_exists( 'bb_admin_addon_upsell_field_names' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_admin_addon_upsell_field_names()}.
+	 *
+	 * @deprecated Use bboss_admin_addon_upsell_field_names() instead.
+	 */
+	function bb_admin_addon_upsell_field_names() {
+		return bboss_admin_addon_upsell_field_names();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Whether a moved-feature field actually has a working provider on this site.
@@ -123,6 +151,20 @@ function bboss_admin_addon_field_has_provider( $field_name ) {
 			return true;
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_admin_addon_field_has_provider' ) && ! function_exists( 'bb_admin_addon_field_has_provider' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_admin_addon_field_has_provider()}.
+	 *
+	 * @deprecated Use bboss_admin_addon_field_has_provider() instead.
+	 */
+	function bb_admin_addon_field_has_provider( $field_name ) {
+		return bboss_admin_addon_field_has_provider( $field_name );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Default an add-on feature's upsell modal to the 'start' tier.
@@ -154,40 +196,8 @@ function bboss_admin_apply_addon_upsell_tier( $modal, $feature_id, $field_name =
 
 	return $modal;
 }
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
-if ( function_exists( 'bboss_admin_addon_field_has_provider' ) && ! function_exists( 'bb_admin_addon_field_has_provider' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_admin_addon_field_has_provider()}.
-	 *
-	 * @deprecated Use bboss_admin_addon_field_has_provider() instead.
-	 */
-	function bb_admin_addon_field_has_provider( $field_name ) {
-		return bboss_admin_addon_field_has_provider( $field_name );
-	}
-}
-if ( function_exists( 'bboss_admin_addon_upsell_feature_ids' ) && ! function_exists( 'bb_admin_addon_upsell_feature_ids' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_admin_addon_upsell_feature_ids()}.
-	 *
-	 * @deprecated Use bboss_admin_addon_upsell_feature_ids() instead.
-	 */
-	function bb_admin_addon_upsell_feature_ids() {
-		return bboss_admin_addon_upsell_feature_ids();
-	}
-}
-if ( function_exists( 'bboss_admin_addon_upsell_field_names' ) && ! function_exists( 'bb_admin_addon_upsell_field_names' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_admin_addon_upsell_field_names()}.
-	 *
-	 * @deprecated Use bboss_admin_addon_upsell_field_names() instead.
-	 */
-	function bb_admin_addon_upsell_field_names() {
-		return bboss_admin_addon_upsell_field_names();
-	}
-}
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_admin_apply_addon_upsell_tier' ) && ! function_exists( 'bb_admin_apply_addon_upsell_tier' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_admin_apply_addon_upsell_tier()}.
@@ -199,3 +209,4 @@ if ( function_exists( 'bboss_admin_apply_addon_upsell_tier' ) && ! function_exis
 	}
 }
 // @bbwt-com-end compat-layer
+

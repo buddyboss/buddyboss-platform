@@ -31,6 +31,20 @@ function bboss_activity_add_admin_menu() {
 		$settings_url,
 	);
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_activity_add_admin_menu' ) && ! function_exists( 'bp_activity_add_admin_menu' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_activity_add_admin_menu()}.
+	 *
+	 * @deprecated Use bboss_activity_add_admin_menu() instead.
+	 */
+	function bp_activity_add_admin_menu() {
+		return bboss_activity_add_admin_menu();
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( bboss_core_admin_hook(), 'bp_activity_add_admin_menu', 65 );
 
 /**
@@ -62,20 +76,8 @@ function bboss_activity_admin_get_activity_actions() {
 
 	return $actions;
 }
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
-if ( function_exists( 'bboss_activity_add_admin_menu' ) && ! function_exists( 'bp_activity_add_admin_menu' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_activity_add_admin_menu()}.
-	 *
-	 * @deprecated Use bboss_activity_add_admin_menu() instead.
-	 */
-	function bp_activity_add_admin_menu() {
-		return bboss_activity_add_admin_menu();
-	}
-}
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_activity_admin_get_activity_actions' ) && ! function_exists( 'bp_activity_admin_get_activity_actions' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_activity_admin_get_activity_actions()}.
@@ -87,3 +89,4 @@ if ( function_exists( 'bboss_activity_admin_get_activity_actions' ) && ! functio
 	}
 }
 // @bbwt-com-end compat-layer
+

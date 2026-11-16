@@ -27,6 +27,20 @@ function bboss_moderation_sanitize_auto_suspend_threshold( $value ) {
 
 	return max( 1, $value );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_moderation_sanitize_auto_suspend_threshold' ) && ! function_exists( 'bb_moderation_sanitize_auto_suspend_threshold' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_moderation_sanitize_auto_suspend_threshold()}.
+	 *
+	 * @deprecated Use bboss_moderation_sanitize_auto_suspend_threshold() instead.
+	 */
+	function bb_moderation_sanitize_auto_suspend_threshold( $value ) {
+		return bboss_moderation_sanitize_auto_suspend_threshold( $value );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Sanitize the auto-hide threshold value for content reporting.
@@ -44,6 +58,20 @@ function bboss_moderation_sanitize_auto_hide_threshold( $value ) {
 
 	return max( 1, min( 99, $value ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_moderation_sanitize_auto_hide_threshold' ) && ! function_exists( 'bb_moderation_sanitize_auto_hide_threshold' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_moderation_sanitize_auto_hide_threshold()}.
+	 *
+	 * @deprecated Use bboss_moderation_sanitize_auto_hide_threshold() instead.
+	 */
+	function bb_moderation_sanitize_auto_hide_threshold( $value ) {
+		return bboss_moderation_sanitize_auto_hide_threshold( $value );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Sync individual content reporting field values back to legacy serialized arrays.
@@ -103,31 +131,8 @@ function bboss_moderation_sync_content_reporting_to_legacy( $feature_id, $settin
 		update_option( 'bpm_reporting_auto_hide_threshold', $threshold_array );
 	}
 }
-add_action( 'bb_admin_save_feature_settings_after', 'bb_moderation_sync_content_reporting_to_legacy', 10, 3 );
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
-if ( function_exists( 'bboss_moderation_sanitize_auto_hide_threshold' ) && ! function_exists( 'bb_moderation_sanitize_auto_hide_threshold' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_moderation_sanitize_auto_hide_threshold()}.
-	 *
-	 * @deprecated Use bboss_moderation_sanitize_auto_hide_threshold() instead.
-	 */
-	function bb_moderation_sanitize_auto_hide_threshold( $value ) {
-		return bboss_moderation_sanitize_auto_hide_threshold( $value );
-	}
-}
-if ( function_exists( 'bboss_moderation_sanitize_auto_suspend_threshold' ) && ! function_exists( 'bb_moderation_sanitize_auto_suspend_threshold' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_moderation_sanitize_auto_suspend_threshold()}.
-	 *
-	 * @deprecated Use bboss_moderation_sanitize_auto_suspend_threshold() instead.
-	 */
-	function bb_moderation_sanitize_auto_suspend_threshold( $value ) {
-		return bboss_moderation_sanitize_auto_suspend_threshold( $value );
-	}
-}
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_moderation_sync_content_reporting_to_legacy' ) && ! function_exists( 'bb_moderation_sync_content_reporting_to_legacy' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_moderation_sync_content_reporting_to_legacy()}.
@@ -139,3 +144,5 @@ if ( function_exists( 'bboss_moderation_sync_content_reporting_to_legacy' ) && !
 	}
 }
 // @bbwt-com-end compat-layer
+
+add_action( 'bb_admin_save_feature_settings_after', 'bb_moderation_sync_content_reporting_to_legacy', 10, 3 );

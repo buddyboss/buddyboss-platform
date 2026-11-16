@@ -119,11 +119,8 @@ function bboss_nouveau_messages( $bp_nouveau = null ) {
 
 	$bp_nouveau->messages = new BBoss_Nouveau_Messages();
 }
-add_action( 'bp_nouveau_includes', 'bp_nouveau_messages', 10, 1 );
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_nouveau_messages' ) && ! function_exists( 'bp_nouveau_messages' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_nouveau_messages()}.
@@ -135,3 +132,5 @@ if ( function_exists( 'bboss_nouveau_messages' ) && ! function_exists( 'bp_nouve
 	}
 }
 // @bbwt-com-end compat-layer
+
+add_action( 'bp_nouveau_includes', 'bp_nouveau_messages', 10, 1 );

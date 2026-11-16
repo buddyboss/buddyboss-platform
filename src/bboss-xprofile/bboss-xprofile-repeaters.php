@@ -18,6 +18,20 @@ defined( 'ABSPATH' ) || exit;
 function bboss_profile_field_set_max_cap() {
 	return 100;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_profile_field_set_max_cap' ) && ! function_exists( 'bp_profile_field_set_max_cap' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_profile_field_set_max_cap()}.
+	 *
+	 * @deprecated Use bboss_profile_field_set_max_cap() instead.
+	 */
+	function bp_profile_field_set_max_cap() {
+		return bboss_profile_field_set_max_cap();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return repeater template field ids
@@ -61,6 +75,20 @@ function bboss_get_repeater_template_field_ids( $field_group_id ) {
 
 	return $template_field_ids;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_repeater_template_field_ids' ) && ! function_exists( 'bp_get_repeater_template_field_ids' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_repeater_template_field_ids()}.
+	 *
+	 * @deprecated Use bboss_get_repeater_template_field_ids() instead.
+	 */
+	function bp_get_repeater_template_field_ids( $field_group_id ) {
+		return bboss_get_repeater_template_field_ids( $field_group_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return ids of one field sets repeated instances.
@@ -131,6 +159,20 @@ function bboss_get_repeater_clone_field_ids_subset( $field_group_id, $count ) {
 
 	return $ids;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_repeater_clone_field_ids_subset' ) && ! function_exists( 'bp_get_repeater_clone_field_ids_subset' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_repeater_clone_field_ids_subset()}.
+	 *
+	 * @deprecated Use bboss_get_repeater_clone_field_ids_subset() instead.
+	 */
+	function bp_get_repeater_clone_field_ids_subset( $field_group_id, $count ) {
+		return bboss_get_repeater_clone_field_ids_subset( $field_group_id, $count );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return ids of all field sets repeated instances.
@@ -173,6 +215,20 @@ function bboss_get_repeater_clone_field_ids_all( $field_group_id ) {
 
 	return $ids;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_repeater_clone_field_ids_all' ) && ! function_exists( 'bp_get_repeater_clone_field_ids_all' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_repeater_clone_field_ids_all()}.
+	 *
+	 * @deprecated Use bboss_get_repeater_clone_field_ids_all() instead.
+	 */
+	function bp_get_repeater_clone_field_ids_all( $field_group_id ) {
+		return bboss_get_repeater_clone_field_ids_all( $field_group_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 add_action( 'xprofile_updated_profile', 'bp_profile_repeaters_update_field_data', 11, 5 );
 add_action( 'bb_xprofile_error_on_updated_profile', 'bp_profile_repeaters_update_field_data', 11, 5 );
@@ -283,6 +339,20 @@ function bboss_profile_repeaters_update_field_data( $user_id, $posted_field_ids,
 		bboss_set_profile_field_set_count( $field_group_id, $user_id, count( $field_set_sequence ) );
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_profile_repeaters_update_field_data' ) && ! function_exists( 'bp_profile_repeaters_update_field_data' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_profile_repeaters_update_field_data()}.
+	 *
+	 * @deprecated Use bboss_profile_repeaters_update_field_data() instead.
+	 */
+	function bp_profile_repeaters_update_field_data( $user_id, $posted_field_ids, $errors, $old_values, $new_values ) {
+		return bboss_profile_repeaters_update_field_data( $user_id, $posted_field_ids, $errors, $old_values, $new_values );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 add_filter( 'bp_xprofile_set_field_data_pre_validate', 'bp_repeater_set_field_data_pre_validate', 10, 2 );
 
@@ -306,6 +376,20 @@ function bboss_repeater_set_field_data_pre_validate( $value, $field ) {
 	$bp_profile_repeater_last_field = $field;
 	return $value;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_repeater_set_field_data_pre_validate' ) && ! function_exists( 'bp_repeater_set_field_data_pre_validate' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_repeater_set_field_data_pre_validate()}.
+	 *
+	 * @deprecated Use bboss_repeater_set_field_data_pre_validate() instead.
+	 */
+	function bp_repeater_set_field_data_pre_validate( $value, $field ) {
+		return bboss_repeater_set_field_data_pre_validate( $value, $field );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 add_filter( 'bp_xprofile_field_type_is_valid', 'bp_profile_repeater_is_data_valid_for_template_fields', 10, 3 );
 
@@ -369,6 +453,20 @@ function bboss_profile_repeater_is_data_valid_for_template_fields( $validated, $
 	$bp_profile_repeater_last_field = false;// reset
 	return $validated;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_profile_repeater_is_data_valid_for_template_fields' ) && ! function_exists( 'bp_profile_repeater_is_data_valid_for_template_fields' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_profile_repeater_is_data_valid_for_template_fields()}.
+	 *
+	 * @deprecated Use bboss_profile_repeater_is_data_valid_for_template_fields() instead.
+	 */
+	function bp_profile_repeater_is_data_valid_for_template_fields( $validated, $values, $field_type_obj ) {
+		return bboss_profile_repeater_is_data_valid_for_template_fields( $validated, $values, $field_type_obj );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Copy form fields for field sets that repeat.
@@ -494,6 +592,20 @@ function bboss_clone_field_for_repeater_sets( $field_id, $field_group_id, $curre
 
 	return false;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_clone_field_for_repeater_sets' ) && ! function_exists( 'bp_clone_field_for_repeater_sets' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_clone_field_for_repeater_sets()}.
+	 *
+	 * @deprecated Use bboss_clone_field_for_repeater_sets() instead.
+	 */
+	function bp_clone_field_for_repeater_sets( $field_id, $field_group_id, $current_count = 0 ) {
+		return bboss_clone_field_for_repeater_sets( $field_id, $field_group_id, $current_count );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 add_action( 'xprofile_fields_saved_field', 'xprofile_update_clones_on_template_update' );
 
@@ -755,6 +867,20 @@ function bboss_xprofile_repeater_field_get_children( $children, $for_editing, $f
 
 	return $children;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_xprofile_repeater_field_get_children' ) && ! function_exists( 'bp_xprofile_repeater_field_get_children' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_xprofile_repeater_field_get_children()}.
+	 *
+	 * @deprecated Use bboss_xprofile_repeater_field_get_children() instead.
+	 */
+	function bp_xprofile_repeater_field_get_children( $children, $for_editing, $field ) {
+		return bboss_xprofile_repeater_field_get_children( $children, $for_editing, $field );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return total number of field sets.
@@ -768,6 +894,20 @@ function bboss_get_profile_field_set_count( $field_group_id, $user_id ) {
 	$count = get_user_meta( $user_id, 'field_set_count_' . $field_group_id, true );
 	return $count > 0 ? $count : 1;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_profile_field_set_count' ) && ! function_exists( 'bp_get_profile_field_set_count' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_profile_field_set_count()}.
+	 *
+	 * @deprecated Use bboss_get_profile_field_set_count() instead.
+	 */
+	function bp_get_profile_field_set_count( $field_group_id, $user_id ) {
+		return bboss_get_profile_field_set_count( $field_group_id, $user_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Set maximum field set allowed.
@@ -784,6 +924,20 @@ function bboss_set_profile_field_set_count( $field_group_id, $user_id, $count ) 
 
 	return update_user_meta( $user_id, 'field_set_count_' . $field_group_id, $count );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_set_profile_field_set_count' ) && ! function_exists( 'bp_set_profile_field_set_count' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_set_profile_field_set_count()}.
+	 *
+	 * @deprecated Use bboss_set_profile_field_set_count() instead.
+	 */
+	function bp_set_profile_field_set_count( $field_group_id, $user_id, $count ) {
+		return bboss_set_profile_field_set_count( $field_group_id, $user_id, $count );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 add_action( 'bp_after_profile_field_content', 'bp_print_add_repeater_set_button' );
 
@@ -832,6 +986,20 @@ function bboss_print_add_repeater_set_button( $args = array() ) {
 		echo '</button>';
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_print_add_repeater_set_button' ) && ! function_exists( 'bp_print_add_repeater_set_button' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_print_add_repeater_set_button()}.
+	 *
+	 * @deprecated Use bboss_print_add_repeater_set_button() instead.
+	 */
+	function bp_print_add_repeater_set_button( $args = array() ) {
+		return bboss_print_add_repeater_set_button( $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 add_action( 'wp_ajax_bp_xprofile_add_repeater_set', 'bp_xprofile_ajax_add_repeater_set' );
 
@@ -859,6 +1027,20 @@ function bboss_xprofile_ajax_add_repeater_set() {
 	bboss_set_profile_field_set_count( $field_group_id, $user_id, $count );
 	die( 'ok' );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_xprofile_ajax_add_repeater_set' ) && ! function_exists( 'bp_xprofile_ajax_add_repeater_set' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_xprofile_ajax_add_repeater_set()}.
+	 *
+	 * @deprecated Use bboss_xprofile_ajax_add_repeater_set() instead.
+	 */
+	function bp_xprofile_ajax_add_repeater_set() {
+		return bboss_xprofile_ajax_add_repeater_set();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 add_action( 'bp_before_profile_field_html', 'bp_profile_repeaters_print_group_html_start' );
 
@@ -958,6 +1140,20 @@ function bboss_profile_repeaters_print_group_html_start( $args = array() ) {
 		}
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_profile_repeaters_print_group_html_start' ) && ! function_exists( 'bp_profile_repeaters_print_group_html_start' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_profile_repeaters_print_group_html_start()}.
+	 *
+	 * @deprecated Use bboss_profile_repeaters_print_group_html_start() instead.
+	 */
+	function bp_profile_repeaters_print_group_html_start( $args = array() ) {
+		return bboss_profile_repeaters_print_group_html_start( $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 add_action( 'bp_after_profile_field_content', 'bp_profile_repeaters_print_group_html_end', 4 );
 
@@ -975,6 +1171,20 @@ function bboss_profile_repeaters_print_group_html_end() {
 		$first_xpfield_in_repeater = false;
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_profile_repeaters_print_group_html_end' ) && ! function_exists( 'bp_profile_repeaters_print_group_html_end' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_profile_repeaters_print_group_html_end()}.
+	 *
+	 * @deprecated Use bboss_profile_repeaters_print_group_html_end() instead.
+	 */
+	function bp_profile_repeaters_print_group_html_end() {
+		return bboss_profile_repeaters_print_group_html_end();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 
 add_action( 'bp_before_profile_field_item', 'bp_view_profile_repeaters_print_group_html_start' );
@@ -1004,6 +1214,20 @@ function bboss_view_profile_repeaters_print_group_html_start() {
 		$repeater_set_being_displayed = $current_set_number;
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_view_profile_repeaters_print_group_html_start' ) && ! function_exists( 'bp_view_profile_repeaters_print_group_html_start' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_view_profile_repeaters_print_group_html_start()}.
+	 *
+	 * @deprecated Use bboss_view_profile_repeaters_print_group_html_start() instead.
+	 */
+	function bp_view_profile_repeaters_print_group_html_start() {
+		return bboss_view_profile_repeaters_print_group_html_start();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 add_action( 'bp_after_profile_field_items', 'bp_view_profile_repeaters_print_group_html_end', 4 );
 
@@ -1022,6 +1246,20 @@ function bboss_view_profile_repeaters_print_group_html_end() {
 		$repeater_set_being_displayed = false;
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_view_profile_repeaters_print_group_html_end' ) && ! function_exists( 'bp_view_profile_repeaters_print_group_html_end' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_view_profile_repeaters_print_group_html_end()}.
+	 *
+	 * @deprecated Use bboss_view_profile_repeaters_print_group_html_end() instead.
+	 */
+	function bp_view_profile_repeaters_print_group_html_end() {
+		return bboss_view_profile_repeaters_print_group_html_end();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 add_filter( 'bp_ps_field_before_query', 'bp_profile_repeaters_search_change_filter' );
 
@@ -1058,6 +1296,20 @@ function bboss_profile_repeaters_search_change_filter( $f ) {
 	$f->filter = 'contains';
 	return $f;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_profile_repeaters_search_change_filter' ) && ! function_exists( 'bp_profile_repeaters_search_change_filter' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_profile_repeaters_search_change_filter()}.
+	 *
+	 * @deprecated Use bboss_profile_repeaters_search_change_filter() instead.
+	 */
+	function bp_profile_repeaters_search_change_filter( $f ) {
+		return bboss_profile_repeaters_search_change_filter( $f );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Find top most template function ids from clone field ids.
@@ -1078,6 +1330,20 @@ function bboss_xprofile_top_most_template_field_id( $field_id ) {
 
 	return $main_field;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_xprofile_top_most_template_field_id' ) && ! function_exists( 'bb_xprofile_top_most_template_field_id' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_xprofile_top_most_template_field_id()}.
+	 *
+	 * @deprecated Use bboss_xprofile_top_most_template_field_id() instead.
+	 */
+	function bb_xprofile_top_most_template_field_id( $field_id ) {
+		return bboss_xprofile_top_most_template_field_id( $field_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Adds a repeater set for admin screen.
@@ -1230,6 +1496,20 @@ function bboss_admin_xprofile_add_repeater_set() {
 		)
 	);
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_admin_xprofile_add_repeater_set' ) && ! function_exists( 'bb_admin_xprofile_add_repeater_set' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_admin_xprofile_add_repeater_set()}.
+	 *
+	 * @deprecated Use bboss_admin_xprofile_add_repeater_set() instead.
+	 */
+	function bb_admin_xprofile_add_repeater_set() {
+		return bboss_admin_xprofile_add_repeater_set();
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'wp_ajax_bb_admin_xprofile_add_repeater_set', 'bb_admin_xprofile_add_repeater_set' );
 
 /**
@@ -1352,6 +1632,20 @@ function bboss_admin_profile_repeaters_update_field_data( $user_id, $posted_fiel
 		}
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_admin_profile_repeaters_update_field_data' ) && ! function_exists( 'bb_admin_profile_repeaters_update_field_data' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_admin_profile_repeaters_update_field_data()}.
+	 *
+	 * @deprecated Use bboss_admin_profile_repeaters_update_field_data() instead.
+	 */
+	function bb_admin_profile_repeaters_update_field_data( $user_id, $posted_field_ids, $errors, $old_values, $new_values ) {
+		return bboss_admin_profile_repeaters_update_field_data( $user_id, $posted_field_ids, $errors, $old_values, $new_values );
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'xprofile_updated_profile', 'bb_admin_profile_repeaters_update_field_data', 11, 5 );
 
 /**
@@ -1372,6 +1666,20 @@ function bboss_xprofile_is_repeater_group( $field_group_id ) {
 
 	return 'on' === BBoss_XProfile_Group::get_group_meta( $field_group_id, 'is_repeater_enabled' );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_xprofile_is_repeater_group' ) && ! function_exists( 'bb_xprofile_is_repeater_group' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_xprofile_is_repeater_group()}.
+	 *
+	 * @deprecated Use bboss_xprofile_is_repeater_group() instead.
+	 */
+	function bb_xprofile_is_repeater_group( $field_group_id ) {
+		return bboss_xprofile_is_repeater_group( $field_group_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Check whether a profile field set contains a Bio field.
@@ -1409,6 +1717,20 @@ function bboss_xprofile_group_has_bio_field( $field_group_id ) {
 
 	return ! empty( $exists );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_xprofile_group_has_bio_field' ) && ! function_exists( 'bb_xprofile_group_has_bio_field' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_xprofile_group_has_bio_field()}.
+	 *
+	 * @deprecated Use bboss_xprofile_group_has_bio_field() instead.
+	 */
+	function bb_xprofile_group_has_bio_field( $field_group_id ) {
+		return bboss_xprofile_group_has_bio_field( $field_group_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Check whether a repeater template field must not receive the mirrored value.
@@ -1440,50 +1762,8 @@ function bboss_xprofile_skip_repeater_template_mirror( $template_field_id ) {
 
 	return 'biography' === BBoss_XProfile_Field::get_type( $template_field_id );
 }
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
-if ( function_exists( 'bboss_admin_profile_repeaters_update_field_data' ) && ! function_exists( 'bb_admin_profile_repeaters_update_field_data' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_admin_profile_repeaters_update_field_data()}.
-	 *
-	 * @deprecated Use bboss_admin_profile_repeaters_update_field_data() instead.
-	 */
-	function bb_admin_profile_repeaters_update_field_data( $user_id, $posted_field_ids, $errors, $old_values, $new_values ) {
-		return bboss_admin_profile_repeaters_update_field_data( $user_id, $posted_field_ids, $errors, $old_values, $new_values );
-	}
-}
-if ( function_exists( 'bboss_admin_xprofile_add_repeater_set' ) && ! function_exists( 'bb_admin_xprofile_add_repeater_set' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_admin_xprofile_add_repeater_set()}.
-	 *
-	 * @deprecated Use bboss_admin_xprofile_add_repeater_set() instead.
-	 */
-	function bb_admin_xprofile_add_repeater_set() {
-		return bboss_admin_xprofile_add_repeater_set();
-	}
-}
-if ( function_exists( 'bboss_xprofile_group_has_bio_field' ) && ! function_exists( 'bb_xprofile_group_has_bio_field' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_xprofile_group_has_bio_field()}.
-	 *
-	 * @deprecated Use bboss_xprofile_group_has_bio_field() instead.
-	 */
-	function bb_xprofile_group_has_bio_field( $field_group_id ) {
-		return bboss_xprofile_group_has_bio_field( $field_group_id );
-	}
-}
-if ( function_exists( 'bboss_xprofile_is_repeater_group' ) && ! function_exists( 'bb_xprofile_is_repeater_group' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_xprofile_is_repeater_group()}.
-	 *
-	 * @deprecated Use bboss_xprofile_is_repeater_group() instead.
-	 */
-	function bb_xprofile_is_repeater_group( $field_group_id ) {
-		return bboss_xprofile_is_repeater_group( $field_group_id );
-	}
-}
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_xprofile_skip_repeater_template_mirror' ) && ! function_exists( 'bb_xprofile_skip_repeater_template_mirror' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_xprofile_skip_repeater_template_mirror()}.
@@ -1494,194 +1774,5 @@ if ( function_exists( 'bboss_xprofile_skip_repeater_template_mirror' ) && ! func
 		return bboss_xprofile_skip_repeater_template_mirror( $template_field_id );
 	}
 }
-if ( function_exists( 'bboss_xprofile_top_most_template_field_id' ) && ! function_exists( 'bb_xprofile_top_most_template_field_id' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_xprofile_top_most_template_field_id()}.
-	 *
-	 * @deprecated Use bboss_xprofile_top_most_template_field_id() instead.
-	 */
-	function bb_xprofile_top_most_template_field_id( $field_id ) {
-		return bboss_xprofile_top_most_template_field_id( $field_id );
-	}
-}
-if ( function_exists( 'bboss_clone_field_for_repeater_sets' ) && ! function_exists( 'bp_clone_field_for_repeater_sets' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_clone_field_for_repeater_sets()}.
-	 *
-	 * @deprecated Use bboss_clone_field_for_repeater_sets() instead.
-	 */
-	function bp_clone_field_for_repeater_sets( $field_id, $field_group_id, $current_count = 0 ) {
-		return bboss_clone_field_for_repeater_sets( $field_id, $field_group_id, $current_count );
-	}
-}
-if ( function_exists( 'bboss_get_profile_field_set_count' ) && ! function_exists( 'bp_get_profile_field_set_count' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_profile_field_set_count()}.
-	 *
-	 * @deprecated Use bboss_get_profile_field_set_count() instead.
-	 */
-	function bp_get_profile_field_set_count( $field_group_id, $user_id ) {
-		return bboss_get_profile_field_set_count( $field_group_id, $user_id );
-	}
-}
-if ( function_exists( 'bboss_get_repeater_clone_field_ids_all' ) && ! function_exists( 'bp_get_repeater_clone_field_ids_all' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_repeater_clone_field_ids_all()}.
-	 *
-	 * @deprecated Use bboss_get_repeater_clone_field_ids_all() instead.
-	 */
-	function bp_get_repeater_clone_field_ids_all( $field_group_id ) {
-		return bboss_get_repeater_clone_field_ids_all( $field_group_id );
-	}
-}
-if ( function_exists( 'bboss_get_repeater_clone_field_ids_subset' ) && ! function_exists( 'bp_get_repeater_clone_field_ids_subset' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_repeater_clone_field_ids_subset()}.
-	 *
-	 * @deprecated Use bboss_get_repeater_clone_field_ids_subset() instead.
-	 */
-	function bp_get_repeater_clone_field_ids_subset( $field_group_id, $count ) {
-		return bboss_get_repeater_clone_field_ids_subset( $field_group_id, $count );
-	}
-}
-if ( function_exists( 'bboss_get_repeater_template_field_ids' ) && ! function_exists( 'bp_get_repeater_template_field_ids' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_repeater_template_field_ids()}.
-	 *
-	 * @deprecated Use bboss_get_repeater_template_field_ids() instead.
-	 */
-	function bp_get_repeater_template_field_ids( $field_group_id ) {
-		return bboss_get_repeater_template_field_ids( $field_group_id );
-	}
-}
-if ( function_exists( 'bboss_print_add_repeater_set_button' ) && ! function_exists( 'bp_print_add_repeater_set_button' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_print_add_repeater_set_button()}.
-	 *
-	 * @deprecated Use bboss_print_add_repeater_set_button() instead.
-	 */
-	function bp_print_add_repeater_set_button( $args = array() ) {
-		return bboss_print_add_repeater_set_button( $args );
-	}
-}
-if ( function_exists( 'bboss_profile_field_set_max_cap' ) && ! function_exists( 'bp_profile_field_set_max_cap' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_profile_field_set_max_cap()}.
-	 *
-	 * @deprecated Use bboss_profile_field_set_max_cap() instead.
-	 */
-	function bp_profile_field_set_max_cap() {
-		return bboss_profile_field_set_max_cap();
-	}
-}
-if ( function_exists( 'bboss_profile_repeater_is_data_valid_for_template_fields' ) && ! function_exists( 'bp_profile_repeater_is_data_valid_for_template_fields' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_profile_repeater_is_data_valid_for_template_fields()}.
-	 *
-	 * @deprecated Use bboss_profile_repeater_is_data_valid_for_template_fields() instead.
-	 */
-	function bp_profile_repeater_is_data_valid_for_template_fields( $validated, $values, $field_type_obj ) {
-		return bboss_profile_repeater_is_data_valid_for_template_fields( $validated, $values, $field_type_obj );
-	}
-}
-if ( function_exists( 'bboss_profile_repeaters_print_group_html_end' ) && ! function_exists( 'bp_profile_repeaters_print_group_html_end' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_profile_repeaters_print_group_html_end()}.
-	 *
-	 * @deprecated Use bboss_profile_repeaters_print_group_html_end() instead.
-	 */
-	function bp_profile_repeaters_print_group_html_end() {
-		return bboss_profile_repeaters_print_group_html_end();
-	}
-}
-if ( function_exists( 'bboss_profile_repeaters_print_group_html_start' ) && ! function_exists( 'bp_profile_repeaters_print_group_html_start' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_profile_repeaters_print_group_html_start()}.
-	 *
-	 * @deprecated Use bboss_profile_repeaters_print_group_html_start() instead.
-	 */
-	function bp_profile_repeaters_print_group_html_start( $args = array() ) {
-		return bboss_profile_repeaters_print_group_html_start( $args );
-	}
-}
-if ( function_exists( 'bboss_profile_repeaters_search_change_filter' ) && ! function_exists( 'bp_profile_repeaters_search_change_filter' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_profile_repeaters_search_change_filter()}.
-	 *
-	 * @deprecated Use bboss_profile_repeaters_search_change_filter() instead.
-	 */
-	function bp_profile_repeaters_search_change_filter( $f ) {
-		return bboss_profile_repeaters_search_change_filter( $f );
-	}
-}
-if ( function_exists( 'bboss_profile_repeaters_update_field_data' ) && ! function_exists( 'bp_profile_repeaters_update_field_data' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_profile_repeaters_update_field_data()}.
-	 *
-	 * @deprecated Use bboss_profile_repeaters_update_field_data() instead.
-	 */
-	function bp_profile_repeaters_update_field_data( $user_id, $posted_field_ids, $errors, $old_values, $new_values ) {
-		return bboss_profile_repeaters_update_field_data( $user_id, $posted_field_ids, $errors, $old_values, $new_values );
-	}
-}
-if ( function_exists( 'bboss_repeater_set_field_data_pre_validate' ) && ! function_exists( 'bp_repeater_set_field_data_pre_validate' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_repeater_set_field_data_pre_validate()}.
-	 *
-	 * @deprecated Use bboss_repeater_set_field_data_pre_validate() instead.
-	 */
-	function bp_repeater_set_field_data_pre_validate( $value, $field ) {
-		return bboss_repeater_set_field_data_pre_validate( $value, $field );
-	}
-}
-if ( function_exists( 'bboss_set_profile_field_set_count' ) && ! function_exists( 'bp_set_profile_field_set_count' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_set_profile_field_set_count()}.
-	 *
-	 * @deprecated Use bboss_set_profile_field_set_count() instead.
-	 */
-	function bp_set_profile_field_set_count( $field_group_id, $user_id, $count ) {
-		return bboss_set_profile_field_set_count( $field_group_id, $user_id, $count );
-	}
-}
-if ( function_exists( 'bboss_view_profile_repeaters_print_group_html_end' ) && ! function_exists( 'bp_view_profile_repeaters_print_group_html_end' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_view_profile_repeaters_print_group_html_end()}.
-	 *
-	 * @deprecated Use bboss_view_profile_repeaters_print_group_html_end() instead.
-	 */
-	function bp_view_profile_repeaters_print_group_html_end() {
-		return bboss_view_profile_repeaters_print_group_html_end();
-	}
-}
-if ( function_exists( 'bboss_view_profile_repeaters_print_group_html_start' ) && ! function_exists( 'bp_view_profile_repeaters_print_group_html_start' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_view_profile_repeaters_print_group_html_start()}.
-	 *
-	 * @deprecated Use bboss_view_profile_repeaters_print_group_html_start() instead.
-	 */
-	function bp_view_profile_repeaters_print_group_html_start() {
-		return bboss_view_profile_repeaters_print_group_html_start();
-	}
-}
-if ( function_exists( 'bboss_xprofile_ajax_add_repeater_set' ) && ! function_exists( 'bp_xprofile_ajax_add_repeater_set' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_xprofile_ajax_add_repeater_set()}.
-	 *
-	 * @deprecated Use bboss_xprofile_ajax_add_repeater_set() instead.
-	 */
-	function bp_xprofile_ajax_add_repeater_set() {
-		return bboss_xprofile_ajax_add_repeater_set();
-	}
-}
-if ( function_exists( 'bboss_xprofile_repeater_field_get_children' ) && ! function_exists( 'bp_xprofile_repeater_field_get_children' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_xprofile_repeater_field_get_children()}.
-	 *
-	 * @deprecated Use bboss_xprofile_repeater_field_get_children() instead.
-	 */
-	function bp_xprofile_repeater_field_get_children( $children, $for_editing, $field ) {
-		return bboss_xprofile_repeater_field_get_children( $children, $for_editing, $field );
-	}
-}
 // @bbwt-com-end compat-layer
+

@@ -18,6 +18,20 @@ defined( 'ABSPATH' ) || exit;
 function bboss_maintenance_mode() {
 	echo esc_html( bboss_get_maintenance_mode() );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_maintenance_mode' ) && ! function_exists( 'bp_maintenance_mode' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_maintenance_mode()}.
+	 *
+	 * @deprecated Use bboss_maintenance_mode() instead.
+	 */
+	function bp_maintenance_mode() {
+		return bboss_maintenance_mode();
+	}
+}
+// @bbwt-com-end compat-layer
+
 	/**
 	 * Return the BuddyPress maintenance mode
 	 *
@@ -28,6 +42,20 @@ function bboss_maintenance_mode() {
 function bboss_get_maintenance_mode() {
 	return bboss()->maintenance_mode;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_maintenance_mode' ) && ! function_exists( 'bp_get_maintenance_mode' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_maintenance_mode()}.
+	 *
+	 * @deprecated Use bboss_get_maintenance_mode() instead.
+	 */
+	function bp_get_maintenance_mode() {
+		return bboss_get_maintenance_mode();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * bboss_xprofile_get_profile()
@@ -38,6 +66,20 @@ function bboss_xprofile_get_profile() {
 	_deprecated_function( __FUNCTION__, '1.7' );
 	bboss_locate_template( array( 'profile/profile-loop.php' ), true );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_xprofile_get_profile' ) && ! function_exists( 'xprofile_get_profile' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_xprofile_get_profile()}.
+	 *
+	 * @deprecated Use bboss_xprofile_get_profile() instead.
+	 */
+	function xprofile_get_profile() {
+		return bboss_xprofile_get_profile();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * bboss_get_profile_header()
@@ -48,6 +90,20 @@ function bboss_get_profile_header() {
 	_deprecated_function( __FUNCTION__, '1.7' );
 	bboss_locate_template( array( 'profile/profile-header.php' ), true );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_profile_header' ) && ! function_exists( 'bp_get_profile_header' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_profile_header()}.
+	 *
+	 * @deprecated Use bboss_get_profile_header() instead.
+	 */
+	function bp_get_profile_header() {
+		return bboss_get_profile_header();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * bp_exists( $component_name )
@@ -64,6 +120,20 @@ function bboss_exists( $component_name ) {
 
 	return false;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_exists' ) && ! function_exists( 'bp_exists' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_exists()}.
+	 *
+	 * @deprecated Use bboss_exists() instead.
+	 */
+	function bp_exists( $component_name ) {
+		return bboss_exists( $component_name );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * bboss_get_plugin_sidebar()
@@ -74,6 +144,20 @@ function bboss_get_plugin_sidebar() {
 	_deprecated_function( __FUNCTION__, '1.7' );
 	bboss_locate_template( array( 'plugin-sidebar.php' ), true );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_plugin_sidebar' ) && ! function_exists( 'bp_get_plugin_sidebar' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_plugin_sidebar()}.
+	 *
+	 * @deprecated Use bboss_get_plugin_sidebar() instead.
+	 */
+	function bp_get_plugin_sidebar() {
+		return bboss_get_plugin_sidebar();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * On multiblog installations you must first allow themes to be activated and
@@ -103,6 +187,20 @@ function bboss_core_allow_default_theme( $themes ) {
 
 	return $themes;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_core_allow_default_theme' ) && ! function_exists( 'bp_core_allow_default_theme' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_allow_default_theme()}.
+	 *
+	 * @deprecated Use bboss_core_allow_default_theme() instead.
+	 */
+	function bp_core_allow_default_theme( $themes ) {
+		return bboss_core_allow_default_theme( $themes );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * No longer used by BuddyPress core
@@ -124,6 +222,20 @@ function bboss_is_page( $page = '' ) {
 
 	return false;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_is_page' ) && ! function_exists( 'bp_is_page' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_page()}.
+	 *
+	 * @deprecated Use bboss_is_page() instead.
+	 */
+	function bp_is_page( $page = '' ) {
+		return bboss_is_page( $page );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /** Admin *********************************************************************/
 
@@ -173,80 +285,8 @@ function bboss_update_db_stuff() {
 		}
 	}
 }
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
-if ( function_exists( 'bboss_core_allow_default_theme' ) && ! function_exists( 'bp_core_allow_default_theme' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_core_allow_default_theme()}.
-	 *
-	 * @deprecated Use bboss_core_allow_default_theme() instead.
-	 */
-	function bp_core_allow_default_theme( $themes ) {
-		return bboss_core_allow_default_theme( $themes );
-	}
-}
-if ( function_exists( 'bboss_exists' ) && ! function_exists( 'bp_exists' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_exists()}.
-	 *
-	 * @deprecated Use bboss_exists() instead.
-	 */
-	function bp_exists( $component_name ) {
-		return bboss_exists( $component_name );
-	}
-}
-if ( function_exists( 'bboss_get_maintenance_mode' ) && ! function_exists( 'bp_get_maintenance_mode' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_maintenance_mode()}.
-	 *
-	 * @deprecated Use bboss_get_maintenance_mode() instead.
-	 */
-	function bp_get_maintenance_mode() {
-		return bboss_get_maintenance_mode();
-	}
-}
-if ( function_exists( 'bboss_get_plugin_sidebar' ) && ! function_exists( 'bp_get_plugin_sidebar' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_plugin_sidebar()}.
-	 *
-	 * @deprecated Use bboss_get_plugin_sidebar() instead.
-	 */
-	function bp_get_plugin_sidebar() {
-		return bboss_get_plugin_sidebar();
-	}
-}
-if ( function_exists( 'bboss_get_profile_header' ) && ! function_exists( 'bp_get_profile_header' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_profile_header()}.
-	 *
-	 * @deprecated Use bboss_get_profile_header() instead.
-	 */
-	function bp_get_profile_header() {
-		return bboss_get_profile_header();
-	}
-}
-if ( function_exists( 'bboss_is_page' ) && ! function_exists( 'bp_is_page' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_is_page()}.
-	 *
-	 * @deprecated Use bboss_is_page() instead.
-	 */
-	function bp_is_page( $page = '' ) {
-		return bboss_is_page( $page );
-	}
-}
-if ( function_exists( 'bboss_maintenance_mode' ) && ! function_exists( 'bp_maintenance_mode' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_maintenance_mode()}.
-	 *
-	 * @deprecated Use bboss_maintenance_mode() instead.
-	 */
-	function bp_maintenance_mode() {
-		return bboss_maintenance_mode();
-	}
-}
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_update_db_stuff' ) && ! function_exists( 'bp_update_db_stuff' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_update_db_stuff()}.
@@ -257,14 +297,5 @@ if ( function_exists( 'bboss_update_db_stuff' ) && ! function_exists( 'bp_update
 		return bboss_update_db_stuff();
 	}
 }
-if ( function_exists( 'bboss_xprofile_get_profile' ) && ! function_exists( 'xprofile_get_profile' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_xprofile_get_profile()}.
-	 *
-	 * @deprecated Use bboss_xprofile_get_profile() instead.
-	 */
-	function xprofile_get_profile() {
-		return bboss_xprofile_get_profile();
-	}
-}
 // @bbwt-com-end compat-layer
+

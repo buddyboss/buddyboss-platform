@@ -100,10 +100,8 @@ function bboss_xprofile_screen_change_avatar() {
 	 */
 	bboss_core_load_template( apply_filters( 'xprofile_template_change_avatar', 'members/single/home' ) );
 }
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_xprofile_screen_change_avatar' ) && ! function_exists( 'xprofile_screen_change_avatar' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_xprofile_screen_change_avatar()}.
@@ -115,3 +113,4 @@ if ( function_exists( 'bboss_xprofile_screen_change_avatar' ) && ! function_exis
 	}
 }
 // @bbwt-com-end compat-layer
+

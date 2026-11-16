@@ -90,6 +90,20 @@ function bboss_has_profile( $args = '' ) {
 	 */
 	return apply_filters( 'bp_has_profile', $profile_template->has_groups(), $profile_template, $r );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_has_profile' ) && ! function_exists( 'bp_has_profile' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_has_profile()}.
+	 *
+	 * @deprecated Use bboss_has_profile() instead.
+	 */
+	function bp_has_profile( $args = '' ) {
+		return bboss_has_profile( $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Start off the profile groups.
@@ -102,6 +116,20 @@ function bboss_profile_groups() {
 	global $profile_template;
 	return $profile_template->profile_groups();
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_profile_groups' ) && ! function_exists( 'bp_profile_groups' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_profile_groups()}.
+	 *
+	 * @deprecated Use bboss_profile_groups() instead.
+	 */
+	function bp_profile_groups() {
+		return bboss_profile_groups();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Set up the profile groups.
@@ -114,6 +142,20 @@ function bboss_the_profile_group() {
 	global $profile_template;
 	return $profile_template->the_profile_group();
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_the_profile_group' ) && ! function_exists( 'bp_the_profile_group' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_the_profile_group()}.
+	 *
+	 * @deprecated Use bboss_the_profile_group() instead.
+	 */
+	function bp_the_profile_group() {
+		return bboss_the_profile_group();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Whether or not the group has fields to display.
@@ -126,6 +168,20 @@ function bboss_profile_group_has_fields() {
 	global $profile_template;
 	return $profile_template->has_fields();
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_profile_group_has_fields' ) && ! function_exists( 'bp_profile_group_has_fields' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_profile_group_has_fields()}.
+	 *
+	 * @deprecated Use bboss_profile_group_has_fields() instead.
+	 */
+	function bp_profile_group_has_fields() {
+		return bboss_profile_group_has_fields();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output the class attribute for a field.
@@ -139,6 +195,20 @@ function bboss_profile_group_has_fields() {
 function bboss_field_css_class( $class = false ) {
 	echo bboss_get_field_css_class( $class ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- returns class="..." attribute markup; esc_attr would corrupt it.
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_field_css_class' ) && ! function_exists( 'bp_field_css_class' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_field_css_class()}.
+	 *
+	 * @deprecated Use bboss_field_css_class() instead.
+	 */
+	function bp_field_css_class( $class = false ) {
+		return bboss_field_css_class( $class );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 	/**
 	 * Return the class attribute for a field.
@@ -202,6 +272,20 @@ function bboss_get_field_css_class( $class = false ) {
 	 */
 	return apply_filters( 'bp_get_field_css_class', ' class="' . implode( ' ', $css_classes ) . '"' );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_field_css_class' ) && ! function_exists( 'bp_get_field_css_class' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_field_css_class()}.
+	 *
+	 * @deprecated Use bboss_get_field_css_class() instead.
+	 */
+	function bp_get_field_css_class( $class = false ) {
+		return bboss_get_field_css_class( $class );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Whether or not the XProfile field has data to display.
@@ -227,6 +311,20 @@ function bboss_field_has_data() {
 	 */
 	return apply_filters( 'bp_field_has_data', $profile_template->field_has_data, $profile_template, $profile_template->field, $profile_template->field->id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_field_has_data' ) && ! function_exists( 'bp_field_has_data' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_field_has_data()}.
+	 *
+	 * @deprecated Use bboss_field_has_data() instead.
+	 */
+	function bp_field_has_data() {
+		return bboss_field_has_data();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Whether or not the XProfile field has public data to display.
@@ -252,6 +350,20 @@ function bboss_field_has_public_data() {
 	 */
 	return apply_filters( 'bp_field_has_public_data', ( ! empty( $profile_template->field_has_data ) ), $profile_template, $profile_template->field, $profile_template->field->id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_field_has_public_data' ) && ! function_exists( 'bp_field_has_public_data' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_field_has_public_data()}.
+	 *
+	 * @deprecated Use bboss_field_has_public_data() instead.
+	 */
+	function bp_field_has_public_data() {
+		return bboss_field_has_public_data();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output the XProfile group ID.
@@ -261,6 +373,20 @@ function bboss_field_has_public_data() {
 function bboss_the_profile_group_id() {
 	echo esc_attr( bboss_get_the_profile_group_id() );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_the_profile_group_id' ) && ! function_exists( 'bp_the_profile_group_id' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_the_profile_group_id()}.
+	 *
+	 * @deprecated Use bboss_the_profile_group_id() instead.
+	 */
+	function bp_the_profile_group_id() {
+		return bboss_the_profile_group_id();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 	/**
 	 * Return the XProfile group ID.
@@ -281,6 +407,20 @@ function bboss_get_the_profile_group_id() {
 	 */
 	return (int) apply_filters( 'bp_get_the_profile_group_id', $group->id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_the_profile_group_id' ) && ! function_exists( 'bp_get_the_profile_group_id' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_the_profile_group_id()}.
+	 *
+	 * @deprecated Use bboss_get_the_profile_group_id() instead.
+	 */
+	function bp_get_the_profile_group_id() {
+		return bboss_get_the_profile_group_id();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output the XProfile group name.
@@ -290,6 +430,20 @@ function bboss_get_the_profile_group_id() {
 function bboss_the_profile_group_name() {
 	echo bboss_get_the_profile_group_name(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- pre-escaped via the wp_filter_kses filter chain; inline esc_html would double-encode intentional entities/HTML.
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_the_profile_group_name' ) && ! function_exists( 'bp_the_profile_group_name' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_the_profile_group_name()}.
+	 *
+	 * @deprecated Use bboss_the_profile_group_name() instead.
+	 */
+	function bp_the_profile_group_name() {
+		return bboss_the_profile_group_name();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 	/**
 	 * Return the XProfile group name.
@@ -310,6 +464,20 @@ function bboss_get_the_profile_group_name() {
 	 */
 	return apply_filters( 'bp_get_the_profile_group_name', $group->name );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_the_profile_group_name' ) && ! function_exists( 'bp_get_the_profile_group_name' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_the_profile_group_name()}.
+	 *
+	 * @deprecated Use bboss_get_the_profile_group_name() instead.
+	 */
+	function bp_get_the_profile_group_name() {
+		return bboss_get_the_profile_group_name();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output the XProfile group slug.
@@ -319,6 +487,20 @@ function bboss_get_the_profile_group_name() {
 function bboss_the_profile_group_slug() {
 	echo esc_attr( bboss_get_the_profile_group_slug() );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_the_profile_group_slug' ) && ! function_exists( 'bp_the_profile_group_slug' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_the_profile_group_slug()}.
+	 *
+	 * @deprecated Use bboss_the_profile_group_slug() instead.
+	 */
+	function bp_the_profile_group_slug() {
+		return bboss_the_profile_group_slug();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 	/**
 	 * Return the XProfile group slug.
@@ -339,6 +521,20 @@ function bboss_get_the_profile_group_slug() {
 	 */
 	return apply_filters( 'bp_get_the_profile_group_slug', sanitize_title( $group->name ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_the_profile_group_slug' ) && ! function_exists( 'bp_get_the_profile_group_slug' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_the_profile_group_slug()}.
+	 *
+	 * @deprecated Use bboss_get_the_profile_group_slug() instead.
+	 */
+	function bp_get_the_profile_group_slug() {
+		return bboss_get_the_profile_group_slug();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output the XProfile group description.
@@ -348,6 +544,20 @@ function bboss_get_the_profile_group_slug() {
 function bboss_the_profile_group_description() {
 	echo bboss_get_the_profile_group_description(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- pre-escaped via the wp_filter_kses filter chain; inline esc_html would double-encode intentional entities/HTML.
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_the_profile_group_description' ) && ! function_exists( 'bp_the_profile_group_description' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_the_profile_group_description()}.
+	 *
+	 * @deprecated Use bboss_the_profile_group_description() instead.
+	 */
+	function bp_the_profile_group_description() {
+		return bboss_the_profile_group_description();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 	/**
 	 * Return the XProfile group description.
@@ -368,6 +578,20 @@ function bboss_get_the_profile_group_description() {
 	 */
 	return apply_filters( 'bp_get_the_profile_group_description', $group->description );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_the_profile_group_description' ) && ! function_exists( 'bp_get_the_profile_group_description' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_the_profile_group_description()}.
+	 *
+	 * @deprecated Use bboss_get_the_profile_group_description() instead.
+	 */
+	function bp_get_the_profile_group_description() {
+		return bboss_get_the_profile_group_description();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output the XProfile group edit form action.
@@ -377,6 +601,20 @@ function bboss_get_the_profile_group_description() {
 function bboss_the_profile_group_edit_form_action() {
 	echo esc_url( bboss_get_the_profile_group_edit_form_action() );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_the_profile_group_edit_form_action' ) && ! function_exists( 'bp_the_profile_group_edit_form_action' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_the_profile_group_edit_form_action()}.
+	 *
+	 * @deprecated Use bboss_the_profile_group_edit_form_action() instead.
+	 */
+	function bp_the_profile_group_edit_form_action() {
+		return bboss_the_profile_group_edit_form_action();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 	/**
 	 * Return the XProfile group edit form action.
@@ -401,6 +639,20 @@ function bboss_get_the_profile_group_edit_form_action() {
 	 */
 	return apply_filters( 'bp_get_the_profile_group_edit_form_action', $form_action );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_the_profile_group_edit_form_action' ) && ! function_exists( 'bp_get_the_profile_group_edit_form_action' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_the_profile_group_edit_form_action()}.
+	 *
+	 * @deprecated Use bboss_get_the_profile_group_edit_form_action() instead.
+	 */
+	function bp_get_the_profile_group_edit_form_action() {
+		return bboss_get_the_profile_group_edit_form_action();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output the XProfile group field IDs.
@@ -410,6 +662,20 @@ function bboss_get_the_profile_group_edit_form_action() {
 function bboss_the_profile_group_field_ids() {
 	echo esc_attr( bboss_get_the_profile_group_field_ids() );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_the_profile_group_field_ids' ) && ! function_exists( 'bp_the_profile_group_field_ids' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_the_profile_group_field_ids()}.
+	 *
+	 * @deprecated Use bboss_the_profile_group_field_ids() instead.
+	 */
+	function bp_the_profile_group_field_ids() {
+		return bboss_the_profile_group_field_ids();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 	/**
 	 * Return the XProfile group field IDs.
@@ -431,6 +697,20 @@ function bboss_get_the_profile_group_field_ids() {
 
 	return substr( $field_ids, 0, -1 );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_the_profile_group_field_ids' ) && ! function_exists( 'bp_get_the_profile_group_field_ids' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_the_profile_group_field_ids()}.
+	 *
+	 * @deprecated Use bboss_get_the_profile_group_field_ids() instead.
+	 */
+	function bp_get_the_profile_group_field_ids() {
+		return bboss_get_the_profile_group_field_ids();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output a comma-separated list of field IDs that are to be submitted on profile edit.
@@ -440,6 +720,20 @@ function bboss_get_the_profile_group_field_ids() {
 function bboss_the_profile_field_ids() {
 	echo esc_attr( bboss_get_the_profile_field_ids() );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_the_profile_field_ids' ) && ! function_exists( 'bp_the_profile_field_ids' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_the_profile_field_ids()}.
+	 *
+	 * @deprecated Use bboss_the_profile_field_ids() instead.
+	 */
+	function bp_the_profile_field_ids() {
+		return bboss_the_profile_field_ids();
+	}
+}
+// @bbwt-com-end compat-layer
+
 	/**
 	 * Generate a comma-separated list of field IDs that are to be submitted on profile edit.
 	 *
@@ -480,6 +774,20 @@ function bboss_get_the_profile_field_ids() {
 	 */
 	return apply_filters( 'bp_get_the_profile_field_ids', $field_ids );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_the_profile_field_ids' ) && ! function_exists( 'bp_get_the_profile_field_ids' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_the_profile_field_ids()}.
+	 *
+	 * @deprecated Use bboss_get_the_profile_field_ids() instead.
+	 */
+	function bp_get_the_profile_field_ids() {
+		return bboss_get_the_profile_field_ids();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return the XProfile fields.
@@ -492,6 +800,20 @@ function bboss_profile_fields() {
 	global $profile_template;
 	return $profile_template->profile_fields();
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_profile_fields' ) && ! function_exists( 'bp_profile_fields' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_profile_fields()}.
+	 *
+	 * @deprecated Use bboss_profile_fields() instead.
+	 */
+	function bp_profile_fields() {
+		return bboss_profile_fields();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Sets up the XProfile field.
@@ -504,6 +826,20 @@ function bboss_the_profile_field() {
 	global $profile_template;
 	return $profile_template->the_profile_field();
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_the_profile_field' ) && ! function_exists( 'bp_the_profile_field' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_the_profile_field()}.
+	 *
+	 * @deprecated Use bboss_the_profile_field() instead.
+	 */
+	function bp_the_profile_field() {
+		return bboss_the_profile_field();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output the XProfile field ID.
@@ -513,6 +849,20 @@ function bboss_the_profile_field() {
 function bboss_the_profile_field_id() {
 	echo esc_attr( bboss_get_the_profile_field_id() );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_the_profile_field_id' ) && ! function_exists( 'bp_the_profile_field_id' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_the_profile_field_id()}.
+	 *
+	 * @deprecated Use bboss_the_profile_field_id() instead.
+	 */
+	function bp_the_profile_field_id() {
+		return bboss_the_profile_field_id();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 	/**
 	 * Return the XProfile field ID.
@@ -533,6 +883,20 @@ function bboss_get_the_profile_field_id() {
 	 */
 	return (int) apply_filters( 'bp_get_the_profile_field_id', $field->id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_the_profile_field_id' ) && ! function_exists( 'bp_get_the_profile_field_id' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_the_profile_field_id()}.
+	 *
+	 * @deprecated Use bboss_get_the_profile_field_id() instead.
+	 */
+	function bp_get_the_profile_field_id() {
+		return bboss_get_the_profile_field_id();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Outputs the XProfile field name.
@@ -542,6 +906,20 @@ function bboss_get_the_profile_field_id() {
 function bboss_the_profile_field_name() {
 	echo bboss_get_the_profile_field_name(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- pre-escaped via the wp_filter_kses filter chain; inline esc_html would double-encode intentional entities/HTML.
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_the_profile_field_name' ) && ! function_exists( 'bp_the_profile_field_name' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_the_profile_field_name()}.
+	 *
+	 * @deprecated Use bboss_the_profile_field_name() instead.
+	 */
+	function bp_the_profile_field_name() {
+		return bboss_the_profile_field_name();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 	/**
 	 * Returns the XProfile field name.
@@ -562,6 +940,20 @@ function bboss_get_the_profile_field_name() {
 	 */
 	return apply_filters( 'bp_get_the_profile_field_name', $field->name );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_the_profile_field_name' ) && ! function_exists( 'bp_get_the_profile_field_name' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_the_profile_field_name()}.
+	 *
+	 * @deprecated Use bboss_get_the_profile_field_name() instead.
+	 */
+	function bp_get_the_profile_field_name() {
+		return bboss_get_the_profile_field_name();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Returns the XProfile field's alternate name, if added, empty otherwise.
@@ -587,6 +979,20 @@ function bboss_get_the_profile_field_alternate_name( $the_field = false ) {
 	 */
 	return apply_filters( 'bp_get_the_profile_field_alternate_name', $the_field->get_alternate_name() );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_the_profile_field_alternate_name' ) && ! function_exists( 'bp_get_the_profile_field_alternate_name' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_the_profile_field_alternate_name()}.
+	 *
+	 * @deprecated Use bboss_get_the_profile_field_alternate_name() instead.
+	 */
+	function bp_get_the_profile_field_alternate_name( $the_field = false ) {
+		return bboss_get_the_profile_field_alternate_name( $the_field );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Outputs the XProfile field value.
@@ -596,6 +1002,20 @@ function bboss_get_the_profile_field_alternate_name( $the_field = false ) {
 function bboss_the_profile_field_value() {
 	echo bboss_get_the_profile_field_value(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- filter-escaped via bp_xprofile_escape_field_data (esc_html / xprofile_filter_kses).
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_the_profile_field_value' ) && ! function_exists( 'bp_the_profile_field_value' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_the_profile_field_value()}.
+	 *
+	 * @deprecated Use bboss_the_profile_field_value() instead.
+	 */
+	function bp_the_profile_field_value() {
+		return bboss_the_profile_field_value();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 	/**
 	 * Returns the XProfile field value.
@@ -657,6 +1077,20 @@ function bboss_get_the_profile_field_value() {
 	 */
 	return apply_filters( 'bp_get_the_profile_field_value', $field->data->value, $field->type, $field->id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_the_profile_field_value' ) && ! function_exists( 'bp_get_the_profile_field_value' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_the_profile_field_value()}.
+	 *
+	 * @deprecated Use bboss_get_the_profile_field_value() instead.
+	 */
+	function bp_get_the_profile_field_value() {
+		return bboss_get_the_profile_field_value();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Outputs the XProfile field edit value.
@@ -666,6 +1100,20 @@ function bboss_get_the_profile_field_value() {
 function bboss_the_profile_field_edit_value() {
 	echo bboss_get_the_profile_field_edit_value(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- filter-escaped via bp_xprofile_escape_field_data (esc_html / xprofile_filter_kses).
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_the_profile_field_edit_value' ) && ! function_exists( 'bp_the_profile_field_edit_value' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_the_profile_field_edit_value()}.
+	 *
+	 * @deprecated Use bboss_the_profile_field_edit_value() instead.
+	 */
+	function bp_the_profile_field_edit_value() {
+		return bboss_the_profile_field_edit_value();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 	/**
 	 * Returns the XProfile field edit value.
@@ -705,6 +1153,20 @@ function bboss_get_the_profile_field_edit_value() {
 	 */
 	return apply_filters( 'bp_get_the_profile_field_edit_value', $field->data->value, $field->type, $field->id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_the_profile_field_edit_value' ) && ! function_exists( 'bp_get_the_profile_field_edit_value' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_the_profile_field_edit_value()}.
+	 *
+	 * @deprecated Use bboss_get_the_profile_field_edit_value() instead.
+	 */
+	function bp_get_the_profile_field_edit_value() {
+		return bboss_get_the_profile_field_edit_value();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Outputs the XProfile field type.
@@ -714,6 +1176,20 @@ function bboss_get_the_profile_field_edit_value() {
 function bboss_the_profile_field_type() {
 	echo esc_attr( bboss_get_the_profile_field_type() );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_the_profile_field_type' ) && ! function_exists( 'bp_the_profile_field_type' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_the_profile_field_type()}.
+	 *
+	 * @deprecated Use bboss_the_profile_field_type() instead.
+	 */
+	function bp_the_profile_field_type() {
+		return bboss_the_profile_field_type();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 	/**
 	 * Returns the XProfile field type.
@@ -734,6 +1210,20 @@ function bboss_get_the_profile_field_type() {
 	 */
 	return apply_filters( 'bp_the_profile_field_type', $field->type );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_the_profile_field_type' ) && ! function_exists( 'bp_get_the_profile_field_type' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_the_profile_field_type()}.
+	 *
+	 * @deprecated Use bboss_get_the_profile_field_type() instead.
+	 */
+	function bp_get_the_profile_field_type() {
+		return bboss_get_the_profile_field_type();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Outputs the XProfile field description.
@@ -743,6 +1233,20 @@ function bboss_get_the_profile_field_type() {
 function bboss_the_profile_field_description() {
 	echo bboss_get_the_profile_field_description(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- pre-escaped via the wp_filter_kses filter chain; inline esc_html would double-encode intentional entities/HTML.
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_the_profile_field_description' ) && ! function_exists( 'bp_the_profile_field_description' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_the_profile_field_description()}.
+	 *
+	 * @deprecated Use bboss_the_profile_field_description() instead.
+	 */
+	function bp_the_profile_field_description() {
+		return bboss_the_profile_field_description();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 	/**
 	 * Returns the XProfile field description.
@@ -763,6 +1267,20 @@ function bboss_get_the_profile_field_description() {
 	 */
 	return apply_filters( 'bp_get_the_profile_field_description', $field->description );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_the_profile_field_description' ) && ! function_exists( 'bp_get_the_profile_field_description' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_the_profile_field_description()}.
+	 *
+	 * @deprecated Use bboss_get_the_profile_field_description() instead.
+	 */
+	function bp_get_the_profile_field_description() {
+		return bboss_get_the_profile_field_description();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Outputs the XProfile field input name.
@@ -772,6 +1290,20 @@ function bboss_get_the_profile_field_description() {
 function bboss_the_profile_field_input_name() {
 	echo esc_html( bboss_get_the_profile_field_input_name() );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_the_profile_field_input_name' ) && ! function_exists( 'bp_the_profile_field_input_name' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_the_profile_field_input_name()}.
+	 *
+	 * @deprecated Use bboss_the_profile_field_input_name() instead.
+	 */
+	function bp_the_profile_field_input_name() {
+		return bboss_the_profile_field_input_name();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 	/**
 	 * Retursn the XProfile field input name.
@@ -792,6 +1324,20 @@ function bboss_get_the_profile_field_input_name() {
 	 */
 	return apply_filters( 'bp_get_the_profile_field_input_name', 'field_' . $field->id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_the_profile_field_input_name' ) && ! function_exists( 'bp_get_the_profile_field_input_name' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_the_profile_field_input_name()}.
+	 *
+	 * @deprecated Use bboss_get_the_profile_field_input_name() instead.
+	 */
+	function bp_get_the_profile_field_input_name() {
+		return bboss_get_the_profile_field_input_name();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Returns the action name for any signup errors related to this profile field.
@@ -810,6 +1356,20 @@ function bboss_get_the_profile_field_errors_action() {
 	global $field;
 	return 'bp_field_' . $field->id . '_errors';
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_the_profile_field_errors_action' ) && ! function_exists( 'bp_get_the_profile_field_errors_action' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_the_profile_field_errors_action()}.
+	 *
+	 * @deprecated Use bboss_get_the_profile_field_errors_action() instead.
+	 */
+	function bp_get_the_profile_field_errors_action() {
+		return bboss_get_the_profile_field_errors_action();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Displays field options HTML for field types of 'selectbox', 'multiselectbox',
@@ -822,6 +1382,20 @@ function bboss_get_the_profile_field_errors_action() {
 function bboss_the_profile_field_options( $args = array() ) {
 	echo bboss_get_the_profile_field_options( $args ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- returns field option markup pre-escaped per option (esc_attr/esc_html); contains form controls wp_kses_post would strip.
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_the_profile_field_options' ) && ! function_exists( 'bp_the_profile_field_options' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_the_profile_field_options()}.
+	 *
+	 * @deprecated Use bboss_the_profile_field_options() instead.
+	 */
+	function bp_the_profile_field_options( $args = array() ) {
+		return bboss_the_profile_field_options( $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 	/**
 	 * Retrieves field options HTML for field types of 'selectbox', 'multiselectbox', 'radio', 'checkbox', and 'datebox'.
 	 *
@@ -872,6 +1446,20 @@ function bboss_get_the_profile_field_options( $args = array() ) {
 
 	return $html;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_the_profile_field_options' ) && ! function_exists( 'bp_get_the_profile_field_options' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_the_profile_field_options()}.
+	 *
+	 * @deprecated Use bboss_get_the_profile_field_options() instead.
+	 */
+	function bp_get_the_profile_field_options( $args = array() ) {
+		return bboss_get_the_profile_field_options( $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Render whether or not a profile field is required.
@@ -881,6 +1469,20 @@ function bboss_get_the_profile_field_options( $args = array() ) {
 function bboss_the_profile_field_is_required() {
 	echo esc_html( bboss_get_the_profile_field_is_required() );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_the_profile_field_is_required' ) && ! function_exists( 'bp_the_profile_field_is_required' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_the_profile_field_is_required()}.
+	 *
+	 * @deprecated Use bboss_the_profile_field_is_required() instead.
+	 */
+	function bp_the_profile_field_is_required() {
+		return bboss_the_profile_field_is_required();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 	/**
 	 * Return whether or not a profile field is required.
@@ -909,6 +1511,20 @@ function bboss_get_the_profile_field_is_required() {
 	 */
 	return (bool) apply_filters( 'bp_get_the_profile_field_is_required', $retval, $field->id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_the_profile_field_is_required' ) && ! function_exists( 'bp_get_the_profile_field_is_required' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_the_profile_field_is_required()}.
+	 *
+	 * @deprecated Use bboss_get_the_profile_field_is_required() instead.
+	 */
+	function bp_get_the_profile_field_is_required() {
+		return bboss_get_the_profile_field_is_required();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output the visibility level of this field.
@@ -918,6 +1534,20 @@ function bboss_get_the_profile_field_is_required() {
 function bboss_the_profile_field_visibility_level() {
 	echo esc_attr( bboss_get_the_profile_field_visibility_level() );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_the_profile_field_visibility_level' ) && ! function_exists( 'bp_the_profile_field_visibility_level' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_the_profile_field_visibility_level()}.
+	 *
+	 * @deprecated Use bboss_the_profile_field_visibility_level() instead.
+	 */
+	function bp_the_profile_field_visibility_level() {
+		return bboss_the_profile_field_visibility_level();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 	/**
 	 * Return the visibility level of this field.
@@ -947,6 +1577,20 @@ function bboss_get_the_profile_field_visibility_level() {
 	 */
 	return apply_filters( 'bp_get_the_profile_field_visibility_level', $retval );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_the_profile_field_visibility_level' ) && ! function_exists( 'bp_get_the_profile_field_visibility_level' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_the_profile_field_visibility_level()}.
+	 *
+	 * @deprecated Use bboss_get_the_profile_field_visibility_level() instead.
+	 */
+	function bp_get_the_profile_field_visibility_level() {
+		return bboss_get_the_profile_field_visibility_level();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Echo the visibility level label of this field.
@@ -956,6 +1600,20 @@ function bboss_get_the_profile_field_visibility_level() {
 function bboss_the_profile_field_visibility_level_label() {
 	echo esc_html( bboss_get_the_profile_field_visibility_level_label() );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_the_profile_field_visibility_level_label' ) && ! function_exists( 'bp_the_profile_field_visibility_level_label' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_the_profile_field_visibility_level_label()}.
+	 *
+	 * @deprecated Use bboss_the_profile_field_visibility_level_label() instead.
+	 */
+	function bp_the_profile_field_visibility_level_label() {
+		return bboss_the_profile_field_visibility_level_label();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 	/**
 	 * Return the visibility level label of this field.
@@ -989,6 +1647,20 @@ function bboss_get_the_profile_field_visibility_level_label() {
 	 */
 	return apply_filters( 'bp_get_the_profile_field_visibility_level_label', $fields[ $level ]['label'], $level );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_the_profile_field_visibility_level_label' ) && ! function_exists( 'bp_get_the_profile_field_visibility_level_label' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_the_profile_field_visibility_level_label()}.
+	 *
+	 * @deprecated Use bboss_get_the_profile_field_visibility_level_label() instead.
+	 */
+	function bp_get_the_profile_field_visibility_level_label() {
+		return bboss_get_the_profile_field_visibility_level_label();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return unserialized profile field data, and combine any array items into a
@@ -1011,6 +1683,20 @@ function bboss_unserialize_profile_field( $value ) {
 
 	return $value;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_unserialize_profile_field' ) && ! function_exists( 'bp_unserialize_profile_field' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_unserialize_profile_field()}.
+	 *
+	 * @deprecated Use bboss_unserialize_profile_field() instead.
+	 */
+	function bp_unserialize_profile_field( $value ) {
+		return bboss_unserialize_profile_field( $value );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output XProfile field data.
@@ -1022,6 +1708,20 @@ function bboss_unserialize_profile_field( $value ) {
 function bboss_profile_field_data( $args = '' ) {
 	echo wp_kses_post( bboss_get_profile_field_data( $args ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_profile_field_data' ) && ! function_exists( 'bp_profile_field_data' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_profile_field_data()}.
+	 *
+	 * @deprecated Use bboss_profile_field_data() instead.
+	 */
+	function bp_profile_field_data( $args = '' ) {
+		return bboss_profile_field_data( $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 	/**
 	 * Return XProfile field data.
@@ -1057,6 +1757,20 @@ function bboss_get_profile_field_data( $args = '' ) {
 	 */
 	return apply_filters( 'bp_get_profile_field_data', bboss_xprofile_get_field_data( $r['field'], $r['user_id'] ), $r );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_profile_field_data' ) && ! function_exists( 'bp_get_profile_field_data' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_profile_field_data()}.
+	 *
+	 * @deprecated Use bboss_get_profile_field_data() instead.
+	 */
+	function bp_get_profile_field_data( $args = '' ) {
+		return bboss_get_profile_field_data( $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get all profile field groups.
@@ -1169,6 +1883,20 @@ function bboss_profile_get_field_groups() {
 	 */
 	return apply_filters( 'bp_profile_get_field_groups', $groups );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_profile_get_field_groups' ) && ! function_exists( 'bp_profile_get_field_groups' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_profile_get_field_groups()}.
+	 *
+	 * @deprecated Use bboss_profile_get_field_groups() instead.
+	 */
+	function bp_profile_get_field_groups() {
+		return bboss_profile_get_field_groups();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Check if there is more than one group of fields for the profile being edited.
@@ -1189,6 +1917,20 @@ function bboss_profile_has_multiple_groups() {
 	 */
 	return (bool) apply_filters( 'bp_profile_has_multiple_groups', $has_multiple_groups );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_profile_has_multiple_groups' ) && ! function_exists( 'bp_profile_has_multiple_groups' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_profile_has_multiple_groups()}.
+	 *
+	 * @deprecated Use bboss_profile_has_multiple_groups() instead.
+	 */
+	function bp_profile_has_multiple_groups() {
+		return bboss_profile_has_multiple_groups();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output the tabs to switch between profile field groups.
@@ -1206,6 +1948,20 @@ function bboss_profile_group_tabs() {
 	 */
 	do_action( 'xprofile_profile_group_tabs' );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_profile_group_tabs' ) && ! function_exists( 'bp_profile_group_tabs' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_profile_group_tabs()}.
+	 *
+	 * @deprecated Use bboss_profile_group_tabs() instead.
+	 */
+	function bp_profile_group_tabs() {
+		return bboss_profile_group_tabs();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return the XProfile group tabs.
@@ -1260,6 +2016,20 @@ function bboss_get_profile_group_tabs() {
 
 	return join( '', $tabs );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_profile_group_tabs' ) && ! function_exists( 'bp_get_profile_group_tabs' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_profile_group_tabs()}.
+	 *
+	 * @deprecated Use bboss_get_profile_group_tabs() instead.
+	 */
+	function bp_get_profile_group_tabs() {
+		return bboss_get_profile_group_tabs();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output the XProfile group name.
@@ -1277,6 +2047,20 @@ function bboss_profile_group_name( $deprecated = true ) {
 		echo esc_html( bboss_get_profile_group_name() );
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_profile_group_name' ) && ! function_exists( 'bp_profile_group_name' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_profile_group_name()}.
+	 *
+	 * @deprecated Use bboss_profile_group_name() instead.
+	 */
+	function bp_profile_group_name( $deprecated = true ) {
+		return bboss_profile_group_name( $deprecated );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 	/**
 	 * Return the XProfile group name.
@@ -1307,6 +2091,20 @@ function bboss_get_profile_group_name() {
 	 */
 	return apply_filters( 'bp_get_profile_group_name', $group->name, $group_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_profile_group_name' ) && ! function_exists( 'bp_get_profile_group_name' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_profile_group_name()}.
+	 *
+	 * @deprecated Use bboss_get_profile_group_name() instead.
+	 */
+	function bp_get_profile_group_name() {
+		return bboss_get_profile_group_name();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Render a formatted string displaying when a profile was last updated.
@@ -1323,6 +2121,20 @@ function bboss_profile_last_updated() {
 		echo esc_html( $last_updated );
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_profile_last_updated' ) && ! function_exists( 'bp_profile_last_updated' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_profile_last_updated()}.
+	 *
+	 * @deprecated Use bboss_profile_last_updated() instead.
+	 */
+	function bp_profile_last_updated() {
+		return bboss_profile_last_updated();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 	/**
 	 * Return a formatted string displaying when a profile was last updated.
@@ -1350,6 +2162,20 @@ function bboss_get_profile_last_updated() {
 
 	return false;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_profile_last_updated' ) && ! function_exists( 'bp_get_profile_last_updated' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_profile_last_updated()}.
+	 *
+	 * @deprecated Use bboss_get_profile_last_updated() instead.
+	 */
+	function bp_get_profile_last_updated() {
+		return bboss_get_profile_last_updated();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Display the current profile group ID.
@@ -1359,6 +2185,20 @@ function bboss_get_profile_last_updated() {
 function bboss_current_profile_group_id() {
 	echo esc_attr( bboss_get_current_profile_group_id() );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_current_profile_group_id' ) && ! function_exists( 'bp_current_profile_group_id' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_current_profile_group_id()}.
+	 *
+	 * @deprecated Use bboss_current_profile_group_id() instead.
+	 */
+	function bp_current_profile_group_id() {
+		return bboss_current_profile_group_id();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 	/**
 	 * Return the current profile group ID.
@@ -1384,6 +2224,20 @@ function bboss_get_current_profile_group_id() {
 	 */
 	return (int) apply_filters( 'bp_get_current_profile_group_id', $profile_group_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_current_profile_group_id' ) && ! function_exists( 'bp_get_current_profile_group_id' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_current_profile_group_id()}.
+	 *
+	 * @deprecated Use bboss_get_current_profile_group_id() instead.
+	 */
+	function bp_get_current_profile_group_id() {
+		return bboss_get_current_profile_group_id();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Render an avatar delete link.
@@ -1393,6 +2247,20 @@ function bboss_get_current_profile_group_id() {
 function bboss_avatar_delete_link() {
 	echo wp_kses_post( bboss_get_avatar_delete_link() );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_avatar_delete_link' ) && ! function_exists( 'bp_avatar_delete_link' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_avatar_delete_link()}.
+	 *
+	 * @deprecated Use bboss_avatar_delete_link() instead.
+	 */
+	function bp_avatar_delete_link() {
+		return bboss_avatar_delete_link();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 	/**
 	 * Return an avatar delete link.
@@ -1412,6 +2280,20 @@ function bboss_get_avatar_delete_link() {
 	 */
 	return apply_filters( 'bp_get_avatar_delete_link', wp_nonce_url( bboss_displayed_user_domain() . bboss_get_profile_slug() . '/change-avatar/delete-avatar/', 'bp_delete_avatar_link' ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_avatar_delete_link' ) && ! function_exists( 'bp_get_avatar_delete_link' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_avatar_delete_link()}.
+	 *
+	 * @deprecated Use bboss_get_avatar_delete_link() instead.
+	 */
+	function bp_get_avatar_delete_link() {
+		return bboss_get_avatar_delete_link();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Render an edit profile button.
@@ -1431,6 +2313,20 @@ function bboss_edit_profile_button() {
 		)
 	);
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_edit_profile_button' ) && ! function_exists( 'bp_edit_profile_button' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_edit_profile_button()}.
+	 *
+	 * @deprecated Use bboss_edit_profile_button() instead.
+	 */
+	function bp_edit_profile_button() {
+		return bboss_edit_profile_button();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /** Visibility ****************************************************************/
 
@@ -1444,6 +2340,20 @@ function bboss_edit_profile_button() {
 function bboss_profile_visibility_radio_buttons( $args = '' ) {
 	echo bboss_profile_get_visibility_radio_buttons( $args ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- returns form-control markup (<select>/<option>/<input>) pre-escaped per value at construction; wp_kses_post strips the controls.
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_profile_visibility_radio_buttons' ) && ! function_exists( 'bp_profile_visibility_radio_buttons' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_profile_visibility_radio_buttons()}.
+	 *
+	 * @deprecated Use bboss_profile_visibility_radio_buttons() instead.
+	 */
+	function bp_profile_visibility_radio_buttons( $args = '' ) {
+		return bboss_profile_visibility_radio_buttons( $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 	/**
 	 * Return the field visibility radio buttons.
 	 *
@@ -1525,6 +2435,20 @@ function bboss_profile_get_visibility_radio_buttons( $args = '' ) {
 	 */
 	return apply_filters( 'bp_profile_get_visibility_radio_buttons', $retval, $r, $args );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_profile_get_visibility_radio_buttons' ) && ! function_exists( 'bp_profile_get_visibility_radio_buttons' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_profile_get_visibility_radio_buttons()}.
+	 *
+	 * @deprecated Use bboss_profile_get_visibility_radio_buttons() instead.
+	 */
+	function bp_profile_get_visibility_radio_buttons( $args = '' ) {
+		return bboss_profile_get_visibility_radio_buttons( $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output the XProfile field visibility select list for settings.
@@ -1536,6 +2460,20 @@ function bboss_profile_get_visibility_radio_buttons( $args = '' ) {
 function bboss_profile_settings_visibility_select( $args = '' ) {
 	echo bboss_profile_get_settings_visibility_select( $args ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- returns pre-escaped select/radio markup (esc_attr/esc_html, wp_kses_post on wrappers); contains form controls wp_kses_post would strip.
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_profile_settings_visibility_select' ) && ! function_exists( 'bp_profile_settings_visibility_select' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_profile_settings_visibility_select()}.
+	 *
+	 * @deprecated Use bboss_profile_settings_visibility_select() instead.
+	 */
+	function bp_profile_settings_visibility_select( $args = '' ) {
+		return bboss_profile_settings_visibility_select( $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 	/**
 	 * Return the XProfile field visibility select list for settings.
 	 *
@@ -1632,6 +2570,20 @@ function bboss_profile_get_settings_visibility_select( $args = '' ) {
 	 */
 	return apply_filters( 'bp_profile_settings_visibility_select', $retval, $r, $args );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_profile_get_settings_visibility_select' ) && ! function_exists( 'bp_profile_get_settings_visibility_select' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_profile_get_settings_visibility_select()}.
+	 *
+	 * @deprecated Use bboss_profile_get_settings_visibility_select() instead.
+	 */
+	function bp_profile_get_settings_visibility_select( $args = '' ) {
+		return bboss_profile_get_settings_visibility_select( $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output the 'required' markup in extended profile field labels.
@@ -1641,6 +2593,20 @@ function bboss_profile_get_settings_visibility_select( $args = '' ) {
 function bboss_the_profile_field_required_label() {
 	echo wp_kses_post( bboss_get_the_profile_field_required_label() );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_the_profile_field_required_label' ) && ! function_exists( 'bp_the_profile_field_required_label' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_the_profile_field_required_label()}.
+	 *
+	 * @deprecated Use bboss_the_profile_field_required_label() instead.
+	 */
+	function bp_the_profile_field_required_label() {
+		return bboss_the_profile_field_required_label();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 	/**
 	 * Return the 'required' markup in extended profile field labels.
@@ -1663,6 +2629,20 @@ function bboss_get_the_profile_field_required_label() {
 
 	return $retval;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_the_profile_field_required_label' ) && ! function_exists( 'bp_get_the_profile_field_required_label' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_the_profile_field_required_label()}.
+	 *
+	 * @deprecated Use bboss_get_the_profile_field_required_label() instead.
+	 */
+	function bp_get_the_profile_field_required_label() {
+		return bboss_get_the_profile_field_required_label();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output the 'optional' markup in extended profile field labels.
@@ -1672,6 +2652,20 @@ function bboss_get_the_profile_field_required_label() {
 function bboss_the_profile_field_optional_label() {
 	echo wp_kses_post( bboss_get_the_profile_field_optional_label() );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_the_profile_field_optional_label' ) && ! function_exists( 'bp_the_profile_field_optional_label' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_the_profile_field_optional_label()}.
+	 *
+	 * @deprecated Use bboss_the_profile_field_optional_label() instead.
+	 */
+	function bp_the_profile_field_optional_label() {
+		return bboss_the_profile_field_optional_label();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Return the 'optional' markup in extended profile field labels.
@@ -1696,6 +2690,20 @@ function bboss_get_the_profile_field_optional_label() {
 
 	return $retval;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_the_profile_field_optional_label' ) && ! function_exists( 'bp_get_the_profile_field_optional_label' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_the_profile_field_optional_label()}.
+	 *
+	 * @deprecated Use bboss_get_the_profile_field_optional_label() instead.
+	 */
+	function bp_get_the_profile_field_optional_label() {
+		return bboss_get_the_profile_field_optional_label();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output the data attribute for a field.
@@ -1709,6 +2717,20 @@ function bboss_get_the_profile_field_optional_label() {
 function bboss_field_data_attribute( $attribute = false ) {
 	echo bboss_get_field_data_attribute( $attribute ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- returns built data-attribute markup; escaping would corrupt the attribute string.
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_field_data_attribute' ) && ! function_exists( 'bp_field_data_attribute' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_field_data_attribute()}.
+	 *
+	 * @deprecated Use bboss_field_data_attribute() instead.
+	 */
+	function bp_field_data_attribute( $attribute = false ) {
+		return bboss_field_data_attribute( $attribute );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 	/**
 	 * Return the data attribute for a field.
@@ -1743,6 +2765,20 @@ function bboss_get_field_data_attribute( $attribute = false ) {
 	 */
 	return apply_filters( 'bp_get_field_data_attribute', implode( ' ', $data_attribute ) . '"' );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_field_data_attribute' ) && ! function_exists( 'bp_get_field_data_attribute' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_field_data_attribute()}.
+	 *
+	 * @deprecated Use bboss_get_field_data_attribute() instead.
+	 */
+	function bp_get_field_data_attribute( $attribute = false ) {
+		return bboss_get_field_data_attribute( $attribute );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Validate social networks field values.
@@ -1763,10 +2799,8 @@ function bboss_get_user_social_networks_urls_with_visibility( $html, $original_o
 
 	return $html;
 }
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_get_user_social_networks_urls_with_visibility' ) && ! function_exists( 'bb_get_user_social_networks_urls_with_visibility' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_get_user_social_networks_urls_with_visibility()}.
@@ -1777,744 +2811,5 @@ if ( function_exists( 'bboss_get_user_social_networks_urls_with_visibility' ) &&
 		return bboss_get_user_social_networks_urls_with_visibility( $html, $original_option_values, $social_networks_id );
 	}
 }
-if ( function_exists( 'bboss_avatar_delete_link' ) && ! function_exists( 'bp_avatar_delete_link' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_avatar_delete_link()}.
-	 *
-	 * @deprecated Use bboss_avatar_delete_link() instead.
-	 */
-	function bp_avatar_delete_link() {
-		return bboss_avatar_delete_link();
-	}
-}
-if ( function_exists( 'bboss_current_profile_group_id' ) && ! function_exists( 'bp_current_profile_group_id' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_current_profile_group_id()}.
-	 *
-	 * @deprecated Use bboss_current_profile_group_id() instead.
-	 */
-	function bp_current_profile_group_id() {
-		return bboss_current_profile_group_id();
-	}
-}
-if ( function_exists( 'bboss_edit_profile_button' ) && ! function_exists( 'bp_edit_profile_button' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_edit_profile_button()}.
-	 *
-	 * @deprecated Use bboss_edit_profile_button() instead.
-	 */
-	function bp_edit_profile_button() {
-		return bboss_edit_profile_button();
-	}
-}
-if ( function_exists( 'bboss_field_css_class' ) && ! function_exists( 'bp_field_css_class' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_field_css_class()}.
-	 *
-	 * @deprecated Use bboss_field_css_class() instead.
-	 */
-	function bp_field_css_class( $class = false ) {
-		return bboss_field_css_class( $class );
-	}
-}
-if ( function_exists( 'bboss_field_data_attribute' ) && ! function_exists( 'bp_field_data_attribute' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_field_data_attribute()}.
-	 *
-	 * @deprecated Use bboss_field_data_attribute() instead.
-	 */
-	function bp_field_data_attribute( $attribute = false ) {
-		return bboss_field_data_attribute( $attribute );
-	}
-}
-if ( function_exists( 'bboss_field_has_data' ) && ! function_exists( 'bp_field_has_data' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_field_has_data()}.
-	 *
-	 * @deprecated Use bboss_field_has_data() instead.
-	 */
-	function bp_field_has_data() {
-		return bboss_field_has_data();
-	}
-}
-if ( function_exists( 'bboss_field_has_public_data' ) && ! function_exists( 'bp_field_has_public_data' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_field_has_public_data()}.
-	 *
-	 * @deprecated Use bboss_field_has_public_data() instead.
-	 */
-	function bp_field_has_public_data() {
-		return bboss_field_has_public_data();
-	}
-}
-if ( function_exists( 'bboss_get_avatar_delete_link' ) && ! function_exists( 'bp_get_avatar_delete_link' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_avatar_delete_link()}.
-	 *
-	 * @deprecated Use bboss_get_avatar_delete_link() instead.
-	 */
-	function bp_get_avatar_delete_link() {
-		return bboss_get_avatar_delete_link();
-	}
-}
-if ( function_exists( 'bboss_get_current_profile_group_id' ) && ! function_exists( 'bp_get_current_profile_group_id' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_current_profile_group_id()}.
-	 *
-	 * @deprecated Use bboss_get_current_profile_group_id() instead.
-	 */
-	function bp_get_current_profile_group_id() {
-		return bboss_get_current_profile_group_id();
-	}
-}
-if ( function_exists( 'bboss_get_field_css_class' ) && ! function_exists( 'bp_get_field_css_class' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_field_css_class()}.
-	 *
-	 * @deprecated Use bboss_get_field_css_class() instead.
-	 */
-	function bp_get_field_css_class( $class = false ) {
-		return bboss_get_field_css_class( $class );
-	}
-}
-if ( function_exists( 'bboss_get_field_data_attribute' ) && ! function_exists( 'bp_get_field_data_attribute' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_field_data_attribute()}.
-	 *
-	 * @deprecated Use bboss_get_field_data_attribute() instead.
-	 */
-	function bp_get_field_data_attribute( $attribute = false ) {
-		return bboss_get_field_data_attribute( $attribute );
-	}
-}
-if ( function_exists( 'bboss_get_profile_field_data' ) && ! function_exists( 'bp_get_profile_field_data' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_profile_field_data()}.
-	 *
-	 * @deprecated Use bboss_get_profile_field_data() instead.
-	 */
-	function bp_get_profile_field_data( $args = '' ) {
-		return bboss_get_profile_field_data( $args );
-	}
-}
-if ( function_exists( 'bboss_get_profile_group_name' ) && ! function_exists( 'bp_get_profile_group_name' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_profile_group_name()}.
-	 *
-	 * @deprecated Use bboss_get_profile_group_name() instead.
-	 */
-	function bp_get_profile_group_name() {
-		return bboss_get_profile_group_name();
-	}
-}
-if ( function_exists( 'bboss_get_profile_group_tabs' ) && ! function_exists( 'bp_get_profile_group_tabs' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_profile_group_tabs()}.
-	 *
-	 * @deprecated Use bboss_get_profile_group_tabs() instead.
-	 */
-	function bp_get_profile_group_tabs() {
-		return bboss_get_profile_group_tabs();
-	}
-}
-if ( function_exists( 'bboss_get_profile_last_updated' ) && ! function_exists( 'bp_get_profile_last_updated' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_profile_last_updated()}.
-	 *
-	 * @deprecated Use bboss_get_profile_last_updated() instead.
-	 */
-	function bp_get_profile_last_updated() {
-		return bboss_get_profile_last_updated();
-	}
-}
-if ( function_exists( 'bboss_get_the_profile_field_alternate_name' ) && ! function_exists( 'bp_get_the_profile_field_alternate_name' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_the_profile_field_alternate_name()}.
-	 *
-	 * @deprecated Use bboss_get_the_profile_field_alternate_name() instead.
-	 */
-	function bp_get_the_profile_field_alternate_name( $the_field = false ) {
-		return bboss_get_the_profile_field_alternate_name( $the_field );
-	}
-}
-if ( function_exists( 'bboss_get_the_profile_field_description' ) && ! function_exists( 'bp_get_the_profile_field_description' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_the_profile_field_description()}.
-	 *
-	 * @deprecated Use bboss_get_the_profile_field_description() instead.
-	 */
-	function bp_get_the_profile_field_description() {
-		return bboss_get_the_profile_field_description();
-	}
-}
-if ( function_exists( 'bboss_get_the_profile_field_edit_value' ) && ! function_exists( 'bp_get_the_profile_field_edit_value' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_the_profile_field_edit_value()}.
-	 *
-	 * @deprecated Use bboss_get_the_profile_field_edit_value() instead.
-	 */
-	function bp_get_the_profile_field_edit_value() {
-		return bboss_get_the_profile_field_edit_value();
-	}
-}
-if ( function_exists( 'bboss_get_the_profile_field_errors_action' ) && ! function_exists( 'bp_get_the_profile_field_errors_action' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_the_profile_field_errors_action()}.
-	 *
-	 * @deprecated Use bboss_get_the_profile_field_errors_action() instead.
-	 */
-	function bp_get_the_profile_field_errors_action() {
-		return bboss_get_the_profile_field_errors_action();
-	}
-}
-if ( function_exists( 'bboss_get_the_profile_field_id' ) && ! function_exists( 'bp_get_the_profile_field_id' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_the_profile_field_id()}.
-	 *
-	 * @deprecated Use bboss_get_the_profile_field_id() instead.
-	 */
-	function bp_get_the_profile_field_id() {
-		return bboss_get_the_profile_field_id();
-	}
-}
-if ( function_exists( 'bboss_get_the_profile_field_ids' ) && ! function_exists( 'bp_get_the_profile_field_ids' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_the_profile_field_ids()}.
-	 *
-	 * @deprecated Use bboss_get_the_profile_field_ids() instead.
-	 */
-	function bp_get_the_profile_field_ids() {
-		return bboss_get_the_profile_field_ids();
-	}
-}
-if ( function_exists( 'bboss_get_the_profile_field_input_name' ) && ! function_exists( 'bp_get_the_profile_field_input_name' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_the_profile_field_input_name()}.
-	 *
-	 * @deprecated Use bboss_get_the_profile_field_input_name() instead.
-	 */
-	function bp_get_the_profile_field_input_name() {
-		return bboss_get_the_profile_field_input_name();
-	}
-}
-if ( function_exists( 'bboss_get_the_profile_field_is_required' ) && ! function_exists( 'bp_get_the_profile_field_is_required' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_the_profile_field_is_required()}.
-	 *
-	 * @deprecated Use bboss_get_the_profile_field_is_required() instead.
-	 */
-	function bp_get_the_profile_field_is_required() {
-		return bboss_get_the_profile_field_is_required();
-	}
-}
-if ( function_exists( 'bboss_get_the_profile_field_name' ) && ! function_exists( 'bp_get_the_profile_field_name' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_the_profile_field_name()}.
-	 *
-	 * @deprecated Use bboss_get_the_profile_field_name() instead.
-	 */
-	function bp_get_the_profile_field_name() {
-		return bboss_get_the_profile_field_name();
-	}
-}
-if ( function_exists( 'bboss_get_the_profile_field_optional_label' ) && ! function_exists( 'bp_get_the_profile_field_optional_label' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_the_profile_field_optional_label()}.
-	 *
-	 * @deprecated Use bboss_get_the_profile_field_optional_label() instead.
-	 */
-	function bp_get_the_profile_field_optional_label() {
-		return bboss_get_the_profile_field_optional_label();
-	}
-}
-if ( function_exists( 'bboss_get_the_profile_field_options' ) && ! function_exists( 'bp_get_the_profile_field_options' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_the_profile_field_options()}.
-	 *
-	 * @deprecated Use bboss_get_the_profile_field_options() instead.
-	 */
-	function bp_get_the_profile_field_options( $args = array() ) {
-		return bboss_get_the_profile_field_options( $args );
-	}
-}
-if ( function_exists( 'bboss_get_the_profile_field_required_label' ) && ! function_exists( 'bp_get_the_profile_field_required_label' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_the_profile_field_required_label()}.
-	 *
-	 * @deprecated Use bboss_get_the_profile_field_required_label() instead.
-	 */
-	function bp_get_the_profile_field_required_label() {
-		return bboss_get_the_profile_field_required_label();
-	}
-}
-if ( function_exists( 'bboss_get_the_profile_field_type' ) && ! function_exists( 'bp_get_the_profile_field_type' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_the_profile_field_type()}.
-	 *
-	 * @deprecated Use bboss_get_the_profile_field_type() instead.
-	 */
-	function bp_get_the_profile_field_type() {
-		return bboss_get_the_profile_field_type();
-	}
-}
-if ( function_exists( 'bboss_get_the_profile_field_value' ) && ! function_exists( 'bp_get_the_profile_field_value' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_the_profile_field_value()}.
-	 *
-	 * @deprecated Use bboss_get_the_profile_field_value() instead.
-	 */
-	function bp_get_the_profile_field_value() {
-		return bboss_get_the_profile_field_value();
-	}
-}
-if ( function_exists( 'bboss_get_the_profile_field_visibility_level' ) && ! function_exists( 'bp_get_the_profile_field_visibility_level' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_the_profile_field_visibility_level()}.
-	 *
-	 * @deprecated Use bboss_get_the_profile_field_visibility_level() instead.
-	 */
-	function bp_get_the_profile_field_visibility_level() {
-		return bboss_get_the_profile_field_visibility_level();
-	}
-}
-if ( function_exists( 'bboss_get_the_profile_field_visibility_level_label' ) && ! function_exists( 'bp_get_the_profile_field_visibility_level_label' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_the_profile_field_visibility_level_label()}.
-	 *
-	 * @deprecated Use bboss_get_the_profile_field_visibility_level_label() instead.
-	 */
-	function bp_get_the_profile_field_visibility_level_label() {
-		return bboss_get_the_profile_field_visibility_level_label();
-	}
-}
-if ( function_exists( 'bboss_get_the_profile_group_description' ) && ! function_exists( 'bp_get_the_profile_group_description' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_the_profile_group_description()}.
-	 *
-	 * @deprecated Use bboss_get_the_profile_group_description() instead.
-	 */
-	function bp_get_the_profile_group_description() {
-		return bboss_get_the_profile_group_description();
-	}
-}
-if ( function_exists( 'bboss_get_the_profile_group_edit_form_action' ) && ! function_exists( 'bp_get_the_profile_group_edit_form_action' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_the_profile_group_edit_form_action()}.
-	 *
-	 * @deprecated Use bboss_get_the_profile_group_edit_form_action() instead.
-	 */
-	function bp_get_the_profile_group_edit_form_action() {
-		return bboss_get_the_profile_group_edit_form_action();
-	}
-}
-if ( function_exists( 'bboss_get_the_profile_group_field_ids' ) && ! function_exists( 'bp_get_the_profile_group_field_ids' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_the_profile_group_field_ids()}.
-	 *
-	 * @deprecated Use bboss_get_the_profile_group_field_ids() instead.
-	 */
-	function bp_get_the_profile_group_field_ids() {
-		return bboss_get_the_profile_group_field_ids();
-	}
-}
-if ( function_exists( 'bboss_get_the_profile_group_id' ) && ! function_exists( 'bp_get_the_profile_group_id' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_the_profile_group_id()}.
-	 *
-	 * @deprecated Use bboss_get_the_profile_group_id() instead.
-	 */
-	function bp_get_the_profile_group_id() {
-		return bboss_get_the_profile_group_id();
-	}
-}
-if ( function_exists( 'bboss_get_the_profile_group_name' ) && ! function_exists( 'bp_get_the_profile_group_name' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_the_profile_group_name()}.
-	 *
-	 * @deprecated Use bboss_get_the_profile_group_name() instead.
-	 */
-	function bp_get_the_profile_group_name() {
-		return bboss_get_the_profile_group_name();
-	}
-}
-if ( function_exists( 'bboss_get_the_profile_group_slug' ) && ! function_exists( 'bp_get_the_profile_group_slug' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_the_profile_group_slug()}.
-	 *
-	 * @deprecated Use bboss_get_the_profile_group_slug() instead.
-	 */
-	function bp_get_the_profile_group_slug() {
-		return bboss_get_the_profile_group_slug();
-	}
-}
-if ( function_exists( 'bboss_has_profile' ) && ! function_exists( 'bp_has_profile' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_has_profile()}.
-	 *
-	 * @deprecated Use bboss_has_profile() instead.
-	 */
-	function bp_has_profile( $args = '' ) {
-		return bboss_has_profile( $args );
-	}
-}
-if ( function_exists( 'bboss_profile_field_data' ) && ! function_exists( 'bp_profile_field_data' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_profile_field_data()}.
-	 *
-	 * @deprecated Use bboss_profile_field_data() instead.
-	 */
-	function bp_profile_field_data( $args = '' ) {
-		return bboss_profile_field_data( $args );
-	}
-}
-if ( function_exists( 'bboss_profile_fields' ) && ! function_exists( 'bp_profile_fields' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_profile_fields()}.
-	 *
-	 * @deprecated Use bboss_profile_fields() instead.
-	 */
-	function bp_profile_fields() {
-		return bboss_profile_fields();
-	}
-}
-if ( function_exists( 'bboss_profile_get_field_groups' ) && ! function_exists( 'bp_profile_get_field_groups' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_profile_get_field_groups()}.
-	 *
-	 * @deprecated Use bboss_profile_get_field_groups() instead.
-	 */
-	function bp_profile_get_field_groups() {
-		return bboss_profile_get_field_groups();
-	}
-}
-if ( function_exists( 'bboss_profile_get_settings_visibility_select' ) && ! function_exists( 'bp_profile_get_settings_visibility_select' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_profile_get_settings_visibility_select()}.
-	 *
-	 * @deprecated Use bboss_profile_get_settings_visibility_select() instead.
-	 */
-	function bp_profile_get_settings_visibility_select( $args = '' ) {
-		return bboss_profile_get_settings_visibility_select( $args );
-	}
-}
-if ( function_exists( 'bboss_profile_get_visibility_radio_buttons' ) && ! function_exists( 'bp_profile_get_visibility_radio_buttons' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_profile_get_visibility_radio_buttons()}.
-	 *
-	 * @deprecated Use bboss_profile_get_visibility_radio_buttons() instead.
-	 */
-	function bp_profile_get_visibility_radio_buttons( $args = '' ) {
-		return bboss_profile_get_visibility_radio_buttons( $args );
-	}
-}
-if ( function_exists( 'bboss_profile_group_has_fields' ) && ! function_exists( 'bp_profile_group_has_fields' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_profile_group_has_fields()}.
-	 *
-	 * @deprecated Use bboss_profile_group_has_fields() instead.
-	 */
-	function bp_profile_group_has_fields() {
-		return bboss_profile_group_has_fields();
-	}
-}
-if ( function_exists( 'bboss_profile_group_name' ) && ! function_exists( 'bp_profile_group_name' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_profile_group_name()}.
-	 *
-	 * @deprecated Use bboss_profile_group_name() instead.
-	 */
-	function bp_profile_group_name( $deprecated = true ) {
-		return bboss_profile_group_name( $deprecated );
-	}
-}
-if ( function_exists( 'bboss_profile_group_tabs' ) && ! function_exists( 'bp_profile_group_tabs' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_profile_group_tabs()}.
-	 *
-	 * @deprecated Use bboss_profile_group_tabs() instead.
-	 */
-	function bp_profile_group_tabs() {
-		return bboss_profile_group_tabs();
-	}
-}
-if ( function_exists( 'bboss_profile_groups' ) && ! function_exists( 'bp_profile_groups' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_profile_groups()}.
-	 *
-	 * @deprecated Use bboss_profile_groups() instead.
-	 */
-	function bp_profile_groups() {
-		return bboss_profile_groups();
-	}
-}
-if ( function_exists( 'bboss_profile_has_multiple_groups' ) && ! function_exists( 'bp_profile_has_multiple_groups' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_profile_has_multiple_groups()}.
-	 *
-	 * @deprecated Use bboss_profile_has_multiple_groups() instead.
-	 */
-	function bp_profile_has_multiple_groups() {
-		return bboss_profile_has_multiple_groups();
-	}
-}
-if ( function_exists( 'bboss_profile_last_updated' ) && ! function_exists( 'bp_profile_last_updated' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_profile_last_updated()}.
-	 *
-	 * @deprecated Use bboss_profile_last_updated() instead.
-	 */
-	function bp_profile_last_updated() {
-		return bboss_profile_last_updated();
-	}
-}
-if ( function_exists( 'bboss_profile_settings_visibility_select' ) && ! function_exists( 'bp_profile_settings_visibility_select' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_profile_settings_visibility_select()}.
-	 *
-	 * @deprecated Use bboss_profile_settings_visibility_select() instead.
-	 */
-	function bp_profile_settings_visibility_select( $args = '' ) {
-		return bboss_profile_settings_visibility_select( $args );
-	}
-}
-if ( function_exists( 'bboss_profile_visibility_radio_buttons' ) && ! function_exists( 'bp_profile_visibility_radio_buttons' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_profile_visibility_radio_buttons()}.
-	 *
-	 * @deprecated Use bboss_profile_visibility_radio_buttons() instead.
-	 */
-	function bp_profile_visibility_radio_buttons( $args = '' ) {
-		return bboss_profile_visibility_radio_buttons( $args );
-	}
-}
-if ( function_exists( 'bboss_the_profile_field' ) && ! function_exists( 'bp_the_profile_field' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_the_profile_field()}.
-	 *
-	 * @deprecated Use bboss_the_profile_field() instead.
-	 */
-	function bp_the_profile_field() {
-		return bboss_the_profile_field();
-	}
-}
-if ( function_exists( 'bboss_the_profile_field_description' ) && ! function_exists( 'bp_the_profile_field_description' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_the_profile_field_description()}.
-	 *
-	 * @deprecated Use bboss_the_profile_field_description() instead.
-	 */
-	function bp_the_profile_field_description() {
-		return bboss_the_profile_field_description();
-	}
-}
-if ( function_exists( 'bboss_the_profile_field_edit_value' ) && ! function_exists( 'bp_the_profile_field_edit_value' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_the_profile_field_edit_value()}.
-	 *
-	 * @deprecated Use bboss_the_profile_field_edit_value() instead.
-	 */
-	function bp_the_profile_field_edit_value() {
-		return bboss_the_profile_field_edit_value();
-	}
-}
-if ( function_exists( 'bboss_the_profile_field_id' ) && ! function_exists( 'bp_the_profile_field_id' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_the_profile_field_id()}.
-	 *
-	 * @deprecated Use bboss_the_profile_field_id() instead.
-	 */
-	function bp_the_profile_field_id() {
-		return bboss_the_profile_field_id();
-	}
-}
-if ( function_exists( 'bboss_the_profile_field_ids' ) && ! function_exists( 'bp_the_profile_field_ids' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_the_profile_field_ids()}.
-	 *
-	 * @deprecated Use bboss_the_profile_field_ids() instead.
-	 */
-	function bp_the_profile_field_ids() {
-		return bboss_the_profile_field_ids();
-	}
-}
-if ( function_exists( 'bboss_the_profile_field_input_name' ) && ! function_exists( 'bp_the_profile_field_input_name' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_the_profile_field_input_name()}.
-	 *
-	 * @deprecated Use bboss_the_profile_field_input_name() instead.
-	 */
-	function bp_the_profile_field_input_name() {
-		return bboss_the_profile_field_input_name();
-	}
-}
-if ( function_exists( 'bboss_the_profile_field_is_required' ) && ! function_exists( 'bp_the_profile_field_is_required' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_the_profile_field_is_required()}.
-	 *
-	 * @deprecated Use bboss_the_profile_field_is_required() instead.
-	 */
-	function bp_the_profile_field_is_required() {
-		return bboss_the_profile_field_is_required();
-	}
-}
-if ( function_exists( 'bboss_the_profile_field_name' ) && ! function_exists( 'bp_the_profile_field_name' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_the_profile_field_name()}.
-	 *
-	 * @deprecated Use bboss_the_profile_field_name() instead.
-	 */
-	function bp_the_profile_field_name() {
-		return bboss_the_profile_field_name();
-	}
-}
-if ( function_exists( 'bboss_the_profile_field_optional_label' ) && ! function_exists( 'bp_the_profile_field_optional_label' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_the_profile_field_optional_label()}.
-	 *
-	 * @deprecated Use bboss_the_profile_field_optional_label() instead.
-	 */
-	function bp_the_profile_field_optional_label() {
-		return bboss_the_profile_field_optional_label();
-	}
-}
-if ( function_exists( 'bboss_the_profile_field_options' ) && ! function_exists( 'bp_the_profile_field_options' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_the_profile_field_options()}.
-	 *
-	 * @deprecated Use bboss_the_profile_field_options() instead.
-	 */
-	function bp_the_profile_field_options( $args = array() ) {
-		return bboss_the_profile_field_options( $args );
-	}
-}
-if ( function_exists( 'bboss_the_profile_field_required_label' ) && ! function_exists( 'bp_the_profile_field_required_label' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_the_profile_field_required_label()}.
-	 *
-	 * @deprecated Use bboss_the_profile_field_required_label() instead.
-	 */
-	function bp_the_profile_field_required_label() {
-		return bboss_the_profile_field_required_label();
-	}
-}
-if ( function_exists( 'bboss_the_profile_field_type' ) && ! function_exists( 'bp_the_profile_field_type' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_the_profile_field_type()}.
-	 *
-	 * @deprecated Use bboss_the_profile_field_type() instead.
-	 */
-	function bp_the_profile_field_type() {
-		return bboss_the_profile_field_type();
-	}
-}
-if ( function_exists( 'bboss_the_profile_field_value' ) && ! function_exists( 'bp_the_profile_field_value' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_the_profile_field_value()}.
-	 *
-	 * @deprecated Use bboss_the_profile_field_value() instead.
-	 */
-	function bp_the_profile_field_value() {
-		return bboss_the_profile_field_value();
-	}
-}
-if ( function_exists( 'bboss_the_profile_field_visibility_level' ) && ! function_exists( 'bp_the_profile_field_visibility_level' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_the_profile_field_visibility_level()}.
-	 *
-	 * @deprecated Use bboss_the_profile_field_visibility_level() instead.
-	 */
-	function bp_the_profile_field_visibility_level() {
-		return bboss_the_profile_field_visibility_level();
-	}
-}
-if ( function_exists( 'bboss_the_profile_field_visibility_level_label' ) && ! function_exists( 'bp_the_profile_field_visibility_level_label' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_the_profile_field_visibility_level_label()}.
-	 *
-	 * @deprecated Use bboss_the_profile_field_visibility_level_label() instead.
-	 */
-	function bp_the_profile_field_visibility_level_label() {
-		return bboss_the_profile_field_visibility_level_label();
-	}
-}
-if ( function_exists( 'bboss_the_profile_group' ) && ! function_exists( 'bp_the_profile_group' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_the_profile_group()}.
-	 *
-	 * @deprecated Use bboss_the_profile_group() instead.
-	 */
-	function bp_the_profile_group() {
-		return bboss_the_profile_group();
-	}
-}
-if ( function_exists( 'bboss_the_profile_group_description' ) && ! function_exists( 'bp_the_profile_group_description' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_the_profile_group_description()}.
-	 *
-	 * @deprecated Use bboss_the_profile_group_description() instead.
-	 */
-	function bp_the_profile_group_description() {
-		return bboss_the_profile_group_description();
-	}
-}
-if ( function_exists( 'bboss_the_profile_group_edit_form_action' ) && ! function_exists( 'bp_the_profile_group_edit_form_action' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_the_profile_group_edit_form_action()}.
-	 *
-	 * @deprecated Use bboss_the_profile_group_edit_form_action() instead.
-	 */
-	function bp_the_profile_group_edit_form_action() {
-		return bboss_the_profile_group_edit_form_action();
-	}
-}
-if ( function_exists( 'bboss_the_profile_group_field_ids' ) && ! function_exists( 'bp_the_profile_group_field_ids' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_the_profile_group_field_ids()}.
-	 *
-	 * @deprecated Use bboss_the_profile_group_field_ids() instead.
-	 */
-	function bp_the_profile_group_field_ids() {
-		return bboss_the_profile_group_field_ids();
-	}
-}
-if ( function_exists( 'bboss_the_profile_group_id' ) && ! function_exists( 'bp_the_profile_group_id' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_the_profile_group_id()}.
-	 *
-	 * @deprecated Use bboss_the_profile_group_id() instead.
-	 */
-	function bp_the_profile_group_id() {
-		return bboss_the_profile_group_id();
-	}
-}
-if ( function_exists( 'bboss_the_profile_group_name' ) && ! function_exists( 'bp_the_profile_group_name' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_the_profile_group_name()}.
-	 *
-	 * @deprecated Use bboss_the_profile_group_name() instead.
-	 */
-	function bp_the_profile_group_name() {
-		return bboss_the_profile_group_name();
-	}
-}
-if ( function_exists( 'bboss_the_profile_group_slug' ) && ! function_exists( 'bp_the_profile_group_slug' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_the_profile_group_slug()}.
-	 *
-	 * @deprecated Use bboss_the_profile_group_slug() instead.
-	 */
-	function bp_the_profile_group_slug() {
-		return bboss_the_profile_group_slug();
-	}
-}
-if ( function_exists( 'bboss_unserialize_profile_field' ) && ! function_exists( 'bp_unserialize_profile_field' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_unserialize_profile_field()}.
-	 *
-	 * @deprecated Use bboss_unserialize_profile_field() instead.
-	 */
-	function bp_unserialize_profile_field( $value ) {
-		return bboss_unserialize_profile_field( $value );
-	}
-}
 // @bbwt-com-end compat-layer
+

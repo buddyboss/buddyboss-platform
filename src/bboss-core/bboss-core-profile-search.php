@@ -41,6 +41,20 @@ function bboss_core_load_profile_search() {
 		add_action( 'bp_include', 'bps_buddypress' );
 		function bboss_bps_buddypress() {
 		}
+		// @bbwt-com-start compat-layer
+		// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+		if ( function_exists( 'bboss_bps_buddypress' ) && ! function_exists( 'bps_buddypress' ) ) {
+			/**
+			 * Backward-compatible alias of {@see bboss_bps_buddypress()}.
+			 *
+			 * @deprecated Use bboss_bps_buddypress() instead.
+			 */
+			function bps_buddypress() {
+				return bboss_bps_buddypress();
+			}
+		}
+		// @bbwt-com-end compat-layer
+
 	}
 
 	define( 'BBOSS_BPS_VERSION', BBOSS_PLATFORM_VERSION );
@@ -49,10 +63,8 @@ function bboss_core_load_profile_search() {
 		include bboss()->plugin_dir . 'bboss-core/profile-search/bps-start.php';
 	}
 }
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_core_load_profile_search' ) && ! function_exists( 'bp_core_load_profile_search' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_core_load_profile_search()}.
@@ -63,14 +75,5 @@ if ( function_exists( 'bboss_core_load_profile_search' ) && ! function_exists( '
 		return bboss_core_load_profile_search();
 	}
 }
-if ( function_exists( 'bboss_bps_buddypress' ) && ! function_exists( 'bps_buddypress' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bps_buddypress()}.
-	 *
-	 * @deprecated Use bboss_bps_buddypress() instead.
-	 */
-	function bps_buddypress() {
-		return bboss_bps_buddypress();
-	}
-}
 // @bbwt-com-end compat-layer
+

@@ -31,6 +31,20 @@ defined( 'ABSPATH' ) || exit;
 function bboss_bbp_translate_user_role( $name ) {
 	return translate_with_gettext_context( before_last_bar( $name ), 'User role', 'buddyboss' ); // phpcs:ignore WordPress.WP.I18n.LowLevelTranslationFunction,WordPress.WP.I18n.NonSingularStringLiteralText -- mirrors core's translate_user_role() for the plugin's own role names (registered as translatable strings where the roles are defined).
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_bbp_translate_user_role' ) && ! function_exists( 'bbp_translate_user_role' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_bbp_translate_user_role()}.
+	 *
+	 * @deprecated Use bboss_bbp_translate_user_role() instead.
+	 */
+	function bbp_translate_user_role( $name ) {
+		return bboss_bbp_translate_user_role( $name );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Dummy gettext calls to get strings in the catalog.
@@ -54,10 +68,8 @@ function bboss_bbp_dummy_role_names() {
 	/* translators: user role */
 	__( 'Blocked', 'buddyboss' );
 }
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_bbp_dummy_role_names' ) && ! function_exists( 'bbp_dummy_role_names' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_bbp_dummy_role_names()}.
@@ -68,14 +80,5 @@ if ( function_exists( 'bboss_bbp_dummy_role_names' ) && ! function_exists( 'bbp_
 		return bboss_bbp_dummy_role_names();
 	}
 }
-if ( function_exists( 'bboss_bbp_translate_user_role' ) && ! function_exists( 'bbp_translate_user_role' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_bbp_translate_user_role()}.
-	 *
-	 * @deprecated Use bboss_bbp_translate_user_role() instead.
-	 */
-	function bbp_translate_user_role( $name ) {
-		return bboss_bbp_translate_user_role( $name );
-	}
-}
 // @bbwt-com-end compat-layer
+

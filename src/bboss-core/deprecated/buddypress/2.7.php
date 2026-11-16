@@ -24,10 +24,8 @@ function bboss_core_set_charset() {
 	require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 	return ! empty( $wpdb->charset ) ? "DEFAULT CHARACTER SET {$wpdb->charset}" : '';
 }
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_core_set_charset' ) && ! function_exists( 'bp_core_set_charset' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_core_set_charset()}.
@@ -39,3 +37,4 @@ if ( function_exists( 'bboss_core_set_charset' ) && ! function_exists( 'bp_core_
 	}
 }
 // @bbwt-com-end compat-layer
+

@@ -106,6 +106,20 @@ function bboss_moved_media_features_get_stored_counts() {
 
 	return $counts;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_moved_media_features_get_stored_counts' ) && ! function_exists( 'bb_moved_media_features_get_stored_counts' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_moved_media_features_get_stored_counts()}.
+	 *
+	 * @deprecated Use bboss_moved_media_features_get_stored_counts() instead.
+	 */
+	function bb_moved_media_features_get_stored_counts() {
+		return bboss_moved_media_features_get_stored_counts();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Clear the cached stored-item counts when the plugins providing the features change.
@@ -121,6 +135,20 @@ function bboss_moved_media_features_get_stored_counts() {
 function bboss_moved_media_features_clear_stored_counts() {
 	delete_transient( 'bb_moved_media_features_stored_counts' );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_moved_media_features_clear_stored_counts' ) && ! function_exists( 'bb_moved_media_features_clear_stored_counts' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_moved_media_features_clear_stored_counts()}.
+	 *
+	 * @deprecated Use bboss_moved_media_features_clear_stored_counts() instead.
+	 */
+	function bb_moved_media_features_clear_stored_counts() {
+		return bboss_moved_media_features_clear_stored_counts();
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'activated_plugin', 'bb_moved_media_features_clear_stored_counts' );
 add_action( 'deactivated_plugin', 'bb_moved_media_features_clear_stored_counts' );
 add_action( 'upgrader_process_complete', 'bb_moved_media_features_clear_stored_counts' );
@@ -140,6 +168,20 @@ function bboss_moved_media_features_table_exists( $table ) {
 
 	return $table === $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $wpdb->esc_like( $table ) ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_moved_media_features_table_exists' ) && ! function_exists( 'bb_moved_media_features_table_exists' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_moved_media_features_table_exists()}.
+	 *
+	 * @deprecated Use bboss_moved_media_features_table_exists() instead.
+	 */
+	function bb_moved_media_features_table_exists( $table ) {
+		return bboss_moved_media_features_table_exists( $table );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get the features whose stored content is currently hidden.
@@ -177,6 +219,20 @@ function bboss_moved_media_features_get_hidden_content() {
 
 	return $hidden;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_moved_media_features_get_hidden_content' ) && ! function_exists( 'bb_moved_media_features_get_hidden_content' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_moved_media_features_get_hidden_content()}.
+	 *
+	 * @deprecated Use bboss_moved_media_features_get_hidden_content() instead.
+	 */
+	function bb_moved_media_features_get_hidden_content() {
+		return bboss_moved_media_features_get_hidden_content();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get the install/activation state of the BuddyBoss Add-ons plugin.
@@ -200,6 +256,20 @@ function bboss_moved_media_features_get_addons_state() {
 
 	return 'not_installed';
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_moved_media_features_get_addons_state' ) && ! function_exists( 'bb_moved_media_features_get_addons_state' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_moved_media_features_get_addons_state()}.
+	 *
+	 * @deprecated Use bboss_moved_media_features_get_addons_state() instead.
+	 */
+	function bb_moved_media_features_get_addons_state() {
+		return bboss_moved_media_features_get_addons_state();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Whether the site is known to be entitled to BuddyBoss Add-ons without a remote call.
@@ -241,6 +311,20 @@ function bboss_moved_media_features_is_entitled_from_cache() {
 
 	return bboss_is_entitled_to_addons();
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_moved_media_features_is_entitled_from_cache' ) && ! function_exists( 'bb_moved_media_features_is_entitled_from_cache' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_moved_media_features_is_entitled_from_cache()}.
+	 *
+	 * @deprecated Use bboss_moved_media_features_is_entitled_from_cache() instead.
+	 */
+	function bb_moved_media_features_is_entitled_from_cache() {
+		return bboss_moved_media_features_is_entitled_from_cache();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get the pricing URL used by the moved media features upsells.
@@ -277,6 +361,20 @@ function bboss_moved_media_features_get_upgrade_url( $content = 'admin-notice' )
 	 */
 	return (string) apply_filters( 'bb_moved_media_features_upgrade_url', $url, $content );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_moved_media_features_get_upgrade_url' ) && ! function_exists( 'bb_moved_media_features_get_upgrade_url' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_moved_media_features_get_upgrade_url()}.
+	 *
+	 * @deprecated Use bboss_moved_media_features_get_upgrade_url() instead.
+	 */
+	function bb_moved_media_features_get_upgrade_url( $content = 'admin-notice' ) {
+		return bboss_moved_media_features_get_upgrade_url( $content );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Whether the current user snoozed the notice within the last 30 days.
@@ -290,6 +388,20 @@ function bboss_moved_media_features_notice_is_snoozed() {
 
 	return $dismissed > 0 && ( time() - $dismissed ) < 30 * DAY_IN_SECONDS;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_moved_media_features_notice_is_snoozed' ) && ! function_exists( 'bb_moved_media_features_notice_is_snoozed' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_moved_media_features_notice_is_snoozed()}.
+	 *
+	 * @deprecated Use bboss_moved_media_features_notice_is_snoozed() instead.
+	 */
+	function bb_moved_media_features_notice_is_snoozed() {
+		return bboss_moved_media_features_notice_is_snoozed();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Render the moved media features notice.
@@ -466,6 +578,20 @@ JS;
 		echo '<script>' . $inline_js . '</script>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static JS literal with a wp_json_encode()'d URL. WordPress < 5.7 only.
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_moved_media_features_render_notice' ) && ! function_exists( 'bb_moved_media_features_render_notice' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_moved_media_features_render_notice()}.
+	 *
+	 * @deprecated Use bboss_moved_media_features_render_notice() instead.
+	 */
+	function bb_moved_media_features_render_notice() {
+		return bboss_moved_media_features_render_notice();
+	}
+}
+// @bbwt-com-end compat-layer
+
 add_action( 'admin_notices', 'bb_moved_media_features_render_notice' );
 
 /**
@@ -486,21 +612,8 @@ function bboss_moved_media_features_dismiss_notice() {
 
 	wp_send_json_success();
 }
-add_action( 'wp_ajax_bb_dismiss_moved_media_features_notice', 'bb_moved_media_features_dismiss_notice' );
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
-if ( function_exists( 'bboss_moved_media_features_clear_stored_counts' ) && ! function_exists( 'bb_moved_media_features_clear_stored_counts' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_moved_media_features_clear_stored_counts()}.
-	 *
-	 * @deprecated Use bboss_moved_media_features_clear_stored_counts() instead.
-	 */
-	function bb_moved_media_features_clear_stored_counts() {
-		return bboss_moved_media_features_clear_stored_counts();
-	}
-}
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_moved_media_features_dismiss_notice' ) && ! function_exists( 'bb_moved_media_features_dismiss_notice' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_moved_media_features_dismiss_notice()}.
@@ -511,84 +624,6 @@ if ( function_exists( 'bboss_moved_media_features_dismiss_notice' ) && ! functio
 		return bboss_moved_media_features_dismiss_notice();
 	}
 }
-if ( function_exists( 'bboss_moved_media_features_get_addons_state' ) && ! function_exists( 'bb_moved_media_features_get_addons_state' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_moved_media_features_get_addons_state()}.
-	 *
-	 * @deprecated Use bboss_moved_media_features_get_addons_state() instead.
-	 */
-	function bb_moved_media_features_get_addons_state() {
-		return bboss_moved_media_features_get_addons_state();
-	}
-}
-if ( function_exists( 'bboss_moved_media_features_get_hidden_content' ) && ! function_exists( 'bb_moved_media_features_get_hidden_content' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_moved_media_features_get_hidden_content()}.
-	 *
-	 * @deprecated Use bboss_moved_media_features_get_hidden_content() instead.
-	 */
-	function bb_moved_media_features_get_hidden_content() {
-		return bboss_moved_media_features_get_hidden_content();
-	}
-}
-if ( function_exists( 'bboss_moved_media_features_get_stored_counts' ) && ! function_exists( 'bb_moved_media_features_get_stored_counts' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_moved_media_features_get_stored_counts()}.
-	 *
-	 * @deprecated Use bboss_moved_media_features_get_stored_counts() instead.
-	 */
-	function bb_moved_media_features_get_stored_counts() {
-		return bboss_moved_media_features_get_stored_counts();
-	}
-}
-if ( function_exists( 'bboss_moved_media_features_get_upgrade_url' ) && ! function_exists( 'bb_moved_media_features_get_upgrade_url' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_moved_media_features_get_upgrade_url()}.
-	 *
-	 * @deprecated Use bboss_moved_media_features_get_upgrade_url() instead.
-	 */
-	function bb_moved_media_features_get_upgrade_url( $content = 'admin-notice' ) {
-		return bboss_moved_media_features_get_upgrade_url( $content );
-	}
-}
-if ( function_exists( 'bboss_moved_media_features_is_entitled_from_cache' ) && ! function_exists( 'bb_moved_media_features_is_entitled_from_cache' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_moved_media_features_is_entitled_from_cache()}.
-	 *
-	 * @deprecated Use bboss_moved_media_features_is_entitled_from_cache() instead.
-	 */
-	function bb_moved_media_features_is_entitled_from_cache() {
-		return bboss_moved_media_features_is_entitled_from_cache();
-	}
-}
-if ( function_exists( 'bboss_moved_media_features_notice_is_snoozed' ) && ! function_exists( 'bb_moved_media_features_notice_is_snoozed' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_moved_media_features_notice_is_snoozed()}.
-	 *
-	 * @deprecated Use bboss_moved_media_features_notice_is_snoozed() instead.
-	 */
-	function bb_moved_media_features_notice_is_snoozed() {
-		return bboss_moved_media_features_notice_is_snoozed();
-	}
-}
-if ( function_exists( 'bboss_moved_media_features_render_notice' ) && ! function_exists( 'bb_moved_media_features_render_notice' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_moved_media_features_render_notice()}.
-	 *
-	 * @deprecated Use bboss_moved_media_features_render_notice() instead.
-	 */
-	function bb_moved_media_features_render_notice() {
-		return bboss_moved_media_features_render_notice();
-	}
-}
-if ( function_exists( 'bboss_moved_media_features_table_exists' ) && ! function_exists( 'bb_moved_media_features_table_exists' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_moved_media_features_table_exists()}.
-	 *
-	 * @deprecated Use bboss_moved_media_features_table_exists() instead.
-	 */
-	function bb_moved_media_features_table_exists( $table ) {
-		return bboss_moved_media_features_table_exists( $table );
-	}
-}
 // @bbwt-com-end compat-layer
+
+add_action( 'wp_ajax_bb_dismiss_moved_media_features_notice', 'bb_moved_media_features_dismiss_notice' );

@@ -28,6 +28,20 @@ function bboss_nouveau_message_markup_wrapper( $message, $type ) {
 
 	return $message;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_message_markup_wrapper' ) && ! function_exists( 'bp_nouveau_message_markup_wrapper' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_message_markup_wrapper()}.
+	 *
+	 * @deprecated Use bboss_nouveau_message_markup_wrapper() instead.
+	 */
+	function bp_nouveau_message_markup_wrapper( $message, $type ) {
+		return bboss_nouveau_message_markup_wrapper( $message, $type );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Register Scripts for the Groups component
@@ -62,6 +76,20 @@ function bboss_nouveau_groups_register_scripts( $scripts = array() ) {
 	return array_merge( $scripts, $message_scripts );
 
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_groups_register_scripts' ) && ! function_exists( 'bp_nouveau_groups_register_scripts' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_groups_register_scripts()}.
+	 *
+	 * @deprecated Use bboss_nouveau_groups_register_scripts() instead.
+	 */
+	function bp_nouveau_groups_register_scripts( $scripts = array() ) {
+		return bboss_nouveau_groups_register_scripts( $scripts );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Enqueue the groups scripts
@@ -86,6 +114,20 @@ function bboss_nouveau_groups_enqueue_scripts() {
 	wp_enqueue_script( 'bp-select2' );
 	wp_enqueue_script( 'bp-nouveau-group-invites' );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_groups_enqueue_scripts' ) && ! function_exists( 'bp_nouveau_groups_enqueue_scripts' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_groups_enqueue_scripts()}.
+	 *
+	 * @deprecated Use bboss_nouveau_groups_enqueue_scripts() instead.
+	 */
+	function bp_nouveau_groups_enqueue_scripts() {
+		return bboss_nouveau_groups_enqueue_scripts();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Can all members be invited to join any group?
@@ -106,6 +148,20 @@ function bboss_nouveau_groups_disallow_all_members_invites( $default = false ) {
 	 */
 	return apply_filters( 'bp_nouveau_groups_disallow_all_members_invites', $default );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_groups_disallow_all_members_invites' ) && ! function_exists( 'bp_nouveau_groups_disallow_all_members_invites' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_groups_disallow_all_members_invites()}.
+	 *
+	 * @deprecated Use bboss_nouveau_groups_disallow_all_members_invites() instead.
+	 */
+	function bp_nouveau_groups_disallow_all_members_invites( $default = false ) {
+		return bboss_nouveau_groups_disallow_all_members_invites( $default );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Localize the strings needed for the Group's Invite UI
@@ -186,6 +242,20 @@ function bboss_nouveau_groups_localize_scripts( $params = array() ) {
 
 	return $params;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_groups_localize_scripts' ) && ! function_exists( 'bp_nouveau_groups_localize_scripts' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_groups_localize_scripts()}.
+	 *
+	 * @deprecated Use bboss_nouveau_groups_localize_scripts() instead.
+	 */
+	function bp_nouveau_groups_localize_scripts( $params = array() ) {
+		return bboss_nouveau_groups_localize_scripts( $params );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Returns id of member who sent group invite.
@@ -199,6 +269,20 @@ function bboss_nouveau_groups_get_inviter_ids( $user_id, $group_id ) {
 
 	return BBoss_Nouveau_Group_Invite_Query::get_inviter_ids( $user_id, $group_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_groups_get_inviter_ids' ) && ! function_exists( 'bp_nouveau_groups_get_inviter_ids' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_groups_get_inviter_ids()}.
+	 *
+	 * @deprecated Use bboss_nouveau_groups_get_inviter_ids() instead.
+	 */
+	function bp_nouveau_groups_get_inviter_ids( $user_id, $group_id ) {
+		return bboss_nouveau_groups_get_inviter_ids( $user_id, $group_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Prepare list of group invites for JS.
@@ -280,6 +364,20 @@ function bboss_nouveau_prepare_group_potential_invites_for_js( $user ) {
 	 */
 	return apply_filters( 'bp_nouveau_prepare_group_potential_invites_for_js', $response, $user );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_prepare_group_potential_invites_for_js' ) && ! function_exists( 'bp_nouveau_prepare_group_potential_invites_for_js' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_prepare_group_potential_invites_for_js()}.
+	 *
+	 * @deprecated Use bboss_nouveau_prepare_group_potential_invites_for_js() instead.
+	 */
+	function bp_nouveau_prepare_group_potential_invites_for_js( $user ) {
+		return bboss_nouveau_prepare_group_potential_invites_for_js( $user );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get potential group invites.
@@ -340,6 +438,20 @@ function bboss_nouveau_get_group_potential_invites( $args = array() ) {
 
 	return $response;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_get_group_potential_invites' ) && ! function_exists( 'bp_nouveau_get_group_potential_invites' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_get_group_potential_invites()}.
+	 *
+	 * @deprecated Use bboss_nouveau_get_group_potential_invites() instead.
+	 */
+	function bp_nouveau_get_group_potential_invites( $args = array() ) {
+		return bboss_nouveau_get_group_potential_invites( $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Create group invites steps
@@ -361,6 +473,20 @@ function bboss_nouveau_group_invites_create_steps( $steps = array() ) {
 
 	return $steps;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_group_invites_create_steps' ) && ! function_exists( 'bp_nouveau_group_invites_create_steps' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_group_invites_create_steps()}.
+	 *
+	 * @deprecated Use bboss_nouveau_group_invites_create_steps() instead.
+	 */
+	function bp_nouveau_group_invites_create_steps( $steps = array() ) {
+		return bboss_nouveau_group_invites_create_steps( $steps );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Setup group invite navigation menu item.
@@ -427,6 +553,20 @@ function bboss_nouveau_group_setup_nav() {
 		}
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_group_setup_nav' ) && ! function_exists( 'bp_nouveau_group_setup_nav' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_group_setup_nav()}.
+	 *
+	 * @deprecated Use bboss_nouveau_group_setup_nav() instead.
+	 */
+	function bp_nouveau_group_setup_nav() {
+		return bboss_nouveau_group_setup_nav();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Returns group invite custom message.
@@ -452,6 +592,20 @@ function bboss_nouveau_groups_invites_custom_message( $message = '' ) {
 
 	return $message;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_groups_invites_custom_message' ) && ! function_exists( 'bp_nouveau_groups_invites_custom_message' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_groups_invites_custom_message()}.
+	 *
+	 * @deprecated Use bboss_nouveau_groups_invites_custom_message() instead.
+	 */
+	function bp_nouveau_groups_invites_custom_message( $message = '' ) {
+		return bboss_nouveau_groups_invites_custom_message( $message );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Format a Group for a json reply
@@ -528,6 +682,20 @@ function bboss_nouveau_prepare_group_for_js( $item ) {
 	 */
 	return apply_filters( 'bp_nouveau_prepare_group_for_js', $args, $item );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_prepare_group_for_js' ) && ! function_exists( 'bp_nouveau_prepare_group_for_js' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_prepare_group_for_js()}.
+	 *
+	 * @deprecated Use bboss_nouveau_prepare_group_for_js() instead.
+	 */
+	function bp_nouveau_prepare_group_for_js( $item ) {
+		return bboss_nouveau_prepare_group_for_js( $item );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Group invites restriction settings navigation.
@@ -553,6 +721,20 @@ function bboss_nouveau_groups_invites_restriction_nav() {
 		'user_has_access' => bboss_core_can_edit_settings(),
 	), 'members' );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_groups_invites_restriction_nav' ) && ! function_exists( 'bp_nouveau_groups_invites_restriction_nav' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_groups_invites_restriction_nav()}.
+	 *
+	 * @deprecated Use bboss_nouveau_groups_invites_restriction_nav() instead.
+	 */
+	function bp_nouveau_groups_invites_restriction_nav() {
+		return bboss_nouveau_groups_invites_restriction_nav();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Group invites restriction settings Admin Bar navigation.
@@ -577,6 +759,20 @@ function bboss_nouveau_groups_invites_restriction_admin_nav( $wp_admin_nav ) {
 
 	return $wp_admin_nav;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_groups_invites_restriction_admin_nav' ) && ! function_exists( 'bp_nouveau_groups_invites_restriction_admin_nav' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_groups_invites_restriction_admin_nav()}.
+	 *
+	 * @deprecated Use bboss_nouveau_groups_invites_restriction_admin_nav() instead.
+	 */
+	function bp_nouveau_groups_invites_restriction_admin_nav( $wp_admin_nav ) {
+		return bboss_nouveau_groups_invites_restriction_admin_nav( $wp_admin_nav );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Group invites restriction screen.
@@ -618,6 +814,20 @@ function bboss_nouveau_groups_screen_invites_restriction() {
 	 */
 	bboss_core_load_template( apply_filters( 'bp_nouveau_groups_screen_invites_restriction', 'members/single/settings/group-invites' ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_groups_screen_invites_restriction' ) && ! function_exists( 'bp_nouveau_groups_screen_invites_restriction' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_groups_screen_invites_restriction()}.
+	 *
+	 * @deprecated Use bboss_nouveau_groups_screen_invites_restriction() instead.
+	 */
+	function bp_nouveau_groups_screen_invites_restriction() {
+		return bboss_nouveau_groups_screen_invites_restriction();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get group directory navigation menu items.
@@ -703,6 +913,20 @@ function bboss_nouveau_get_groups_directory_nav_items() {
 	 */
 	return apply_filters( 'bp_nouveau_get_groups_directory_nav_items', $nav_items );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_get_groups_directory_nav_items' ) && ! function_exists( 'bp_nouveau_get_groups_directory_nav_items' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_get_groups_directory_nav_items()}.
+	 *
+	 * @deprecated Use bboss_nouveau_get_groups_directory_nav_items() instead.
+	 */
+	function bp_nouveau_get_groups_directory_nav_items() {
+		return bboss_nouveau_get_groups_directory_nav_items();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get Dropdown filters for the groups component
@@ -747,6 +971,20 @@ function bboss_nouveau_get_groups_filters( $context = '' ) {
 
 	return $filters;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_get_groups_filters' ) && ! function_exists( 'bp_nouveau_get_groups_filters' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_get_groups_filters()}.
+	 *
+	 * @deprecated Use bboss_nouveau_get_groups_filters() instead.
+	 */
+	function bp_nouveau_get_groups_filters( $context = '' ) {
+		return bboss_nouveau_get_groups_filters( $context );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Catch the arguments for buttons
@@ -767,6 +1005,20 @@ function bboss_nouveau_groups_catch_button_args( $button = array() ) {
 	// return an empty array to stop the button creation process
 	return array();
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_groups_catch_button_args' ) && ! function_exists( 'bp_nouveau_groups_catch_button_args' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_groups_catch_button_args()}.
+	 *
+	 * @deprecated Use bboss_nouveau_groups_catch_button_args() instead.
+	 */
+	function bp_nouveau_groups_catch_button_args( $button = array() ) {
+		return bboss_nouveau_groups_catch_button_args( $button );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Catch the content hooked to the 'bp_group_header_meta' action
@@ -793,6 +1045,20 @@ function bboss_nouveau_get_hooked_group_meta() {
 
 	return false;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_get_hooked_group_meta' ) && ! function_exists( 'bp_nouveau_get_hooked_group_meta' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_get_hooked_group_meta()}.
+	 *
+	 * @deprecated Use bboss_nouveau_get_hooked_group_meta() instead.
+	 */
+	function bp_nouveau_get_hooked_group_meta() {
+		return bboss_nouveau_get_hooked_group_meta();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Display the Widgets of Group extensions into the default front page?
@@ -806,6 +1072,20 @@ function bboss_nouveau_groups_do_group_boxes() {
 
 	return ! empty( $group_settings['group_front_page'] ) && ! empty( $group_settings['group_front_boxes'] );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_groups_do_group_boxes' ) && ! function_exists( 'bp_nouveau_groups_do_group_boxes' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_groups_do_group_boxes()}.
+	 *
+	 * @deprecated Use bboss_nouveau_groups_do_group_boxes() instead.
+	 */
+	function bp_nouveau_groups_do_group_boxes() {
+		return bboss_nouveau_groups_do_group_boxes();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Display description of the Group into the default front page?
@@ -823,6 +1103,20 @@ function bboss_nouveau_groups_front_page_description() {
 	// @todo
 	return ! empty( $group_settings['group_front_page'] ) && ! empty( $group_settings['group_front_description'] ) && bboss_is_group_home();
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_groups_front_page_description' ) && ! function_exists( 'bp_nouveau_groups_front_page_description' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_groups_front_page_description()}.
+	 *
+	 * @deprecated Use bboss_nouveau_groups_front_page_description() instead.
+	 */
+	function bp_nouveau_groups_front_page_description() {
+		return bboss_nouveau_groups_front_page_description();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Add the default group front template to the front template hierarchy.
@@ -859,6 +1153,20 @@ function bboss_nouveau_group_reset_front_template( $templates = array(), $group 
 	 */
 	return apply_filters( '_bp_nouveau_group_reset_front_template', $templates );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_group_reset_front_template' ) && ! function_exists( 'bp_nouveau_group_reset_front_template' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_group_reset_front_template()}.
+	 *
+	 * @deprecated Use bboss_nouveau_group_reset_front_template() instead.
+	 */
+	function bp_nouveau_group_reset_front_template( $templates = array(), $group = null ) {
+		return bboss_nouveau_group_reset_front_template( $templates, $group );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Locate a single group template into a specific hierarchy.
@@ -919,6 +1227,20 @@ function bboss_nouveau_group_locate_template_part( $template = '' ) {
 	 */
 	return bboss_locate_template( apply_filters( 'bp_nouveau_group_locate_template_part', $templates ), false, true );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_group_locate_template_part' ) && ! function_exists( 'bp_nouveau_group_locate_template_part' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_group_locate_template_part()}.
+	 *
+	 * @deprecated Use bboss_nouveau_group_locate_template_part() instead.
+	 */
+	function bp_nouveau_group_locate_template_part( $template = '' ) {
+		return bboss_nouveau_group_locate_template_part( $template );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Load a single group template part
@@ -953,6 +1275,20 @@ function bboss_nouveau_group_get_template_part( $template = '' ) {
 
 	return $located;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_group_get_template_part' ) && ! function_exists( 'bp_nouveau_group_get_template_part' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_group_get_template_part()}.
+	 *
+	 * @deprecated Use bboss_nouveau_group_get_template_part() instead.
+	 */
+	function bp_nouveau_group_get_template_part( $template = '' ) {
+		return bboss_nouveau_group_get_template_part( $template );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Are we inside the Current group's default front page sidebar?
@@ -964,6 +1300,20 @@ function bboss_nouveau_group_get_template_part( $template = '' ) {
 function bboss_nouveau_group_is_home_widgets() {
 	return ( true === bboss_nouveau()->groups->is_group_home_sidebar );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_group_is_home_widgets' ) && ! function_exists( 'bp_nouveau_group_is_home_widgets' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_group_is_home_widgets()}.
+	 *
+	 * @deprecated Use bboss_nouveau_group_is_home_widgets() instead.
+	 */
+	function bp_nouveau_group_is_home_widgets() {
+		return bboss_nouveau_group_is_home_widgets();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Filter the Latest activities Widget to only keep the one of the group displayed
@@ -980,6 +1330,20 @@ function bboss_nouveau_group_activity_widget_overrides( $args = array() ) {
 		'primary_id' => bboss_get_current_group_id(),
 	) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_group_activity_widget_overrides' ) && ! function_exists( 'bp_nouveau_group_activity_widget_overrides' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_group_activity_widget_overrides()}.
+	 *
+	 * @deprecated Use bboss_nouveau_group_activity_widget_overrides() instead.
+	 */
+	function bp_nouveau_group_activity_widget_overrides( $args = array() ) {
+		return bboss_nouveau_group_activity_widget_overrides( $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Filter the Groups widget to only keep the displayed group.
@@ -995,6 +1359,20 @@ function bboss_nouveau_group_groups_widget_overrides( $args = array() ) {
 		'include' => bboss_get_current_group_id(),
 	) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_group_groups_widget_overrides' ) && ! function_exists( 'bp_nouveau_group_groups_widget_overrides' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_group_groups_widget_overrides()}.
+	 *
+	 * @deprecated Use bboss_nouveau_group_groups_widget_overrides() instead.
+	 */
+	function bp_nouveau_group_groups_widget_overrides( $args = array() ) {
+		return bboss_nouveau_group_groups_widget_overrides( $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Filter the Members widgets to only keep members of the displayed group.
@@ -1016,6 +1394,20 @@ function bboss_nouveau_group_members_widget_overrides( $args = array() ) {
 		'include' => wp_list_pluck( $group_members['members'], 'ID' ),
 	) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_group_members_widget_overrides' ) && ! function_exists( 'bp_nouveau_group_members_widget_overrides' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_group_members_widget_overrides()}.
+	 *
+	 * @deprecated Use bboss_nouveau_group_members_widget_overrides() instead.
+	 */
+	function bp_nouveau_group_members_widget_overrides( $args = array() ) {
+		return bboss_nouveau_group_members_widget_overrides( $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Init the Group's default front page filters as we're in the sidebar
@@ -1034,6 +1426,20 @@ function bboss_nouveau_groups_add_home_widget_filters() {
 	 */
 	do_action( 'bp_nouveau_groups_add_home_widget_filters' );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_groups_add_home_widget_filters' ) && ! function_exists( 'bp_nouveau_groups_add_home_widget_filters' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_groups_add_home_widget_filters()}.
+	 *
+	 * @deprecated Use bboss_nouveau_groups_add_home_widget_filters() instead.
+	 */
+	function bp_nouveau_groups_add_home_widget_filters() {
+		return bboss_nouveau_groups_add_home_widget_filters();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Remove the Group's default front page filters as we're no more in the sidebar
@@ -1052,6 +1458,20 @@ function bboss_nouveau_groups_remove_home_widget_filters() {
 	 */
 	do_action( 'bp_nouveau_groups_remove_home_widget_filters' );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_groups_remove_home_widget_filters' ) && ! function_exists( 'bp_nouveau_groups_remove_home_widget_filters' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_groups_remove_home_widget_filters()}.
+	 *
+	 * @deprecated Use bboss_nouveau_groups_remove_home_widget_filters() instead.
+	 */
+	function bp_nouveau_groups_remove_home_widget_filters() {
+		return bboss_nouveau_groups_remove_home_widget_filters();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get the hook, nonce, and eventually a specific template for Core Group's create screens.
@@ -1096,6 +1516,20 @@ function bboss_nouveau_group_get_core_create_screens( $id = '' ) {
 
 	return false;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_group_get_core_create_screens' ) && ! function_exists( 'bp_nouveau_group_get_core_create_screens' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_group_get_core_create_screens()}.
+	 *
+	 * @deprecated Use bboss_nouveau_group_get_core_create_screens() instead.
+	 */
+	function bp_nouveau_group_get_core_create_screens( $id = '' ) {
+		return bboss_nouveau_group_get_core_create_screens( $id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get the hook and nonce for Core Group's manage screens.
@@ -1125,6 +1559,20 @@ function bboss_nouveau_group_get_core_manage_screens( $id = '' ) {
 
 	return false;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_group_get_core_manage_screens' ) && ! function_exists( 'bp_nouveau_group_get_core_manage_screens' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_group_get_core_manage_screens()}.
+	 *
+	 * @deprecated Use bboss_nouveau_group_get_core_manage_screens() instead.
+	 */
+	function bp_nouveau_group_get_core_manage_screens( $id = '' ) {
+		return bboss_nouveau_group_get_core_manage_screens( $id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Register notifications filters for the groups component.
@@ -1174,6 +1622,20 @@ function bboss_nouveau_groups_notification_filters() {
 		bboss_nouveau_notifications_register_filter( $notification );
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_groups_notification_filters' ) && ! function_exists( 'bp_nouveau_groups_notification_filters' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_groups_notification_filters()}.
+	 *
+	 * @deprecated Use bboss_nouveau_groups_notification_filters() instead.
+	 */
+	function bp_nouveau_groups_notification_filters() {
+		return bboss_nouveau_groups_notification_filters();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 function bboss_nouveau_group_pending_invites_set_page_title( $title ){
 
@@ -1190,6 +1652,20 @@ function bboss_nouveau_group_pending_invites_set_page_title( $title ){
 
 	return $title;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_group_pending_invites_set_page_title' ) && ! function_exists( 'bp_nouveau_group_pending_invites_set_page_title' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_group_pending_invites_set_page_title()}.
+	 *
+	 * @deprecated Use bboss_nouveau_group_pending_invites_set_page_title() instead.
+	 */
+	function bp_nouveau_group_pending_invites_set_page_title( $title ) {
+		return bboss_nouveau_group_pending_invites_set_page_title( $title );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 //Update title on Buddypress sub pages
 function bboss_nouveau_group_pending_invites_set_title_tag( $title ){
@@ -1212,6 +1688,20 @@ function bboss_nouveau_group_pending_invites_set_title_tag( $title ){
 
 	return $title;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_group_pending_invites_set_title_tag' ) && ! function_exists( 'bp_nouveau_group_pending_invites_set_title_tag' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_group_pending_invites_set_title_tag()}.
+	 *
+	 * @deprecated Use bboss_nouveau_group_pending_invites_set_title_tag() instead.
+	 */
+	function bp_nouveau_group_pending_invites_set_title_tag( $title ) {
+		return bboss_nouveau_group_pending_invites_set_title_tag( $title );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Localize the strings needed for the Group's Message UI.
@@ -1261,6 +1751,20 @@ function bboss_nouveau_groups_messages_localize_scripts( $params = array() ) {
 
 	return $params;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_groups_messages_localize_scripts' ) && ! function_exists( 'bp_nouveau_groups_messages_localize_scripts' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_groups_messages_localize_scripts()}.
+	 *
+	 * @deprecated Use bboss_nouveau_groups_messages_localize_scripts() instead.
+	 */
+	function bp_nouveau_groups_messages_localize_scripts( $params = array() ) {
+		return bboss_nouveau_groups_messages_localize_scripts( $params );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Enqueue the groups scripts
@@ -1281,290 +1785,8 @@ function bboss_nouveau_groups_messages_enqueue_scripts() {
 		wp_enqueue_script( 'bp-nouveau-group-messages' );
 	}
 }
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
-if ( function_exists( 'bboss_nouveau_get_group_potential_invites' ) && ! function_exists( 'bp_nouveau_get_group_potential_invites' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_get_group_potential_invites()}.
-	 *
-	 * @deprecated Use bboss_nouveau_get_group_potential_invites() instead.
-	 */
-	function bp_nouveau_get_group_potential_invites( $args = array() ) {
-		return bboss_nouveau_get_group_potential_invites( $args );
-	}
-}
-if ( function_exists( 'bboss_nouveau_get_groups_directory_nav_items' ) && ! function_exists( 'bp_nouveau_get_groups_directory_nav_items' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_get_groups_directory_nav_items()}.
-	 *
-	 * @deprecated Use bboss_nouveau_get_groups_directory_nav_items() instead.
-	 */
-	function bp_nouveau_get_groups_directory_nav_items() {
-		return bboss_nouveau_get_groups_directory_nav_items();
-	}
-}
-if ( function_exists( 'bboss_nouveau_get_groups_filters' ) && ! function_exists( 'bp_nouveau_get_groups_filters' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_get_groups_filters()}.
-	 *
-	 * @deprecated Use bboss_nouveau_get_groups_filters() instead.
-	 */
-	function bp_nouveau_get_groups_filters( $context = '' ) {
-		return bboss_nouveau_get_groups_filters( $context );
-	}
-}
-if ( function_exists( 'bboss_nouveau_get_hooked_group_meta' ) && ! function_exists( 'bp_nouveau_get_hooked_group_meta' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_get_hooked_group_meta()}.
-	 *
-	 * @deprecated Use bboss_nouveau_get_hooked_group_meta() instead.
-	 */
-	function bp_nouveau_get_hooked_group_meta() {
-		return bboss_nouveau_get_hooked_group_meta();
-	}
-}
-if ( function_exists( 'bboss_nouveau_group_activity_widget_overrides' ) && ! function_exists( 'bp_nouveau_group_activity_widget_overrides' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_group_activity_widget_overrides()}.
-	 *
-	 * @deprecated Use bboss_nouveau_group_activity_widget_overrides() instead.
-	 */
-	function bp_nouveau_group_activity_widget_overrides( $args = array() ) {
-		return bboss_nouveau_group_activity_widget_overrides( $args );
-	}
-}
-if ( function_exists( 'bboss_nouveau_group_get_core_create_screens' ) && ! function_exists( 'bp_nouveau_group_get_core_create_screens' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_group_get_core_create_screens()}.
-	 *
-	 * @deprecated Use bboss_nouveau_group_get_core_create_screens() instead.
-	 */
-	function bp_nouveau_group_get_core_create_screens( $id = '' ) {
-		return bboss_nouveau_group_get_core_create_screens( $id );
-	}
-}
-if ( function_exists( 'bboss_nouveau_group_get_core_manage_screens' ) && ! function_exists( 'bp_nouveau_group_get_core_manage_screens' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_group_get_core_manage_screens()}.
-	 *
-	 * @deprecated Use bboss_nouveau_group_get_core_manage_screens() instead.
-	 */
-	function bp_nouveau_group_get_core_manage_screens( $id = '' ) {
-		return bboss_nouveau_group_get_core_manage_screens( $id );
-	}
-}
-if ( function_exists( 'bboss_nouveau_group_get_template_part' ) && ! function_exists( 'bp_nouveau_group_get_template_part' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_group_get_template_part()}.
-	 *
-	 * @deprecated Use bboss_nouveau_group_get_template_part() instead.
-	 */
-	function bp_nouveau_group_get_template_part( $template = '' ) {
-		return bboss_nouveau_group_get_template_part( $template );
-	}
-}
-if ( function_exists( 'bboss_nouveau_group_groups_widget_overrides' ) && ! function_exists( 'bp_nouveau_group_groups_widget_overrides' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_group_groups_widget_overrides()}.
-	 *
-	 * @deprecated Use bboss_nouveau_group_groups_widget_overrides() instead.
-	 */
-	function bp_nouveau_group_groups_widget_overrides( $args = array() ) {
-		return bboss_nouveau_group_groups_widget_overrides( $args );
-	}
-}
-if ( function_exists( 'bboss_nouveau_group_invites_create_steps' ) && ! function_exists( 'bp_nouveau_group_invites_create_steps' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_group_invites_create_steps()}.
-	 *
-	 * @deprecated Use bboss_nouveau_group_invites_create_steps() instead.
-	 */
-	function bp_nouveau_group_invites_create_steps( $steps = array() ) {
-		return bboss_nouveau_group_invites_create_steps( $steps );
-	}
-}
-if ( function_exists( 'bboss_nouveau_group_is_home_widgets' ) && ! function_exists( 'bp_nouveau_group_is_home_widgets' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_group_is_home_widgets()}.
-	 *
-	 * @deprecated Use bboss_nouveau_group_is_home_widgets() instead.
-	 */
-	function bp_nouveau_group_is_home_widgets() {
-		return bboss_nouveau_group_is_home_widgets();
-	}
-}
-if ( function_exists( 'bboss_nouveau_group_locate_template_part' ) && ! function_exists( 'bp_nouveau_group_locate_template_part' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_group_locate_template_part()}.
-	 *
-	 * @deprecated Use bboss_nouveau_group_locate_template_part() instead.
-	 */
-	function bp_nouveau_group_locate_template_part( $template = '' ) {
-		return bboss_nouveau_group_locate_template_part( $template );
-	}
-}
-if ( function_exists( 'bboss_nouveau_group_members_widget_overrides' ) && ! function_exists( 'bp_nouveau_group_members_widget_overrides' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_group_members_widget_overrides()}.
-	 *
-	 * @deprecated Use bboss_nouveau_group_members_widget_overrides() instead.
-	 */
-	function bp_nouveau_group_members_widget_overrides( $args = array() ) {
-		return bboss_nouveau_group_members_widget_overrides( $args );
-	}
-}
-if ( function_exists( 'bboss_nouveau_group_pending_invites_set_page_title' ) && ! function_exists( 'bp_nouveau_group_pending_invites_set_page_title' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_group_pending_invites_set_page_title()}.
-	 *
-	 * @deprecated Use bboss_nouveau_group_pending_invites_set_page_title() instead.
-	 */
-	function bp_nouveau_group_pending_invites_set_page_title( $title ) {
-		return bboss_nouveau_group_pending_invites_set_page_title( $title );
-	}
-}
-if ( function_exists( 'bboss_nouveau_group_pending_invites_set_title_tag' ) && ! function_exists( 'bp_nouveau_group_pending_invites_set_title_tag' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_group_pending_invites_set_title_tag()}.
-	 *
-	 * @deprecated Use bboss_nouveau_group_pending_invites_set_title_tag() instead.
-	 */
-	function bp_nouveau_group_pending_invites_set_title_tag( $title ) {
-		return bboss_nouveau_group_pending_invites_set_title_tag( $title );
-	}
-}
-if ( function_exists( 'bboss_nouveau_group_reset_front_template' ) && ! function_exists( 'bp_nouveau_group_reset_front_template' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_group_reset_front_template()}.
-	 *
-	 * @deprecated Use bboss_nouveau_group_reset_front_template() instead.
-	 */
-	function bp_nouveau_group_reset_front_template( $templates = array(), $group = null ) {
-		return bboss_nouveau_group_reset_front_template( $templates, $group );
-	}
-}
-if ( function_exists( 'bboss_nouveau_group_setup_nav' ) && ! function_exists( 'bp_nouveau_group_setup_nav' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_group_setup_nav()}.
-	 *
-	 * @deprecated Use bboss_nouveau_group_setup_nav() instead.
-	 */
-	function bp_nouveau_group_setup_nav() {
-		return bboss_nouveau_group_setup_nav();
-	}
-}
-if ( function_exists( 'bboss_nouveau_groups_add_home_widget_filters' ) && ! function_exists( 'bp_nouveau_groups_add_home_widget_filters' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_groups_add_home_widget_filters()}.
-	 *
-	 * @deprecated Use bboss_nouveau_groups_add_home_widget_filters() instead.
-	 */
-	function bp_nouveau_groups_add_home_widget_filters() {
-		return bboss_nouveau_groups_add_home_widget_filters();
-	}
-}
-if ( function_exists( 'bboss_nouveau_groups_catch_button_args' ) && ! function_exists( 'bp_nouveau_groups_catch_button_args' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_groups_catch_button_args()}.
-	 *
-	 * @deprecated Use bboss_nouveau_groups_catch_button_args() instead.
-	 */
-	function bp_nouveau_groups_catch_button_args( $button = array() ) {
-		return bboss_nouveau_groups_catch_button_args( $button );
-	}
-}
-if ( function_exists( 'bboss_nouveau_groups_disallow_all_members_invites' ) && ! function_exists( 'bp_nouveau_groups_disallow_all_members_invites' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_groups_disallow_all_members_invites()}.
-	 *
-	 * @deprecated Use bboss_nouveau_groups_disallow_all_members_invites() instead.
-	 */
-	function bp_nouveau_groups_disallow_all_members_invites( $default = false ) {
-		return bboss_nouveau_groups_disallow_all_members_invites( $default );
-	}
-}
-if ( function_exists( 'bboss_nouveau_groups_do_group_boxes' ) && ! function_exists( 'bp_nouveau_groups_do_group_boxes' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_groups_do_group_boxes()}.
-	 *
-	 * @deprecated Use bboss_nouveau_groups_do_group_boxes() instead.
-	 */
-	function bp_nouveau_groups_do_group_boxes() {
-		return bboss_nouveau_groups_do_group_boxes();
-	}
-}
-if ( function_exists( 'bboss_nouveau_groups_enqueue_scripts' ) && ! function_exists( 'bp_nouveau_groups_enqueue_scripts' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_groups_enqueue_scripts()}.
-	 *
-	 * @deprecated Use bboss_nouveau_groups_enqueue_scripts() instead.
-	 */
-	function bp_nouveau_groups_enqueue_scripts() {
-		return bboss_nouveau_groups_enqueue_scripts();
-	}
-}
-if ( function_exists( 'bboss_nouveau_groups_front_page_description' ) && ! function_exists( 'bp_nouveau_groups_front_page_description' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_groups_front_page_description()}.
-	 *
-	 * @deprecated Use bboss_nouveau_groups_front_page_description() instead.
-	 */
-	function bp_nouveau_groups_front_page_description() {
-		return bboss_nouveau_groups_front_page_description();
-	}
-}
-if ( function_exists( 'bboss_nouveau_groups_get_inviter_ids' ) && ! function_exists( 'bp_nouveau_groups_get_inviter_ids' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_groups_get_inviter_ids()}.
-	 *
-	 * @deprecated Use bboss_nouveau_groups_get_inviter_ids() instead.
-	 */
-	function bp_nouveau_groups_get_inviter_ids( $user_id, $group_id ) {
-		return bboss_nouveau_groups_get_inviter_ids( $user_id, $group_id );
-	}
-}
-if ( function_exists( 'bboss_nouveau_groups_invites_custom_message' ) && ! function_exists( 'bp_nouveau_groups_invites_custom_message' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_groups_invites_custom_message()}.
-	 *
-	 * @deprecated Use bboss_nouveau_groups_invites_custom_message() instead.
-	 */
-	function bp_nouveau_groups_invites_custom_message( $message = '' ) {
-		return bboss_nouveau_groups_invites_custom_message( $message );
-	}
-}
-if ( function_exists( 'bboss_nouveau_groups_invites_restriction_admin_nav' ) && ! function_exists( 'bp_nouveau_groups_invites_restriction_admin_nav' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_groups_invites_restriction_admin_nav()}.
-	 *
-	 * @deprecated Use bboss_nouveau_groups_invites_restriction_admin_nav() instead.
-	 */
-	function bp_nouveau_groups_invites_restriction_admin_nav( $wp_admin_nav ) {
-		return bboss_nouveau_groups_invites_restriction_admin_nav( $wp_admin_nav );
-	}
-}
-if ( function_exists( 'bboss_nouveau_groups_invites_restriction_nav' ) && ! function_exists( 'bp_nouveau_groups_invites_restriction_nav' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_groups_invites_restriction_nav()}.
-	 *
-	 * @deprecated Use bboss_nouveau_groups_invites_restriction_nav() instead.
-	 */
-	function bp_nouveau_groups_invites_restriction_nav() {
-		return bboss_nouveau_groups_invites_restriction_nav();
-	}
-}
-if ( function_exists( 'bboss_nouveau_groups_localize_scripts' ) && ! function_exists( 'bp_nouveau_groups_localize_scripts' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_groups_localize_scripts()}.
-	 *
-	 * @deprecated Use bboss_nouveau_groups_localize_scripts() instead.
-	 */
-	function bp_nouveau_groups_localize_scripts( $params = array() ) {
-		return bboss_nouveau_groups_localize_scripts( $params );
-	}
-}
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_nouveau_groups_messages_enqueue_scripts' ) && ! function_exists( 'bp_nouveau_groups_messages_enqueue_scripts' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_nouveau_groups_messages_enqueue_scripts()}.
@@ -1575,84 +1797,5 @@ if ( function_exists( 'bboss_nouveau_groups_messages_enqueue_scripts' ) && ! fun
 		return bboss_nouveau_groups_messages_enqueue_scripts();
 	}
 }
-if ( function_exists( 'bboss_nouveau_groups_messages_localize_scripts' ) && ! function_exists( 'bp_nouveau_groups_messages_localize_scripts' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_groups_messages_localize_scripts()}.
-	 *
-	 * @deprecated Use bboss_nouveau_groups_messages_localize_scripts() instead.
-	 */
-	function bp_nouveau_groups_messages_localize_scripts( $params = array() ) {
-		return bboss_nouveau_groups_messages_localize_scripts( $params );
-	}
-}
-if ( function_exists( 'bboss_nouveau_groups_notification_filters' ) && ! function_exists( 'bp_nouveau_groups_notification_filters' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_groups_notification_filters()}.
-	 *
-	 * @deprecated Use bboss_nouveau_groups_notification_filters() instead.
-	 */
-	function bp_nouveau_groups_notification_filters() {
-		return bboss_nouveau_groups_notification_filters();
-	}
-}
-if ( function_exists( 'bboss_nouveau_groups_register_scripts' ) && ! function_exists( 'bp_nouveau_groups_register_scripts' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_groups_register_scripts()}.
-	 *
-	 * @deprecated Use bboss_nouveau_groups_register_scripts() instead.
-	 */
-	function bp_nouveau_groups_register_scripts( $scripts = array() ) {
-		return bboss_nouveau_groups_register_scripts( $scripts );
-	}
-}
-if ( function_exists( 'bboss_nouveau_groups_remove_home_widget_filters' ) && ! function_exists( 'bp_nouveau_groups_remove_home_widget_filters' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_groups_remove_home_widget_filters()}.
-	 *
-	 * @deprecated Use bboss_nouveau_groups_remove_home_widget_filters() instead.
-	 */
-	function bp_nouveau_groups_remove_home_widget_filters() {
-		return bboss_nouveau_groups_remove_home_widget_filters();
-	}
-}
-if ( function_exists( 'bboss_nouveau_groups_screen_invites_restriction' ) && ! function_exists( 'bp_nouveau_groups_screen_invites_restriction' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_groups_screen_invites_restriction()}.
-	 *
-	 * @deprecated Use bboss_nouveau_groups_screen_invites_restriction() instead.
-	 */
-	function bp_nouveau_groups_screen_invites_restriction() {
-		return bboss_nouveau_groups_screen_invites_restriction();
-	}
-}
-if ( function_exists( 'bboss_nouveau_message_markup_wrapper' ) && ! function_exists( 'bp_nouveau_message_markup_wrapper' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_message_markup_wrapper()}.
-	 *
-	 * @deprecated Use bboss_nouveau_message_markup_wrapper() instead.
-	 */
-	function bp_nouveau_message_markup_wrapper( $message, $type ) {
-		return bboss_nouveau_message_markup_wrapper( $message, $type );
-	}
-}
-if ( function_exists( 'bboss_nouveau_prepare_group_for_js' ) && ! function_exists( 'bp_nouveau_prepare_group_for_js' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_prepare_group_for_js()}.
-	 *
-	 * @deprecated Use bboss_nouveau_prepare_group_for_js() instead.
-	 */
-	function bp_nouveau_prepare_group_for_js( $item ) {
-		return bboss_nouveau_prepare_group_for_js( $item );
-	}
-}
-if ( function_exists( 'bboss_nouveau_prepare_group_potential_invites_for_js' ) && ! function_exists( 'bp_nouveau_prepare_group_potential_invites_for_js' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_prepare_group_potential_invites_for_js()}.
-	 *
-	 * @deprecated Use bboss_nouveau_prepare_group_potential_invites_for_js() instead.
-	 */
-	function bp_nouveau_prepare_group_potential_invites_for_js( $user ) {
-		return bboss_nouveau_prepare_group_potential_invites_for_js( $user );
-	}
-}
 // @bbwt-com-end compat-layer
+

@@ -17,6 +17,20 @@ defined( 'ABSPATH' ) || exit;
 function bboss_notifications_slug() {
 	echo esc_attr( bboss_get_notifications_slug() );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_notifications_slug' ) && ! function_exists( 'bp_notifications_slug' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_notifications_slug()}.
+	 *
+	 * @deprecated Use bboss_notifications_slug() instead.
+	 */
+	function bp_notifications_slug() {
+		return bboss_notifications_slug();
+	}
+}
+// @bbwt-com-end compat-layer
+
 	/**
 	 * Return the notifications component slug.
 	 *
@@ -35,6 +49,20 @@ function bboss_get_notifications_slug() {
 	 */
 	return apply_filters( 'bp_get_notifications_slug', bboss()->notifications->slug );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_notifications_slug' ) && ! function_exists( 'bp_get_notifications_slug' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_notifications_slug()}.
+	 *
+	 * @deprecated Use bboss_get_notifications_slug() instead.
+	 */
+	function bp_get_notifications_slug() {
+		return bboss_get_notifications_slug();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output the notifications permalink for a user.
@@ -47,6 +75,20 @@ function bboss_get_notifications_slug() {
 function bboss_notifications_permalink( $user_id = 0 ) {
 	echo esc_url( bboss_get_notifications_permalink( $user_id ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_notifications_permalink' ) && ! function_exists( 'bp_notifications_permalink' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_notifications_permalink()}.
+	 *
+	 * @deprecated Use bboss_notifications_permalink() instead.
+	 */
+	function bp_notifications_permalink( $user_id = 0 ) {
+		return bboss_notifications_permalink( $user_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 	/**
 	 * Return the notifications permalink.
 	 *
@@ -77,6 +119,20 @@ function bboss_get_notifications_permalink( $user_id = 0 ) {
 	 */
 	return apply_filters( 'bp_get_notifications_permalink', $retval, $user_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_notifications_permalink' ) && ! function_exists( 'bp_get_notifications_permalink' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_notifications_permalink()}.
+	 *
+	 * @deprecated Use bboss_get_notifications_permalink() instead.
+	 */
+	function bp_get_notifications_permalink( $user_id = 0 ) {
+		return bboss_get_notifications_permalink( $user_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output the unread notifications permalink for a user.
@@ -89,6 +145,20 @@ function bboss_get_notifications_permalink( $user_id = 0 ) {
 function bboss_notifications_unread_permalink( $user_id = 0 ) {
 	echo esc_url( bboss_get_notifications_unread_permalink( $user_id ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_notifications_unread_permalink' ) && ! function_exists( 'bp_notifications_unread_permalink' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_notifications_unread_permalink()}.
+	 *
+	 * @deprecated Use bboss_notifications_unread_permalink() instead.
+	 */
+	function bp_notifications_unread_permalink( $user_id = 0 ) {
+		return bboss_notifications_unread_permalink( $user_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 	/**
 	 * Return the unread notifications permalink.
 	 *
@@ -118,6 +188,20 @@ function bboss_get_notifications_unread_permalink( $user_id = 0 ) {
 	 */
 	return apply_filters( 'bp_get_notifications_unread_permalink', $retval, $user_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_notifications_unread_permalink' ) && ! function_exists( 'bp_get_notifications_unread_permalink' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_notifications_unread_permalink()}.
+	 *
+	 * @deprecated Use bboss_get_notifications_unread_permalink() instead.
+	 */
+	function bp_get_notifications_unread_permalink( $user_id = 0 ) {
+		return bboss_get_notifications_unread_permalink( $user_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output the read notifications permalink for a user.
@@ -130,6 +214,20 @@ function bboss_get_notifications_unread_permalink( $user_id = 0 ) {
 function bboss_notifications_read_permalink( $user_id = 0 ) {
 	echo esc_url( bboss_get_notifications_read_permalink( $user_id ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_notifications_read_permalink' ) && ! function_exists( 'bp_notifications_read_permalink' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_notifications_read_permalink()}.
+	 *
+	 * @deprecated Use bboss_notifications_read_permalink() instead.
+	 */
+	function bp_notifications_read_permalink( $user_id = 0 ) {
+		return bboss_notifications_read_permalink( $user_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 	/**
 	 * Return the read notifications permalink.
 	 *
@@ -158,6 +256,20 @@ function bboss_get_notifications_read_permalink( $user_id = 0 ) {
 	 */
 	return apply_filters( 'bp_get_notifications_unread_permalink', $retval, $user_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_notifications_read_permalink' ) && ! function_exists( 'bp_get_notifications_read_permalink' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_notifications_read_permalink()}.
+	 *
+	 * @deprecated Use bboss_get_notifications_read_permalink() instead.
+	 */
+	function bp_get_notifications_read_permalink( $user_id = 0 ) {
+		return bboss_get_notifications_read_permalink( $user_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /** The Loop ******************************************************************/
 
@@ -261,6 +373,20 @@ function bboss_has_notifications( $args = '' ) {
 	 */
 	return apply_filters( 'bp_has_notifications', $query_loop->has_notifications(), $query_loop, $r );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_has_notifications' ) && ! function_exists( 'bp_has_notifications' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_has_notifications()}.
+	 *
+	 * @deprecated Use bboss_has_notifications() instead.
+	 */
+	function bp_has_notifications( $args = '' ) {
+		return bboss_has_notifications( $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get the notifications returned by the template loop.
@@ -272,6 +398,20 @@ function bboss_has_notifications( $args = '' ) {
 function bboss_the_notifications() {
 	return bboss()->notifications->query_loop->notifications();
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_the_notifications' ) && ! function_exists( 'bp_the_notifications' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_the_notifications()}.
+	 *
+	 * @deprecated Use bboss_the_notifications() instead.
+	 */
+	function bp_the_notifications() {
+		return bboss_the_notifications();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get the current notification object in the loop.
@@ -283,6 +423,20 @@ function bboss_the_notifications() {
 function bboss_the_notification() {
 	return bboss()->notifications->query_loop->the_notification();
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_the_notification' ) && ! function_exists( 'bp_the_notification' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_the_notification()}.
+	 *
+	 * @deprecated Use bboss_the_notification() instead.
+	 */
+	function bp_the_notification() {
+		return bboss_the_notification();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /** Loop Output ***************************************************************/
 
@@ -294,6 +448,20 @@ function bboss_the_notification() {
 function bboss_the_notification_id() {
 	echo esc_attr( bboss_get_the_notification_id() );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_the_notification_id' ) && ! function_exists( 'bp_the_notification_id' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_the_notification_id()}.
+	 *
+	 * @deprecated Use bboss_the_notification_id() instead.
+	 */
+	function bp_the_notification_id() {
+		return bboss_the_notification_id();
+	}
+}
+// @bbwt-com-end compat-layer
+
 	/**
 	 * Return the ID of the notification currently being iterated on.
 	 *
@@ -312,6 +480,20 @@ function bboss_get_the_notification_id() {
 	 */
 	return apply_filters( 'bp_get_the_notification_id', bboss()->notifications->query_loop->notification->id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_the_notification_id' ) && ! function_exists( 'bp_get_the_notification_id' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_the_notification_id()}.
+	 *
+	 * @deprecated Use bboss_get_the_notification_id() instead.
+	 */
+	function bp_get_the_notification_id() {
+		return bboss_get_the_notification_id();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output the associated item ID of the notification currently being iterated on.
@@ -321,6 +503,20 @@ function bboss_get_the_notification_id() {
 function bboss_the_notification_item_id() {
 	echo esc_attr( bboss_get_the_notification_item_id() );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_the_notification_item_id' ) && ! function_exists( 'bp_the_notification_item_id' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_the_notification_item_id()}.
+	 *
+	 * @deprecated Use bboss_the_notification_item_id() instead.
+	 */
+	function bp_the_notification_item_id() {
+		return bboss_the_notification_item_id();
+	}
+}
+// @bbwt-com-end compat-layer
+
 	/**
 	 * Return the associated item ID of the notification currently being iterated on.
 	 *
@@ -339,6 +535,20 @@ function bboss_get_the_notification_item_id() {
 	 */
 	return apply_filters( 'bp_get_the_notification_item_id', bboss()->notifications->query_loop->notification->item_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_the_notification_item_id' ) && ! function_exists( 'bp_get_the_notification_item_id' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_the_notification_item_id()}.
+	 *
+	 * @deprecated Use bboss_get_the_notification_item_id() instead.
+	 */
+	function bp_get_the_notification_item_id() {
+		return bboss_get_the_notification_item_id();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output the secondary associated item ID of the notification currently being iterated on.
@@ -348,6 +558,20 @@ function bboss_get_the_notification_item_id() {
 function bboss_the_notification_secondary_item_id() {
 	echo esc_attr( bboss_get_the_notification_secondary_item_id() );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_the_notification_secondary_item_id' ) && ! function_exists( 'bp_the_notification_secondary_item_id' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_the_notification_secondary_item_id()}.
+	 *
+	 * @deprecated Use bboss_the_notification_secondary_item_id() instead.
+	 */
+	function bp_the_notification_secondary_item_id() {
+		return bboss_the_notification_secondary_item_id();
+	}
+}
+// @bbwt-com-end compat-layer
+
 	/**
 	 * Return the secondary associated item ID of the notification currently being iterated on.
 	 *
@@ -366,6 +590,20 @@ function bboss_get_the_notification_secondary_item_id() {
 	 */
 	return apply_filters( 'bp_get_the_notification_secondary_item_id', bboss()->notifications->query_loop->notification->secondary_item_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_the_notification_secondary_item_id' ) && ! function_exists( 'bp_get_the_notification_secondary_item_id' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_the_notification_secondary_item_id()}.
+	 *
+	 * @deprecated Use bboss_get_the_notification_secondary_item_id() instead.
+	 */
+	function bp_get_the_notification_secondary_item_id() {
+		return bboss_get_the_notification_secondary_item_id();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output the name of the component associated with the notification currently being iterated on.
@@ -375,6 +613,20 @@ function bboss_get_the_notification_secondary_item_id() {
 function bboss_the_notification_component_name() {
 	echo esc_html( bboss_get_the_notification_component_name() );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_the_notification_component_name' ) && ! function_exists( 'bp_the_notification_component_name' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_the_notification_component_name()}.
+	 *
+	 * @deprecated Use bboss_the_notification_component_name() instead.
+	 */
+	function bp_the_notification_component_name() {
+		return bboss_the_notification_component_name();
+	}
+}
+// @bbwt-com-end compat-layer
+
 	/**
 	 * Return the name of the component associated with the notification currently being iterated on.
 	 *
@@ -393,6 +645,20 @@ function bboss_get_the_notification_component_name() {
 	 */
 	return apply_filters( 'bp_get_the_notification_component_name', bboss()->notifications->query_loop->notification->component_name );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_the_notification_component_name' ) && ! function_exists( 'bp_get_the_notification_component_name' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_the_notification_component_name()}.
+	 *
+	 * @deprecated Use bboss_get_the_notification_component_name() instead.
+	 */
+	function bp_get_the_notification_component_name() {
+		return bboss_get_the_notification_component_name();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output the name of the action associated with the notification currently being iterated on.
@@ -402,6 +668,20 @@ function bboss_get_the_notification_component_name() {
 function bboss_the_notification_component_action() {
 	echo esc_attr( bboss_get_the_notification_component_action() );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_the_notification_component_action' ) && ! function_exists( 'bp_the_notification_component_action' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_the_notification_component_action()}.
+	 *
+	 * @deprecated Use bboss_the_notification_component_action() instead.
+	 */
+	function bp_the_notification_component_action() {
+		return bboss_the_notification_component_action();
+	}
+}
+// @bbwt-com-end compat-layer
+
 	/**
 	 * Return the name of the action associated with the notification currently being iterated on.
 	 *
@@ -420,6 +700,20 @@ function bboss_get_the_notification_component_action() {
 	 */
 	return apply_filters( 'bp_get_the_notification_component_action', bboss()->notifications->query_loop->notification->component_action );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_the_notification_component_action' ) && ! function_exists( 'bp_get_the_notification_component_action' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_the_notification_component_action()}.
+	 *
+	 * @deprecated Use bboss_get_the_notification_component_action() instead.
+	 */
+	function bp_get_the_notification_component_action() {
+		return bboss_get_the_notification_component_action();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output the timestamp of the current notification.
@@ -429,6 +723,20 @@ function bboss_get_the_notification_component_action() {
 function bboss_the_notification_date_notified() {
 	echo esc_html( bboss_get_the_notification_date_notified() );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_the_notification_date_notified' ) && ! function_exists( 'bp_the_notification_date_notified' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_the_notification_date_notified()}.
+	 *
+	 * @deprecated Use bboss_the_notification_date_notified() instead.
+	 */
+	function bp_the_notification_date_notified() {
+		return bboss_the_notification_date_notified();
+	}
+}
+// @bbwt-com-end compat-layer
+
 	/**
 	 * Return the timestamp of the current notification.
 	 *
@@ -447,6 +755,20 @@ function bboss_get_the_notification_date_notified() {
 	 */
 	return apply_filters( 'bp_get_the_notification_date_notified', bboss()->notifications->query_loop->notification->date_notified );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_the_notification_date_notified' ) && ! function_exists( 'bp_get_the_notification_date_notified' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_the_notification_date_notified()}.
+	 *
+	 * @deprecated Use bboss_get_the_notification_date_notified() instead.
+	 */
+	function bp_get_the_notification_date_notified() {
+		return bboss_get_the_notification_date_notified();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output the timestamp of the current notification.
@@ -456,6 +778,20 @@ function bboss_get_the_notification_date_notified() {
 function bboss_the_notification_time_since() {
 	echo esc_html( bboss_get_the_notification_time_since() );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_the_notification_time_since' ) && ! function_exists( 'bp_the_notification_time_since' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_the_notification_time_since()}.
+	 *
+	 * @deprecated Use bboss_the_notification_time_since() instead.
+	 */
+	function bp_the_notification_time_since() {
+		return bboss_the_notification_time_since();
+	}
+}
+// @bbwt-com-end compat-layer
+
 	/**
 	 * Return the timestamp of the current notification.
 	 *
@@ -486,6 +822,20 @@ function bboss_get_the_notification_time_since() {
 	 */
 	return apply_filters( 'bp_get_the_notification_time_since', $retval );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_the_notification_time_since' ) && ! function_exists( 'bp_get_the_notification_time_since' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_the_notification_time_since()}.
+	 *
+	 * @deprecated Use bboss_get_the_notification_time_since() instead.
+	 */
+	function bp_get_the_notification_time_since() {
+		return bboss_get_the_notification_time_since();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output full-text description for a specific notification.
@@ -495,6 +845,20 @@ function bboss_get_the_notification_time_since() {
 function bboss_the_notification_description() {
 	echo wp_kses_post( bboss_get_the_notification_description() );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_the_notification_description' ) && ! function_exists( 'bp_the_notification_description' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_the_notification_description()}.
+	 *
+	 * @deprecated Use bboss_the_notification_description() instead.
+	 */
+	function bp_the_notification_description() {
+		return bboss_the_notification_description();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get full-text description for a specific notification.
@@ -551,6 +915,20 @@ function bboss_get_the_notification_description( $notification = '' ) {
 	 */
 	return apply_filters( 'bp_get_the_notification_description', stripcslashes( $description ), $notification );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_the_notification_description' ) && ! function_exists( 'bp_get_the_notification_description' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_the_notification_description()}.
+	 *
+	 * @deprecated Use bboss_get_the_notification_description() instead.
+	 */
+	function bp_get_the_notification_description( $notification = '' ) {
+		return bboss_get_the_notification_description( $notification );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output the mark read link for the current notification.
@@ -563,6 +941,20 @@ function bboss_get_the_notification_description( $notification = '' ) {
 function bboss_the_notification_mark_read_link( $user_id = 0 ) {
 	echo wp_kses_post( bboss_get_the_notification_mark_read_link( $user_id ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_the_notification_mark_read_link' ) && ! function_exists( 'bp_the_notification_mark_read_link' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_the_notification_mark_read_link()}.
+	 *
+	 * @deprecated Use bboss_the_notification_mark_read_link() instead.
+	 */
+	function bp_the_notification_mark_read_link( $user_id = 0 ) {
+		return bboss_the_notification_mark_read_link( $user_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 	/**
 	 * Return the mark read link for the current notification.
 	 *
@@ -589,6 +981,20 @@ function bboss_get_the_notification_mark_read_link( $user_id = 0 ) {
 	 */
 	return apply_filters( 'bp_get_the_notification_mark_read_link', $retval, $user_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_the_notification_mark_read_link' ) && ! function_exists( 'bp_get_the_notification_mark_read_link' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_the_notification_mark_read_link()}.
+	 *
+	 * @deprecated Use bboss_get_the_notification_mark_read_link() instead.
+	 */
+	function bp_get_the_notification_mark_read_link( $user_id = 0 ) {
+		return bboss_get_the_notification_mark_read_link( $user_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output the URL used for marking a single notification as read.
@@ -603,6 +1009,20 @@ function bboss_get_the_notification_mark_read_link( $user_id = 0 ) {
 function bboss_the_notification_mark_read_url( $user_id = 0 ) {
 	echo esc_url( bboss_get_the_notification_mark_read_url( $user_id ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_the_notification_mark_read_url' ) && ! function_exists( 'bp_the_notification_mark_read_url' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_the_notification_mark_read_url()}.
+	 *
+	 * @deprecated Use bboss_the_notification_mark_read_url() instead.
+	 */
+	function bp_the_notification_mark_read_url( $user_id = 0 ) {
+		return bboss_the_notification_mark_read_url( $user_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 	/**
 	 * Return the URL used for marking a single notification as read.
 	 *
@@ -643,6 +1063,20 @@ function bboss_get_the_notification_mark_read_url( $user_id = 0 ) {
 	 */
 	return apply_filters( 'bp_get_the_notification_mark_read_url', $url, $user_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_the_notification_mark_read_url' ) && ! function_exists( 'bp_get_the_notification_mark_read_url' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_the_notification_mark_read_url()}.
+	 *
+	 * @deprecated Use bboss_get_the_notification_mark_read_url() instead.
+	 */
+	function bp_get_the_notification_mark_read_url( $user_id = 0 ) {
+		return bboss_get_the_notification_mark_read_url( $user_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output the mark unread link for the current notification.
@@ -655,6 +1089,20 @@ function bboss_get_the_notification_mark_read_url( $user_id = 0 ) {
 function bboss_the_notification_mark_unread_link( $user_id = 0 ) {
 	echo wp_kses_post( bboss_get_the_notification_mark_unread_link( $user_id ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_the_notification_mark_unread_link' ) && ! function_exists( 'bp_the_notification_mark_unread_link' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_the_notification_mark_unread_link()}.
+	 *
+	 * @deprecated Use bboss_the_notification_mark_unread_link() instead.
+	 */
+	function bp_the_notification_mark_unread_link( $user_id = 0 ) {
+		return bboss_the_notification_mark_unread_link( $user_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 	/**
 	 * Return the mark unread link for the current notification.
 	 *
@@ -681,6 +1129,20 @@ function bboss_get_the_notification_mark_unread_link( $user_id = 0 ) {
 	 */
 	return apply_filters( 'bp_get_the_notification_mark_unread_link', $retval, $user_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_the_notification_mark_unread_link' ) && ! function_exists( 'bp_get_the_notification_mark_unread_link' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_the_notification_mark_unread_link()}.
+	 *
+	 * @deprecated Use bboss_get_the_notification_mark_unread_link() instead.
+	 */
+	function bp_get_the_notification_mark_unread_link( $user_id = 0 ) {
+		return bboss_get_the_notification_mark_unread_link( $user_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output the URL used for marking a single notification as unread.
@@ -695,6 +1157,20 @@ function bboss_get_the_notification_mark_unread_link( $user_id = 0 ) {
 function bboss_the_notification_mark_unread_url( $user_id = 0 ) {
 	echo esc_url( bboss_get_the_notification_mark_unread_url( $user_id ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_the_notification_mark_unread_url' ) && ! function_exists( 'bp_the_notification_mark_unread_url' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_the_notification_mark_unread_url()}.
+	 *
+	 * @deprecated Use bboss_the_notification_mark_unread_url() instead.
+	 */
+	function bp_the_notification_mark_unread_url( $user_id = 0 ) {
+		return bboss_the_notification_mark_unread_url( $user_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 	/**
 	 * Return the URL used for marking a single notification as unread.
 	 *
@@ -735,6 +1211,20 @@ function bboss_get_the_notification_mark_unread_url( $user_id = 0 ) {
 	 */
 	return apply_filters( 'bp_get_the_notification_mark_unread_url', $url, $user_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_the_notification_mark_unread_url' ) && ! function_exists( 'bp_get_the_notification_mark_unread_url' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_the_notification_mark_unread_url()}.
+	 *
+	 * @deprecated Use bboss_get_the_notification_mark_unread_url() instead.
+	 */
+	function bp_get_the_notification_mark_unread_url( $user_id = 0 ) {
+		return bboss_get_the_notification_mark_unread_url( $user_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output the mark link for the current notification.
@@ -747,6 +1237,20 @@ function bboss_get_the_notification_mark_unread_url( $user_id = 0 ) {
 function bboss_the_notification_mark_link( $user_id = 0 ) {
 	echo wp_kses_post( bboss_get_the_notification_mark_link( $user_id ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_the_notification_mark_link' ) && ! function_exists( 'bp_the_notification_mark_link' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_the_notification_mark_link()}.
+	 *
+	 * @deprecated Use bboss_the_notification_mark_link() instead.
+	 */
+	function bp_the_notification_mark_link( $user_id = 0 ) {
+		return bboss_the_notification_mark_link( $user_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 	/**
 	 * Return the mark link for the current notification.
 	 *
@@ -777,6 +1281,20 @@ function bboss_get_the_notification_mark_link( $user_id = 0 ) {
 	 */
 	return apply_filters( 'bp_get_the_notification_mark_link', $retval, $user_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_the_notification_mark_link' ) && ! function_exists( 'bp_get_the_notification_mark_link' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_the_notification_mark_link()}.
+	 *
+	 * @deprecated Use bboss_get_the_notification_mark_link() instead.
+	 */
+	function bp_get_the_notification_mark_link( $user_id = 0 ) {
+		return bboss_get_the_notification_mark_link( $user_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output the delete link for the current notification.
@@ -789,6 +1307,20 @@ function bboss_get_the_notification_mark_link( $user_id = 0 ) {
 function bboss_the_notification_delete_link( $user_id = 0 ) {
 	echo wp_kses_post( bboss_get_the_notification_delete_link( $user_id ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_the_notification_delete_link' ) && ! function_exists( 'bp_the_notification_delete_link' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_the_notification_delete_link()}.
+	 *
+	 * @deprecated Use bboss_the_notification_delete_link() instead.
+	 */
+	function bp_the_notification_delete_link( $user_id = 0 ) {
+		return bboss_the_notification_delete_link( $user_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 	/**
 	 * Return the delete link for the current notification.
 	 *
@@ -815,6 +1347,20 @@ function bboss_get_the_notification_delete_link( $user_id = 0 ) {
 	 */
 	return apply_filters( 'bp_get_the_notification_delete_link', $retval, $user_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_the_notification_delete_link' ) && ! function_exists( 'bp_get_the_notification_delete_link' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_the_notification_delete_link()}.
+	 *
+	 * @deprecated Use bboss_get_the_notification_delete_link() instead.
+	 */
+	function bp_get_the_notification_delete_link( $user_id = 0 ) {
+		return bboss_get_the_notification_delete_link( $user_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output the URL used for deleting a single notification.
@@ -829,6 +1375,20 @@ function bboss_get_the_notification_delete_link( $user_id = 0 ) {
 function bboss_the_notification_delete_url( $user_id = 0 ) {
 	echo esc_url( bboss_get_the_notification_delete_url( $user_id ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_the_notification_delete_url' ) && ! function_exists( 'bp_the_notification_delete_url' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_the_notification_delete_url()}.
+	 *
+	 * @deprecated Use bboss_the_notification_delete_url() instead.
+	 */
+	function bp_the_notification_delete_url( $user_id = 0 ) {
+		return bboss_the_notification_delete_url( $user_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 	/**
 	 * Return the URL used for deleting a single notification.
 	 *
@@ -875,6 +1435,20 @@ function bboss_get_the_notification_delete_url( $user_id = 0 ) {
 	 */
 	return apply_filters( 'bp_get_the_notification_delete_url', $url, $user_id );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_the_notification_delete_url' ) && ! function_exists( 'bp_get_the_notification_delete_url' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_the_notification_delete_url()}.
+	 *
+	 * @deprecated Use bboss_get_the_notification_delete_url() instead.
+	 */
+	function bp_get_the_notification_delete_url( $user_id = 0 ) {
+		return bboss_get_the_notification_delete_url( $user_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output the action links for the current notification.
@@ -887,6 +1461,20 @@ function bboss_get_the_notification_delete_url( $user_id = 0 ) {
 function bboss_the_notification_action_links( $args = '' ) {
 	echo wp_kses_post( bboss_get_the_notification_action_links( $args ) );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_the_notification_action_links' ) && ! function_exists( 'bp_the_notification_action_links' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_the_notification_action_links()}.
+	 *
+	 * @deprecated Use bboss_the_notification_action_links() instead.
+	 */
+	function bp_the_notification_action_links( $args = '' ) {
+		return bboss_the_notification_action_links( $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 	/**
 	 * Return the action links for the current notification.
 	 *
@@ -934,6 +1522,20 @@ function bboss_get_the_notification_action_links( $args = '' ) {
 	 */
 	return apply_filters( 'bp_get_the_notification_action_links', $retval, $r );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_the_notification_action_links' ) && ! function_exists( 'bp_get_the_notification_action_links' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_the_notification_action_links()}.
+	 *
+	 * @deprecated Use bboss_get_the_notification_action_links() instead.
+	 */
+	function bp_get_the_notification_action_links( $args = '' ) {
+		return bboss_get_the_notification_action_links( $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output the pagination count for the current notification loop.
@@ -943,6 +1545,20 @@ function bboss_get_the_notification_action_links( $args = '' ) {
 function bboss_notifications_pagination_count() {
 	echo esc_html( bboss_get_notifications_pagination_count() );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_notifications_pagination_count' ) && ! function_exists( 'bp_notifications_pagination_count' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_notifications_pagination_count()}.
+	 *
+	 * @deprecated Use bboss_notifications_pagination_count() instead.
+	 */
+	function bp_notifications_pagination_count() {
+		return bboss_notifications_pagination_count();
+	}
+}
+// @bbwt-com-end compat-layer
+
 	/**
 	 * Return the pagination count for the current notification loop.
 	 *
@@ -969,6 +1585,20 @@ function bboss_get_notifications_pagination_count() {
 	 */
 	return apply_filters( 'bp_notifications_pagination_count', $pag );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_notifications_pagination_count' ) && ! function_exists( 'bp_get_notifications_pagination_count' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_notifications_pagination_count()}.
+	 *
+	 * @deprecated Use bboss_get_notifications_pagination_count() instead.
+	 */
+	function bp_get_notifications_pagination_count() {
+		return bboss_get_notifications_pagination_count();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output the pagination links for the current notification loop.
@@ -978,6 +1608,20 @@ function bboss_get_notifications_pagination_count() {
 function bboss_notifications_pagination_links() {
 	echo wp_kses_post( bboss_get_notifications_pagination_links() );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_notifications_pagination_links' ) && ! function_exists( 'bp_notifications_pagination_links' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_notifications_pagination_links()}.
+	 *
+	 * @deprecated Use bboss_notifications_pagination_links() instead.
+	 */
+	function bp_notifications_pagination_links() {
+		return bboss_notifications_pagination_links();
+	}
+}
+// @bbwt-com-end compat-layer
+
 	/**
 	 * Return the pagination links for the current notification loop.
 	 *
@@ -996,6 +1640,20 @@ function bboss_get_notifications_pagination_links() {
 	 */
 	return apply_filters( 'bp_get_notifications_pagination_links', bboss()->notifications->query_loop->pag_links );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_notifications_pagination_links' ) && ! function_exists( 'bp_get_notifications_pagination_links' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_notifications_pagination_links()}.
+	 *
+	 * @deprecated Use bboss_get_notifications_pagination_links() instead.
+	 */
+	function bp_get_notifications_pagination_links() {
+		return bboss_get_notifications_pagination_links();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /** Form Helpers **************************************************************/
 
@@ -1032,6 +1690,20 @@ function bboss_notifications_sort_order_form() {
 
 	<?php
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_notifications_sort_order_form' ) && ! function_exists( 'bp_notifications_sort_order_form' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_notifications_sort_order_form()}.
+	 *
+	 * @deprecated Use bboss_notifications_sort_order_form() instead.
+	 */
+	function bp_notifications_sort_order_form() {
+		return bboss_notifications_sort_order_form();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output the dropdown for bulk management of notifications.
@@ -1059,6 +1731,20 @@ function bboss_notifications_bulk_management_dropdown() {
 	<input type="submit" id="notification-bulk-manage" class="button action" value="<?php esc_attr_e( 'Apply', 'buddyboss' ); ?>">
 	<?php
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_notifications_bulk_management_dropdown' ) && ! function_exists( 'bp_notifications_bulk_management_dropdown' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_notifications_bulk_management_dropdown()}.
+	 *
+	 * @deprecated Use bboss_notifications_bulk_management_dropdown() instead.
+	 */
+	function bp_notifications_bulk_management_dropdown() {
+		return bboss_notifications_bulk_management_dropdown();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Set on-screen notification template.
@@ -1122,12 +1808,8 @@ function bboss_on_screen_notification_template() {
 	</div>
 	<?php
 }
-// No-Screen notification template.
-add_action( 'wp_footer', 'bb_on_screen_notification_template' );
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_on_screen_notification_template' ) && ! function_exists( 'bb_on_screen_notification_template' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_on_screen_notification_template()}.
@@ -1138,494 +1820,7 @@ if ( function_exists( 'bboss_on_screen_notification_template' ) && ! function_ex
 		return bboss_on_screen_notification_template();
 	}
 }
-if ( function_exists( 'bboss_get_notifications_pagination_count' ) && ! function_exists( 'bp_get_notifications_pagination_count' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_notifications_pagination_count()}.
-	 *
-	 * @deprecated Use bboss_get_notifications_pagination_count() instead.
-	 */
-	function bp_get_notifications_pagination_count() {
-		return bboss_get_notifications_pagination_count();
-	}
-}
-if ( function_exists( 'bboss_get_notifications_pagination_links' ) && ! function_exists( 'bp_get_notifications_pagination_links' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_notifications_pagination_links()}.
-	 *
-	 * @deprecated Use bboss_get_notifications_pagination_links() instead.
-	 */
-	function bp_get_notifications_pagination_links() {
-		return bboss_get_notifications_pagination_links();
-	}
-}
-if ( function_exists( 'bboss_get_notifications_permalink' ) && ! function_exists( 'bp_get_notifications_permalink' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_notifications_permalink()}.
-	 *
-	 * @deprecated Use bboss_get_notifications_permalink() instead.
-	 */
-	function bp_get_notifications_permalink( $user_id = 0 ) {
-		return bboss_get_notifications_permalink( $user_id );
-	}
-}
-if ( function_exists( 'bboss_get_notifications_read_permalink' ) && ! function_exists( 'bp_get_notifications_read_permalink' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_notifications_read_permalink()}.
-	 *
-	 * @deprecated Use bboss_get_notifications_read_permalink() instead.
-	 */
-	function bp_get_notifications_read_permalink( $user_id = 0 ) {
-		return bboss_get_notifications_read_permalink( $user_id );
-	}
-}
-if ( function_exists( 'bboss_get_notifications_slug' ) && ! function_exists( 'bp_get_notifications_slug' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_notifications_slug()}.
-	 *
-	 * @deprecated Use bboss_get_notifications_slug() instead.
-	 */
-	function bp_get_notifications_slug() {
-		return bboss_get_notifications_slug();
-	}
-}
-if ( function_exists( 'bboss_get_notifications_unread_permalink' ) && ! function_exists( 'bp_get_notifications_unread_permalink' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_notifications_unread_permalink()}.
-	 *
-	 * @deprecated Use bboss_get_notifications_unread_permalink() instead.
-	 */
-	function bp_get_notifications_unread_permalink( $user_id = 0 ) {
-		return bboss_get_notifications_unread_permalink( $user_id );
-	}
-}
-if ( function_exists( 'bboss_get_the_notification_action_links' ) && ! function_exists( 'bp_get_the_notification_action_links' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_the_notification_action_links()}.
-	 *
-	 * @deprecated Use bboss_get_the_notification_action_links() instead.
-	 */
-	function bp_get_the_notification_action_links( $args = '' ) {
-		return bboss_get_the_notification_action_links( $args );
-	}
-}
-if ( function_exists( 'bboss_get_the_notification_component_action' ) && ! function_exists( 'bp_get_the_notification_component_action' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_the_notification_component_action()}.
-	 *
-	 * @deprecated Use bboss_get_the_notification_component_action() instead.
-	 */
-	function bp_get_the_notification_component_action() {
-		return bboss_get_the_notification_component_action();
-	}
-}
-if ( function_exists( 'bboss_get_the_notification_component_name' ) && ! function_exists( 'bp_get_the_notification_component_name' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_the_notification_component_name()}.
-	 *
-	 * @deprecated Use bboss_get_the_notification_component_name() instead.
-	 */
-	function bp_get_the_notification_component_name() {
-		return bboss_get_the_notification_component_name();
-	}
-}
-if ( function_exists( 'bboss_get_the_notification_date_notified' ) && ! function_exists( 'bp_get_the_notification_date_notified' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_the_notification_date_notified()}.
-	 *
-	 * @deprecated Use bboss_get_the_notification_date_notified() instead.
-	 */
-	function bp_get_the_notification_date_notified() {
-		return bboss_get_the_notification_date_notified();
-	}
-}
-if ( function_exists( 'bboss_get_the_notification_delete_link' ) && ! function_exists( 'bp_get_the_notification_delete_link' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_the_notification_delete_link()}.
-	 *
-	 * @deprecated Use bboss_get_the_notification_delete_link() instead.
-	 */
-	function bp_get_the_notification_delete_link( $user_id = 0 ) {
-		return bboss_get_the_notification_delete_link( $user_id );
-	}
-}
-if ( function_exists( 'bboss_get_the_notification_delete_url' ) && ! function_exists( 'bp_get_the_notification_delete_url' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_the_notification_delete_url()}.
-	 *
-	 * @deprecated Use bboss_get_the_notification_delete_url() instead.
-	 */
-	function bp_get_the_notification_delete_url( $user_id = 0 ) {
-		return bboss_get_the_notification_delete_url( $user_id );
-	}
-}
-if ( function_exists( 'bboss_get_the_notification_description' ) && ! function_exists( 'bp_get_the_notification_description' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_the_notification_description()}.
-	 *
-	 * @deprecated Use bboss_get_the_notification_description() instead.
-	 */
-	function bp_get_the_notification_description( $notification = '' ) {
-		return bboss_get_the_notification_description( $notification );
-	}
-}
-if ( function_exists( 'bboss_get_the_notification_id' ) && ! function_exists( 'bp_get_the_notification_id' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_the_notification_id()}.
-	 *
-	 * @deprecated Use bboss_get_the_notification_id() instead.
-	 */
-	function bp_get_the_notification_id() {
-		return bboss_get_the_notification_id();
-	}
-}
-if ( function_exists( 'bboss_get_the_notification_item_id' ) && ! function_exists( 'bp_get_the_notification_item_id' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_the_notification_item_id()}.
-	 *
-	 * @deprecated Use bboss_get_the_notification_item_id() instead.
-	 */
-	function bp_get_the_notification_item_id() {
-		return bboss_get_the_notification_item_id();
-	}
-}
-if ( function_exists( 'bboss_get_the_notification_mark_link' ) && ! function_exists( 'bp_get_the_notification_mark_link' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_the_notification_mark_link()}.
-	 *
-	 * @deprecated Use bboss_get_the_notification_mark_link() instead.
-	 */
-	function bp_get_the_notification_mark_link( $user_id = 0 ) {
-		return bboss_get_the_notification_mark_link( $user_id );
-	}
-}
-if ( function_exists( 'bboss_get_the_notification_mark_read_link' ) && ! function_exists( 'bp_get_the_notification_mark_read_link' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_the_notification_mark_read_link()}.
-	 *
-	 * @deprecated Use bboss_get_the_notification_mark_read_link() instead.
-	 */
-	function bp_get_the_notification_mark_read_link( $user_id = 0 ) {
-		return bboss_get_the_notification_mark_read_link( $user_id );
-	}
-}
-if ( function_exists( 'bboss_get_the_notification_mark_read_url' ) && ! function_exists( 'bp_get_the_notification_mark_read_url' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_the_notification_mark_read_url()}.
-	 *
-	 * @deprecated Use bboss_get_the_notification_mark_read_url() instead.
-	 */
-	function bp_get_the_notification_mark_read_url( $user_id = 0 ) {
-		return bboss_get_the_notification_mark_read_url( $user_id );
-	}
-}
-if ( function_exists( 'bboss_get_the_notification_mark_unread_link' ) && ! function_exists( 'bp_get_the_notification_mark_unread_link' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_the_notification_mark_unread_link()}.
-	 *
-	 * @deprecated Use bboss_get_the_notification_mark_unread_link() instead.
-	 */
-	function bp_get_the_notification_mark_unread_link( $user_id = 0 ) {
-		return bboss_get_the_notification_mark_unread_link( $user_id );
-	}
-}
-if ( function_exists( 'bboss_get_the_notification_mark_unread_url' ) && ! function_exists( 'bp_get_the_notification_mark_unread_url' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_the_notification_mark_unread_url()}.
-	 *
-	 * @deprecated Use bboss_get_the_notification_mark_unread_url() instead.
-	 */
-	function bp_get_the_notification_mark_unread_url( $user_id = 0 ) {
-		return bboss_get_the_notification_mark_unread_url( $user_id );
-	}
-}
-if ( function_exists( 'bboss_get_the_notification_secondary_item_id' ) && ! function_exists( 'bp_get_the_notification_secondary_item_id' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_the_notification_secondary_item_id()}.
-	 *
-	 * @deprecated Use bboss_get_the_notification_secondary_item_id() instead.
-	 */
-	function bp_get_the_notification_secondary_item_id() {
-		return bboss_get_the_notification_secondary_item_id();
-	}
-}
-if ( function_exists( 'bboss_get_the_notification_time_since' ) && ! function_exists( 'bp_get_the_notification_time_since' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_get_the_notification_time_since()}.
-	 *
-	 * @deprecated Use bboss_get_the_notification_time_since() instead.
-	 */
-	function bp_get_the_notification_time_since() {
-		return bboss_get_the_notification_time_since();
-	}
-}
-if ( function_exists( 'bboss_has_notifications' ) && ! function_exists( 'bp_has_notifications' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_has_notifications()}.
-	 *
-	 * @deprecated Use bboss_has_notifications() instead.
-	 */
-	function bp_has_notifications( $args = '' ) {
-		return bboss_has_notifications( $args );
-	}
-}
-if ( function_exists( 'bboss_notifications_bulk_management_dropdown' ) && ! function_exists( 'bp_notifications_bulk_management_dropdown' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_notifications_bulk_management_dropdown()}.
-	 *
-	 * @deprecated Use bboss_notifications_bulk_management_dropdown() instead.
-	 */
-	function bp_notifications_bulk_management_dropdown() {
-		return bboss_notifications_bulk_management_dropdown();
-	}
-}
-if ( function_exists( 'bboss_notifications_pagination_count' ) && ! function_exists( 'bp_notifications_pagination_count' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_notifications_pagination_count()}.
-	 *
-	 * @deprecated Use bboss_notifications_pagination_count() instead.
-	 */
-	function bp_notifications_pagination_count() {
-		return bboss_notifications_pagination_count();
-	}
-}
-if ( function_exists( 'bboss_notifications_pagination_links' ) && ! function_exists( 'bp_notifications_pagination_links' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_notifications_pagination_links()}.
-	 *
-	 * @deprecated Use bboss_notifications_pagination_links() instead.
-	 */
-	function bp_notifications_pagination_links() {
-		return bboss_notifications_pagination_links();
-	}
-}
-if ( function_exists( 'bboss_notifications_permalink' ) && ! function_exists( 'bp_notifications_permalink' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_notifications_permalink()}.
-	 *
-	 * @deprecated Use bboss_notifications_permalink() instead.
-	 */
-	function bp_notifications_permalink( $user_id = 0 ) {
-		return bboss_notifications_permalink( $user_id );
-	}
-}
-if ( function_exists( 'bboss_notifications_read_permalink' ) && ! function_exists( 'bp_notifications_read_permalink' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_notifications_read_permalink()}.
-	 *
-	 * @deprecated Use bboss_notifications_read_permalink() instead.
-	 */
-	function bp_notifications_read_permalink( $user_id = 0 ) {
-		return bboss_notifications_read_permalink( $user_id );
-	}
-}
-if ( function_exists( 'bboss_notifications_slug' ) && ! function_exists( 'bp_notifications_slug' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_notifications_slug()}.
-	 *
-	 * @deprecated Use bboss_notifications_slug() instead.
-	 */
-	function bp_notifications_slug() {
-		return bboss_notifications_slug();
-	}
-}
-if ( function_exists( 'bboss_notifications_sort_order_form' ) && ! function_exists( 'bp_notifications_sort_order_form' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_notifications_sort_order_form()}.
-	 *
-	 * @deprecated Use bboss_notifications_sort_order_form() instead.
-	 */
-	function bp_notifications_sort_order_form() {
-		return bboss_notifications_sort_order_form();
-	}
-}
-if ( function_exists( 'bboss_notifications_unread_permalink' ) && ! function_exists( 'bp_notifications_unread_permalink' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_notifications_unread_permalink()}.
-	 *
-	 * @deprecated Use bboss_notifications_unread_permalink() instead.
-	 */
-	function bp_notifications_unread_permalink( $user_id = 0 ) {
-		return bboss_notifications_unread_permalink( $user_id );
-	}
-}
-if ( function_exists( 'bboss_the_notification' ) && ! function_exists( 'bp_the_notification' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_the_notification()}.
-	 *
-	 * @deprecated Use bboss_the_notification() instead.
-	 */
-	function bp_the_notification() {
-		return bboss_the_notification();
-	}
-}
-if ( function_exists( 'bboss_the_notification_action_links' ) && ! function_exists( 'bp_the_notification_action_links' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_the_notification_action_links()}.
-	 *
-	 * @deprecated Use bboss_the_notification_action_links() instead.
-	 */
-	function bp_the_notification_action_links( $args = '' ) {
-		return bboss_the_notification_action_links( $args );
-	}
-}
-if ( function_exists( 'bboss_the_notification_component_action' ) && ! function_exists( 'bp_the_notification_component_action' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_the_notification_component_action()}.
-	 *
-	 * @deprecated Use bboss_the_notification_component_action() instead.
-	 */
-	function bp_the_notification_component_action() {
-		return bboss_the_notification_component_action();
-	}
-}
-if ( function_exists( 'bboss_the_notification_component_name' ) && ! function_exists( 'bp_the_notification_component_name' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_the_notification_component_name()}.
-	 *
-	 * @deprecated Use bboss_the_notification_component_name() instead.
-	 */
-	function bp_the_notification_component_name() {
-		return bboss_the_notification_component_name();
-	}
-}
-if ( function_exists( 'bboss_the_notification_date_notified' ) && ! function_exists( 'bp_the_notification_date_notified' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_the_notification_date_notified()}.
-	 *
-	 * @deprecated Use bboss_the_notification_date_notified() instead.
-	 */
-	function bp_the_notification_date_notified() {
-		return bboss_the_notification_date_notified();
-	}
-}
-if ( function_exists( 'bboss_the_notification_delete_link' ) && ! function_exists( 'bp_the_notification_delete_link' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_the_notification_delete_link()}.
-	 *
-	 * @deprecated Use bboss_the_notification_delete_link() instead.
-	 */
-	function bp_the_notification_delete_link( $user_id = 0 ) {
-		return bboss_the_notification_delete_link( $user_id );
-	}
-}
-if ( function_exists( 'bboss_the_notification_delete_url' ) && ! function_exists( 'bp_the_notification_delete_url' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_the_notification_delete_url()}.
-	 *
-	 * @deprecated Use bboss_the_notification_delete_url() instead.
-	 */
-	function bp_the_notification_delete_url( $user_id = 0 ) {
-		return bboss_the_notification_delete_url( $user_id );
-	}
-}
-if ( function_exists( 'bboss_the_notification_description' ) && ! function_exists( 'bp_the_notification_description' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_the_notification_description()}.
-	 *
-	 * @deprecated Use bboss_the_notification_description() instead.
-	 */
-	function bp_the_notification_description() {
-		return bboss_the_notification_description();
-	}
-}
-if ( function_exists( 'bboss_the_notification_id' ) && ! function_exists( 'bp_the_notification_id' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_the_notification_id()}.
-	 *
-	 * @deprecated Use bboss_the_notification_id() instead.
-	 */
-	function bp_the_notification_id() {
-		return bboss_the_notification_id();
-	}
-}
-if ( function_exists( 'bboss_the_notification_item_id' ) && ! function_exists( 'bp_the_notification_item_id' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_the_notification_item_id()}.
-	 *
-	 * @deprecated Use bboss_the_notification_item_id() instead.
-	 */
-	function bp_the_notification_item_id() {
-		return bboss_the_notification_item_id();
-	}
-}
-if ( function_exists( 'bboss_the_notification_mark_link' ) && ! function_exists( 'bp_the_notification_mark_link' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_the_notification_mark_link()}.
-	 *
-	 * @deprecated Use bboss_the_notification_mark_link() instead.
-	 */
-	function bp_the_notification_mark_link( $user_id = 0 ) {
-		return bboss_the_notification_mark_link( $user_id );
-	}
-}
-if ( function_exists( 'bboss_the_notification_mark_read_link' ) && ! function_exists( 'bp_the_notification_mark_read_link' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_the_notification_mark_read_link()}.
-	 *
-	 * @deprecated Use bboss_the_notification_mark_read_link() instead.
-	 */
-	function bp_the_notification_mark_read_link( $user_id = 0 ) {
-		return bboss_the_notification_mark_read_link( $user_id );
-	}
-}
-if ( function_exists( 'bboss_the_notification_mark_read_url' ) && ! function_exists( 'bp_the_notification_mark_read_url' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_the_notification_mark_read_url()}.
-	 *
-	 * @deprecated Use bboss_the_notification_mark_read_url() instead.
-	 */
-	function bp_the_notification_mark_read_url( $user_id = 0 ) {
-		return bboss_the_notification_mark_read_url( $user_id );
-	}
-}
-if ( function_exists( 'bboss_the_notification_mark_unread_link' ) && ! function_exists( 'bp_the_notification_mark_unread_link' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_the_notification_mark_unread_link()}.
-	 *
-	 * @deprecated Use bboss_the_notification_mark_unread_link() instead.
-	 */
-	function bp_the_notification_mark_unread_link( $user_id = 0 ) {
-		return bboss_the_notification_mark_unread_link( $user_id );
-	}
-}
-if ( function_exists( 'bboss_the_notification_mark_unread_url' ) && ! function_exists( 'bp_the_notification_mark_unread_url' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_the_notification_mark_unread_url()}.
-	 *
-	 * @deprecated Use bboss_the_notification_mark_unread_url() instead.
-	 */
-	function bp_the_notification_mark_unread_url( $user_id = 0 ) {
-		return bboss_the_notification_mark_unread_url( $user_id );
-	}
-}
-if ( function_exists( 'bboss_the_notification_secondary_item_id' ) && ! function_exists( 'bp_the_notification_secondary_item_id' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_the_notification_secondary_item_id()}.
-	 *
-	 * @deprecated Use bboss_the_notification_secondary_item_id() instead.
-	 */
-	function bp_the_notification_secondary_item_id() {
-		return bboss_the_notification_secondary_item_id();
-	}
-}
-if ( function_exists( 'bboss_the_notification_time_since' ) && ! function_exists( 'bp_the_notification_time_since' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_the_notification_time_since()}.
-	 *
-	 * @deprecated Use bboss_the_notification_time_since() instead.
-	 */
-	function bp_the_notification_time_since() {
-		return bboss_the_notification_time_since();
-	}
-}
-if ( function_exists( 'bboss_the_notifications' ) && ! function_exists( 'bp_the_notifications' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_the_notifications()}.
-	 *
-	 * @deprecated Use bboss_the_notifications() instead.
-	 */
-	function bp_the_notifications() {
-		return bboss_the_notifications();
-	}
-}
 // @bbwt-com-end compat-layer
+
+// No-Screen notification template.
+add_action( 'wp_footer', 'bb_on_screen_notification_template' );

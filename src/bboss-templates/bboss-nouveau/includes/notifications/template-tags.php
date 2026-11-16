@@ -17,6 +17,20 @@ defined( 'ABSPATH' ) || exit;
 function bboss_nouveau_notifications_filters() {
 	echo bboss_nouveau_get_notifications_filters(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- returns form-control markup (<select>/<option>/<input>) pre-escaped per value at construction; wp_kses_post strips the controls.
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_notifications_filters' ) && ! function_exists( 'bp_nouveau_notifications_filters' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_notifications_filters()}.
+	 *
+	 * @deprecated Use bboss_nouveau_notifications_filters() instead.
+	 */
+	function bp_nouveau_notifications_filters() {
+		return bboss_nouveau_notifications_filters();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 	/**
 	 * Get the notifications filter options.
@@ -64,6 +78,20 @@ function bboss_nouveau_notifications_filters() {
 		 */
 		return apply_filters( 'bp_nouveau_get_notifications_filters', $output, $filters );
 	}
+	// @bbwt-com-start compat-layer
+	// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+	if ( function_exists( 'bboss_nouveau_get_notifications_filters' ) && ! function_exists( 'bp_nouveau_get_notifications_filters' ) ) {
+		/**
+		 * Backward-compatible alias of {@see bboss_nouveau_get_notifications_filters()}.
+		 *
+		 * @deprecated Use bboss_nouveau_get_notifications_filters() instead.
+		 */
+		function bp_nouveau_get_notifications_filters() {
+			return bboss_nouveau_get_notifications_filters();
+		}
+	}
+	// @bbwt-com-end compat-layer
+
 
 /**
  * Outputs the order action links.
@@ -88,6 +116,20 @@ function bboss_nouveau_notifications_sort_order_links() {
 
 	<?php
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_notifications_sort_order_links' ) && ! function_exists( 'bp_nouveau_notifications_sort_order_links' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_notifications_sort_order_links()}.
+	 *
+	 * @deprecated Use bboss_nouveau_notifications_sort_order_links() instead.
+	 */
+	function bp_nouveau_notifications_sort_order_links() {
+		return bboss_nouveau_notifications_sort_order_links();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Output the dropdown for bulk management of notifications.
@@ -121,20 +163,8 @@ function bboss_nouveau_notifications_bulk_management_dropdown() {
 	<input type="submit" id="notification-bulk-manage" class="button action" value="<?php esc_attr_e( 'Apply', 'buddyboss' ); ?>">
 	<?php
 }
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
-if ( function_exists( 'bboss_nouveau_get_notifications_filters' ) && ! function_exists( 'bp_nouveau_get_notifications_filters' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_get_notifications_filters()}.
-	 *
-	 * @deprecated Use bboss_nouveau_get_notifications_filters() instead.
-	 */
-	function bp_nouveau_get_notifications_filters() {
-		return bboss_nouveau_get_notifications_filters();
-	}
-}
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_nouveau_notifications_bulk_management_dropdown' ) && ! function_exists( 'bp_nouveau_notifications_bulk_management_dropdown' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_nouveau_notifications_bulk_management_dropdown()}.
@@ -145,24 +175,5 @@ if ( function_exists( 'bboss_nouveau_notifications_bulk_management_dropdown' ) &
 		return bboss_nouveau_notifications_bulk_management_dropdown();
 	}
 }
-if ( function_exists( 'bboss_nouveau_notifications_filters' ) && ! function_exists( 'bp_nouveau_notifications_filters' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_notifications_filters()}.
-	 *
-	 * @deprecated Use bboss_nouveau_notifications_filters() instead.
-	 */
-	function bp_nouveau_notifications_filters() {
-		return bboss_nouveau_notifications_filters();
-	}
-}
-if ( function_exists( 'bboss_nouveau_notifications_sort_order_links' ) && ! function_exists( 'bp_nouveau_notifications_sort_order_links' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_notifications_sort_order_links()}.
-	 *
-	 * @deprecated Use bboss_nouveau_notifications_sort_order_links() instead.
-	 */
-	function bp_nouveau_notifications_sort_order_links() {
-		return bboss_nouveau_notifications_sort_order_links();
-	}
-}
 // @bbwt-com-end compat-layer
+

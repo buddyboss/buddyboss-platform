@@ -82,11 +82,8 @@ function bboss_messages_star_bulk_manage_handler() {
 	bboss_core_redirect( bboss_displayed_user_domain() . bboss_get_messages_slug() . '/' . bboss_current_action() . '/' );
 	die();
 }
-add_action( 'bp_actions', 'bp_messages_star_bulk_manage_handler', 5 );
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_messages_star_bulk_manage_handler' ) && ! function_exists( 'bp_messages_star_bulk_manage_handler' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_messages_star_bulk_manage_handler()}.
@@ -98,3 +95,5 @@ if ( function_exists( 'bboss_messages_star_bulk_manage_handler' ) && ! function_
 	}
 }
 // @bbwt-com-end compat-layer
+
+add_action( 'bp_actions', 'bp_messages_star_bulk_manage_handler', 5 );

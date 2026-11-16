@@ -34,6 +34,20 @@ function bboss_nouveau_notifications_register_scripts( $scripts = array() ) {
 		)
 	);
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_notifications_register_scripts' ) && ! function_exists( 'bp_nouveau_notifications_register_scripts' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_notifications_register_scripts()}.
+	 *
+	 * @deprecated Use bboss_nouveau_notifications_register_scripts() instead.
+	 */
+	function bp_nouveau_notifications_register_scripts( $scripts = array() ) {
+		return bboss_nouveau_notifications_register_scripts( $scripts );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Enqueue the notifications scripts
@@ -48,6 +62,20 @@ function bboss_nouveau_notifications_enqueue_scripts() {
 
 	wp_enqueue_script( 'bp-nouveau-notifications' );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_notifications_enqueue_scripts' ) && ! function_exists( 'bp_nouveau_notifications_enqueue_scripts' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_notifications_enqueue_scripts()}.
+	 *
+	 * @deprecated Use bboss_nouveau_notifications_enqueue_scripts() instead.
+	 */
+	function bp_nouveau_notifications_enqueue_scripts() {
+		return bboss_nouveau_notifications_enqueue_scripts();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Init Notifications filters and fire a hook to let
@@ -69,6 +97,20 @@ function bboss_nouveau_notifications_init_filters() {
 	 */
 	do_action( 'bp_nouveau_notifications_init_filters' );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_notifications_init_filters' ) && ! function_exists( 'bp_nouveau_notifications_init_filters' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_notifications_init_filters()}.
+	 *
+	 * @deprecated Use bboss_nouveau_notifications_init_filters() instead.
+	 */
+	function bp_nouveau_notifications_init_filters() {
+		return bboss_nouveau_notifications_init_filters();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Register new filters for the notifications screens.
@@ -107,6 +149,20 @@ function bboss_nouveau_notifications_register_filter( $args = array() ) {
 	$bp_nouveau->notifications->filters[ $r['id'] ] = $r;
 	return true;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_notifications_register_filter' ) && ! function_exists( 'bp_nouveau_notifications_register_filter' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_notifications_register_filter()}.
+	 *
+	 * @deprecated Use bboss_nouveau_notifications_register_filter() instead.
+	 */
+	function bp_nouveau_notifications_register_filter( $args = array() ) {
+		return bboss_nouveau_notifications_register_filter( $args );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Get one or all notifications filters.
@@ -135,6 +191,20 @@ function bboss_nouveau_notifications_get_filters( $id = '' ) {
 		return false;
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_notifications_get_filters' ) && ! function_exists( 'bp_nouveau_notifications_get_filters' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_notifications_get_filters()}.
+	 *
+	 * @deprecated Use bboss_nouveau_notifications_get_filters() instead.
+	 */
+	function bp_nouveau_notifications_get_filters( $id = '' ) {
+		return bboss_nouveau_notifications_get_filters( $id );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Sort Notifications according to their position arguments.
@@ -173,6 +243,20 @@ function bboss_nouveau_notifications_sort( $filters = array() ) {
 	ksort( $sorted );
 	return $sorted;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_notifications_sort' ) && ! function_exists( 'bp_nouveau_notifications_sort' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_notifications_sort()}.
+	 *
+	 * @deprecated Use bboss_nouveau_notifications_sort() instead.
+	 */
+	function bp_nouveau_notifications_sort( $filters = array() ) {
+		return bboss_nouveau_notifications_sort( $filters );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Add a dashicon to Notifications action links
@@ -203,6 +287,20 @@ function bboss_nouveau_notifications_dashiconified_link( $link = '', $bp_tooltip
 
 	return $link;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_notifications_dashiconified_link' ) && ! function_exists( 'bp_nouveau_notifications_dashiconified_link' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_notifications_dashiconified_link()}.
+	 *
+	 * @deprecated Use bboss_nouveau_notifications_dashiconified_link() instead.
+	 */
+	function bp_nouveau_notifications_dashiconified_link( $link = '', $bp_tooltip = '', $dashicon = '' ) {
+		return bboss_nouveau_notifications_dashiconified_link( $link, $bp_tooltip, $dashicon );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Edit the Mark Unread action link to include a dashicon
@@ -220,6 +318,20 @@ function bboss_nouveau_notifications_mark_unread_link( $link = '' ) {
 		'dashicons-hidden'
 	);
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_notifications_mark_unread_link' ) && ! function_exists( 'bp_nouveau_notifications_mark_unread_link' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_notifications_mark_unread_link()}.
+	 *
+	 * @deprecated Use bboss_nouveau_notifications_mark_unread_link() instead.
+	 */
+	function bp_nouveau_notifications_mark_unread_link( $link = '' ) {
+		return bboss_nouveau_notifications_mark_unread_link( $link );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Edit the Mark Read action link to include a dashicon
@@ -237,6 +349,20 @@ function bboss_nouveau_notifications_mark_read_link( $link = '' ) {
 		'dashicons-visibility'
 	);
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_nouveau_notifications_mark_read_link' ) && ! function_exists( 'bp_nouveau_notifications_mark_read_link' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_nouveau_notifications_mark_read_link()}.
+	 *
+	 * @deprecated Use bboss_nouveau_notifications_mark_read_link() instead.
+	 */
+	function bp_nouveau_notifications_mark_read_link( $link = '' ) {
+		return bboss_nouveau_notifications_mark_read_link( $link );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Edit the Delete action link to include a dashicon
@@ -254,20 +380,8 @@ function bboss_nouveau_notifications_delete_link( $link = '' ) {
 		'dashicons-trash'
 	);
 }
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
-if ( function_exists( 'bboss_nouveau_notifications_dashiconified_link' ) && ! function_exists( 'bp_nouveau_notifications_dashiconified_link' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_notifications_dashiconified_link()}.
-	 *
-	 * @deprecated Use bboss_nouveau_notifications_dashiconified_link() instead.
-	 */
-	function bp_nouveau_notifications_dashiconified_link( $link = '', $bp_tooltip = '', $dashicon = '' ) {
-		return bboss_nouveau_notifications_dashiconified_link( $link, $bp_tooltip, $dashicon );
-	}
-}
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_nouveau_notifications_delete_link' ) && ! function_exists( 'bp_nouveau_notifications_delete_link' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_nouveau_notifications_delete_link()}.
@@ -278,84 +392,5 @@ if ( function_exists( 'bboss_nouveau_notifications_delete_link' ) && ! function_
 		return bboss_nouveau_notifications_delete_link( $link );
 	}
 }
-if ( function_exists( 'bboss_nouveau_notifications_enqueue_scripts' ) && ! function_exists( 'bp_nouveau_notifications_enqueue_scripts' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_notifications_enqueue_scripts()}.
-	 *
-	 * @deprecated Use bboss_nouveau_notifications_enqueue_scripts() instead.
-	 */
-	function bp_nouveau_notifications_enqueue_scripts() {
-		return bboss_nouveau_notifications_enqueue_scripts();
-	}
-}
-if ( function_exists( 'bboss_nouveau_notifications_get_filters' ) && ! function_exists( 'bp_nouveau_notifications_get_filters' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_notifications_get_filters()}.
-	 *
-	 * @deprecated Use bboss_nouveau_notifications_get_filters() instead.
-	 */
-	function bp_nouveau_notifications_get_filters( $id = '' ) {
-		return bboss_nouveau_notifications_get_filters( $id );
-	}
-}
-if ( function_exists( 'bboss_nouveau_notifications_init_filters' ) && ! function_exists( 'bp_nouveau_notifications_init_filters' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_notifications_init_filters()}.
-	 *
-	 * @deprecated Use bboss_nouveau_notifications_init_filters() instead.
-	 */
-	function bp_nouveau_notifications_init_filters() {
-		return bboss_nouveau_notifications_init_filters();
-	}
-}
-if ( function_exists( 'bboss_nouveau_notifications_mark_read_link' ) && ! function_exists( 'bp_nouveau_notifications_mark_read_link' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_notifications_mark_read_link()}.
-	 *
-	 * @deprecated Use bboss_nouveau_notifications_mark_read_link() instead.
-	 */
-	function bp_nouveau_notifications_mark_read_link( $link = '' ) {
-		return bboss_nouveau_notifications_mark_read_link( $link );
-	}
-}
-if ( function_exists( 'bboss_nouveau_notifications_mark_unread_link' ) && ! function_exists( 'bp_nouveau_notifications_mark_unread_link' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_notifications_mark_unread_link()}.
-	 *
-	 * @deprecated Use bboss_nouveau_notifications_mark_unread_link() instead.
-	 */
-	function bp_nouveau_notifications_mark_unread_link( $link = '' ) {
-		return bboss_nouveau_notifications_mark_unread_link( $link );
-	}
-}
-if ( function_exists( 'bboss_nouveau_notifications_register_filter' ) && ! function_exists( 'bp_nouveau_notifications_register_filter' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_notifications_register_filter()}.
-	 *
-	 * @deprecated Use bboss_nouveau_notifications_register_filter() instead.
-	 */
-	function bp_nouveau_notifications_register_filter( $args = array() ) {
-		return bboss_nouveau_notifications_register_filter( $args );
-	}
-}
-if ( function_exists( 'bboss_nouveau_notifications_register_scripts' ) && ! function_exists( 'bp_nouveau_notifications_register_scripts' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_notifications_register_scripts()}.
-	 *
-	 * @deprecated Use bboss_nouveau_notifications_register_scripts() instead.
-	 */
-	function bp_nouveau_notifications_register_scripts( $scripts = array() ) {
-		return bboss_nouveau_notifications_register_scripts( $scripts );
-	}
-}
-if ( function_exists( 'bboss_nouveau_notifications_sort' ) && ! function_exists( 'bp_nouveau_notifications_sort' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_nouveau_notifications_sort()}.
-	 *
-	 * @deprecated Use bboss_nouveau_notifications_sort() instead.
-	 */
-	function bp_nouveau_notifications_sort( $filters = array() ) {
-		return bboss_nouveau_notifications_sort( $filters );
-	}
-}
 // @bbwt-com-end compat-layer
+

@@ -51,10 +51,8 @@ function groups_screen_group_messages() {
 function bboss_groups_public_message_screen_content() {
 	bboss_get_template_part( 'groups/single/messages' );
 }
-
 // @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename names of this file's symbols (decision 0013): declared
-// here, guarded on the renamed declaration, so each old name exists exactly when the new one does.
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
 if ( function_exists( 'bboss_groups_public_message_screen_content' ) && ! function_exists( 'bp_groups_public_message_screen_content' ) ) {
 	/**
 	 * Backward-compatible alias of {@see bboss_groups_public_message_screen_content()}.
@@ -66,3 +64,4 @@ if ( function_exists( 'bboss_groups_public_message_screen_content' ) && ! functi
 	}
 }
 // @bbwt-com-end compat-layer
+
