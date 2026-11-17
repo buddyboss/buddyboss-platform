@@ -16586,16 +16586,16 @@ msgid "Failed to rename document."
 msgstr ""
 
 #: bp-core/classes/class-bb-readylaunch.php:4657
-#: bp-core/classes/class-bb-readylaunch.php:4724
+#: bp-core/classes/class-bb-readylaunch.php:4727
 #: bp-templates/bp-nouveau/includes/media/ajax.php:940
 msgid "Invalid privacy status."
 msgstr ""
 
-#: bp-core/classes/class-bb-readylaunch.php:4704
+#: bp-core/classes/class-bb-readylaunch.php:4707
 msgid "You don't have permission to edit this folder."
 msgstr ""
 
-#: bp-core/classes/class-bb-readylaunch.php:4715
+#: bp-core/classes/class-bb-readylaunch.php:4718
 msgid "Failed to rename folder."
 msgstr ""
 
