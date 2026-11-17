@@ -833,6 +833,11 @@
 				// Falls back to #bb-rl-whats-new-toolbar, centred with the footer.
 				position: static;
 
+				// The emojionearea wrapper is positioned too, so release it as well.
+				.emojionearea {
+					position: static;
+				}
+
 				// Static positioning moves the tooltip onto the "Aa" button, and
 				// phones show it on tap, so hide it at this size.
 				&[data-bp-tooltip] {
