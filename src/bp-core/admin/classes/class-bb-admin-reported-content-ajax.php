@@ -199,7 +199,28 @@ class BB_Admin_Reported_Content_Ajax {
 			$owner_ids = array();
 			$owner_map = array();
 			foreach ( $result['moderations'] as $moderation ) {
+
+				/**
+				 * Fires before the content owner of a reported item is looked up.
+				 *
+				 * This screen loads over admin-ajax, where the frontend moderation
+				 * pre-validate filters are active. Without lifting them, a hidden
+				 * item (e.g. activity) loads with id 0, so the owner is shown as
+				 * "Unknown". Listeners remove the pre-validate check here.
+				 *
+				 * @since BuddyBoss [BBVERSION]
+				 */
+				do_action( 'bb_moderation_before_get_related_' . $moderation->item_type );
 				$owner_id = bp_moderation_get_content_owner_id( (int) $moderation->item_id, $moderation->item_type );
+
+				/**
+				 * Fires after the content owner of a reported item is looked up.
+				 *
+				 * Listeners restore the pre-validate check removed above.
+				 *
+				 * @since BuddyBoss [BBVERSION]
+				 */
+				do_action( 'bb_moderation_after_get_related_' . $moderation->item_type );
 				if ( is_array( $owner_id ) ) {
 					$owner_id = ! empty( $owner_id ) ? (int) $owner_id[0] : 0;
 				}
@@ -223,7 +244,26 @@ class BB_Admin_Reported_Content_Ajax {
 				$content_label = isset( $content_types[ $item_type ] ) ? $content_types[ $item_type ] : $item_type;
 
 				// Content URL.
+
+				/**
+				 * Fires before the permalink of a reported item is built.
+				 *
+				 * Lifts the moderation pre-validate check so a hidden item resolves
+				 * its real ID/slug instead of producing an id=0 or directory link.
+				 *
+				 * @since BuddyBoss [BBVERSION]
+				 */
+				do_action( 'bb_moderation_before_get_related_' . $item_type );
 				$content_url = bp_moderation_get_permalink( $item_id, $item_type );
+
+				/**
+				 * Fires after the permalink of a reported item is built.
+				 *
+				 * Listeners restore the pre-validate check removed above.
+				 *
+				 * @since BuddyBoss [BBVERSION]
+				 */
+				do_action( 'bb_moderation_after_get_related_' . $item_type );
 
 				// Content owner (cached from first pass).
 				$owner_id = isset( $owner_map[ $moderation->id ] ) ? $owner_map[ $moderation->id ] : 0;
@@ -361,10 +401,31 @@ class BB_Admin_Reported_Content_Ajax {
 
 		$content_types = bp_moderation_content_types();
 		$content_label = isset( $content_types[ $item_type ] ) ? $content_types[ $item_type ] : $item_type;
-		$content_url   = bp_moderation_get_permalink( $item_id, $item_type );
+
+		/**
+		 * Fires before the permalink and owner of a reported item are looked up.
+		 *
+		 * The report details load over admin-ajax, where the frontend moderation
+		 * pre-validate filters are active. Without lifting them, a hidden item
+		 * loads with id 0, so the owner shows as "Unknown" and the link breaks.
+		 * Listeners remove the pre-validate check here.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 */
+		do_action( 'bb_moderation_before_get_related_' . $item_type );
+		$content_url = bp_moderation_get_permalink( $item_id, $item_type );
 
 		// Content owner.
 		$owner_id = bp_moderation_get_content_owner_id( $item_id, $item_type );
+
+		/**
+		 * Fires after the permalink and owner of a reported item are looked up.
+		 *
+		 * Listeners restore the pre-validate check removed above.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 */
+		do_action( 'bb_moderation_after_get_related_' . $item_type );
 		if ( is_array( $owner_id ) ) {
 			$owner_id = ! empty( $owner_id ) ? (int) $owner_id[0] : 0;
 		}
