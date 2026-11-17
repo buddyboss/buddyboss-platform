@@ -2420,6 +2420,33 @@ function bb_update_digest_schedule_event_on_change_component_status( $active_com
 add_action( 'bp_core_install', 'bb_update_digest_schedule_event_on_change_component_status', 10, 1 );
 
 /**
+ * Remove the delayed message email event when "Private Messaging" is turned off
+ * from its Settings 2.0 feature card.
+ *
+ * BB_Feature_Registry::bb_deactivate_feature() never calls bp_core_install(), so
+ * bb_update_digest_schedule_event_on_change_component_status() above does not see the
+ * change and the event stays scheduled, firing with no callback while the Messages
+ * code is not loaded. Every occurrence is cleared, so a duplicate event cannot survive
+ * either.
+ *
+ * Turning Messages on needs no counterpart here: the first request after activation
+ * creates the event through bb_messages_maybe_schedule_digest_email_notifications(),
+ * which applies the delay, Notifications, root-blog and cron-filter checks.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $feature_id Feature ID that was deactivated.
+ */
+function bb_messages_unschedule_digest_cron_on_feature_deactivate( $feature_id ) {
+	if ( 'messages' !== $feature_id ) {
+		return;
+	}
+
+	wp_clear_scheduled_hook( 'bb_digest_email_notifications_hook' );
+}
+add_action( 'bb_feature_deactivated', 'bb_messages_unschedule_digest_cron_on_feature_deactivate' );
+
+/**
  * Get member presence information.
  *
  * @since BuddyBoss 2.1.4
