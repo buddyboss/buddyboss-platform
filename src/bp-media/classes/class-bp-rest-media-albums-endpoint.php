@@ -675,6 +675,15 @@ class BP_REST_Media_Albums_Endpoint extends WP_REST_Controller {
 						'status' => 404,
 					)
 				);
+			} elseif ( empty( $album->group_id ) && ! bp_album_user_can_delete( $album ) ) {
+				// Personal album: only the owner (or a moderator) may edit it.
+				$retval = new WP_Error(
+					'bp_rest_authorization_required',
+					__( 'Sorry, you are not allowed to update this album.', 'buddyboss' ),
+					array(
+						'status' => rest_authorization_required_code(),
+					)
+				);
 			} else {
 				// album permissions.
 				$album_access = bb_media_user_can_access( $album->id, 'album' );
