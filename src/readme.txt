@@ -3,7 +3,7 @@ Contributors: buddyboss
 Requires at least: 4.9.1
 Tested up to: 7.1
 Requires PHP: 7.4.0
-Stable tag: 3.7.1
+Stable tag: 3.7.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -55,6 +55,16 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 3.7.2 =
+* Bug: Activity - Fixed an issue where an activity post containing only an emoji could not be posted
+* Bug: Core - Fixed a limitation in the API cache so the app can store separate cached responses for each app language
+* Bug: Elementor - Fixed an issue where the Elementor activity widget lost its custom layout after deleting media from a post
+* Bug: Media - Fixed an issue where choosing Move on an activity document opened the wrong popup when the feed had several document posts
+* Bug: Messages - Fixed an issue where messages that had been read still appeared in bold like unread messages
+* Bug: Moderation - Fixed an issue where long reasons were cut off when viewing a report on reported content
+* Bug: Profiles - Fixed an issue where the profile photo options could not be reached using the keyboard
+* Bug: Translations - Fixed an issue where formatting options in the rich text editor could not be translated
 
 = 3.7.1 =
 * Bug: Activity - Fixed a slowdown caused by activity post drafts with pasted images taking up too much storage
