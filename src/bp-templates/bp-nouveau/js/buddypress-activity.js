@@ -1231,7 +1231,11 @@ window.bp = window.bp || {};
 							}
 
 							if ( response.data.parent_activity_id && response.data.activity ) {
-								$( 'body:not(.activity-singular) #buddypress #activity-stream ul.activity-list li#activity-' + response.data.parent_activity_id ).replaceWith( response.data.activity );
+								bp.Nouveau.replaceActivityItem(
+									$( 'body:not(.activity-singular) #buddypress #activity-stream ul.activity-list li#activity-' + response.data.parent_activity_id ),
+									response.data.activity,
+									[ '.activity-inner > .bb-activity-media-wrap', '.activity-inner > .bb-activity-video-wrap', '.activity-state' ]
+								);
 							}
 
 							if ( activity_comment_id ) {
@@ -4454,7 +4458,11 @@ window.bp = window.bp || {};
 								return;
 							} else if ( 'undefined' !== typeof response.data && 'undefined' !== typeof response.data.activity ) {
 								// success
-								$pageActivityListItem.replaceWith( $.parseHTML( response.data.activity ) );
+								bp.Nouveau.replaceActivityItem(
+									$pageActivityListItem,
+									$.parseHTML( response.data.activity ),
+									[ '.activity-inner > .bb-activity-media-wrap', '.activity-inner > .bb-activity-video-wrap', '.activity-state', '.activity-comments ul[data-activity_id]' ]
+								);
 								// replace dummy image with original image by faking scroll event to call bp.Nouveau.lazyLoad.
 								jQuery( window ).scroll();
 
