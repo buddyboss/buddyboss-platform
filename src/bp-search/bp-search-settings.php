@@ -132,7 +132,15 @@ function bp_is_search_user_field_enable( $id ) {
  * @return bool Is members search enabled or not
  */
 function bp_is_search_post_type_enable( $post_type, $default = 1 ) {
-	return (bool) apply_filters( 'bp_is_search_post_type_enable', (bool) get_option( "bp_search_post_type_$post_type", $default ) );
+	/**
+	 * Filters whether search for a given post type is enabled.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param bool   $is_enabled Whether search for the post type is enabled.
+	 * @param string $post_type  Post type.
+	 */
+	return (bool) apply_filters( 'bp_is_search_post_type_enable', (bool) get_option( "bp_search_post_type_$post_type", $default ), $post_type );
 }
 
 /**
