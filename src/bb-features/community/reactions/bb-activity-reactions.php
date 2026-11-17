@@ -515,14 +515,9 @@ function bb_get_activity_reaction_ajax_callback() {
 	}
 
 	// Enforce per-user visibility so reactor data is not exposed for items the
-	// current user cannot see. For activity comments, visibility is governed by the
-	// root activity ($activity->item_id holds the topmost activity ID), so the group
-	// or privacy check must run against that root rather than the comment row.
-	$readable_activity = $activity;
-	if ( 'activity_comment' === $activity->type && ! empty( $activity->item_id ) ) {
-		$readable_activity = new BP_Activity_Activity( $activity->item_id );
-	}
-	if ( empty( $readable_activity->id ) || ! bp_activity_user_can_read( $readable_activity ) ) {
+	// current user cannot see. This walks a comment to its root post and a photo,
+	// video or document to the post it belongs to, and checks group and privacy rules.
+	if ( ! bb_activity_user_can_view( $activity ) ) {
 		wp_send_json_error(
 			array(
 				'message' => __( 'Activity not found.', 'buddyboss' ),

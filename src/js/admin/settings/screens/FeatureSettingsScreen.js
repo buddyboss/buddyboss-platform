@@ -1432,7 +1432,9 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 													} )()}
 												</div>
 												<div className="bb-admin-feature-settings__section-header-right">
-													{/* Section-level PRO badge (e.g. UPGRADE LAUNCH / UPGRADE SCALE).
+													{/* Section-level PRO badge (e.g. UPGRADE LAUNCH / UPGRADE SCALE / UPGRADE START).
+													    An optional `pro_notice.tier` adds a style modifier
+													    (e.g. `--start` for features in the BuddyBoss Add-ons plan).
 													    With a modal payload (field-upgrades catalog entry
 													    or registration-provided) the badge opens
 													    UpgradeModal in-page; without one it keeps the
@@ -1444,7 +1446,7 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 																<button
 																	type="button"
 																	onClick={() => handleSectionProClick(section)}
-																	className="bb-admin-feature-settings__section-pro-badge"
+																	className={ 'bb-admin-feature-settings__section-pro-badge' + ( section.pro_notice.tier ? ' bb-admin-feature-settings__section-pro-badge--' + section.pro_notice.tier : '' ) }
 																>
 																	<i className={section.pro_notice.badge_icon || 'bb-icons-rl-crown-simple'} />
 																	<span>{section.pro_notice.badge_text || 'UPGRADE LAUNCH'}</span>
@@ -1454,7 +1456,7 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 																	href={safeUrl( section.pro_notice.link_url || 'https://www.buddyboss.com/pricing/' )}
 																	target="_blank"
 																	rel="noopener noreferrer"
-																	className="bb-admin-feature-settings__section-pro-badge"
+																	className={ 'bb-admin-feature-settings__section-pro-badge' + ( section.pro_notice.tier ? ' bb-admin-feature-settings__section-pro-badge--' + section.pro_notice.tier : '' ) }
 																>
 																	<i className={section.pro_notice.badge_icon || 'bb-icons-rl-crown-simple'} />
 																	<span>{section.pro_notice.badge_text || 'UPGRADE LAUNCH'}</span>

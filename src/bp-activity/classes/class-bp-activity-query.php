@@ -116,6 +116,7 @@ class BP_Activity_Query extends BP_Recursive_Query {
 	 * Generate WHERE clauses for a first-order clause.
 	 *
 	 * @since BuddyPress 2.2.0
+	 * @since BuddyBoss 3.7.1 `hide_sitewide = 0` also requires a comment's item to be visible.
 	 *
 	 * @param  array $clause       Array of arguments belonging to the clause.
 	 * @param  array $parent_query Parent query to which the clause belongs.
@@ -184,7 +185,11 @@ class BP_Activity_Query extends BP_Recursive_Query {
 			}
 
 			// Tinyint.
-			if ( ! empty( $column ) && true === in_array( $column, array( 'hide_sitewide', 'is_spam' ) ) ) {
+			if ( 'hide_sitewide' === $column && ! empty( $this->table_alias ) && is_scalar( $value ) && 0 === (int) $value ) {
+				// Scopes ask for site-wide visible rows here; a comment also needs its item visible (PROD-10649).
+				$sql_chunks['where'][] = BP_Activity_Activity::get_visible_sitewide_sql( $this->table_alias );
+
+			} elseif ( ! empty( $column ) && true === in_array( $column, array( 'hide_sitewide', 'is_spam' ) ) ) {
 				$sql_chunks['where'][] = $wpdb->prepare( "{$alias}{$column} = %d", $value );
 
 			} else {
