@@ -2512,6 +2512,106 @@ function bp_core_get_minified_asset_suffix() {
 }
 
 /**
+ * Check whether a component's directory is present in this build.
+ *
+ * Optional components can be stripped from a distribution (e.g. the video and
+ * document components moved to the BuddyBoss Add-ons plugin). This checks for
+ * the component's loader file on disk, and lets a provider plugin claim the
+ * component through the `bb_component_directory_available` filter. Video and
+ * Documents are not available from a BuddyBoss Add-ons build below the version
+ * this Platform requires.
+ *
+ * @since BuddyBoss 3.7.0
+ *
+ * @param string $component Component ID (e.g. 'video', 'document').
+ * @return bool True when the component's code is available to load.
+ */
+function bb_is_component_directory_available( $component ) {
+	static $available = array();
+
+	if ( isset( $available[ $component ] ) ) {
+		return $available[ $component ];
+	}
+
+	$exists = file_exists( buddypress()->plugin_dir . 'bp-' . $component . '/bp-' . $component . '-loader.php' );
+
+	/**
+	 * Filters whether a component's code is available to load.
+	 *
+	 * By default this reflects whether the component's loader file exists
+	 * inside the Platform build. An external plugin that provides a
+	 * component (e.g. BuddyBoss Add-ons supplying video/document) returns
+	 * true for its component so the availability scrub keeps it active
+	 * and the admin UI keeps offering the toggle.
+	 *
+	 * @since BuddyBoss 3.7.0
+	 *
+	 * @param bool   $exists    Whether the component's loader file exists in this build.
+	 * @param string $component Component ID (e.g. 'video', 'document').
+	 */
+	$is_available = (bool) apply_filters( 'bb_component_directory_available', $exists, $component );
+
+	/*
+	 * Videos and Documents moved their template pack code, settings panels and
+	 * group screens from Platform into BuddyBoss Add-ons. An older Add-ons
+	 * build still claims the components but lacks that code, so they stay off
+	 * (their data is kept) until Add-ons is updated to the required version.
+	 */
+	if (
+		$is_available &&
+		! $exists &&
+		in_array( $component, array( 'video', 'document' ), true ) &&
+		defined( 'BB_ADDONS_PLUGIN_VERSION' ) &&
+		bb_is_addons_below_required_version( (string) BB_ADDONS_PLUGIN_VERSION )
+	) {
+		$is_available = false;
+	}
+
+	// Providers register their claims on `bp_loaded`, so only memoise once it
+	// has finished — an earlier call must not freeze a premature `false`.
+	if ( did_action( 'bp_loaded' ) && ! doing_action( 'bp_loaded' ) ) {
+		$available[ $component ] = $is_available;
+	}
+
+	return $is_available;
+}
+
+/**
+ * Record that Videos or Documents are not available on this site.
+ *
+ * Their cleanup and moderation hooks ship in BuddyBoss Add-ons, so members,
+ * posts and messages deleted, and members suspended, while they are off leave
+ * their files behind. BuddyBoss Add-ons reads this record when the components
+ * are back and repairs the data.
+ *
+ * @since BuddyBoss 3.7.0
+ *
+ * @return void
+ */
+function bb_media_record_unavailable_components() {
+	// The record lives on the root blog, like the active components option.
+	if ( is_multisite() && ! bp_is_root_blog() ) {
+		return;
+	}
+
+	$pending = bp_get_option( 'bb_media_reconcile_pending', false );
+	$changed = false === $pending;
+	$pending = $changed ? array() : (array) $pending;
+
+	foreach ( array( 'video', 'document' ) as $component ) {
+		if ( ! bp_is_active( $component ) && empty( $pending[ $component ] ) ) {
+			$pending[ $component ] = time();
+			$changed               = true;
+		}
+	}
+
+	if ( $changed ) {
+		bp_update_option( 'bb_media_reconcile_pending', $pending );
+	}
+}
+add_action( 'bp_init', 'bb_media_record_unavailable_components', 20 );
+
+/**
  * Return a list of component information.
  *
  * @since BuddyPress 2.6.0
@@ -2703,6 +2803,14 @@ function bp_core_get_components( $type = 'all' ) {
 	// Add blogs tracking if multisite.
 	if ( is_multisite() ) {
 		$optional_components['blogs']['description'] = __( 'Record activity for new sites, posts, and comments across your network.', 'buddyboss' );
+	}
+
+	// Hide optional components whose directories are not present in this build
+	// (e.g. the video and document components stripped from the free package).
+	foreach ( array_keys( $optional_components ) as $component_key ) {
+		if ( ! bb_is_component_directory_available( $component_key ) ) {
+			unset( $optional_components[ $component_key ] );
+		}
 	}
 
 	$default_components = array();
@@ -3555,6 +3663,8 @@ function bp_get_email( $email_type ) {
  * process the request without any errors.
  *
  * @since BuddyPress 2.5.0
+ * @since BuddyBoss [BBVERSION] Added the `bb_pre_bp_send_email` filter, which can stop a validated
+ *                              email before any mail transport runs.
  *
  * @param string                   $email_type Type of email being sent.
  * @param string|array|int|WP_User $to         Either an email address, user ID, WP_User object,
@@ -3639,6 +3749,31 @@ function bp_send_email( $email_type, $to, $args = array() ) {
 	$status = $email->validate();
 	if ( is_wp_error( $status ) ) {
 		return $status;
+	}
+
+	/**
+	 * Filters whether to stop a validated email before it reaches a mail transport.
+	 *
+	 * Return anything other than null to end bp_send_email() here: that value is returned to
+	 * the caller and neither wp_mail() nor the delivery class runs. This fires before the
+	 * transport is chosen, so it behaves the same whichever mail plugin the site uses,
+	 * including plugins that declare their own wp_mail(), which may not apply `pre_wp_mail`.
+	 * Return true when the email was handled another way (for example held for a digest), or
+	 * a WP_Error to report that it was not sent.
+	 *
+	 * Plugins should check for bb_email_supports_pre_send_filter() before relying on it.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param null|bool|WP_Error       $pre_send   Null to send the email as usual.
+	 * @param BP_Email                 $email      The validated email.
+	 * @param string                   $email_type Type of email being sent.
+	 * @param string|array|int|WP_User $to         The recipient passed to bp_send_email().
+	 * @param array                    $args       Extra parameters, notably `tokens`.
+	 */
+	$pre_send = apply_filters( 'bb_pre_bp_send_email', null, $email, $email_type, $to, $args );
+	if ( null !== $pre_send ) {
+		return $pre_send;
 	}
 
 	/**
@@ -3754,6 +3889,21 @@ function bp_send_email( $email_type, $to, $args = array() ) {
 		);
 
 	}
+}
+
+/**
+ * Whether bp_send_email() applies the `bb_pre_bp_send_email` filter.
+ *
+ * A capability marker. Plugins that hold or reroute BuddyBoss emails should gate their
+ * `bb_pre_bp_send_email` callback on function_exists() of this function and keep their older
+ * route (such as `pre_wp_mail`) for Platform versions without the filter.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return bool Always true when this function exists.
+ */
+function bb_email_supports_pre_send_filter() {
+	return true;
 }
 
 /**
@@ -4803,21 +4953,23 @@ function bp_core_get_group_avatar( $legacy_user_avatar_name, $legacy_group_avata
  *
  * @return array Parsed URL data.
  * @since BuddyBoss 1.3.2
+ * @since BuddyBoss [BBVERSION] Skips avatar images when collecting the page images.
  */
 function bp_core_parse_url( $url ) {
 
 	$parse_url_data = wp_parse_url( $url, PHP_URL_HOST );
 	$original_url   = $url;
+	$user_agent     = bb_get_url_preview_user_agent();
 
-	if ( in_array( $parse_url_data, apply_filters( 'bp_core_parse_url_shorten_url_provider', array( 'bit.ly', 'snip.ly', 'rb.gy', 'tinyurl.com', 'tiny.one', 'rotf.lol', 'b.link', '4ubr.short.gy', '' ) ), true ) ) {
+	if ( in_array( $parse_url_data, apply_filters( 'bp_core_parse_url_shorten_url_provider', array( 'bit.ly', 'snip.ly', 'rb.gy', 'tinyurl.com', 'tiny.one', 'rotf.lol', 'b.link', '4ubr.short.gy', 'maps.app.goo.gl', '' ) ), true ) ) {
 		$response = wp_safe_remote_get(
 			$url,
 			array(
-				'stream'      => true,
-				'headers'     => array(
-					'user-agent' => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:71.0) Gecko/20100101 Firefox/71.0',
+				'stream'  => true,
+				'headers' => array(
+					'user-agent' => $user_agent,
 				),
-			),
+			)
 		);
 
 		if ( ! is_wp_error( $response ) && ! empty( $response['http_response']->get_response_object()->url ) && $response['http_response']->get_response_object()->url !== $url ) {
@@ -4830,16 +4982,24 @@ function bp_core_parse_url( $url ) {
 		if ( $original_url === $url ) {
 			$context = array(
 				'http' => array(
-					'method'        => 'GET',
-					'max_redirects' => 1,
+					'method'          => 'GET',
+					// Stop at the first response so the Location header below reflects the redirect.
+					'follow_location' => 0,
+					'user_agent'      => $user_agent,
 				),
 			);
 
 			@file_get_contents( $url, null, stream_context_create( $context ) );
-			if ( isset( $http_response_header ) && isset( $http_response_header[6] ) ) {
-				$new_url = str_replace( 'Location: ', '', $http_response_header[6] );
-				if ( filter_var( $new_url, FILTER_VALIDATE_URL ) ) {
-					$url = $new_url;
+			if ( ! empty( $http_response_header ) && is_array( $http_response_header ) ) {
+				// Find the redirect target instead of relying on a fixed header position.
+				foreach ( $http_response_header as $response_header ) {
+					if ( 0 === stripos( $response_header, 'Location:' ) ) {
+						$new_url = trim( substr( $response_header, strlen( 'Location:' ) ) );
+						if ( filter_var( $new_url, FILTER_VALIDATE_URL ) ) {
+							$url = $new_url;
+						}
+						break;
+					}
 				}
 			}
 		}
@@ -4880,7 +5040,7 @@ function bp_core_parse_url( $url ) {
 		$parsed_url_data['error']       = '';
 		$parsed_url_data['wp_embed']    = true;
 	} else {
-		$args = array( 'user-agent' => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:71.0) Gecko/20100101 Firefox/71.0' );
+		$args = array( 'user-agent' => $user_agent );
 
 		if ( bb_is_same_site_url( $url ) ) {
 			if ( ! bp_enable_private_network() ) {
@@ -4962,6 +5122,12 @@ function bp_core_parse_url( $url ) {
 			for ( $i = 0; $i < $image_elements->length; $i ++ ) {
 				$image = $image_elements->item( $i );
 				$src   = $image->getAttribute( 'src' );
+
+				// Skip avatars (get_avatar() and BuddyBoss avatars carry an "avatar" class token),
+				// so a member photo is not used as the preview image when the page has no og:image.
+				if ( preg_match( '/(^|\s)avatar(\s|$)/i', $image->getAttribute( 'class' ) ) ) {
+					continue;
+				}
 
 				if ( filter_var( $src, FILTER_VALIDATE_URL ) ) {
 					$images[] = $src;
@@ -11851,6 +12017,347 @@ function bb_is_feature_provided( $feature ) {
 }
 
 /**
+ * Build the signed "receiver" URL segment for a media or video preview URL.
+ *
+ * Preview URLs embedded in emails (for example message notifications) name the
+ * recipient so the image renders where the recipient is not logged in. The segment
+ * carries an HMAC bound to the receiver, the item and the attachment, so it cannot be
+ * forged or reused for another user or file.
+ *
+ * @since BuddyBoss 3.6.2
+ *
+ * @param int        $receiver_id   Receiver user ID.
+ * @param int|string $item_id       Media or video ID (a `forbidden_` prefix is ignored).
+ * @param int|string $attachment_id Attachment ID (a `forbidden_` prefix is ignored).
+ *
+ * @return string Base64-encoded URL segment, or an empty string when no receiver is given.
+ */
+function bb_media_preview_receiver_segment( $receiver_id, $item_id, $attachment_id ) {
+	$receiver_id = absint( $receiver_id );
+
+	if ( empty( $receiver_id ) ) {
+		return '';
+	}
+
+	return base64_encode( 'receiver_' . $receiver_id . '_' . bb_media_preview_receiver_signature( $receiver_id, $item_id, $attachment_id ) ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode
+}
+
+/**
+ * Validate a "receiver" URL segment of a media or video preview URL.
+ *
+ * @since BuddyBoss 3.6.2
+ *
+ * @param string     $segment       Base64-encoded segment taken from the URL.
+ * @param int|string $item_id       Media or video ID from the same URL.
+ * @param int|string $attachment_id Attachment ID from the same URL.
+ *
+ * @return int Receiver user ID when the signature is valid, 0 otherwise.
+ */
+function bb_media_preview_get_receiver_id( $segment, $item_id, $attachment_id ) {
+	if ( empty( $segment ) || ! is_string( $segment ) ) {
+		return 0;
+	}
+
+	$decoded = base64_decode( $segment, true ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_decode
+
+	if ( false === $decoded || ! preg_match( '/^receiver_(\d+)_([a-f0-9]{32})$/', $decoded, $matches ) ) {
+		return 0;
+	}
+
+	$receiver_id = absint( $matches[1] );
+
+	$expected = bb_media_preview_receiver_signature( $receiver_id, $item_id, $attachment_id );
+
+	if ( empty( $receiver_id ) || '' === $expected || ! hash_equals( $expected, $matches[2] ) ) {
+		return 0;
+	}
+
+	return $receiver_id;
+}
+
+/**
+ * Compute the signature used in preview receiver segments.
+ *
+ * @since BuddyBoss 3.6.2
+ *
+ * @param int        $receiver_id   Receiver user ID.
+ * @param int|string $item_id       Media or video ID.
+ * @param int|string $attachment_id Attachment ID.
+ *
+ * @return string 32-character hex signature, or an empty string when the item or attachment ID is malformed.
+ */
+function bb_media_preview_receiver_signature( $receiver_id, $item_id, $attachment_id ) {
+	// Accept only a plain number with an optional `forbidden_` prefix. Anything else (e.g. `1x2`)
+	// would normalise differently here than the endpoint's (int) cast and let one signature cover another item.
+	if ( ! preg_match( '/^(?:forbidden_)?(\d+)$/', (string) $item_id, $item_match ) || ! preg_match( '/^(?:forbidden_)?(\d+)$/', (string) $attachment_id, $attachment_match ) ) {
+		return '';
+	}
+
+	$item_id       = absint( $item_match[1] );
+	$attachment_id = absint( $attachment_match[1] );
+
+	return substr( hash_hmac( 'sha256', 'bb_media_preview_receiver|' . absint( $receiver_id ) . '|' . $item_id . '|' . $attachment_id, wp_salt( 'auth' ) ), 0, 32 );
+}
+
+if ( ! function_exists( 'bb_video_get_thumbnail_editable_video' ) ) {
+	/**
+	 * Get a video the current user may change the thumbnail of.
+	 *
+	 * The video must exist, belong to the given video attachment, and the current user
+	 * must have the requested permission on it.
+	 *
+	 * @since BuddyBoss 3.6.2
+	 *
+	 * @param int    $video_id            Video ID.
+	 * @param int    $video_attachment_id Attachment ID of the video file.
+	 * @param string $permission          'edit' or 'delete'. Default 'edit'.
+	 *
+	 * @return BP_Video|false Video object on success, false otherwise.
+	 */
+	function bb_video_get_thumbnail_editable_video( $video_id, $video_attachment_id, $permission = 'edit' ) {
+		$video_id            = absint( $video_id );
+		$video_attachment_id = absint( $video_attachment_id );
+
+		if ( ! is_user_logged_in() || empty( $video_id ) || empty( $video_attachment_id ) || ! class_exists( 'BP_Video' ) ) {
+			return false;
+		}
+
+		$video = new BP_Video( $video_id );
+
+		if ( empty( $video->id ) || (int) $video->attachment_id !== $video_attachment_id ) {
+			return false;
+		}
+
+		$allowed = ( 'delete' === $permission ) ? bp_video_user_can_delete( $video ) : bp_video_user_can_edit( $video );
+
+		return $allowed ? $video : false;
+	}
+}
+
+if ( ! function_exists( 'bb_video_is_trusted_thumbnail' ) ) {
+	/**
+	 * Whether an attachment may be served as a thumbnail (poster) of a video.
+	 *
+	 * An attachment is trusted only when it is the video's own file, one of the video's
+	 * auto-generated previews, a thumbnail stored on this video (current poster, custom
+	 * image or default images), or came through the video thumbnail uploader. Any other
+	 * attachment, including other attachments of the video owner, is never served.
+	 *
+	 * @since BuddyBoss 3.6.2
+	 *
+	 * @param BP_Video $video         Video object.
+	 * @param int      $attachment_id Thumbnail attachment ID.
+	 *
+	 * @return bool
+	 */
+	function bb_video_is_trusted_thumbnail( $video, $attachment_id ) {
+		$attachment_id = absint( $attachment_id );
+
+		if ( empty( $video->id ) || empty( $attachment_id ) || 'attachment' !== get_post_type( $attachment_id ) ) {
+			return false;
+		}
+
+		$video_attachment_id = ! empty( $video->attachment_id ) ? absint( $video->attachment_id ) : 0;
+
+		// The video's own file.
+		if ( $video_attachment_id === $attachment_id ) {
+			return true;
+		}
+
+		// Thumbnails that came through the video thumbnail uploader.
+		if ( get_post_meta( $attachment_id, 'bp_video_thumbnail_upload', true ) ) {
+			return true;
+		}
+
+		if ( empty( $video_attachment_id ) ) {
+			return false;
+		}
+
+		// Auto-generated previews of this video.
+		$auto_ids   = function_exists( 'bb_video_get_auto_generated_preview_ids' ) ? (array) bb_video_get_auto_generated_preview_ids( $video_attachment_id ) : array();
+		$thumbnails = get_post_meta( $video_attachment_id, 'video_preview_thumbnails', true );
+
+		if ( is_array( $thumbnails ) && ! empty( $thumbnails['default_images'] ) ) {
+			$auto_ids = array_merge( $auto_ids, (array) $thumbnails['default_images'] );
+		}
+
+		if ( in_array( $attachment_id, array_map( 'absint', $auto_ids ), true ) ) {
+			return true;
+		}
+
+		// A poster or custom image stored on this video is trusted only when the video owner uploaded it.
+		$stored_ids = array( get_post_meta( $video_attachment_id, 'bp_video_preview_thumbnail_id', true ) );
+		if ( is_array( $thumbnails ) && ! empty( $thumbnails['custom_image'] ) ) {
+			$stored_ids[] = $thumbnails['custom_image'];
+		}
+
+		return in_array( $attachment_id, array_map( 'absint', $stored_ids ), true ) &&
+			(int) get_post_field( 'post_author', $attachment_id ) === (int) $video->user_id;
+	}
+}
+
+if ( ! function_exists( 'bb_video_can_delete_stored_thumbnail' ) ) {
+	/**
+	 * Whether a thumbnail ID stored on a video may be deleted together with the video.
+	 *
+	 * The stored poster / custom image IDs may come from meta saved before thumbnail
+	 * validation existed, so only a trusted thumbnail attachment uploaded by the video
+	 * owner is deleted, or a custom thumbnail that someone else who can edit the video
+	 * (a group organizer or a moderator) uploaded through the video thumbnail uploader,
+	 * that is stored on this video and that no other video uses. The video's own file
+	 * is never deleted through this path.
+	 *
+	 * @since BuddyBoss 3.6.2
+	 *
+	 * @param BP_Video|object $video        Video object or row with `id`, `user_id` and `attachment_id`.
+	 * @param int             $thumbnail_id Stored thumbnail attachment ID.
+	 *
+	 * @return bool
+	 */
+	function bb_video_can_delete_stored_thumbnail( $video, $thumbnail_id ) {
+		$thumbnail_id = absint( $thumbnail_id );
+
+		if (
+			empty( $video->id ) ||
+			empty( $video->user_id ) ||
+			empty( $thumbnail_id ) ||
+			( ! empty( $video->attachment_id ) && absint( $video->attachment_id ) === $thumbnail_id )
+		) {
+			return false;
+		}
+
+		if ( ! bb_video_is_trusted_thumbnail( $video, $thumbnail_id ) ) {
+			return false;
+		}
+
+		// Uploaded by the video owner.
+		if ( (int) get_post_field( 'post_author', $thumbnail_id ) === (int) $video->user_id ) {
+			return true;
+		}
+
+		/*
+		 * Uploaded by someone else: only a flagged custom thumbnail stored on this video that
+		 * no other video uses. A stale pointer to another member's thumbnail that their own
+		 * video still uses is never deleted.
+		 */
+		$video_attachment_id = ! empty( $video->attachment_id ) ? absint( $video->attachment_id ) : 0;
+
+		if ( empty( $video_attachment_id ) || ! get_post_meta( $thumbnail_id, 'bp_video_thumbnail_upload', true ) ) {
+			return false;
+		}
+
+		$thumbnails = get_post_meta( $video_attachment_id, 'video_preview_thumbnails', true );
+		$stored_ids = array( absint( get_post_meta( $video_attachment_id, 'bp_video_preview_thumbnail_id', true ) ) );
+
+		if ( is_array( $thumbnails ) && ! empty( $thumbnails['custom_image'] ) ) {
+			$stored_ids[] = absint( $thumbnails['custom_image'] );
+		}
+
+		if ( ! in_array( $thumbnail_id, $stored_ids, true ) ) {
+			return false;
+		}
+
+		global $wpdb;
+
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		$used_elsewhere = $wpdb->get_var(
+			$wpdb->prepare(
+				"SELECT meta_id FROM {$wpdb->postmeta} WHERE post_id != %d AND ( ( meta_key = 'bp_video_preview_thumbnail_id' AND meta_value = %s ) OR ( meta_key = 'video_preview_thumbnails' AND ( meta_value LIKE %s OR meta_value LIKE %s ) ) ) LIMIT 1",
+				$video_attachment_id,
+				(string) $thumbnail_id,
+				'%' . $wpdb->esc_like( '"custom_image";i:' . $thumbnail_id . ';' ) . '%',
+				'%' . $wpdb->esc_like( '"custom_image";s:' . strlen( (string) $thumbnail_id ) . ':"' . $thumbnail_id . '";' ) . '%'
+			)
+		);
+
+		return empty( $used_elsewhere );
+	}
+}
+
+if ( ! function_exists( 'bb_video_is_valid_thumbnail_for_video' ) ) {
+	/**
+	 * Check whether an attachment may be used, or deleted, as a thumbnail of a video.
+	 *
+	 * Accepts the video's own auto-generated previews (when `$allow_auto_generated` is true)
+	 * and custom thumbnails uploaded through the video thumbnail uploader that are already
+	 * this video's custom thumbnail / poster, or belong to the current user. On delete paths
+	 * (`$allow_auto_generated` false) the current user's upload is accepted only while it is
+	 * not yet saved as a thumbnail of any video, and this video's stored custom thumbnail /
+	 * poster only when bb_video_can_delete_stored_thumbnail() allows deleting it.
+	 *
+	 * @since BuddyBoss 3.6.2
+	 *
+	 * @param BP_Video $video                Video object.
+	 * @param int      $thumbnail_id         Attachment ID of the thumbnail.
+	 * @param bool     $allow_auto_generated Whether auto-generated previews are accepted. Default true.
+	 *
+	 * @return bool
+	 */
+	function bb_video_is_valid_thumbnail_for_video( $video, $thumbnail_id, $allow_auto_generated = true ) {
+		$thumbnail_id = absint( $thumbnail_id );
+
+		if ( empty( $video->id ) || empty( $thumbnail_id ) || 'attachment' !== get_post_type( $thumbnail_id ) ) {
+			return false;
+		}
+
+		$auto_generated = function_exists( 'bb_video_get_auto_generated_preview_ids' ) ? array_map( 'absint', (array) bb_video_get_auto_generated_preview_ids( $video->attachment_id ) ) : array();
+
+		if ( in_array( $thumbnail_id, $auto_generated, true ) ) {
+			return $allow_auto_generated;
+		}
+
+		if ( ! get_post_meta( $thumbnail_id, 'bp_video_thumbnail_upload', true ) ) {
+			return false;
+		}
+
+		$thumbnails = get_post_meta( $video->attachment_id, 'video_preview_thumbnails', true );
+		$current_id = absint( get_post_meta( $video->attachment_id, 'bp_video_preview_thumbnail_id', true ) );
+
+		// This video's own custom thumbnail, or its current poster.
+		if (
+			( ! empty( $thumbnails['custom_image'] ) && absint( $thumbnails['custom_image'] ) === $thumbnail_id ) ||
+			$current_id === $thumbnail_id
+		) {
+			// Stored meta is not trusted on delete paths: it may point at another member's thumbnail.
+			if ( ! $allow_auto_generated ) {
+				return function_exists( 'bb_video_can_delete_stored_thumbnail' ) && bb_video_can_delete_stored_thumbnail( $video, $thumbnail_id );
+			}
+
+			return true;
+		}
+
+		if ( (int) get_post_field( 'post_author', $thumbnail_id ) !== bp_loggedin_user_id() ) {
+			return false;
+		}
+
+		// Selecting the user's own upload is fine; on delete paths it must still be unsaved.
+		if ( $allow_auto_generated ) {
+			return true;
+		}
+
+		// `bp_video_thumbnail_saved` is never flipped after upload, so detect use directly:
+		// a saved thumbnail is flagged `bp_video_upload` (legacy save) or referenced by a video.
+		if ( get_post_meta( $thumbnail_id, 'bp_video_upload', true ) ) {
+			return false;
+		}
+
+		global $wpdb;
+
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		$in_use = $wpdb->get_var(
+			$wpdb->prepare(
+				"SELECT meta_id FROM {$wpdb->postmeta} WHERE ( meta_key = 'bp_video_preview_thumbnail_id' AND meta_value = %s ) OR ( meta_key = 'video_preview_thumbnails' AND ( meta_value LIKE %s OR meta_value LIKE %s ) ) LIMIT 1",
+				(string) $thumbnail_id,
+				'%' . $wpdb->esc_like( '"custom_image";i:' . $thumbnail_id . ';' ) . '%',
+				'%' . $wpdb->esc_like( '"custom_image";s:' . strlen( (string) $thumbnail_id ) . ':"' . $thumbnail_id . '";' ) . '%'
+			)
+		);
+
+		return empty( $in_use );
+	}
+}
+
+/**
  * Check whether a user may flag or delete an attachment referenced by a composer draft.
  *
  * Draft payloads (activity, forum topic/reply) carry client-supplied attachment IDs. Only
@@ -11898,4 +12405,166 @@ function bb_user_can_manage_draft_attachment( $attachment_id, $for_delete = fals
 	 * @param int  $user_id       User ID.
 	 */
 	return (bool) apply_filters( 'bb_user_can_manage_draft_attachment', $can_manage, $attachment_id, $for_delete, $user_id );
+}
+
+if ( ! function_exists( 'bb_user_can_adopt_attachment' ) ) {
+	/**
+	 * Check whether a user may wrap an attachment in a new media, video or document item.
+	 *
+	 * Save handlers (AJAX, forum, message and REST) receive attachment IDs from the client.
+	 * A new item may only wrap the user's own upload that went through the BuddyBoss
+	 * uploader and is not yet bound to a media, video or document item.
+	 *
+	 * @since BuddyBoss 3.6.2
+	 *
+	 * @param int $attachment_id Attachment ID from the request.
+	 * @param int $user_id       User ID. Default the logged-in user.
+	 *
+	 * @return bool
+	 */
+	function bb_user_can_adopt_attachment( $attachment_id, $user_id = 0 ) {
+		// Only a positive whole number can name an attachment. absint() would turn -5 into 5,
+		// and the caller would then store the negative value, which skips the attachment check on read.
+		$attachment_id = filter_var( $attachment_id, FILTER_VALIDATE_INT, array( 'options' => array( 'min_range' => 1 ) ) );
+		$attachment_id = false === $attachment_id ? 0 : (int) $attachment_id;
+		$user_id       = $user_id ? absint( $user_id ) : bp_loggedin_user_id();
+		$can_adopt     = false;
+
+		if (
+			! empty( $attachment_id ) &&
+			! empty( $user_id ) &&
+			'attachment' === get_post_type( $attachment_id ) &&
+			(int) get_post_field( 'post_author', $attachment_id ) === $user_id &&
+			(
+				get_post_meta( $attachment_id, 'bp_media_upload', true ) ||
+				get_post_meta( $attachment_id, 'bp_video_upload', true ) ||
+				get_post_meta( $attachment_id, 'bp_document_upload', true )
+			)
+		) {
+			$can_adopt = true;
+
+			foreach ( array( 'bp_media_id', 'bp_video_id', 'bp_document_id' ) as $meta_key ) {
+				if ( get_post_meta( $attachment_id, $meta_key, true ) ) {
+					$can_adopt = false;
+					break;
+				}
+			}
+		}
+
+		/**
+		 * Filters whether a user may wrap an attachment in a new media, video or document item.
+		 *
+		 * @since BuddyBoss 3.6.2
+		 *
+		 * @param bool $can_adopt     Whether the user may use the attachment.
+		 * @param int  $attachment_id Attachment ID.
+		 * @param int  $user_id       User ID.
+		 */
+		return (bool) apply_filters( 'bb_user_can_adopt_attachment', $can_adopt, $attachment_id, $user_id );
+	}
+}
+
+if ( ! function_exists( 'bb_media_sanitize_gif_url' ) ) {
+	/**
+	 * Sanitize a GIF still or mp4 value before it is stored.
+	 *
+	 * GIF values come from Giphy and are always http(s) URLs. Anything else, such as an
+	 * integer that the delete-time handlers would treat as an attachment ID, is dropped.
+	 *
+	 * @since BuddyBoss 3.6.2
+	 *
+	 * @param mixed $value GIF value from the request.
+	 *
+	 * @return string Sanitized URL, or an empty string when the value is not an http(s) URL.
+	 */
+	function bb_media_sanitize_gif_url( $value ) {
+		if ( ! is_string( $value ) || ! preg_match( '#^https?://#i', $value ) ) {
+			return '';
+		}
+
+		return esc_url_raw( $value, array( 'http', 'https' ) );
+	}
+}
+
+if ( ! function_exists( 'bb_media_delete_legacy_gif_attachment' ) ) {
+	/**
+	 * Delete a legacy GIF attachment stored as an integer in `_gif_data`.
+	 *
+	 * Old releases downloaded GIFs into the media library and stored the attachment ID.
+	 * Only such an integer ID is deleted, and only when the attachment was uploaded by the
+	 * author of the activity or post that holds the GIF.
+	 *
+	 * @since BuddyBoss 3.6.2
+	 *
+	 * @param mixed $value     The `still` or `mp4` value from `_gif_data`.
+	 * @param int   $author_id User ID of the activity or post author.
+	 *
+	 * @return bool True when the attachment was deleted.
+	 */
+	function bb_media_delete_legacy_gif_attachment( $value, $author_id ) {
+		$author_id = absint( $author_id );
+
+		if (
+			! is_int( $value ) ||
+			$value <= 0 ||
+			empty( $author_id ) ||
+			'attachment' !== get_post_type( $value ) ||
+			(int) get_post_field( 'post_author', $value ) !== $author_id
+		) {
+			return false;
+		}
+
+		return (bool) wp_delete_attachment( $value, true );
+	}
+}
+
+/**
+ * Whether the BuddyBoss Add-ons plugin provides a given module on this site.
+ *
+ * The plugin-wide lock (bb_addons_should_lock_features()) only says the plan
+ * entitles the site to at least one add-on module. A plan can carry some
+ * modules and not others (Legacy Free carries Video, Documents and GIFs
+ * only), so callers that stand in for one module must also check that module.
+ * Add-ons builds without the per-module API fall back to the plugin-wide lock.
+ *
+ * @since BuddyBoss 3.7.0
+ *
+ * @param string $module_id Add-ons module ID, e.g. 'reactions' or 'pinned-posts'.
+ *
+ * @return bool True when the add-on is unlocked and entitled to the module.
+ */
+function bb_addons_provides_module( $module_id ) {
+	if ( ! function_exists( 'bb_addons_should_lock_features' ) || bb_addons_should_lock_features() ) {
+		return false;
+	}
+
+	if ( function_exists( 'bb_addons_is_module_entitled' ) ) {
+		return (bool) bb_addons_is_module_entitled( $module_id );
+	}
+
+	return true;
+}
+
+/**
+ * Get the user agent string used for URL preview HTTP requests.
+ *
+ * A modern browser UA is required so URL redirect resolvers (e.g. Google's
+ * maps.app.goo.gl short-link service) return proper 3xx redirects instead of
+ * empty JS-only interstitials that contain no scrapeable metadata.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return string User agent string.
+ */
+function bb_get_url_preview_user_agent() {
+	$user_agent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36';
+
+	/**
+	 * Filters the user agent string used for URL preview HTTP requests.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $user_agent User agent string.
+	 */
+	return apply_filters( 'bb_url_preview_user_agent', $user_agent );
 }

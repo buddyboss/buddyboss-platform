@@ -18,7 +18,7 @@ import {
 	MenuItem,
 	Modal,
 } from '@wordpress/components';
-import { __ } from '@wordpress/i18n';
+import { __, _n, sprintf } from '@wordpress/i18n';
 import {
 	getReportedContent,
 	hideContent,
@@ -676,7 +676,11 @@ export function ReportedContentScreen() {
 					{ ! isLoading && total > 0 && (
 						<div className="bb-admin-reported-content__footer">
 							<span className="bb-admin-reported-content__item-count">
-								{ total } { total === 1 ? __( 'item', 'buddyboss' ) : __( 'items', 'buddyboss' ) }
+								{ sprintf(
+									/* translators: %s: number of items. */
+									_n( '%s item', '%s items', total, 'buddyboss' ),
+									total
+								) }
 							</span>
 
 							{ totalPages > 1 && (

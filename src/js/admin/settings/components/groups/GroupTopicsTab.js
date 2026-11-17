@@ -238,6 +238,10 @@ export function GroupTopicsTab( { groupId, setNotice } ) {
 			setIsSaving( false );
 			if ( response.success && response.data && response.data.content && response.data.content.topic ) {
 				var newTopic = response.data.content.topic;
+				// The response puts the display label in permission_type. Keep the key we sent,
+				// or the next edit sends the label and the server stores it.
+				newTopic.permission_label = newTopic.permission_type;
+				newTopic.permission_type = data.permission_type;
 				// The response includes is_global_activity from bb_get_topic().
 				// Normalize to is_global for consistent rendering.
 				if ( newTopic.is_global_activity ) {
@@ -252,7 +256,7 @@ export function GroupTopicsTab( { groupId, setNotice } ) {
 					setNotice( { type: 'success', message: __( 'Topic created successfully.', 'buddyboss' ) } );
 				}
 			} else {
-				setError( response.data && response.data.message ? response.data.message : __( 'Failed to add topic.', 'buddyboss' ) );
+				setError( response.data && ( response.data.error || response.data.message ) ? ( response.data.error || response.data.message ) : __( 'Failed to add topic.', 'buddyboss' ) );
 			}
 		} ).catch( function () {
 			setIsSaving( false );
@@ -281,6 +285,8 @@ export function GroupTopicsTab( { groupId, setNotice } ) {
 			if ( response.success && response.data && response.data.content && response.data.content.topic ) {
 				var updatedTopic = response.data.content.topic;
 				var originalTopicId = String( data.topic_id );
+				updatedTopic.permission_label = updatedTopic.permission_type;
+				updatedTopic.permission_type = data.permission_type;
 				setTopics( function ( prev ) {
 					return prev.map( function ( t ) {
 						if ( String( t.topic_id ) === originalTopicId ) {
@@ -296,7 +302,7 @@ export function GroupTopicsTab( { groupId, setNotice } ) {
 					setNotice( { type: 'success', message: __( 'Topic updated successfully.', 'buddyboss' ) } );
 				}
 			} else {
-				setError( response.data && response.data.message ? response.data.message : __( 'Failed to update topic.', 'buddyboss' ) );
+				setError( response.data && ( response.data.error || response.data.message ) ? ( response.data.error || response.data.message ) : __( 'Failed to update topic.', 'buddyboss' ) );
 			}
 		} ).catch( function () {
 			setIsSaving( false );
@@ -326,7 +332,7 @@ export function GroupTopicsTab( { groupId, setNotice } ) {
 				setIsDeleteModalOpen( true );
 				setError( '' );
 			} else {
-				setError( response.data && response.data.message ? response.data.message : __( 'Failed to initiate topic deletion.', 'buddyboss' ) );
+				setError( response.data && ( response.data.error || response.data.message ) ? ( response.data.error || response.data.message ) : __( 'Failed to initiate topic deletion.', 'buddyboss' ) );
 			}
 		} ).catch( function () {
 			setIsDeleteLoading( false );
@@ -364,7 +370,7 @@ export function GroupTopicsTab( { groupId, setNotice } ) {
 					setNotice( { type: 'success', message: __( 'Topic deleted successfully.', 'buddyboss' ) } );
 				}
 			} else {
-				setError( response.data && response.data.message ? response.data.message : __( 'Failed to delete topic.', 'buddyboss' ) );
+				setError( response.data && ( response.data.error || response.data.message ) ? ( response.data.error || response.data.message ) : __( 'Failed to delete topic.', 'buddyboss' ) );
 			}
 		} ).catch( function () {
 			setIsSaving( false );
@@ -407,6 +413,8 @@ export function GroupTopicsTab( { groupId, setNotice } ) {
 			} );
 			topicAjaxFetch( 'bb_update_topics_order', {
 				topic_ids: topicIds,
+				item_id: groupId,
+				item_type: 'groups',
 			}, noncesRef.current.reorder || '' ).then( function ( response ) {
 				if ( ! response.success ) {
 					setTopics( previousTopics );
@@ -480,7 +488,12 @@ export function GroupTopicsTab( { groupId, setNotice } ) {
 									<BBIcon name="list" />
 								</span>
 								<span className="bb-topic-list__name">
-									{ topic.name }
+									<span
+										className="bb-topic-list__name-text"
+										title={ topic.name }
+									>
+										{ topic.name }
+									</span>
 									{ ( topic.is_global || topic.is_global_activity ) && (
 										<span
 											className="bb-topic-list__global-icon"
@@ -633,6 +646,8 @@ export function GroupTopicsTab( { groupId, setNotice } ) {
  */
 function GroupTopicModal( { isOpen, onClose, onSave, topic, isSaving, permissionTypes, topicMode, globalTopics } ) {
 	var isEditing = !! topic;
+	// A global topic keeps its name inside a group (the server refuses a rename), so only its permission is editable.
+	var isGlobalLocked = isEditing && !! ( topic.is_global || topic.is_global_activity );
 	var initialName = isEditing ? ( topic.name || '' ) : '';
 	// Default to first permission type value (usually 'members') for groups.
 	var defaultPermission = permissionTypes && permissionTypes.length > 0
@@ -811,6 +826,7 @@ function GroupTopicModal( { isOpen, onClose, onSave, topic, isSaving, permission
 							type="text"
 							className="bb-topic-modal__search-input components-text-control__input"
 							value={ searchText }
+							disabled={ isGlobalLocked }
 							placeholder={ __( 'Select a topic', 'buddyboss' ) }
 							onChange={ function ( e ) {
 								var val = e.target.value;
@@ -883,6 +899,7 @@ function GroupTopicModal( { isOpen, onClose, onSave, topic, isSaving, permission
 							type="text"
 							className="bb-topic-modal__search-input components-text-control__input"
 							value={ searchText }
+							disabled={ isGlobalLocked }
 							placeholder={ __( 'Select a topic', 'buddyboss' ) }
 							onChange={ function ( e ) {
 								var val = e.target.value;
@@ -946,6 +963,7 @@ function GroupTopicModal( { isOpen, onClose, onSave, topic, isSaving, permission
 			<TextControl
 				label={ __( 'Topic Name', 'buddyboss' ) }
 				value={ name }
+				disabled={ isGlobalLocked }
 				onChange={ function ( val ) {
 					setName( val );
 					if ( modalError ) {

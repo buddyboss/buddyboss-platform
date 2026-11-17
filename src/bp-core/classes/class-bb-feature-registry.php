@@ -642,6 +642,59 @@ class BB_Feature_Registry {
 	}
 
 	/**
+	 * Map a renamed section ID to its current ID.
+	 *
+	 * When a section is renamed, code that still uses the old ID (for example an add-on that
+	 * registers its own field into the section) keeps working: the old ID is resolved to the
+	 * current one and a deprecation notice names the new ID. Only used when the old ID is not
+	 * itself a registered section and the current one is.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $feature_id    Feature ID.
+	 * @param string $side_panel_id Side panel ID.
+	 * @param string $section_id    Section ID as given by the caller.
+	 * @param string $caller        Calling method, for the deprecation notice.
+	 * @return string Section ID to use.
+	 */
+	private function bb_resolve_section_alias( $feature_id, $side_panel_id, $section_id, $caller ) {
+		if ( isset( $this->sections[ $feature_id ][ $side_panel_id ][ $section_id ] ) ) {
+			return $section_id;
+		}
+
+		/**
+		 * Filters the renamed (old => current) section IDs of a side panel.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param array  $aliases       Old section ID => current section ID.
+		 * @param string $feature_id    Feature ID.
+		 * @param string $side_panel_id Side panel ID.
+		 */
+		$aliases = apply_filters( 'bb_feature_section_aliases', array(), $feature_id, $side_panel_id );
+
+		if (
+			empty( $aliases[ $section_id ] ) ||
+			! isset( $this->sections[ $feature_id ][ $side_panel_id ][ $aliases[ $section_id ] ] )
+		) {
+			return $section_id;
+		}
+
+		_deprecated_argument(
+			__CLASS__ . '::' . $caller,
+			'[BBVERSION]',
+			sprintf(
+				/* translators: 1: old section ID, 2: current section ID */
+				esc_html__( 'Section "%1$s" was renamed to "%2$s". Use the new ID.', 'buddyboss' ),
+				esc_html( $section_id ),
+				esc_html( $aliases[ $section_id ] )
+			)
+		);
+
+		return $aliases[ $section_id ];
+	}
+
+	/**
 	 * Register a feature field.
 	 *
 	 * @since BuddyBoss 3.0.0
@@ -692,6 +745,9 @@ class BB_Feature_Registry {
 				)
 			);
 		}
+
+		// A section that was renamed keeps accepting fields under its old ID.
+		$section_id = $this->bb_resolve_section_alias( $feature_id, $side_panel_id, $section_id, __FUNCTION__ );
 
 		// Validate section exists.
 		if ( ! isset( $this->sections[ $feature_id ][ $side_panel_id ][ $section_id ] ) ) {
@@ -1056,6 +1112,8 @@ class BB_Feature_Registry {
 			}
 			return $all_fields;
 		}
+
+		$section_id = $this->bb_resolve_section_alias( $feature_id, $side_panel_id, $section_id, __FUNCTION__ );
 
 		if ( ! isset( $this->fields[ $feature_id ][ $side_panel_id ][ $section_id ] ) ) {
 			return array();

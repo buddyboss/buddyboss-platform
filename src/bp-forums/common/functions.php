@@ -2629,6 +2629,7 @@ function bbp_get_url_scheme() {
  * Delete media, document and video attachments when a topic or reply is deleted.
  *
  * @since BuddyBoss 2.9.00
+ * @since BuddyBoss 3.6.2 Deletes stored video poster / custom thumbnails only when owned by the video owner.
  *
  * @param int    $post_id Post ID (topic or reply) being deleted.
  * @param object $post    Post object.
@@ -2694,17 +2695,17 @@ function bb_forums_delete_topic_reply_media_attachments( $post_id = 0, $post = n
 		$video_ids_array = array_map( 'intval', $video_ids_array );
 
 		if ( ! empty( $video_ids_array ) ) {
-			if ( bp_is_active( 'media' ) ) {
+			if ( bp_is_active( 'video' ) ) {
 				foreach ( $video_ids_array as $video_id ) {
 					bp_video_delete( array( 'id' => $video_id ) );
 				}
 			} else {
 
-				// Get attachment IDs before deleting video records.
+				// Get the video rows before deleting them, to validate stored thumbnail IDs.
 				// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-				$attachment_ids = $wpdb->get_col(
+				$video_rows = $wpdb->get_results(
 					$wpdb->prepare(
-						"SELECT attachment_id FROM {$wpdb->base_prefix}bp_media WHERE id IN (" . implode( ',', array_fill( 0, count( $video_ids_array ), '%d' ) ) . ') AND attachment_id > 0',
+						"SELECT id, user_id, attachment_id FROM {$wpdb->base_prefix}bp_media WHERE id IN (" . implode( ',', array_fill( 0, count( $video_ids_array ), '%d' ) ) . ') AND attachment_id > 0',
 						$video_ids_array
 					)
 				);
@@ -2719,24 +2720,25 @@ function bb_forums_delete_topic_reply_media_attachments( $post_id = 0, $post = n
 				);
 
 				// Delete attachments.
-				if ( ! empty( $attachment_ids ) ) {
-					foreach ( $attachment_ids as $attachment_id ) {
+				if ( ! empty( $video_rows ) ) {
+					foreach ( $video_rows as $video_row ) {
+						$attachment_id = (int) $video_row->attachment_id;
 						if ( ! empty( $attachment_id ) ) {
 							// Delete poster images.
 							$get_auto_generated_thumbnails = get_post_meta( $attachment_id, 'video_preview_thumbnails', true );
-							if ( ! empty( $get_auto_generated_thumbnails ) ) {
+							if ( ! empty( $get_auto_generated_thumbnails ) && is_array( $get_auto_generated_thumbnails ) ) {
 								foreach ( $get_auto_generated_thumbnails as $key => $attachment ) {
 									if ( is_array( $attachment ) && ! empty( $attachment ) ) {
 										foreach ( $attachment as $thumb_id ) {
 											wp_delete_attachment( (int) $thumb_id, true );
 										}
-									} elseif ( ! empty( $attachment ) ) {
+									} elseif ( ! empty( $attachment ) && bb_video_can_delete_stored_thumbnail( $video_row, $attachment ) ) {
 										wp_delete_attachment( (int) $attachment, true );
 									}
 								}
 							}
 							$preview_thumbnail = get_post_meta( $attachment_id, 'bp_video_preview_thumbnail_id', true );
-							if ( ! empty( $preview_thumbnail ) ) {
+							if ( ! empty( $preview_thumbnail ) && bb_video_can_delete_stored_thumbnail( $video_row, $preview_thumbnail ) ) {
 								wp_delete_attachment( (int) $preview_thumbnail, true );
 							}
 
@@ -2757,7 +2759,7 @@ function bb_forums_delete_topic_reply_media_attachments( $post_id = 0, $post = n
 		$document_ids_array = array_map( 'intval', $document_ids_array );
 
 		if ( ! empty( $document_ids_array ) ) {
-			if ( bp_is_active( 'media' ) ) {
+			if ( bp_is_active( 'document' ) ) {
 				foreach ( $document_ids_array as $document_id ) {
 					bp_document_delete( array( 'id' => $document_id ) );
 				}
