@@ -14080,9 +14080,36 @@ body.bb-rl-activity-modal-open .bb-rl-activity-update-form.modal-popup {
   border: 0;
 }
 
+@media (max-width: 680px) {
+  .bb-rl-activity-form #bb-rl-whats-new-toolbar .bb-rl-post-emoji {
+    position: static;
+  }
+  .bb-rl-activity-form #bb-rl-whats-new-toolbar .bb-rl-post-emoji .emojionearea {
+    position: static;
+  }
+  .bb-rl-activity-form #bb-rl-whats-new-toolbar .bb-rl-post-emoji[data-bp-tooltip]:after, .bb-rl-activity-form #bb-rl-whats-new-toolbar .bb-rl-post-emoji[data-bp-tooltip]:before {
+    display: none;
+  }
+}
+
 .bb-rl-activity-form #bb-rl-whats-new-toolbar .emojionearea-picker.emojionearea-picker-position-top {
   top: inherit;
   bottom: 40px;
+}
+
+@media (max-width: 680px) {
+  .bb-rl-activity-form #bb-rl-whats-new-toolbar .emojionearea-picker.emojionearea-picker-position-top {
+    left: 50%;
+    right: auto;
+    transform: translateX(-50%);
+  }
+}
+
+@media (min-width: 681px) and (max-width: 1240px) {
+  .bb-rl-activity-form #bb-rl-whats-new-toolbar .emojionearea-picker.emojionearea-picker-position-top {
+    left: 0;
+    right: auto;
+  }
 }
 
 .bb-rl-activity-form #bb-rl-whats-new-toolbar .emojionearea-button {
@@ -14704,6 +14731,8 @@ body.bb-rl-activity-modal-open .bb-rl-activity-update-form.modal-popup {
   }
   .whats-new-topic-selector .bb-rl-topic-selector-list {
     z-index: 9;
+    left: 50%;
+    transform: translateX(-50%);
   }
   .whats-new-topic-selector .bb-rl-topic-selector-button {
     max-width: 100%;
