@@ -650,8 +650,26 @@ class BP_Nouveau extends BP_Theme_Compat {
 	 *
 	 * @since BuddyPress 3.0.0
 	 * @since BuddyBoss 3.6.2 Adds the `invites_revoke` nonce.
+	 * @since BuddyBoss 3.8.0 Adds the link_preview_error and link_preview_timeout values.
 	 */
 	public function localize_scripts() {
+
+		// The activity editor's WYSIWYG toolbar tooltips (bold, ordered list, quote, etc.).
+		// Translatable via standard gettext/Loco Translate (domain 'buddyboss') — WPML String
+		// Translation picks these up on its own from the gettext calls below, the same way it
+		// does for every other 'buddyboss' string, so no separate wpml_register_single_string()
+		// registration is needed here.
+		$activity_editor_button_labels = array(
+			'bold'          => __( 'Bold', 'buddyboss' ),
+			'italic'        => __( 'Italic', 'buddyboss' ),
+			'unorderedlist' => __( 'Unordered list', 'buddyboss' ),
+			'orderedlist'   => __( 'Ordered list', 'buddyboss' ),
+			'quote'         => __( 'Quote', 'buddyboss' ),
+			'anchor'        => __( 'Link', 'buddyboss' ),
+			'pre'           => __( 'Code', 'buddyboss' ),
+			'h3'            => __( 'Heading 3', 'buddyboss' ),
+			'h4'            => __( 'Heading 4', 'buddyboss' ),
+		);
 
 		$params = array(
 			'ajaxurl'                    => bp_core_ajax_url(),
@@ -663,6 +681,7 @@ class BP_Nouveau extends BP_Theme_Compat {
 			'unsaved_changes'            => __( 'Your profile has unsaved changes. If you leave the page, the changes will be lost.', 'buddyboss' ),
 			'object_nav_parent'          => '#buddypress',
 			'anchorPlaceholderText'      => __( 'Paste or type a link', 'buddyboss' ),
+			'activityEditorButtonLabels' => $activity_editor_button_labels,
 			'empty_field'                => __( 'New Field', 'buddyboss' ),
 			'close'                      => __( 'Close', 'buddyboss' ),
 			'parent_group_leave_confirm' => esc_html__( 'By leaving this main group you will automatically be removed and unsubscribed to any subgroups relating to this group.', 'buddyboss' ),
@@ -688,6 +707,8 @@ class BP_Nouveau extends BP_Theme_Compat {
 			'card_load_error'            => __( 'Failed to load data.', 'buddyboss' ),
 			'member_label'               => __( 'member', 'buddyboss' ),
 			'members_label'              => __( 'members', 'buddyboss' ),
+			'loadingMore'                => esc_html__( 'Loading...', 'buddyboss' ),
+			'directory_autoload'         => function_exists( 'bb_is_list_autoload_active' ) && bb_is_list_autoload_active(),
 			// Logged-in user id, used by the hover pop-up cards to suppress a member's own card.
 			// The cards previously read BP_Nouveau.activity.params.user_id, which carries the
 			// same value but is only registered when the Activity component is enabled — with
@@ -767,6 +788,12 @@ class BP_Nouveau extends BP_Theme_Compat {
 
 		// Add localize variable for more menu text.
 		$params['more_menu_text'] = esc_html__( 'More', 'buddyboss' );
+
+		// Add localize variable for the link preview error when the request fails.
+		$params['link_preview_error'] = esc_html__( 'There was a problem generating a link preview.', 'buddyboss' );
+
+		// Add localize variable for the link preview request time limit in milliseconds, above the server-side fetch time.
+		$params['link_preview_timeout'] = 20000;
 
 		/**
 		 * Filters core JavaScript strings for internationalization before AJAX usage.
