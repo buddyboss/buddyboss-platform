@@ -552,7 +552,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 	 *
 	 * @return WP_REST_Response | WP_Error
 	 * @since 0.1.0
-	 * @since BuddyBoss [BBVERSION] An `id` sent with the request is ignored, so a create never changes an existing activity.
+	 * @since BuddyBoss 3.8.0 An `id` sent with the request is ignored, so a create never changes an existing activity.
 	 *
 	 * @api            {POST} /wp-json/buddyboss/v1/activity Create activity
 	 * @apiName        CreateBBActivity
@@ -997,7 +997,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 	 *
 	 * @return WP_REST_Response | WP_Error
 	 * @since 0.1.0
-	 * @since BuddyBoss [BBVERSION] A privacy-only update keeps the stored title, status and link preview, as the
+	 * @since BuddyBoss 3.8.0 A privacy-only update keeps the stored title, status and link preview, as the
 	 *                             website's privacy handler does. The author cannot be changed: user_id is ignored.
 	 *
 	 * @api            {PATCH} /wp-json/buddyboss/v1/activity/:id Update activity
@@ -2688,7 +2688,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 	 *
 	 * @return stdClass|WP_Error Object or WP_Error.
 	 * @since 0.1.0
-	 * @since BuddyBoss [BBVERSION] An update always keeps the stored author.
+	 * @since BuddyBoss 3.8.0 An update always keeps the stored author.
 	 */
 	protected function prepare_item_for_database( $request ) {
 		$prepared_activity = new stdClass();

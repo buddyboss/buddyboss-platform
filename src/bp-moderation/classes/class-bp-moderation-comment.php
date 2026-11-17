@@ -261,7 +261,7 @@ class BP_Moderation_Comment extends BP_Moderation_Abstract {
 	/**
 	 * Remove the hidden comment link check.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.8.0
 	 */
 	public function remove_comment_link_check() {
 		remove_filter( 'get_comment_link', array( $this, 'blocked_get_comment_link' ), 10 );
@@ -270,7 +270,7 @@ class BP_Moderation_Comment extends BP_Moderation_Abstract {
 	/**
 	 * Add the hidden comment link check.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.8.0
 	 */
 	public function add_comment_link_check() {
 		add_filter( 'get_comment_link', array( $this, 'blocked_get_comment_link' ), 10, 2 );

@@ -377,7 +377,7 @@ if ( ! class_exists( 'BB_WPML_Helpers' ) ) {
 		 * bridge adds a `gender` case, the original label is no longer in the value, so
 		 * this becomes a no-op.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.8.0
 		 *
 		 * @param string $value      The field value to display.
 		 * @param string $field_type The type of the field.

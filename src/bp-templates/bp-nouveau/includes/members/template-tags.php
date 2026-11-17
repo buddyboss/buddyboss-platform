@@ -1231,7 +1231,7 @@ function bb_get_member_joined_date( $user_id = 0 ) {
 	 * Filters the user registered date meta.
 	 *
 	 * @since BuddyPress 1.9.1
-	 * @since BuddyBoss [BBVERSION] Added the `$user_id` parameter.
+	 * @since BuddyBoss 3.8.0 Added the `$user_id` parameter.
 	 *
 	 * @param string The user registered date meta.
 	 * @param string The user registered date.
