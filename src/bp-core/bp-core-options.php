@@ -99,9 +99,6 @@ function bp_get_default_options() {
 		// Group Types.
 		'bp-disable-group-type-creation'             => false,
 
-		// Group Subscriptions.
-		'bb_enable_group_subscriptions'              => true,
-
 		// Auto Group Membership Approval.
 		'bp-enable-group-auto-join'                  => false,
 
@@ -189,6 +186,7 @@ function bp_get_default_options() {
 		'bb_ajax_request_page_load'                  => 1,
 		'bb_load_activity_per_request'               => 10,
 		'bb_activity_load_type'                      => 'infinite',
+		'bb_directory_load_type'                     => 'pagination',
 
 		'bb-enable-content-counts'                   => 0,
 		'bb-enable-sso'                              => false,
@@ -1023,6 +1021,97 @@ function bp_is_activity_autoload_active( $default = true ) {
 	 * @param bool $value true if Autoload is enabled, otherwise false.
 	 */
 	return (bool) apply_filters( 'bp_is_activity_autoload_active', ( 'infinite' === bp_get_option( 'bb_activity_load_type', $default_val ) ) );
+}
+
+/**
+ * Get the directory (members/groups) page loading type.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $default Optional. Fallback value if not found in the database.
+ *                        Default: 'pagination'.
+ *
+ * @return string 'pagination' for classic pagination (default), 'infinite' for infinite scroll.
+ */
+function bb_get_directory_load_type( $default = 'pagination' ) {
+	$load_type = bp_get_option( 'bb_directory_load_type', $default );
+
+	if ( ! in_array( $load_type, array( 'infinite', 'pagination' ), true ) ) {
+		$load_type = $default;
+	}
+
+	/**
+	 * Filters the directory page loading type.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $load_type 'infinite' or 'pagination'.
+	 */
+	return apply_filters( 'bb_get_directory_load_type', $load_type );
+}
+
+/**
+ * Check whether infinite scroll is enabled for directory (members/groups) pages.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param bool $default Optional. Fallback value if not found in the database.
+ *                      Default: false (classic pagination).
+ *
+ * @return bool True if infinite scroll is enabled, false when pagination is used.
+ */
+function bb_is_directory_autoload_active( $default = false ) {
+
+	$default_val = true === $default ? 'infinite' : 'pagination';
+
+	/**
+	 * Filters whether directory infinite scroll is enabled.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param bool $value True if infinite scroll is enabled, otherwise false.
+	 */
+	return (bool) apply_filters( 'bb_is_directory_autoload_active', ( 'infinite' === bb_get_directory_load_type( $default_val ) ) );
+}
+
+/**
+ * Check whether a members or groups list on the current screen loads with infinite scroll.
+ *
+ * The Members & Groups Loading setting applies to the same places as Feed Page Loading does for
+ * activity: the directories, the profile lists and the group lists. Lists rendered on any other
+ * screen (widgets, Network Search, group management screens) keep pagination.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $list_name Optional. List to check: 'members' (Members directory, including the
+ *                          Following/Followers tabs, and profile Connections + Mutual Connections),
+ *                          'groups' (Groups directory, profile Groups and group Subgroups) or
+ *                          'group_members' (group Members). Default empty, which checks every list.
+ *
+ * @return bool True when the list uses infinite scroll on the current screen.
+ */
+function bb_is_list_autoload_active( $list_name = '' ) {
+	$is_active = false;
+
+	if ( bb_is_directory_autoload_active() ) {
+		$lists = array(
+			'members'       => bp_is_members_directory() || ( bp_is_user_friends() && in_array( bp_current_action(), array( 'my-friends', 'mutual' ), true ) ),
+			'groups'        => bp_is_groups_directory() || ( bp_is_user_groups() && bp_is_current_action( 'my-groups' ) ) || bp_is_group_subgroups(),
+			'group_members' => bp_is_group_members(),
+		);
+
+		$is_active = empty( $list_name ) ? in_array( true, $lists, true ) : ! empty( $lists[ $list_name ] );
+	}
+
+	/**
+	 * Filters whether a members or groups list on the current screen loads with infinite scroll.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param bool   $is_active True when the list uses infinite scroll.
+	 * @param string $list_name List being checked, or empty for any list.
+	 */
+	return (bool) apply_filters( 'bb_is_list_autoload_active', $is_active, $list_name );
 }
 
 /**
@@ -2445,28 +2534,6 @@ function bb_get_default_custom_upload_group_cover() {
 }
 
 /**
- * Is group subscription turned off?
- *
- * @since BuddyBoss 2.2.8
- *
- * @param bool $default Optional. Fallback value if not found in the database.
- *                      Default: true.
- *
- * @return bool True if group subscription is enabled, otherwise false.
- */
-function bb_enable_group_subscriptions( $default = true ) {
-
-	/**
-	 * Filters whether group subscription is turned off.
-	 *
-	 * @since BuddyBoss 2.2.8
-	 *
-	 * @param bool $value Whether group subscription is turned off.
-	 */
-	return (bool) apply_filters( 'bb_enable_group_subscriptions', (bool) bp_get_option( 'bb_enable_group_subscriptions', $default ) );
-}
-
-/**
  * Get profile slug format.
  *
  * @since BuddyBoss 2.3.1
@@ -2629,7 +2696,7 @@ function bb_is_active_activity_pinned_posts( $default = false ) {
 		 * call, before the module loads at bp_include:20.
 		 */
 		$provider_available =
-			( function_exists( 'bb_addons_should_lock_features' ) && ! bb_addons_should_lock_features() )
+			bb_addons_provides_module( 'pinned-posts' )
 			|| (
 				function_exists( 'bb_activity_pin_unpin_post' )
 				&& ! function_exists( 'bb_activity_pin_unpin_post_is_stub' )
@@ -2858,7 +2925,7 @@ function bb_get_reaction_mode( $default = 'likes' ) {
 		// licensed site would report emotions "available" with nothing behind it.
 		$emotion_layer_available =
 			class_exists( 'BB_Reactions' )
-			|| ( function_exists( 'bb_addons_should_lock_features' ) && ! bb_addons_should_lock_features() )
+			|| bb_addons_provides_module( 'reactions' )
 			|| (
 				function_exists( 'bp_register_reaction' )
 				&& function_exists( 'bbp_pro_is_license_valid' )

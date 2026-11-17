@@ -86,6 +86,10 @@ class BP_Moderation_Comment extends BP_Moderation_Abstract {
 		add_filter( 'comment_reply_link', array( $this, 'blocked_comment_reply_link' ), 10, 3 );
 		add_filter( 'edit_comment_link', array( $this, 'blocked_edit_comment_link' ), 10, 2 );
 
+		// Lift the hidden-comment link restriction while the admin Reported Content screen resolves the comment link.
+		add_action( 'bb_moderation_before_get_related_' . $this->item_type, array( $this, 'remove_comment_link_check' ) );
+		add_action( 'bb_moderation_after_get_related_' . $this->item_type, array( $this, 'add_comment_link_check' ) );
+
 		/**
 		 * Moderation code should not add for WordPress backend or IF component is not active or Bypass argument passed for admin
 		 */
@@ -252,6 +256,24 @@ class BP_Moderation_Comment extends BP_Moderation_Abstract {
 		}
 
 		return $link;
+	}
+
+	/**
+	 * Remove the hidden comment link check.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	public function remove_comment_link_check() {
+		remove_filter( 'get_comment_link', array( $this, 'blocked_get_comment_link' ), 10 );
+	}
+
+	/**
+	 * Add the hidden comment link check.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	public function add_comment_link_check() {
+		add_filter( 'get_comment_link', array( $this, 'blocked_get_comment_link' ), 10, 2 );
 	}
 
 	/**

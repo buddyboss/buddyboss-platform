@@ -25,7 +25,20 @@ module.exports = function (grunt) {
 		return 'git@github.com:buddyboss/' + repo + '.git';
 	}
 
-	var sass       = require( 'node-sass' ),
+	// Node 14 (.nvmrc) only ships as an x86_64 build, so on Apple silicon Grunt runs
+	// under Rosetta. There `/usr/bin/git` is an xcrun shim that fails to load the
+	// arm64-only libxcrun. Put the real git binary first so every `exec` git call works.
+	if ( 'darwin' === process.platform && 'x64' === process.arch ) {
+		[ '/Library/Developer/CommandLineTools/usr/bin', '/Applications/Xcode.app/Contents/Developer/usr/bin' ].some( function ( dir ) {
+			if ( require( 'fs' ).existsSync( dir + '/git' ) ) {
+				process.env.PATH = dir + ':' + process.env.PATH;
+				return true;
+			}
+			return false;
+		} );
+	}
+
+	var sass      = require( 'node-sass' ),
 		SOURCE_DIR = 'src/',
 		BUILD_DIR  = 'buddyboss-platform/',
 
@@ -305,8 +318,11 @@ module.exports = function (grunt) {
 					'**/bp-groups/**',
 					'**/bp-invites/**',
 					'**/bp-media/**',
-					'**/bp-document/**',
-					'**/bp-video/**',
+					// bp-document / bp-video are NOT imported: the components
+					// moved from Platform to the buddyboss-addons plugin, which
+					// ships their REST controllers. Re-importing them here would
+					// silently recreate the directories we deleted (same
+					// rationale as the LearnDash exclusion below, PROD-9792).
 					'**/bp-members/**',
 					'**/bp-messages/**',
 					'**/bp-moderation/**',
@@ -676,7 +692,8 @@ module.exports = function (grunt) {
 			'string-replace': {
 				dist: {
 					files: [{
-						src: '**/*.php',
+						// readme.txt carries the version in its Upgrade Notice heading.
+						src: [ '**/*.php', 'src/readme.txt' ],
 						expand: true,
 					}],
 					options: {
