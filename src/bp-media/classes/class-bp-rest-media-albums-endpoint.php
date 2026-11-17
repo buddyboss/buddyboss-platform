@@ -197,9 +197,21 @@ class BP_REST_Media_Albums_Endpoint extends WP_REST_Controller {
 			}
 		}
 
+		// Drop a requested privacy level the current user may not see.
+		if (
+			! bp_current_user_can( 'bp_moderate' ) &&
+			! in_array( $args['privacy'], array_merge( array( 'public' ), array_slice( $privacy, 1 ) ), true )
+		) {
+			array_shift( $privacy );
+		}
+
 		if ( isset( $args['group_id'] ) && ! empty( $args['group_id'] ) ) {
 			$args['user_id'] = false;
 			$privacy         = array( 'grouponly' );
+		}
+
+		if ( empty( $privacy ) ) {
+			return bp_rest_response_add_total_headers( rest_ensure_response( array() ), 0, $request['per_page'] );
 		}
 
 		$args['privacy'] = $privacy;
@@ -217,10 +229,25 @@ class BP_REST_Media_Albums_Endpoint extends WP_REST_Controller {
 		$medias = $this->assemble_response_data( $args );
 
 		$retval = array();
+		$hidden = 0;
 		foreach ( $medias['albums'] as $album ) {
+			// Leave out albums the current user may not view.
+			if (
+				'public' !== $album->privacy &&
+				! bp_current_user_can( 'bp_moderate' ) &&
+				true === $this->bp_rest_check_album_privacy_restriction( $album )
+			) {
+				++$hidden;
+				continue;
+			}
+
 			$retval[] = $this->prepare_response_for_collection(
 				$this->prepare_item_for_response( $album, $request )
 			);
+		}
+
+		if ( $hidden && is_numeric( $medias['total'] ) ) {
+			$medias['total'] = max( 0, (int) $medias['total'] - $hidden );
 		}
 
 		$response = rest_ensure_response( $retval );
@@ -255,6 +282,26 @@ class BP_REST_Media_Albums_Endpoint extends WP_REST_Controller {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
 				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss' ),
+				array(
+					'status' => rest_authorization_required_code(),
+				)
+			);
+		}
+
+		$group_id = $request->get_param( 'group_id' );
+
+		// Check the current user's membership, not the requested member's.
+		if (
+			true === $retval &&
+			! empty( $group_id ) &&
+			bp_is_active( 'groups' ) &&
+			! bp_current_user_can( 'bp_moderate' ) &&
+			'public' !== bp_get_group_status( groups_get_group( $group_id ) ) &&
+			! groups_is_user_member( bp_loggedin_user_id(), $group_id )
+		) {
+			$retval = new WP_Error(
+				'bp_rest_authorization_required',
+				__( 'Sorry, Restrict access to only group members.', 'buddyboss' ),
 				array(
 					'status' => rest_authorization_required_code(),
 				)

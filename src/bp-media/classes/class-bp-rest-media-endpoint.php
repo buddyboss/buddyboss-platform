@@ -233,6 +233,12 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 
 		$args['scope'] = $this->bp_rest_media_default_scope( $args['scope'], $args );
 
+		// Limit another member's items to the privacy levels the current user may see.
+		$args = $this->bb_rest_limit_member_privacy( $args );
+		if ( false === $args ) {
+			return bp_rest_response_add_total_headers( rest_ensure_response( array() ), 0, $request['per_page'] );
+		}
+
 		/**
 		 * Filter the query arguments for the request.
 		 *
@@ -250,10 +256,21 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 		$medias = $this->assemble_response_data( $args );
 
 		$retval = array();
+		$hidden = 0;
 		foreach ( $medias['medias'] as $media ) {
+			// Items requested by ID can belong to anyone, so check each one.
+			if ( ! empty( $args['media_ids'] ) && $this->bb_rest_is_item_restricted( $media ) ) {
+				++$hidden;
+				continue;
+			}
+
 			$retval[] = $this->prepare_response_for_collection(
 				$this->prepare_item_for_response( $media, $request )
 			);
+		}
+
+		if ( $hidden && is_numeric( $medias['total'] ) ) {
+			$medias['total'] = max( 0, (int) $medias['total'] - $hidden );
 		}
 
 		$response = rest_ensure_response( $retval );
@@ -295,9 +312,9 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 		}
 
 		if ( true === $retval && ! empty( $request['group_id'] ) && bp_is_active( 'groups' ) ) {
+			// Check the current user's membership, not the requested member's.
 			$group       = groups_get_group( $request['group_id'] );
-			$user_id     = ( ! empty( $request['user_id'] ) ? $request['user_id'] : bp_loggedin_user_id() );
-			$user_groups = groups_get_user_groups( $user_id );
+			$user_groups = groups_get_user_groups( bp_loggedin_user_id() );
 
 			if ( empty( $group->id ) ) {
 				$retval = new WP_Error(
@@ -419,7 +436,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 			true === $retval
 			&& 'public' !== $media->privacy
 			&& ! bp_current_user_can( 'bp_moderate' )
-			&& true === $this->bp_rest_check_privacy_restriction( $media )
+			&& true === $this->bb_rest_is_item_restricted( $media )
 		) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
@@ -3730,6 +3747,100 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 		$new_scope = apply_filters( 'bp_rest_media_default_scope', $new_scope );
 
 		return implode( ',', $new_scope );
+	}
+
+	/**
+	 * Limit a list of another member's items to the privacy levels the current user may see.
+	 *
+	 * The friends and groups scopes are built from the requested member's own friends and groups, so they are dropped.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array $args Query arguments.
+	 *
+	 * @return array|false Arguments, or false when nothing requested is visible.
+	 */
+	protected function bb_rest_limit_member_privacy( $args ) {
+		if (
+			empty( $args['user_id'] ) ||
+			! empty( $args['group_id'] ) ||
+			bp_loggedin_user_id() === (int) $args['user_id'] ||
+			bp_current_user_can( 'bp_moderate' )
+		) {
+			return $args;
+		}
+
+		$privacy = array( 'public' );
+		if ( is_user_logged_in() ) {
+			$privacy[] = 'loggedin';
+
+			if ( bp_is_active( 'friends' ) && friends_check_friendship( bp_loggedin_user_id(), (int) $args['user_id'] ) ) {
+				$privacy[] = 'friends';
+			}
+		}
+
+		if ( ! empty( $args['privacy'] ) ) {
+			$privacy = array_values( array_intersect( (array) $args['privacy'], $privacy ) );
+			if ( empty( $privacy ) ) {
+				return false;
+			}
+		}
+
+		if ( ! empty( $args['scope'] ) ) {
+			$scope = array_intersect( explode( ',', $args['scope'] ), array( 'personal', 'public' ) );
+			if ( empty( $scope ) ) {
+				return false;
+			}
+
+			$args['scope'] = implode( ',', $scope );
+		}
+
+		$args['privacy'] = $privacy;
+
+		return $args;
+	}
+
+	/**
+	 * Check whether the current user is blocked from viewing the media.
+	 *
+	 * Message, forum and comment items use the same rules as the site (bb_media_user_can_access()).
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param object $media Media object.
+	 *
+	 * @return bool
+	 */
+	protected function bb_rest_is_item_restricted( $media ) {
+		if ( 'public' === $media->privacy || bp_current_user_can( 'bp_moderate' ) ) {
+			return false;
+		}
+
+		if ( true === $this->bp_rest_check_privacy_restriction( $media ) ) {
+			return true;
+		}
+
+		if ( in_array( $media->privacy, array( 'message', 'forums', 'comment' ), true ) ) {
+			// Attachments in a private or hidden group are for its members only.
+			if (
+				bp_is_active( 'groups' ) &&
+				! empty( $media->group_id ) &&
+				'public' !== bp_get_group_status( groups_get_group( $media->group_id ) ) &&
+				! groups_is_user_member( bp_loggedin_user_id(), $media->group_id )
+			) {
+				return true;
+			}
+
+			if ( ! function_exists( 'bb_media_user_can_access' ) ) {
+				return true;
+			}
+
+			$access = bb_media_user_can_access( $media->id, 'video' === $media->type ? 'video' : 'photo' );
+
+			return empty( $access['can_view'] );
+		}
+
+		return false;
 	}
 
 	/**
