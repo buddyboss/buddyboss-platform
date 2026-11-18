@@ -4425,7 +4425,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 * Modify member's joined date.
 		 *
 		 * @since BuddyBoss 2.9.30
-		 * @since BuddyBoss [BBVERSION] Added the `$user_id` parameter.
+		 * @since BuddyBoss 3.8.0 Added the `$user_id` parameter.
 		 *
 		 * @param string $user_registered_date The user registered date.
 		 * @param string $register_date        The register date.

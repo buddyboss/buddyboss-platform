@@ -527,7 +527,7 @@ add_filter( 'bbp_request', 'bb_restricate_rss_feed_forums_request', 9 );
  * Function will remove REST APIs endpoint.
  *
  * @since BuddyBoss 1.8.6
- * @since BuddyBoss [BBVERSION] Only restricts requests served over the REST API, not internal rest_do_request() calls.
+ * @since BuddyBoss 3.8.0 Only restricts requests served over the REST API, not internal rest_do_request() calls.
  *
  * @param WP_REST_Response|WP_HTTP_Response|WP_Error|mixed $response Result to send to the client.
  *                                                                   Usually a WP_REST_Response or WP_Error.

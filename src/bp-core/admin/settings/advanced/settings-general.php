@@ -126,7 +126,7 @@ function bb_advanced_register_general_fields() {
 		)
 	);
 
-	// Before BuddyBoss [BBVERSION] this section was "advanced_activity"; fields added under that ID still land here.
+	// Before BuddyBoss 3.8.0 this section was "advanced_activity"; fields added under that ID still land here.
 	add_filter( 'bb_feature_section_aliases', 'bb_advanced_general_section_aliases', 10, 3 );
 
 	// Field 6: Feed Page Loading — two inline selects (conditional on Activity component).
@@ -205,7 +205,7 @@ function bb_advanced_register_general_fields() {
 	 * select and accepted when the setting is saved. Only 'infinite' turns infinite scroll on;
 	 * any other saved value loads the lists with pagination.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.8.0
 	 *
 	 * @param array $options Additional options as value => label. Default empty array.
 	 */
@@ -322,12 +322,12 @@ function bb_advanced_register_general_fields() {
 /**
  * Keep the pre-rename ID of the Page Loading section working.
  *
- * Before BuddyBoss [BBVERSION] the Advanced > General card that holds Feed Page Loading was the
+ * Before BuddyBoss 3.8.0 the Advanced > General card that holds Feed Page Loading was the
  * "advanced_activity" section, registered only while the Activity component is active. It is
  * now "advanced_page_loading" (it also holds Members & Groups Loading), so a field that an
  * add-on still registers into "advanced_activity" is moved into it, under the same condition.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.8.0
  *
  * @param array  $aliases       Old section ID => current section ID.
  * @param string $feature_id    Feature ID.
