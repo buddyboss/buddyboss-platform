@@ -19,6 +19,27 @@ defined( 'ABSPATH' ) || exit;
 #[\AllowDynamicProperties]
 class BP_Activity_Activity {
 
+	/**
+	 * Default ORDER BY clause of the activity comment query.
+	 *
+	 * The id tie-breaker keeps comments recorded in the same second in a stable order.
+	 * The whole clause is passed to the `bp_activity_comments_get_misc_sql` filter, which
+	 * can replace it.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	const COMMENTS_ORDER_SQL = 'ORDER BY a.date_recorded ASC, a.id ASC';
+
+	/**
+	 * Version of the comment tree stored in the `bp_activity_comments` cache group.
+	 *
+	 * Bump it whenever the shape of the cached tree changes, so trees cached by an older
+	 * builder are rebuilt instead of served.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	const COMMENT_TREE_CACHE_VERSION = 2;
+
 	/** Properties ************************************************************/
 
 	/**
@@ -1710,11 +1731,21 @@ class BP_Activity_Activity {
 		) {
 			$args['last_comment_id']        = intval( $_GET['last_comment_id'] );
 			$args['last_comment_timestamp'] = sanitize_text_field( $_GET['last_comment_timestamp'] );
-			$args['comment_order_by']       = apply_filters( 'bb_activity_recurse_comments_order_by', 'ASC' );
+			/** This filter is documented in bp-activity/bp-activity-template.php */
+			$args['comment_order_by'] = apply_filters( 'bb_activity_recurse_comments_order_by', bb_get_activity_comments_order() );
 		}
 
 		if ( bp_is_single_activity() || ( bb_is_rest() && empty( $_GET['apply_limit'] ) ) ) {
-			$comments = wp_cache_get( $activity_id, 'bp_activity_comments' );
+			$cached = wp_cache_get( $activity_id, 'bp_activity_comments' );
+
+			// Only use a tree written by the current builder. Anything else, such as a tree
+			// cached before an update, counts as a miss and is rebuilt below.
+			$comments = (
+				is_array( $cached ) &&
+				isset( $cached['tree_version'] ) &&
+				self::COMMENT_TREE_CACHE_VERSION === $cached['tree_version'] &&
+				array_key_exists( 'tree', $cached )
+			) ? $cached['tree'] : array();
 		} else {
 			// No caching for paginated comments.
 			$comments = array();
@@ -1766,7 +1797,7 @@ class BP_Activity_Activity {
 				$sql['select'] = "SELECT a.*, u.user_email, u.user_nicename, u.user_login, u.display_name{$fullname_select} ";
 				$sql['from']   = "FROM {$bp->activity->table_name} a, {$wpdb->users} u{$fullname_from} ";
 				$sql['where']  = "WHERE u.ID = a.user_id {$fullname_where} AND a.type = 'activity_comment' {$spam_sql} AND a.item_id = %d AND a.mptt_left > %d AND a.mptt_left < %d";
-				$sql['misc']   = 'ORDER BY a.date_recorded ASC';
+				$sql['misc']   = self::COMMENTS_ORDER_SQL;
 
 				/**
 				 * Filters the MySQL From query for legacy activity comment.
@@ -1832,7 +1863,7 @@ class BP_Activity_Activity {
 				} else {
 					$sql['where'] = "WHERE a.type = 'activity_comment' {$spam_sql} AND a.item_id = $top_level_parent_id and a.mptt_left > $left AND a.mptt_left < $right";
 				}
-				$sql['misc'] = 'ORDER BY a.date_recorded ASC';
+				$sql['misc'] = self::COMMENTS_ORDER_SQL;
 
 				/**
 				 * Filters the MySQL From query for legacy activity comment.
@@ -1857,7 +1888,11 @@ class BP_Activity_Activity {
 				/**
 				 * Filters the MySQL From query for order by activity comment.
 				 *
+				 * The sort direction of the first ORDER BY column also sets the direction of the
+				 * "View more comments" paging, see bb_get_activity_comments_order().
+				 *
 				 * @since BuddyBoss 2.4.20
+				 * @since BuddyBoss [BBVERSION] The default clause has an `a.id` tie-breaker.
 				 *
 				 * @param string $misc Activity Comment from query
 				 */
@@ -1944,27 +1979,38 @@ class BP_Activity_Activity {
 			}
 
 			$ref = array();
-			// Loop descendants and build an assoc array.
+
+			// Build the tree in two passes so its shape does not depend on the fetch order
+			// (`bp_activity_comments_get_misc_sql` can change it): first register every
+			// comment, then attach each one under its parent.
 			foreach ( (array) $descendants as $d ) {
-				$d->children = array();
+				$d->children   = array();
+				$ref[ $d->id ] = $d;
+			}
 
-				// If we have a reference on the parent.
-				if ( isset( $ref[ $d->secondary_item_id ] ) ) {
+			// Comments whose parent chain loops back to themselves (corrupt
+			// secondary_item_id) cannot be nested; they are shown at the root.
+			$cyclic_ids = self::get_cyclic_comment_ids( $ref );
+
+			// The root keeps direct replies, comments whose parent is not in this result
+			// (spam, moderated or outside the page) and the cyclic comments. Both loops keep
+			// the fetch order, so siblings are listed in the order of the query.
+			foreach ( $ref as $d ) {
+				if ( isset( $ref[ $d->secondary_item_id ] ) && ! isset( $cyclic_ids[ (int) $d->id ] ) ) {
 					$ref[ $d->secondary_item_id ]->children[ $d->id ] = $d;
-					$ref[ $d->id ]                                    =& $ref[ $d->secondary_item_id ]->children[ $d->id ];
-
-					// If we don't have a reference on the parent, put in the root level.
 				} else {
 					$comments[ $d->id ] = $d;
-					$ref[ $d->id ]      =& $comments[ $d->id ];
 				}
+			}
 
-				if (
-					true === $exclude_childrens ||
-					(
-						bb_is_rest() && ! isset( $_GET['apply_limit'] )
-					)
-				) {
+			// Child counts come from SQL and do not depend on the tree.
+			if (
+				true === $exclude_childrens ||
+				(
+					bb_is_rest() && ! isset( $_GET['apply_limit'] )
+				)
+			) {
+				foreach ( (array) $descendants as $d ) {
 					$comments_count = self::bb_get_all_activity_comment_children_count(
 						array(
 							'spam'     => $spam,
@@ -1982,9 +2028,22 @@ class BP_Activity_Activity {
 			foreach ( $ref as &$r ) {
 				$depth     = 1;
 				$parent_id = $r->secondary_item_id;
+				$visited   = array( (int) $r->id => true );
+
+				// A cyclic comment sits at the root.
+				if ( isset( $cyclic_ids[ (int) $r->id ] ) ) {
+					$parent_id = $r->item_id;
+				}
 
 				while ( $parent_id !== $r->item_id ) {
 					$depth++;
+
+					// Stop at a cyclic comment (it sits at the root, depth 1) and at any other
+					// loop in the parent chain, for example one through parents fetched below.
+					if ( isset( $cyclic_ids[ (int) $parent_id ] ) || isset( $visited[ (int) $parent_id ] ) ) {
+						break;
+					}
+					$visited[ (int) $parent_id ] = true;
 
 					// When display_comments=stream, the parent comment may not be part of the
 					// returned results, so we manually fetch it.
@@ -2032,7 +2091,14 @@ class BP_Activity_Activity {
 					empty( (bool) $_GET['apply_limit'] )
 				)
 			) {
-				wp_cache_set( $activity_id, $cache_value, 'bp_activity_comments' );
+				wp_cache_set(
+					$activity_id,
+					array(
+						'tree_version' => self::COMMENT_TREE_CACHE_VERSION,
+						'tree'         => $cache_value,
+					),
+					'bp_activity_comments'
+				);
 			}
 		} else {
 			// Cache hit. The cached tree carries every name-bearing value resolved for the viewer
@@ -2043,6 +2109,55 @@ class BP_Activity_Activity {
 		}
 
 		return $comments;
+	}
+
+	/**
+	 * Find the comments whose parent chain loops back to themselves.
+	 *
+	 * A comment that is its own parent, or two or more comments that are each other's
+	 * parents, can only come from corrupt `secondary_item_id` data. Such comments cannot be
+	 * nested, so the tree builder puts them at the root. Comments that hang below a loop
+	 * are not part of it and nest as usual.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array $ref Comments keyed by ID, each with a `secondary_item_id`.
+	 *
+	 * @return array IDs of the comments that are part of a loop, as keys.
+	 */
+	protected static function get_cyclic_comment_ids( $ref ) {
+		$cyclic = array();
+		$done   = array();
+
+		foreach ( array_keys( $ref ) as $start_id ) {
+			$start_id = (int) $start_id;
+			if ( isset( $done[ $start_id ] ) ) {
+				continue;
+			}
+
+			// Walk up the parents inside this result until the chain leaves it, reaches a
+			// comment already checked, or comes back to a comment on this walk.
+			$path       = array();
+			$current_id = $start_id;
+			while ( isset( $ref[ $current_id ] ) && ! isset( $done[ $current_id ] ) && ! isset( $path[ $current_id ] ) ) {
+				$path[ $current_id ] = true;
+				$current_id          = (int) $ref[ $current_id ]->secondary_item_id;
+			}
+
+			// Back on this walk: the comments from that point on form the loop.
+			$in_loop = false;
+			foreach ( array_keys( $path ) as $path_id ) {
+				if ( isset( $path[ $current_id ] ) && $path_id === $current_id ) {
+					$in_loop = true;
+				}
+				if ( $in_loop ) {
+					$cyclic[ $path_id ] = true;
+				}
+				$done[ $path_id ] = true;
+			}
+		}
+
+		return $cyclic;
 	}
 
 	/**
