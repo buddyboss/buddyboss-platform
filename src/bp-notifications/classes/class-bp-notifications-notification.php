@@ -846,6 +846,7 @@ class BP_Notifications_Notification {
 	 * Get a count of total notifications matching a set of arguments.
 	 *
 	 * @since BuddyPress 1.9.0
+	 * @since BuddyBoss [BBVERSION] Caches the count under a hash of the final count SQL plus the user's count incrementor.
 	 *
 	 * @see BP_Notifications_Notification::get() for a description of arguments.
 	 *

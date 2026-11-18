@@ -101,6 +101,10 @@ window.bp = window.bp || {};
 				dictMaxFilesExceeded: videoSettings.video_dict_file_exceeded,
 				previewTemplate: ForumVideoTemplate,
 				dictCancelUploadConfirmation: videoSettings.dictCancelUploadConfirmation,
+				chunking: true,
+				chunkSize: 30*1024*1024,
+				retryChunks: true,
+				retryChunksLimit: 3,
 			};
 
 			if ( $( '#bp-media-uploader' ).hasClass( 'bp-media-document-uploader' ) ) {
@@ -1134,6 +1138,7 @@ window.bp = window.bp || {};
 					'activity_id': activityId,
 					'attachment_id': attachment_id,
 					'_wpnonce': BP_Nouveau.nonces.media,
+					'bb_legacy_template': 1, // Keep non-RL markup in the response when ReadyLaunch is on.
 				};
 
 				$.ajax(
@@ -1151,7 +1156,7 @@ window.bp = window.bp || {};
 									self.removeDeletedActivityComment( activityId );
 								} else {
 									self.removeDeletedItemsFromCommentEditData( activityId, 'document', [ id ] );
-									$( 'body #buddypress .activity-list li#activity-' + activityId ).replaceWith( response.data.activity_content );
+									bp.Nouveau.replaceActivityItem( $( 'body #buddypress .activity-list li#activity-' + activityId ), response.data.activity_content, [ '.activity-inner > .bb-activity-media-wrap' ] );
 								}
 							}
 						}
@@ -1365,6 +1370,7 @@ window.bp = window.bp || {};
 
 			var data = {
 				'action': 'document_move',
+				'bb_legacy_template': 1, // Keep non-RL markup in the response when ReadyLaunch is on.
 				'_wpnonce': BP_Nouveau.nonces.media,
 				'document_id': document_id,
 				'folder_id': folder_id,
@@ -1449,6 +1455,7 @@ window.bp = window.bp || {};
 
 			var data = {
 				'action': 'media_move',
+				'bb_legacy_template': 1, // Keep non-RL markup in the response when ReadyLaunch is on.
 				'_wpnonce': BP_Nouveau.nonces.media,
 				'media_id': media_id,
 				'album_id': album_id,
@@ -1600,6 +1607,7 @@ window.bp = window.bp || {};
 				'media': media,
 				'activity_id': activityId,
 				'from_where': fromWhere,
+				'bb_legacy_template': 1, // Keep non-RL markup in the response when ReadyLaunch is on.
 			};
 
 			$.ajax(
@@ -1654,7 +1662,7 @@ window.bp = window.bp || {};
 								} else {
 									self.removeDeletedItemsFromCommentEditData( activityId, 'media', media );
 									self.refreshKeptCommentAttachments( activityId, '.bb-activity-media-wrap', '.bp-media-move-photo', response.data.media_content );
-									$( 'body #buddypress .activity-list li#activity-' + activityId ).replaceWith( response.data.activity_content );
+									bp.Nouveau.replaceActivityItem( $( 'body #buddypress .activity-list li#activity-' + activityId ), response.data.activity_content, [ '.activity-inner > .bb-activity-media-wrap' ] );
 								}
 							}
 						} else if ( fromWhere && fromWhere.length && 'media' === fromWhere ) {
@@ -2871,6 +2879,8 @@ window.bp = window.bp || {};
 									$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
 								} else if( file.status == 'error' && ( file.xhr && file.xhr.status == 0) ) { // update server error text to user friendly
 									$( file.previewElement ).find( '.dz-error-message span' ).text( BP_Nouveau.media.connection_lost_error );
+								} else if ( file.status == 'error' && file.xhr && file.xhr.status >= 400 && 'string' === typeof response ) { // Non-JSON error body (e.g. proxy 413 page): show a readable message instead of raw HTML.
+									$( file.previewElement ).find( '.dz-error-message span' ).text( ( 413 === file.xhr.status ? BP_Nouveau.media.upload_too_large_error : BP_Nouveau.media.upload_server_error.replace( '{{statusCode}}', file.xhr.status ) ) );
 								}
 							} else {
 								if ( !jQuery( '.forum-document-error-popup' ).length ) {
@@ -2887,7 +2897,7 @@ window.bp = window.bp || {};
 						'success',
 						function ( file, response ) {
 							if ( response.data.id ) {
-								file.id = response.id;
+								file.id = response.data.id;
 								response.data.uuid = file.upload.uuid;
 								response.data.menu_order = $( file.previewElement ).closest( '.dropzone' ).find( file.previewElement ).index() - 1;
 								response.data.album_id = self.album_id;
@@ -3102,6 +3112,8 @@ window.bp = window.bp || {};
 									$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
 								} else if( file.status == 'error' && ( file.xhr && file.xhr.status == 0) ) { // update server error text to user friendly
 									$( file.previewElement ).find( '.dz-error-message span' ).text( BP_Nouveau.media.connection_lost_error );
+								} else if ( file.status == 'error' && file.xhr && file.xhr.status >= 400 && 'string' === typeof response ) { // Non-JSON error body (e.g. proxy 413 page): show a readable message instead of raw HTML.
+									$( file.previewElement ).find( '.dz-error-message span' ).text( ( 413 === file.xhr.status ? BP_Nouveau.media.upload_too_large_error : BP_Nouveau.media.upload_server_error.replace( '{{statusCode}}', file.xhr.status ) ) );
 								}
 							} else {
 								if ( !jQuery( '.group-media-error-popup' ).length ) {
@@ -3116,7 +3128,7 @@ window.bp = window.bp || {};
 						'success',
 						function ( file, response ) {
 							if ( response.data.id ) {
-								file.id = response.id;
+								file.id = response.data.id;
 								response.data.uuid = file.upload.uuid;
 								response.data.menu_order = $( file.previewElement ).closest( '.dropzone' ).find( file.previewElement ).index() - 1;
 								response.data.album_id = self.album_id;
@@ -3246,6 +3258,8 @@ window.bp = window.bp || {};
 									$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
 								} else if( file.status == 'error' && ( file.xhr && file.xhr.status == 0) ) { // update server error text to user friendly
 									$( file.previewElement ).find( '.dz-error-message span' ).text( BP_Nouveau.media.connection_lost_error );
+								} else if ( file.status == 'error' && file.xhr && file.xhr.status >= 400 && 'string' === typeof response ) { // Non-JSON error body (e.g. proxy 413 page): show a readable message instead of raw HTML.
+									$( file.previewElement ).find( '.dz-error-message span' ).text( ( 413 === file.xhr.status ? BP_Nouveau.media.upload_too_large_error : BP_Nouveau.media.upload_server_error.replace( '{{statusCode}}', file.xhr.status ) ) );
 								}
 							} else {
 								if ( !jQuery( '.group-document-error-popup' ).length ) {
@@ -3271,7 +3285,7 @@ window.bp = window.bp || {};
 						'success',
 						function ( file, response ) {
 							if ( response.data.id ) {
-								file.id = response.id;
+								file.id = response.data.id;
 								response.data.uuid = file.upload.uuid;
 								response.data.menu_order = $( file.previewElement ).closest( '.dropzone' ).find( file.previewElement ).index() - 1;
 								response.data.folder_id = self.current_folder;
@@ -3398,6 +3412,8 @@ window.bp = window.bp || {};
 									$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
 								} else if( file.status == 'error' && ( file.xhr && file.xhr.status == 0) ) { // update server error text to user friendly
 									$( file.previewElement ).find( '.dz-error-message span' ).text( BP_Nouveau.media.connection_lost_error );
+								} else if ( file.status == 'error' && file.xhr && file.xhr.status >= 400 && 'string' === typeof response ) { // Non-JSON error body (e.g. proxy 413 page): show a readable message instead of raw HTML.
+									$( file.previewElement ).find( '.dz-error-message span' ).text( ( 413 === file.xhr.status ? BP_Nouveau.media.upload_too_large_error : BP_Nouveau.media.upload_server_error.replace( '{{statusCode}}', file.xhr.status ) ) );
 								}
 							} else {
 								$( 'body' ).append( '<div id="bp-video-create-album" style="display: block;" class="open-popup"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="boss-video-create-album-popup" class="modal-container has-folderlocationUI"><header class="bb-model-header"><h4>' + BP_Nouveau.video.invalid_video_type + '</h4><a class="bb-model-close-button errorPopup" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>' );
@@ -3465,8 +3481,13 @@ window.bp = window.bp || {};
 								$( file.previewElement ).closest( '.dz-preview' ).addClass( 'dz-complete' );
 							}
 
-							if ( response.data.id ) {
-								file.id = response.id;
+							if ( true === file.upload.chunked ) {
+								// Chunked upload: Dropzone passes an empty response, read the final chunk response from the XHR.
+								response = JSON.parse( file.xhr.response );
+							}
+
+							if ( response.data && response.data.id ) {
+								file.id = response.data.id;
 								response.data.uuid = file.upload.uuid;
 								response.data.menu_order = $( file.previewElement ).closest( '.dropzone' ).find( file.previewElement ).index() - 1;
 								response.data.album_id = self.album_id;
@@ -3631,6 +3652,8 @@ window.bp = window.bp || {};
 									$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
 								} else if( file.status == 'error' && ( file.xhr && file.xhr.status == 0) ) { // update server error text to user friendly
 									$( file.previewElement ).find( '.dz-error-message span' ).text( BP_Nouveau.media.connection_lost_error );
+								} else if ( file.status == 'error' && file.xhr && file.xhr.status >= 400 && 'string' === typeof response ) { // Non-JSON error body (e.g. proxy 413 page): show a readable message instead of raw HTML.
+									$( file.previewElement ).find( '.dz-error-message span' ).text( ( 413 === file.xhr.status ? BP_Nouveau.media.upload_too_large_error : BP_Nouveau.media.upload_server_error.replace( '{{statusCode}}', file.xhr.status ) ) );
 								}
 							} else {
 								if ( !jQuery( '.forum-document-error-popup' ).length ) {
@@ -3658,7 +3681,7 @@ window.bp = window.bp || {};
 						'success',
 						function ( file, response ) {
 							if ( response.data.id ) {
-								file.id = response.id;
+								file.id = response.data.id;
 								response.data.uuid = file.upload.uuid;
 								response.data.menu_order = $( file.previewElement ).closest( '.dropzone' ).find( file.previewElement ).index() - 1;
 								response.data.folder_id = self.current_folder;
@@ -3916,6 +3939,8 @@ window.bp = window.bp || {};
 									$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
 								} else if( file.status == 'error' && ( file.xhr && file.xhr.status == 0) ) { // update server error text to user friendly
 									$( file.previewElement ).find( '.dz-error-message span' ).text( BP_Nouveau.media.connection_lost_error );
+								} else if ( file.status == 'error' && file.xhr && file.xhr.status >= 400 && 'string' === typeof response ) { // Non-JSON error body (e.g. proxy 413 page): show a readable message instead of raw HTML.
+									$( file.previewElement ).find( '.dz-error-message span' ).text( ( 413 === file.xhr.status ? BP_Nouveau.media.upload_too_large_error : BP_Nouveau.media.upload_server_error.replace( '{{statusCode}}', file.xhr.status ) ) );
 								}
 							} else {
 								if ( !jQuery( '.forum-video-error-popup' ).length ) {
@@ -3988,8 +4013,13 @@ window.bp = window.bp || {};
 								$( file.previewElement ).closest( '.dz-preview' ).addClass( 'dz-complete' );
 							}
 
-							if ( response.data.id ) {
-								file.id                = response.id;
+							if ( true === file.upload.chunked ) {
+								// Chunked upload: Dropzone passes an empty response, read the final chunk response from the XHR.
+								response = JSON.parse( file.xhr.response );
+							}
+
+							if ( response.data && response.data.id ) {
+								file.id                = response.data.id;
 								response.data.uuid     = file.upload.uuid;
 								response.data.album_id = self.album_id;
 								response.data.group_id = self.group_id;
@@ -4380,6 +4410,8 @@ window.bp = window.bp || {};
 								$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
 							} else if( file.status == 'error' && ( file.xhr && file.xhr.status == 0) ) { // update server error text to user friendly
 								$( file.previewElement ).find( '.dz-error-message span' ).text( BP_Nouveau.media.connection_lost_error );
+							} else if ( 'error' === file.status && file.xhr && file.xhr.status >= 400 && 'string' === typeof response ) { // Non-JSON error body (e.g. proxy 413 page): show a readable message instead of raw HTML.
+								$( file.previewElement ).find( '.dz-error-message span' ).text( ( 413 === file.xhr.status ? BP_Nouveau.media.upload_too_large_error : BP_Nouveau.media.upload_server_error.replace( '{{statusCode}}', file.xhr.status ) ) );
 							}
 						} else {
 							if ( !jQuery( '.media-error-popup' ).length ) {
@@ -4410,7 +4442,7 @@ window.bp = window.bp || {};
 					'success',
 					function ( file, response ) {
 						if ( response.data.id ) {
-							file.id = response.id;
+							file.id = response.data.id;
 							response.data.uuid = file.upload.uuid;
 							response.data.menu_order = self.dropzone_media.length;
 							response.data.album_id = self.album_id;
@@ -4643,6 +4675,8 @@ window.bp = window.bp || {};
 								$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
 							} else if( file.status == 'error' && ( file.xhr && file.xhr.status == 0) ) { // update server error text to user friendly
 								$( file.previewElement ).find( '.dz-error-message span' ).text( BP_Nouveau.media.connection_lost_error );
+							} else if ( 'error' === file.status && file.xhr && file.xhr.status >= 400 && 'string' === typeof response ) { // Non-JSON error body (e.g. proxy 413 page): show a readable message instead of raw HTML.
+								$( file.previewElement ).find( '.dz-error-message span' ).text( ( 413 === file.xhr.status ? BP_Nouveau.media.upload_too_large_error : BP_Nouveau.media.upload_server_error.replace( '{{statusCode}}', file.xhr.status ) ) );
 							}
 						} else {
 							if ( !jQuery( '.document-error-popup' ).length ) {
@@ -4684,7 +4718,7 @@ window.bp = window.bp || {};
 					'success',
 					function ( file, response ) {
 						if ( response.data.id ) {
-							file.id = response.id;
+							file.id = response.data.id;
 							response.data.uuid = file.upload.uuid;
 							response.data.menu_order = self.dropzone_media.length;
 							response.data.folder_id = self.current_folder;
@@ -4977,6 +5011,12 @@ window.bp = window.bp || {};
 			if ( !$currentTarget || $currentTarget.length === 0 ) {
 				// Last resort: find any modal in the context, but this should rarely happen
 				$currentTarget = $contextContainer.find( '.bp-media-move-file' ).first();
+			}
+
+			// Activity move popups are rendered before the document loop, so they share id "bp-media-move-file-0".
+			// Give this one its own id, or the selector below resolves to the first popup on the page.
+			if ( $currentTarget.attr( 'id' ) && 1 < $( '[id="' + $currentTarget.attr( 'id' ) + '"]' ).length ) {
+				$currentTarget.attr( 'id', 'bp-media-move-file-' + _.uniqueId( 'popup-' ) );
 			}
 
 			// Convert to selector string for compatibility with existing code
@@ -7453,6 +7493,7 @@ window.bp = window.bp || {};
 					url: BP_Nouveau.ajaxurl,
 					data: {
 						action: 'media_get_media_description',
+						bb_legacy_template: 1, // Keep non-RL markup in the response when ReadyLaunch is on.
 						id: self.current_media.id,
 						attachment_id: self.current_media.attachment_id,
 						nonce: BP_Nouveau.nonces.media
@@ -8078,6 +8119,7 @@ window.bp = window.bp || {};
 						url: BP_Nouveau.ajaxurl,
 						data: {
 							action: 'media_get_activity',
+							bb_legacy_template: 1, // Keep non-RL markup in the response when ReadyLaunch is on.
 							id: self.current_media.activity_id,
 							group_id: !_.isUndefined( self.current_media.group_id ) ? self.current_media.group_id : 0,
 							nonce: BP_Nouveau.nonces.media
@@ -8134,6 +8176,7 @@ window.bp = window.bp || {};
 						url: BP_Nouveau.ajaxurl,
 						data: {
 							action: 'document_get_activity',
+							bb_legacy_template: 1, // Keep non-RL markup in the response when ReadyLaunch is on.
 							id: self.current_document.activity_id,
 							group_id: !_.isUndefined( self.current_document.group_id ) ? self.current_document.group_id : 0,
 							nonce: BP_Nouveau.nonces.media
@@ -8186,6 +8229,7 @@ window.bp = window.bp || {};
 					url: BP_Nouveau.ajaxurl,
 					data: {
 						action: 'document_get_document_description',
+						bb_legacy_template: 1, // Keep non-RL markup in the response when ReadyLaunch is on.
 						id: self.current_document.id,
 						attachment_id: self.current_document.attachment_id,
 						nonce: BP_Nouveau.nonces.media
@@ -8446,6 +8490,11 @@ window.bp = window.bp || {};
 				parent_wrap = target.parents( '.activity-media-description' ),
 				description = parent_wrap.find( '#add-activity-description' ).val(),
 				attachment_id = parent_wrap.find( '#bp-attachment-id' ).val();
+
+			// The video script binds the same button; only save descriptions inside the media wrapper.
+			if ( ! parent_wrap.length ) {
+				return;
+			}
 
 			var data = {
 				'action': 'media_description_save',
