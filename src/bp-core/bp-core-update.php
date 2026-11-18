@@ -608,6 +608,13 @@ function bp_version_updater() {
 			bb_purge_activity_api_cache_for_comment_access();
 		}
 
+		// DB version 23651 — restore the default document extensions on sites whose
+		// list was stored as an empty array by bb_update_to_2_4_10() or an earlier
+		// toggle-only save, so Manage File Extensions lists them again (PROD-10342).
+		if ( $raw_db_version < 23651 ) {
+			bb_repair_empty_document_extensions_on_upgrade();
+		}
+
 		if ( $raw_db_version !== $current_db ) {
 			// @todo - Write only data manipulate migration here. ( This is not for DB structure change ).
 
@@ -3295,17 +3302,29 @@ function bb_update_to_2_4_10() {
 
 	if ( bp_is_active( 'document' ) ) {
 		$saved_extensions = bp_get_option( 'bp_document_extensions_support', array() );
-		$default          = bp_media_allowed_document_type();
 
-		foreach ( $default as $key => $value ) {
-			if ( isset( $saved_extensions[ $key ] ) ) {
-				$document_file_extension          = substr( strrchr( $value['extension'], '.' ), 1 );
-				$new_icon                         = bp_document_svg_icon( $document_file_extension );
-				$saved_extensions[ $key ]['icon'] = $new_icon;
+		// Only touch the option when something was actually saved. Writing
+		// array() back here when nothing existed used to permanently poison
+		// the option: get_option() would then keep returning that stored
+		// empty value forever, indistinguishable from an admin's later
+		// deliberate "delete all extensions" save (see
+		// bb_media_get_saved_extensions() in
+		// bp-core/admin/settings/media/callbacks.php).
+		//
+		// @since BuddyBoss [BBVERSION].
+		if ( ! empty( $saved_extensions ) ) {
+			$default = bp_media_allowed_document_type();
+
+			foreach ( $default as $key => $value ) {
+				if ( isset( $saved_extensions[ $key ] ) ) {
+					$document_file_extension          = substr( strrchr( $value['extension'], '.' ), 1 );
+					$new_icon                         = bp_document_svg_icon( $document_file_extension );
+					$saved_extensions[ $key ]['icon'] = $new_icon;
+				}
 			}
-		}
 
-		bp_update_option( 'bp_document_extensions_support', $saved_extensions );
+			bp_update_option( 'bp_document_extensions_support', $saved_extensions );
+		}
 	}
 
 	if ( ! bp_is_active( 'groups' ) ) {
@@ -4827,6 +4846,52 @@ function bb_purge_activity_api_cache_for_comment_access() {
 	if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
 		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bp-activity' );
 	}
+}
+
+/**
+ * Restore the default document extensions when the saved list is empty.
+ *
+ * Before this release, bb_update_to_2_4_10() and the toggle-only save of the
+ * Settings 2.0 extensions field wrote an empty array to
+ * `bp_document_extensions_support` on sites that had never saved the list.
+ * The Manage File Extensions modal then showed no extensions, and the
+ * Add-ons seed (bb_addons_document_save_default_extensions()) skips the
+ * option because the row exists. Uploads are not affected:
+ * bp_document_extensions_list() merges the defaults into the saved list, so
+ * an empty, missing or default list allows the same types.
+ *
+ * Only an option that is exactly an empty array is changed. When the
+ * defaults are loaded (BuddyBoss Add-ons, Documents), they are saved now.
+ * Otherwise the empty row is deleted, so the Add-ons seed saves the defaults
+ * on the first admin request where they are available. An admin who empties
+ * the list after this upgrade keeps an empty list. The video list is left
+ * alone: an empty video list blocks every video upload, so restoring the
+ * defaults there would change which files members can upload.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array|null $defaults Optional. Default document list to save. Default null reads
+ *                             bp_media_allowed_document_type() when it is loaded.
+ *
+ * @return void
+ */
+function bb_repair_empty_document_extensions_on_upgrade( $defaults = null ) {
+	$saved = bp_get_option( 'bp_document_extensions_support', false );
+
+	if ( array() !== $saved ) {
+		return;
+	}
+
+	if ( null === $defaults ) {
+		$defaults = function_exists( 'bp_media_allowed_document_type' ) ? bp_media_allowed_document_type() : array();
+	}
+
+	if ( ! empty( $defaults ) && is_array( $defaults ) ) {
+		bp_update_option( 'bp_document_extensions_support', $defaults );
+		return;
+	}
+
+	bp_delete_option( 'bp_document_extensions_support' );
 }
 
 /**

@@ -140,6 +140,155 @@ function bb_media_sanitize_upload_limit( $value ) {
 }
 
 /**
+ * Get the hard-coded default extension list for an extensions option.
+ *
+ * Centralizes the option-name-to-defaults mapping so the sanitize and
+ * getter helpers below can't drift out of sync (they previously each
+ * duplicated this mapping, and the getters always fell back to the
+ * document list regardless of `$option_name`, silently handing the video
+ * field document defaults on a site where the video option was never
+ * saved).
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $option_name The DB option name (bp_video_extensions_support
+ *                             or bp_document_extensions_support).
+ *
+ * @return array Hard-coded default extensions for the given option, or an
+ *               empty array if the option is unrecognized or its source
+ *               function isn't loaded yet.
+ */
+function bb_media_get_default_extensions( $option_name ) {
+	$defaults = array();
+
+	if ( 'bp_video_extensions_support' === $option_name && function_exists( 'bp_video_allowed_video_type' ) ) {
+		$defaults = bp_video_allowed_video_type();
+	} elseif ( 'bp_document_extensions_support' === $option_name && function_exists( 'bp_media_allowed_document_type' ) ) {
+		$defaults = bp_media_allowed_document_type();
+	}
+
+	/**
+	 * Filters the default extension list used by the Settings 2.0 extensions fields.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array  $defaults    Default extensions keyed by extension ID.
+	 * @param string $option_name The DB option name.
+	 */
+	return (array) apply_filters( 'bb_media_default_extensions', $defaults, $option_name );
+}
+
+/**
+ * Get a stored extensions option, falling back to defaults only when unset.
+ *
+ * `bp_get_option( $option_name, $default )` already substitutes `$default`
+ * when the option row is missing entirely, but it returns the *stored*
+ * value — including an empty array — when the row exists. That distinction
+ * matters here: an admin can deliberately clear every extension via the
+ * React modal (see the "delete all" short-circuit in
+ * bb_media_sanitize_extensions()), which persists an empty array on
+ * purpose. Naively treating "empty" the same as "missing" would silently
+ * resurrect the defaults on the next page load and make that deletion
+ * impossible to keep. A private sentinel default lets us tell "never
+ * saved" (get back the sentinel) apart from "saved empty" (get back the
+ * real empty array) with a strict comparison.
+ *
+ * A non-empty saved list that holds at least one entry with `is_default`
+ * set gets the default types it is missing (matched on extension + MIME
+ * type). A list with no `is_default` entry is returned as saved.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $option_name The DB option name.
+ * @param array  $default_extensions Hard-coded defaults to use when the option was never saved.
+ *
+ * @return array The stored extensions, reconciled with the defaults as described above,
+ *               or the defaults outright when the option row doesn't exist yet.
+ */
+function bb_media_get_saved_extensions( $option_name, $default_extensions ) {
+	$unset    = "\0bb_media_extensions_unset\0";
+	$existing = bp_get_option( $option_name, $unset );
+
+	if ( $unset === $existing || ! is_array( $existing ) ) {
+		return $default_extensions;
+	}
+
+	// A deliberate "delete all" save (the short-circuit in
+	// bb_media_sanitize_extensions()) always persists a genuinely empty
+	// array — respect that as-is rather than backfilling it back to the
+	// defaults.
+	if ( empty( $existing ) ) {
+		return $existing;
+	}
+
+	// Backfill only a list that already holds at least one default entry,
+	// i.e. an entry saved with `is_default` set. A list with none (e.g. a
+	// video list the admin reduced to custom types) is deliberate: the video
+	// upload allow-list reads the saved list as-is, so adding the defaults
+	// back on a toggle save would re-allow those uploads. The key is not a
+	// marker: the React modal names custom entries bb_vid_0, bb_vid_1, ...
+	// (bb_doc_0, ...), which reuses default keys, and a default type the
+	// admin adds back by hand is saved with `is_default` 0.
+	$has_default_entry = false;
+	foreach ( $existing as $ext ) {
+		if ( is_array( $ext ) && ! empty( $ext['is_default'] ) ) {
+			$has_default_entry = true;
+			break;
+		}
+	}
+
+	if ( ! $has_default_entry ) {
+		return $existing;
+	}
+
+	// Backfill a default entry that a *non-empty* saved list does not have
+	// yet, such as a default added in a later release. Match on the
+	// extension and MIME type, not on the key: older sites stored some of
+	// today's defaults (e.g. .mp4, .mov) as custom entries under other keys,
+	// and a key-only check would list those types twice and save the
+	// duplicates on the next toggle save. The MIME type is part of the match
+	// because the defaults list some extensions more than once with
+	// different MIME types (e.g. .ai, .csv). Every saved entry, including one
+	// toggled off, is left untouched.
+	$saved_types = array();
+	foreach ( $existing as $ext ) {
+		if ( is_array( $ext ) && ! empty( $ext['extension'] ) ) {
+			$saved_types[ bb_media_get_extension_type_key( $ext ) ] = true;
+		}
+	}
+
+	foreach ( $default_extensions as $key => $ext ) {
+		if ( isset( $existing[ $key ] ) || ! is_array( $ext ) || empty( $ext['extension'] ) ) {
+			continue;
+		}
+
+		if ( isset( $saved_types[ bb_media_get_extension_type_key( $ext ) ] ) ) {
+			continue;
+		}
+
+		$existing[ $key ] = $ext;
+	}
+
+	return $existing;
+}
+
+/**
+ * Build the comparison key for an extension entry (extension + MIME type).
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $ext Extension entry with `extension` and `mime_type`.
+ *
+ * @return string Lower-cased "extension|mime_type".
+ */
+function bb_media_get_extension_type_key( $ext ) {
+	$extension = isset( $ext['extension'] ) ? strtolower( trim( (string) $ext['extension'] ) ) : '';
+	$mime_type = isset( $ext['mime_type'] ) ? strtolower( trim( (string) $ext['mime_type'] ) ) : '';
+
+	return $extension . '|' . $mime_type;
+}
+
+/**
  * Sanitize file extensions array (video/document).
  *
  * Handles two input formats from the React admin UI:
@@ -172,7 +321,7 @@ function bb_media_sanitize_extensions( $value, $option_name = '' ) {
 	// the toggle-only flow always sends every registered key with its
 	// 0/1 state, never an empty map.
 	//
-	// @since BuddyBoss 3.0.3
+	// @since BuddyBoss 3.0.3.
 	if ( empty( $value ) ) {
 		return array();
 	}
@@ -194,10 +343,28 @@ function bb_media_sanitize_extensions( $value, $option_name = '' ) {
 			}
 		}
 
-		// Merge toggle states into existing stored data.
-		$existing = bp_get_option( $option_name, array() );
+		// Merge toggle states into existing stored data, falling back to the
+		// hard-coded defaults only when the option has never been saved yet.
+		// See bb_media_get_saved_extensions() — an admin-emptied option must
+		// stay empty here too, or a toggle flip on a freshly-cleared list
+		// would resurrect every default extension.
+		//
+		// @since BuddyBoss [BBVERSION].
+		$default_extensions = bb_media_get_default_extensions( $option_name );
+		$existing           = bb_media_get_saved_extensions( $option_name, $default_extensions );
 
 		foreach ( $value as $key => $is_active ) {
+			// Defense in depth: a toggle-only payload's values must be
+			// scalar (0/1). absint() on an array returns 1 for any
+			// non-empty array, which would silently force an untouched
+			// extension back to active on a malformed/mixed-shape payload
+			// instead of leaving it as already stored.
+			//
+			// @since BuddyBoss [BBVERSION].
+			if ( is_array( $is_active ) ) {
+				continue;
+			}
+
 			$sanitized_key = sanitize_key( $key );
 
 			if ( isset( $existing[ $sanitized_key ] ) ) {
@@ -765,8 +932,10 @@ function bb_media_create_test_upload() {
  * @return array Toggle list options.
  */
 function bb_media_get_extension_options( $option_name, $include_default = false ) {
-	$extensions = bp_get_option( $option_name, array() );
-	$options    = array();
+	$default_extensions = bb_media_get_default_extensions( $option_name );
+	$extensions         = bb_media_get_saved_extensions( $option_name, $default_extensions );
+
+	$options = array();
 
 	foreach ( $extensions as $key => $ext ) {
 		if ( ! is_array( $ext ) || empty( $ext['extension'] ) ) {
@@ -800,8 +969,10 @@ function bb_media_get_extension_options( $option_name, $include_default = false 
  * @return array Full extension data keyed by extension ID.
  */
 function bb_media_get_extension_data( $option_name ) {
-	$extensions = bp_get_option( $option_name, array() );
-	$data       = array();
+	$default_extensions = bb_media_get_default_extensions( $option_name );
+	$extensions         = bb_media_get_saved_extensions( $option_name, $default_extensions );
+
+	$data = array();
 
 	foreach ( $extensions as $key => $ext ) {
 		if ( ! is_array( $ext ) || empty( $ext['extension'] ) ) {
