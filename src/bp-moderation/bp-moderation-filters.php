@@ -171,9 +171,9 @@ function bp_moderation_content_report() {
 		$response['message'] = new WP_Error(
 			'bp_moderation_already_reported',
 			sprintf(
-				/* translators: Item type to reported. */
-				esc_html__( 'You have already reported this %s', 'buddyboss' ),
-				esc_attr( $item_sub_type )
+				/* translators: %s: reported content type (e.g. Post, Comment, Member). */
+				esc_html__( 'You have already reported this %s.', 'buddyboss' ),
+				esc_html( bp_moderation_get_report_type( $item_sub_type, $item_sub_id ) )
 			)
 		);
 		wp_send_json_error( $response );

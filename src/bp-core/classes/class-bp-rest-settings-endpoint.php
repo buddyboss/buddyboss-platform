@@ -1021,6 +1021,16 @@ class BP_REST_Settings_Endpoint extends WP_REST_Controller {
 	 * @return mixed|WP_Error Validated value or WP_Error.
 	 */
 	protected function validate_setting_by_pattern( $key, $value ) {
+		// Directory loading type must be one of the supported modes.
+		if ( 'bb_directory_load_type' === $key && ! in_array( $value, array( 'infinite', 'pagination' ), true ) ) {
+			return new WP_Error(
+				'bp_rest_setting_invalid_value',
+				/* translators: %s: Setting key. */
+				sprintf( __( 'Setting "%s" must be either "infinite" or "pagination".', 'buddyboss' ), $key ),
+				array( 'status' => 400 )
+			);
+		}
+
 		// Time-based settings validation.
 		if ( strpos( $key, '_time' ) !== false || strpos( $key, '_lock' ) !== false ) {
 			if ( is_numeric( $value ) ) {
@@ -1188,6 +1198,7 @@ class BP_REST_Settings_Endpoint extends WP_REST_Controller {
 			'bp-profile-layout-format'                 => bp_get_option( 'bp-profile-layout-format', 'list_grid' ),
 			'bp-profile-layout-default-format'         => bp_profile_layout_default_format(),
 			'bb-enable-content-counts'                 => function_exists( 'bb_enable_content_counts' ) ? bb_enable_content_counts() : true,
+			'bb_directory_load_type'                   => function_exists( 'bb_get_directory_load_type' ) ? bb_get_directory_load_type() : 'pagination',
 			'bb-web-notification-enabled'              => function_exists( 'bb_web_notification_enabled' ) && bb_web_notification_enabled(),
 			'bb-app-notification-enabled'              => function_exists( 'bb_app_notification_enabled' ) && bb_app_notification_enabled(),
 			'bb_enabled_legacy_email_preference'       => function_exists( 'bb_enabled_legacy_email_preference' ) && bb_enabled_legacy_email_preference(),
@@ -1315,9 +1326,9 @@ class BP_REST_Settings_Endpoint extends WP_REST_Controller {
 			// Activity Settings.
 			$results['bp_enable_activity_edit']         = bp_is_activity_edit_enabled();
 			$results['bb_enable_activity_post_title']   = bb_is_activity_post_title_enabled();
-			$results['bp_activity_edit_time']           = bp_get_activity_edit_time( - 1 );
+			$results['bp_activity_edit_time']           = bp_get_activity_edit_time();
 			$results['bb_enable_activity_comment_edit'] = bb_is_activity_comment_edit_enabled();
-			$results['bb_activity_comment_edit_time']   = bb_get_activity_comment_edit_time( - 1 );
+			$results['bb_activity_comment_edit_time']   = bb_get_activity_comment_edit_time();
 			$results['bp_enable_heartbeat_refresh']     = bp_is_activity_heartbeat_active();
 			$results['bp_enable_activity_autoload']     = bp_is_activity_autoload_active();
 			$results['bp_enable_activity_tabs']         = bp_is_activity_tabs_active();

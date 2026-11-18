@@ -36,7 +36,7 @@ wp_style_add_data( 'bb-rl-login-style', 'rtl', 'replace' );
 	<?php bp_get_template_part( 'common/header-register' ); ?>
 	<div class="register-page-main">
 		<?php
-		$bb_rl_light_logo = bp_get_option( 'bb_rl_light_logo', array() );
+		$bb_rl_light_logo = bb_load_readylaunch()->bb_rl_get_theme_logo( 'light' );
 		if ( ! empty( $bb_rl_light_logo ) ) :
 			$logo_url   = esc_url( $bb_rl_light_logo['url'] );
 			$logo_title = ! empty( $bb_rl_light_logo['title'] ) ? $bb_rl_light_logo['title'] : '';

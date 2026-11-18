@@ -37,6 +37,12 @@ if ( function_exists( 'bp_is_single_album' ) && bp_is_single_album() ) {
 } elseif ( function_exists( 'bp_is_single_video_album' ) && bp_is_single_video_album() ) {
 	$single_album = true;
 }
+
+// Mention videos only when the album can hold them in this context.
+$single_album_videos = $single_album && bp_is_active( 'video' ) && (
+	( bp_is_group() && bp_is_group_video_support_enabled() ) ||
+	( ! bp_is_group() && bp_is_profile_video_support_enabled() )
+);
 ?>
 <div class="bb-rl-media-none">
 	<div class="bb-rl-media-none-figure"><i class="bb-icons-rl-file-image"></i></div>
@@ -44,8 +50,10 @@ if ( function_exists( 'bp_is_single_album' ) && bp_is_single_album() ) {
 		<span class="bp-icon" aria-hidden="true"></span>
 		<p>
 			<?php
-			if ( $single_album ) {
+			if ( $single_album_videos ) {
 				esc_html_e( 'No photos or videos found', 'buddyboss' );
+			} elseif ( $single_album ) {
+				esc_html_e( 'No photos found', 'buddyboss' );
 			} elseif ( $album_dir ) {
 				esc_html_e( 'No albums found', 'buddyboss' );
 			} else {
@@ -56,8 +64,10 @@ if ( function_exists( 'bp_is_single_album' ) && bp_is_single_album() ) {
 	</aside>
 	<p class="bb-rl-media-none-description">
 		<?php
-		if ( $single_album ) {
+		if ( $single_album_videos ) {
 			esc_html_e( 'It looks like there aren\'t any photos or videos in this album.', 'buddyboss' );
+		} elseif ( $single_album ) {
+			esc_html_e( 'It looks like there aren\'t any photos in this album.', 'buddyboss' );
 		} elseif ( $album_dir ) {
 			esc_html_e( 'It looks like there aren\'t any albums in this directory.', 'buddyboss' );
 		} else {

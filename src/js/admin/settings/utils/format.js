@@ -296,6 +296,36 @@ export function splitFieldsByMetaboxGroup( fields ) {
 }
 
 /**
+ * Resolve the value to POST for one registered field.
+ *
+ * null/undefined become ''. An empty array is kept as-is, so FormData sends
+ * nothing and save_fields_data() skips the field (existing contract that
+ * every array field's sanitize/save callbacks rely on). A field can opt in
+ * to being cleared by setting `extra_data.send_empty_as_clear`: its empty
+ * array is then posted as '', and its sanitize_callback must treat '' as an
+ * empty selection (see bb_legacy_wpf_sanitize_group_tag_ids()).
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {Object} field Field definition from the registry.
+ * @param {*}      val   Current field value.
+ * @returns {*} Value to put in the payload.
+ */
+export function getRegisteredFieldPostValue( field, val ) {
+	if ( null === val || undefined === val ) {
+		return '';
+	}
+
+	var clearsWhenEmpty = !! ( field && field.extra_data && field.extra_data.send_empty_as_clear );
+
+	if ( clearsWhenEmpty && Array.isArray( val ) && 0 === val.length ) {
+		return '';
+	}
+
+	return val;
+}
+
+/**
  * Build registered field payload for AJAX save.
  *
  * Iterates registered fields, pulls TinyMCE content for richtext fields,
@@ -330,7 +360,7 @@ export function buildRegisteredFieldPayload( fields, values, itemId ) {
 			}
 		}
 
-		var safeVal = null !== val && undefined !== val ? val : '';
+		var safeVal = getRegisteredFieldPostValue( field, val );
 
 		// Plain key — read by AJAX handlers directly (e.g. $_POST['publish_mode']).
 		payload[ field.id ] = safeVal;

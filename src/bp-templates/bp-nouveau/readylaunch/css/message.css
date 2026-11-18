@@ -540,6 +540,11 @@ body.messages .bb-rl-content-wrapper {
   margin-top: 7px;
 }
 
+.bb-rl-message-lists .bb-rl-thread-item.unread .bb-rl-thread-content .bb-rl-thread-excerpt {
+  color: var(--bb-rl-text-color);
+  font-weight: 500;
+}
+
 .bb-rl-message-lists .bb-rl-thread-item:has(.message_action__list.is_visible), .bb-rl-message-lists .bb-rl-thread-item:hover {
   background-color: var(--bb-rl-background-secondary-color);
 }
@@ -1187,6 +1192,32 @@ body.messages .bb-rl-content-wrapper {
 #bp-message-thread-list > li .message-metadata time {
   font-size: var(--bb-rl-font-size-sm);
   color: var(--bb-rl-text-tertiary-color);
+}
+
+#bp-message-thread-list > li .bb-group-message-info {
+  display: flex;
+  align-items: center;
+  gap: var(--bb-rl-space-50);
+  font-size: var(--bb-rl-font-size-sm);
+  font-weight: 500;
+  color: var(--bb-rl-text-tertiary-color);
+  line-height: 1.5;
+  margin-top: var(--bb-rl-space-50);
+}
+
+#bp-message-thread-list > li .bb-group-message-info::before {
+  content: "\e68e";
+  font-family: bb-icons-rl;
+  font-size: 16px;
+  font-weight: 400;
+  font-style: normal;
+  line-height: 1;
+}
+
+#bp-message-thread-list > li .bb-group-message-info a {
+  color: inherit;
+  font-weight: 500;
+  text-decoration: none;
 }
 
 #bp-message-thread-list > li .bp-message-content-wrap {

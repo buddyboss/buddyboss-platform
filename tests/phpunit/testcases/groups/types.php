@@ -7,7 +7,7 @@
 class BP_Tests_Groups_Types extends BP_UnitTestCase {
 	protected static $u1 = null;
 
-	public function setUp() {
+	public function setUp(): void {
 		parent::setUp();
 
 		buddypress()->groups->types = array();
@@ -306,5 +306,91 @@ class BP_Tests_Groups_Types extends BP_UnitTestCase {
 
 		// Assert!
 		$this->assertEqualSets( $types, bp_groups_get_group_type( $g, false ) );
+	}
+
+	/**
+	 * A registered group type key resolves to itself.
+	 *
+	 * @group bb_group_type_shortcode_resolve_key
+	 */
+	public function test_shortcode_resolve_key_returns_registered_key() {
+		bp_groups_register_group_type( 'foo' );
+
+		$this->assertSame( 'foo', bb_group_type_shortcode_resolve_key( 'foo' ) );
+	}
+
+	/**
+	 * A label-style value ("Foo Bar") slugifies to the registered key.
+	 *
+	 * @group bb_group_type_shortcode_resolve_key
+	 */
+	public function test_shortcode_resolve_key_slugifies_input_to_registered_key() {
+		bp_groups_register_group_type( 'foo-bar' );
+
+		$this->assertSame( 'foo-bar', bb_group_type_shortcode_resolve_key( 'Foo Bar' ) );
+	}
+
+	/**
+	 * A legacy group type post ID resolves to its stored key (the PROD-10403 fix:
+	 * the admin modal used to emit the post ID in the shortcode).
+	 *
+	 * @group bb_group_type_shortcode_resolve_key
+	 */
+	public function test_shortcode_resolve_key_resolves_post_id_to_key() {
+		$post_id = self::factory()->post->create( array( 'post_type' => bp_groups_get_group_type_post_type() ) );
+		update_post_meta( $post_id, '_bp_group_type_key', 'clubs' );
+
+		$this->assertSame( 'clubs', bb_group_type_shortcode_resolve_key( $post_id ) );
+	}
+
+	/**
+	 * A numeric value that is itself a registered key must win over the post-ID
+	 * fallback (defensive ordering: key lookup first).
+	 *
+	 * @group bb_group_type_shortcode_resolve_key
+	 */
+	public function test_shortcode_resolve_key_prefers_registered_numeric_key_over_post_id() {
+		bp_groups_register_group_type( '123' );
+
+		$this->assertSame( '123', bb_group_type_shortcode_resolve_key( '123' ) );
+	}
+
+	/**
+	 * An empty value resolves to an empty string.
+	 *
+	 * @group bb_group_type_shortcode_resolve_key
+	 */
+	public function test_shortcode_resolve_key_returns_empty_string_for_empty_input() {
+		$this->assertSame( '', bb_group_type_shortcode_resolve_key( '' ) );
+	}
+
+	/**
+	 * An unresolvable, non-numeric value is passed through as its slug (the
+	 * template message guard then avoids a broken sentence for it).
+	 *
+	 * @group bb_group_type_shortcode_resolve_key
+	 */
+	public function test_shortcode_resolve_key_passes_through_unresolvable_value() {
+		$this->assertSame( 'does-not-exist', bb_group_type_shortcode_resolve_key( 'Does Not Exist' ) );
+	}
+
+	/**
+	 * The resolved key is filterable.
+	 *
+	 * @group bb_group_type_shortcode_resolve_key
+	 */
+	public function test_shortcode_resolve_key_is_filterable() {
+		bp_groups_register_group_type( 'foo' );
+
+		$callback = function () {
+			return 'filtered-key';
+		};
+		add_filter( 'bb_group_type_shortcode_resolve_key', $callback );
+
+		$resolved = bb_group_type_shortcode_resolve_key( 'foo' );
+
+		remove_filter( 'bb_group_type_shortcode_resolve_key', $callback );
+
+		$this->assertSame( 'filtered-key', $resolved );
 	}
 }

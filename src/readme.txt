@@ -1,9 +1,9 @@
 === BuddyBoss Platform ===
 Contributors: buddyboss
 Requires at least: 4.9.1
-Tested up to: 6.8.1
+Tested up to: 7.1
 Requires PHP: 7.4.0
-Stable tag: 3.4.2
+Stable tag: 3.8.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -14,7 +14,6 @@ BuddyBoss Platform helps site builders & developers add community features to th
 - [Tutorials](https://www.buddyboss.com/resources/docs/)
 - [Code Reference](https://www.buddyboss.com/resources/reference/)
 - [Github](https://github.com/buddyboss/buddyboss-platform/wiki)
-- [Roadmap](https://www.buddyboss.com/roadmap/)
 
 == Requirements ==
 
@@ -56,6 +55,137 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 3.8.0 =
+* Enhancement: Members - Added an option to load member and group lists with infinite scroll
+* Bug: Activity - Fixed an error message shown when pasting Google Maps links into an activity post
+* Bug: Activity - Fixed an issue where link previews showed a member avatar instead of the page image
+* Bug: Activity - Fixed an issue where link previews kept loading and never appeared
+* Bug: Activity - Fixed an issue where older posts without a title could not be updated from the app after post titles were made required
+* Bug: Activity - Fixed incorrect times shown on the admin Activity screen
+* Bug: Core - Fixed an issue where regular pages could show a 404 error until permalinks were saved again
+* Bug: Core - Fixed repeated database queries that slowed down page loads
+* Bug: Elementor - Fixed an issue where Elementor global colors and fonts could stop showing on the site
+* Bug: Email - Fixed an issue where the email digest did not work with some email sending plugins
+* Bug: Forums - Fixed an issue where membership access settings on forums were not saved correctly
+* Bug: Forums - Fixed PHP 8.3 errors when forum discussions are enabled
+* Bug: Groups - Fixed an issue where group email notifications were not sent for some groups
+* Bug: Groups - Fixed an issue where line breaks in group descriptions were removed when editing from the dashboard
+* Bug: Groups - Fixed an issue where the group type list did not appear on the group settings page with ReadyLaunch enabled
+* Bug: Media - Fixed an issue where video thumbnails were missing in comments and small videos slowed down page loads
+* Bug: Members - Fixed incorrect joined dates on member cards for sites in other languages
+* Bug: Messages - Fixed an issue where delayed email notifications for new messages were not sent after turning on Private Messaging
+* Bug: Moderation - Fixed an issue where reports for hidden posts with multiple images showed an unknown reporter and a broken link
+* Bug: Notifications - Fixed an issue where notification preferences could save unexpected values
+* Bug: ReadyLaunch - Fixed an issue where the Messages and Notifications quick links in the mobile menu could not be tapped
+* Bug: ReadyLaunch - Fixed issues with error messages and post status not updating correctly when managing media in pop-up windows
+* Bug: ReadyLaunch - Fixed the description placeholder text shown when uploading photos, videos and documents
+* Bug: Translations - Fixed an issue where profile field section labels were not translated in the Profile Completion widget
+* Bug: Translations - Fixed an issue where translated gender values did not show on the profile page
+
+= 3.7.2 =
+* Bug: Activity - Fixed an issue where an activity post containing only an emoji could not be posted
+* Bug: Core - Fixed a limitation in the API cache so the app can store separate cached responses for each app language
+* Bug: Elementor - Fixed an issue where the Elementor activity widget lost its custom layout after deleting media from a post
+* Bug: Media - Fixed an issue where choosing Move on an activity document opened the wrong popup when the feed had several document posts
+* Bug: Messages - Fixed an issue where messages that had been read still appeared in bold like unread messages
+* Bug: Moderation - Fixed an issue where long reasons were cut off when viewing a report on reported content
+* Bug: Profiles - Fixed an issue where the profile photo options could not be reached using the keyboard
+* Bug: Translations - Fixed an issue where formatting options in the rich text editor could not be translated
+
+= 3.7.1 =
+* Bug: Activity - Fixed a slowdown caused by activity post drafts with pasted images taking up too much storage
+* Bug: Activity - Fixed an issue where long links in activity post titles did not wrap on mobile and desktop
+* Bug: Core - Fixed a broken Roadmap link in the plugin description
+* Bug: Core - Fixed an issue where some scheduled background cleanup tasks for media, videos and documents were not running
+* Bug: Core - Fixed an issue where the settings page layout did not expand to full width when a meta box was visible
+* Bug: Elementor - Fixed an issue where the activity feed layout broke after deleting media in the Elementor activity widget
+* Bug: Groups - Fixed a security issue related to comments on private and hidden group posts
+* Bug: Media - Fixed an issue where saving a photo or video description caused an unnecessary failed request in the background
+* Bug: Media - Fixed an issue where video uploads over 100 MB failed in forum discussions on sites behind Cloudflare
+* Bug: ReadyLaunch - Fixed a display issue with the radio buttons in the ReadyLaunch onboarding wizard
+
+= 3.7.0 =
+* Enhancement: Core - Moved Videos, Documents, Animated GIFs and Group Subscription to the Addons plugin, with existing customers keeping access
+* Bug: Activity - Fixed an issue where the app's "Only Me" activity filter showed posts from other members
+* Bug: Activity - Fixed several issues with activity topics, including required-topic checks, topic links and cleanup when topics are deleted
+* Bug: Core - Fixed an issue where emoji images did not display correctly
+* Bug: Groups - Fixed an issue where group names containing double quotes were cut off and lost when saved
+* Bug: Groups - Fixed an issue where group organizers who are not site administrators could not add topics to their own group
+* Bug: Groups - Fixed an issue where the group name was missing from the delete confirmation and cut off in the groups list
+* Bug: Groups - Fixed an issue where WP Fusion settings boxes were missing from group edit screens
+* Bug: Members - Fixed an issue where admins could not manually activate pending users when Google reCAPTCHA was enabled
+* Bug: Notifications - Fixed an issue where mention notifications for comments on event activities did not link to the right page
+
+= 3.6.2 =
+* Bug: Activity - Fixed an issue where comment reactions stopped working when reactions were turned off for activity posts
+* Bug: Activity - Fixed an issue where editing an activity comment wrongly increased the comment count
+* Bug: Core - Fixed an issue where the app could not load profile forum topics when a security plugin's username protection was turned on
+* Bug: Core - Strengthened permission checks for media previews, video thumbnails, invites, drafts and private messages
+* Bug: Email - Fixed an issue where message emails sent together could show the wrong sender avatar and profile link
+* Bug: Forums - Fixed an issue where logged-out visitors could not reply to existing replies in public discussions with anonymous posting enabled
+* Bug: Forums - Fixed an issue where videos in discussions and replies did not show a preview in the app
+* Bug: Translations - Fixed an issue where some Report text in the Turkish translation was worded incorrectly
+
+= 3.6.1 =
+* Bug: Activity - Fixed PHP warnings in activity feed caused by invalid cached activity data
+* Bug: Core - Fixed a security issue in how activity post drafts are saved
+* Bug: Core - Fixed an issue where Private Website protection did not fully cover some restricted content
+* Bug: Core - Fixed an issue where Private Website protection did not fully cover file download links
+* Bug: Groups - Fixed a permissions issue with creating folders in group documents
+* Bug: Groups - Fixed an out-of-memory error that could occur when uploading media in very large groups
+* Bug: LearnDash - Fixed an issue cached API responses, causing the app's course screen to show placeholder content instead of the actual course curriculum
+* Bug: Media - Fixed an issue where profile completion did not recognize avatars and cover photos when media offloading was enabled
+* Bug: Messages - Fixed a slowdown that made pages load very slowly on large sites with many members and unread message notifications
+* Bug: Messages - Fixed an issue where some conversations in the app incorrectly showed that new messages could not be sent
+* Bug: ReadyLaunch - Fixed an issue where a stray divider line appeared in the group header for logged-out visitors
+* Bug: ReadyLaunch - Fixed an issue where discussion tags overflowed their container when a discussion had many tags
+
+= 3.6.0 =
+* Enhancement: Social Login - Added frontend Two-Factor Authentication management under Account - Security, allowing members to securely set up and manage 2FA and use it seamlessly with BuddyBoss Social Login
+* Bug: Groups - Fixed an issue where group members could not move documents into a group folder created by another member
+* Bug: Media - Fixed a display issue where the page layout broke after deleting all photos, videos or documents in comment and media pop-ups
+* Bug: Media - Fixed an issue where the empty album message was not shown after deleting the last photo or video in an album
+* Bug: Members - Fixed an issue where using the browser's back button after searching members showed a "Confirm Form Resubmission" error instead of the members list
+* Bug: ReadyLaunch - Fixed an issue where the comment box appeared inside the activity post and the layout broke after editing an activity or deleting its media
+
+= 3.5.1 =
+* Bug: Activity - Fixed an issue where a blocked member's posts and activity were still visible in the activity feed
+* Bug: Activity - Fixed an issue where the activity post editing time limit could become invalid, causing the settings page to show the wrong value and editing to stop working correctly
+* Bug: Core - Fixed an issue where administrators were unable to edit other users’ profile settings
+* Bug: Groups - Fixed an issue where the group invite member list took a long time to load
+* Bug: Login - Fixed an issue where the login security check (reCAPTCHA) could expire before a form was submitted, incorrectly locking out legitimate users
+* Bug: ReadyLaunch - Fixed a display issue where the password show/hide icon appeared above the password field instead of inside it in ReadyLaunch
+* Bug: Translations - Fixed an issue where translated text for the post reporting options did not appear on the site
+
+= 3.5.0 =
+* New Feature! Notification - Turn a flood of notification emails into a single daily or weekly Email Digest, with each member choosing their own frequency
+* Bug: Core - Fixed an issue that could cause the app to crash when the BuddyBoss Addons plugin was not activated
+* Bug: Core - Fixed an issue where clicking "View details" on the BuddyBoss products not showing update details
+* Bug: Core - Fixed inconsistencies where member hover cards were not appearing correctly in some areas like groups, forums, and activity feeds
+* Bug: Core - Updated the BuddyBoss products compatibility version with the latest WordPress version as unknown
+* Bug: Forums - Fixed an issue where changing a forum discussion's visibility to private was silently reverted back to public after saving
+* Bug: Group - Fixed an issue where group album edit options were incorrectly visible to non-members and logged-out users
+* Bug: Groups - Fixed an issue where the group type shortcode did not display groups when added to a WordPress page
+* Bug: Media - Fixed an issue where the "no photos or videos found" message disappeared after renaming an empty album
+* Bug: Profiles - Fixed a privacy issue where a member's full name could still appear in page source code and social sharing previews even when only their first name was set to display
+* Bug: Profiles - Fixed a security issue where new users could be granted incorrect account permissions during self-registration
+* Bug: Profiles - Fixed an issue where using a Biography field inside a repeater field set could duplicate the field and overwrite a member's WordPress biography
+* Bug: Profiles - Fixed an issue where visibility and requirement options,were missing for the Last Name profile field
+* Bug: ReadyLaunch - Fixed a display issue with reaction icons on activity comments in ReadyLaunch
+* Bug: ReadyLaunch - Fixed a styling issue with the "Sent from [Group]" label shown in group message threads in ReadyLaunch
+* Bug: ReadyLaunch - Fixed a styling issue with the guest information fields shown when starting a discussion anonymously in ReadyLaunch
+* Bug: ReadyLaunch - Fixed an issue where the Courses link did not work correctly when a custom course URL slug was set
+* Bug: ReadyLaunch - Fixed an issue where the Forum menu icon was missing from the group admin sidebar when a custom forum URL was used
+* Bug: Translations - Fixed an issue where interface text could appear in the wrong language on multilingual sites
+
+= 3.4.4 =
+* Enhancement: Members - Added Member Directory settings to the REST API, allowing apps to access configured directory elements, profile actions, and primary actions
+* Bug: Core - Fixed an issue where the Profile Visibility API ignored enforced visibility settings, allowing users to select and save visibility options restricted by administrators
+
+= 3.4.3 =
+* Bug: Access Controls - Fixed Access Control settings not saving when only the restriction type or membership provider was changed
+* Bug: Login - Fixed reCAPTCHA login verification blocking sign-ins on third-party login forms such as MemberPress; verification now applies only to the WordPress and BuddyBoss login forms it is rendered on
 
 = 3.4.2 =
 * Bug: Activity - Added two new objects to the Activity REST API

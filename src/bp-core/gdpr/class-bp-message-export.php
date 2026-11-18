@@ -66,8 +66,10 @@ final class BP_Message_Export extends BP_Export {
 			}
 			foreach ( $item->recipients as $r_user ) {
 				if ( ! empty( $r_user ) ) {
-					$name = $r_user->display_name;
-					if ( empty( $r_user->display_name ) ) {
+					// Resolve for the data subject ($user) so a recipient's last name hidden by
+					// profile-field visibility is not exported in the raw column.
+					$name = bp_core_get_user_displayname( $r_user->ID, $user->ID );
+					if ( empty( $name ) ) {
 						$name = $r_user->user_login;
 					}
 					$recipients[] = $name;

@@ -276,6 +276,8 @@ function bp_core_set_uri_globals() {
 		return false;
 	}
 
+	// Rewrite rules generated later in this request are rebuilt with the
+	// flag WordPress expects, see bb_core_keep_verbose_page_rules_on_generate().
 	$wp_rewrite->use_verbose_page_rules = false;
 
 	// Find the offset. With $root_profile set, we fudge the offset down so later parsing works.
@@ -1208,8 +1210,9 @@ function bp_private_network_template_redirect() {
 		$server_http_host    = isset( $_SERVER['HTTP_HOST'] ) ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_HOST'] ) ) : '';
 		$server_request_uri  = isset( $_SERVER['REQUEST_URI'] ) ? esc_url_raw( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '';
 		$actual_link         = ( is_ssl() ? 'https://' : 'http://' ) . $server_http_host . $server_request_uri;
-		// If feed then return.
-		if ( strpos( $actual_link, '/feed/' ) !== false || strpos( $actual_link, 'feed=' ) !== false ) { // if permalink has ? then need to check with feed=.
+		// Feeds are restricted by the "Private RSS Feeds" setting instead. Ask the parsed main query,
+		// never the URL, so a query parameter that merely contains "feed" cannot skip this redirect.
+		if ( is_feed() ) {
 			return;
 		}
 		/**
@@ -1645,3 +1648,48 @@ function bp_core_change_privacy_policy_link_on_private_network( $link, $privacy_
 
 	return apply_filters( 'bp_core_change_privacy_policy_link_on_private_network', $link, $privacy_policy_url );
 }
+
+/**
+ * Rebuild rewrite rules with verbose page rules when they are generated while
+ * BuddyBoss has switched them off for the current request.
+ *
+ * The bp_core_set_uri_globals() sets $wp_rewrite->use_verbose_page_rules to false on
+ * every BuddyBoss page request. WP_Rewrite::rewrite_rules() places the page rule
+ * after the post rule while that flag is false. If the rules are regenerated in
+ * the same request (a deferred flush on wp_loaded or shutdown, a flush from
+ * WP-CLI, or the lazy regeneration of an emptied rewrite_rules option), the
+ * stored rules match every page slug as a post and regular pages return 404
+ * until the rules are regenerated again. This filter rebuilds the rules once
+ * with the value WordPress derives from the permalink structure and restores
+ * the flag afterwards, so the parsing of the current request is unchanged.
+ *
+ * @since BuddyBoss 3.8.0
+ *
+ * @param array $rules Generated rewrite rules, keyed by their regex pattern.
+ *
+ * @return array
+ */
+function bb_core_keep_verbose_page_rules_on_generate( $rules ) {
+	global $wp_rewrite;
+	static $rebuilding = false;
+
+	if ( $rebuilding || ! ( $wp_rewrite instanceof WP_Rewrite ) || ! is_array( $rules ) ) {
+		return $rules;
+	}
+
+	// Mirrors the test WP_Rewrite::init() uses to decide the flag.
+	$needs_verbose = (bool) preg_match( '/^[^%]*%(?:postname|category|tag|author)%/', (string) $wp_rewrite->permalink_structure );
+
+	if ( ! $needs_verbose || true === $wp_rewrite->use_verbose_page_rules ) {
+		return $rules;
+	}
+
+	$rebuilding                         = true;
+	$wp_rewrite->use_verbose_page_rules = true;
+	$rebuilt                            = $wp_rewrite->rewrite_rules();
+	$wp_rewrite->use_verbose_page_rules = false;
+	$rebuilding                         = false;
+
+	return ( is_array( $rebuilt ) && ! empty( $rebuilt ) ) ? $rebuilt : $rules;
+}
+add_filter( 'rewrite_rules_array', 'bb_core_keep_verbose_page_rules_on_generate', PHP_INT_MAX );

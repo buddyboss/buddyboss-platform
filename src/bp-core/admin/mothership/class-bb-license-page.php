@@ -4,15 +4,10 @@ declare(strict_types=1);
 
 namespace BuddyBoss\Core\Admin\Mothership;
 
-use BuddyBossPlatform\GroundLevel\Container\Concerns\HasStaticContainer;
-use BuddyBossPlatform\GroundLevel\Container\Contracts\StaticContainerAwareness;
-
 /**
  * This class registers and renders an admin page that displays a form for activating/deactivating the license.
  */
-class BB_License_Page implements StaticContainerAwareness {
-
-	use HasStaticContainer;
+class BB_License_Page {
 
 	/**
 	 * The capability required to view the page.
@@ -36,14 +31,18 @@ class BB_License_Page implements StaticContainerAwareness {
 	/**
 	 * Registers the page.
 	 *
-	 * @return mixed The resulting page's hook suffix or false if the user does not have the capability set in the constant self::CAPABILITY.
+	 * @since BuddyBoss 3.5.1 Added the `$parent_slug` and `$capability` parameters.
+	 *
+	 * @param string $parent_slug Parent menu slug.
+	 * @param string $capability  Capability required to view the page.
+	 * @return mixed The resulting page's hook suffix or false if the user does not have the capability.
 	 */
-	public static function register() {
+	public static function register( string $parent_slug = 'buddyboss-platform', string $capability = self::CAPABILITY ) {
 		return add_submenu_page(
-			'buddyboss-platform',
+			$parent_slug,
 			self::pageTitle(),
 			esc_html__( 'License Activation', 'buddyboss' ),
-			self::CAPABILITY,
+			$capability,
 			self::SLUG,
 			array(
 				self::class,
@@ -57,7 +56,6 @@ class BB_License_Page implements StaticContainerAwareness {
 	 */
 	public static function render(): void {
 		wp_enqueue_style( 'bb-mothership-admin', buddypress()->plugin_url . 'bp-core/admin/css/mothership.css', array(), buddypress()->version );
-
 
 		include_once __DIR__ . '/views/admin.php';
 	}

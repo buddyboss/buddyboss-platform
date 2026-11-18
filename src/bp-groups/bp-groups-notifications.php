@@ -198,7 +198,10 @@ function groups_notification_new_membership_request( $requesting_user_id = 0, $a
 			'membership.id'        => $membership_id,
 			'profile.url'          => esc_url( bp_core_get_user_domain( $requesting_user_id ) ),
 			'requesting-user.id'   => $requesting_user_id,
-			'requesting-user.name' => bp_core_get_user_displayname( $requesting_user_id ),
+			// Resolved for the ADMIN who receives this email, not the member who triggered it - a
+			// name resolved with the requester as viewer is never redacted, because nobody is denied
+			// their own name.
+			'requesting-user.name' => bp_core_get_user_displayname( $requesting_user_id, $admin_id ),
 			'request.message'      => $request_message,
 			'unsubscribe'          => esc_url( bp_email_get_unsubscribe_link( $unsubscribe_args ) ),
 		),
@@ -441,7 +444,10 @@ function groups_notification_group_invites( &$group, &$member, $inviter_user_id 
 			'group'          => $group,
 			'group.url'      => bp_get_group_permalink( $group ),
 			'group.name'     => $group->name,
-			'inviter.name'   => bp_core_get_userlink( $inviter_user_id, true, false, true ),
+			// bp_core_get_userlink() takes no viewer, so it resolved the inviter's name in the
+			// inviter's own request context - never redacted. Resolve for the invitee who receives
+			// this email instead.
+			'inviter.name'   => bp_core_get_user_displayname( $inviter_user_id, $invited_user_id ),
 			'inviter.url'    => bp_core_get_user_domain( $inviter_user_id ),
 			'inviter.id'     => $inviter_user_id,
 			'invited.id'     => $invited_user_id,

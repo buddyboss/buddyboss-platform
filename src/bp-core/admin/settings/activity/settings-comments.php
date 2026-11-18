@@ -71,6 +71,9 @@ function bb_activity_register_comments_panel_fields( $edit_time_options ) {
 					'default'           => bb_get_activity_comment_edit_time() ? bb_get_activity_comment_edit_time() : 600,
 					'options'           => $edit_time_options,
 					'sanitize_callback' => 'bb_activity_sanitize_edit_time',
+					// The sanitizer resolves to one of the options above, and the getter applies
+					// the same rule, so a stored value may be resolved on read and repaired on save.
+					'resolve_invalid'   => true,
 				),
 			),
 			'order'                => 20,
@@ -162,6 +165,9 @@ function bb_activity_register_comments_panel_fields( $edit_time_options ) {
 						),
 					),
 					'sanitize_callback' => 'bb_activity_sanitize_comment_threading_depth',
+					// The sanitizer resolves to one of the options above, and the getter applies
+					// the same rule, so a stored value may be resolved on read and repaired on save.
+					'resolve_invalid'   => true,
 				),
 			),
 			'order'                => 40,

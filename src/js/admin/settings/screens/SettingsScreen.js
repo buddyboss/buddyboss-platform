@@ -395,15 +395,19 @@ export function SettingsScreen({ onNavigate }) {
 	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @param {Object} feature  Placeholder feature object with plugin_slug.
-	 * @param {string} action   'mosh_addon_install' or 'mosh_addon_activate'.
+	 * @param {string} actionKey 'install' or 'activate' — resolved to the plugin-ID-scoped
+	 *                           GroundLevel AJAX action via bbAdminData.addonActions.
 	 */
-	const handleAddonAction = (feature, action) => {
-		if ( ! feature.plugin_slug || ! window.bbAdminData.addonNonce ) {
+	const handleAddonAction = (feature, actionKey) => {
+		var actions = window.bbAdminData.addonActions || {};
+		var action = actions[ actionKey ];
+
+		if ( ! feature.plugin_slug || ! window.bbAdminData.addonNonce || ! action ) {
 			return;
 		}
 
 		var label = feature.label || feature.id;
-		var isInstall = 'mosh_addon_install' === action;
+		var isInstall = 'install' === actionKey;
 
 		setToast({
 			status: 'saving',
@@ -626,7 +630,7 @@ export function SettingsScreen({ onNavigate }) {
 														variant="secondary"
 														className={`bb-admin-settings__feature-settings-btn${feature.requires_unmet ? ' bb-admin-settings__feature-settings-btn--disabled' : ''}`}
 														disabled={!!feature.requires_unmet}
-														onClick={feature.requires_unmet ? undefined : () => handleAddonAction(feature, 'mosh_addon_install')}
+														onClick={feature.requires_unmet ? undefined : () => handleAddonAction(feature, 'install')}
 													>
 														{__('Install & Activate', 'buddyboss')}
 													</Button>
@@ -635,7 +639,7 @@ export function SettingsScreen({ onNavigate }) {
 														variant="secondary"
 														className={`bb-admin-settings__feature-settings-btn${feature.requires_unmet ? ' bb-admin-settings__feature-settings-btn--disabled' : ''}`}
 														disabled={!!feature.requires_unmet}
-														onClick={feature.requires_unmet ? undefined : () => handleAddonAction(feature, 'mosh_addon_activate')}
+														onClick={feature.requires_unmet ? undefined : () => handleAddonAction(feature, 'activate')}
 													>
 														{__('Activate', 'buddyboss')}
 													</Button>

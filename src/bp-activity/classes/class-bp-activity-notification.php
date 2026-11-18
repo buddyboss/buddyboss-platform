@@ -662,9 +662,13 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 			$video_ids    = bp_activity_get_meta( $activity->id, 'bp_video_ids', true );
 			$gif_data     = bp_activity_get_meta( $activity->id, '_gif_data', true );
 			$poll_id      = bp_activity_get_meta( $activity->id, 'bb_poll_id' );
-			$poll         = ! empty( $poll_id ) && function_exists( 'bb_load_polls' ) ? bb_load_polls()->bb_get_poll( $poll_id ) : '';
-			$question     = ! empty( $poll->question ) ? $poll->question : '';
-			$amount       = 'single';
+			$poll         = '';
+			if ( ! empty( $poll_id ) && bb_is_feature_provided( 'polls' ) && function_exists( 'bb_load_polls' ) ) {
+				$bb_polls = bb_load_polls();
+				$poll     = $bb_polls ? $bb_polls->bb_get_poll( $poll_id ) : '';
+			}
+			$question = ! empty( $poll->question ) ? $poll->question : '';
+			$amount   = 'single';
 
 			if ( 'web_push' === $screen ) {
 				$notification_link = add_query_arg( 'rid', (int) $notification_id, bp_activity_get_permalink( $item_id ) );
