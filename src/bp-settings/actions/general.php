@@ -18,6 +18,7 @@
  * users accounts already, without knowing their existing password.
  *
  * @since BuddyPress 1.6.0
+ * @since BuddyBoss [BBVERSION] A new password is only reported and notified as changed once it is saved.
  *
  * @global BuddyPress $bp
  */
@@ -45,7 +46,7 @@ function bp_settings_action_general() {
 	// Define local defaults.
 	$bp            = buddypress(); // The instance.
 	$email_error   = '';           // Email error code: invalid|blocked|taken|empty|nochange.
-	$pass_error    = '';           // Password error code: invalid|mismatch|empty|nochange.
+	$pass_error    = '';           // Password error code: invalid|mismatch|empty|same|update_failed.
 	$pass_changed  = false;        // true if the user changes their password.
 	$email_changed = false;        // true if the user changes their email.
 	$feedback_type = 'error';      // success|error.
@@ -181,9 +182,24 @@ function bp_settings_action_general() {
 		// Restrict to send WordPress notification when change password from BuddyBoss.
 		add_filter( 'send_password_change_email', '__return_false' );
 
-		if ( ( empty( $email_error ) ) && ( empty( $pass_error ) ) && ( wp_update_user( $update_user ) ) ) {
-			$bp->displayed_user->userdata = bp_core_get_core_userdata( bp_displayed_user_id() );
+		$pass_saved = false;
+
+		if ( empty( $email_error ) && empty( $pass_error ) ) {
+			$user_updated = wp_update_user( $update_user );
+
+			// wp_update_user() returns a WP_Error on failure, which is truthy.
+			if ( ! is_wp_error( $user_updated ) ) {
+				$pass_saved                   = $pass_changed;
+				$bp->displayed_user->userdata = bp_core_get_core_userdata( bp_displayed_user_id() );
+			} elseif ( true === $pass_changed ) {
+				$pass_error = 'update_failed';
+			}
 		}
+
+		// The success message and the password changed email and notification
+		// rely on $pass_changed, so it is only true once the password is saved.
+		// It is not saved when the email has an error or the update fails.
+		$pass_changed = $pass_saved;
 
 		// Password Error.
 	} else {
@@ -225,6 +241,9 @@ function bp_settings_action_general() {
 			break;
 		case 'same':
 			$feedback['pass_same'] = __( 'The new password must be different from the current password.', 'buddyboss' );
+			break;
+		case 'update_failed':
+			$feedback['pass_update_failed'] = __( 'Your password could not be updated. Please try again or contact the site administrator.', 'buddyboss' );
 			break;
 		case false:
 			// No change.
@@ -325,6 +344,7 @@ add_action( 'bp_actions', 'bp_settings_action_general' );
  * Process email change verification or cancel requests.
  *
  * @since BuddyPress 2.1.0
+ * @since BuddyBoss [BBVERSION] A failed email update is no longer reported as verified, and a link with no pending change is ignored.
  */
 function bp_settings_verify_email_change() {
 	if ( ! bp_is_settings_component() ) {
@@ -341,8 +361,13 @@ function bp_settings_verify_email_change() {
 	if ( isset( $_GET['verify_email_change'] ) ) {
 		$pending_email = bp_get_user_meta( bp_displayed_user_id(), 'pending_email_change', true );
 
-		// Bail if the hash provided doesn't match the one saved in the database.
-		if ( ! hash_equals( urldecode( $_GET['verify_email_change'] ), $pending_email['hash'] ) ) {
+		// Bail if there is no pending change, for example when the link was
+		// already used or the change was cancelled, or if the hash provided
+		// doesn't match the one saved in the database.
+		if (
+			empty( $pending_email['hash'] ) ||
+			! hash_equals( urldecode( $_GET['verify_email_change'] ), $pending_email['hash'] )
+		) {
 			return;
 		}
 
@@ -353,7 +378,9 @@ function bp_settings_verify_email_change() {
 			)
 		);
 
-		if ( $email_changed ) {
+		// A WP_Error is truthy, so check for it explicitly. On failure the
+		// pending change is kept, so it can still be cancelled.
+		if ( ! is_wp_error( $email_changed ) ) {
 
 			// Delete the pending email change key.
 			bp_delete_user_meta( bp_displayed_user_id(), 'pending_email_change' );
