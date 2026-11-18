@@ -4521,7 +4521,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/includes/document/functions.php:182
 #: bp-templates/bp-nouveau/includes/groups/classes.php:455
 #: bp-templates/bp-nouveau/includes/groups/functions.php:664
-#: bp-templates/bp-nouveau/includes/media/functions.php:268
+#: bp-templates/bp-nouveau/includes/media/functions.php:269
 #: bp-templates/bp-nouveau/includes/video/functions.php:213
 msgid "My Groups"
 msgstr ""
@@ -5929,7 +5929,7 @@ msgstr ""
 #: bp-performance/bp-performance-includes.php:124
 #: bp-templates/bp-nouveau/buddypress/groups/single/photos.php:70
 #: bp-templates/bp-nouveau/includes/groups/classes.php:483
-#: bp-templates/bp-nouveau/includes/media/functions.php:222
+#: bp-templates/bp-nouveau/includes/media/functions.php:223
 #: bp-templates/bp-nouveau/readylaunch/media/add-media.php:57
 #: bp-templates/bp-nouveau/readylaunch/media/index.php:22
 #: bp-templates/bp-nouveau/readylaunch/media/media-header.php:43
@@ -5949,7 +5949,7 @@ msgstr ""
 #: bp-performance/bp-performance-includes.php:138
 #: bp-templates/bp-nouveau/buddypress/groups/single/videos.php:64
 #: bp-templates/bp-nouveau/includes/groups/classes.php:497
-#: bp-templates/bp-nouveau/includes/media/functions.php:214
+#: bp-templates/bp-nouveau/includes/media/functions.php:215
 #: bp-templates/bp-nouveau/readylaunch/video/index.php:21
 #: bp-templates/bp-nouveau/readylaunch/video/video-header.php:43
 #: bp-templates/bp-nouveau/readylaunch/video/videos.php:43
@@ -11626,7 +11626,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/video/albums.php:19
 #: bp-templates/bp-nouveau/buddypress/video/location-move.php:25
 #: bp-templates/bp-nouveau/includes/groups/classes.php:506
-#: bp-templates/bp-nouveau/includes/media/functions.php:218
+#: bp-templates/bp-nouveau/includes/media/functions.php:219
 #: bp-templates/bp-nouveau/readylaunch/media/albums.php:70
 #: bp-templates/bp-nouveau/readylaunch/media/location-move.php:29
 #: bp-templates/bp-nouveau/readylaunch/video/albums.php:22
@@ -11984,7 +11984,7 @@ msgstr ""
 #: bp-moderation/classes/class-bp-moderation-activity.php:573
 #: bp-moderation/classes/class-bp-moderation-activity.php:580
 #: bp-moderation/classes/class-bp-moderation-video.php:220
-#: bp-templates/bp-nouveau/includes/media/functions.php:213
+#: bp-templates/bp-nouveau/includes/media/functions.php:214
 #: bp-video/bp-video-functions.php:2805
 msgid "Video"
 msgstr ""
@@ -14341,7 +14341,7 @@ msgstr ""
 #: bp-media/classes/class-bp-media-component.php:334
 #: bp-media/classes/class-bp-media-component.php:365
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:1271
-#: bp-templates/bp-nouveau/includes/media/functions.php:256
+#: bp-templates/bp-nouveau/includes/media/functions.php:257
 msgid "My Photos"
 msgstr ""
 
@@ -16474,29 +16474,34 @@ msgstr ""
 msgid "Please login to perform this action."
 msgstr ""
 
-#: bp-core/classes/class-bb-readylaunch.php:4600
+#: bp-core/classes/class-bb-readylaunch.php:4593
+#: bp-templates/bp-nouveau/includes/media/functions.php:207
+msgid "Please enter a title."
+msgstr ""
+
+#: bp-core/classes/class-bb-readylaunch.php:4606
 msgid "You don't have permission to edit this document."
 msgstr ""
 
-#: bp-core/classes/class-bb-readylaunch.php:4611
+#: bp-core/classes/class-bb-readylaunch.php:4617
 msgid "Failed to rename document."
 msgstr ""
 
-#: bp-core/classes/class-bb-readylaunch.php:4620
-#: bp-core/classes/class-bb-readylaunch.php:4687
+#: bp-core/classes/class-bb-readylaunch.php:4626
+#: bp-core/classes/class-bb-readylaunch.php:4696
 #: bp-templates/bp-nouveau/includes/document/ajax.php:1854
 #: bp-templates/bp-nouveau/includes/media/ajax.php:908
 #: bp-templates/bp-nouveau/includes/video/ajax.php:1013
 msgid "Invalid privacy status."
 msgstr ""
 
-#: bp-core/classes/class-bb-readylaunch.php:4667
+#: bp-core/classes/class-bb-readylaunch.php:4676
 #: bp-templates/bp-nouveau/includes/document/ajax.php:817
 #: bp-templates/bp-nouveau/includes/document/ajax.php:877
 msgid "You don't have permission to edit this folder."
 msgstr ""
 
-#: bp-core/classes/class-bb-readylaunch.php:4678
+#: bp-core/classes/class-bb-readylaunch.php:4687
 msgid "Failed to rename folder."
 msgstr ""
 
@@ -25876,7 +25881,7 @@ msgstr ""
 #: bp-moderation/classes/class-bp-moderation-activity.php:545
 #: bp-moderation/classes/class-bp-moderation-activity.php:552
 #: bp-moderation/classes/class-bp-moderation-media.php:225
-#: bp-templates/bp-nouveau/includes/media/functions.php:221
+#: bp-templates/bp-nouveau/includes/media/functions.php:222
 msgid "Photo"
 msgstr ""
 
@@ -36975,11 +36980,11 @@ msgstr ""
 msgid "videos"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/media/functions.php:217
+#: bp-templates/bp-nouveau/includes/media/functions.php:218
 msgid "Album"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/media/functions.php:245
+#: bp-templates/bp-nouveau/includes/media/functions.php:246
 msgid "All Photos"
 msgstr ""
 

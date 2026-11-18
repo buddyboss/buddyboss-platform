@@ -18,6 +18,8 @@
  * users accounts already, without knowing their existing password.
  *
  * @since BuddyPress 1.6.0
+ * @since BuddyBoss [BBVERSION] An unchanged email address containing an apostrophe or ampersand is no longer treated as changed.
+ *                              The user is only updated when a new password is saved.
  *
  * @global BuddyPress $bp
  */
@@ -57,7 +59,10 @@ function bp_settings_action_general() {
 	// Validate the user again for the current password when making a big change.
 	if ( ( is_super_admin() ) || ( ! empty( $_POST['pwd'] ) && wp_check_password( $_POST['pwd'], $bp->displayed_user->userdata->user_pass, bp_displayed_user_id() ) ) ) {
 
-		$update_user = get_userdata( bp_displayed_user_id() );
+		// Only the fields this form can change are passed to wp_update_user().
+		$update_user = array(
+			'ID' => bp_displayed_user_id(),
+		);
 
 		/* Email Change Attempt ******************************************/
 
@@ -65,11 +70,13 @@ function bp_settings_action_general() {
 
 			// What is missing from the profile page vs signup -
 			// let's double check the goodies.
-			$user_email     = sanitize_email( esc_html( trim( $_POST['email'] ) ) );
+			$user_email     = sanitize_email( wp_unslash( $_POST['email'] ) );
 			$old_user_email = $bp->displayed_user->userdata->user_email;
 
 			// User is changing email address.
-			if ( $old_user_email !== $user_email ) {
+			// WordPress saves "&" as "&amp;", so compare with the plain text
+			// version of the saved address.
+			if ( wp_specialchars_decode( $old_user_email, ENT_QUOTES ) !== $user_email ) {
 
 				// Run some tests on the email address.
 				$email_checks = bp_core_validate_email_address( $user_email );
@@ -116,7 +123,7 @@ function bp_settings_action_general() {
 					bp_send_email( 'settings-verify-email-change', bp_displayed_user_id(), $args );
 					// We mark that the change has taken place so as to ensure a
 					// success message, even though verification is still required.
-					$_POST['email'] = $update_user->user_email;
+					$_POST['email'] = $old_user_email;
 					$email_changed  = true;
 				}
 
@@ -138,8 +145,8 @@ function bp_settings_action_general() {
 
 				// Password change attempt is successful.
 				if ( ( ! empty( $_POST['pwd'] ) && $_POST['pwd'] != $_POST['pass1'] ) || is_super_admin() ) {
-					$update_user->user_pass = $_POST['pass1'];
-					$pass_changed           = true;
+					$update_user['user_pass'] = $_POST['pass1'];
+					$pass_changed             = true;
 
 					// The new password is the same as the current password.
 				} else {
@@ -160,20 +167,6 @@ function bp_settings_action_general() {
 			$pass_error = 'empty';
 		}
 
-		// The structure of the $update_user object changed in WP 3.3, but
-		// wp_update_user() still expects the old format.
-		if ( isset( $update_user->data ) && is_object( $update_user->data ) ) {
-			$update_user = $update_user->data;
-			$update_user = get_object_vars( $update_user );
-
-			// Unset the password field to prevent it from emptying out the
-			// user's user_pass field in the database.
-			// @see wp_update_user().
-			if ( false === $pass_changed ) {
-				unset( $update_user['user_pass'] );
-			}
-		}
-
 		// Clear cached data, so that the changed settings take effect
 		// on the current page load.
 		clean_user_cache( bp_displayed_user_id() );
@@ -181,7 +174,17 @@ function bp_settings_action_general() {
 		// Restrict to send WordPress notification when change password from BuddyBoss.
 		add_filter( 'send_password_change_email', '__return_false' );
 
-		if ( ( empty( $email_error ) ) && ( empty( $pass_error ) ) && ( wp_update_user( $update_user ) ) ) {
+		// Only the password is saved here. A new email address waits for the
+		// verification link, so a save without a new password has nothing to
+		// write. Skipping wp_update_user() then also keeps an address with "&"
+		// as it is: WordPress re-encodes a saved "&amp;" on every update
+		// (https://core.trac.wordpress.org/ticket/16788).
+		if (
+			empty( $email_error ) &&
+			empty( $pass_error ) &&
+			true === $pass_changed &&
+			wp_update_user( $update_user )
+		) {
 			$bp->displayed_user->userdata = bp_core_get_core_userdata( bp_displayed_user_id() );
 		}
 
