@@ -344,7 +344,7 @@ add_action( 'bp_actions', 'bp_settings_action_general' );
  * Process email change verification or cancel requests.
  *
  * @since BuddyPress 2.1.0
- * @since BuddyBoss [BBVERSION] A failed email update is no longer reported as verified.
+ * @since BuddyBoss [BBVERSION] A failed email update is no longer reported as verified, and a link with no pending change is ignored.
  */
 function bp_settings_verify_email_change() {
 	if ( ! bp_is_settings_component() ) {
@@ -361,8 +361,13 @@ function bp_settings_verify_email_change() {
 	if ( isset( $_GET['verify_email_change'] ) ) {
 		$pending_email = bp_get_user_meta( bp_displayed_user_id(), 'pending_email_change', true );
 
-		// Bail if the hash provided doesn't match the one saved in the database.
-		if ( ! hash_equals( urldecode( $_GET['verify_email_change'] ), $pending_email['hash'] ) ) {
+		// Bail if there is no pending change, for example when the link was
+		// already used or the change was cancelled, or if the hash provided
+		// doesn't match the one saved in the database.
+		if (
+			empty( $pending_email['hash'] ) ||
+			! hash_equals( urldecode( $_GET['verify_email_change'] ), $pending_email['hash'] )
+		) {
 			return;
 		}
 

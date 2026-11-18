@@ -6,10 +6,11 @@
  */
 
 /**
- * Login Information: feedback when a change is not saved.
+ * Login Information: feedback when a change is saved or not.
  *
  * A new password is only reported and notified as changed once it is saved,
- * and a failed email verification is not reported as verified.
+ * a failed email verification is not reported as verified, and a
+ * verification link with no pending change is ignored.
  *
  * @group settings
  */
@@ -57,7 +58,7 @@ class BP_Tests_Settings_BpSettingsLoginInformationFeedback extends BP_UnitTestCa
 
 	/**
 	 * When wp_update_user() returns a WP_Error the new password is not
-	 * reported as saved and no email is sent.
+	 * reported as saved, and no email or notification is sent.
 	 */
 	public function test_failed_password_update_is_reported_as_error() {
 		$u     = $this->create_member( 'plain@example.com' );
@@ -90,6 +91,7 @@ class BP_Tests_Settings_BpSettingsLoginInformationFeedback extends BP_UnitTestCa
 		$this->assertSame( 'Your password could not be updated. Please try again or contact the site administrator.', buddypress()->template_message );
 		$this->assertSame( 'error', buddypress()->template_message_type );
 		$this->assertCount( 0, $sent );
+		$this->assertSame( 0, $this->count_password_notifications( $u ) );
 	}
 
 	/**
@@ -115,6 +117,7 @@ class BP_Tests_Settings_BpSettingsLoginInformationFeedback extends BP_UnitTestCa
 		$this->assertSame( 'That email address is already taken.', buddypress()->template_message );
 		$this->assertSame( 'error', buddypress()->template_message_type );
 		$this->assertCount( 0, $sent );
+		$this->assertSame( 0, $this->count_password_notifications( $u ) );
 	}
 
 	/**
@@ -134,6 +137,64 @@ class BP_Tests_Settings_BpSettingsLoginInformationFeedback extends BP_UnitTestCa
 		$this->assertSame( 'plain@example.com', get_userdata( $u )->user_email );
 		$this->assertSame( 'error', buddypress()->template_message_type );
 		$this->assertNotEmpty( bp_get_user_meta( $u, 'pending_email_change', true ) );
+	}
+
+	/**
+	 * A saved password is reported as saved, and the member gets the
+	 * password changed email and notification.
+	 */
+	public function test_saved_password_is_reported_and_notified() {
+		$u    = $this->create_member( 'plain@example.com' );
+		$sent = $this->record_emails();
+
+		$this->save_login_information(
+			$u,
+			array(
+				'email' => 'plain@example.com',
+				'pass1' => 'a-new-password',
+				'pass2' => 'a-new-password',
+			)
+		);
+
+		$this->assertTrue( wp_check_password( 'a-new-password', get_userdata( $u )->user_pass, $u ) );
+		$this->assertSame( 'Your settings have been saved.', buddypress()->template_message );
+		$this->assertSame( 'success', buddypress()->template_message_type );
+		$this->assertSame( array( 'settings-password-changed' ), $sent->getArrayCopy() );
+		$this->assertSame( 1, $this->count_password_notifications( $u ) );
+	}
+
+	/**
+	 * A verification link that was already used is ignored, because there is
+	 * no pending change left to verify.
+	 */
+	public function test_used_verify_link_is_ignored() {
+		$u = $this->create_member( 'plain@example.com' );
+
+		$this->save_login_information( $u, array( 'email' => 'new@example.com' ) );
+
+		$pending = bp_get_user_meta( $u, 'pending_email_change', true );
+
+		$this->open_verify_link( $u, $pending['hash'] );
+		$this->assertSame( 'new@example.com', get_userdata( $u )->user_email );
+
+		// The member opens the same link again.
+		$this->open_verify_link( $u, $pending['hash'] );
+
+		$this->assertSame( 'new@example.com', get_userdata( $u )->user_email );
+		$this->assertEmpty( buddypress()->template_message );
+	}
+
+	/**
+	 * A verification link with an empty hash is ignored when there is no
+	 * pending change, so the email address is kept.
+	 */
+	public function test_empty_verify_link_hash_is_ignored() {
+		$u = $this->create_member( 'plain@example.com' );
+
+		$this->open_verify_link( $u, '' );
+
+		$this->assertSame( 'plain@example.com', get_userdata( $u )->user_email );
+		$this->assertEmpty( buddypress()->template_message );
 	}
 
 	/**
@@ -166,6 +227,10 @@ class BP_Tests_Settings_BpSettingsLoginInformationFeedback extends BP_UnitTestCa
 		$bp->displayed_user->domain   = bp_core_get_user_domain( $user_id );
 		$bp->current_component        = 'settings';
 		$bp->current_action           = 'general';
+
+		// Each page load starts without a message.
+		$bp->template_message      = '';
+		$bp->template_message_type = '';
 	}
 
 	/**
@@ -196,6 +261,8 @@ class BP_Tests_Settings_BpSettingsLoginInformationFeedback extends BP_UnitTestCa
 	/**
 	 * Record the type of every email sent through bp_send_email().
 	 *
+	 * The filter doesn't get the email type, so it's read from the tokens.
+	 *
 	 * @return ArrayObject Email types, filled while the test runs.
 	 */
 	protected function record_emails() {
@@ -204,7 +271,13 @@ class BP_Tests_Settings_BpSettingsLoginInformationFeedback extends BP_UnitTestCa
 		add_filter(
 			'bp_before_send_email_parse_args',
 			static function ( $args ) use ( $sent ) {
-				$sent[] = isset( $args['tokens']['verify.url'] ) ? 'settings-verify-email-change' : 'other';
+				if ( isset( $args['tokens']['verify.url'] ) ) {
+					$sent[] = 'settings-verify-email-change';
+				} elseif ( isset( $args['tokens']['reset.url'] ) ) {
+					$sent[] = 'settings-password-changed';
+				} else {
+					$sent[] = 'other';
+				}
 
 				return $args;
 			}
@@ -214,19 +287,49 @@ class BP_Tests_Settings_BpSettingsLoginInformationFeedback extends BP_UnitTestCa
 	}
 
 	/**
-	 * Open the verification link of the pending email change.
+	 * Count the password changed notifications of a member.
 	 *
-	 * The handler redirects and dies. Throwing from `wp_redirect` (before the
-	 * suite-wide `__return_false` callback) stops it before die().
+	 * @param int $user_id Member ID.
+	 *
+	 * @return int Number of notifications, read or unread.
+	 */
+	protected function count_password_notifications( $user_id ) {
+		$notifications = BP_Notifications_Notification::get(
+			array(
+				'user_id'          => $user_id,
+				'component_name'   => buddypress()->members->id,
+				'component_action' => 'bb_account_password',
+				'is_new'           => 'both',
+			)
+		);
+
+		return count( $notifications );
+	}
+
+	/**
+	 * Open the verification link of the pending email change.
 	 *
 	 * @param int $user_id Member opening their own link.
 	 */
 	protected function verify_pending_email( $user_id ) {
 		$pending = bp_get_user_meta( $user_id, 'pending_email_change', true );
 
+		$this->open_verify_link( $user_id, $pending['hash'] );
+	}
+
+	/**
+	 * Open an email verification link.
+	 *
+	 * The handler redirects and dies. Throwing from `wp_redirect` (before the
+	 * suite-wide `__return_false` callback) stops it before die().
+	 *
+	 * @param int    $user_id Member opening their own link.
+	 * @param string $hash    Hash in the link.
+	 */
+	protected function open_verify_link( $user_id, $hash ) {
 		$this->open_login_information( $user_id );
 
-		$_GET['verify_email_change'] = $pending['hash'];
+		$_GET['verify_email_change'] = $hash;
 
 		add_filter(
 			'wp_redirect',
