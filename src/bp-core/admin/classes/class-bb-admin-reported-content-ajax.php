@@ -208,7 +208,7 @@ class BB_Admin_Reported_Content_Ajax {
 				 * item (e.g. activity) loads with id 0, so the owner is shown as
 				 * "Unknown". Listeners remove the pre-validate check here.
 				 *
-				 * @since BuddyBoss [BBVERSION]
+				 * @since BuddyBoss 3.8.0
 				 */
 				do_action( 'bb_moderation_before_get_related_' . $moderation->item_type );
 				$owner_id = bp_moderation_get_content_owner_id( (int) $moderation->item_id, $moderation->item_type );
@@ -218,7 +218,7 @@ class BB_Admin_Reported_Content_Ajax {
 				 *
 				 * Listeners restore the pre-validate check removed above.
 				 *
-				 * @since BuddyBoss [BBVERSION]
+				 * @since BuddyBoss 3.8.0
 				 */
 				do_action( 'bb_moderation_after_get_related_' . $moderation->item_type );
 				if ( is_array( $owner_id ) ) {
@@ -251,7 +251,7 @@ class BB_Admin_Reported_Content_Ajax {
 				 * Lifts the moderation pre-validate check so a hidden item resolves
 				 * its real ID/slug instead of producing an id=0 or directory link.
 				 *
-				 * @since BuddyBoss [BBVERSION]
+				 * @since BuddyBoss 3.8.0
 				 */
 				do_action( 'bb_moderation_before_get_related_' . $item_type );
 				$content_url = bp_moderation_get_permalink( $item_id, $item_type );
@@ -261,7 +261,7 @@ class BB_Admin_Reported_Content_Ajax {
 				 *
 				 * Listeners restore the pre-validate check removed above.
 				 *
-				 * @since BuddyBoss [BBVERSION]
+				 * @since BuddyBoss 3.8.0
 				 */
 				do_action( 'bb_moderation_after_get_related_' . $item_type );
 
@@ -410,7 +410,7 @@ class BB_Admin_Reported_Content_Ajax {
 		 * loads with id 0, so the owner shows as "Unknown" and the link breaks.
 		 * Listeners remove the pre-validate check here.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.8.0
 		 */
 		do_action( 'bb_moderation_before_get_related_' . $item_type );
 		$content_url = bp_moderation_get_permalink( $item_id, $item_type );
@@ -423,7 +423,7 @@ class BB_Admin_Reported_Content_Ajax {
 		 *
 		 * Listeners restore the pre-validate check removed above.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.8.0
 		 */
 		do_action( 'bb_moderation_after_get_related_' . $item_type );
 		if ( is_array( $owner_id ) ) {

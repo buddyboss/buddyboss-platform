@@ -1026,7 +1026,7 @@ function bp_is_activity_autoload_active( $default = true ) {
 /**
  * Get the directory (members/groups) page loading type.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.8.0
  *
  * @param string $default Optional. Fallback value if not found in the database.
  *                        Default: 'pagination'.
@@ -1043,7 +1043,7 @@ function bb_get_directory_load_type( $default = 'pagination' ) {
 	/**
 	 * Filters the directory page loading type.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.8.0
 	 *
 	 * @param string $load_type 'infinite' or 'pagination'.
 	 */
@@ -1053,7 +1053,7 @@ function bb_get_directory_load_type( $default = 'pagination' ) {
 /**
  * Check whether infinite scroll is enabled for directory (members/groups) pages.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.8.0
  *
  * @param bool $default Optional. Fallback value if not found in the database.
  *                      Default: false (classic pagination).
@@ -1067,7 +1067,7 @@ function bb_is_directory_autoload_active( $default = false ) {
 	/**
 	 * Filters whether directory infinite scroll is enabled.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.8.0
 	 *
 	 * @param bool $value True if infinite scroll is enabled, otherwise false.
 	 */
@@ -1081,7 +1081,7 @@ function bb_is_directory_autoload_active( $default = false ) {
  * activity: the directories, the profile lists and the group lists. Lists rendered on any other
  * screen (widgets, Network Search, group management screens) keep pagination.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.8.0
  *
  * @param string $list_name Optional. List to check: 'members' (Members directory, including the
  *                          Following/Followers tabs, and profile Connections + Mutual Connections),
@@ -1106,7 +1106,7 @@ function bb_is_list_autoload_active( $list_name = '' ) {
 	/**
 	 * Filters whether a members or groups list on the current screen loads with infinite scroll.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.8.0
 	 *
 	 * @param bool   $is_active True when the list uses infinite scroll.
 	 * @param string $list_name List being checked, or empty for any list.

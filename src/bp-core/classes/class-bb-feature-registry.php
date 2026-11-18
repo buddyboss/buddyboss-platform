@@ -649,7 +649,7 @@ class BB_Feature_Registry {
 	 * current one and a deprecation notice names the new ID. Only used when the old ID is not
 	 * itself a registered section and the current one is.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.8.0
 	 *
 	 * @param string $feature_id    Feature ID.
 	 * @param string $side_panel_id Side panel ID.
@@ -665,7 +665,7 @@ class BB_Feature_Registry {
 		/**
 		 * Filters the renamed (old => current) section IDs of a side panel.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.8.0
 		 *
 		 * @param array  $aliases       Old section ID => current section ID.
 		 * @param string $feature_id    Feature ID.
@@ -682,7 +682,7 @@ class BB_Feature_Registry {
 
 		_deprecated_argument(
 			__CLASS__ . '::' . $caller,
-			'[BBVERSION]',
+			'3.8.0',
 			sprintf(
 				/* translators: 1: old section ID, 2: current section ID */
 				esc_html__( 'Section "%1$s" was renamed to "%2$s". Use the new ID.', 'buddyboss' ),
