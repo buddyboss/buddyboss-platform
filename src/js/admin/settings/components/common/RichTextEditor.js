@@ -245,6 +245,21 @@ export function RichTextEditor( { id, label, value, onChange } ) {
 								} );
 
 								addLinkModalCommand( editor );
+
+								// Edits in the Code tab don't fire TinyMCE events: typing
+								// fires input and the Code tab buttons fire change on the
+								// textarea. Send them too, converted with autop() to the
+								// same HTML format as the Visual tab, so the value is kept
+								// when the modal switches to another tab before Save.
+								// Bind through jQuery: the link button's wpLink fires its
+								// change with jQuery's trigger(), which native listeners
+								// don't receive.
+								var onCodeTabChange = function () {
+									if ( editor.isHidden() && window.wp.editor.autop ) {
+										onChangeRef.current( window.wp.editor.autop( textarea.value ) );
+									}
+								};
+								window.jQuery( textarea ).on( 'input change', onCodeTabChange );
 							},
 						},
 						quicktags: {
