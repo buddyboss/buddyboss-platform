@@ -128,9 +128,9 @@ function bb_appearance_site_seo_add_pro_badge_when_no_sharing( $args ) {
 		'badge_icon' => 'bb-icons-rl-crown-simple',
 		'link_url'   => '',
 	);
-	// @bbwt-com-start pricing-links
+	// @bbwt-com-start pro-field-upgrade-links
 	$args['pro_notice']['link_url'] = 'https://www.buddyboss.com/pricing/';
-	// @bbwt-com-end pricing-links
+	// @bbwt-com-end pro-field-upgrade-links
 
 	return $args;
 }
@@ -1018,9 +1018,9 @@ function bb_appearance_register_site_seo_pro_placeholder_fields() {
 		'link_url'   => '',
 		'link_icon'  => 'bb-icons-rl-play',
 	);
-	// @bbwt-com-start pricing-links
+	// @bbwt-com-start pro-field-upgrade-links
 	$pro_notice_field['link_url'] = 'https://www.buddyboss.com/platform/';
-	// @bbwt-com-end pricing-links
+	// @bbwt-com-end pro-field-upgrade-links
 
 	// Idempotently ensure the section carries the UPGRADE LAUNCH badge.
 	//
@@ -1036,9 +1036,9 @@ function bb_appearance_register_site_seo_pro_placeholder_fields() {
 	// badge at AJAX time, where license state is settled. Same canonical
 	// pattern used by Activity Sharing.
 	$pro_notice_section_url = '';
-	// @bbwt-com-start pricing-links
+	// @bbwt-com-start pro-field-upgrade-links
 	$pro_notice_section_url = 'https://www.buddyboss.com/pricing/';
-	// @bbwt-com-end pricing-links
+	// @bbwt-com-end pro-field-upgrade-links
 	bb_register_feature_section(
 		$feature_id,
 		$panel_id,

@@ -467,9 +467,9 @@ function bb_field_upgrade_to_modal_payload( $entry, $fallback_label = '' ) {
 	// Builds without pricing links (the wordpress.org edition) have no fallback URL;
 	// UpgradeModal then renders no call-to-action link.
 	$fallback_url = '';
-	// @bbwt-com-start pricing-links
+	// @bbwt-com-start pro-field-upgrade-links
 	$fallback_url = 'https://www.buddyboss.com/pricing/';
-	// @bbwt-com-end pricing-links
+	// @bbwt-com-end pro-field-upgrade-links
 
 	return array(
 		'tier'        => sanitize_key( $entry['upgrade_tier'] ?? $entry['tier'] ?? 'pro' ),

@@ -121,9 +121,9 @@ function bb_notifications_register_web_push_panel_fields() {
 	) {
 		// Builds without upsell links (the wordpress.org edition) name the plugin without a link.
 		$pro_link = __( 'BuddyBoss Platform Pro', 'buddyboss' );
-		// @bbwt-com-start pricing-links
+		// @bbwt-com-start pro-field-upgrade-links
 		$pro_link = '<a target="_blank" rel="noopener noreferrer" href="' . esc_url( 'https://www.buddyboss.com/platform' ) . '">' . __( 'BuddyBoss Platform Pro', 'buddyboss' ) . '</a>';
-		// @bbwt-com-end pricing-links
+		// @bbwt-com-end pro-field-upgrade-links
 
 		// Pro installed but older version.
 		bb_register_feature_field(
@@ -195,9 +195,9 @@ function bb_notifications_register_web_push_pro_placeholder_fields() {
 	// Builds without upsell links (the wordpress.org edition) send no badge URL;
 	// the settings app then hides the section badge.
 	$pro_notice_section_url = '';
-	// @bbwt-com-start pricing-links
+	// @bbwt-com-start pro-field-upgrade-links
 	$pro_notice_section_url = 'https://www.buddyboss.com/platform/';
-	// @bbwt-com-end pricing-links
+	// @bbwt-com-end pro-field-upgrade-links
 
 	// -------------------------------------------------------------------------
 	// SECTION: OneSignal Connection (pro-gated placeholder).

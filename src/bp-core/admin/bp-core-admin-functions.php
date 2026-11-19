@@ -2264,14 +2264,14 @@ function bb_get_pro_label_notice( $type = 'default' ) {
 		);
 	} elseif ( ! function_exists( 'bb_platform_pro' ) || ( function_exists( 'bb_pro_should_lock_features' ) ? bb_pro_should_lock_features() : ! bbp_pro_is_license_valid() ) ) {
 		// Builds without upsell links (the wordpress.org edition) add no "Install ... to unlock" notice.
-		// @bbwt-com-start pricing-links
+		// @bbwt-com-start pro-field-upgrade-links
 		$bb_pro_notice = sprintf(
 			'<br/><span class="bb-head-notice"> %1$s <a target="_blank" href="https://www.buddyboss.com/platform/">%2$s</a> %3$s</span>',
 			esc_html__( 'Install', 'buddyboss' ),
 			esc_html__( 'BuddyBoss Platform Pro', 'buddyboss' ),
 			esc_html__( 'to unlock', 'buddyboss' )
 		);
-		// @bbwt-com-end pricing-links
+		// @bbwt-com-end pro-field-upgrade-links
 	}
 
 	$retval[ $type ] = $bb_pro_notice;

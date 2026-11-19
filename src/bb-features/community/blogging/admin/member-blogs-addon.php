@@ -363,11 +363,11 @@ function bb_member_blogging_get_upsell_field_data() {
 			// where the add-on is downloaded for upload. Builds without upsell links
 			// (the wordpress.org edition, which never reaches this state: it has no
 			// license connector) render no button.
-			// @bbwt-com-start pricing-links
+			// @bbwt-com-start pro-field-upgrade-links
 			$data['button_label']  = __( 'Go to My Account', 'buddyboss' );
 			$data['button_url']    = 'https://www.buddyboss.com/my-account/';
 			$data['button_target'] = '_blank';
-			// @bbwt-com-end pricing-links
+			// @bbwt-com-end pro-field-upgrade-links
 			// @bbwt-com-start installers
 			// In-place install. The empty-state card renders an `addon_action` button
 			// ahead of `button_url`, so the link above is only a fallback.
@@ -417,9 +417,9 @@ function bb_member_blogging_get_upsell_field_data() {
 				'button_url_from_catalog' => true,
 				'button_target'           => '_blank',
 			);
-			// @bbwt-com-start pricing-links
+			// @bbwt-com-start pro-field-upgrade-links
 			$data['button_url'] = 'https://www.buddyboss.com/pricing/';
-			// @bbwt-com-end pricing-links
+			// @bbwt-com-end pro-field-upgrade-links
 			break;
 	}
 

@@ -97,6 +97,11 @@ BuddyBoss Platform connects to the services below only in the situations describ
 * **What and when:** when an administrator opens the Help screen or the Integrations list in BuddyBoss > Settings, the site requests the help articles or the list of available integrations from `https://buddyboss.com`. The request carries the site's URL and the Platform version in its user agent, and nothing else.
 * **Who provides it:** BuddyBoss. [Terms](https://www.buddyboss.com/terms-and-conditions/), [Privacy Policy](https://www.buddyboss.com/privacy-policy/).
 
+= BuddyBoss add-on and upgrade catalog (admin only) =
+
+* **What and when:** when an administrator opens BuddyBoss > Settings, the site fetches two small JSON files from `https://bb-features-marketing.s3.amazonaws.com` (the list of BuddyBoss add-ons that are not installed, and the descriptions and images shown in the upgrade windows of settings that need a paid add-on). The result is cached for six hours. The request is a plain download and carries no information about your site.
+* **Who provides it:** BuddyBoss, hosted on Amazon S3. [Terms](https://www.buddyboss.com/terms-and-conditions/), [Privacy Policy](https://www.buddyboss.com/privacy-policy/).
+
 = "Chat with Buddy" support assistant (admin only, on click) =
 
 * **What and when:** the Help screen in BuddyBoss > Settings has a "Chat with Buddy" button. Nothing is loaded until an administrator clicks it; then the browser loads the chat widget script from `https://widget.docsbot.ai/chat.js` and the questions typed into the chat are sent to DocsBot AI to generate answers from the BuddyBoss documentation. No site data is sent automatically.
