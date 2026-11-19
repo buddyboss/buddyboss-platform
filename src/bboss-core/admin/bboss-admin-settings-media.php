@@ -385,7 +385,7 @@ function bboss_media_get_addons_upgrade_url( $panel_id ) {
 	// Builds without pricing links (the wordpress.org edition) return an empty URL,
 	// so the upsell card renders no button.
 	$url = '';
-	// @bbwt-com-start pricing-links
+	// @bbwt-com-start pro-field-upgrade-links
 	$url = add_query_arg(
 		array(
 			'utm_source'   => 'product',
@@ -395,7 +395,7 @@ function bboss_media_get_addons_upgrade_url( $panel_id ) {
 		),
 		'https://www.buddyboss.com/pricing/'
 	);
-	// @bbwt-com-end pricing-links
+	// @bbwt-com-end pro-field-upgrade-links
 
 	/** This filter is documented in bboss-core/admin/bboss-admin-moved-media-features-notice.php */
 	return (string) apply_filters( 'bb_moved_media_features_upgrade_url', $url, $content );

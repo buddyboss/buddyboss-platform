@@ -378,7 +378,7 @@ function bboss_admin_settings_page() {
 	// fallback (`supportTicket`). Builds without pricing links (the wordpress.org
 	// edition) send an empty list, and each component then hides its link.
 	$bb_pricing_urls = array();
-	// @bbwt-com-start pricing-links
+	// @bbwt-com-start pro-field-upgrade-links
 	$bb_pricing_urls = array(
 		'default'       => 'https://www.buddyboss.com/pricing/',
 		'buyTheme'      => 'https://buddyboss.com/pricing/',
@@ -387,7 +387,7 @@ function bboss_admin_settings_page() {
 		'helpProToPlus' => 'https://buddyboss.com/pricing/?utm_source=product&utm_medium=platform-plugin&utm_campaign=Help-upgrade-pro-to-plus&utm_content=help',
 		'helpFreeToPro' => 'https://buddyboss.com/pricing/?utm_source=product&utm_medium=platform-plugin&utm_campaign=Help-upgrade-free-to-pro&utm_content=help',
 	);
-	// @bbwt-com-end pricing-links
+	// @bbwt-com-end pro-field-upgrade-links
 	$localize_data['pricingUrls'] = $bb_pricing_urls;
 
 	// Help tab promo images, hosted on the BuddyBoss marketing bucket. Builds

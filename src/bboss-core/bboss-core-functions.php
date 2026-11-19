@@ -14248,11 +14248,11 @@ function bboss_admin_settings_get_pro_notice( $args = array() ) {
 		'link_url'   => '',
 		'link_icon'  => 'bb-icons-rl-play',
 	);
-	// @bbwt-com-start pricing-links
+	// @bbwt-com-start pro-field-upgrade-links
 	if ( $is_section ) {
 		$data['link_url'] = 'https://www.buddyboss.com/pricing/';
 	}
-	// @bbwt-com-end pricing-links
+	// @bbwt-com-end pro-field-upgrade-links
 
 	$is_pro_locked = false;
 
@@ -14339,9 +14339,9 @@ function bboss_admin_settings_get_pro_notice( $args = array() ) {
 
 			// Builds without upsell links (the wordpress.org edition) leave other types without a link.
 			$default_feature_url = '';
-			// @bbwt-com-start pricing-links
+			// @bbwt-com-start pro-field-upgrade-links
 			$default_feature_url = 'https://www.buddyboss.com/platform/';
-			// @bbwt-com-end pricing-links
+			// @bbwt-com-end pro-field-upgrade-links
 
 			$data['link_url'] = isset( $feature_urls[ $type ] ) ? $feature_urls[ $type ] : $default_feature_url;
 		}

@@ -354,9 +354,9 @@ function bboss_blogging_register_admin_settings() {
 		// Builds without pricing links (the wordpress.org edition) leave the
 		// fallback URL empty, so the card renders no button.
 		$member_blogs_upgrade_url = '';
-		// @bbwt-com-start pricing-links
+		// @bbwt-com-start pro-field-upgrade-links
 		$member_blogs_upgrade_url = 'https://www.buddyboss.com/pricing/';
-		// @bbwt-com-end pricing-links
+		// @bbwt-com-end pro-field-upgrade-links
 		bboss_register_feature_field(
 			'blogging',
 			'member_blogs',
