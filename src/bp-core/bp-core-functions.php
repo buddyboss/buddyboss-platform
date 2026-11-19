@@ -3663,6 +3663,8 @@ function bp_get_email( $email_type ) {
  * process the request without any errors.
  *
  * @since BuddyPress 2.5.0
+ * @since BuddyBoss 3.8.0 Added the `bb_pre_bp_send_email` filter, which can stop a validated
+ *                              email before any mail transport runs.
  *
  * @param string                   $email_type Type of email being sent.
  * @param string|array|int|WP_User $to         Either an email address, user ID, WP_User object,
@@ -3747,6 +3749,31 @@ function bp_send_email( $email_type, $to, $args = array() ) {
 	$status = $email->validate();
 	if ( is_wp_error( $status ) ) {
 		return $status;
+	}
+
+	/**
+	 * Filters whether to stop a validated email before it reaches a mail transport.
+	 *
+	 * Return anything other than null to end bp_send_email() here: that value is returned to
+	 * the caller and neither wp_mail() nor the delivery class runs. This fires before the
+	 * transport is chosen, so it behaves the same whichever mail plugin the site uses,
+	 * including plugins that declare their own wp_mail(), which may not apply `pre_wp_mail`.
+	 * Return true when the email was handled another way (for example held for a digest), or
+	 * a WP_Error to report that it was not sent.
+	 *
+	 * Plugins should check for bb_email_supports_pre_send_filter() before relying on it.
+	 *
+	 * @since BuddyBoss 3.8.0
+	 *
+	 * @param null|bool|WP_Error       $pre_send   Null to send the email as usual.
+	 * @param BP_Email                 $email      The validated email.
+	 * @param string                   $email_type Type of email being sent.
+	 * @param string|array|int|WP_User $to         The recipient passed to bp_send_email().
+	 * @param array                    $args       Extra parameters, notably `tokens`.
+	 */
+	$pre_send = apply_filters( 'bb_pre_bp_send_email', null, $email, $email_type, $to, $args );
+	if ( null !== $pre_send ) {
+		return $pre_send;
 	}
 
 	/**
@@ -3862,6 +3889,21 @@ function bp_send_email( $email_type, $to, $args = array() ) {
 		);
 
 	}
+}
+
+/**
+ * Whether bp_send_email() applies the `bb_pre_bp_send_email` filter.
+ *
+ * A capability marker. Plugins that hold or reroute BuddyBoss emails should gate their
+ * `bb_pre_bp_send_email` callback on function_exists() of this function and keep their older
+ * route (such as `pre_wp_mail`) for Platform versions without the filter.
+ *
+ * @since BuddyBoss 3.8.0
+ *
+ * @return bool Always true when this function exists.
+ */
+function bb_email_supports_pre_send_filter() {
+	return true;
 }
 
 /**
@@ -4911,6 +4953,7 @@ function bp_core_get_group_avatar( $legacy_user_avatar_name, $legacy_group_avata
  *
  * @return array Parsed URL data.
  * @since BuddyBoss 1.3.2
+ * @since BuddyBoss 3.8.0 Skips avatar images when collecting the page images.
  */
 function bp_core_parse_url( $url ) {
 
@@ -5079,6 +5122,12 @@ function bp_core_parse_url( $url ) {
 			for ( $i = 0; $i < $image_elements->length; $i ++ ) {
 				$image = $image_elements->item( $i );
 				$src   = $image->getAttribute( 'src' );
+
+				// Skip avatars (get_avatar() and BuddyBoss avatars carry an "avatar" class token),
+				// so a member photo is not used as the preview image when the page has no og:image.
+				if ( preg_match( '/(^|\s)avatar(\s|$)/i', $image->getAttribute( 'class' ) ) ) {
+					continue;
+				}
 
 				if ( filter_var( $src, FILTER_VALIDATE_URL ) ) {
 					$images[] = $src;
@@ -12470,30 +12519,6 @@ if ( ! function_exists( 'bb_media_delete_legacy_gif_attachment' ) ) {
 }
 
 /**
- * Get the user agent string used for URL preview HTTP requests.
- *
- * A modern browser UA is required so URL redirect resolvers (e.g. Google's
- * maps.app.goo.gl short-link service) return proper 3xx redirects instead of
- * empty JS-only interstitials that contain no scrapeable metadata.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @return string User agent string.
- */
-function bb_get_url_preview_user_agent() {
-	$user_agent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36';
-
-	/**
-	 * Filters the user agent string used for URL preview HTTP requests.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @param string $user_agent User agent string.
-	 */
-	return apply_filters( 'bb_url_preview_user_agent', $user_agent );
-}
-
-/**
  * Whether the BuddyBoss Add-ons plugin provides a given module on this site.
  *
  * The plugin-wide lock (bb_addons_should_lock_features()) only says the plan
@@ -12518,4 +12543,28 @@ function bb_addons_provides_module( $module_id ) {
 	}
 
 	return true;
+}
+
+/**
+ * Get the user agent string used for URL preview HTTP requests.
+ *
+ * A modern browser UA is required so URL redirect resolvers (e.g. Google's
+ * maps.app.goo.gl short-link service) return proper 3xx redirects instead of
+ * empty JS-only interstitials that contain no scrapeable metadata.
+ *
+ * @since BuddyBoss 3.8.0
+ *
+ * @return string User agent string.
+ */
+function bb_get_url_preview_user_agent() {
+	$user_agent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36';
+
+	/**
+	 * Filters the user agent string used for URL preview HTTP requests.
+	 *
+	 * @since BuddyBoss 3.8.0
+	 *
+	 * @param string $user_agent User agent string.
+	 */
+	return apply_filters( 'bb_url_preview_user_agent', $user_agent );
 }
