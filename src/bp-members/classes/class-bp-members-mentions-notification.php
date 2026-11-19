@@ -77,6 +77,8 @@ class BP_Members_Mentions_Notification extends BP_Core_Notification_Abstract {
 	 * Register notification for user mention.
 	 *
 	 * @since BuddyBoss 1.9.3
+	 * @since BuddyBoss [BBVERSION] The label shows the mention name of the member whose settings
+	 *                              are displayed, see bb_get_notification_settings_user_id().
 	 */
 	public function register_notification_for_mentions() {
 		$this->register_notification_type(
@@ -84,7 +86,7 @@ class BP_Members_Mentions_Notification extends BP_Core_Notification_Abstract {
 			sprintf(
 				/* translators: %s: users mention name. */
 				__( 'A member mentions you using "@%s"', 'buddyboss' ),
-				bb_members_get_user_mentionname( get_current_user_id() )
+				bb_members_get_user_mentionname( bb_get_notification_settings_user_id() )
 			),
 			esc_html__( 'A member is mentioned by another member', 'buddyboss' ),
 			'mentions'
