@@ -111,28 +111,8 @@ const settingsConfig = withCommonExternal({
 
 // Integrations marketplace configuration.
 // Standalone admin page (BuddyBoss → Integrations); its own bundle so it never
-// loads on the Settings page and vice-versa.
-const integrationsConfig = withCommonExternal({
-    ...defaultConfig,
-    name: 'integrations',
-    entry: {
-        'index': path.resolve(__dirname, 'integrations/index.js'),
-    },
-    output: {
-        path: path.resolve(__dirname, '../../bboss-core/admin/bboss-settings/integrations/build'),
-        filename: '[name].js',
-        clean: {
-            keep: /styles/, // Keep the styles directory (SCSS output)
-        },
-    },
-    module: {
-        ...defaultConfig.module,
-        rules: [
-            ...rules,
-            scssRule,
-        ],
-    },
-});
+// loads on the Settings page and vice-versa. buddyboss.com build only: the
+// WordPress.org build ships neither the page nor this bundle.
 
 // Standalone KB modal — mounts the shared KB modal on any admin page and
 // exposes window.bbKb. Externalizes @bb/admin-common like the other consumers.
@@ -190,13 +170,18 @@ if (buildTarget === 'common') {
     module.exports = rlOnboardingConfig;
 } else if (buildTarget === 'settings') {
     module.exports = settingsConfig;
-} else if (buildTarget === 'integrations') {
-    module.exports = integrationsConfig;
 } else if (buildTarget === 'kb-standalone') {
     module.exports = kbStandaloneConfig;
 } else {
     // Default: export all configurations for combined builds. common is listed
     // before settings/integrations to mirror the package.json build order (they
     // externalize @bb/admin-common as a runtime dep, so order is cosmetic here).
-    module.exports = [rlOnboardingConfig, commonConfig, settingsConfig, integrationsConfig, kbStandaloneConfig];
+    // One entry per line so the marketplace bundle can be fenced out of the
+    // WordPress.org build.
+    module.exports = [
+        rlOnboardingConfig,
+        commonConfig,
+        settingsConfig,
+        kbStandaloneConfig,
+    ];
 }

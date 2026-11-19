@@ -97,10 +97,6 @@ function bboss_admin_settings_init() {
 			}
 		}
 
-		// Integrations marketplace — plugin activate/deactivate AJAX handlers.
-		if ( file_exists( bboss()->plugin_dir . 'bboss-core/admin/classes/class-bboss-admin-integrations-ajax.php' ) ) {
-			require_once bboss()->plugin_dir . 'bboss-core/admin/classes/class-bboss-admin-integrations-ajax.php';
-		}
 
 		// Profile AJAX handlers (only when xprofile component is active).
 		if ( bboss_is_active( 'xprofile' ) ) {
@@ -142,10 +138,6 @@ function bboss_admin_settings_init() {
 			require_once bboss()->plugin_dir . 'bboss-core/admin/bboss-admin-settings-page.php';
 		}
 
-		// Integrations marketplace page (render function for the bb-integrations submenu).
-		if ( file_exists( bboss()->plugin_dir . 'bboss-core/admin/bboss-admin-integrations-page.php' ) ) {
-			require_once bboss()->plugin_dir . 'bboss-core/admin/bboss-admin-integrations-page.php';
-		}
 
 		// Shared admin-common layer asset registration.
 		if ( file_exists( bboss()->plugin_dir . 'bboss-core/admin/bboss-admin-common-assets.php' ) ) {
@@ -290,30 +282,6 @@ function bboss_register_help_content_rest_route() {
 }
 add_action( 'rest_api_init', 'bboss_register_help_content_rest_route' );
 
-/**
- * Register the Integrations marketplace REST proxy route.
- *
- * Same-origin server-side proxy for the buddyboss.com Integrations directory
- * (`wp/v2/integrations` + taxonomies). Mirrors the help-content proxy with its
- * own cache namespace and filters. The React Integrations screen POSTs path-only
- * fragments to `buddyboss/v1/integrations/proxy`.
- *
- * @since BuddyBoss 3.1.0
- *
- * @return void
- */
-function bboss_register_integrations_rest_route() {
-	$controller_file = bboss()->plugin_dir . 'bboss-core/admin/classes/class-bboss-rest-integrations-endpoint.php';
-	if ( ! file_exists( $controller_file ) ) {
-		return;
-	}
-	require_once $controller_file;
-	if ( ! class_exists( 'BBoss_REST_Integrations_Endpoint' ) ) {
-		return;
-	}
-	( new BBoss_REST_Integrations_Endpoint() )->register_routes();
-}
-add_action( 'rest_api_init', 'bboss_register_integrations_rest_route' );
 
 /**
  * Initialize the Integration Bridge early.

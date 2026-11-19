@@ -462,21 +462,6 @@ if ( ! class_exists( 'BBoss_Admin' ) ) :
 			// per-integration settings now live inside the Settings grid under the
 			// "Integrations" category (the bp-integrations URL is redirected by
 			// bb_redirect_bp_integrations_* in bboss-core-admin-actions.php).
-			//
-			// Separately, the Integrations *marketplace* — a curated directory of
-			// third-party integrations fetched from buddyboss.com — is its own
-			// standalone React page under the new bb-integrations slug. Registered
-			// unconditionally (like bb-settings above): add_submenu_page() only
-			// stores the callback string; WP invokes bb_admin_integrations_page()
-			// at render time, by which point bboss-admin-integrations-page.php is loaded.
-			$hooks[] = add_submenu_page(
-				$this->settings_page,
-				__( 'BuddyBoss Integrations', 'buddyboss-platform' ),
-				__( 'Integrations', 'buddyboss-platform' ),
-				$this->capability,
-				'bb-integrations',
-				'bboss_admin_integrations_page'
-			);
 
 			// ReadyLaunch legacy admin page retired in BuddyBoss 3.0.0 —
 			// the `bb-readylaunch` URL now redirects to Appearance in Settings 2.0
