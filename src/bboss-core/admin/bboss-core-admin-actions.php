@@ -1130,16 +1130,52 @@ if ( function_exists( 'bboss_core_settings_saved_notice' ) && ! function_exists(
 add_action( 'bp_admin_notices', 'bb_core_settings_saved_notice', 1010 );
 
 /**
- * Whether the BuddyBoss Theme renders its own admin header on this screen.
+ * The BuddyBoss Theme's standalone admin-header callback, if it is hooked.
  *
  * The theme boots its standalone licensing module (licence page, admin header
  * with the notification bell) only when Platform's licence manager is absent,
  * for example on a build without the buddyboss.com hub. That module hooks
  * `in_admin_header` for every screen whose base contains `buddyboss`, `bp_` or
- * `bb_` (plus the Custom Fonts post type), the same screens this file's header
- * covers, so without this check such pages show two branding bars.
+ * `bb_` (plus the Custom Fonts post type): the same screens this file's legacy
+ * header covers, and the Settings screen, which draws its own React header.
  *
  * The hook table is read directly: calling the theme's singleton would boot it.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return array{0:object,1:string,2:int}|null Callback and priority, or null.
+ */
+function bb_theme_admin_header_callback() {
+	if ( ! class_exists( '\BuddyBossTheme\Admin\Mothership\BB_Theme_Mothership_Loader', false ) ) {
+		return null;
+	}
+
+	$hook = isset( $GLOBALS['wp_filter']['in_admin_header'] ) ? $GLOBALS['wp_filter']['in_admin_header'] : null;
+	if ( ! $hook instanceof WP_Hook ) {
+		return null;
+	}
+
+	foreach ( $hook->callbacks as $priority => $callbacks ) {
+		foreach ( $callbacks as $callback ) {
+			if (
+				isset( $callback['function'] ) &&
+				is_array( $callback['function'] ) &&
+				isset( $callback['function'][0], $callback['function'][1] ) &&
+				$callback['function'][0] instanceof \BuddyBossTheme\Admin\Mothership\BB_Theme_Mothership_Loader
+			) {
+				return array( $callback['function'][0], (string) $callback['function'][1], (int) $priority );
+			}
+		}
+	}
+
+	return null;
+}
+
+/**
+ * Whether the BuddyBoss Theme renders its own admin header on this screen.
+ *
+ * Mirrors the theme's screen test, so Platform's legacy header can stand down
+ * where the theme prints one and the page does not show two branding bars.
  *
  * @since BuddyBoss [BBVERSION]
  *
@@ -1147,11 +1183,11 @@ add_action( 'bp_admin_notices', 'bb_core_settings_saved_notice', 1010 );
  * @return bool
  */
 function bb_theme_renders_admin_header( $screen ) {
-	if ( empty( $screen ) || ! class_exists( '\BuddyBossTheme\Admin\Mothership\BB_Theme_Mothership_Loader', false ) ) {
+	if ( empty( $screen ) || null === bb_theme_admin_header_callback() ) {
 		return false;
 	}
 
-	$covered = (
+	return (
 		! empty( $screen->base ) &&
 		(
 			false !== strpos( $screen->base, 'buddyboss' ) ||
@@ -1159,31 +1195,32 @@ function bb_theme_renders_admin_header( $screen ) {
 			false !== strpos( $screen->base, 'bb_' )
 		)
 	) || ( ! empty( $screen->post_type ) && 'buddyboss_fonts' === $screen->post_type );
-
-	if ( ! $covered ) {
-		return false;
-	}
-
-	$hook = isset( $GLOBALS['wp_filter']['in_admin_header'] ) ? $GLOBALS['wp_filter']['in_admin_header'] : null;
-	if ( ! $hook instanceof WP_Hook ) {
-		return false;
-	}
-
-	foreach ( $hook->callbacks as $callbacks ) {
-		foreach ( $callbacks as $callback ) {
-			if (
-				isset( $callback['function'] ) &&
-				is_array( $callback['function'] ) &&
-				isset( $callback['function'][0] ) &&
-				$callback['function'][0] instanceof \BuddyBossTheme\Admin\Mothership\BB_Theme_Mothership_Loader
-			) {
-				return true;
-			}
-		}
-	}
-
-	return false;
 }
+
+/**
+ * Keep the theme's standalone header off the screens that draw the React one.
+ *
+ * Settings 2.0 renders the shared React header (`.bb-admin-header`) inside its
+ * app, so a second bar printed in `in_admin_header` only adds dead space above
+ * it. Runs before the theme's callback (priority 999) and unhooks it there.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_remove_theme_admin_header_on_react_screens() {
+	$screen = get_current_screen();
+	if ( empty( $screen->id ) || 'buddyboss_page_bb-settings' !== $screen->id ) {
+		return;
+	}
+
+	$callback = bb_theme_admin_header_callback();
+	if ( null !== $callback ) {
+		remove_action( 'in_admin_header', array( $callback[0], $callback[1] ), $callback[2] );
+	}
+}
+
+add_action( 'in_admin_header', 'bb_remove_theme_admin_header_on_react_screens', 1 );
 
 /**
  * Render the admin header for BuddyBoss related admin pages.
