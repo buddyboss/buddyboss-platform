@@ -2029,6 +2029,17 @@ function bp_activity_get_comments( $args = '' ) {
 function bp_activity_recurse_comments( $comment, $args = array() ) {
 	global $activities_template;
 
+	/**
+	 * Filters the direction of the activity comment paging ("View more comments").
+	 *
+	 * @since BuddyBoss 2.5.80
+	 * @since BuddyBoss [BBVERSION] Defaults to the direction of the comment query
+	 *                              (`bp_activity_comments_get_misc_sql`) instead of 'ASC'.
+	 *
+	 * @param string $order 'ASC' or 'DESC'.
+	 */
+	$comment_order_by = apply_filters( 'bb_activity_recurse_comments_order_by', bb_get_activity_comments_order() );
+
 	$r = bp_parse_args(
 		$args,
 		array(
@@ -2039,7 +2050,7 @@ function bp_activity_recurse_comments( $comment, $args = array() ) {
 			'is_ajax_load_more'      => false,
 			'last_comment_timestamp' => '',
 			'last_comment_id'        => 0,
-			'comment_order_by'       => apply_filters( 'bb_activity_recurse_comments_order_by', 'ASC' ),
+			'comment_order_by'       => $comment_order_by,
 		),
 		'bb_activity_recurse_comments'
 	);
