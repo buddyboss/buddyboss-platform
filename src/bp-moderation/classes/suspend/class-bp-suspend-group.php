@@ -204,7 +204,7 @@ class BP_Suspend_Group extends BP_Suspend_Abstract {
 	/**
 	 * Remove Pre-validate check.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.8.0
 	 */
 	public function remove_pre_validate_check() {
 		remove_filter( 'bp_groups_group_pre_validate', array( $this, 'restrict_single_item' ), 10 );
@@ -213,7 +213,7 @@ class BP_Suspend_Group extends BP_Suspend_Abstract {
 	/**
 	 * Add Pre-validate check.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.8.0
 	 */
 	public function add_pre_validate_check() {
 		add_filter( 'bp_groups_group_pre_validate', array( $this, 'restrict_single_item' ), 10, 2 );

@@ -340,7 +340,7 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 	/**
 	 * Remove the suspended comment link check.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.8.0
 	 */
 	public function remove_comment_link_check() {
 		remove_filter( 'get_comment_link', array( $this, 'blocked_get_comment_link' ), 10 );
@@ -349,7 +349,7 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 	/**
 	 * Add the suspended comment link check.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.8.0
 	 */
 	public function add_comment_link_check() {
 		add_filter( 'get_comment_link', array( $this, 'blocked_get_comment_link' ), 10, 2 );

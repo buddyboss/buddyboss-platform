@@ -80,7 +80,7 @@ class BB_DRM_Event {
 	 *
 	 * A null value means "no row" and is cached too.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.8.0
 	 *
 	 * @var array
 	 */
@@ -387,7 +387,7 @@ class BB_DRM_Event {
 	/**
 	 * Flush the per-request latest() cache.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.8.0
 	 *
 	 * @param string $event Optional. Event name to flush. Default empty, flushes all events.
 	 */

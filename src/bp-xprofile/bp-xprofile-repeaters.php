@@ -1409,7 +1409,7 @@ function bb_xprofile_skip_repeater_template_mirror( $template_field_id ) {
  * queued migration from WP-Cron, where admin files are not loaded.
  *
  * @since BuddyBoss 2.3.70
- * @since BuddyBoss [BBVERSION] Moved from bp-xprofile-admin.php so the cron healthcheck can run it.
+ * @since BuddyBoss 3.8.0 Moved from bp-xprofile-admin.php so the cron healthcheck can run it.
  *
  * @param array $user_ids Array of user ID's.
  * @param int   $group_id Xprofile group ID.
