@@ -460,7 +460,9 @@ function bboss_admin_settings_register_email_digest_placeholder() {
 			'show'       => true,
 			'badge_text' => __( 'UPGRADE START', 'buddyboss-platform' ),
 			'badge_icon' => 'bb-icons-rl-crown-simple',
+			// @bbwt-com-start pro-field-upgrade-links
 			'link_url'   => 'https://buddyboss.com/ch/web-start/?utm_source=product&utm_medium=platform-plugin&utm_campaign=email-digest-upgrade&utm_content=emails-settings',
+			// @bbwt-com-end pro-field-upgrade-links
 		);
 	}
 
@@ -705,7 +707,9 @@ function bboss_admin_settings_register_email_digest_locked_form() {
 				'badge_text' => __( 'START', 'buddyboss-platform' ),
 				'badge_icon' => 'bb-icons-rl-crown-simple',
 				'link_icon'  => 'bb-icons-rl bb-icons-rl-play',
+				// @bbwt-com-start pro-field-upgrade-links
 				'link_url'   => 'https://buddyboss.com/ch/web-start/?utm_source=product&utm_medium=platform-plugin&utm_campaign=email-digest-upgrade&utm_content=emails-settings',
+				// @bbwt-com-end pro-field-upgrade-links
 			),
 		)
 	);
