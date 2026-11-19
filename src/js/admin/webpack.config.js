@@ -111,7 +111,9 @@ const settingsConfig = withCommonExternal({
 
 // Integrations marketplace configuration.
 // Standalone admin page (BuddyBoss → Integrations); its own bundle so it never
-// loads on the Settings page and vice-versa.
+// loads on the Settings page and vice-versa. buddyboss.com build only: the
+// WordPress.org build ships neither the page nor this bundle.
+/* @bbwt-com-start integrations-marketplace */
 const integrationsConfig = withCommonExternal({
     ...defaultConfig,
     name: 'integrations',
@@ -133,6 +135,7 @@ const integrationsConfig = withCommonExternal({
         ],
     },
 });
+/* @bbwt-com-end integrations-marketplace */
 
 // Standalone KB modal — mounts the shared KB modal on any admin page and
 // exposes window.bbKb. Externalizes @bb/admin-common like the other consumers.
@@ -190,13 +193,25 @@ if (buildTarget === 'common') {
     module.exports = rlOnboardingConfig;
 } else if (buildTarget === 'settings') {
     module.exports = settingsConfig;
+/* @bbwt-com-start integrations-marketplace */
 } else if (buildTarget === 'integrations') {
     module.exports = integrationsConfig;
+/* @bbwt-com-end integrations-marketplace */
 } else if (buildTarget === 'kb-standalone') {
     module.exports = kbStandaloneConfig;
 } else {
     // Default: export all configurations for combined builds. common is listed
     // before settings/integrations to mirror the package.json build order (they
     // externalize @bb/admin-common as a runtime dep, so order is cosmetic here).
-    module.exports = [rlOnboardingConfig, commonConfig, settingsConfig, integrationsConfig, kbStandaloneConfig];
+    // One entry per line so the marketplace bundle can be fenced out of the
+    // WordPress.org build.
+    module.exports = [
+        rlOnboardingConfig,
+        commonConfig,
+        settingsConfig,
+        /* @bbwt-com-start integrations-marketplace */
+        integrationsConfig,
+        /* @bbwt-com-end integrations-marketplace */
+        kbStandaloneConfig,
+    ];
 }

@@ -510,6 +510,7 @@ if ( ! class_exists( 'BBoss_Admin' ) ) :
 			// per-integration settings now live inside the Settings grid under the
 			// "Integrations" category (the bp-integrations URL is redirected by
 			// bb_redirect_bp_integrations_* in bboss-core-admin-actions.php).
+			// @bbwt-com-start integrations-marketplace
 			//
 			// Separately, the Integrations *marketplace* — a curated directory of
 			// third-party integrations fetched from buddyboss.com — is its own
@@ -517,6 +518,7 @@ if ( ! class_exists( 'BBoss_Admin' ) ) :
 			// unconditionally (like bb-settings above): add_submenu_page() only
 			// stores the callback string; WP invokes bb_admin_integrations_page()
 			// at render time, by which point bboss-admin-integrations-page.php is loaded.
+			// buddyboss.com build only: the WordPress.org build has no marketplace page.
 			$hooks[] = add_submenu_page(
 				$this->settings_page,
 				__( 'BuddyBoss Integrations', 'buddyboss' ),
@@ -525,6 +527,7 @@ if ( ! class_exists( 'BBoss_Admin' ) ) :
 				'bb-integrations',
 				'bboss_admin_integrations_page'
 			);
+			// @bbwt-com-end integrations-marketplace
 
 			// ReadyLaunch legacy admin page retired in BuddyBoss 3.0.0 —
 			// the `bb-readylaunch` URL now redirects to Appearance in Settings 2.0
