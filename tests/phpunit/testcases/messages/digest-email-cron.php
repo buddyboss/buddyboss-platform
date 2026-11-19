@@ -602,4 +602,89 @@ class BB_Tests_Messages_Digest_Email_Cron extends BP_UnitTestCase_Emails {
 		$this->assertSame( '', (string) bp_get_option( 'bb_delay_email_notification_disabled_at', '' ) );
 		$this->assertSame( '', (string) bp_get_option( 'bb_delay_email_notification_enabled_at', '' ) );
 	}
+
+	/**
+	 * Replay BB_Feature_Registry::bb_activate_feature( 'messages' ) as far as the digest event
+	 * is concerned: the component list is saved first, then `bp_core_install` and
+	 * `bb_feature_activated` fire. (Settings 2.0 features are not registered in the test
+	 * bootstrap, so the registry method itself cannot be called here.)
+	 */
+	protected function activate_messages_like_settings_2_0() {
+		$active_components             = bp_get_option( 'bp-active-components', array() );
+		$active_components['messages'] = 1;
+
+		bp_update_option( 'bp-active-components', $active_components );
+		do_action( 'bp_core_install', $active_components );
+		do_action( 'bb_feature_activated', 'messages' );
+	}
+
+	/**
+	 * PROD-10189 — turning "Private Messaging" on from its Settings 2.0 card saves the component
+	 * list before `bp_core_install` fires, so the component-diff scheduler never sees the change
+	 * and the activation request itself creates no event. The first request after activation
+	 * must create it on the saved interval.
+	 */
+	public function test_activating_messages_from_settings_2_0_schedules_the_digest_event_on_the_next_load() {
+		bp_update_option( 'delay_email_notification', 1 );
+		bp_update_option( 'time_delay_email_notification', 60 );
+
+		$this->activate_messages_like_settings_2_0();
+		$this->assertSame( 0, $this->count_digest_events(), 'precondition: the activation request schedules nothing (PROD-10189 root cause)' );
+
+		$this->run_load_time_schedule();
+
+		$this->assertSame( 'bb_schedule_1hour', wp_get_schedule( 'bb_digest_email_notifications_hook' ) );
+		$this->assertSame( 1, $this->count_digest_events() );
+	}
+
+	/**
+	 * PROD-10189 — activation creates no event while delayed emails are not in effect
+	 * (e.g. the Notifications component is off), even though the stored option is on.
+	 */
+	public function test_activating_messages_does_not_schedule_when_delay_is_not_in_effect() {
+		bp_update_option( 'delay_email_notification', 1 );
+		bp_update_option( 'time_delay_email_notification', 15 );
+		add_filter( 'bb_delay_email_notifications_enabled', '__return_false' );
+		$this->assertFalse( bb_check_delay_email_notification(), 'precondition: delay is not in effect' );
+
+		$this->activate_messages_like_settings_2_0();
+		$this->run_load_time_schedule();
+
+		$this->assertSame( 0, $this->count_digest_events() );
+	}
+
+	/**
+	 * PROD-10189 — turning "Private Messaging" off from its Settings 2.0 card removes every
+	 * digest event, duplicates included.
+	 */
+	public function test_deactivating_messages_clears_every_digest_event() {
+		$this->assertSame( 10, has_action( 'bb_feature_deactivated', 'bb_messages_unschedule_digest_cron_on_feature_deactivate' ) );
+
+		wp_schedule_event( time(), 'bb_schedule_15min', 'bb_digest_email_notifications_hook' );
+		wp_schedule_event( time() + HOUR_IN_SECONDS, 'bb_schedule_15min', 'bb_digest_email_notifications_hook' );
+		$this->assertSame( 2, $this->count_digest_events(), 'precondition: two digest events' );
+
+		do_action( 'bb_feature_deactivated', 'messages' );
+
+		$this->assertSame( 0, $this->count_digest_events() );
+	}
+
+	/**
+	 * PROD-10189 — turning off any other feature leaves the digest event alone.
+	 */
+	public function test_deactivating_another_feature_keeps_the_digest_event() {
+		wp_schedule_event( time(), 'bb_schedule_15min', 'bb_digest_email_notifications_hook' );
+
+		do_action( 'bb_feature_deactivated', 'activity' );
+
+		$this->assertSame( 1, $this->count_digest_events() );
+	}
+
+	/**
+	 * PROD-10189 — activation adds no scheduler of its own (the load-time repair owns it), so
+	 * no event is created during the activation request with the checks it applies skipped.
+	 */
+	public function test_activation_adds_no_digest_scheduler_of_its_own() {
+		$this->assertFalse( has_action( 'bb_feature_activated', 'bb_messages_schedule_digest_cron_on_feature_activate' ) );
+	}
 }
