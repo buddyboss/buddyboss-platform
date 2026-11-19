@@ -1130,6 +1130,62 @@ if ( function_exists( 'bboss_core_settings_saved_notice' ) && ! function_exists(
 add_action( 'bp_admin_notices', 'bb_core_settings_saved_notice', 1010 );
 
 /**
+ * Whether the BuddyBoss Theme renders its own admin header on this screen.
+ *
+ * The theme boots its standalone licensing module (licence page, admin header
+ * with the notification bell) only when Platform's licence manager is absent,
+ * for example on a build without the buddyboss.com hub. That module hooks
+ * `in_admin_header` for every screen whose base contains `buddyboss`, `bp_` or
+ * `bb_` (plus the Custom Fonts post type), the same screens this file's header
+ * covers, so without this check such pages show two branding bars.
+ *
+ * The hook table is read directly: calling the theme's singleton would boot it.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param WP_Screen|null $screen Current screen.
+ * @return bool
+ */
+function bb_theme_renders_admin_header( $screen ) {
+	if ( empty( $screen ) || ! class_exists( '\BuddyBossTheme\Admin\Mothership\BB_Theme_Mothership_Loader', false ) ) {
+		return false;
+	}
+
+	$covered = (
+		! empty( $screen->base ) &&
+		(
+			false !== strpos( $screen->base, 'buddyboss' ) ||
+			false !== strpos( $screen->base, 'bp_' ) ||
+			false !== strpos( $screen->base, 'bb_' )
+		)
+	) || ( ! empty( $screen->post_type ) && 'buddyboss_fonts' === $screen->post_type );
+
+	if ( ! $covered ) {
+		return false;
+	}
+
+	$hook = isset( $GLOBALS['wp_filter']['in_admin_header'] ) ? $GLOBALS['wp_filter']['in_admin_header'] : null;
+	if ( ! $hook instanceof WP_Hook ) {
+		return false;
+	}
+
+	foreach ( $hook->callbacks as $callbacks ) {
+		foreach ( $callbacks as $callback ) {
+			if (
+				isset( $callback['function'] ) &&
+				is_array( $callback['function'] ) &&
+				isset( $callback['function'][0] ) &&
+				$callback['function'][0] instanceof \BuddyBossTheme\Admin\Mothership\BB_Theme_Mothership_Loader
+			) {
+				return true;
+			}
+		}
+	}
+
+	return false;
+}
+
+/**
  * Render the admin header for BuddyBoss related admin pages.
  *
  * @since BuddyBoss 2.14.0
@@ -1138,6 +1194,11 @@ add_action( 'bp_admin_notices', 'bb_core_settings_saved_notice', 1010 );
  */
 function bboss_render_admin_header() {
 	$screen = get_current_screen();
+
+	// The theme's standalone module prints its own header on these screens.
+	if ( bb_theme_renders_admin_header( $screen ) ) {
+		return;
+	}
 
 	if (
 		(
