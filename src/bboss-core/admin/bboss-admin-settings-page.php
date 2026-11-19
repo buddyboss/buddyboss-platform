@@ -332,15 +332,12 @@ function bboss_admin_settings_page() {
 	// fallback (`supportTicket`). Builds without pricing links (the wordpress.org
 	// edition) send an empty list, and each component then hides its link.
 	$bb_pricing_urls = array();
+	// `default` backs the upgrade modal of the pro fields and placeholder cards
+	// (rule pro-field-upgrade-links); the Help tab's support-ticket card, its
+	// promo cards and the Appearance Buy Theme banner are plain buddyboss.com
+	// links (rule pricing-links).
 	// @bbwt-com-start pro-field-upgrade-links
-	$bb_pricing_urls = array(
-		'default'       => 'https://www.buddyboss.com/pricing/',
-		'buyTheme'      => 'https://buddyboss.com/pricing/',
-		'supportTicket' => 'https://buddyboss.com/my-account/?tab=support',
-		'helpPlusToApp' => 'https://buddyboss.com/pricing/?utm_source=product&utm_medium=platform-plugin&utm_campaign=Help-upgrade-plus-to-app&utm_content=help',
-		'helpProToPlus' => 'https://buddyboss.com/pricing/?utm_source=product&utm_medium=platform-plugin&utm_campaign=Help-upgrade-pro-to-plus&utm_content=help',
-		'helpFreeToPro' => 'https://buddyboss.com/pricing/?utm_source=product&utm_medium=platform-plugin&utm_campaign=Help-upgrade-free-to-pro&utm_content=help',
-	);
+	$bb_pricing_urls['default'] = 'https://www.buddyboss.com/pricing/';
 	// @bbwt-com-end pro-field-upgrade-links
 	$localize_data['pricingUrls'] = $bb_pricing_urls;
 
