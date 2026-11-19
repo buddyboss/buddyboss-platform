@@ -96,6 +96,7 @@ function bb_notifications_sanitize_types( $value ) {
 	// Whitelist against registered preferences and collect read-only fields in a single pass.
 	$notification_preferences = bb_register_notification_preferences();
 	$registered_keys          = array();
+	$registered_defaults      = array();
 	$preferences              = array();
 	if ( ! empty( $notification_preferences ) ) {
 		foreach ( $notification_preferences as $group_data ) {
@@ -106,7 +107,8 @@ function bb_notifications_sanitize_types( $value ) {
 				if ( empty( $field['key'] ) ) {
 					continue;
 				}
-				$registered_keys[] = $field['key'];
+				$registered_keys[]                    = $field['key'];
+				$registered_defaults[ $field['key'] ] = isset( $field['default'] ) ? $field['default'] : '';
 
 				if ( ! empty( $field['notification_read_only'] ) ) {
 					$preferences[] = array(
@@ -125,6 +127,14 @@ function bb_notifications_sanitize_types( $value ) {
 	}
 
 	$enabled_notification = array_intersect_key( $enabled_notification, array_flip( $registered_keys ) );
+
+	// A save that only changed an email/web/app sub-type carries no 'main' value. Store the
+	// registered default so every row keeps the 'main' key that readers rely on.
+	foreach ( $enabled_notification as $key => $sub_values ) {
+		if ( ! isset( $sub_values['main'] ) ) {
+			$enabled_notification[ $key ]['main'] = ( 'yes' === $registered_defaults[ $key ] ) ? 'yes' : 'no';
+		}
+	}
 
 	if ( ! empty( $preferences ) ) {
 		foreach ( $preferences as $preference ) {
