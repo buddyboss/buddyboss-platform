@@ -224,9 +224,15 @@ function bb_email_digest_licensed_plan_sku() {
  *                'addon_not_installed', 'addon_outdated'.
  */
 function bb_email_digest_get_placeholder_state() {
+	// @bbwt-com-start mothership-hub
+	// The licence check belongs to the buddyboss.com build. Without it (the
+	// WordPress.org build) the plan SKU below is empty, so the panel resolves to
+	// 'not_in_plan': the locked form with its upgrade badge and link, never a
+	// licence prompt.
 	if ( ! bb_email_digest_is_license_active() ) {
 		return 'needs_license';
 	}
+	// @bbwt-com-end mothership-hub
 
 	$sku = bb_email_digest_licensed_plan_sku();
 
