@@ -224,9 +224,6 @@ function bboss_email_digest_licensed_plan_sku() {
  *                'addon_not_installed', 'addon_outdated'.
  */
 function bboss_email_digest_get_placeholder_state() {
-	if ( ! bboss_email_digest_is_license_active() ) {
-		return 'needs_license';
-	}
 
 	$sku = bboss_email_digest_licensed_plan_sku();
 
