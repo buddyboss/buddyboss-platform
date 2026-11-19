@@ -79,7 +79,7 @@ function bp_settings_update_notification_settings( $user_id, $settings ) {
  * Sanitize email notification settings as submitted by a user.
  *
  * @since BuddyPress 2.3.5
- * @since BuddyBoss [BBVERSION] Every registered key is saved as 'yes' or 'no', unless it is listed
+ * @since BuddyBoss 3.8.0 Every registered key is saved as 'yes' or 'no', unless it is listed
  *                              in the `bb_settings_non_boolean_notification_keys` filter.
  *
  * @param array $settings Array of settings.
@@ -126,7 +126,7 @@ function bp_settings_sanitize_notification_settings( $settings = array() ) {
 	 * Keys from the `bp_settings_core_notification_setting` filter are ignored. The
 	 * field must be rendered as an <input> named notifications[key] to be picked up.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.8.0
 	 *
 	 * @param array $non_boolean_settings Notification keys that store a non-boolean value. Default empty array.
 	 */

@@ -3663,7 +3663,7 @@ function bp_get_email( $email_type ) {
  * process the request without any errors.
  *
  * @since BuddyPress 2.5.0
- * @since BuddyBoss [BBVERSION] Added the `bb_pre_bp_send_email` filter, which can stop a validated
+ * @since BuddyBoss 3.8.0 Added the `bb_pre_bp_send_email` filter, which can stop a validated
  *                              email before any mail transport runs.
  *
  * @param string                   $email_type Type of email being sent.
@@ -3763,7 +3763,7 @@ function bp_send_email( $email_type, $to, $args = array() ) {
 	 *
 	 * Plugins should check for bb_email_supports_pre_send_filter() before relying on it.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.8.0
 	 *
 	 * @param null|bool|WP_Error       $pre_send   Null to send the email as usual.
 	 * @param BP_Email                 $email      The validated email.
@@ -3898,7 +3898,7 @@ function bp_send_email( $email_type, $to, $args = array() ) {
  * `bb_pre_bp_send_email` callback on function_exists() of this function and keep their older
  * route (such as `pre_wp_mail`) for Platform versions without the filter.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.8.0
  *
  * @return bool Always true when this function exists.
  */
@@ -4953,7 +4953,7 @@ function bp_core_get_group_avatar( $legacy_user_avatar_name, $legacy_group_avata
  *
  * @return array Parsed URL data.
  * @since BuddyBoss 1.3.2
- * @since BuddyBoss [BBVERSION] Skips avatar images when collecting the page images.
+ * @since BuddyBoss 3.8.0 Skips avatar images when collecting the page images.
  */
 function bp_core_parse_url( $url ) {
 
@@ -12601,7 +12601,7 @@ function bb_addons_provides_module( $module_id ) {
  * maps.app.goo.gl short-link service) return proper 3xx redirects instead of
  * empty JS-only interstitials that contain no scrapeable metadata.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.8.0
  *
  * @return string User agent string.
  */
@@ -12611,7 +12611,7 @@ function bb_get_url_preview_user_agent() {
 	/**
 	 * Filters the user agent string used for URL preview HTTP requests.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.8.0
 	 *
 	 * @param string $user_agent User agent string.
 	 */

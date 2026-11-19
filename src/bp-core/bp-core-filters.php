@@ -2433,7 +2433,7 @@ add_action( 'bp_core_install', 'bb_update_digest_schedule_event_on_change_compon
  * creates the event through bb_messages_maybe_schedule_digest_email_notifications(),
  * which applies the delay, Notifications, root-blog and cron-filter checks.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.8.0
  *
  * @param string $feature_id Feature ID that was deactivated.
  */

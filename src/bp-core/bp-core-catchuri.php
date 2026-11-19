@@ -1663,7 +1663,7 @@ function bp_core_change_privacy_policy_link_on_private_network( $link, $privacy_
  * with the value WordPress derives from the permalink structure and restores
  * the flag afterwards, so the parsing of the current request is unchanged.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.8.0
  *
  * @param array $rules Generated rewrite rules, keyed by their regex pattern.
  *

@@ -208,7 +208,7 @@ if ( ! class_exists( 'BB_Background_Process' ) ) {
 		 * and data exists in the queue.
 		 *
 		 * @since BuddyBoss 2.5.20
-		 * @since BuddyBoss [BBVERSION] Process the queue within the cron request instead of dispatching
+		 * @since BuddyBoss 3.8.0 Process the queue within the cron request instead of dispatching
 		 *                              another loopback request, so the queue still runs on hosts that block loopback requests.
 		 *                              Return instead of exiting, so the rest of the WP-Cron run still executes,
 		 *                              and skip a paused or cancelled queue.

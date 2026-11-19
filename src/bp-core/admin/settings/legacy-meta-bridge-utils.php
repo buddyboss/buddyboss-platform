@@ -1056,7 +1056,7 @@ function bb_legacy_read_multiselect_meta( $post_id, $name ) {
  * All other types pass through unchanged.
  *
  * @since BuddyBoss 3.1.0
- * @since BuddyBoss [BBVERSION] Accepts `ajax_multiselect`; `toggle_list` is
+ * @since BuddyBoss 3.8.0 Accepts `ajax_multiselect`; `toggle_list` is
  *                              always treated as a checked map (PROD-10441).
  *
  * @param string $type   Registered field type: `toggle_list`, `ajax_multiselect`,

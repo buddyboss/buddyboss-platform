@@ -58,7 +58,7 @@ function bb_advanced_sanitize_activity_load_type( $value ) {
  *
  * Ensures only valid directory loading types are saved.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.8.0
  *
  * @param mixed $value The value to sanitize.
  *

@@ -3,7 +3,7 @@
  * Tests for the legacy meta-box bridge save-value normalizer.
  *
  * @package BuddyBoss\Tests\Core
- * @since   BuddyBoss [BBVERSION]
+ * @since   BuddyBoss 3.8.0
  */
 
 /**
