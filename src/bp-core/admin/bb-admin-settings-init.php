@@ -103,10 +103,13 @@ function bb_admin_settings_init() {
 			}
 		}
 
-		// Integrations marketplace — plugin activate/deactivate AJAX handlers.
+		// @bbwt-com-start integrations-marketplace
+		// Integrations marketplace — plugin activate/deactivate AJAX handlers
+		// (buddyboss.com build only).
 		if ( file_exists( buddypress()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-integrations-ajax.php' ) ) {
 			require_once buddypress()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-integrations-ajax.php';
 		}
+		// @bbwt-com-end integrations-marketplace
 
 		// Profile AJAX handlers (only when xprofile component is active).
 		if ( bp_is_active( 'xprofile' ) ) {
@@ -148,10 +151,13 @@ function bb_admin_settings_init() {
 			require_once buddypress()->plugin_dir . 'bp-core/admin/bb-admin-settings-page.php';
 		}
 
-		// Integrations marketplace page (render function for the bb-integrations submenu).
+		// @bbwt-com-start integrations-marketplace
+		// Integrations marketplace page (render function for the bb-integrations
+		// submenu; buddyboss.com build only).
 		if ( file_exists( buddypress()->plugin_dir . 'bp-core/admin/bb-admin-integrations-page.php' ) ) {
 			require_once buddypress()->plugin_dir . 'bp-core/admin/bb-admin-integrations-page.php';
 		}
+		// @bbwt-com-end integrations-marketplace
 
 		// Shared admin-common layer asset registration.
 		if ( file_exists( buddypress()->plugin_dir . 'bp-core/admin/bb-admin-common-assets.php' ) ) {
@@ -331,8 +337,9 @@ function bb_register_help_content_rest_route() {
 }
 add_action( 'rest_api_init', 'bb_register_help_content_rest_route' );
 
+// @bbwt-com-start integrations-marketplace
 /**
- * Register the Integrations marketplace REST proxy route.
+ * Register the Integrations marketplace REST proxy route (buddyboss.com build only).
  *
  * Same-origin server-side proxy for the buddyboss.com Integrations directory
  * (`wp/v2/integrations` + taxonomies). Mirrors the help-content proxy with its
@@ -355,6 +362,7 @@ function bb_register_integrations_rest_route() {
 	( new BB_REST_Integrations_Endpoint() )->register_routes();
 }
 add_action( 'rest_api_init', 'bb_register_integrations_rest_route' );
+// @bbwt-com-end integrations-marketplace
 
 /**
  * Initialize the Integration Bridge early.
