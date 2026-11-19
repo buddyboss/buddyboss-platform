@@ -86,3 +86,6 @@ add_action( 'bb_register_features', 'bboss_admin_settings_register_emails_featur
 // Not loaded on the WordPress.org build: every state of the stand-in is a licence or plan
 // prompt for an add-on that build never runs beside, so the Emails tab simply has no
 // Email Digest entry there.
+// @bbwt-com-start remote-upsell-features
+require_once __DIR__ . '/settings/emails/email-digest-placeholder.php';
+// @bbwt-com-end remote-upsell-features

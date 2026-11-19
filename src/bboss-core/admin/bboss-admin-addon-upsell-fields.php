@@ -7,7 +7,7 @@
  * is loaded on this site, and the 'start' tier default for their upsell modal.
  * Used by the Settings 2.0 AJAX handlers to gate those fields on their
  * provider (display and save), independent of the remote field-upgrades
- * catalog in bb-admin-field-upgrades.php.
+ * catalog in bboss-admin-field-upgrades.php.
  *
  * @package BuddyBoss\Core\Administration
  * @since   BuddyBoss [BBVERSION]

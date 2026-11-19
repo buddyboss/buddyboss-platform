@@ -222,6 +222,14 @@ function bboss_admin_settings_init() {
 		}
 
 		bboss_icon_registry();
+		// @bbwt-com-start remote-upsell-features
+
+		// Placeholder features provider for unregistered add-ons/integrations.
+		if ( file_exists( bboss()->plugin_dir . 'bboss-core/admin/bboss-admin-placeholder-features.php' ) ) {
+			require_once bboss()->plugin_dir . 'bboss-core/admin/bboss-admin-placeholder-features.php';
+		}
+
+		// @bbwt-com-end remote-upsell-features
 
 		// Add-on upsell field helpers: which fields belong to the features that
 		// moved into BuddyBoss Addons, and whether their provider is loaded.
@@ -230,6 +238,16 @@ function bboss_admin_settings_init() {
 			require_once bboss()->plugin_dir . 'bboss-core/admin/bboss-admin-addon-upsell-fields.php';
 		}
 
+		// @bbwt-com-start remote-upsell-features
+		// Field & section upgrade modal catalog (Settings 2.0 marketing copy
+		// for `pro_only` fields and `pro_notice` sections). Hosted on S3 like
+		// the placeholder features catalog and shares its cache-flush plumbing
+		// via the `bb_feature_caches_flushed` action.
+		if ( file_exists( bboss()->plugin_dir . 'bboss-core/admin/bboss-admin-field-upgrades.php' ) ) {
+			require_once bboss()->plugin_dir . 'bboss-core/admin/bboss-admin-field-upgrades.php';
+		}
+
+		// @bbwt-com-end remote-upsell-features
 		// Platform 3.0 addon-compatibility admin notice. Loads
 		// unconditionally so the warning fires regardless of which
 		// admin screen the user is on — version mismatches break

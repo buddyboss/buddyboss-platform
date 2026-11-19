@@ -332,12 +332,29 @@ function bboss_admin_settings_page() {
 	// fallback (`supportTicket`). Builds without pricing links (the wordpress.org
 	// edition) send an empty list, and each component then hides its link.
 	$bb_pricing_urls = array();
+	// @bbwt-com-start pro-field-upgrade-links
+	$bb_pricing_urls = array(
+		'default'       => 'https://www.buddyboss.com/pricing/',
+		'buyTheme'      => 'https://buddyboss.com/pricing/',
+		'supportTicket' => 'https://buddyboss.com/my-account/?tab=support',
+		'helpPlusToApp' => 'https://buddyboss.com/pricing/?utm_source=product&utm_medium=platform-plugin&utm_campaign=Help-upgrade-plus-to-app&utm_content=help',
+		'helpProToPlus' => 'https://buddyboss.com/pricing/?utm_source=product&utm_medium=platform-plugin&utm_campaign=Help-upgrade-pro-to-plus&utm_content=help',
+		'helpFreeToPro' => 'https://buddyboss.com/pricing/?utm_source=product&utm_medium=platform-plugin&utm_campaign=Help-upgrade-free-to-pro&utm_content=help',
+	);
+	// @bbwt-com-end pro-field-upgrade-links
 	$localize_data['pricingUrls'] = $bb_pricing_urls;
 
 	// Help tab promo images, hosted on the BuddyBoss marketing bucket. Builds
 	// without remote marketing assets (the wordpress.org edition) send an empty
 	// list, and the Help promos then render without an image.
 	$bb_help_promo_images = array();
+	// @bbwt-com-start remote-upsell-features
+	$bb_help_promo_images = array(
+		'app'         => 'https://bb-features-marketing.s3.amazonaws.com/images/admin/app%203.0.png',
+		'upgradePlus' => 'https://bb-features-marketing.s3.amazonaws.com/images/admin/upgrade-plus.jpg',
+		'upgradePro'  => 'https://bb-features-marketing.s3.amazonaws.com/images/admin/upgrade-pro.jpg',
+	);
+	// @bbwt-com-end remote-upsell-features
 	$localize_data['helpPromoImages'] = $bb_help_promo_images;
 
 	// Upload nonces for image upload fields (avatar/cover).
@@ -377,7 +394,7 @@ function bboss_admin_settings_page() {
 	// One-shot help-content cache flush signal.
 	//
 	// `bb_maybe_clear_placeholder_features_cache()` (admin_init handler in
-	// bb-admin-placeholder-features.php) raises this transient when an admin
+	// bboss-admin-placeholder-features.php) raises this transient when an admin
 	// hits `?bb_clear_placeholder_cache=1`. Reading + deleting it here means
 	// the React app sees the signal exactly once on its next mount and then
 	// the flag is gone — even if the page reloads, the localStorage flush

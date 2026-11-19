@@ -25,6 +25,12 @@ $bb_recaptcha_icon = array(
 	'type'  => 'font',
 	'class' => 'bb-icons-rl bb-icons-rl-robot',
 );
+// @bbwt-com-start remote-upsell-features
+$bb_recaptcha_icon = array(
+	'type' => 'svg',
+	'url'  => 'https://bb-features-marketing.s3.amazonaws.com/images/svg/ReCaptcha.svg',
+);
+// @bbwt-com-end remote-upsell-features
 
 bboss_register_integration(
 	'recaptcha',

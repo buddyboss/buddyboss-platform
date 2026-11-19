@@ -603,6 +603,9 @@ class BBoss_Admin_Settings_Ajax {
 						// Builds without pricing links (the wordpress.org edition) have no
 						// fallback URL; UpgradeModal then renders no call-to-action link.
 						$registered_fallback_url = '';
+						// @bbwt-com-start pro-field-upgrade-links
+						$registered_fallback_url = 'https://www.buddyboss.com/pricing/';
+						// @bbwt-com-end pro-field-upgrade-links
 
 						$section_modal = array(
 							'tier'        => sanitize_key( $registered_modal['tier'] ?? 'pro' ),
@@ -688,6 +691,9 @@ class BBoss_Admin_Settings_Ajax {
 		// Builds without paid-plan upsells (the wordpress.org edition) leave out every
 		// section and field still locked behind a plan, instead of showing it badged.
 		$bb_drop_locked = true;
+		// @bbwt-com-start remote-upsell-features
+		$bb_drop_locked = false;
+		// @bbwt-com-end remote-upsell-features
 		if ( $bb_drop_locked ) {
 			$formatted_side_panels = $this->bb_drop_locked_settings( $formatted_side_panels );
 		}
@@ -1365,7 +1371,15 @@ class BBoss_Admin_Settings_Ajax {
 							// empty; UpgradeModal then renders no call-to-action link.
 							'url'         => '',
 						);
+						// @bbwt-com-start pro-field-upgrade-links
+						$field_data['pro_notice']['modal']['url'] = 'https://www.buddyboss.com/pricing/';
+						// @bbwt-com-end pro-field-upgrade-links
 					} elseif ( empty( $field['pro_notice']['link_url'] ) ) {
+						// @bbwt-com-start pro-field-upgrade-links
+						// A field that registered its own upgrade link (e.g. Email Digest's
+						// Start checkout) keeps it when the catalog has no entry.
+						$field_data['pro_notice']['link_url'] = 'https://www.buddyboss.com/pricing/';
+						// @bbwt-com-end pro-field-upgrade-links
 					}
 				}
 			}
