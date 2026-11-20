@@ -76,6 +76,30 @@ class BB_Tests_Core_Functions_BpCoreReplaceTokensInText extends BP_UnitTestCase 
 	}
 
 	/**
+	 * With no text selected the link dialog uses the URL as the link text too.
+	 */
+	public function test_scheme_is_removed_from_link_text_that_is_the_url_token() {
+		$text = '<a href="http://{{{message.url}}}">http://{{{message.url}}}</a> <a target="_blank" href="https://{{message.url}}" rel="noopener">HTTPS://{{message.url}}</a>';
+
+		$this->assertSame(
+			'<a href="http://example.org/members/admin/messages/view/42/">http://example.org/members/admin/messages/view/42/</a> <a target="_blank" href="http://example.org/members/admin/messages/view/42/" rel="noopener">http://example.org/members/admin/messages/view/42/</a>',
+			bp_core_replace_tokens_in_text( $text, $this->get_tokens() )
+		);
+	}
+
+	/**
+	 * Link text with more than the token, or a token that isn't a full URL, is kept.
+	 */
+	public function test_other_link_text_is_not_changed() {
+		$text = '<a href="{{{message.url}}}">Open http://{{{message.url}}} now</a> <a href="http://{{{site.domain}}}">http://{{{site.domain}}}</a>';
+
+		$this->assertSame(
+			'<a href="http://example.org/members/admin/messages/view/42/">Open http://http://example.org/members/admin/messages/view/42/ now</a> <a href="http://example.org">http://example.org</a>',
+			bp_core_replace_tokens_in_text( $text, $this->get_tokens() )
+		);
+	}
+
+	/**
 	 * Only links are changed, not plain text.
 	 */
 	public function test_text_outside_a_link_is_not_changed() {

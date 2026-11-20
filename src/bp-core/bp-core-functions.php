@@ -3993,7 +3993,7 @@ function bp_email_get_template( WP_Post $object ) {
  * Intended for use with the email system introduced in BuddyPress 2.5.0.
  *
  * @since BuddyPress 2.5.0
- * @since BuddyBoss [BBVERSION] Removes the scheme that the link dialog adds in front of a URL token in a link.
+ * @since BuddyBoss [BBVERSION] Removes the scheme that the link dialog adds in front of a URL token in a link and its text.
  *
  * @param string $text   Text to replace tokens in.
  * @param array  $tokens Token names and replacement values for the $text.
@@ -4024,13 +4024,18 @@ function bp_core_replace_tokens_in_text( $text, $tokens ) {
 
 	// WordPress's link dialog adds "http://" in front of a URL it doesn't
 	// recognise, so a link to a token is saved as href="http://{{{message.url}}}".
-	// When the token's value is already a full URL, drop that scheme so the
-	// link isn't sent as http://http://...
+	// With no text selected it also uses that URL as the link text. When the
+	// token's value is already a full URL, drop that scheme from the href and
+	// from link text that is only the token, so neither is sent as http://http://...
 	if ( ! empty( $url_tokens ) && false !== strpos( $text, '://{{' ) ) {
-		$names = implode( '|', $url_tokens );
-		$text  = preg_replace(
-			'/(\bhref\s*=\s*["\'])https?:\/\/(\{\{\{(?:' . $names . ')\}\}\}|\{\{(?:' . $names . ')\}\})/i',
-			'$1$2',
+		$names     = implode( '|', $url_tokens );
+		$url_token = '(\{\{\{(?:' . $names . ')\}\}\}|\{\{(?:' . $names . ')\}\})';
+		$text      = preg_replace(
+			array(
+				'/(\bhref\s*=\s*["\'])https?:\/\/' . $url_token . '/i',
+				'/(<a\b[^>]*>)https?:\/\/' . $url_token . '(<\/a>)/i',
+			),
+			array( '$1$2', '$1$2$3' ),
 			$text
 		);
 	}
