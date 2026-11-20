@@ -123,8 +123,8 @@ if ( ! class_exists( 'BBoss_Telemetry' ) ) {
 			add_action( 'bb_telemetry_report_cron_event', array( $this, 'bb_send_telemetry_report_to_analytics' ) );
 			add_action( 'bb_telemetry_report_single_cron_event', array( $this, 'bb_send_telemetry_report_to_analytics' ) );
 			add_action( 'bb_telemetry_report_retry_event', array( $this, 'bb_send_telemetry_report_to_analytics' ) );
-			add_action( 'admin_notices', array( $this, 'bb_telemetry_admin_notice' ) );
-			add_action( 'wp_ajax_dismiss_bb_telemetry_notice', array( $this, 'bb_telemetry_notice_dismissed' ) );
+			// The "Help us improve BuddyBoss" admin notice: not shown by the WordPress.org edition, where telemetry
+			// stays off until an administrator turns it on in the settings.
 		}
 
 		/**
