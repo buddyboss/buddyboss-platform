@@ -732,18 +732,6 @@ function bboss_forums_subscriptions_redirect() {
 
 add_action( 'bp_ready', 'bboss_forums_subscriptions_redirect' );
 
-/**
- * Load Presence API mu plugin.
- *
- * @since BuddyBoss 2.3.1
- */
-function bboss_load_presence_api_mu() {
-	if ( class_exists( 'BBoss_Presence' ) ) {
-		BBoss_Presence::bb_load_presence_api_mu_plugin( false );
-	}
-}
-
-add_action( 'bp_admin_init', 'bboss_load_presence_api_mu' );
 
 /**
  * Function to check server allow to load php file directly or not.

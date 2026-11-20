@@ -54,14 +54,6 @@ if ( ! class_exists( 'BBoss_Presence' ) ) {
 		 */
 		public static $table_name;
 
-		/**
-		 * Download plugin text which appears on admin side.
-		 *
-		 * @since BuddyBoss 2.3.1
-		 *
-		 * @var string
-		 */
-		public static $download_plugin_text;
 
 		/**
 		 * Get the instance of this class.
@@ -261,110 +253,6 @@ if ( ! class_exists( 'BBoss_Presence' ) ) {
 			return $cached_data;
 		}
 
-		/**
-		 * Load presence API mu plugin.
-		 *
-		 * @param bool $bypass Bypass transient.
-		 *
-		 * @since BuddyBoss 2.3.1
-		 */
-		public static function bb_load_presence_api_mu_plugin( $bypass = true ) {
-			if ( ! function_exists( 'bboss' ) ) {
-				return;
-			}
-
-			if ( ! class_exists( '\WP_Filesystem_Direct' ) ) {
-				require_once ABSPATH . 'wp-admin/includes/class-wp-filesystem-base.php';
-				require_once ABSPATH . 'wp-admin/includes/class-wp-filesystem-direct.php';
-			}
-
-			$wp_files_system        = new \WP_Filesystem_Direct( array() );
-			$bp_mu_plugin_file_path = bboss()->plugin_dir . 'bboss-core/mu-plugins/buddyboss-performance-api.php';
-
-			$purge_nonce = ( ! empty( $_GET['download_mu_bpa_file'] ) ) ? wp_unslash( $_GET['download_mu_bpa_file'] ) : ''; //phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-
-			if ( wp_verify_nonce( $purge_nonce, 'bb_presence_api_mu_download' ) && ! empty( $bp_mu_plugin_file_path ) ) {
-				if ( file_exists( $bp_mu_plugin_file_path ) ) {
-					header( 'Content-Type: application/force-download' );
-					header( 'Content-Disposition: attachment; filename="' . basename( $bp_mu_plugin_file_path ) . '"' );
-					header( 'Expires: 0' );
-					header( 'Cache-Control: must-revalidate' );
-					header( 'Pragma: public' );
-					header( 'Content-Length: ' . filesize( $bp_mu_plugin_file_path ) );
-					flush();
-					// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-					echo $wp_files_system->get_contents( $bp_mu_plugin_file_path );
-					die();
-				}
-			}
-
-			$bb_presence_api_mu_download = get_transient( 'bb_presence_api_mu_download' );
-			if ( ! empty( $bb_presence_api_mu_download ) && ! $bypass ) {
-				return;
-			}
-
-			// If mu-plugin directory not exists then create automatically.
-			if ( ! is_dir( WPMU_PLUGIN_DIR ) ) {
-				wp_mkdir_p( WPMU_PLUGIN_DIR );
-			}
-
-			$mu_plugins = get_mu_plugins();
-			if ( ! file_exists( WPMU_PLUGIN_DIR . '/buddyboss-performance-api.php' ) ) {
-				// Try to automatically install MU plugin.
-				if ( wp_is_writable( WPMU_PLUGIN_DIR ) && ! empty( $bp_mu_plugin_file_path ) ) {
-					// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
-					@$wp_files_system->copy( $bp_mu_plugin_file_path, WPMU_PLUGIN_DIR . '/buddyboss-performance-api.php' );
-				}
-			} elseif (
-				! empty( $mu_plugins ) &&
-				array_key_exists( 'buddyboss-performance-api.php', $mu_plugins ) &&
-				version_compare( $mu_plugins['buddyboss-performance-api.php']['Version'], '1.0.1', '<' )
-			) {
-				// Try to automatically install MU plugin.
-				if ( wp_is_writable( WPMU_PLUGIN_DIR ) && ! empty( $bp_mu_plugin_file_path ) ) {
-					// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
-					@$wp_files_system->copy( $bp_mu_plugin_file_path, WPMU_PLUGIN_DIR . '/buddyboss-performance-api.php', true );
-				}
-			}
-
-			set_transient( 'bb_presence_api_mu_download', 'true', WEEK_IN_SECONDS );
-
-			if ( ! file_exists( WPMU_PLUGIN_DIR . '/buddyboss-performance-api.php' ) ) {
-				self::$download_plugin_text = __( 'Download the plugin', 'buddyboss-platform' );
-				add_action( 'admin_notices', array( get_called_class(), 'bb_add_sitewide_notice_for_presence_api_mu_file' ) );
-			} elseif (
-				! empty( $mu_plugins ) &&
-				array_key_exists( 'buddyboss-performance-api.php', $mu_plugins ) &&
-				version_compare( $mu_plugins['buddyboss-performance-api.php']['Version'], '1.0.0', '<' )
-			) {
-				self::$download_plugin_text = __( 'Download v1.0.0', 'buddyboss-platform' );
-				add_action( 'admin_notices', array( get_called_class(), 'bb_add_sitewide_notice_for_presence_api_mu_file' ) );
-			}
-		}
-
-		/**
-		 * Function to add/update admin notice to download BuddyBoss Performance API mu plugin file if not exists.
-		 *
-		 * @since BuddyBoss 2.3.1
-		 */
-		public static function bb_add_sitewide_notice_for_presence_api_mu_file() {
-
-			$bp_performance_download_nonce = wp_create_nonce( 'bb_presence_api_mu_download' );
-
-			$download_path = admin_url( 'admin.php?page=bb-settings&download_mu_bpa_file=' . $bp_performance_download_nonce );
-			$notice        = sprintf(
-				'%1$s <a href="%2$s">%3$s</a>. <br /><strong><a href="%4$s">%5$s</a></strong> %6$s',
-				__( 'BuddyBoss Performance API cannot be automatically installed on your server. To improve performance, you need to manually install the "BuddyBoss Performance API" plugin in your', 'buddyboss-platform' ),
-				'https://wordpress.org/support/article/must-use-plugins/',
-				__( 'must-use plugins', 'buddyboss-platform' ),
-				$download_path,
-				self::$download_plugin_text,
-				__( 'and then upload it into the "/wp-content/mu-plugins/" directory on your server.', 'buddyboss-platform' )
-			);
-
-			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-			echo '<div class="notice notice-error">' . wpautop( $notice ) . '</div>';
-		}
 
 		/**
 		 * Function to check native presence file load directly or not.
