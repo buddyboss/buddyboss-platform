@@ -17,7 +17,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 <div class="woocommerce woocommerce--bb-rl">
 	<?php do_action( 'wc4bp_before_checkout_body' ); ?>
 
-	<?php echo wp_kses_post( do_shortcode( '[woocommerce_checkout]' ) ); ?>
+	<?php echo do_shortcode( '[woocommerce_checkout]' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Shortcode output is escaped by WooCommerce; wp_kses_post() strips its form fields. ?>
 
 	<?php do_action( 'wc4bp_after_checkout_body' ); ?>
 </div>
