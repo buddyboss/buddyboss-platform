@@ -1272,6 +1272,7 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 			return $active_integrations;
 		}
 
+		// @bbwt-com-start telemetry-notice
 		/**
 		 * Telemetry notice.
 		 *
@@ -1355,5 +1356,6 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 			bp_update_option( 'bb_telemetry_notice_dismissed', 1 );
 			wp_send_json_success();
 		}
+		// @bbwt-com-end telemetry-notice
 	}
 }
