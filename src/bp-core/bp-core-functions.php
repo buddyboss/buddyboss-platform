@@ -4017,7 +4017,7 @@ function bp_core_replace_tokens_in_text( $text, $tokens ) {
 		$unescaped[ '{{{' . $token . '}}}' ] = $value;
 		$escaped[ '{{' . $token . '}}' ]     = esc_html( $value );
 
-		if ( is_string( $value ) && preg_match( '#^[a-z][a-z0-9+.-]*://#i', $value ) ) {
+		if ( is_string( $value ) && preg_match( '#^https?://#i', $value ) ) {
 			$url_tokens[] = preg_quote( $token, '/' );
 		}
 	}
@@ -4025,7 +4025,7 @@ function bp_core_replace_tokens_in_text( $text, $tokens ) {
 	// WordPress's link dialog adds "http://" in front of a URL it doesn't
 	// recognise, so a link to a token is saved as href="http://{{{message.url}}}".
 	// With no text selected it also uses that URL as the link text. When the
-	// token's value is already a full URL, drop that scheme from the href and
+	// token's value is already a full http(s) URL, drop that scheme from the href and
 	// from link text that is only the token, so neither is sent as http://http://...
 	if ( ! empty( $url_tokens ) && false !== strpos( $text, '://{{' ) ) {
 		$names     = implode( '|', $url_tokens );
@@ -4033,7 +4033,7 @@ function bp_core_replace_tokens_in_text( $text, $tokens ) {
 		$text      = preg_replace(
 			array(
 				'/(\bhref\s*=\s*["\'])https?:\/\/' . $url_token . '/i',
-				'/(<a\b[^>]*>)https?:\/\/' . $url_token . '(<\/a>)/i',
+				'/(<a\b[^<>]*>)https?:\/\/' . $url_token . '(<\/a>)/i',
 			),
 			array( '$1$2', '$1$2$3' ),
 			$text

@@ -122,4 +122,29 @@ class BB_Tests_Core_Functions_BpCoreReplaceTokensInText extends BP_UnitTestCase 
 			bp_core_replace_tokens_in_text( $text, $this->get_tokens() )
 		);
 	}
+	/**
+	 * Only an http(s) token value drops the scheme, so a link to a token whose
+	 * value has another scheme keeps the harmless "http://" prefix.
+	 */
+	public function test_scheme_is_kept_when_the_token_value_is_not_http() {
+		$tokens = array( 'evil.url' => 'javascript://example.org/%0Aalert(1)' );
+		$text   = '<a href="http://{{{evil.url}}}">http://{{{evil.url}}}</a>';
+
+		$this->assertSame(
+			'<a href="http://javascript://example.org/%0Aalert(1)">http://javascript://example.org/%0Aalert(1)</a>',
+			bp_core_replace_tokens_in_text( $text, $tokens )
+		);
+	}
+
+	/**
+	 * A long run of unclosed anchor tags is processed in linear time.
+	 */
+	public function test_unclosed_anchor_run_is_processed_quickly() {
+		$text  = str_repeat( '<a', 50000 ) . ' href="http://{{{message.url}}}">x</a>';
+		$start = microtime( true );
+		$out   = bp_core_replace_tokens_in_text( $text, $this->get_tokens() );
+
+		$this->assertLessThan( 2, microtime( true ) - $start );
+		$this->assertStringContainsString( 'href="http://example.org/members/admin/messages/view/42/"', $out );
+	}
 }
