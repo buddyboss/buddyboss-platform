@@ -54,6 +54,7 @@ if ( ! class_exists( 'BBoss_Presence' ) ) {
 		 */
 		public static $table_name;
 
+		// @bbwt-com-start presence-mu-plugin
 		/**
 		 * Download plugin text which appears on admin side.
 		 *
@@ -62,6 +63,7 @@ if ( ! class_exists( 'BBoss_Presence' ) ) {
 		 * @var string
 		 */
 		public static $download_plugin_text;
+		// @bbwt-com-end presence-mu-plugin
 
 		/**
 		 * Get the instance of this class.
@@ -261,6 +263,7 @@ if ( ! class_exists( 'BBoss_Presence' ) ) {
 			return $cached_data;
 		}
 
+		// @bbwt-com-start presence-mu-plugin
 		/**
 		 * Load presence API mu plugin.
 		 *
@@ -365,6 +368,7 @@ if ( ! class_exists( 'BBoss_Presence' ) ) {
 			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			echo '<div class="notice notice-error">' . wpautop( $notice ) . '</div>';
 		}
+		// @bbwt-com-end presence-mu-plugin
 
 		/**
 		 * Function to check native presence file load directly or not.

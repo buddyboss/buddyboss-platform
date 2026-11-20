@@ -3977,7 +3977,9 @@ function bboss_update_to_2_3_1() {
 	set_transient( 'bb_update_to_2_3_1', 'yes', DAY_IN_SECONDS );
 
 	if ( class_exists( 'BBoss_Presence' ) ) {
+		// @bbwt-com-start presence-mu-plugin
 		BBoss_Presence::bb_load_presence_api_mu_plugin();
+		// @bbwt-com-end presence-mu-plugin
 		BBoss_Presence::bb_check_native_presence_load_directly();
 	}
 }
@@ -4005,6 +4007,7 @@ if ( function_exists( 'bboss_update_to_2_3_1' ) && ! function_exists( 'bb_update
  * @return void
  */
 function bboss_update_to_2_3_4() {
+	// @bbwt-com-start presence-mu-plugin
 	if ( file_exists( WPMU_PLUGIN_DIR . '/buddyboss-presence-api.php' ) ) {
 
 		if ( ! class_exists( '\WP_Filesystem_Direct' ) ) {
@@ -4015,6 +4018,7 @@ function bboss_update_to_2_3_4() {
 		$wp_files_system = new \WP_Filesystem_Direct( array() );
 		$wp_files_system->delete( WPMU_PLUGIN_DIR . '/buddyboss-presence-api.php', false, 'f' );
 	}
+	// @bbwt-com-end presence-mu-plugin
 
 	$is_already_run = get_transient( 'bb_migrate_favorites' );
 	if ( $is_already_run ) {
