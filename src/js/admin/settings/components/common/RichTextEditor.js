@@ -72,6 +72,29 @@ export function addLinkModalCommand( editor ) {
 }
 
 /**
+ * Remove the attributes the wplink plugin adds to links while editing.
+ *
+ * TinyMCE's getContent() and the last value sent through onChange skip the
+ * wplink plugin's "savecontent" cleanup, so they can still carry the edit
+ * mark and the "link may be broken" flag. Remove them the same way core does
+ * when it saves, so they are never stored with the content.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {*} content Editor content.
+ * @returns {*} Content without the wplink editing attributes. Non-strings are returned unchanged.
+ */
+export function stripLinkEditorAttributes( content ) {
+	if ( 'string' !== typeof content || -1 === content.indexOf( 'data-wplink-' ) ) {
+		return content;
+	}
+
+	return content.replace( /<a [^>]+>/g, function ( tag ) {
+		return tag.replace( / data-wplink-(?:edit|url-error)="true"/g, '' );
+	} );
+}
+
+/**
  * Get the HTML content of a TinyMCE editor, including Code tab edits.
  *
  * For content that is stored as HTML (activity posts and comments, forum and
@@ -90,19 +113,14 @@ export function getRichTextEditorHtml( editorId, fallback ) {
 	var editor = window.tinymce ? window.tinymce.get( editorId ) : null;
 
 	if ( ! editor ) {
-		return fallback;
+		return stripLinkEditorAttributes( fallback );
 	}
 
 	if ( editor.isHidden() ) {
 		editor.load();
 	}
 
-	// getContent() skips the wplink plugin's "savecontent" cleanup, so remove
-	// the editor-only attributes it adds to links (the edit mark and the
-	// "link may be broken" flag), the same way core does when it saves.
-	return editor.getContent().replace( /<a [^>]+>/g, function ( tag ) {
-		return tag.replace( / data-wplink-(?:edit|url-error)="true"/g, '' );
-	} );
+	return stripLinkEditorAttributes( editor.getContent() );
 }
 
 /**
@@ -159,6 +177,9 @@ export function forceRemoveEditor( editorId ) {
  * @returns {string} Editor content.
  */
 export function getRichTextEditorContent( editorId, fallback ) {
+	// The fallback is the last onChange value, which skipped the wplink cleanup.
+	fallback = stripLinkEditorAttributes( fallback );
+
 	if ( ! window.wp || ! window.wp.editor ) {
 		return fallback;
 	}
@@ -166,7 +187,7 @@ export function getRichTextEditorContent( editorId, fallback ) {
 	if ( 'function' === typeof window.wp.editor.getContent ) {
 		var content = window.wp.editor.getContent( editorId );
 		if ( 'string' === typeof content ) {
-			return content;
+			return stripLinkEditorAttributes( content );
 		}
 	}
 

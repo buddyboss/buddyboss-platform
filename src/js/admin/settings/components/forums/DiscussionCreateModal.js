@@ -129,9 +129,11 @@ export function DiscussionCreateModal( { isOpen, onClose, onCreated, createField
 		);
 
 		// Send the description as HTML, including Code tab edits: the front-end
-		// editor loads the stored value as it is, without autop.
+		// editor loads the stored value as it is, without autop. Send the same
+		// value in both keys, so the registry sees what is saved.
 		if ( undefined !== payload.description ) {
 			payload.description = getRichTextEditorHtml( 'bb-admin-edit-description-0', registeredValues.description || '' );
+			payload.registered_field_description = payload.description;
 		}
 
 		createDiscussion( payload ).then( function ( response ) {

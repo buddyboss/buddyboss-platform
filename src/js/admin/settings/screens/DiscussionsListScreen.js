@@ -995,9 +995,11 @@ function DiscussionEditModal( { discussion, onClose, onSave, isSaving } ) {
 			: {};
 
 		// Send the description as HTML, including Code tab edits: the front-end
-		// editor loads the stored value as it is, without autop.
+		// editor loads the stored value as it is, without autop. Send the same
+		// value in both keys, so the registry sees what is saved.
 		if ( undefined !== registeredPayload.description ) {
 			registeredPayload.description = getRichTextEditorHtml( 'bb-admin-edit-description-' + discussion.id, registeredValues.description || '' );
+			registeredPayload.registered_field_description = registeredPayload.description;
 		}
 
 		var payload = Object.assign( registeredPayload, {

@@ -559,6 +559,11 @@ export default function RepliesListScreen( { onNavigate } ) {
 			content: contentVal, // Override with TinyMCE-pulled value.
 		} );
 
+		// Send the same HTML in the registry key, so the registry sees what is saved.
+		if ( undefined !== payload.registered_field_content ) {
+			payload.registered_field_content = contentVal;
+		}
+
 		saveReply( payload ).then( function ( response ) {
 			setIsEditSaving( false );
 			if ( response.success ) {

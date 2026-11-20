@@ -178,8 +178,10 @@ export function ForumCreateModal( { isOpen, onClose, onCreated, forumBaseSlug, c
 		);
 
 		// Keep the forum description stored as HTML, including Code tab edits.
+		// Send the same value in both keys, so the registry sees what is saved.
 		if ( undefined !== payload.description ) {
 			payload.description = getRichTextEditorHtml( 'bb-admin-edit-description-0', registeredValues.description || '' );
+			payload.registered_field_description = payload.description;
 		}
 
 		createForum( payload ).then( function ( response ) {

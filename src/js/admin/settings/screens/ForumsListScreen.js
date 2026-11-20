@@ -1125,8 +1125,10 @@ function ForumEditModal( props ) {
 			: {};
 
 		// Keep the forum description stored as HTML, including Code tab edits.
+		// Send the same value in both keys, so the registry sees what is saved.
 		if ( undefined !== registeredPayload.description ) {
 			registeredPayload.description = getRichTextEditorHtml( 'bb-admin-edit-description-' + forum.id, registeredValues.description || '' );
+			registeredPayload.registered_field_description = registeredPayload.description;
 		}
 
 		var payload = Object.assign( registeredPayload, {

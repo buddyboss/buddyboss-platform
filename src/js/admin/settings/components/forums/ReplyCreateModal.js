@@ -140,6 +140,11 @@ export function ReplyCreateModal( { isOpen, onClose, onCreated, createFields } )
 			}
 		);
 
+		// Send the same HTML in the registry key, so the registry sees what is saved.
+		if ( undefined !== payload.registered_field_content ) {
+			payload.registered_field_content = contentVal;
+		}
+
 		createReply( payload ).then( function ( response ) {
 			if ( ! isMountedRef.current ) {
 				return;
