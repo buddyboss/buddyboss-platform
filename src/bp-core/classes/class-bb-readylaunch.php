@@ -2345,6 +2345,12 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				$member_type = '';
 			}
 
+			// A name is plain text; a serialized PHP value stored as invite meta can be turned into an object by code
+			// that unserializes meta. Check what update_post_meta() will store, after its own wp_unslash().
+			if ( is_serialized( wp_unslash( $name ) ) ) {
+				wp_send_json_error( $response );
+			}
+
 			$subject = bp_disable_invite_member_email_subject() && ! empty( sanitize_text_field( wp_unslash( $_POST['bp_member_invites_custom_subject'] ) ) )
 				? stripslashes( wp_strip_all_tags( sanitize_text_field( wp_unslash( $_POST['bp_member_invites_custom_subject'] ) ) ) )
 				: stripslashes( wp_strip_all_tags( bp_get_member_invitation_subject() ) );
