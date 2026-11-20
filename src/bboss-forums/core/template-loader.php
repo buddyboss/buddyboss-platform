@@ -515,15 +515,14 @@ function bboss_bbp_get_topic_tag_edit_template() {
  * @return string Path to template file
  */
 function bboss_bbp_get_theme_compat_templates() {
-	$templates = array(
-		'plugin-bbpress.php',
-		'bbpress.php',
-		'forums.php',
-		'forum.php',
-		'generic.php',
-		'page.php',
-		'single.php',
-		'index.php',
+	$templates = array_merge(
+		bboss_bbp_get_theme_wrapper_templates(),
+		array(
+			'generic.php',
+			'page.php',
+			'single.php',
+			'index.php',
+		)
 	);
 	return bboss_bbp_get_query_template( 'bbpress', $templates );
 }

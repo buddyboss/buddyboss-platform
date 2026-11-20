@@ -477,6 +477,78 @@ function bboss_get_template_locations( $templates = array() ) {
 }
 
 /**
+ * Get the subdirectories of the active theme (parent and child) to check for template overrides in.
+ *
+ * The plugin's own template packs keep bboss_get_template_locations(); this list applies to the theme
+ * directories only. Templates in a theme's BuddyPress-era folders call the bp_* names, which only
+ * the buddyboss.com edition declares, so those folders are searched there alone.
+ *
+ * @since BuddyBoss 3.7.2
+ *
+ * @param array $templates Templates we are looking for.
+ * @return array Possible subfolders to look in.
+ */
+function bboss_get_theme_template_locations( $templates = array() ) {
+	$locations = array( 'buddyboss-platform' );
+
+
+	$locations[] = '';
+
+	/**
+	 * Filters the subdirectories of the active theme to check for template overrides in.
+	 *
+	 * @since BuddyBoss 3.7.2
+	 *
+	 * @param array $locations Array of subfolders to look in.
+	 * @param array $templates Array of templates we are looking for.
+	 */
+	return apply_filters( 'bp_get_theme_template_locations', $locations, $templates );
+}
+
+/**
+ * Whether a template stack directory is the active theme's (parent or child) directory.
+ *
+ * @since BuddyBoss 3.7.2
+ *
+ * @param string $stack A directory registered in the template stack.
+ * @return bool
+ */
+function bboss_is_theme_template_stack( $stack ) {
+	$stack = untrailingslashit( wp_normalize_path( (string) $stack ) );
+
+	$theme_dirs = array(
+		untrailingslashit( wp_normalize_path( get_stylesheet_directory() ) ),
+		untrailingslashit( wp_normalize_path( get_template_directory() ) ),
+	);
+
+	return in_array( $stack, $theme_dirs, true );
+}
+
+/**
+ * Get the wrapper templates a theme can provide for BuddyBoss pages.
+ *
+ * The BuddyPress-era names (buddypress.php and friends) call the bp_* names, which only the
+ * buddyboss.com edition declares, so they are accepted there alone.
+ *
+ * @since BuddyBoss 3.7.2
+ *
+ * @return array Wrapper template file names, most specific first.
+ */
+function bboss_get_theme_wrapper_templates() {
+	$templates = array( 'buddyboss-platform.php' );
+
+
+	/**
+	 * Filters the wrapper templates a theme can provide for BuddyBoss pages.
+	 *
+	 * @since BuddyBoss 3.7.2
+	 *
+	 * @param array $templates Wrapper template file names.
+	 */
+	return apply_filters( 'bp_get_theme_wrapper_templates', $templates );
+}
+
+/**
  * Add template locations to template files being searched for.
  *
  * @since BuddyPress 1.7.0
@@ -488,11 +560,13 @@ function bboss_add_template_stack_locations( $stacks = array() ) {
 	$retval = array();
 
 	// Get alternate locations.
-	$locations = bboss_get_template_locations();
+	$locations       = bboss_get_template_locations();
+	$theme_locations = bboss_get_theme_template_locations();
 
 	// Loop through locations and stacks and combine.
 	foreach ( (array) $stacks as $stack ) {
-		foreach ( (array) $locations as $custom_location ) {
+		$stack_locations = bboss_is_theme_template_stack( $stack ) ? $theme_locations : $locations;
+		foreach ( (array) $stack_locations as $custom_location ) {
 			$retval[] = untrailingslashit( trailingslashit( $stack ) . $custom_location );
 		}
 	}
@@ -657,15 +731,15 @@ function bboss_load_theme_functions() {
 function bboss_get_theme_compat_templates() {
 	return bboss_get_query_template(
 		'buddypress',
-		array(
-			'plugin-buddypress.php',
-			'buddypress.php',
-			'community.php',
-			'generic.php',
-			'page.php',
-			'single.php',
-			'singular.php',
-			'index.php',
+		array_merge(
+			bboss_get_theme_wrapper_templates(),
+			array(
+				'generic.php',
+				'page.php',
+				'single.php',
+				'singular.php',
+				'index.php',
+			)
 		)
 	);
 }
