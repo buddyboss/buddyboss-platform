@@ -1249,6 +1249,7 @@ add_filter( 'bp_activity_set_public_scope_args', 'bp_activity_filter_public_scop
  *
  * @since BuddyPress 2.2.0
  * @since BuddyBoss 3.7.1 Returns nothing for guests, and hides hidden items of groups the user is not a member of.
+ * @since BuddyBoss [BBVERSION] Shows friends-only items by the viewer's friends, not the listed member's.
  *
  * @param array $retval Empty array by default.
  * @param array $filter Current activity arguments.
@@ -1308,16 +1309,11 @@ function bp_activity_filter_favorites_scope( $retval = array(), $filter = array(
 		$privacy[] = 'loggedin';
 
 		if ( bp_is_active( 'friends' ) ) {
-			// Determine friends of user.
-			$friends = friends_get_friend_user_ids( $user_id );
-			if ( empty( $friends ) ) {
-				$friends = array( 0 );
-			}
-
-			if ( $user_id === bp_loggedin_user_id() ) {
-				$friends[] = bp_loggedin_user_id();
-				$friends   = array_unique( $friends );
-			}
+			// Friends-only items are for the author and the author's friends, so match the
+			// viewer's friends, not those of the member whose reactions are listed (PROD-10890).
+			$friends   = friends_get_friend_user_ids( bp_loggedin_user_id() );
+			$friends[] = bp_loggedin_user_id();
+			$friends   = array_unique( $friends );
 
 			if ( ! empty( $friends ) ) {
 				$friends_filter = array(
@@ -1410,6 +1406,7 @@ add_filter( 'bp_activity_set_favorites_scope_args', 'bp_activity_filter_favorite
  * Set up activity arguments for use with the 'favorites' scope.
  *
  * @since BuddyPress 2.2.0
+ * @since BuddyBoss [BBVERSION] Matches nothing when mentions are off, and shows friends-only items by the viewer's friends.
  *
  * @param array $retval Empty array by default.
  * @param array $filter Current activity arguments.
@@ -1417,9 +1414,13 @@ add_filter( 'bp_activity_set_favorites_scope_args', 'bp_activity_filter_favorite
  */
 function bp_activity_filter_mentions_scope( $retval = array(), $filter = array() ) {
 
-	// Are mentions disabled?
+	// Are mentions disabled? Then match nothing: an empty condition would leave the query open
+	// to every privacy level (PROD-10890).
 	if ( ! bp_activity_do_mentions() ) {
-		return $retval;
+		return array(
+			'column' => 'id',
+			'value'  => 0,
+		);
 	}
 
 	// Determine the user_id.
@@ -1440,8 +1441,10 @@ function bp_activity_filter_mentions_scope( $retval = array(), $filter = array()
 		$privacy[] = 'loggedin';
 
 		if ( bp_is_active( 'friends' ) && $user_id ) {
-			// Determine friends of user.
-			$friends = friends_get_friend_user_ids( $user_id );
+			// Friends-only items are for the author and the author's friends, so match the
+			// viewer's friends, not those of the mentioned member (PROD-10890).
+			$friends   = friends_get_friend_user_ids( bp_loggedin_user_id() );
+			$friends[] = bp_loggedin_user_id();
 		}
 	}
 
@@ -1632,6 +1635,7 @@ add_filter( 'bp_ajax_querystring', 'bp_add_member_follow_scope_filter', 20, 2 );
  * For details on the syntax, see {@link BP_Activity_Query}.
  *
  * @since BuddyBoss 1.0.0
+ * @since BuddyBoss [BBVERSION] Matches nothing when activity follow is off.
  *
  * @param array $retval Empty array by default.
  * @param array $filter Current activity arguments.
@@ -1640,9 +1644,13 @@ add_filter( 'bp_ajax_querystring', 'bp_add_member_follow_scope_filter', 20, 2 );
  */
 function bp_users_filter_activity_following_scope( $retval = array(), $filter = array() ) {
 
-	// Is follow active?
+	// Is follow active? If not, match nothing: an empty condition would leave the query open
+	// to every privacy level (PROD-10890).
 	if ( ! bp_is_activity_follow_active() ) {
-		return $retval;
+		return array(
+			'column' => 'id',
+			'value'  => 0,
+		);
 	}
 
 	// Determine the user_id.
