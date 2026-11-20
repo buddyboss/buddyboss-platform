@@ -732,6 +732,7 @@ function bb_forums_subscriptions_redirect() {
 
 add_action( 'bp_ready', 'bb_forums_subscriptions_redirect' );
 
+// @bbwt-com-start presence-mu-plugin
 /**
  * Load Presence API mu plugin.
  *
@@ -744,6 +745,7 @@ function bb_load_presence_api_mu() {
 }
 
 add_action( 'bp_admin_init', 'bb_load_presence_api_mu' );
+// @bbwt-com-end presence-mu-plugin
 
 /**
  * Function to check server allow to load php file directly or not.
