@@ -234,4 +234,100 @@ class BP_Tests_XProfile_Cache extends BP_UnitTestCase {
 
 		$this->assertNull( BP_XProfile_Field::get_id_from_name( 'Bar' ) );
 	}
+
+	/**
+	 * A member who renames themself must have the new name written to `wp_users.display_name`,
+	 * even when their name was already resolved earlier in the same request.
+	 *
+	 * Every request resolves the logged-in member's name at `bp_setup_globals`
+	 * (xprofile_override_user_fullnames()), before the profile form is processed, and the
+	 * resolvers keep that answer in a per-request static cache. The save then ran
+	 * bp_xprofile_update_display_name() against that cache and wrote the PREVIOUS name back,
+	 * which left @mention search matching the name the member had given up.
+	 *
+	 * @group bb_xprofile_member_display_name_cache
+	 * @ticket PROD-10542
+	 */
+	public function test_profile_save_writes_new_display_name_after_name_was_resolved_in_same_request() {
+		bp_update_option( 'bp-display-name-format', 'first_last_name' );
+
+		$first_name_id = bp_xprofile_firstname_field_id();
+		$last_name_id  = bp_xprofile_lastname_field_id();
+		$u             = self::factory()->user->create();
+
+		// `profile_update` syncs the WordPress names into the xprofile name fields.
+		wp_update_user(
+			array(
+				'ID'           => $u,
+				'first_name'   => 'Harry',
+				'last_name'    => 'Lime',
+				'display_name' => 'Harry Lime',
+			)
+		);
+		$this->assertSame( 'Lime', xprofile_get_field_data( $last_name_id, $u ) );
+
+		// The start of the save request: bp_setup_globals resolves the logged-in member's name.
+		wp_set_current_user( $u );
+		$GLOBALS['bb_default_display_avatar'] = false;
+		$this->assertSame( 'Harry Lime', bp_core_get_user_displayname( $u ) );
+
+		// The profile form saves every posted field. Last Name is unchanged, which leaves the
+		// default-avatar flag (an incidental cache bypass) off, exactly as on the real form.
+		xprofile_set_field_data( $first_name_id, $u, 'Donald' );
+		xprofile_set_field_data( $last_name_id, $u, 'Lime' );
+		$this->assertFalse( $GLOBALS['bb_default_display_avatar'], 'Fixture must not bypass the name cache through the avatar flag.' );
+
+		do_action(
+			'xprofile_updated_profile',
+			$u,
+			array( $first_name_id, $last_name_id ),
+			false,
+			array(),
+			array(
+				$first_name_id => array( 'value' => 'Donald' ),
+				$last_name_id  => array( 'value' => 'Lime' ),
+			)
+		);
+
+		clean_user_cache( $u );
+		$this->assertSame( 'Donald Lime', get_userdata( $u )->display_name );
+		$this->assertSame( 'Donald Lime', bp_core_get_user_displayname( $u ) );
+	}
+
+	/**
+	 * Removing a name part must also stop the cached name from being served for the rest of the
+	 * request.
+	 *
+	 * @group bb_xprofile_member_display_name_cache
+	 * @ticket PROD-10542
+	 */
+	public function test_deleting_name_field_data_refreshes_resolved_name_in_same_request() {
+		bp_update_option( 'bp-display-name-format', 'first_last_name' );
+
+		$first_name_id = bp_xprofile_firstname_field_id();
+		$last_name_id  = bp_xprofile_lastname_field_id();
+		$u             = self::factory()->user->create();
+
+		wp_update_user(
+			array(
+				'ID'           => $u,
+				'first_name'   => 'Harry',
+				'last_name'    => 'Lime',
+				'display_name' => 'Harry Lime',
+			)
+		);
+		$this->assertSame( 'Lime', xprofile_get_field_data( $last_name_id, $u ) );
+
+		// The resolver falls back to the user meta when a name field is empty.
+		bp_update_user_meta( $u, 'last_name', '' );
+
+		wp_set_current_user( $u );
+		$GLOBALS['bb_default_display_avatar'] = false;
+		$this->assertSame( 'Harry Lime', bp_core_get_user_displayname( $u ) );
+
+		xprofile_delete_field_data( $last_name_id, $u );
+		$this->assertFalse( $GLOBALS['bb_default_display_avatar'], 'Fixture must not bypass the name cache through the avatar flag.' );
+
+		$this->assertSame( 'Harry', bp_core_get_user_displayname( $u ) );
+	}
 }
