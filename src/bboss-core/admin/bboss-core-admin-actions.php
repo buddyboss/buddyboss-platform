@@ -1145,7 +1145,7 @@ add_action( 'bp_admin_notices', 'bb_core_settings_saved_notice', 1010 );
  *
  * @return array{0:object,1:string,2:int}|null Callback and priority, or null.
  */
-function bb_theme_admin_header_callback() {
+function bboss_theme_admin_header_callback() {
 	if ( ! class_exists( '\BuddyBossTheme\Admin\Mothership\BB_Theme_Mothership_Loader', false ) ) {
 		return null;
 	}
@@ -1170,6 +1170,20 @@ function bb_theme_admin_header_callback() {
 
 	return null;
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_theme_admin_header_callback' ) && ! function_exists( 'bb_theme_admin_header_callback' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_theme_admin_header_callback()}.
+	 *
+	 * @deprecated Use bboss_theme_admin_header_callback() instead.
+	 */
+	function bb_theme_admin_header_callback() {
+		return bboss_theme_admin_header_callback();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Whether the BuddyBoss Theme renders its own admin header on this screen.
@@ -1182,8 +1196,8 @@ function bb_theme_admin_header_callback() {
  * @param WP_Screen|null $screen Current screen.
  * @return bool
  */
-function bb_theme_renders_admin_header( $screen ) {
-	if ( empty( $screen ) || null === bb_theme_admin_header_callback() ) {
+function bboss_theme_renders_admin_header( $screen ) {
+	if ( empty( $screen ) || null === bboss_theme_admin_header_callback() ) {
 		return false;
 	}
 
@@ -1196,6 +1210,20 @@ function bb_theme_renders_admin_header( $screen ) {
 		)
 	) || ( ! empty( $screen->post_type ) && 'buddyboss_fonts' === $screen->post_type );
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_theme_renders_admin_header' ) && ! function_exists( 'bb_theme_renders_admin_header' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_theme_renders_admin_header()}.
+	 *
+	 * @deprecated Use bboss_theme_renders_admin_header() instead.
+	 */
+	function bb_theme_renders_admin_header( $screen ) {
+		return bboss_theme_renders_admin_header( $screen );
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 /**
  * Keep the theme's standalone header off the screens that draw the React one.
@@ -1208,17 +1236,31 @@ function bb_theme_renders_admin_header( $screen ) {
  *
  * @return void
  */
-function bb_remove_theme_admin_header_on_react_screens() {
+function bboss_remove_theme_admin_header_on_react_screens() {
 	$screen = get_current_screen();
 	if ( empty( $screen->id ) || 'buddyboss_page_bb-settings' !== $screen->id ) {
 		return;
 	}
 
-	$callback = bb_theme_admin_header_callback();
+	$callback = bboss_theme_admin_header_callback();
 	if ( null !== $callback ) {
 		remove_action( 'in_admin_header', array( $callback[0], $callback[1] ), $callback[2] );
 	}
 }
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_remove_theme_admin_header_on_react_screens' ) && ! function_exists( 'bb_remove_theme_admin_header_on_react_screens' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_remove_theme_admin_header_on_react_screens()}.
+	 *
+	 * @deprecated Use bboss_remove_theme_admin_header_on_react_screens() instead.
+	 */
+	function bb_remove_theme_admin_header_on_react_screens() {
+		return bboss_remove_theme_admin_header_on_react_screens();
+	}
+}
+// @bbwt-com-end compat-layer
+
 
 add_action( 'in_admin_header', 'bb_remove_theme_admin_header_on_react_screens', 1 );
 
@@ -1233,7 +1275,7 @@ function bboss_render_admin_header() {
 	$screen = get_current_screen();
 
 	// The theme's standalone module prints its own header on these screens.
-	if ( bb_theme_renders_admin_header( $screen ) ) {
+	if ( bboss_theme_renders_admin_header( $screen ) ) {
 		return;
 	}
 
