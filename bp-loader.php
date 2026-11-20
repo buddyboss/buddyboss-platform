@@ -14,17 +14,13 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-if ( file_exists( dirname( __FILE__ ) . '/vendor/autoload.php' ) && file_exists( dirname( __FILE__ ) . '/vendor/autoload.php' ) ) {
+if ( file_exists( dirname( __FILE__ ) . '/vendor/autoload.php' ) ) {
 	require dirname( __FILE__ ) . '/vendor/autoload.php';
 }
 
-// Assume you want to load from build.
-$bp_loader = dirname( __FILE__ ) . '/src/bp-loader.php';
-$subdir    = 'src';
-
 if ( ! defined( 'BP_SOURCE_SUBDIRECTORY' ) ) {
 	// Set source subdirectory.
-	define( 'BP_SOURCE_SUBDIRECTORY', $subdir );
+	define( 'BP_SOURCE_SUBDIRECTORY', 'src' );
 }
 
 // Define overrides - only applicable to those running trunk.
@@ -37,7 +33,4 @@ if ( ! defined( 'BP_PLUGIN_URL' ) ) {
 }
 
 // Include BuddyBoss Platform.
-include( $bp_loader );
-
-// Unset the loader, since it's loaded in global scope.
-unset( $bp_loader );
+include dirname( __FILE__ ) . '/src/bp-loader.php';
