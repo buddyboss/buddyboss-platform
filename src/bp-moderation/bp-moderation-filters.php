@@ -490,6 +490,11 @@ add_action( 'wp_ajax_nopriv_bp_moderation_user_actions_request', 'bp_moderation_
  */
 function bb_moderation_content_report_popup() {
 
+	// Report and block buttons are only rendered for logged-in members.
+	if ( ! is_user_logged_in() ) {
+		return;
+	}
+
 	if ( file_exists( buddypress()->core->path . 'bp-moderation/screens/content-report-form.php' ) ) {
 		include buddypress()->core->path . 'bp-moderation/screens/content-report-form.php';
 	}
