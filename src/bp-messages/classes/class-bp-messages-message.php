@@ -365,6 +365,8 @@ class BP_Messages_Message {
 	 * Delete all the message send by user
 	 *
 	 * @since BuddyBoss 1.0.0
+	 * @since BuddyBoss [BBVERSION] Fires `bb_messages_after_delete_user_message` so the
+	 *              message caches of every affected thread are invalidated.
 	 *
 	 * @param int $user_id user id whom message should get deleted.
 	 */
@@ -415,10 +417,16 @@ class BP_Messages_Message {
 		}
 
 		// unread thread message.
+		$unread_recipients = array();
 		if ( ! empty( $thread_ids ) ) {
-			$thread_ids = implode( ',', $thread_ids );
+			$thread_ids_sql = implode( ',', wp_parse_id_list( $thread_ids ) );
+
+			// Recipients whose unread count is about to change, so only their unread caches are invalidated.
+			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+			$unread_recipients = $wpdb->get_results( "SELECT user_id, thread_id FROM {$bp->messages->table_name_recipients} WHERE thread_id IN ({$thread_ids_sql}) AND unread_count <> 0" );
+
 			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.QuotedSimplePlaceholder
-			$wpdb->query( "UPDATE {$bp->messages->table_name_recipients} SET unread_count = 0 WHERE thread_id IN ({$thread_ids})" );
+			$wpdb->query( "UPDATE {$bp->messages->table_name_recipients} SET unread_count = 0 WHERE thread_id IN ({$thread_ids_sql})" );
 		}
 
 		// Delete the thread of user.
@@ -432,6 +440,22 @@ class BP_Messages_Message {
 
 		// delete all the meta recipients from user table.
 		// $wpdb->query( $wpdb->prepare( "DELETE FROM {$bp->messages->table_name_recipients} WHERE user_id = %d", $user_id ) );
+
+		/**
+		 * Fires after all messages sent by a user have been blanked.
+		 *
+		 * The messages are rewritten with direct queries above, so listeners use this
+		 * to invalidate the caches of every affected thread.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param int   $user_id           ID of the user whose messages were deleted.
+		 * @param array $thread_ids        IDs of the threads that contained the user's messages.
+		 * @param array $message_ids       IDs of the messages that were blanked.
+		 * @param array $unread_recipients Recipient rows (`user_id`, `thread_id`) whose unread
+		 *                                 count was reset to 0.
+		 */
+		do_action( 'bb_messages_after_delete_user_message', $user_id, wp_parse_id_list( $thread_ids ), wp_parse_id_list( $message_ids ), (array) $unread_recipients );
 	}
 
 	/**

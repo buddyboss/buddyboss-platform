@@ -94,6 +94,60 @@ function bp_messages_clear_cache_on_message_delete( $thread_ids, $user_id ) {
 add_action( 'messages_delete_thread', 'bp_messages_clear_cache_on_message_delete', 10, 2 );
 
 /**
+ * Clear message caches after all messages of a user have been deleted.
+ *
+ * `BP_Messages_Message::delete_user_message()` blanks the messages and resets the
+ * recipients' unread counts with direct queries, so the thread, recipient, unread
+ * count and message query caches of every affected thread must be cleared here.
+ *
+ * Unread count caches are cleared only for the recipients whose unread count was
+ * actually reset, so a large group thread does not cost one cache delete per member.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int   $user_id           ID of the user whose messages were deleted.
+ * @param array $thread_ids        IDs of the threads that contained the user's messages.
+ * @param array $message_ids       IDs of the messages that were blanked.
+ * @param array $unread_recipients Recipient rows (`user_id`, `thread_id`) whose unread
+ *                                 count was reset to 0.
+ */
+function bb_messages_clear_cache_on_delete_user_message( $user_id, $thread_ids, $message_ids = array(), $unread_recipients = array() ) {
+	$thread_ids = wp_parse_id_list( $thread_ids );
+
+	if ( empty( $thread_ids ) ) {
+		return;
+	}
+
+	foreach ( $thread_ids as $thread_id ) {
+		wp_cache_delete( "{$thread_id}99999999", 'bp_messages_threads' );
+		bp_messages_delete_thread_paginated_messages_cache( $thread_id );
+		wp_cache_delete( "thread_recipients_{$thread_id}", 'bp_messages' );
+	}
+
+	$unread_keys   = array();
+	$recipient_ids = array();
+	foreach ( (array) $unread_recipients as $recipient ) {
+		$recipient = (object) $recipient;
+		if ( empty( $recipient->user_id ) || empty( $recipient->thread_id ) ) {
+			continue;
+		}
+
+		$recipient_user_id = (int) $recipient->user_id;
+		$unread_keys[]     = 'bb_thread_message_unread_count_' . $recipient_user_id . '_' . (int) $recipient->thread_id;
+
+		$recipient_ids[ $recipient_user_id ] = $recipient_user_id;
+	}
+
+	foreach ( array_chunk( array_merge( $unread_keys, array_values( $recipient_ids ) ), 500 ) as $chunk ) {
+		bb_core_cache_delete_multiple( $chunk, 'bp_messages_unread_count' );
+	}
+
+	// Invalidate the message and thread query caches.
+	bb_core_clear_message_cache();
+}
+add_action( 'bb_messages_after_delete_user_message', 'bb_messages_clear_cache_on_delete_user_message', 10, 4 );
+
+/**
  * Invalidate cache for notices.
  *
  * Currently, invalidates active notice cache.

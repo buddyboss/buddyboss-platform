@@ -18,6 +18,8 @@ defined( 'ABSPATH' ) || exit;
  */
 function bp_media_clear_cache_for_media( $media ) {
 	wp_cache_delete( $media->id, 'bp_media' );
+	// Photos and videos share one table, so the same row is also cached as a video.
+	wp_cache_delete( $media->id, 'bp_video' );
 	wp_cache_delete( 'bp_attachment_media_id_' . $media->attachment_id, 'bp_media' );
 	wp_cache_delete( 'bb_media_activity_' . $media->id, 'bp_media' ); // Used in bb_moderation_get_media_record_by_id().
 
@@ -51,6 +53,7 @@ add_action( 'bp_media_after_save', 'bp_media_clear_cache_for_media' );
 function bp_media_clear_cache_for_deleted_media( $deleted_ids ) {
 	foreach ( (array) $deleted_ids as $deleted_id ) {
 		wp_cache_delete( $deleted_id, 'bp_media' );
+		wp_cache_delete( $deleted_id, 'bp_video' );
 		wp_cache_delete( 'bb_media_activity_' . $deleted_id, 'bp_media' ); // Used in bb_moderation_get_media_record_by_id().
 	}
 }
@@ -63,15 +66,24 @@ add_action( 'bp_media_deleted_medias', 'bp_media_clear_cache_for_deleted_media' 
  * function effectively invalidates all cached results of media queries.
  *
  * @since BuddyBoss 1.1.5
+ * @since BuddyBoss [BBVERSION] Also resets the `bp_video` incrementor,
+ *              because photos and videos share the same table so media-level
+ *              changes can affect video queries. Now also hooked to
+ *              `bp_media_after_save` so updates (e.g. moving media between
+ *              albums) invalidate media query caches without a global cache flush.
  *
  * @return bool True on success, false on failure.
  */
 function bp_media_reset_cache_incrementor() {
+	// Videos are stored in the media table, so media-level
+	// changes can affect video queries.
+	bp_core_reset_incrementor( 'bp_video' );
 	return bp_core_reset_incrementor( 'bp_media' );
 }
 add_action( 'bp_media_delete', 'bp_media_reset_cache_incrementor' );
 add_action( 'bp_media_add', 'bp_media_reset_cache_incrementor' );
 add_action( 'bp_video_add', 'bp_media_reset_cache_incrementor' );
+add_action( 'bp_media_after_save', 'bp_media_reset_cache_incrementor' );
 
 /**
  * Clear a user's cached media count.
@@ -183,12 +195,15 @@ add_action( 'bp_media_add', 'bp_media_clear_media_group_object_cache', 10 );
  * Clear a group's cached media count when delete.
  *
  * @since BuddyBoss 1.2.0
+ * @since BuddyBoss [BBVERSION] Fixed iteration over the deleted media rows
+ *              so the group media count cache is actually cleared for every
+ *              affected group.
  *
  * @param array $medias DB results of media items.
  */
 function bp_media_clear_media_group_object_cache_on_delete( $medias ) {
-	if ( ! empty( $medias[0] ) ) {
-		foreach ( (array) $medias[0] as $deleted_media ) {
+	if ( ! empty( $medias ) ) {
+		foreach ( (array) $medias as $deleted_media ) {
 			$group_id = ! empty( $deleted_media->group_id ) ? $deleted_media->group_id : false;
 
 			if ( $group_id ) {
@@ -200,14 +215,51 @@ function bp_media_clear_media_group_object_cache_on_delete( $medias ) {
 add_action( 'bp_media_before_delete', 'bp_media_clear_media_group_object_cache_on_delete', 10 );
 
 /**
+ * Clear the video caches for video rows deleted through the media path.
+ *
+ * Deleting an album or a selection of items calls bp_media_delete(), which
+ * also removes video rows from the shared table. Only bp_media_before_delete
+ * fires for them, so the video user and group counts are cleared here.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $medias DB results of media items.
+ */
+function bb_media_clear_video_object_cache_on_delete( $medias ) {
+	$videos = array();
+	foreach ( (array) $medias as $deleted_media ) {
+		if ( ! empty( $deleted_media->type ) && 'video' === $deleted_media->type ) {
+			$videos[] = $deleted_media;
+		}
+	}
+
+	if ( empty( $videos ) ) {
+		return;
+	}
+
+	if ( function_exists( 'bp_video_clear_video_user_object_cache_on_delete' ) ) {
+		bp_video_clear_video_user_object_cache_on_delete( $videos );
+	}
+
+	if ( function_exists( 'bp_video_clear_video_group_object_cache_on_delete' ) ) {
+		bp_video_clear_video_group_object_cache_on_delete( $videos );
+	}
+}
+add_action( 'bp_media_before_delete', 'bb_media_clear_video_object_cache_on_delete', 10 );
+
+/**
  * Clear a cached album item when that item is updated.
  *
  * @since BuddyBoss 1.1.5
+ * @since BuddyBoss [BBVERSION] Also clears the video album copy of the row.
  *
  * @param BP_Media_Album $album Album object.
  */
 function bp_media_clear_cache_for_album( $album ) {
 	wp_cache_delete( $album->id, 'bp_media_album' );
+
+	// Photo and video albums share one table, so the same row is also cached as a video album.
+	wp_cache_delete( $album->id, 'bp_video_album' );
 }
 add_action( 'bp_media_album_after_save', 'bp_media_clear_cache_for_album' );
 
@@ -215,12 +267,14 @@ add_action( 'bp_media_album_after_save', 'bp_media_clear_cache_for_album' );
  * Clear cached data for deleted album items.
  *
  * @since BuddyBoss 1.1.5
+ * @since BuddyBoss [BBVERSION] Also clears the video album copy of each row.
  *
  * @param array $deleted_ids IDs of deleted album items.
  */
 function bp_media_clear_cache_for_deleted_album( $deleted_ids ) {
 	foreach ( (array) $deleted_ids as $deleted_id ) {
 		wp_cache_delete( $deleted_id, 'bp_media_album' );
+		wp_cache_delete( $deleted_id, 'bp_video_album' );
 	}
 }
 add_action( 'bp_albums_deleted_albums', 'bp_media_clear_cache_for_deleted_album' );
@@ -232,14 +286,22 @@ add_action( 'bp_albums_deleted_albums', 'bp_media_clear_cache_for_deleted_album'
  * function effectively invalidates all cached results of album queries.
  *
  * @since BuddyBoss 1.1.5
+ * @since BuddyBoss [BBVERSION] Also resets the `bp_video_album` incrementor, because
+ *              photo and video albums share the same table, so saving a photo
+ *              album (for example when media is moved into it) can change video
+ *              album query results.
  *
  * @return bool True on success, false on failure.
  */
 function bp_media_album_reset_cache_incrementor() {
+	// Video albums are stored in the albums table, so album changes
+	// can affect video album queries.
+	bp_core_reset_incrementor( 'bp_video_album' );
 	return bp_core_reset_incrementor( 'bp_media_album' );
 }
 add_action( 'bp_album_delete', 'bp_media_album_reset_cache_incrementor' );
 add_action( 'bp_album_add', 'bp_media_album_reset_cache_incrementor' );
+add_action( 'bp_media_album_after_save', 'bp_media_album_reset_cache_incrementor' );
 
 /**
  * Clear a group's cached album count.
@@ -263,12 +325,15 @@ add_action( 'bp_album_add', 'bp_media_clear_album_group_object_cache', 10 );
  * Clear a group's cached album count when delete.
  *
  * @since BuddyBoss 1.2.0
+ * @since BuddyBoss [BBVERSION] Fixed iteration over the deleted album rows
+ *              so the group album count cache is actually cleared for every
+ *              affected group.
  *
  * @param array $albums DB results of album items.
  */
 function bp_media_clear_album_group_object_cache_on_delete( $albums ) {
-	if ( ! empty( $albums[0] ) ) {
-		foreach ( (array) $albums[0] as $deleted_album ) {
+	if ( ! empty( $albums ) ) {
+		foreach ( (array) $albums as $deleted_album ) {
 			$group_id = ! empty( $deleted_album->group_id ) ? $deleted_album->group_id : false;
 
 			if ( $group_id ) {

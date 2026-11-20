@@ -149,6 +149,161 @@ function bp_friends_delete_cached_friendships_on_friendship_save( $friendship ) 
 }
 add_action( 'friends_friendship_after_save', 'bp_friends_delete_cached_friendships_on_friendship_save' );
 
+/**
+ * Store, or pull, the members related to a user whose connection data is being removed.
+ *
+ * `BP_Friends_Friendship::delete_all_for_user()` deletes friendships and friend
+ * notifications with direct queries, so the other members involved must be
+ * captured before the rows are gone and their caches cleared afterwards.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int        $user_id ID of the user whose connection data is being removed.
+ * @param array|null $related Optional. Related member data to store. Omit to pull
+ *                            (return and forget) the stored data.
+ *
+ * @return array {
+ *     Related member data.
+ *
+ *     @type int[]    $user_ids      IDs of the members with a friendship or request
+ *                                   of any status with the user.
+ *     @type object[] $notifications Friend notifications about the user, each with
+ *                                   `id` and `user_id` (the recipient).
+ * }
+ */
+function bb_friends_remove_data_related_users( $user_id, $related = null ) {
+	static $store = array();
+
+	$user_id = (int) $user_id;
+
+	if ( null !== $related ) {
+		$store[ $user_id ] = $related;
+
+		return $related;
+	}
+
+	$related = isset( $store[ $user_id ] ) ? $store[ $user_id ] : array();
+	unset( $store[ $user_id ] );
+
+	return $related;
+}
+
+/**
+ * Capture the members related to a user before their connection data is removed.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int $user_id ID of the user whose connection data is being removed.
+ */
+function bb_friends_capture_related_users_before_remove_data( $user_id ) {
+	global $wpdb;
+
+	$user_id = (int) $user_id;
+	if ( empty( $user_id ) ) {
+		return;
+	}
+
+	$bp = buddypress();
+
+	// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Reads the rows about to be deleted so their caches can be cleared.
+	$friendships = $wpdb->get_results( $wpdb->prepare( "SELECT initiator_user_id, friend_user_id FROM {$bp->friends->table_name} WHERE initiator_user_id = %d OR friend_user_id = %d", $user_id, $user_id ) );
+
+	$user_ids = array();
+	foreach ( (array) $friendships as $friendship ) {
+		$other_id              = ( (int) $friendship->initiator_user_id === $user_id ) ? (int) $friendship->friend_user_id : (int) $friendship->initiator_user_id;
+		$user_ids[ $other_id ] = $other_id;
+	}
+
+	$notifications = array();
+	if ( bp_is_active( 'notifications' ) ) {
+		// Same rows as the friend notification cleanup in BP_Friends_Friendship::delete_all_for_user().
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Reads the rows about to be deleted so their caches can be cleared.
+		$notifications = $wpdb->get_results( $wpdb->prepare( "SELECT id, user_id FROM {$bp->notifications->table_name} WHERE component_name = 'friends' AND component_action IN ( 'friendship_request', 'friendship_accepted', 'bb_connections_new_request', 'bb_connections_request_accepted' ) AND item_id = %d", $user_id ) );
+	}
+
+	bb_friends_remove_data_related_users(
+		$user_id,
+		array(
+			'user_ids'      => array_values( $user_ids ),
+			'notifications' => (array) $notifications,
+		)
+	);
+}
+add_action( 'friends_before_remove_data', 'bb_friends_capture_related_users_before_remove_data' );
+
+/**
+ * Clear the connection and notification caches of the members related to a
+ * user after the user's connection data has been removed.
+ *
+ * Covers members on either side of a confirmed friendship or a pending request,
+ * and the recipients of friend notifications about the user. The removed user's
+ * own keys are cleared as well, because a member marked as spam stays on the site.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int $user_id ID of the user whose connection data was removed.
+ */
+function bb_friends_clear_related_users_cache_on_remove_data( $user_id ) {
+	$user_id = (int) $user_id;
+	if ( empty( $user_id ) ) {
+		return;
+	}
+
+	$related  = bb_friends_remove_data_related_users( $user_id );
+	$user_ids = ! empty( $related['user_ids'] ) ? wp_parse_id_list( $related['user_ids'] ) : array();
+
+	$for_user_keys = array( $user_id, 'get_friendship_ids_for_user_' . $user_id );
+	$request_keys  = array( $user_id );
+	$bp_keys       = array( 'friends_friend_ids_' . $user_id, 'bp_friends_user_query_' . $user_id );
+	$status_keys   = array();
+
+	foreach ( $user_ids as $other_id ) {
+		$for_user_keys[] = $other_id;
+		$for_user_keys[] = 'get_friendship_ids_for_user_' . $other_id;
+		$request_keys[]  = $other_id;
+		$bp_keys[]       = 'friends_friend_ids_' . $other_id;
+		$bp_keys[]       = 'bp_friends_user_query_' . $other_id;
+		$bp_keys[]       = 'friendship_id_' . $other_id . '_' . $user_id;
+		$bp_keys[]       = 'friendship_id_' . $user_id . '_' . $other_id;
+		$status_keys[]   = bp_core_get_incremented_cache_key( $other_id . ':' . $user_id, 'bp_friends' );
+		$status_keys[]   = bp_core_get_incremented_cache_key( $user_id . ':' . $other_id, 'bp_friends' );
+	}
+
+	foreach (
+		array(
+			'bp_friends_friendships_for_user' => $for_user_keys,
+			'bp_friends_requests'             => $request_keys,
+			'bp'                              => $bp_keys,
+			'bp_friends'                      => $status_keys,
+		) as $group => $keys
+	) {
+		foreach ( array_chunk( $keys, 500 ) as $chunk ) {
+			bb_core_cache_delete_multiple( $chunk, $group );
+		}
+	}
+
+	// Friend notifications about the user were deleted with a direct query.
+	if ( ! empty( $related['notifications'] ) && function_exists( 'bp_notifications_clear_all_for_user_cache' ) ) {
+		$recipient_ids    = array();
+		$notification_ids = array();
+
+		foreach ( $related['notifications'] as $notification ) {
+			$recipient_ids[ (int) $notification->user_id ] = (int) $notification->user_id;
+			$notification_ids[]                            = (int) $notification->id;
+			wp_cache_delete( 'bp_notifications_check_access_' . $notification->user_id . '_' . $notification->id, 'bp_notifications' );
+		}
+
+		foreach ( array_chunk( $notification_ids, 500 ) as $chunk ) {
+			bb_core_cache_delete_multiple( $chunk, 'bp_notifications' );
+		}
+
+		foreach ( $recipient_ids as $recipient_id ) {
+			bp_notifications_clear_all_for_user_cache( $recipient_id );
+		}
+	}
+}
+add_action( 'friends_remove_data', 'bb_friends_clear_related_users_cache_on_remove_data', 5 );
+
 // List actions to clear super cached pages on, if super cache is installed.
 add_action( 'friends_friendship_rejected', 'bp_core_clear_cache' );
 add_action( 'friends_friendship_accepted', 'bp_core_clear_cache' );
