@@ -493,6 +493,69 @@ function bbp_get_template_locations( $templates = array() ) {
 }
 
 /**
+ * Get the subdirectories of the active theme (parent and child) to check for forum template overrides in.
+ *
+ * The plugin's own template pack keeps bbp_get_template_locations(); this list applies to the theme
+ * directories only. Templates in a theme's bbPress-era folders call the bbp_* names, which only the
+ * buddyboss.com edition declares, so those folders are searched there alone.
+ *
+ * @since BuddyBoss 3.7.2
+ *
+ * @param array $templates Templates we are looking for.
+ * @return array Possible subfolders to look in.
+ */
+function bbp_get_theme_template_locations( $templates = array() ) {
+	$locations = array( 'buddyboss-platform' );
+
+	// @bbwt-com-start theme-template-locations
+	$locations[] = 'bbpress';
+	$locations[] = 'forums';
+	// @bbwt-com-end theme-template-locations
+
+	$locations[] = '';
+
+	/**
+	 * Filters the subdirectories of the active theme to check for forum template overrides in.
+	 *
+	 * @since BuddyBoss 3.7.2
+	 *
+	 * @param array $locations Array of subfolders to look in.
+	 * @param array $templates Array of templates we are looking for.
+	 */
+	return apply_filters( 'bbp_get_theme_template_locations', $locations, $templates );
+}
+
+/**
+ * Get the wrapper templates a theme can provide for forum pages.
+ *
+ * The bbPress-era names (bbpress.php and friends) call the bbp_* names, which only the
+ * buddyboss.com edition declares, so they are accepted there alone.
+ *
+ * @since BuddyBoss 3.7.2
+ *
+ * @return array Wrapper template file names, most specific first.
+ */
+function bbp_get_theme_wrapper_templates() {
+	$templates = array( 'buddyboss-platform.php' );
+
+	// @bbwt-com-start theme-template-locations
+	$templates[] = 'plugin-bbpress.php';
+	$templates[] = 'bbpress.php';
+	$templates[] = 'forums.php';
+	$templates[] = 'forum.php';
+	// @bbwt-com-end theme-template-locations
+
+	/**
+	 * Filters the wrapper templates a theme can provide for forum pages.
+	 *
+	 * @since BuddyBoss 3.7.2
+	 *
+	 * @param array $templates Wrapper template file names.
+	 */
+	return apply_filters( 'bbp_get_theme_wrapper_templates', $templates );
+}
+
+/**
  * Add template locations to template files being searched for
  *
  * @since bbPress (r3738)
@@ -504,11 +567,13 @@ function bbp_add_template_stack_locations( $stacks = array() ) {
 	$retval = array();
 
 	// Get alternate locations.
-	$locations = bbp_get_template_locations();
+	$locations       = bbp_get_template_locations();
+	$theme_locations = bbp_get_theme_template_locations();
 
 	// Loop through locations and stacks and combine.
 	foreach ( (array) $stacks as $stack ) {
-		foreach ( (array) $locations as $custom_location ) {
+		$stack_locations = bp_is_theme_template_stack( $stack ) ? $theme_locations : $locations;
+		foreach ( (array) $stack_locations as $custom_location ) {
 			$retval[] = untrailingslashit( trailingslashit( $stack ) . $custom_location );
 		}
 	}

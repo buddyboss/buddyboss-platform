@@ -1104,9 +1104,10 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				// so BuddyPress templates are used instead of ReadyLaunch.
 				$this->bb_rl_restore_default_template_stack();
 
-				// Use the theme's buddypress.php which provides the full page
-				// wrapper (header, logo, footer) for the register form.
-				$theme_bp_template = locate_template( 'buddypress.php' );
+				// Use the theme's wrapper template (buddyboss-platform.php, or buddypress.php where that
+				// name is accepted) which provides the full page wrapper (header, logo, footer) for the
+				// register form.
+				$theme_bp_template = locate_template( bp_get_theme_wrapper_templates() );
 				if ( $theme_bp_template ) {
 					return $theme_bp_template;
 				}
