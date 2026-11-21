@@ -30,7 +30,7 @@ import { useListScreenState } from '../hooks/useListScreenState';
 import { groupFieldsWithLayout, buildRegisteredFieldPayload, getVisibleFields, isFieldConditionalDisabled, needsSeparator, splitFieldsByMetaboxGroup } from '../utils/format';
 import { DiscussionCreateModal } from '../components/forums/DiscussionCreateModal';
 import { RegisteredMetaField } from '../components/common/RegisteredMetaField';
-import { forceRemoveEditor } from '../components/common/RichTextEditor';
+import { forceRemoveEditor, getRichTextEditorHtml } from '../components/common/RichTextEditor';
 import { TagsAutocomplete } from '../components/forums/TagsAutocomplete';
 
 /**
@@ -993,6 +993,14 @@ function DiscussionEditModal( { discussion, onClose, onSave, isSaving } ) {
 		var registeredPayload = discussion.registered_fields
 			? buildRegisteredFieldPayload( discussion.registered_fields, registeredValues, discussion.id )
 			: {};
+
+		// Send the description as HTML, including Code tab edits: the front-end
+		// editor loads the stored value as it is, without autop. Send the same
+		// value in both keys, so the registry sees what is saved.
+		if ( undefined !== registeredPayload.description ) {
+			registeredPayload.description = getRichTextEditorHtml( 'bb-admin-edit-description-' + discussion.id, registeredValues.description || '' );
+			registeredPayload.registered_field_description = registeredPayload.description;
+		}
 
 		var payload = Object.assign( registeredPayload, {
 			topic_id: discussion.id,
