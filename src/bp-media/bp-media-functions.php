@@ -3635,7 +3635,8 @@ function bp_media_get_preview_image_url( $media_id, $attachment_id, $size = 'bb-
 
 		$output_file_src = get_attached_file( $attachment_id );
 		if ( wp_attachment_is_image( $attachment_id ) && file_exists( $output_file_src ) ) {
-			$media = new BP_Media( $media_id );
+			$media          = new BP_Media( $media_id );
+			$symlink_exists = false;
 
 			if ( bb_enable_symlinks() ) {
 
@@ -3656,6 +3657,15 @@ function bp_media_get_preview_image_url( $media_id, $attachment_id, $size = 'bb-
 					bp_media_create_symlinks( $media, $size );
 				}
 
+				/*
+				 * The symlink may still be missing, e.g. when the symlink type
+				 * (bb_media_symlink_type) was never detected or was reset. Returning
+				 * its URL would output a broken image, so fall back to the preview URL.
+				 */
+				$symlink_exists = file_exists( $preview_attachment_path );
+			}
+
+			if ( $symlink_exists ) {
 				$attachment_url = bb_core_symlink_absolute_path( $preview_attachment_path, $upload_directory );
 
 				/**
