@@ -34,12 +34,6 @@ if ( function_exists( 'bp_core_active_plugin_is' ) && ! function_exists( 'bboss_
 		return bp_core_active_plugin_is( $plugin, $name );
 	}
 }
-if ( function_exists( 'bp_core_load_buddypress_textdomain' ) && ! function_exists( 'bboss_core_load_buddypress_textdomain' ) ) {
-	// Pluggable: bp_core_load_buddypress_textdomain() was defined first (bp-custom.php, a plugin); bboss_core_load_buddypress_textdomain() delegates to it.
-	function bboss_core_load_buddypress_textdomain() {
-		return bp_core_load_buddypress_textdomain();
-	}
-}
 // @bbwt-com-end compat-layer
 
 // Stay unloaded when another copy of Platform runs in this request, or when the
@@ -1081,20 +1075,6 @@ if ( ! function_exists( 'bboss_core_load_buddypress_textdomain' ) ) {
 
 		return false;
 	}
-	// @bbwt-com-start compat-layer
-	// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
-	if ( function_exists( 'bboss_core_load_buddypress_textdomain' ) && ! function_exists( 'bp_core_load_buddypress_textdomain' ) ) {
-		/**
-		 * Backward-compatible alias of {@see bboss_core_load_buddypress_textdomain()}.
-		 *
-		 * @deprecated Use bboss_core_load_buddypress_textdomain() instead.
-		 */
-		function bp_core_load_buddypress_textdomain() {
-			return bboss_core_load_buddypress_textdomain();
-		}
-	}
-	// @bbwt-com-end compat-layer
-
 }
 
 // @bbwt-com-start compat-layer
