@@ -25,6 +25,15 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
+// Stay unloaded when another copy of Platform runs in this request, or when the
+// buddyboss.com edition is active next to this one. Nothing may be declared before
+// this point, so that the other copy can load.
+if ( require __DIR__ . '/bp-core/bb-core-edition-precedence.php' ) {
+	return;
+}
+
+define( 'BB_PLATFORM_LOADED_FROM', __FILE__ );
+
 define('PLATFORM_EDITION', 'developer');
 
 if ( ! defined( 'BP_SOURCE_SUBDIRECTORY' ) && file_exists( dirname( __FILE__ ) . '/vendor/autoload.php' ) ) {
