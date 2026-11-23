@@ -25,15 +25,17 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-// Stay unloaded when another copy of Platform runs in this request, or when the
-// buddyboss.com edition is active next to this one. Nothing may be declared before
-// this point, and no function or class may be declared unconditionally anywhere in
-// this file, so that the other copy can load.
+// @bbwt-com-start edition-precedence
+// When another copy of Platform is already running in this request, deactivate it and
+// stay out until the next request. Nothing may be declared before this point, and no
+// function or class may be declared unconditionally anywhere in this file, so that
+// this file can be read while the other copy is loaded.
 if ( require __DIR__ . '/bp-core/bb-core-edition-precedence.php' ) {
 	return;
 }
 
 define( 'BB_PLATFORM_LOADED_FROM', __FILE__ );
+// @bbwt-com-end edition-precedence
 
 define('PLATFORM_EDITION', 'developer');
 
