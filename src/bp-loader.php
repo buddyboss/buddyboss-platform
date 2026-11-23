@@ -25,7 +25,8 @@ defined( 'ABSPATH' ) || exit;
 
 // Stay unloaded when another copy of Platform runs in this request, or when the
 // buddyboss.com edition is active next to this one. Nothing may be declared before
-// this point, so that the other copy can load.
+// this point, and no function or class may be declared unconditionally anywhere in
+// this file, so that the other copy can load.
 if ( require __DIR__ . '/bboss-core/bboss-core-edition-precedence.php' ) {
 	return;
 }
@@ -108,44 +109,49 @@ if ( $bp_is_multisite ) {
 $bp_plugins   = array_merge( $bp_sitewide_plugins, (array) get_option( 'active_plugins', array() ) );
 $bp_plugins[] = isset( $_REQUEST['plugin'] ) ? $_REQUEST['plugin'] : array();
 
-/**
- * Tell whether an active plugin entry is BuddyPress or bbPress, whatever its folder is called.
- *
- * The standard path matches at once. A copy in a renamed folder (`buddypress.bak/`, `bp-old/`)
- * is recognised by its `Plugin Name` header, read only for entries whose folder or file name
- * suggests one of the two, so no request pays a header read per installed plugin. Platform's
- * own entry never matches, whichever folder it is installed in.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @param string $plugin Plugin file relative to the plugins directory, as stored in `active_plugins`.
- * @param string $name   'BuddyPress' or 'bbPress'.
- *
- * @return bool
- */
-function bboss_core_active_plugin_is( $plugin, $name ) {
-	$standard = array(
-		'BuddyPress' => 'buddypress/bp-loader.php',
-		'bbPress'    => 'bbpress/bbpress.php',
-	);
-	if ( ! is_string( $plugin ) || '' === $plugin || ! isset( $standard[ $name ] ) ) {
-		return false;
-	}
-	if ( $standard[ $name ] === $plugin ) {
-		return true;
-	}
-	$lower = strtolower( $plugin );
-	if ( false === strpos( $lower, 'buddypress' ) && false === strpos( $lower, 'bbpress' ) && 'bp-loader.php' !== basename( $lower ) ) {
-		return false;
-	}
-	$file = WP_PLUGIN_DIR . '/' . $plugin;
-	$own  = dirname( __DIR__ ) . '/bp-loader.php';
-	if ( ! is_file( $file ) || realpath( $file ) === realpath( $own ) ) {
-		return false;
-	}
-	$data = get_file_data( $file, array( 'name' => 'Plugin Name' ) );
+// Declared conditionally on purpose: PHP declares an unconditional function when it
+// compiles the file, before the edition check above can return, and a second copy of
+// Platform must be able to read this file without a redeclaration error.
+if ( ! function_exists( 'bboss_core_active_plugin_is' ) ) {
+	/**
+	 * Tell whether an active plugin entry is BuddyPress or bbPress, whatever its folder is called.
+	 *
+	 * The standard path matches at once. A copy in a renamed folder (`buddypress.bak/`, `bp-old/`)
+	 * is recognised by its `Plugin Name` header, read only for entries whose folder or file name
+	 * suggests one of the two, so no request pays a header read per installed plugin. Platform's
+	 * own entry never matches, whichever folder it is installed in.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $plugin Plugin file relative to the plugins directory, as stored in `active_plugins`.
+	 * @param string $name   'BuddyPress' or 'bbPress'.
+	 *
+	 * @return bool
+	 */
+	function bboss_core_active_plugin_is( $plugin, $name ) {
+		$standard = array(
+			'BuddyPress' => 'buddypress/bp-loader.php',
+			'bbPress'    => 'bbpress/bbpress.php',
+		);
+		if ( ! is_string( $plugin ) || '' === $plugin || ! isset( $standard[ $name ] ) ) {
+			return false;
+		}
+		if ( $standard[ $name ] === $plugin ) {
+			return true;
+		}
+		$lower = strtolower( $plugin );
+		if ( false === strpos( $lower, 'buddypress' ) && false === strpos( $lower, 'bbpress' ) && 'bp-loader.php' !== basename( $lower ) ) {
+			return false;
+		}
+		$file = WP_PLUGIN_DIR . '/' . $plugin;
+		$own  = dirname( __DIR__ ) . '/bp-loader.php';
+		if ( ! is_file( $file ) || realpath( $file ) === realpath( $own ) ) {
+			return false;
+		}
+		$data = get_file_data( $file, array( 'name' => 'Plugin Name' ) );
 
-	return isset( $data['name'] ) && trim( (string) $data['name'] ) === $name;
+		return isset( $data['name'] ) && trim( (string) $data['name'] ) === $name;
+	}
 }
 
 // Check if BuddyPress or bbPress is activated, by identity rather than by folder name.
