@@ -100,9 +100,7 @@ if ( $bp_is_multisite ) {
 $bp_plugins   = array_merge( $bp_sitewide_plugins, (array) get_option( 'active_plugins', array() ) );
 $bp_plugins[] = isset( $_REQUEST['plugin'] ) ? $_REQUEST['plugin'] : array();
 
-// Declared conditionally on purpose: PHP declares an unconditional function when it
-// compiles the file, before the edition check above can return, and a second copy of
-// Platform must be able to read this file without a redeclaration error.
+// Declared conditionally, like every other function in this file.
 if ( ! function_exists( 'bboss_core_active_plugin_is' ) ) {
 	/**
 	 * Tell whether an active plugin entry is BuddyPress or bbPress, whatever its folder is called.
