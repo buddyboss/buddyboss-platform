@@ -28,6 +28,12 @@ defined( 'ABSPATH' ) || exit;
 // @bbwt-com-start compat-layer
 // bbwt-rename:compat-aliases-pre — pluggable functions (decision 0013): a site that defined the
 // pre-rename name first keeps its override, and Platform's guarded declaration below stands down.
+if ( function_exists( 'bp_core_active_plugin_is' ) && ! function_exists( 'bboss_core_active_plugin_is' ) ) {
+	// Pluggable: bp_core_active_plugin_is() was defined first (bp-custom.php, a plugin); bboss_core_active_plugin_is() delegates to it.
+	function bboss_core_active_plugin_is( $plugin, $name ) {
+		return bp_core_active_plugin_is( $plugin, $name );
+	}
+}
 if ( function_exists( 'bp_core_load_buddypress_textdomain' ) && ! function_exists( 'bboss_core_load_buddypress_textdomain' ) ) {
 	// Pluggable: bp_core_load_buddypress_textdomain() was defined first (bp-custom.php, a plugin); bboss_core_load_buddypress_textdomain() delegates to it.
 	function bboss_core_load_buddypress_textdomain() {
@@ -46,7 +52,8 @@ if ( file_exists( __DIR__ . '/bboss-compat/bboss-compat-loader.php' ) ) {
 
 // Stay unloaded when another copy of Platform runs in this request, or when the
 // buddyboss.com edition is active next to this one. Nothing may be declared before
-// this point, so that the other copy can load.
+// this point, and no function or class may be declared unconditionally anywhere in
+// this file, so that the other copy can load.
 if ( require __DIR__ . '/bboss-core/bboss-core-edition-precedence.php' ) {
 	return;
 }
@@ -129,59 +136,64 @@ if ( $bp_is_multisite ) {
 $bp_plugins   = array_merge( $bp_sitewide_plugins, (array) get_option( 'active_plugins', array() ) );
 $bp_plugins[] = isset( $_REQUEST['plugin'] ) ? $_REQUEST['plugin'] : array();
 
-/**
- * Tell whether an active plugin entry is BuddyPress or bbPress, whatever its folder is called.
- *
- * The standard path matches at once. A copy in a renamed folder (`buddypress.bak/`, `bp-old/`)
- * is recognised by its `Plugin Name` header, read only for entries whose folder or file name
- * suggests one of the two, so no request pays a header read per installed plugin. Platform's
- * own entry never matches, whichever folder it is installed in.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @param string $plugin Plugin file relative to the plugins directory, as stored in `active_plugins`.
- * @param string $name   'BuddyPress' or 'bbPress'.
- *
- * @return bool
- */
-function bboss_core_active_plugin_is( $plugin, $name ) {
-	$standard = array(
-		'BuddyPress' => 'buddypress/bp-loader.php',
-		'bbPress'    => 'bbpress/bbpress.php',
-	);
-	if ( ! is_string( $plugin ) || '' === $plugin || ! isset( $standard[ $name ] ) ) {
-		return false;
-	}
-	if ( $standard[ $name ] === $plugin ) {
-		return true;
-	}
-	$lower = strtolower( $plugin );
-	if ( false === strpos( $lower, 'buddypress' ) && false === strpos( $lower, 'bbpress' ) && 'bp-loader.php' !== basename( $lower ) ) {
-		return false;
-	}
-	$file = WP_PLUGIN_DIR . '/' . $plugin;
-	$own  = dirname( __DIR__ ) . '/bp-loader.php';
-	if ( ! is_file( $file ) || realpath( $file ) === realpath( $own ) ) {
-		return false;
-	}
-	$data = get_file_data( $file, array( 'name' => 'Plugin Name' ) );
-
-	return isset( $data['name'] ) && trim( (string) $data['name'] ) === $name;
-}
-// @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
-if ( function_exists( 'bboss_core_active_plugin_is' ) && ! function_exists( 'bp_core_active_plugin_is' ) ) {
+// Declared conditionally on purpose: PHP declares an unconditional function when it
+// compiles the file, before the edition check above can return, and a second copy of
+// Platform must be able to read this file without a redeclaration error.
+if ( ! function_exists( 'bboss_core_active_plugin_is' ) ) {
 	/**
-	 * Backward-compatible alias of {@see bboss_core_active_plugin_is()}.
+	 * Tell whether an active plugin entry is BuddyPress or bbPress, whatever its folder is called.
 	 *
-	 * @deprecated Use bboss_core_active_plugin_is() instead.
+	 * The standard path matches at once. A copy in a renamed folder (`buddypress.bak/`, `bp-old/`)
+	 * is recognised by its `Plugin Name` header, read only for entries whose folder or file name
+	 * suggests one of the two, so no request pays a header read per installed plugin. Platform's
+	 * own entry never matches, whichever folder it is installed in.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $plugin Plugin file relative to the plugins directory, as stored in `active_plugins`.
+	 * @param string $name   'BuddyPress' or 'bbPress'.
+	 *
+	 * @return bool
 	 */
-	function bp_core_active_plugin_is( $plugin, $name ) {
-		return bboss_core_active_plugin_is( $plugin, $name );
-	}
-}
-// @bbwt-com-end compat-layer
+	function bboss_core_active_plugin_is( $plugin, $name ) {
+		$standard = array(
+			'BuddyPress' => 'buddypress/bp-loader.php',
+			'bbPress'    => 'bbpress/bbpress.php',
+		);
+		if ( ! is_string( $plugin ) || '' === $plugin || ! isset( $standard[ $name ] ) ) {
+			return false;
+		}
+		if ( $standard[ $name ] === $plugin ) {
+			return true;
+		}
+		$lower = strtolower( $plugin );
+		if ( false === strpos( $lower, 'buddypress' ) && false === strpos( $lower, 'bbpress' ) && 'bp-loader.php' !== basename( $lower ) ) {
+			return false;
+		}
+		$file = WP_PLUGIN_DIR . '/' . $plugin;
+		$own  = dirname( __DIR__ ) . '/bp-loader.php';
+		if ( ! is_file( $file ) || realpath( $file ) === realpath( $own ) ) {
+			return false;
+		}
+		$data = get_file_data( $file, array( 'name' => 'Plugin Name' ) );
 
+		return isset( $data['name'] ) && trim( (string) $data['name'] ) === $name;
+	}
+	// @bbwt-com-start compat-layer
+	// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+	if ( function_exists( 'bboss_core_active_plugin_is' ) && ! function_exists( 'bp_core_active_plugin_is' ) ) {
+		/**
+		 * Backward-compatible alias of {@see bboss_core_active_plugin_is()}.
+		 *
+		 * @deprecated Use bboss_core_active_plugin_is() instead.
+		 */
+		function bp_core_active_plugin_is( $plugin, $name ) {
+			return bboss_core_active_plugin_is( $plugin, $name );
+		}
+	}
+	// @bbwt-com-end compat-layer
+
+}
 
 // Check if BuddyPress or bbPress is activated, by identity rather than by folder name.
 foreach ( $bp_plugins as $bp_active_plugin ) {
