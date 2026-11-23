@@ -42,14 +42,6 @@ if ( function_exists( 'bp_core_load_buddypress_textdomain' ) && ! function_exist
 }
 // @bbwt-com-end compat-layer
 
-// @bbwt-com-start compat-layer
-// bbwt-rename:compat-loader — backward compatibility for third-party code that uses the
-// pre-rename (BuddyPress-style) function, class and constant names. buddyboss.com build only.
-if ( file_exists( __DIR__ . '/bboss-compat/bboss-compat-loader.php' ) ) {
-	require_once __DIR__ . '/bboss-compat/bboss-compat-loader.php';
-}
-// @bbwt-com-end compat-layer
-
 // Stay unloaded when another copy of Platform runs in this request, or when the
 // buddyboss.com edition is active next to this one. Nothing may be declared before
 // this point, and no function or class may be declared unconditionally anywhere in
@@ -59,6 +51,14 @@ if ( require __DIR__ . '/bboss-core/bboss-core-edition-precedence.php' ) {
 }
 
 define( 'BBOSS_PLATFORM_LOADED_FROM', __FILE__ );
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-loader — backward compatibility for third-party code that uses the
+// pre-rename (BuddyPress-style) function, class and constant names. buddyboss.com build only.
+if ( file_exists( __DIR__ . '/bboss-compat/bboss-compat-loader.php' ) ) {
+	require_once __DIR__ . '/bboss-compat/bboss-compat-loader.php';
+}
+// @bbwt-com-end compat-layer
 
 define('BBOSS_PLATFORM_EDITION', 'developer');
 
