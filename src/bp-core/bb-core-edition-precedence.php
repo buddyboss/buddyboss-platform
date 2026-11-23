@@ -41,11 +41,21 @@ return ( static function () {
 	$network = is_multisite() ? array_keys( (array) get_site_option( 'active_sitewide_plugins', array() ) ) : array();
 	$active  = array_merge( $network, (array) get_option( 'active_plugins', array() ) );
 	$other   = array();
+
+	$this_file = wp_normalize_path( __FILE__ );
+	$this_real = wp_normalize_path( (string) realpath( __FILE__ ) );
 	foreach ( $active as $plugin ) {
 		if ( ! is_string( $plugin ) || 'bp-loader.php' !== basename( $plugin ) ) {
 			continue;
 		}
 		if ( ! isset( $loaded[ wp_normalize_path( WP_PLUGIN_DIR . '/' . $plugin ) ] ) ) {
+			continue;
+		}
+
+		// Never this copy itself: its own loader is among the included files too.
+		$folder = trailingslashit( wp_normalize_path( WP_PLUGIN_DIR . '/' . dirname( $plugin ) ) );
+		$real   = realpath( $folder );
+		if ( 0 === strpos( $this_file, $folder ) || ( false !== $real && 0 === strpos( $this_real, trailingslashit( wp_normalize_path( $real ) ) ) ) ) {
 			continue;
 		}
 		if ( bp_core_active_plugin_is( $plugin, 'BuddyPress' ) ) {
