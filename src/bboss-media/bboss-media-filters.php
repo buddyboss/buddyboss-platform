@@ -81,9 +81,9 @@ add_filter( 'bb_activity_comment_get_edit_data', 'bboss_media_get_edit_activity_
 function bboss_media_search_label_search( $type ) {
 
 	if ( 'albums' === $type ) {
-		$type = __( 'Albums', 'buddyboss-platform' );
+		$type = __( 'Albums', 'buddyboss-community-social-network-groups-forums-messaging' );
 	} elseif ( 'photos' === $type ) {
-		$type = __( 'Photos', 'buddyboss-platform' );
+		$type = __( 'Photos', 'buddyboss-community-social-network-groups-forums-messaging' );
 	}
 
 	return $type;
@@ -839,8 +839,8 @@ function bboss_media_import_admin_menu() {
 
 	add_submenu_page(
 		'buddyboss-platform',
-		__( 'Import Media', 'buddyboss-platform' ),
-		__( 'Import Media', 'buddyboss-platform' ),
+		__( 'Import Media', 'buddyboss-community-social-network-groups-forums-messaging' ),
+		__( 'Import Media', 'buddyboss-community-social-network-groups-forums-messaging' ),
 		'manage_options',
 		'bp-media-import',
 		'bboss_media_import_submenu_page'
@@ -904,14 +904,14 @@ function bboss_media_import_submenu_page() {
 							if ( ! empty( $meta_icon ) ) {
 								echo '<i class="' . esc_attr( $meta_icon ) . '"></i>';
 							}
-							esc_html_e( 'Import Media', 'buddyboss-platform' );
+							esc_html_e( 'Import Media', 'buddyboss-community-social-network-groups-forums-messaging' );
 							?>
 						</h2>
 
 						<?php
 						if ( $check ) {
 							?>
-							<p><?php esc_html_e( 'BuddyBoss Media plugin database tables do not exist, meaning you have nothing to import.', 'buddyboss-platform' ); ?></p>
+							<p><?php esc_html_e( 'BuddyBoss Media plugin database tables do not exist, meaning you have nothing to import.', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></p>
 							<?php
 						} elseif ( $is_updating ) {
 							$total_media   = get_option( 'bp_media_import_total_media', 0 );
@@ -928,39 +928,39 @@ function bboss_media_import_submenu_page() {
 							$media_ids     = get_option( 'bp_media_import_media_ids', array() );
 							?>
 							<p>
-								<?php esc_html_e( 'Your database is being updated in the background.', 'buddyboss-platform' ); ?>
+								<?php esc_html_e( 'Your database is being updated in the background.', 'buddyboss-community-social-network-groups-forums-messaging' ); ?>
 							</p>
 							<label style="display: none;"
-								   id="bp-media-resetting"><strong><?php echo esc_html__( 'Migration in progress', 'buddyboss-platform' ) . '...'; ?></strong></label>
+								   id="bp-media-resetting"><strong><?php echo esc_html__( 'Migration in progress', 'buddyboss-community-social-network-groups-forums-messaging' ) . '...'; ?></strong></label>
 							<table class="form-table">
 								<tr>
-									<th scope="row"><?php esc_html_e( 'Albums', 'buddyboss-platform' ); ?></th>
+									<th scope="row"><?php esc_html_e( 'Albums', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></th>
 									<td>
-										<span id="bp-media-import-albums-done"><?php echo (int) $albums_done; ?></span> <?php esc_html_e( 'out of', 'buddyboss-platform' ); ?>
+										<span id="bp-media-import-albums-done"><?php echo (int) $albums_done; ?></span> <?php esc_html_e( 'out of', 'buddyboss-community-social-network-groups-forums-messaging' ); ?>
 										<span id="bp-media-import-albums-total"><?php echo (int) $total_albums; ?></span></td>
 								</tr>
 								<tr>
-									<th scope="row"><?php esc_html_e( 'Media', 'buddyboss-platform' ); ?></th>
+									<th scope="row"><?php esc_html_e( 'Media', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></th>
 									<td>
-										<span id="bp-media-import-media-done"><?php echo (int) $media_done; ?></span> <?php esc_html_e( 'out of', 'buddyboss-platform' ); ?>
+										<span id="bp-media-import-media-done"><?php echo (int) $media_done; ?></span> <?php esc_html_e( 'out of', 'buddyboss-community-social-network-groups-forums-messaging' ); ?>
 										<span id="bp-media-import-media-total"><?php echo (int) $total_media; ?></span></td>
 								</tr>
 								<tr>
-									<th scope="row"><?php esc_html_e( 'Forums', 'buddyboss-platform' ); ?></th>
+									<th scope="row"><?php esc_html_e( 'Forums', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></th>
 									<td>
-										<span id="bp-media-import-forums-done"><?php echo (int) $forums_done; ?></span> <?php esc_html_e( 'out of', 'buddyboss-platform' ); ?>
+										<span id="bp-media-import-forums-done"><?php echo (int) $forums_done; ?></span> <?php esc_html_e( 'out of', 'buddyboss-community-social-network-groups-forums-messaging' ); ?>
 										<span id="bp-media-import-media-total"><?php echo (int) $forums_total; ?></span></td>
 								</tr>
 								<tr>
-									<th scope="row"><?php esc_html_e( 'Discussions', 'buddyboss-platform' ); ?></th>
+									<th scope="row"><?php esc_html_e( 'Discussions', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></th>
 									<td>
-										<span id="bp-media-import-forums-done"><?php echo (int) $topics_done; ?></span> <?php esc_html_e( 'out of', 'buddyboss-platform' ); ?>
+										<span id="bp-media-import-forums-done"><?php echo (int) $topics_done; ?></span> <?php esc_html_e( 'out of', 'buddyboss-community-social-network-groups-forums-messaging' ); ?>
 										<span id="bp-media-import-media-total"><?php echo (int) $topics_total; ?></span></td>
 								</tr>
 								<tr>
-									<th scope="row"><?php esc_html_e( 'Replies', 'buddyboss-platform' ); ?></th>
+									<th scope="row"><?php esc_html_e( 'Replies', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></th>
 									<td>
-										<span id="bp-media-import-forums-done"><?php echo (int) $replies_done; ?></span> <?php esc_html_e( 'out of', 'buddyboss-platform' ); ?>
+										<span id="bp-media-import-forums-done"><?php echo (int) $replies_done; ?></span> <?php esc_html_e( 'out of', 'buddyboss-community-social-network-groups-forums-messaging' ); ?>
 										<span id="bp-media-import-media-total"><?php echo (int) $replies_total; ?></span></td>
 								</tr>
 							</table>
@@ -972,7 +972,7 @@ function bboss_media_import_submenu_page() {
 								<input type="hidden" value="1" name="bp-media-re-run-import"
 									   id="bp-media-re-run-import"/>
 								<input type="submit" style="display: none;"
-									   value="<?php esc_html_e( 'Re-Run Migration', 'buddyboss-platform' ); ?>"
+									   value="<?php esc_html_e( 'Re-Run Migration', 'buddyboss-community-social-network-groups-forums-messaging' ); ?>"
 									   id="bp-media-import-submit" name="bp-media-import-submit"
 									   class="button-primary"/>
 								<?php
@@ -981,22 +981,22 @@ function bboss_media_import_submenu_page() {
 							$albums_ids = get_option( 'bp_media_import_albums_ids', array() );
 							$media_ids  = get_option( 'bp_media_import_media_ids', array() );
 							?>
-							<p><?php esc_html_e( 'BuddyBoss Media data update is complete! Any previously uploaded member photos should display in their profiles now.', 'buddyboss-platform' ); ?></p>
+							<p><?php esc_html_e( 'BuddyBoss Media data update is complete! Any previously uploaded member photos should display in their profiles now.', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></p>
 
 							<?php if ( ! empty( $albums_ids ) || ! empty( $media_ids ) ) { ?>
 								<input type="hidden" value="1" name="bp-media-re-run-import"
 									   id="bp-media-re-run-import"/>
-								<input type="submit" value="<?php esc_html_e( 'Re-Run Migration', 'buddyboss-platform' ); ?>"
+								<input type="submit" value="<?php esc_html_e( 'Re-Run Migration', 'buddyboss-community-social-network-groups-forums-messaging' ); ?>"
 									   id="bp-media-import-submit" name="bp-media-import-submit"
 									   class="button-primary"/>
 								<?php
 							}
 						} else {
 							// Builds without upsell links (the wordpress.org edition) name the product without a link.
-							$media_import_text = __( 'Import your existing members photo uploads, if you were previously using BuddyBoss Media with BuddyPress. Click "Run Migration" below to migrate your old photos into the new Media component.', 'buddyboss-platform' );
+							$media_import_text = __( 'Import your existing members photo uploads, if you were previously using BuddyBoss Media with BuddyPress. Click "Run Migration" below to migrate your old photos into the new Media component.', 'buddyboss-community-social-network-groups-forums-messaging' );
 							?>
 							<p><?php echo wp_kses_post( $media_import_text ); ?></p>
-							<input type="submit" value="<?php esc_html_e( 'Run Migration', 'buddyboss-platform' ); ?>"
+							<input type="submit" value="<?php esc_html_e( 'Run Migration', 'buddyboss-community-social-network-groups-forums-messaging' ); ?>"
 								   id="bp-media-import-submit" name="bp-media-import-submit" class="button-primary"/>
 						<?php } ?>
 					</div>
@@ -1042,9 +1042,9 @@ function bboss_media_activation_notice() {
 			);
 			$notice    = sprintf(
 				'%1$s <a href="%2$s">%3$s</a>',
-				__( 'We have found some media uploaded from the <strong>BuddyBoss Media</strong></strong> plugin, which is not compatible with BuddyBoss Platform as it has its own media component. You should  import the media into BuddyBoss Platform, and then remove the BuddyBoss Media plugin if you are still using it.', 'buddyboss-platform' ),
+				__( 'We have found some media uploaded from the <strong>BuddyBoss Media</strong></strong> plugin, which is not compatible with BuddyBoss Platform as it has its own media component. You should  import the media into BuddyBoss Platform, and then remove the BuddyBoss Media plugin if you are still using it.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				esc_url( $admin_url ),
-				__( 'Import Media', 'buddyboss-platform' )
+				__( 'Import Media', 'buddyboss-community-social-network-groups-forums-messaging' )
 			);
 
 			bboss_core_add_admin_notice( $notice );
@@ -1200,17 +1200,17 @@ function bboss_media_add_admin_repair_items( $repair_list ) {
 	if ( bboss_is_active( 'activity' ) ) {
 		$repair_list[] = array(
 			'bp-repair-media',
-			esc_html__( 'Repair media', 'buddyboss-platform' ),
+			esc_html__( 'Repair media', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'bboss_media_admin_repair_media',
 		);
 		$repair_list[] = array(
 			'bp-media-forum-privacy-repair',
-			esc_html__( 'Repair forum media privacy', 'buddyboss-platform' ),
+			esc_html__( 'Repair forum media privacy', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'bboss_media_forum_privacy_repair',
 		);
 		$repair_list[] = array(
 			'bp-media-message-repair',
-			esc_html__( 'Repair messages media', 'buddyboss-platform' ),
+			esc_html__( 'Repair messages media', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'bboss_media_message_privacy_repair',
 		);
 	}
@@ -1244,7 +1244,7 @@ function bboss_media_message_privacy_repair() {
 			$offset ++;
 		}
 		/* translators: %s: number. */
-		$records_updated = sprintf( __( '%s messages updated successfully.', 'buddyboss-platform' ), bboss_core_number_format( $offset ) );
+		$records_updated = sprintf( __( '%s messages updated successfully.', 'buddyboss-community-social-network-groups-forums-messaging' ), bboss_core_number_format( $offset ) );
 
 		return array(
 			'status'  => 'running',
@@ -1254,7 +1254,7 @@ function bboss_media_message_privacy_repair() {
 	} else {
 		return array(
 			'status'  => 1,
-			'message' => __( 'Repairing messages media &hellip; Complete!', 'buddyboss-platform' ),
+			'message' => __( 'Repairing messages media &hellip; Complete!', 'buddyboss-community-social-network-groups-forums-messaging' ),
 		);
 	}
 }
@@ -1306,7 +1306,7 @@ function bboss_media_admin_repair_media() {
 			$offset ++;
 		}
 		/* translators: %s: number. */
-		$records_updated = sprintf( __( '%s media updated successfully.', 'buddyboss-platform' ), bboss_core_number_format( $offset ) );
+		$records_updated = sprintf( __( '%s media updated successfully.', 'buddyboss-community-social-network-groups-forums-messaging' ), bboss_core_number_format( $offset ) );
 
 		return array(
 			'status'  => 'running',
@@ -1316,7 +1316,7 @@ function bboss_media_admin_repair_media() {
 	} else {
 		return array(
 			'status'  => 1,
-			'message' => __( 'Repairing media &hellip; Complete!', 'buddyboss-platform' ),
+			'message' => __( 'Repairing media &hellip; Complete!', 'buddyboss-community-social-network-groups-forums-messaging' ),
 		);
 	}
 }
@@ -1350,7 +1350,7 @@ function bboss_media_forum_privacy_repair() {
 			$offset ++;
 		}
 		/* translators: %s: number. */
-		$records_updated = sprintf( __( '%s forums media privacy updated successfully.', 'buddyboss-platform' ), bboss_core_number_format( $offset ) );
+		$records_updated = sprintf( __( '%s forums media privacy updated successfully.', 'buddyboss-community-social-network-groups-forums-messaging' ), bboss_core_number_format( $offset ) );
 
 		return array(
 			'status'  => 'running',
@@ -1359,11 +1359,11 @@ function bboss_media_forum_privacy_repair() {
 		);
 	} else {
 		/* translators: %s: progress text. */
-		$statement = __( 'Repair forum media privacy &hellip; %s', 'buddyboss-platform' );
+		$statement = __( 'Repair forum media privacy &hellip; %s', 'buddyboss-community-social-network-groups-forums-messaging' );
 
 		return array(
 			'status'  => 1,
-			'message' => sprintf( $statement, __( 'Complete!', 'buddyboss-platform' ) ),
+			'message' => sprintf( $statement, __( 'Complete!', 'buddyboss-community-social-network-groups-forums-messaging' ) ),
 		);
 	}
 }
@@ -1465,7 +1465,7 @@ function bboss_media_download_file_force( $file_path, $filename ) {
 		if ( $parsed_file_path['remote_file'] ) {
 			bboss_media_download_file_redirect( $file_path );
 		} else {
-			bboss_media_download_error( __( 'File not found', 'buddyboss-platform' ) );
+			bboss_media_download_error( __( 'File not found', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 		}
 	}
 
@@ -1483,7 +1483,7 @@ function bboss_media_download_file_force( $file_path, $filename ) {
  */
 function bboss_media_download_error( $message, $title = '', $status = 404 ) {
 	if ( ! strstr( $message, '<a ' ) ) {
-		$message .= ' <a href="' . esc_url( site_url() ) . '" class="bp-media-forward">' . esc_html__( 'Go to media', 'buddyboss-platform' ) . '</a>';
+		$message .= ' <a href="' . esc_url( site_url() ) . '" class="bp-media-forward">' . esc_html__( 'Go to media', 'buddyboss-community-social-network-groups-forums-messaging' ) . '</a>';
 	}
 	wp_die( wp_kses_post( $message ), esc_html( $title ), array( 'response' => (int) $status ) );
 }

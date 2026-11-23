@@ -30,8 +30,8 @@ function bboss_admin_settings_register_account_settings_feature() {
 	bboss_register_feature(
 		'settings',
 		array(
-			'label'              => __( 'Account Settings', 'buddyboss-platform' ),
-			'description'        => __( 'Allow members to update their account and notification settings directly from their profiles with this account settings page.', 'buddyboss-platform' ),
+			'label'              => __( 'Account Settings', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'description'        => __( 'Allow members to update their account and notification settings directly from their profiles with this account settings page.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'icon'               => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-user-gear',

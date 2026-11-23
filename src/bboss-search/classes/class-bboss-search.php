@@ -102,7 +102,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 		 * @since BuddyBoss 1.0.0
 		 */
 		public function __clone() {
-			_doing_it_wrong( __FUNCTION__, esc_html__( 'Cheatin\' huh?', 'buddyboss-platform' ), '1.7' );
+			_doing_it_wrong( __FUNCTION__, esc_html__( 'Cheatin\' huh?', 'buddyboss-community-social-network-groups-forums-messaging' ), '1.7' );
 		}
 
 		/**
@@ -111,7 +111,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 		 * @since BuddyBoss 1.0.0
 		 */
 		public function __wakeup() {
-			_doing_it_wrong( __FUNCTION__, esc_html__( 'Cheatin\' huh?', 'buddyboss-platform' ), '1.7' );
+			_doing_it_wrong( __FUNCTION__, esc_html__( 'Cheatin\' huh?', 'buddyboss-community-social-network-groups-forums-messaging' ), '1.7' );
 		}
 
 		/**
@@ -374,7 +374,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 				// Show "View All" link.
 				if ( absint( $this->search_results[$key]['total_match_count'] ) > absint( bboss_search_get_form_option( 'bp_search_number_of_results', 5 ) ) ) {
 					$all_results_row  = array(
-						'value'      => "<div class='bp-search-ajax-item allresults'><a href='" . esc_url( $url ) . "'>" . __( 'View all', 'buddyboss-platform' ) . '</a></div>',
+						'value'      => "<div class='bp-search-ajax-item allresults'><a href='" . esc_url( $url ) . "'>" . __( 'View all', 'buddyboss-community-social-network-groups-forums-messaging' ) . '</a></div>',
 						'type'       => 'view_all_type',
 						'type_label' => '',
 					);
@@ -384,7 +384,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 				// @todo give a settings screen for this field
 				$search_results[] = array(
 					'value' => '<div class="bp-search-ajax-item ui-state-disabled noresult">' .
-						esc_html__( 'No results found.', 'buddyboss-platform' ) .
+						esc_html__( 'No results found.', 'buddyboss-community-social-network-groups-forums-messaging' ) .
 					'</div>',
 					'label' => $this->search_args['search_term'],
 				);
@@ -624,7 +624,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 										  . "<header class='results-group-header clearfix'>"
 										  . "<h3 class='results-group-title'><span>" . apply_filters( 'bp_search_label_search_type', $label ) . '</span></h3>'
 										  /* translators: %s: number. */
-										  . "<span class='total-results'>" . sprintf( _n( '%d result', '%d results', $total_results, 'buddyboss-platform' ), $total_results ) . '</a>'
+										  . "<span class='total-results'>" . sprintf( _n( '%d result', '%d results', $total_results, 'buddyboss-community-social-network-groups-forums-messaging' ), $total_results ) . '</a>'
 										  . '</header>'
 										  . "<ul id='{$type}-stream' class='item-list {$type}-list bp-list " . apply_filters( 'bp_search_class_search_list', 'bp-search-results-list', $label ) . "'>";
 
@@ -641,7 +641,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 								$end_html .= "<footer class='results-group-footer'>";
 								$end_html .= "<a href='" . $category_search_url . "' class='view-all-link'>" .
 											   /* translators: %s: number. */
-											   sprintf( esc_html__( 'View (%d) more', 'buddyboss-platform' ), $total_results - $args['number'] ) .
+											   sprintf( esc_html__( 'View (%d) more', 'buddyboss-community-social-network-groups-forums-messaging' ), $total_results - $args['number'] ) .
 											 '</a>';
 								$end_html .= '</footer>';
 							}
@@ -906,7 +906,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 			// first print the 'all results' tab.
 			$class = 'all' == $this->search_args['search_subset'] ? 'active current selected' : '';
 			// this filter can be used to change display of 'all' to 'Everything' etc..
-			$all_label = __( 'All Results', 'buddyboss-platform' );
+			$all_label = __( 'All Results', 'buddyboss-community-social-network-groups-forums-messaging' );
 			$label     = apply_filters( 'bp_search_label_search_type', $all_label );
 
 			if ( $this->search_args['count_total'] && isset( $this->search_results['all'] ) ) {
@@ -993,7 +993,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 		 */
 		public function get_available_search() {
 			$retval = array(
-				'' => __( 'All', 'buddyboss-platform' ),
+				'' => __( 'All', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			);
 
 			if ( ! empty( $this->searchable_items ) && is_array( $this->searchable_items ) ) {

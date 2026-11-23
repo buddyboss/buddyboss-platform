@@ -24,8 +24,8 @@ class BBoss_XProfile_Field_Type_Multiselectbox extends BBoss_XProfile_Field_Type
 	public function __construct() {
 		parent::__construct();
 
-		$this->category = __( 'Multi Fields', 'buddyboss-platform' );
-		$this->name     = __( 'Multi Select', 'buddyboss-platform' );
+		$this->category = __( 'Multi Fields', 'buddyboss-community-social-network-groups-forums-messaging' );
+		$this->name     = __( 'Multi Select', 'buddyboss-community-social-network-groups-forums-messaging' );
 
 		$this->supports_multiple_defaults = true;
 		$this->accepts_null_value         = true;
@@ -107,7 +107,7 @@ class BBoss_XProfile_Field_Type_Multiselectbox extends BBoss_XProfile_Field_Type
 		<?php if ( ! bboss_get_the_profile_field_is_required() ) : ?>
 
 			<a class="clear-value" href="javascript:clear( '<?php echo esc_js( bboss_get_the_profile_field_input_name() ); ?>[]' );">
-				<?php esc_html_e( 'Clear', 'buddyboss-platform' ); ?>
+				<?php esc_html_e( 'Clear', 'buddyboss-community-social-network-groups-forums-messaging' ); ?>
 			</a>
 
 		<?php endif; ?>
@@ -205,7 +205,7 @@ class BBoss_XProfile_Field_Type_Multiselectbox extends BBoss_XProfile_Field_Type
 		<label for="<?php bboss_the_profile_field_input_name(); ?>" class="screen-reader-text">
 															 <?php
 																/* translators: accessibility text */
-																esc_html_e( 'Select', 'buddyboss-platform' );
+																esc_html_e( 'Select', 'buddyboss-community-social-network-groups-forums-messaging' );
 																?>
 		</label>
 		<select <?php echo $this->get_edit_field_html_elements( $r ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- get_edit_field_html_elements() returns attribute markup escaped via bp_get_form_field_attributes(). ?>>

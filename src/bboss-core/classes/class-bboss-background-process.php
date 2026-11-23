@@ -190,7 +190,7 @@ if ( ! class_exists( 'BBoss_Background_Process' ) ) {
 			$schedules[ $this->identifier . '_cron_interval' ] = array(
 				'interval' => MINUTE_IN_SECONDS * $interval,
 				/* translators: %d: interval */
-				'display'  => sprintf( __( 'Every %d minutes', 'buddyboss-platform' ), $interval ),
+				'display'  => sprintf( __( 'Every %d minutes', 'buddyboss-community-social-network-groups-forums-messaging' ), $interval ),
 			);
 
 			return $schedules;

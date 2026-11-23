@@ -61,8 +61,8 @@ class BBoss_Post_Notification extends BBoss_Core_Notification_Abstract {
 		if ( bboss_is_active( 'activity' ) ) {
 			$this->register_notification_group(
 				'posts',
-				esc_html__( 'Posts', 'buddyboss-platform' ),
-				esc_html__( 'Posts', 'buddyboss-platform' ),
+				esc_html__( 'Posts', 'buddyboss-community-social-network-groups-forums-messaging' ),
+				esc_html__( 'Posts', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				5
 			);
 
@@ -79,8 +79,8 @@ class BBoss_Post_Notification extends BBoss_Core_Notification_Abstract {
 
 		$this->register_notification_type(
 			'bb_posts_new_comment_reply',
-			esc_html__( 'A member replies to your post comment', 'buddyboss-platform' ),
-			esc_html__( 'A member receives a reply to their WordPress post comment', 'buddyboss-platform' ),
+			esc_html__( 'A member replies to your post comment', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			esc_html__( 'A member receives a reply to their WordPress post comment', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'posts'
 		);
 
@@ -88,13 +88,13 @@ class BBoss_Post_Notification extends BBoss_Core_Notification_Abstract {
 			'new-comment-reply',
 			array(
 				/* translators: do not remove {} brackets or translate its contents. */
-				'email_title'         => __( '[{{{site.name}}}] {{commenter.name}} replied to your comment', 'buddyboss-platform' ),
+				'email_title'         => __( '[{{{site.name}}}] {{commenter.name}} replied to your comment', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				/* translators: do not remove {} brackets or translate its contents. */
-				'email_content'       => __( "<a href=\"{{{commenter.url}}}\">{{commenter.name}}</a> replied to your comment:\n\n{{{comment_reply}}}", 'buddyboss-platform' ),
+				'email_content'       => __( "<a href=\"{{{commenter.url}}}\">{{commenter.name}}</a> replied to your comment:\n\n{{{comment_reply}}}", 'buddyboss-community-social-network-groups-forums-messaging' ),
 				/* translators: do not remove {} brackets or translate its contents. */
-				'email_plain_content' => __( "{{commenter.name}} replied to your comment:\n\n{{{comment_reply}}}\n\nView the comment: {{{comment.url}}}", 'buddyboss-platform' ),
-				'situation_label'     => __( 'A member receives a reply to their WordPress post comment', 'buddyboss-platform' ),
-				'unsubscribe_text'    => __( 'You will no longer receive emails when someone replies to your comments.', 'buddyboss-platform' ),
+				'email_plain_content' => __( "{{commenter.name}} replied to your comment:\n\n{{{comment_reply}}}\n\nView the comment: {{{comment.url}}}", 'buddyboss-community-social-network-groups-forums-messaging' ),
+				'situation_label'     => __( 'A member receives a reply to their WordPress post comment', 'buddyboss-community-social-network-groups-forums-messaging' ),
+				'unsubscribe_text'    => __( 'You will no longer receive emails when someone replies to your comments.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				'group'               => 'activity',
 			),
 			'bb_posts_new_comment_reply'
@@ -143,7 +143,7 @@ class BBoss_Post_Notification extends BBoss_Core_Notification_Abstract {
 					$excerpt,
 					50,
 					array(
-						'ending' => __( '&hellip;', 'buddyboss-platform' ),
+						'ending' => __( '&hellip;', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					)
 				) . '"';
 
@@ -157,17 +157,17 @@ class BBoss_Post_Notification extends BBoss_Core_Notification_Abstract {
 				if ( ! empty( $excerpt ) ) {
 					$text = sprintf(
 						/* translators: Excerpt. */
-						__( 'Replied to your comment: %s', 'buddyboss-platform' ),
+						__( 'Replied to your comment: %s', 'buddyboss-community-social-network-groups-forums-messaging' ),
 						$excerpt
 					);
 				} else {
-					$text = __( 'Replied to your comment', 'buddyboss-platform' );
+					$text = __( 'Replied to your comment', 'buddyboss-community-social-network-groups-forums-messaging' );
 				}
 			} else {
 				if ( (int) $total_items > 1 ) {
 					$text   = sprintf(
 					/* translators: %s: Total new comment reply count. */
-						__( 'You have %1$d new comment reply', 'buddyboss-platform' ),
+						__( 'You have %1$d new comment reply', 'buddyboss-community-social-network-groups-forums-messaging' ),
 						(int) $total_items
 					);
 					$amount = 'multiple';
@@ -175,14 +175,14 @@ class BBoss_Post_Notification extends BBoss_Core_Notification_Abstract {
 					if ( ! empty( $excerpt ) ) {
 						$text = sprintf(
 						/* translators: 1: Commenter name, 2: Excerpt. */
-							esc_html__( '%1$s replied to your comment: %2$s', 'buddyboss-platform' ),
+							esc_html__( '%1$s replied to your comment: %2$s', 'buddyboss-community-social-network-groups-forums-messaging' ),
 							$commenter_name,
 							$excerpt
 						);
 					} else {
 						$text = sprintf(
 						/* translators: %s: Commenter name. */
-							esc_html__( '%1$s replied to your comment', 'buddyboss-platform' ),
+							esc_html__( '%1$s replied to your comment', 'buddyboss-community-social-network-groups-forums-messaging' ),
 							$commenter_name
 						);
 					}

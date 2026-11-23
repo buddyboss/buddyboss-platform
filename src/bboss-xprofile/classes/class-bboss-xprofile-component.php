@@ -180,24 +180,24 @@ class BBoss_XProfile_Component extends BBoss_Component {
 		$this->visibility_levels = array(
 			'public'     => array(
 				'id'    => 'public',
-				'label' => __( 'Public', 'buddyboss-platform' ),
+				'label' => __( 'Public', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			),
 			'loggedin'   => array(
 				'id'    => 'loggedin',
-				'label' => __( 'All Members', 'buddyboss-platform' ),
+				'label' => __( 'All Members', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			),
 		);
 
 		if ( bboss_is_active( 'friends' ) ) {
 			$this->visibility_levels['friends'] = array(
 				'id'    => 'friends',
-				'label' => __( 'My Connections', 'buddyboss-platform' ),
+				'label' => __( 'My Connections', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			);
 		}
 
 		$this->visibility_levels['adminsonly'] = array(
 			'id'    => 'adminsonly',
-			'label' => __( 'Only Me', 'buddyboss-platform' ),
+			'label' => __( 'Only Me', 'buddyboss-community-social-network-groups-forums-messaging' ),
 		);
 
 		// Tables.
@@ -253,7 +253,7 @@ class BBoss_XProfile_Component extends BBoss_Component {
 
 		// Add 'Profile' to the main navigation.
 		$main_nav = array(
-			'name'                => __( 'Profile', 'buddyboss-platform' ),
+			'name'                => __( 'Profile', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'slug'                => $slug,
 			'position'            => 20,
 			'screen_function'     => 'bboss_xprofile_screen_display_profile',
@@ -263,7 +263,7 @@ class BBoss_XProfile_Component extends BBoss_Component {
 
 		// Add the subnav items to the profile.
 		$sub_nav[] = array(
-			'name'            => __( 'View', 'buddyboss-platform' ),
+			'name'            => __( 'View', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'slug'            => 'public',
 			'parent_url'      => $profile_link,
 			'parent_slug'     => $slug,
@@ -273,7 +273,7 @@ class BBoss_XProfile_Component extends BBoss_Component {
 
 		// Edit Profile.
 		$sub_nav[] = array(
-			'name'            => __( 'Edit', 'buddyboss-platform' ),
+			'name'            => __( 'Edit', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'slug'            => 'edit',
 			'parent_url'      => $profile_link,
 			'parent_slug'     => $slug,
@@ -285,7 +285,7 @@ class BBoss_XProfile_Component extends BBoss_Component {
 		// Change Avatar.
 		if ( bboss()->avatar->show_avatars && ! bboss_disable_avatar_uploads() ) {
 			$sub_nav[] = array(
-				'name'            => __( 'Profile Photo', 'buddyboss-platform' ),
+				'name'            => __( 'Profile Photo', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				'slug'            => 'change-avatar',
 				'parent_url'      => $profile_link,
 				'parent_slug'     => $slug,
@@ -298,7 +298,7 @@ class BBoss_XProfile_Component extends BBoss_Component {
 		// Change cover photo.
 		if ( bboss_displayed_user_use_cover_image_header() ) {
 			$sub_nav[] = array(
-				'name'            => __( 'Cover Photo', 'buddyboss-platform' ),
+				'name'            => __( 'Cover Photo', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				'slug'            => 'change-cover-image',
 				'parent_url'      => $profile_link,
 				'parent_slug'     => $slug,
@@ -342,7 +342,7 @@ class BBoss_XProfile_Component extends BBoss_Component {
 
 		bboss_core_new_subnav_item(
 			array(
-				'name'            => __( 'Privacy', 'buddyboss-platform' ),
+				'name'            => __( 'Privacy', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				'slug'            => 'profile',
 				'parent_url'      => trailingslashit( $user_domain . $settings_slug ),
 				'parent_slug'     => $settings_slug,
@@ -373,7 +373,7 @@ class BBoss_XProfile_Component extends BBoss_Component {
 			$wp_admin_nav[] = array(
 				'parent' => bboss()->my_account_menu_id,
 				'id'     => 'my-account-' . $this->id,
-				'title'  => __( 'Profile', 'buddyboss-platform' ),
+				'title'  => __( 'Profile', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				'href'   => $profile_link,
 			);
 
@@ -381,7 +381,7 @@ class BBoss_XProfile_Component extends BBoss_Component {
 			$wp_admin_nav[] = array(
 				'parent'   => 'my-account-' . $this->id,
 				'id'       => 'my-account-' . $this->id . '-public',
-				'title'    => __( 'View', 'buddyboss-platform' ),
+				'title'    => __( 'View', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				'href'     => $profile_link,
 				'position' => 10,
 			);
@@ -390,7 +390,7 @@ class BBoss_XProfile_Component extends BBoss_Component {
 			$wp_admin_nav[] = array(
 				'parent'   => 'my-account-' . $this->id,
 				'id'       => 'my-account-' . $this->id . '-edit',
-				'title'    => __( 'Edit', 'buddyboss-platform' ),
+				'title'    => __( 'Edit', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				'href'     => trailingslashit( $profile_link . 'edit' ),
 				'position' => 20,
 			);
@@ -400,7 +400,7 @@ class BBoss_XProfile_Component extends BBoss_Component {
 				$wp_admin_nav[] = array(
 					'parent'   => 'my-account-' . $this->id,
 					'id'       => 'my-account-' . $this->id . '-change-avatar',
-					'title'    => __( 'Profile Photo', 'buddyboss-platform' ),
+					'title'    => __( 'Profile Photo', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'href'     => trailingslashit( $profile_link . 'change-avatar' ),
 					'position' => 30,
 				);
@@ -410,7 +410,7 @@ class BBoss_XProfile_Component extends BBoss_Component {
 				$wp_admin_nav[] = array(
 					'parent'   => 'my-account-' . $this->id,
 					'id'       => 'my-account-' . $this->id . '-change-cover-image',
-					'title'    => __( 'Cover Photo', 'buddyboss-platform' ),
+					'title'    => __( 'Cover Photo', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'href'     => trailingslashit( $profile_link . 'change-cover-image' ),
 					'position' => 40,
 				);
@@ -440,14 +440,14 @@ class BBoss_XProfile_Component extends BBoss_Component {
 			$bp = bboss();
 
 			if ( bboss_is_my_profile() ) {
-				$bp->bp_options_title = __( 'My Profile', 'buddyboss-platform' );
+				$bp->bp_options_title = __( 'My Profile', 'buddyboss-community-social-network-groups-forums-messaging' );
 			} else {
 				$bp->bp_options_avatar = bboss_core_fetch_avatar(
 					array(
 						'item_id' => bboss_displayed_user_id(),
 						'type'    => 'thumb',
 						/* translators: %s: member display name. */
-						'alt'     => sprintf( __( 'Profile photo of %s', 'buddyboss-platform' ), bboss_get_displayed_user_fullname() ),
+						'alt'     => sprintf( __( 'Profile photo of %s', 'buddyboss-community-social-network-groups-forums-messaging' ), bboss_get_displayed_user_fullname() ),
 					)
 				);
 				$bp->bp_options_title  = bboss_get_displayed_user_fullname();
@@ -501,7 +501,7 @@ class BBoss_XProfile_Component extends BBoss_Component {
 		$wp_admin_nav[] = array(
 			'parent'   => 'my-account-' . bboss()->settings->id,
 			'id'       => 'my-account-' . bboss()->settings->id . '-profile',
-			'title'    => __( 'Privacy', 'buddyboss-platform' ),
+			'title'    => __( 'Privacy', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'href'     => trailingslashit( $settings_link . 'profile' ),
 			'position' => 30,
 		);

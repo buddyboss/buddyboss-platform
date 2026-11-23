@@ -24,8 +24,8 @@ class BBoss_XProfile_Field_Type_Member_Types extends BBoss_XProfile_Field_Type {
 	public function __construct() {
 		parent::__construct();
 
-		$this->category = __( 'Multi Fields', 'buddyboss-platform' );
-		$this->name     = __( 'Profile Type', 'buddyboss-platform' );
+		$this->category = __( 'Multi Fields', 'buddyboss-community-social-network-groups-forums-messaging' );
+		$this->name     = __( 'Profile Type', 'buddyboss-community-social-network-groups-forums-messaging' );
 
 		$this->supports_options = false;
 
@@ -71,7 +71,7 @@ class BBoss_XProfile_Field_Type_Member_Types extends BBoss_XProfile_Field_Type {
 							/* translators: %s: URL to the profile types admin screen. */
 							__(
 								'Please make sure to add some <a href="%s">profile types</a> first.',
-								'buddyboss-platform'
+								'buddyboss-community-social-network-groups-forums-messaging'
 							),
 							esc_url(
 								add_query_arg(
@@ -182,7 +182,7 @@ class BBoss_XProfile_Field_Type_Member_Types extends BBoss_XProfile_Field_Type {
 
 		if ( ! empty( $bp_active_member_types ) ) {
 
-			$html .= '<option value="">' . /* translators: no option picked in select box */ esc_html__( '----', 'buddyboss-platform' ) . '</option>';
+			$html .= '<option value="">' . /* translators: no option picked in select box */ esc_html__( '----', 'buddyboss-community-social-network-groups-forums-messaging' ) . '</option>';
 
 			foreach ( $bp_active_member_types as $bp_active_member_type ) {
 				$enabled = get_post_meta( $bp_active_member_type, '_bp_member_type_enable_profile_field', true );
@@ -277,7 +277,7 @@ class BBoss_XProfile_Field_Type_Member_Types extends BBoss_XProfile_Field_Type {
 		$member_type_name = get_post_meta( $field_value, '_bp_member_type_label_singular_name', true );
 
 		if ( '' === $member_type_name || false === $member_type_name ) {
-			return esc_html__( '---', 'buddyboss-platform' );
+			return esc_html__( '---', 'buddyboss-community-social-network-groups-forums-messaging' );
 		}
 
 		return $member_type_name;

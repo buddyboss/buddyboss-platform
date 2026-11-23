@@ -23,29 +23,29 @@ defined( 'ABSPATH' ) || exit;
 
 				<fieldset class="bbp-form">
 
-					<legend><?php /* translators: %s: discussion title. */ printf( esc_html__( 'Split discussion "%s"', 'buddyboss-platform' ), bboss_bbp_get_topic_title() ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bbp_get_topic_title() is self-escaping (filtered). ?></legend>
+					<legend><?php /* translators: %s: discussion title. */ printf( esc_html__( 'Split discussion "%s"', 'buddyboss-community-social-network-groups-forums-messaging' ), bboss_bbp_get_topic_title() ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bbp_get_topic_title() is self-escaping (filtered). ?></legend>
 
 					<div>
 
 						<div class="bp-feedback info">
 							<span class="bp-icon" aria-hidden="true"></span>
-							<p><?php esc_html_e( 'When you split a discussion, you are slicing it in half starting with the reply you just selected. Choose to use that reply as a new discussion with a new title, or merge those replies into an existing discussion.', 'buddyboss-platform' ); ?></p>
+							<p><?php esc_html_e( 'When you split a discussion, you are slicing it in half starting with the reply you just selected. Choose to use that reply as a new discussion with a new title, or merge those replies into an existing discussion.', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></p>
 						</div>
 
 						<div class="bp-feedback info">
 							<span class="bp-icon" aria-hidden="true"></span>
-							<p><?php esc_html_e( 'If you use the existing discussion option, replies within both discussions will be merged chronologically. The order of the merged replies is based on the time and date they were posted.', 'buddyboss-platform' ); ?></p>
+							<p><?php esc_html_e( 'If you use the existing discussion option, replies within both discussions will be merged chronologically. The order of the merged replies is based on the time and date they were posted.', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></p>
 						</div>
 
 						<fieldset class="bbp-form">
-							<legend><?php esc_html_e( 'Split Method', 'buddyboss-platform' ); ?></legend>
+							<legend><?php esc_html_e( 'Split Method', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></legend>
 
 							<div>
 								<div class="bp-radio-wrap">
 									<input name="bbp_topic_split_option" id="bbp_topic_split_option_reply" class="bs-styled-radio" type="radio" checked="checked" value="reply" tabindex="<?php bboss_bbp_tab_index(); ?>" />
-									<label for="bbp_topic_split_option_reply"><?php /* translators: %s: forum title. */ echo wp_kses_post( sprintf( __( 'New discussion in <strong>%s</strong> titled:', 'buddyboss-platform' ), esc_html( bboss_bbp_get_forum_title( bboss_bbp_get_topic_forum_id( bboss_bbp_get_topic_id() ) ) ) ) ); ?></label>
+									<label for="bbp_topic_split_option_reply"><?php /* translators: %s: forum title. */ echo wp_kses_post( sprintf( __( 'New discussion in <strong>%s</strong> titled:', 'buddyboss-community-social-network-groups-forums-messaging' ), esc_html( bboss_bbp_get_forum_title( bboss_bbp_get_topic_forum_id( bboss_bbp_get_topic_id() ) ) ) ) ); ?></label>
 								</div>
-								<input type="text" id="bbp_topic_split_destination_title" value="<?php /* translators: %s: discussion title. */ printf( esc_html__( 'Split: %s', 'buddyboss-platform' ), bboss_bbp_get_topic_title() ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bbp_get_topic_title() is self-escaping (filtered). ?>" tabindex="<?php bboss_bbp_tab_index(); ?>" size="35" name="bbp_topic_split_destination_title" />
+								<input type="text" id="bbp_topic_split_destination_title" value="<?php /* translators: %s: discussion title. */ printf( esc_html__( 'Split: %s', 'buddyboss-community-social-network-groups-forums-messaging' ), bboss_bbp_get_topic_title() ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bbp_get_topic_title() is self-escaping (filtered). ?>" tabindex="<?php bboss_bbp_tab_index(); ?>" size="35" name="bbp_topic_split_destination_title" />
 							</div>
 
 							<?php
@@ -61,7 +61,7 @@ defined( 'ABSPATH' ) || exit;
 								<div>
 									<div class="bp-radio-wrap">
 										<input name="bbp_topic_split_option" id="bbp_topic_split_option_existing" class="bs-styled-radio" type="radio" value="existing" tabindex="<?php bboss_bbp_tab_index(); ?>" />
-										<label for="bbp_topic_split_option_existing"><?php esc_html_e( 'Use an existing discussion in this forum:', 'buddyboss-platform' ); ?></label>
+										<label for="bbp_topic_split_option_existing"><?php esc_html_e( 'Use an existing discussion in this forum:', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></label>
 									</div>
 
 									<?php
@@ -82,25 +82,25 @@ defined( 'ABSPATH' ) || exit;
 						</fieldset>
 
 						<fieldset class="bbp-form">
-							<legend><?php esc_html_e( 'Discussion Extras', 'buddyboss-platform' ); ?></legend>
+							<legend><?php esc_html_e( 'Discussion Extras', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></legend>
 
 							<div>
 								<?php if ( bboss_is_enabled_subscription( 'topic' ) ) : ?>
 									<div class="bp-checkbox-wrap">
 										<input name="bbp_topic_subscribers" id="bbp_topic_subscribers" class="bs-styled-checkbox" type="checkbox" value="1" checked="checked" tabindex="<?php bboss_bbp_tab_index(); ?>" />
-										<label for="bbp_topic_subscribers"><?php esc_html_e( 'Copy subscribers to the new discussion', 'buddyboss-platform' ); ?></label>
+										<label for="bbp_topic_subscribers"><?php esc_html_e( 'Copy subscribers to the new discussion', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></label>
 									</div>
 								<?php endif; ?>
 
 								<div class="bp-checkbox-wrap">
 									<input name="bbp_topic_favoriters" id="bbp_topic_favoriters" class="bs-styled-checkbox" type="checkbox" value="1" checked="checked" tabindex="<?php bboss_bbp_tab_index(); ?>" />
-									<label for="bbp_topic_favoriters"><?php esc_html_e( 'Copy favoriters to the new discussion', 'buddyboss-platform' ); ?></label>
+									<label for="bbp_topic_favoriters"><?php esc_html_e( 'Copy favoriters to the new discussion', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></label>
 								</div>
 
 								<?php if ( bboss_bbp_allow_topic_tags() ) : ?>
 									<div class="bp-checkbox-wrap">
 										<input name="bbp_topic_tags" id="bbp_topic_tags" class="bs-styled-checkbox" type="checkbox" value="1" checked="checked" tabindex="<?php bboss_bbp_tab_index(); ?>" />
-										<label for="bbp_topic_tags"><?php esc_html_e( 'Copy discussion tags to the new discussion', 'buddyboss-platform' ); ?></label>
+										<label for="bbp_topic_tags"><?php esc_html_e( 'Copy discussion tags to the new discussion', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></label>
 									</div>
 								<?php endif; ?>
 							</div>
@@ -108,11 +108,11 @@ defined( 'ABSPATH' ) || exit;
 
 						<div class="bp-feedback error">
 							<span class="bp-icon" aria-hidden="true"></span>
-							<p><?php echo wp_kses_post( __( '<strong>WARNING:</strong> This process cannot be undone.', 'buddyboss-platform' ) ); ?></p>
+							<p><?php echo wp_kses_post( __( '<strong>WARNING:</strong> This process cannot be undone.', 'buddyboss-community-social-network-groups-forums-messaging' ) ); ?></p>
 						</div>
 
 						<div class="bbp-submit-wrapper">
-							<button type="submit" tabindex="<?php bboss_bbp_tab_index(); ?>" id="bbp_merge_topic_submit" name="bbp_merge_topic_submit" class="button submit"><?php esc_html_e( 'Submit', 'buddyboss-platform' ); ?></button>
+							<button type="submit" tabindex="<?php bboss_bbp_tab_index(); ?>" id="bbp_merge_topic_submit" name="bbp_merge_topic_submit" class="button submit"><?php esc_html_e( 'Submit', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></button>
 						</div>
 					</div>
 
@@ -125,7 +125,7 @@ defined( 'ABSPATH' ) || exit;
 	<?php else : ?>
 
 		<div id="no-topic-<?php bboss_bbp_topic_id(); ?>" class="bbp-no-topic">
-			<div class="entry-content"><?php is_user_logged_in() ? esc_html_e( 'You do not have the permissions to edit this discussion!', 'buddyboss-platform' ) : esc_html_e( 'You cannot edit this discussion.', 'buddyboss-platform' ); ?></div>
+			<div class="entry-content"><?php is_user_logged_in() ? esc_html_e( 'You do not have the permissions to edit this discussion!', 'buddyboss-community-social-network-groups-forums-messaging' ) : esc_html_e( 'You cannot edit this discussion.', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></div>
 		</div>
 
 	<?php endif; ?>

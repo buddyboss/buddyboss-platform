@@ -145,7 +145,7 @@ class BBoss_Akismet {
 				'id'         => 'activity_make_spam_' . bboss_get_activity_id(),
 				'link_class' => 'bp-secondary-action spam-activity confirm button item-button',
 				'link_href'  => wp_nonce_url( bboss_get_root_domain() . '/' . bboss_get_activity_slug() . '/spam/' . bboss_get_activity_id() . '/', 'bp_activity_akismet_spam_' . bboss_get_activity_id() ),
-				'link_text'  => __( 'Spam', 'buddyboss-platform' ),
+				'link_text'  => __( 'Spam', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				'wrapper'    => false,
 			)
 		);
@@ -176,7 +176,7 @@ class BBoss_Akismet {
 				'id'         => 'activity_make_spam_' . bboss_get_activity_comment_id(),
 				'link_class' => 'bp-secondary-action spam-activity-comment confirm',
 				'link_href'  => wp_nonce_url( bboss_get_root_domain() . '/' . bboss_get_activity_slug() . '/spam/' . bboss_get_activity_comment_id() . '/?cid=' . bboss_get_activity_comment_id(), 'bp_activity_akismet_spam_' . bboss_get_activity_comment_id() ),
-				'link_text'  => __( 'Spam', 'buddyboss-platform' ),
+				'link_text'  => __( 'Spam', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				'wrapper'    => false,
 			)
 		);
@@ -393,7 +393,7 @@ class BBoss_Akismet {
 		}
 
 		/* translators: %s: member display name. */
-		$this->update_activity_history( $activity->id, sprintf( __( '%s reported this activity as spam', 'buddyboss-platform' ), bboss_get_loggedin_user_username() ), 'report-spam' );
+		$this->update_activity_history( $activity->id, sprintf( __( '%s reported this activity as spam', 'buddyboss-community-social-network-groups-forums-messaging' ), bboss_get_loggedin_user_username() ), 'report-spam' );
 		bboss_activity_update_meta( $activity->id, '_bp_akismet_user_result', 'true' );
 		bboss_activity_update_meta( $activity->id, '_bp_akismet_user', bboss_get_loggedin_user_username() );
 	}
@@ -412,7 +412,7 @@ class BBoss_Akismet {
 		}
 
 		/* translators: %s: member display name. */
-		$this->update_activity_history( $activity->id, sprintf( __( '%s reported this activity as not spam', 'buddyboss-platform' ), bboss_get_loggedin_user_username() ), 'report-ham' );
+		$this->update_activity_history( $activity->id, sprintf( __( '%s reported this activity as not spam', 'buddyboss-community-social-network-groups-forums-messaging' ), bboss_get_loggedin_user_username() ), 'report-ham' );
 		bboss_activity_update_meta( $activity->id, '_bp_akismet_user_result', 'false' );
 		bboss_activity_update_meta( $activity->id, '_bp_akismet_user', bboss_get_loggedin_user_username() );
 	}
@@ -438,18 +438,18 @@ class BBoss_Akismet {
 		// Spam.
 		if ( 'true' == $this->last_activity->akismet_submission['bp_as_result'] ) {
 			bboss_activity_update_meta( $activity->id, '_bp_akismet_result', 'true' );
-			$this->update_activity_history( $activity->id, __( 'Akismet caught this item as spam', 'buddyboss-platform' ), 'check-spam' );
+			$this->update_activity_history( $activity->id, __( 'Akismet caught this item as spam', 'buddyboss-community-social-network-groups-forums-messaging' ), 'check-spam' );
 
 			// Not spam.
 		} elseif ( 'false' == $this->last_activity->akismet_submission['bp_as_result'] ) {
 			bboss_activity_update_meta( $activity->id, '_bp_akismet_result', 'false' );
-			$this->update_activity_history( $activity->id, __( 'Akismet cleared this item', 'buddyboss-platform' ), 'check-ham' );
+			$this->update_activity_history( $activity->id, __( 'Akismet cleared this item', 'buddyboss-community-social-network-groups-forums-messaging' ), 'check-ham' );
 
 			// Uh oh, something's gone horribly wrong. Unexpected result.
 		} else {
 			bboss_activity_update_meta( $activity->id, '_bp_akismet_error', bboss_core_current_time() );
 			/* translators: %s: Akismet response. */
-			$this->update_activity_history( $activity->id, sprintf( __( 'Akismet was unable to check this item (response: %s), will automatically retry again later.', 'buddyboss-platform' ), $this->last_activity->akismet_submission['bp_as_result'] ), 'check-error' );
+			$this->update_activity_history( $activity->id, sprintf( __( 'Akismet was unable to check this item (response: %s), will automatically retry again later.', 'buddyboss-community-social-network-groups-forums-messaging' ), $this->last_activity->akismet_submission['bp_as_result'] ), 'check-error' );
 		}
 
 		// Record the original data which was submitted to Akismet for checking.
@@ -610,7 +610,7 @@ class BBoss_Akismet {
 			$component,
 			'activity_history',
 			array(
-				'label'      => __( 'Activity History', 'buddyboss-platform' ),
+				'label'      => __( 'Activity History', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				'type'       => 'readonly',
 				'order'      => 200,
 				'context'    => 'after',

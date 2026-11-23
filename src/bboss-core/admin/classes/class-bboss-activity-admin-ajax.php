@@ -84,7 +84,7 @@ class BBoss_Activity_Admin_Ajax {
 		$this->bb_verify_request();
 
 		if ( ! bboss_is_active( 'activity' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Activity component is not active.', 'buddyboss-platform' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Activity component is not active.', 'buddyboss-community-social-network-groups-forums-messaging' ) ) );
 		}
 
 		/**
@@ -196,10 +196,10 @@ class BBoss_Activity_Admin_Ajax {
 		// Get columns (same as legacy BP_Activity_List_Table::get_columns()).
 		$default_columns = array(
 			'cb'       => '<input name type="checkbox" />',
-			'author'   => __( 'Author', 'buddyboss-platform' ),
-			'comment'  => __( 'Activity', 'buddyboss-platform' ),
-			'action'   => __( 'Action', 'buddyboss-platform' ),
-			'response' => __( 'In Response To', 'buddyboss-platform' ),
+			'author'   => __( 'Author', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'comment'  => __( 'Activity', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'action'   => __( 'Action', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'response' => __( 'In Response To', 'buddyboss-community-social-network-groups-forums-messaging' ),
 		);
 
 		/**
@@ -322,10 +322,10 @@ class BBoss_Activity_Admin_Ajax {
 
 				// Row actions (same as legacy column_comment() - filter so plugins can add/alter).
 				$row_actions = array(
-					'edit'   => __( 'Edit', 'buddyboss-platform' ),
-					'spam'   => __( 'Spam', 'buddyboss-platform' ),
-					'unspam' => __( 'Not Spam', 'buddyboss-platform' ),
-					'delete' => __( 'Delete', 'buddyboss-platform' ),
+					'edit'   => __( 'Edit', 'buddyboss-community-social-network-groups-forums-messaging' ),
+					'spam'   => __( 'Spam', 'buddyboss-community-social-network-groups-forums-messaging' ),
+					'unspam' => __( 'Not Spam', 'buddyboss-community-social-network-groups-forums-messaging' ),
+					'delete' => __( 'Delete', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				);
 				if ( (int) $activity_obj->is_spam ) {
 					unset( $row_actions['spam'] );
@@ -455,7 +455,7 @@ class BBoss_Activity_Admin_Ajax {
 						$component_name = ucfirst( $component );
 					}
 
-					$component_name = ( 'Bbpress' === $component_name ) ? __( 'Forums', 'buddyboss-platform' ) : $component_name;
+					$component_name = ( 'Bbpress' === $component_name ) ? __( 'Forums', 'buddyboss-community-social-network-groups-forums-messaging' ) : $component_name;
 
 					$group_options = array();
 					$actions_arr   = (array) $actions;
@@ -480,9 +480,9 @@ class BBoss_Activity_Admin_Ajax {
 
 			// Get bulk actions (same as legacy BP_Activity_List_Table::get_bulk_actions()).
 			$bulk_actions = array(
-				'bulk_spam'   => __( 'Mark as Spam', 'buddyboss-platform' ),
-				'bulk_ham'    => __( 'Not Spam', 'buddyboss-platform' ),
-				'bulk_delete' => __( 'Delete', 'buddyboss-platform' ),
+				'bulk_spam'   => __( 'Mark as Spam', 'buddyboss-community-social-network-groups-forums-messaging' ),
+				'bulk_ham'    => __( 'Not Spam', 'buddyboss-community-social-network-groups-forums-messaging' ),
+				'bulk_delete' => __( 'Delete', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			);
 
 			/**
@@ -509,11 +509,11 @@ class BBoss_Activity_Admin_Ajax {
 		$current_view = 'spam_only' === $spam ? 'spam' : 'all';
 		$views        = array(
 			'all'  => array(
-				'label' => __( 'All', 'buddyboss-platform' ),
+				'label' => __( 'All', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				'count' => $ham_count,
 			),
 			'spam' => array(
-				'label' => __( 'Spam', 'buddyboss-platform' ),
+				'label' => __( 'Spam', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				'count' => $spam_count,
 			),
 		);
@@ -605,7 +605,7 @@ class BBoss_Activity_Admin_Ajax {
 		$this->bb_verify_request();
 
 		if ( ! bboss_is_active( 'activity' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Activity component is not active.', 'buddyboss-platform' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Activity component is not active.', 'buddyboss-community-social-network-groups-forums-messaging' ) ) );
 		}
 
 		// phpcs:disable WordPress.Security.NonceVerification.Missing
@@ -613,7 +613,7 @@ class BBoss_Activity_Admin_Ajax {
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
 		if ( empty( $activity_id ) ) {
-			wp_send_json_error( array( 'message' => __( 'Activity ID is required.', 'buddyboss-platform' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Activity ID is required.', 'buddyboss-community-social-network-groups-forums-messaging' ) ) );
 		}
 
 		$activity = bboss_activity_get(
@@ -627,7 +627,7 @@ class BBoss_Activity_Admin_Ajax {
 		);
 
 		if ( empty( $activity['activities'][0] ) ) {
-			wp_send_json_error( array( 'message' => __( 'Activity not found.', 'buddyboss-platform' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Activity not found.', 'buddyboss-community-social-network-groups-forums-messaging' ) ) );
 		}
 
 		$item = $activity['activities'][0];
@@ -726,7 +726,7 @@ class BBoss_Activity_Admin_Ajax {
 		$this->bb_verify_request();
 
 		if ( ! bboss_is_active( 'activity' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Activity component is not active.', 'buddyboss-platform' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Activity component is not active.', 'buddyboss-community-social-network-groups-forums-messaging' ) ) );
 		}
 
 		// phpcs:disable WordPress.Security.NonceVerification.Missing
@@ -734,14 +734,14 @@ class BBoss_Activity_Admin_Ajax {
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
 		if ( empty( $activity_id ) ) {
-			wp_send_json_error( array( 'message' => __( 'Activity ID is required.', 'buddyboss-platform' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Activity ID is required.', 'buddyboss-community-social-network-groups-forums-messaging' ) ) );
 		}
 
 		// Get the activity from the database.
 		$activity = new BBoss_Activity_Activity( $activity_id );
 
 		if ( empty( $activity->component ) ) {
-			wp_send_json_error( array( 'message' => __( 'Activity not found.', 'buddyboss-platform' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Activity not found.', 'buddyboss-community-social-network-groups-forums-messaging' ) ) );
 		}
 
 		// Phase 1: Set core object properties from registry fields before save.
@@ -798,7 +798,7 @@ class BBoss_Activity_Admin_Ajax {
 		);
 
 		if ( 0 !== $error ) {
-			wp_send_json_error( array( 'message' => __( 'Failed to save activity.', 'buddyboss-platform' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Failed to save activity.', 'buddyboss-community-social-network-groups-forums-messaging' ) ) );
 		}
 
 		// Phase 2: Save meta fields via the field registry after save.
@@ -806,7 +806,7 @@ class BBoss_Activity_Admin_Ajax {
 
 		wp_send_json_success(
 			array(
-				'message' => __( 'Activity saved successfully.', 'buddyboss-platform' ),
+				'message' => __( 'Activity saved successfully.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			)
 		);
 	}
@@ -824,7 +824,7 @@ class BBoss_Activity_Admin_Ajax {
 		$this->bb_verify_request();
 
 		if ( ! bboss_is_active( 'activity' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Activity component is not active.', 'buddyboss-platform' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Activity component is not active.', 'buddyboss-community-social-network-groups-forums-messaging' ) ) );
 		}
 
 		// phpcs:disable WordPress.Security.NonceVerification.Missing
@@ -833,11 +833,11 @@ class BBoss_Activity_Admin_Ajax {
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
 		if ( empty( $raw_ids ) || empty( $do_action ) ) {
-			wp_send_json_error( array( 'message' => __( 'Activity IDs and action are required.', 'buddyboss-platform' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Activity IDs and action are required.', 'buddyboss-community-social-network-groups-forums-messaging' ) ) );
 		}
 
 		if ( ! in_array( $do_action, array( 'spam', 'ham', 'delete' ), true ) ) {
-			wp_send_json_error( array( 'message' => __( 'Invalid action.', 'buddyboss-platform' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Invalid action.', 'buddyboss-community-social-network-groups-forums-messaging' ) ) );
 		}
 
 		// Parse activity IDs.
@@ -845,7 +845,7 @@ class BBoss_Activity_Admin_Ajax {
 		$activity_ids = array_filter( $activity_ids );
 
 		if ( empty( $activity_ids ) ) {
-			wp_send_json_error( array( 'message' => __( 'No valid activity IDs provided.', 'buddyboss-platform' ) ) );
+			wp_send_json_error( array( 'message' => __( 'No valid activity IDs provided.', 'buddyboss-community-social-network-groups-forums-messaging' ) ) );
 		}
 
 		// Cap bulk operations to prevent timeout.
@@ -950,23 +950,23 @@ class BBoss_Activity_Admin_Ajax {
 		);
 
 		if ( ! empty( $errors ) && 0 === $processed ) {
-			wp_send_json_error( array( 'message' => __( 'Failed to process activities.', 'buddyboss-platform' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Failed to process activities.', 'buddyboss-community-social-network-groups-forums-messaging' ) ) );
 		}
 
 		$messages = array(
 			'spam'   => sprintf(
 				/* translators: %d: number of activities */
-				_n( '%d activity marked as spam.', '%d activities marked as spam.', $processed, 'buddyboss-platform' ),
+				_n( '%d activity marked as spam.', '%d activities marked as spam.', $processed, 'buddyboss-community-social-network-groups-forums-messaging' ),
 				$processed
 			),
 			'ham'    => sprintf(
 				/* translators: %d: number of activities */
-				_n( '%d activity marked as not spam.', '%d activities marked as not spam.', $processed, 'buddyboss-platform' ),
+				_n( '%d activity marked as not spam.', '%d activities marked as not spam.', $processed, 'buddyboss-community-social-network-groups-forums-messaging' ),
 				$processed
 			),
 			'delete' => sprintf(
 				/* translators: %d: number of activities */
-				_n( '%d activity deleted.', '%d activities deleted.', $processed, 'buddyboss-platform' ),
+				_n( '%d activity deleted.', '%d activities deleted.', $processed, 'buddyboss-community-social-network-groups-forums-messaging' ),
 				$processed
 			),
 		);
@@ -993,7 +993,7 @@ class BBoss_Activity_Admin_Ajax {
 		$this->bb_verify_request();
 
 		if ( ! bboss_is_active( 'activity' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Activity component is not active.', 'buddyboss-platform' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Activity component is not active.', 'buddyboss-community-social-network-groups-forums-messaging' ) ) );
 		}
 
 		// phpcs:disable WordPress.Security.NonceVerification.Missing
@@ -1002,18 +1002,18 @@ class BBoss_Activity_Admin_Ajax {
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
 		if ( empty( $activity_id ) ) {
-			wp_send_json_error( array( 'message' => __( 'Activity ID is required.', 'buddyboss-platform' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Activity ID is required.', 'buddyboss-community-social-network-groups-forums-messaging' ) ) );
 		}
 
 		if ( empty( trim( $content ) ) ) {
-			wp_send_json_error( array( 'message' => __( 'Comment content is required.', 'buddyboss-platform' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Comment content is required.', 'buddyboss-community-social-network-groups-forums-messaging' ) ) );
 		}
 
 		// Get the activity to determine the root activity ID.
 		$activity = new BBoss_Activity_Activity( $activity_id );
 
 		if ( empty( $activity->component ) ) {
-			wp_send_json_error( array( 'message' => __( 'Activity not found.', 'buddyboss-platform' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Activity not found.', 'buddyboss-community-social-network-groups-forums-messaging' ) ) );
 		}
 
 		// Determine root activity ID: if this is already a comment, use its item_id.
@@ -1037,7 +1037,7 @@ class BBoss_Activity_Admin_Ajax {
 
 		wp_send_json_success(
 			array(
-				'message'    => __( 'Comment posted successfully.', 'buddyboss-platform' ),
+				'message'    => __( 'Comment posted successfully.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				'comment_id' => $comment_id,
 			)
 		);

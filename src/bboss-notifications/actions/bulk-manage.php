@@ -35,7 +35,7 @@ function bboss_notifications_action_bulk_manage() {
 
 	// Check the nonce.
 	if ( ! wp_verify_nonce( $nonce, 'notifications_bulk_nonce' ) ) {
-		bboss_core_add_message( __( 'There was a problem managing your notifications.', 'buddyboss-platform' ), 'error' );
+		bboss_core_add_message( __( 'There was a problem managing your notifications.', 'buddyboss-community-social-network-groups-forums-messaging' ), 'error' );
 		return false;
 	}
 
@@ -47,21 +47,21 @@ function bboss_notifications_action_bulk_manage() {
 			foreach ( $notifications as $notification ) {
 				bboss_notifications_delete_notification( $notification );
 			}
-			bboss_core_add_message( __( 'Notifications deleted.', 'buddyboss-platform' ) );
+			bboss_core_add_message( __( 'Notifications deleted.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 			break;
 
 		case 'read':
 			foreach ( $notifications as $notification ) {
 				bboss_notifications_mark_notification( $notification, false );
 			}
-			bboss_core_add_message( __( 'Notifications marked as read', 'buddyboss-platform' ) );
+			bboss_core_add_message( __( 'Notifications marked as read', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 			break;
 
 		case 'unread':
 			foreach ( $notifications as $notification ) {
 				bboss_notifications_mark_notification( $notification, true );
 			}
-			bboss_core_add_message( __( 'Notifications marked as unread.', 'buddyboss-platform' ) );
+			bboss_core_add_message( __( 'Notifications marked as unread.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 			break;
 	}
 

@@ -28,7 +28,7 @@ function bboss_activity_register_settings_panel_fields( $edit_time_options = arr
 		'activity_settings',
 		'activity_settings',
 		array(
-			'title'       => __( 'Activity Settings', 'buddyboss-platform' ),
+			'title'       => __( 'Activity Settings', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'description' => '',
 			'order'       => 10,
 			'help_url'    => '636101',
@@ -41,10 +41,10 @@ function bboss_activity_register_settings_panel_fields( $edit_time_options = arr
 		'activity_settings',
 		array(
 			'name'                 => '_bp_enable_activity_edit',
-			'label'                => __( 'Edit Activity', 'buddyboss-platform' ),
+			'label'                => __( 'Edit Activity', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'type'                 => 'toggle',
 			// translators: %s: Edit time duration select control (e.g. "10 minutes").
-			'description'          => __( 'Allow members to edit their activity posts for a duration of %s', 'buddyboss-platform' ),
+			'description'          => __( 'Allow members to edit their activity posts for a duration of %s', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'default'              => bboss_is_activity_edit_enabled(),
 			'sanitize_callback'    => 'absint',
 			'description_controls' => array(
@@ -70,9 +70,9 @@ function bboss_activity_register_settings_panel_fields( $edit_time_options = arr
 		'activity_settings',
 		array(
 			'name'              => 'bb_activity_post_title_enabled',
-			'label'             => __( 'Post Title', 'buddyboss-platform' ),
+			'label'             => __( 'Post Title', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'type'              => 'toggle',
-			'description'       => __( 'Make post titles mandatory', 'buddyboss-platform' ),
+			'description'       => __( 'Make post titles mandatory', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'default'           => bboss_is_activity_post_title_enabled(),
 			'sanitize_callback' => 'absint',
 			'order'             => 20,
@@ -86,9 +86,9 @@ function bboss_activity_register_settings_panel_fields( $edit_time_options = arr
 		'activity_settings',
 		array(
 			'name'              => 'bb_enable_activity_post_feature_image',
-			'label'             => __( 'Post Feature Image', 'buddyboss-platform' ),
+			'label'             => __( 'Post Feature Image', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'type'              => 'toggle',
-			'description'       => __( 'Allow group owners and moderators to add a featured image to their posts', 'buddyboss-platform' ),
+			'description'       => __( 'Allow group owners and moderators to add a featured image to their posts', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'default'           => function_exists( 'bb_pro_activity_post_feature_image_instance' ) ? bb_pro_activity_post_feature_image_instance()->bb_is_enabled() : false,
 			'sanitize_callback' => 'absint',
 			'order'             => 30,
@@ -100,9 +100,9 @@ function bboss_activity_register_settings_panel_fields( $edit_time_options = arr
 	$heartbeat_disabled = '1' === get_option( 'bp_wp_heartbeat_disabled' );
 	$heartbeat_args     = array(
 		'name'              => '_bp_enable_heartbeat_refresh',
-		'label'             => __( 'Activity auto-refresh', 'buddyboss-platform' ),
+		'label'             => __( 'Activity auto-refresh', 'buddyboss-community-social-network-groups-forums-messaging' ),
 		'type'              => 'toggle',
-		'description'       => __( 'Automatically check for new activity posts', 'buddyboss-platform' ),
+		'description'       => __( 'Automatically check for new activity posts', 'buddyboss-community-social-network-groups-forums-messaging' ),
 		'default'           => bboss_is_activity_heartbeat_active(),
 		'sanitize_callback' => 'absint',
 		'order'             => 40,
@@ -110,7 +110,7 @@ function bboss_activity_register_settings_panel_fields( $edit_time_options = arr
 
 	if ( $heartbeat_disabled ) {
 		$heartbeat_args['disabled']  = true;
-		$heartbeat_args['help_text'] = __( 'This feature requires the WordPress <a href="https://developer.wordpress.org/plugins/javascript/heartbeat-api/" target="_blank">Heartbeat API</a> to function, which is disabled on your server.', 'buddyboss-platform' );
+		$heartbeat_args['help_text'] = __( 'This feature requires the WordPress <a href="https://developer.wordpress.org/plugins/javascript/heartbeat-api/" target="_blank">Heartbeat API</a> to function, which is disabled on your server.', 'buddyboss-community-social-network-groups-forums-messaging' );
 	}
 
 	bboss_register_feature_field(
@@ -127,9 +127,9 @@ function bboss_activity_register_settings_panel_fields( $edit_time_options = arr
 		'activity_settings',
 		array(
 			'name'              => '_bb_enable_close_activity_comments',
-			'label'             => __( 'Close Comments', 'buddyboss-platform' ),
+			'label'             => __( 'Close Comments', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'type'              => 'toggle',
-			'description'       => __( 'Allow your users to stop users commenting on their posts', 'buddyboss-platform' ),
+			'description'       => __( 'Allow your users to stop users commenting on their posts', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'default'           => bboss_is_close_activity_comments_enabled(),
 			'sanitize_callback' => 'absint',
 			'order'             => 50,
@@ -143,9 +143,9 @@ function bboss_activity_register_settings_panel_fields( $edit_time_options = arr
 		'activity_settings',
 		array(
 			'name'              => '_bb_enable_activity_post_polls',
-			'label'             => __( 'Polls', 'buddyboss-platform' ),
+			'label'             => __( 'Polls', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'type'              => 'toggle',
-			'description'       => __( 'Allow group owners and moderators to post polls', 'buddyboss-platform' ),
+			'description'       => __( 'Allow group owners and moderators to post polls', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'default'           => function_exists( 'bb_is_enabled_activity_post_polls' ) ? bb_is_enabled_activity_post_polls( false ) : false,
 			'sanitize_callback' => 'absint',
 			'order'             => 60,
@@ -160,9 +160,9 @@ function bboss_activity_register_settings_panel_fields( $edit_time_options = arr
 		'activity_settings',
 		array(
 			'name'              => '_bb_enable_activity_pinned_posts',
-			'label'             => __( 'Pinned Post', 'buddyboss-platform' ),
+			'label'             => __( 'Pinned Post', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'type'              => 'toggle',
-			'description'       => __( 'Allow group owners and moderators to pin posts', 'buddyboss-platform' ),
+			'description'       => __( 'Allow group owners and moderators to pin posts', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'default'           => bboss_is_active_activity_pinned_posts(),
 			'sanitize_callback' => 'absint',
 			'order'             => 70,
@@ -177,9 +177,9 @@ function bboss_activity_register_settings_panel_fields( $edit_time_options = arr
 		'activity_settings',
 		array(
 			'name'              => '_bb_enable_activity_schedule_posts',
-			'label'             => __( 'Schedule Posts', 'buddyboss-platform' ),
+			'label'             => __( 'Schedule Posts', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'type'              => 'toggle',
-			'description'       => __( 'Allow group owners and moderators to schedule their posts', 'buddyboss-platform' ),
+			'description'       => __( 'Allow group owners and moderators to schedule their posts', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'default'           => function_exists( 'bb_is_enabled_activity_schedule_posts_filter' ) ? bb_is_enabled_activity_schedule_posts_filter() : false,
 			'sanitize_callback' => 'absint',
 			'order'             => 80,
@@ -194,9 +194,9 @@ function bboss_activity_register_settings_panel_fields( $edit_time_options = arr
 		'activity_settings',
 		array(
 			'name'              => '_bp_enable_activity_follow',
-			'label'             => __( 'Follow', 'buddyboss-platform' ),
+			'label'             => __( 'Follow', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'type'              => 'toggle',
-			'description'       => __( 'Allow your members to follow the activity of each other on their timeline', 'buddyboss-platform' ),
+			'description'       => __( 'Allow your members to follow the activity of each other on their timeline', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'default'           => bboss_is_activity_follow_active(),
 			'sanitize_callback' => 'absint',
 			'order'             => 90,
@@ -210,10 +210,10 @@ function bboss_activity_register_settings_panel_fields( $edit_time_options = arr
 		'activity_settings',
 		array(
 			'name'              => '_bp_enable_relevant_feed',
-			'label'             => __( 'Relevant Activity', 'buddyboss-platform' ),
+			'label'             => __( 'Relevant Activity', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'type'              => 'toggle',
-			'description'       => __( 'Show only relevant posts to the logged-in member in the activity feed.', 'buddyboss-platform' ),
-			'help_text'         => __( 'When checked, logged-in members will see activity from their timeline, connections, followed members, joined groups, subscribed forums, and mentions.', 'buddyboss-platform' ),
+			'description'       => __( 'Show only relevant posts to the logged-in member in the activity feed.', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'help_text'         => __( 'When checked, logged-in members will see activity from their timeline, connections, followed members, joined groups, subscribed forums, and mentions.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'default'           => bboss_is_relevant_feed_enabled(),
 			'sanitize_callback' => 'absint',
 			'order'             => 100,
@@ -236,7 +236,7 @@ function bboss_activity_register_settings_panel_fields( $edit_time_options = arr
 		'activity_settings',
 		'activity_feed',
 		array(
-			'title'       => __( 'Activity Feed', 'buddyboss-platform' ),
+			'title'       => __( 'Activity Feed', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'description' => '',
 			'order'       => 20,
 			'help_url'    => '636104',
@@ -250,9 +250,9 @@ function bboss_activity_register_settings_panel_fields( $edit_time_options = arr
 		'activity_feed',
 		array(
 			'name'              => 'bb_enable_activity_search',
-			'label'             => __( 'Activity Search', 'buddyboss-platform' ),
+			'label'             => __( 'Activity Search', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'type'              => 'toggle',
-			'description'       => __( 'Allow members to search activity posts', 'buddyboss-platform' ),
+			'description'       => __( 'Allow members to search activity posts', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'default'           => bboss_is_activity_search_enabled(),
 			'sanitize_callback' => 'absint',
 			'order'             => 10,
@@ -284,9 +284,9 @@ function bboss_activity_register_settings_panel_fields( $edit_time_options = arr
 		'activity_feed',
 		array(
 			'name'        => 'bb_activity_filter_options',
-			'label'       => __( 'Activity Feed Filters', 'buddyboss-platform' ),
+			'label'       => __( 'Activity Feed Filters', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'type'        => 'checkbox_list',
-			'description' => __( 'Allow members to filter activity posts by:', 'buddyboss-platform' ),
+			'description' => __( 'Allow members to filter activity posts by:', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'default'           => bboss_get_enabled_activity_filter_options(),
 			'options'           => $activity_feed_filter_options,
 			'sanitize_callback' => 'bboss_sanitize_checkbox_list',
@@ -319,9 +319,9 @@ function bboss_activity_register_settings_panel_fields( $edit_time_options = arr
 		'activity_feed',
 		array(
 			'name'        => 'bb_activity_timeline_filter_options',
-			'label'       => __( 'Profile Timeline Filters', 'buddyboss-platform' ),
+			'label'       => __( 'Profile Timeline Filters', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'type'        => 'checkbox_list',
-			'description' => __( 'Allow members to filter activity posts by:', 'buddyboss-platform' ),
+			'description' => __( 'Allow members to filter activity posts by:', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'default'     => array(
 				'just-me'   => 1,
 				'favorites' => 1,
@@ -361,9 +361,9 @@ function bboss_activity_register_settings_panel_fields( $edit_time_options = arr
 		'activity_feed',
 		array(
 			'name'        => 'bb_activity_sorting_options',
-			'label'       => __( 'Activity Sorting', 'buddyboss-platform' ),
+			'label'       => __( 'Activity Sorting', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'type'        => 'checkbox_list',
-			'description' => __( 'Allow members to sort activity posts by:', 'buddyboss-platform' ),
+			'description' => __( 'Allow members to sort activity posts by:', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'default'     => bboss_get_enabled_activity_sorting_options(),
 			'options'           => $activity_sorting_options,
 			'sanitize_callback' => 'bboss_sanitize_checkbox_list',

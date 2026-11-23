@@ -166,7 +166,7 @@ function bboss_activity_screen_single_activity_permalink() {
 
 			// Redirect away.
 		} else {
-			bboss_core_add_message( __( 'You do not have access to this activity.', 'buddyboss-platform' ), 'error' );
+			bboss_core_add_message( __( 'You do not have access to this activity.', 'buddyboss-community-social-network-groups-forums-messaging' ), 'error' );
 			bboss_core_redirect( bboss_loggedin_user_domain() );
 		}
 	}

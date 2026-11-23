@@ -29,7 +29,7 @@ defined( 'ABSPATH' ) || exit;
  * @return string Translated role name on success, original name on failure.
  */
 function bboss_bbp_translate_user_role( $name ) {
-	return translate_with_gettext_context( before_last_bar( $name ), 'User role', 'buddyboss-platform' ); // phpcs:ignore WordPress.WP.I18n.LowLevelTranslationFunction,WordPress.WP.I18n.NonSingularStringLiteralText -- mirrors core's translate_user_role() for the plugin's own role names (registered as translatable strings where the roles are defined).
+	return translate_with_gettext_context( before_last_bar( $name ), 'User role', 'buddyboss-community-social-network-groups-forums-messaging' ); // phpcs:ignore WordPress.WP.I18n.LowLevelTranslationFunction,WordPress.WP.I18n.NonSingularStringLiteralText -- mirrors core's translate_user_role() for the plugin's own role names (registered as translatable strings where the roles are defined).
 }
 
 /**
@@ -40,17 +40,17 @@ function bboss_bbp_translate_user_role( $name ) {
 function bboss_bbp_dummy_role_names() {
 
 	/* translators: user role */
-	__( 'Organizer', 'buddyboss-platform' );
+	__( 'Organizer', 'buddyboss-community-social-network-groups-forums-messaging' );
 
 	/* translators: user role */
-	__( 'Moderator', 'buddyboss-platform' );
+	__( 'Moderator', 'buddyboss-community-social-network-groups-forums-messaging' );
 
 	/* translators: user role */
-	__( 'Participant', 'buddyboss-platform' );
+	__( 'Participant', 'buddyboss-community-social-network-groups-forums-messaging' );
 
 	/* translators: user role */
-	__( 'Spectator', 'buddyboss-platform' );
+	__( 'Spectator', 'buddyboss-community-social-network-groups-forums-messaging' );
 
 	/* translators: user role */
-	__( 'Blocked', 'buddyboss-platform' );
+	__( 'Blocked', 'buddyboss-community-social-network-groups-forums-messaging' );
 }

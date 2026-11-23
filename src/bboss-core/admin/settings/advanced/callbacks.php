@@ -44,8 +44,8 @@ function bboss_advanced_sanitize_activity_load_type( $value ) {
 		bboss_parse_args(
 			apply_filters( 'bb_performance_activity_autoload', array() ),
 			array(
-				'infinite'  => __( 'Infinite Scroll', 'buddyboss-platform' ),
-				'load_more' => __( 'Load More', 'buddyboss-platform' ),
+				'infinite'  => __( 'Infinite Scroll', 'buddyboss-community-social-network-groups-forums-messaging' ),
+				'load_more' => __( 'Load More', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			)
 		)
 	);

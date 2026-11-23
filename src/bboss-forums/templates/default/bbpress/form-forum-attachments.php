@@ -34,8 +34,8 @@ do_action( 'bbp_theme_before_forums_form_attachments' ); ?>
 	<?php
 	if ( bboss_is_active( 'media' ) ) :
 		?>
-		<div class="post-elements-buttons-item show-toolbar" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php esc_attr_e( 'Show formatting', 'buddyboss-platform' ); ?>" data-bp-tooltip-hide="<?php esc_html_e( 'Hide formatting', 'buddyboss-platform' ); ?>" data-bp-tooltip-show="<?php esc_html_e( 'Show formatting', 'buddyboss-platform' ); ?>">
-			<a href="#" id="show-toolbar-button" class="toolbar-button bp-tooltip" aria-label="<?php esc_attr_e( 'Show formatting', 'buddyboss-platform' ); ?>">
+		<div class="post-elements-buttons-item show-toolbar" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php esc_attr_e( 'Show formatting', 'buddyboss-community-social-network-groups-forums-messaging' ); ?>" data-bp-tooltip-hide="<?php esc_html_e( 'Hide formatting', 'buddyboss-community-social-network-groups-forums-messaging' ); ?>" data-bp-tooltip-show="<?php esc_html_e( 'Show formatting', 'buddyboss-community-social-network-groups-forums-messaging' ); ?>">
+			<a href="#" id="show-toolbar-button" class="toolbar-button bp-tooltip" aria-label="<?php esc_attr_e( 'Show formatting', 'buddyboss-community-social-network-groups-forums-messaging' ); ?>">
 				<span class="bb-icon-l bb-icon-font"></span>
 			</a>
 		</div>
@@ -44,7 +44,7 @@ do_action( 'bbp_theme_before_forums_form_attachments' ); ?>
 
 	if ( bboss_is_active( 'media' ) && bboss_user_has_access_upload_emoji( $group_id, bboss_loggedin_user_id(), $forum_id, 0, 'forum' ) ) :
 		?>
-		<div class="post-elements-buttons-item post-emoji bp-tooltip" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php esc_attr_e( 'Emoji', 'buddyboss-platform' ); ?>"></div>
+		<div class="post-elements-buttons-item post-emoji bp-tooltip" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php esc_attr_e( 'Emoji', 'buddyboss-community-social-network-groups-forums-messaging' ); ?>"></div>
 		<?php
 	endif;
 	?>

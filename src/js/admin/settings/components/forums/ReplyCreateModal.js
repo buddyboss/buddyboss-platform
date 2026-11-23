@@ -128,12 +128,12 @@ export function ReplyCreateModal( { isOpen, onClose, onCreated, createFields } )
 		}
 
 		if ( ! contentVal.trim() ) {
-			setError( __( 'Description is required.', 'buddyboss-platform' ) );
+			setError( __( 'Description is required.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 			return;
 		}
 
 		if ( ! registeredValues.topic_id ) {
-			setError( __( 'Discussion is required.', 'buddyboss-platform' ) );
+			setError( __( 'Discussion is required.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 			return;
 		}
 
@@ -159,14 +159,14 @@ export function ReplyCreateModal( { isOpen, onClose, onCreated, createFields } )
 					onCreated( response.data.reply_id );
 				}
 			} else {
-				setError( ( response.data && response.data.message ) || __( 'Failed to create reply.', 'buddyboss-platform' ) );
+				setError( ( response.data && response.data.message ) || __( 'Failed to create reply.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 			}
 		} ).catch( function () {
 			if ( ! isMountedRef.current ) {
 				return;
 			}
 			setIsSaving( false );
-			setError( __( 'An error occurred. Please try again.', 'buddyboss-platform' ) );
+			setError( __( 'An error occurred. Please try again.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 		} );
 	};
 
@@ -302,7 +302,7 @@ export function ReplyCreateModal( { isOpen, onClose, onCreated, createFields } )
 
 	return (
 		<Modal
-			title={ __( 'Create New Reply', 'buddyboss-platform' ) }
+			title={ __( 'Create New Reply', 'buddyboss-community-social-network-groups-forums-messaging' ) }
 			onRequestClose={ handleClose }
 			className="bb-reply-modal bb-reply-create-modal bb-admin-settings-modal"
 			shouldCloseOnClickOutside={ false }
@@ -321,7 +321,7 @@ export function ReplyCreateModal( { isOpen, onClose, onCreated, createFields } )
 					onClick={ handleClose }
 					disabled={ isSaving }
 				>
-					{ __( 'Cancel', 'buddyboss-platform' ) }
+					{ __( 'Cancel', 'buddyboss-community-social-network-groups-forums-messaging' ) }
 				</Button>
 				<Button
 					variant="primary"
@@ -329,7 +329,7 @@ export function ReplyCreateModal( { isOpen, onClose, onCreated, createFields } )
 					isBusy={ isSaving }
 					disabled={ isSaving || ! registeredValues.topic_id }
 				>
-					{ __( 'Save', 'buddyboss-platform' ) }
+					{ __( 'Save', 'buddyboss-community-social-network-groups-forums-messaging' ) }
 				</Button>
 			</div>
 		</Modal>

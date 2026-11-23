@@ -1,4 +1,4 @@
-=== BuddyBoss Platform ===
+=== BuddyBoss – Community, Social Network, Groups, Forums & Private Messaging ===
 Contributors: buddyboss
 Requires at least: 6.3
 Tested up to: 7.1
@@ -39,8 +39,8 @@ To run BuddyBoss Platform, we recommend your host supports:
 
 1. Visit 'Plugins > Add New'
 2. Click 'Upload Plugin'
-3. Upload the file 'buddyboss-platform-plugin.zip'
-4. Activate 'BuddyBoss Platform' from your Plugins page.
+3. Upload the file 'buddyboss-community-social-network-groups-forums-messaging.zip'
+4. Activate 'BuddyBoss – Community, Social Network, Groups, Forums & Private Messaging' from your Plugins page.
 
 == Setup ==
 

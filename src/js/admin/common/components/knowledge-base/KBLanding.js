@@ -152,7 +152,7 @@ export default function KBLanding() {
 		return (
 			<div className="bb-kb-landing">
 				<div className="bb-kb-landing__error" role="alert">
-					{ __( 'Couldn’t load documentation.', 'buddyboss-platform' ) }
+					{ __( 'Couldn’t load documentation.', 'buddyboss-community-social-network-groups-forums-messaging' ) }
 					<button
 						type="button"
 						className="components-button is-primary"
@@ -165,7 +165,7 @@ export default function KBLanding() {
 							setRetry( ( c ) => c + 1 );
 						} }
 					>
-						{ __( 'Retry', 'buddyboss-platform' ) }
+						{ __( 'Retry', 'buddyboss-community-social-network-groups-forums-messaging' ) }
 					</button>
 				</div>
 			</div>
@@ -175,7 +175,7 @@ export default function KBLanding() {
 	return (
 		<div className="bb-kb-landing">
 			<h2 className="bb-kb-landing__title">
-				{ __( 'BuddyBoss Knowledge Base', 'buddyboss-platform' ) }
+				{ __( 'BuddyBoss Knowledge Base', 'buddyboss-community-social-network-groups-forums-messaging' ) }
 			</h2>
 			<ul className="bb-kb-landing__grid" role="list">
 				{ cards.map( ( cat ) => (
@@ -190,7 +190,7 @@ export default function KBLanding() {
 							<p className="bb-kb-card__description">{ cat.description }</p>
 							<span className="bb-kb-card__count">
 								{ sprintf(
-									_n( '%d article', '%d articles', cat.count, 'buddyboss-platform' ),
+									_n( '%d article', '%d articles', cat.count, 'buddyboss-community-social-network-groups-forums-messaging' ),
 									cat.count
 								) }
 							</span>

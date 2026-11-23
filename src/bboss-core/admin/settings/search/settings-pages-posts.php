@@ -39,8 +39,8 @@ function bboss_search_register_pages_posts_fields() {
 		'pages_posts',
 		'pages_posts_content',
 		array(
-			'title'       => __( 'Pages & Posts Search', 'buddyboss-platform' ),
-			'description' => __( 'All listed WordPress content and custom post types are searchable. The switches indicate which ones are included in searches.', 'buddyboss-platform' ),
+			'title'       => __( 'Pages & Posts Search', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'description' => __( 'All listed WordPress content and custom post types are searchable. The switches indicate which ones are included in searches.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'order'       => 10,
 		)
 	);
@@ -57,13 +57,13 @@ function bboss_search_register_pages_posts_fields() {
 		// Determine display label and toggle description.
 		$label = $post_type_obj->labels->name;
 		if ( 'post' === $post_type ) {
-			$label = __( 'Blog Posts', 'buddyboss-platform' );
+			$label = __( 'Blog Posts', 'buddyboss-community-social-network-groups-forums-messaging' );
 		}
 
 		$toggle_descriptions = array(
-			'post'       => __( 'Allow blog posts searching', 'buddyboss-platform' ),
-			'page'       => __( 'Allow Pages searching', 'buddyboss-platform' ),
-			'attachment' => __( 'Allow media searching', 'buddyboss-platform' ),
+			'post'       => __( 'Allow blog posts searching', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'page'       => __( 'Allow Pages searching', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'attachment' => __( 'Allow media searching', 'buddyboss-community-social-network-groups-forums-messaging' ),
 		);
 
 		$toggle_description = isset( $toggle_descriptions[ $post_type ] )
@@ -175,7 +175,7 @@ function bboss_search_register_meta_field( $post_type, $base_order = 10, $taxono
 		'pages_posts_content',
 		array(
 			'name'              => 'bp_search_post_type_meta_' . $post_type,
-			'label'             => __( 'Meta Data', 'buddyboss-platform' ),
+			'label'             => __( 'Meta Data', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'type'              => 'checkbox',
 			'default'           => absint( bboss_get_option( 'bp_search_post_type_meta_' . $post_type, 0 ) ),
 			'sanitize_callback' => 'absint',
@@ -237,7 +237,7 @@ function bboss_search_lazy_register_cpt_fields( $feature_id ) {
 		'pages_posts_content',
 		array(
 			'name'  => 'bp_search_custom_post_types',
-			'label' => __( 'Custom Post Types', 'buddyboss-platform' ),
+			'label' => __( 'Custom Post Types', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'type'  => 'hidden',
 			'order' => $parent_order,
 		)

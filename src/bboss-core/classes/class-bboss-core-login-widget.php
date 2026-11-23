@@ -24,9 +24,9 @@ class BBoss_Core_Login_Widget extends WP_Widget {
 	public function __construct() {
 		parent::__construct(
 			self::class === static::class ? 'bp_core_login_widget' : false,
-			__( '(BB) Log In', 'buddyboss-platform' ),
+			__( '(BB) Log In', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			array(
-				'description'                 => __( 'Show a Log In form to logged-out visitors, and a Log Out link to those who are logged in.', 'buddyboss-platform' ),
+				'description'                 => __( 'Show a Log In form to logged-out visitors, and a Log Out link to those who are logged in.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				'classname'                   => 'widget_bp_core_login_widget buddypress widget',
 				'customize_selective_refresh' => true,
 			)
@@ -81,7 +81,7 @@ class BBoss_Core_Login_Widget extends WP_Widget {
 
 			<div class="bp-login-widget-user-links">
 				<h4 class="bp-login-widget-user-link"><?php echo wp_kses_post( bboss_core_get_userlink( bboss_loggedin_user_id() ) ); ?></h4>
-				<div class="bp-login-widget-user-logout"><a class="logout" href="<?php echo esc_url( wp_logout_url( bboss_get_requested_url() ) ); ?>"><?php esc_html_e( 'Log Out', 'buddyboss-platform' ); ?></a></div>
+				<div class="bp-login-widget-user-logout"><a class="logout" href="<?php echo esc_url( wp_logout_url( bboss_get_requested_url() ) ); ?>"><?php esc_html_e( 'Log Out', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></a></div>
 			</div>
 
 			<?php
@@ -107,24 +107,24 @@ class BBoss_Core_Login_Widget extends WP_Widget {
 			?>
 
 			<form name="bp-login-form" id="bp-login-widget-form" class="standard-form" action="<?php echo esc_url( site_url( 'wp-login.php', 'login_post' ) ); ?>" method="post">
-				<label for="bp-login-widget-user-login"><?php esc_html_e( 'Username', 'buddyboss-platform' ); ?></label>
+				<label for="bp-login-widget-user-login"><?php esc_html_e( 'Username', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></label>
 				<input type="text" name="log" id="bp-login-widget-user-login" class="input" value="" />
 
-				<label for="bp-login-widget-user-pass"><?php esc_html_e( 'Password', 'buddyboss-platform' ); ?></label>
+				<label for="bp-login-widget-user-pass"><?php esc_html_e( 'Password', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></label>
 				<input type="password" name="pwd" id="bp-login-widget-user-pass" class="input" value="" <?php bboss_form_field_attributes( 'password' ); ?> />
 
 				<div class="forgetmenot">
 					<input name="rememberme" type="checkbox" id="bp-login-widget-rememberme" class="bs-styled-checkbox" value="forever" />
-					<label for="bp-login-widget-rememberme"><?php esc_html_e( 'Remember Me', 'buddyboss-platform' ); ?></label>
+					<label for="bp-login-widget-rememberme"><?php esc_html_e( 'Remember Me', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></label>
 				</div>
 
 				<div class="bbp-submit-wrapper">
-					<input type="submit" name="wp-submit" id="bp-login-widget-submit" value="<?php esc_attr_e( 'Log In', 'buddyboss-platform' ); ?>" />
+					<input type="submit" name="wp-submit" id="bp-login-widget-submit" value="<?php esc_attr_e( 'Log In', 'buddyboss-community-social-network-groups-forums-messaging' ); ?>" />
 				</div>
 
 				<?php if ( bboss_get_signup_allowed() ) : ?>
 
-					<span class="bp-login-widget-register-link"><a href="<?php echo esc_url( bboss_get_signup_page() ); ?>"><?php esc_html_e( 'Register', 'buddyboss-platform' ); ?></a></span>
+					<span class="bp-login-widget-register-link"><a href="<?php echo esc_url( bboss_get_signup_page() ); ?>"><?php esc_html_e( 'Register', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></a></span>
 
 				<?php endif; ?>
 
@@ -191,7 +191,7 @@ class BBoss_Core_Login_Widget extends WP_Widget {
 		?>
 
 		<p>
-			<label for="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>"><?php esc_html_e( 'Title:', 'buddyboss-platform' ); ?>
+			<label for="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>"><?php esc_html_e( 'Title:', 'buddyboss-community-social-network-groups-forums-messaging' ); ?>
 			<input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'title' ) ); ?>" type="text" value="<?php echo esc_attr( $settings['title'] ); ?>" /></label>
 		</p>
 

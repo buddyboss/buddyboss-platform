@@ -42,16 +42,16 @@ if ( $is_web_enabled && $is_app_enabled ) {
 
 			<div class="notification_type email_notification">
 				<div class="notification_type_info">
-					<h3><i class="bb-icons-rl-envelope-simple"></i><?php esc_attr_e( 'Email', 'buddyboss-platform' ); ?></h3>
-					<p><?php esc_attr_e( 'A notification sent to your inbox', 'buddyboss-platform' ); ?></p>
+					<h3><i class="bb-icons-rl-envelope-simple"></i><?php esc_attr_e( 'Email', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></h3>
+					<p><?php esc_attr_e( 'A notification sent to your inbox', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></p>
 				</div>
 			</div><!-- .notification_type -->
 
 			<?php if ( $is_web_enabled ) { ?>
 			<div class="notification_type web_notification">
 				<div class="notification_type_info">
-					<h3><i class="bb-icons-rl-desktop"></i><?php esc_attr_e( 'Web', 'buddyboss-platform' ); ?></h3>
-					<p><?php esc_attr_e( 'A notification in the corner of your screen', 'buddyboss-platform' ); ?></p>
+					<h3><i class="bb-icons-rl-desktop"></i><?php esc_attr_e( 'Web', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></h3>
+					<p><?php esc_attr_e( 'A notification in the corner of your screen', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></p>
 				</div>
 			</div><!-- .notification_type -->
 			<?php } ?>
@@ -59,13 +59,13 @@ if ( $is_web_enabled && $is_app_enabled ) {
 			<?php if ( $is_app_enabled ) { ?>
 			<div class="notification_type app_notification">
 				<div class="notification_type_info">
-					<h3><i class="bb-icons-rl-device-mobile"></i><?php esc_attr_e( 'App', 'buddyboss-platform' ); ?></h3>
-					<p><?php esc_attr_e( 'A notification pushed to your mobile device', 'buddyboss-platform' ); ?></p>
+					<h3><i class="bb-icons-rl-device-mobile"></i><?php esc_attr_e( 'App', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></h3>
+					<p><?php esc_attr_e( 'A notification pushed to your mobile device', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></p>
 				</div>
 			</div><!-- .notification_type -->
 			<?php } ?>
 
-			<p class="notification_learn_more"><a href="#"><?php esc_html_e( 'Learn more', 'buddyboss-platform' ); ?><span class="bb-icon-chevron-down"></span></a></p>
+			<p class="notification_learn_more"><a href="#"><?php esc_html_e( 'Learn more', 'buddyboss-community-social-network-groups-forums-messaging' ); ?><span class="bb-icon-chevron-down"></span></a></p>
 
 		</div><!-- .notification_info -->
 		<?php

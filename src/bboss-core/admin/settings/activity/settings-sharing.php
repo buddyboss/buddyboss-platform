@@ -27,7 +27,7 @@ defined( 'ABSPATH' ) || exit;
  * @return string Translated section title.
  */
 function bboss_activity_sharing_section_title() {
-	return __( 'Activity Sharing', 'buddyboss-platform' );
+	return __( 'Activity Sharing', 'buddyboss-community-social-network-groups-forums-messaging' );
 }
 
 /**
@@ -140,7 +140,7 @@ function bboss_activity_sharing_add_pro_badge_when_no_sharing( $args ) {
 
 	$args['pro_notice'] = array(
 		'show'       => true,
-		'badge_text' => __( 'UPGRADE LAUNCH', 'buddyboss-platform' ),
+		'badge_text' => __( 'UPGRADE LAUNCH', 'buddyboss-community-social-network-groups-forums-messaging' ),
 		'badge_icon' => 'bb-icons-rl-crown-simple',
 		'link_url'   => '',
 	);
@@ -212,9 +212,9 @@ function bboss_activity_register_sharing_panel_fields() {
 				'label'                   => '',
 				'type'                    => 'empty_state',
 				'icon'                    => 'bb-icons-rl bb-icons-rl-warning-circle',
-				'empty_state_title'       => __( 'BuddyBoss Sharing Update Required', 'buddyboss-platform' ),
-				'empty_state_description' => __( 'Please update to the latest version of BuddyBoss Sharing to manage activity sharing from Settings 2.0.', 'buddyboss-platform' ),
-				'button_label'            => __( 'Update Now', 'buddyboss-platform' ),
+				'empty_state_title'       => __( 'BuddyBoss Sharing Update Required', 'buddyboss-community-social-network-groups-forums-messaging' ),
+				'empty_state_description' => __( 'Please update to the latest version of BuddyBoss Sharing to manage activity sharing from Settings 2.0.', 'buddyboss-community-social-network-groups-forums-messaging' ),
+				'button_label'            => __( 'Update Now', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				'button_url'              => admin_url( 'update-core.php' ),
 				'sanitize_callback'       => '__return_empty_string',
 				'order'                   => 10,
@@ -278,7 +278,7 @@ function bboss_activity_register_sharing_pro_placeholder_fields() {
 	// and keep the badge visible in that combination.
 	$pro_notice_field = array(
 		'show'       => true,
-		'badge_text' => __( 'LAUNCH', 'buddyboss-platform' ),
+		'badge_text' => __( 'LAUNCH', 'buddyboss-community-social-network-groups-forums-messaging' ),
 		'badge_icon' => 'bb-icons-rl-crown-simple',
 		'link_url'   => '',
 		'link_icon'  => 'bb-icons-rl-play',
@@ -307,7 +307,7 @@ function bboss_activity_register_sharing_pro_placeholder_fields() {
 			'merge'      => true,
 			'pro_notice' => array(
 				'show'       => true,
-				'badge_text' => __( 'UPGRADE LAUNCH', 'buddyboss-platform' ),
+				'badge_text' => __( 'UPGRADE LAUNCH', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				'badge_icon' => 'bb-icons-rl-crown-simple',
 				'link_url'   => $pro_notice_section_url,
 			),
@@ -320,32 +320,32 @@ function bboss_activity_register_sharing_pro_placeholder_fields() {
 	$toggle_fields = array(
 		array(
 			'name'        => 'buddyboss_enable_activity_sharing',
-			'label'       => __( 'Enable Sharing', 'buddyboss-platform' ),
-			'description' => __( 'Allow members to share activity posts', 'buddyboss-platform' ),
+			'label'       => __( 'Enable Sharing', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'description' => __( 'Allow members to share activity posts', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'order'       => 10,
 		),
 		array(
 			'name'        => 'buddyboss_activity_sharing_custom_message',
-			'label'       => __( 'Custom Message', 'buddyboss-platform' ),
-			'description' => __( 'Allow members to add a custom message while sharing', 'buddyboss-platform' ),
+			'label'       => __( 'Custom Message', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'description' => __( 'Allow members to add a custom message while sharing', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'order'       => 20,
 		),
 		array(
 			'name'        => 'buddyboss_activity_sharing_to_groups',
-			'label'       => __( 'Share to Groups', 'buddyboss-platform' ),
-			'description' => __( 'Allow members to share public posts in their groups', 'buddyboss-platform' ),
+			'label'       => __( 'Share to Groups', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'description' => __( 'Allow members to share public posts in their groups', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'order'       => 30,
 		),
 		array(
 			'name'        => 'buddyboss_activity_sharing_to_friends',
-			'label'       => __( 'Share to Friends', 'buddyboss-platform' ),
-			'description' => __( "Allow members to share public posts to their friends' profiles", 'buddyboss-platform' ),
+			'label'       => __( 'Share to Friends', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'description' => __( "Allow members to share public posts to their friends' profiles", 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'order'       => 40,
 		),
 		array(
 			'name'        => 'buddyboss_activity_sharing_to_message',
-			'label'       => __( 'Share to Message', 'buddyboss-platform' ),
-			'description' => __( 'Allow members to send via direct message', 'buddyboss-platform' ),
+			'label'       => __( 'Share to Message', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'description' => __( 'Allow members to send via direct message', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'order'       => 50,
 		),
 	);
@@ -387,9 +387,9 @@ function bboss_activity_register_sharing_pro_placeholder_fields() {
 		$section_id,
 		array(
 			'name'              => 'buddyboss_activity_sharing_as_link',
-			'label'             => __( 'Share as Link', 'buddyboss-platform' ),
+			'label'             => __( 'Share as Link', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'type'              => 'toggle',
-			'description'       => __( 'Allow members to share public posts as link', 'buddyboss-platform' ),
+			'description'       => __( 'Allow members to share public posts as link', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'default'           => 0,
 			'pro_only'          => true,
 			'pro_notice'        => $pro_notice_field,
@@ -417,27 +417,27 @@ function bboss_activity_register_sharing_pro_placeholder_fields() {
 			'default'           => array(),
 			'options'           => array(
 				array(
-					'label' => __( 'Messenger', 'buddyboss-platform' ),
+					'label' => __( 'Messenger', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'value' => 'messenger',
 					'icon' => 'bb-icons-rl bb-icons-rl-messenger-logo',
 				),
 				array(
-					'label' => __( 'Facebook', 'buddyboss-platform' ),
+					'label' => __( 'Facebook', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'value' => 'facebook',
 					'icon' => 'bb-icons-rl bb-icons-rl-facebook-logo',
 				),
 				array(
-					'label' => __( 'X', 'buddyboss-platform' ),
+					'label' => __( 'X', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'value' => 'twitter',
 					'icon' => 'bb-icons-rl bb-icons-rl-x-logo',
 				),
 				array(
-					'label' => __( 'Linkedin', 'buddyboss-platform' ),
+					'label' => __( 'Linkedin', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'value' => 'linkedin',
 					'icon' => 'bb-icons-rl bb-icons-rl-linkedin-logo',
 				),
 				array(
-					'label' => __( 'Whatsapp', 'buddyboss-platform' ),
+					'label' => __( 'Whatsapp', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'value' => 'whatsapp',
 					'icon' => 'bb-icons-rl bb-icons-rl-whatsapp-logo',
 				),

@@ -23,23 +23,23 @@ defined( 'ABSPATH' ) || exit;
 
 				<fieldset class="bbp-form">
 
-					<legend><?php /* translators: %s: discussion title. */ printf( esc_html__( 'Merge discussion "%s"', 'buddyboss-platform' ), bboss_bbp_get_topic_title() ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bbp_get_topic_title() is escaped via its bbp_get_topic_title filter. ?></legend>
+					<legend><?php /* translators: %s: discussion title. */ printf( esc_html__( 'Merge discussion "%s"', 'buddyboss-community-social-network-groups-forums-messaging' ), bboss_bbp_get_topic_title() ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bbp_get_topic_title() is escaped via its bbp_get_topic_title filter. ?></legend>
 
 					<div>
 
 						<div class="bp-feedback info">
 							<span class="bp-icon" aria-hidden="true"></span>
-							<p><?php esc_html_e( 'Select the discussion to merge this one into. The destination topic will remain the lead discussion, and this one will change into a reply.', 'buddyboss-platform' ); ?><br/>
-							<?php esc_html_e( 'To keep this discussion as the lead, go to the other discussion and use the merge tool from there instead.', 'buddyboss-platform' ); ?></p>
+							<p><?php esc_html_e( 'Select the discussion to merge this one into. The destination topic will remain the lead discussion, and this one will change into a reply.', 'buddyboss-community-social-network-groups-forums-messaging' ); ?><br/>
+							<?php esc_html_e( 'To keep this discussion as the lead, go to the other discussion and use the merge tool from there instead.', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></p>
 						</div>
 
 						<div class="bp-feedback info">
 							<span class="bp-icon" aria-hidden="true"></span>
-							<p><?php esc_html_e( 'All replies within both discussions will be merged chronologically. The order of the merged replies is based on the time and date they were posted. If the destination discussion was created after this one, it\'s post date will be updated to second earlier than this one.', 'buddyboss-platform' ); ?></p>
+							<p><?php esc_html_e( 'All replies within both discussions will be merged chronologically. The order of the merged replies is based on the time and date they were posted. If the destination discussion was created after this one, it\'s post date will be updated to second earlier than this one.', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></p>
 						</div>
 
 						<fieldset class="bbp-form">
-							<legend><?php esc_html_e( 'Destination', 'buddyboss-platform' ); ?></legend>
+							<legend><?php esc_html_e( 'Destination', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></legend>
 							<div>
 								<?php
 								if ( bboss_bbp_has_topics(
@@ -51,7 +51,7 @@ defined( 'ABSPATH' ) || exit;
 								) ) :
 									?>
 
-									<label for="bbp_destination_topic"><?php esc_html_e( 'Merge with this topic:', 'buddyboss-platform' ); ?></label>
+									<label for="bbp_destination_topic"><?php esc_html_e( 'Merge with this topic:', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></label>
 
 										<?php
 										bboss_bbp_dropdown(
@@ -67,7 +67,7 @@ defined( 'ABSPATH' ) || exit;
 
 								<?php else : ?>
 
-									<label><?php esc_html_e( 'There are no other discussions in this forum to merge with.', 'buddyboss-platform' ); ?></label>
+									<label><?php esc_html_e( 'There are no other discussions in this forum to merge with.', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></label>
 
 								<?php endif; ?>
 
@@ -75,25 +75,25 @@ defined( 'ABSPATH' ) || exit;
 						</fieldset>
 
 						<fieldset class="bbp-form">
-							<legend><?php esc_html_e( 'Discussion Extras', 'buddyboss-platform' ); ?></legend>
+							<legend><?php esc_html_e( 'Discussion Extras', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></legend>
 
 							<div>
 								<?php if ( bboss_is_enabled_subscription( 'topic' ) ) : ?>
 									<div class="bp-checkbox-wrap">
 										<input name="bbp_topic_subscribers" id="bbp_topic_subscribers" class="bs-styled-checkbox" type="checkbox" value="1" checked="checked" tabindex="<?php bboss_bbp_tab_index(); ?>" />
-										<label for="bbp_topic_subscribers"><?php esc_html_e( 'Merge discussion subscribers', 'buddyboss-platform' ); ?></label>
+										<label for="bbp_topic_subscribers"><?php esc_html_e( 'Merge discussion subscribers', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></label>
 									</div>
 								<?php endif; ?>
 
 								<div class="bp-checkbox-wrap">
 									<input name="bbp_topic_favoriters" id="bbp_topic_favoriters" class="bs-styled-checkbox" type="checkbox" value="1" checked="checked" tabindex="<?php bboss_bbp_tab_index(); ?>" />
-									<label for="bbp_topic_favoriters"><?php esc_html_e( 'Merge discussion favoriters', 'buddyboss-platform' ); ?></label>
+									<label for="bbp_topic_favoriters"><?php esc_html_e( 'Merge discussion favoriters', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></label>
 								</div>
 
 								<?php if ( bboss_bbp_allow_topic_tags() ) : ?>
 									<div class="bp-checkbox-wrap">
 										<input name="bbp_topic_tags" id="bbp_topic_tags" class="bs-styled-checkbox" type="checkbox" value="1" checked="checked" tabindex="<?php bboss_bbp_tab_index(); ?>" />
-										<label for="bbp_topic_tags"><?php esc_html_e( 'Merge discussion tags', 'buddyboss-platform' ); ?></label>
+										<label for="bbp_topic_tags"><?php esc_html_e( 'Merge discussion tags', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></label>
 									</div>
 								<?php endif; ?>
 							</div>
@@ -101,11 +101,11 @@ defined( 'ABSPATH' ) || exit;
 
 						<div class="bp-feedback error">
 							<span class="bp-icon" aria-hidden="true"></span>
-							<p><?php echo wp_kses_post( __( '<strong>WARNING:</strong> This process cannot be undone.', 'buddyboss-platform' ) ); ?></p>
+							<p><?php echo wp_kses_post( __( '<strong>WARNING:</strong> This process cannot be undone.', 'buddyboss-community-social-network-groups-forums-messaging' ) ); ?></p>
 						</div>
 
 						<div class="bbp-submit-wrapper">
-							<button type="submit" tabindex="<?php bboss_bbp_tab_index(); ?>" id="bbp_merge_topic_submit" name="bbp_merge_topic_submit" class="button submit"><?php esc_html_e( 'Submit', 'buddyboss-platform' ); ?></button>
+							<button type="submit" tabindex="<?php bboss_bbp_tab_index(); ?>" id="bbp_merge_topic_submit" name="bbp_merge_topic_submit" class="button submit"><?php esc_html_e( 'Submit', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></button>
 						</div>
 					</div>
 
@@ -118,7 +118,7 @@ defined( 'ABSPATH' ) || exit;
 	<?php else : ?>
 
 		<div id="no-topic-<?php bboss_bbp_topic_id(); ?>" class="bbp-no-topic">
-			<div class="entry-content"><?php is_user_logged_in() ? esc_html_e( 'You do not have the permissions to edit this discussion!', 'buddyboss-platform' ) : esc_html_e( 'You cannot edit this discussion.', 'buddyboss-platform' ); ?></div>
+			<div class="entry-content"><?php is_user_logged_in() ? esc_html_e( 'You do not have the permissions to edit this discussion!', 'buddyboss-community-social-network-groups-forums-messaging' ) : esc_html_e( 'You cannot edit this discussion.', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></div>
 		</div>
 
 	<?php endif; ?>

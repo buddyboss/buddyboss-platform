@@ -68,8 +68,8 @@ import { evaluateConditional } from '../utils/conditional';
 // than shared so the two surfaces (global redirects vs profile-type rows)
 // can evolve independently.
 var REDIRECT_STATIC_OPTIONS = [
-	{ value: '', label: __( 'Default', 'buddyboss-platform' ) },
-	{ value: '0', label: __( 'Custom URL', 'buddyboss-platform' ) },
+	{ value: '', label: __( 'Default', 'buddyboss-community-social-network-groups-forums-messaging' ) },
+	{ value: '0', label: __( 'Custom URL', 'buddyboss-community-social-network-groups-forums-messaging' ) },
 ];
 
 /**
@@ -152,7 +152,7 @@ function PageCreateButton( { field, disabled, onCreated } ) {
 			aria-busy={ isCreating }
 			aria-disabled={ disabled || isCreating }
 		>
-			{ isCreating ? __( 'Creating…', 'buddyboss-platform' ) : __( 'Create Page', 'buddyboss-platform' ) }
+			{ isCreating ? __( 'Creating…', 'buddyboss-community-social-network-groups-forums-messaging' ) : __( 'Create Page', 'buddyboss-community-social-network-groups-forums-messaging' ) }
 			<i className="bb-icons-rl-plus"></i>
 		</button>
 	);
@@ -535,18 +535,18 @@ export function SettingsForm({ fields, values, onChange, onProBadgeClick, onUpgr
 							<button
 								type="button"
 								className="bb-admin-settings-form__copy-btn"
-								title={ __( 'Copy to clipboard', 'buddyboss-platform' ) }
+								title={ __( 'Copy to clipboard', 'buddyboss-community-social-network-groups-forums-messaging' ) }
 								onClick={ function() {
 									if ( ! navigator.clipboard || ! value ) {
 										return;
 									}
 									navigator.clipboard.writeText( value ).then( function () {
 										window.dispatchEvent( new CustomEvent( 'bb-settings-toast', {
-											detail: { status: 'success', message: __( 'Copied to clipboard.', 'buddyboss-platform' ) },
+											detail: { status: 'success', message: __( 'Copied to clipboard.', 'buddyboss-community-social-network-groups-forums-messaging' ) },
 										} ) );
 									} ).catch( function () {
 										window.dispatchEvent( new CustomEvent( 'bb-settings-toast', {
-											detail: { status: 'error', message: __( 'Failed to copy to clipboard.', 'buddyboss-platform' ) },
+											detail: { status: 'error', message: __( 'Failed to copy to clipboard.', 'buddyboss-community-social-network-groups-forums-messaging' ) },
 										} ) );
 									} );
 								} }
@@ -602,7 +602,7 @@ export function SettingsForm({ fields, values, onChange, onProBadgeClick, onUpgr
 							key={field.name}
 							label=""
 							value=""
-							options={ [ { value: '', label: selectOverrides.loadingText || __( 'Loading...', 'buddyboss-platform' ) } ] }
+							options={ [ { value: '', label: selectOverrides.loadingText || __( 'Loading...', 'buddyboss-community-social-network-groups-forums-messaging' ) } ] }
 							disabled
 							__nextHasNoMarginBottom
 						/>
@@ -710,7 +710,7 @@ export function SettingsForm({ fields, values, onChange, onProBadgeClick, onUpgr
 								target="_blank"
 								rel="noopener noreferrer"
 							>
-								{ __( 'View', 'buddyboss-platform' ) }
+								{ __( 'View', 'buddyboss-community-social-network-groups-forums-messaging' ) }
 								<i className="bb-icons-rl-arrow-up-right"></i>
 							</a>
 						) }
@@ -1208,7 +1208,7 @@ export function SettingsForm({ fields, values, onChange, onProBadgeClick, onUpgr
 						{ field.manage_icon && (
 							<i className={ field.manage_icon } />
 						) }
-						<span>{ field.manage_label || __( 'Manage', 'buddyboss-platform' ) }</span>
+						<span>{ field.manage_label || __( 'Manage', 'buddyboss-community-social-network-groups-forums-messaging' ) }</span>
 					</button>
 				);
 
@@ -1271,7 +1271,7 @@ export function SettingsForm({ fields, values, onChange, onProBadgeClick, onUpgr
 
 				return (
 					<p className="bb-admin-settings-field__unsupported">
-						{__('Field type not yet supported in React UI.', 'buddyboss-platform')}
+						{__('Field type not yet supported in React UI.', 'buddyboss-community-social-network-groups-forums-messaging')}
 					</p>
 				);
 			}
@@ -1510,7 +1510,7 @@ export function SettingsForm({ fields, values, onChange, onProBadgeClick, onUpgr
 											type="button"
 											onClick={ () => onProBadgeClick( field ) }
 											className="bb-pro-badge__play-link"
-											aria-label={ __( 'Learn more', 'buddyboss-platform' ) }
+											aria-label={ __( 'Learn more', 'buddyboss-community-social-network-groups-forums-messaging' ) }
 										>
 											<i className={field.pro_notice.link_icon || 'bb-icons-rl bb-icons-rl-play'} />
 										</button>
@@ -1520,7 +1520,7 @@ export function SettingsForm({ fields, values, onChange, onProBadgeClick, onUpgr
 											target="_blank"
 											rel="noopener noreferrer"
 											className="bb-pro-badge__play-link"
-											aria-label={__('Learn more about PRO', 'buddyboss-platform')}
+											aria-label={__('Learn more about PRO', 'buddyboss-community-social-network-groups-forums-messaging')}
 										>
 											<i className={field.pro_notice.link_icon || ''} />
 										</a>

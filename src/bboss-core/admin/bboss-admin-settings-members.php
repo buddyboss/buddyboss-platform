@@ -29,8 +29,8 @@ function bboss_admin_settings_register_members_feature() {
 	bboss_register_feature(
 		'members',
 		array(
-			'label'              => __( 'Member Profiles', 'buddyboss-platform' ),
-			'description'        => __( 'Create customizable member profiles with extended fields, avatars, cover images, profile types, and member directories.', 'buddyboss-platform' ),
+			'label'              => __( 'Member Profiles', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'description'        => __( 'Create customizable member profiles with extended fields, avatars, cover images, profile types, and member directories.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'icon'               => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-user-square',
@@ -76,7 +76,7 @@ function bboss_admin_settings_register_members_feature() {
 		'members',
 		'profile_name',
 		array(
-			'title'      => __( 'Profile Name', 'buddyboss-platform' ),
+			'title'      => __( 'Profile Name', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'icon'       => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-identification-card',
@@ -92,7 +92,7 @@ function bboss_admin_settings_register_members_feature() {
 		'members',
 		'profile_image',
 		array(
-			'title'      => __( 'Profile Image', 'buddyboss-platform' ),
+			'title'      => __( 'Profile Image', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'icon'       => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-image',
@@ -116,7 +116,7 @@ function bboss_admin_settings_register_members_feature() {
 		'members',
 		'profile_headers',
 		array(
-			'title'      => __( 'Profile Headers', 'buddyboss-platform' ),
+			'title'      => __( 'Profile Headers', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'icon'       => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-arrows-out-simple',
@@ -132,7 +132,7 @@ function bboss_admin_settings_register_members_feature() {
 		'members',
 		'member_directory',
 		array(
-			'title'      => __( 'Member Directory', 'buddyboss-platform' ),
+			'title'      => __( 'Member Directory', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'icon'       => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-grid-nine',
@@ -149,7 +149,7 @@ function bboss_admin_settings_register_members_feature() {
 		'members',
 		'member_connection',
 		array(
-			'title'      => __( 'Member Connection', 'buddyboss-platform' ),
+			'title'      => __( 'Member Connection', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'icon'       => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-user-plus',
@@ -175,7 +175,7 @@ function bboss_admin_settings_register_members_feature() {
 		'members',
 		'profile_fields',
 		array(
-			'title'      => __( 'Profile Fields', 'buddyboss-platform' ),
+			'title'      => __( 'Profile Fields', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'icon'       => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-user-list',
@@ -200,7 +200,7 @@ function bboss_admin_settings_register_members_feature() {
 		'members',
 		'profile_types',
 		array(
-			'title'    => __( 'Profile Types', 'buddyboss-platform' ),
+			'title'    => __( 'Profile Types', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'icon'     => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-tag',
@@ -223,7 +223,7 @@ function bboss_admin_settings_register_members_feature() {
 		'members',
 		'profile_search',
 		array(
-			'title'      => __( 'Profile Search', 'buddyboss-platform' ),
+			'title'      => __( 'Profile Search', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'icon'       => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-magnifying-glass-plus',
@@ -239,7 +239,7 @@ function bboss_admin_settings_register_members_feature() {
 		'members',
 		'profile_navigation',
 		array(
-			'title'      => __( 'Profile Navigation', 'buddyboss-platform' ),
+			'title'      => __( 'Profile Navigation', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'icon'       => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-tabs',

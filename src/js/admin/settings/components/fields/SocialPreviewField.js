@@ -94,8 +94,8 @@ export function SocialPreviewField( { field, values } ) {
 	var siteUrl    = config.site_url || '';
 	var displayUrl = formatDisplayUrl( siteUrl );
 
-	var displayTitle = title || __( 'Your OG title will appear here', 'buddyboss-platform' );
-	var displayDesc  = description || __( 'Your OG description will appear here when this page is shared on social platforms.', 'buddyboss-platform' );
+	var displayTitle = title || __( 'Your OG title will appear here', 'buddyboss-community-social-network-groups-forums-messaging' );
+	var displayDesc  = description || __( 'Your OG description will appear here when this page is shared on social platforms.', 'buddyboss-community-social-network-groups-forums-messaging' );
 
 	return (
 		<div className="bb-admin-social-preview">

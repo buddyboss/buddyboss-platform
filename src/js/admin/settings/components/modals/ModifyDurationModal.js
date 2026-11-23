@@ -18,10 +18,10 @@ import { __ } from '@wordpress/i18n';
  * @since BuddyBoss [BBVERSION]
  */
 var DURATION_OPTIONS = [
-	{ label: __( '1 day', 'buddyboss-platform' ), value: '1' },
-	{ label: __( '3 days', 'buddyboss-platform' ), value: '3' },
-	{ label: __( '5 days', 'buddyboss-platform' ), value: '5' },
-	{ label: __( '7 days', 'buddyboss-platform' ), value: '7' },
+	{ label: __( '1 day', 'buddyboss-community-social-network-groups-forums-messaging' ), value: '1' },
+	{ label: __( '3 days', 'buddyboss-community-social-network-groups-forums-messaging' ), value: '3' },
+	{ label: __( '5 days', 'buddyboss-community-social-network-groups-forums-messaging' ), value: '5' },
+	{ label: __( '7 days', 'buddyboss-community-social-network-groups-forums-messaging' ), value: '7' },
 ];
 
 /**
@@ -59,14 +59,14 @@ export function ModifyDurationModal( { isOpen, value, onClose, onSave } ) {
 
 	return (
 		<Modal
-			title={ __( 'Modify Access Duration', 'buddyboss-platform' ) }
+			title={ __( 'Modify Access Duration', 'buddyboss-community-social-network-groups-forums-messaging' ) }
 			onRequestClose={ onClose }
 			className="bb-admin-modify-duration-modal bb-admin-settings-modal"
 			shouldCloseOnClickOutside={ false }
 		>
 			<div className="bb-admin-settings-modal__body">
 				<SelectControl
-					label={ __( 'Extend support access by:', 'buddyboss-platform' ) }
+					label={ __( 'Extend support access by:', 'buddyboss-community-social-network-groups-forums-messaging' ) }
 					value={ duration }
 					options={ DURATION_OPTIONS }
 					onChange={ function ( val ) { setDuration( val ); } }
@@ -76,10 +76,10 @@ export function ModifyDurationModal( { isOpen, value, onClose, onSave } ) {
 
 			<div className="bb-admin-settings-modal__footer">
 				<Button variant="secondary" onClick={ onClose }>
-					{ __( 'Cancel', 'buddyboss-platform' ) }
+					{ __( 'Cancel', 'buddyboss-community-social-network-groups-forums-messaging' ) }
 				</Button>
 				<Button variant="primary" onClick={ handleSave }>
-					{ __( 'Save', 'buddyboss-platform' ) }
+					{ __( 'Save', 'buddyboss-community-social-network-groups-forums-messaging' ) }
 				</Button>
 			</div>
 		</Modal>

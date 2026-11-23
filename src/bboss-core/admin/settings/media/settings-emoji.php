@@ -26,7 +26,7 @@ function bboss_media_register_emoji_panel_fields() {
 		'emoji',
 		'emoji_settings',
 		array(
-			'title'          => __( 'Emoji', 'buddyboss-platform' ),
+			'title'          => __( 'Emoji', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'order'          => 10,
 			'help_url'       => '636182',
 			'section_toggle' => 'bb_media_emoji_support',
@@ -40,10 +40,10 @@ function bboss_media_register_emoji_panel_fields() {
 		'emoji_settings',
 		array(
 			'name'              => 'bp_media_profiles_emoji_support',
-			'label'             => __( 'Profiles', 'buddyboss-platform' ),
+			'label'             => __( 'Profiles', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'description'       => bboss_is_active( 'activity' )
-				? __( 'Allow members to use emoji in profiles and activity posts', 'buddyboss-platform' )
-				: __( 'Allow members to use emoji in profiles', 'buddyboss-platform' ),
+				? __( 'Allow members to use emoji in profiles and activity posts', 'buddyboss-community-social-network-groups-forums-messaging' )
+				: __( 'Allow members to use emoji in profiles', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'type'              => 'toggle',
 			'default'           => 0,
 			'sanitize_callback' => 'absint',
@@ -54,7 +54,7 @@ function bboss_media_register_emoji_panel_fields() {
 	// FIELD: Groups — emoji support.
 	if ( bboss_is_active( 'groups' ) ) {
 		$group_description = bboss_media_get_group_context_description(
-			__( 'Allow members to use emoji in', 'buddyboss-platform' )
+			__( 'Allow members to use emoji in', 'buddyboss-community-social-network-groups-forums-messaging' )
 		);
 
 		bboss_register_feature_field(
@@ -63,7 +63,7 @@ function bboss_media_register_emoji_panel_fields() {
 			'emoji_settings',
 			array(
 				'name'              => 'bp_media_groups_emoji_support',
-				'label'             => __( 'Groups', 'buddyboss-platform' ),
+				'label'             => __( 'Groups', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				'description'       => $group_description,
 				'type'              => 'toggle',
 				'default'           => 0,
@@ -81,8 +81,8 @@ function bboss_media_register_emoji_panel_fields() {
 			'emoji_settings',
 			array(
 				'name'              => 'bp_media_messages_emoji_support',
-				'label'             => __( 'Messages', 'buddyboss-platform' ),
-				'description'       => __( 'Allow members to use emoji in private messages', 'buddyboss-platform' ),
+				'label'             => __( 'Messages', 'buddyboss-community-social-network-groups-forums-messaging' ),
+				'description'       => __( 'Allow members to use emoji in private messages', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				'type'              => 'toggle',
 				'default'           => 0,
 				'sanitize_callback' => 'absint',
@@ -99,8 +99,8 @@ function bboss_media_register_emoji_panel_fields() {
 			'emoji_settings',
 			array(
 				'name'              => 'bp_media_forums_emoji_support',
-				'label'             => __( 'Forums', 'buddyboss-platform' ),
-				'description'       => __( 'Allow members to use emoji in forum discussions and replies', 'buddyboss-platform' ),
+				'label'             => __( 'Forums', 'buddyboss-community-social-network-groups-forums-messaging' ),
+				'description'       => __( 'Allow members to use emoji in forum discussions and replies', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				'type'              => 'toggle',
 				'default'           => 0,
 				'sanitize_callback' => 'absint',

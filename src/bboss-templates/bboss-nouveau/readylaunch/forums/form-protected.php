@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
 
 <div id="bbpress-forums">
 	<fieldset class="bbp-form" id="bbp-protected">
-		<Legend><?php esc_html_e( 'Protected', 'buddyboss-platform' ); ?></legend>
+		<Legend><?php esc_html_e( 'Protected', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></legend>
 
 		<?php
 		// get_the_password_form() returns core-generated markup (already filtered

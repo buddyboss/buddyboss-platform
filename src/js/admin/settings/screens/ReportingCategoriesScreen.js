@@ -85,7 +85,7 @@ export function ReportingCategoriesScreen( { onNavigate, helpUrl, onHelpClick, f
 			.catch( function ( err ) {
 				if ( ! err || 'AbortError' !== err.name ) {
 					setIsLoading( false );
-					setToast( { status: 'error', message: __( 'Failed to load reporting categories.', 'buddyboss-platform' ) } );
+					setToast( { status: 'error', message: __( 'Failed to load reporting categories.', 'buddyboss-community-social-network-groups-forums-messaging' ) } );
 				}
 			} );
 	}, [] );
@@ -145,13 +145,13 @@ export function ReportingCategoriesScreen( { onNavigate, helpUrl, onHelpClick, f
 							return cat.id !== termId;
 						} );
 					} );
-					setToast( { status: 'success', message: __( 'Category deleted.', 'buddyboss-platform' ) } );
+					setToast( { status: 'success', message: __( 'Category deleted.', 'buddyboss-community-social-network-groups-forums-messaging' ) } );
 				} else {
-					setToast( { status: 'error', message: ( response.data && response.data.message ) || __( 'Failed to delete category.', 'buddyboss-platform' ) } );
+					setToast( { status: 'error', message: ( response.data && response.data.message ) || __( 'Failed to delete category.', 'buddyboss-community-social-network-groups-forums-messaging' ) } );
 				}
 			} )
 			.catch( function () {
-				setToast( { status: 'error', message: __( 'Failed to delete category.', 'buddyboss-platform' ) } );
+				setToast( { status: 'error', message: __( 'Failed to delete category.', 'buddyboss-community-social-network-groups-forums-messaging' ) } );
 			} );
 	}, [ deleteConfirmId ] );
 
@@ -173,7 +173,7 @@ export function ReportingCategoriesScreen( { onNavigate, helpUrl, onHelpClick, f
 		setIsModalOpen( false );
 		setEditingCategory( null );
 		loadCategories();
-		setToast( { status: 'success', message: __( 'Category saved.', 'buddyboss-platform' ) } );
+		setToast( { status: 'success', message: __( 'Category saved.', 'buddyboss-community-social-network-groups-forums-messaging' ) } );
 	}, [ loadCategories ] );
 
 	// Handle modal close.
@@ -188,7 +188,7 @@ export function ReportingCategoriesScreen( { onNavigate, helpUrl, onHelpClick, f
 			<div className="bb-admin-feature-settings__section">
 				<div className="bb-admin-feature-settings__section-header">
 					<h3 className="bb-admin-feature-settings__section-title">
-						{ __( 'Reporting Categories', 'buddyboss-platform' ) }
+						{ __( 'Reporting Categories', 'buddyboss-community-social-network-groups-forums-messaging' ) }
 					</h3>
 					<div className="bb-admin-reporting-categories__header-actions">
 						<button
@@ -196,7 +196,7 @@ export function ReportingCategoriesScreen( { onNavigate, helpUrl, onHelpClick, f
 							onClick={ handleAddNew }
 						>
 							<i className="bb-icons-rl bb-icons-rl-plus"></i>
-							{ __( 'Add New Category', 'buddyboss-platform' ) }
+							{ __( 'Add New Category', 'buddyboss-community-social-network-groups-forums-messaging' ) }
 						</button>
 						{ helpUrl && (
 							<HelpIcon
@@ -238,7 +238,7 @@ export function ReportingCategoriesScreen( { onNavigate, helpUrl, onHelpClick, f
 													onClick={ function () {
 														setOpenMenuId( cat.id === openMenuId ? null : cat.id );
 													} }
-													aria-label={ __( 'Actions', 'buddyboss-platform' ) }
+													aria-label={ __( 'Actions', 'buddyboss-community-social-network-groups-forums-messaging' ) }
 													aria-haspopup="true"
 													aria-expanded={ cat.id === openMenuId ? 'true' : 'false' }
 												>
@@ -254,7 +254,7 @@ export function ReportingCategoriesScreen( { onNavigate, helpUrl, onHelpClick, f
 															} }
 														>
 															<i className="bb-icons-rl bb-icons-rl-pencil-simple"></i>
-															{ __( 'Edit', 'buddyboss-platform' ) }
+															{ __( 'Edit', 'buddyboss-community-social-network-groups-forums-messaging' ) }
 														</button>
 														<button
 															className="bb-admin-reporting-categories__menu-item bb-admin-reporting-categories__menu-item--danger"
@@ -264,7 +264,7 @@ export function ReportingCategoriesScreen( { onNavigate, helpUrl, onHelpClick, f
 															} }
 														>
 															<i className="bb-icons-rl bb-icons-rl-trash"></i>
-															{ __( 'Delete', 'buddyboss-platform' ) }
+															{ __( 'Delete', 'buddyboss-community-social-network-groups-forums-messaging' ) }
 														</button>
 													</div>
 												) }
@@ -276,7 +276,7 @@ export function ReportingCategoriesScreen( { onNavigate, helpUrl, onHelpClick, f
 						</ul>
 					) : (
 						<div className="bb-admin-reporting-categories__empty">
-							<p>{ __( 'No reporting categories found. Click "Add New Category" to create one.', 'buddyboss-platform' ) }</p>
+							<p>{ __( 'No reporting categories found. Click "Add New Category" to create one.', 'buddyboss-community-social-network-groups-forums-messaging' ) }</p>
 						</div>
 					) }
 				</div>
@@ -294,10 +294,10 @@ export function ReportingCategoriesScreen( { onNavigate, helpUrl, onHelpClick, f
 			{/* Delete Confirmation Modal */}
 			<ConfirmToggleModal
 				isOpen={ null !== deleteConfirmId }
-				title={ __( 'Delete Category', 'buddyboss-platform' ) }
-				message={ __( 'Are you sure you want to delete this reporting category?', 'buddyboss-platform' ) }
-				confirmLabel={ __( 'Delete', 'buddyboss-platform' ) }
-				cancelLabel={ __( 'Cancel', 'buddyboss-platform' ) }
+				title={ __( 'Delete Category', 'buddyboss-community-social-network-groups-forums-messaging' ) }
+				message={ __( 'Are you sure you want to delete this reporting category?', 'buddyboss-community-social-network-groups-forums-messaging' ) }
+				confirmLabel={ __( 'Delete', 'buddyboss-community-social-network-groups-forums-messaging' ) }
+				cancelLabel={ __( 'Cancel', 'buddyboss-community-social-network-groups-forums-messaging' ) }
 				isDestructive={ true }
 				onConfirm={ performDelete }
 				onCancel={ function () {

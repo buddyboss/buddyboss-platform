@@ -44,7 +44,7 @@ class BBoss_Compatibility_Integration extends BBoss_Integration {
 
 		// Return normal links if not BuddyBoss Platform plugin or it's does not have a setting links
 		if (
-			plugin_basename( 'buddyboss-platform/bp-loader.php' ) == $file
+			plugin_basename( 'buddyboss-community-social-network-groups-forums-messaging/bp-loader.php' ) == $file
 			|| empty( $link['settings'] )
 		) {
 			return $link;
@@ -77,7 +77,7 @@ class BBoss_Compatibility_Integration extends BBoss_Integration {
 				'settings' => '<a href="' . esc_url( bboss_get_admin_url( add_query_arg( array(
 						'page' => 'bp-integrations',
 						'tab'  => 'bp-compatibility'
-					), 'admin.php' ) ) ) . '">' . esc_html__( 'Settings', 'buddyboss-platform' ) . '</a>',
+					), 'admin.php' ) ) ) . '">' . esc_html__( 'Settings', 'buddyboss-community-social-network-groups-forums-messaging' ) . '</a>',
 			) );
 		}
 

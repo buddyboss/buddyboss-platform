@@ -54,7 +54,7 @@ class BBoss_REST_Blogs_Endpoint extends WP_REST_Controller {
 			array(
 				'args'   => array(
 					'id' => array(
-						'description' => __( 'A unique numeric ID for the Blog.', 'buddyboss-platform' ),
+						'description' => __( 'A unique numeric ID for the Blog.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 						'type'        => 'integer',
 					),
 				),
@@ -128,7 +128,7 @@ class BBoss_REST_Blogs_Endpoint extends WP_REST_Controller {
 			if ( ! $user instanceof WP_User ) {
 				return new WP_Error(
 					'bp_rest_blogs_get_items_user_failed',
-					__( 'There was a problem confirming if user ID provided is a valid one.', 'buddyboss-platform' ),
+					__( 'There was a problem confirming if user ID provided is a valid one.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					array(
 						'status' => 500,
 					)
@@ -205,7 +205,7 @@ class BBoss_REST_Blogs_Endpoint extends WP_REST_Controller {
 		if ( empty( $blog->blog_id ) || empty( $blog->admin_user_id ) ) {
 			return new WP_Error(
 				'bp_rest_blog_invalid_id',
-				__( 'Invalid blog ID.', 'buddyboss-platform' ),
+				__( 'Invalid blog ID.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				array(
 					'status' => 404,
 				)
@@ -417,19 +417,19 @@ class BBoss_REST_Blogs_Endpoint extends WP_REST_Controller {
 			'properties' => array(
 				'id'            => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'A unique numeric ID for the blog.', 'buddyboss-platform' ),
+					'description' => __( 'A unique numeric ID for the blog.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'readonly'    => true,
 					'type'        => 'integer',
 				),
 				'user_id'       => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'A unique numeric ID for the blog admin.', 'buddyboss-platform' ),
+					'description' => __( 'A unique numeric ID for the blog admin.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'readonly'    => true,
 					'type'        => 'integer',
 				),
 				'name'          => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'The name of the blog.', 'buddyboss-platform' ),
+					'description' => __( 'The name of the blog.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'readonly'    => true,
 					'type'        => 'string',
 					'arg_options' => array(
@@ -438,32 +438,32 @@ class BBoss_REST_Blogs_Endpoint extends WP_REST_Controller {
 				),
 				'permalink'     => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'The permalink of the blog.', 'buddyboss-platform' ),
+					'description' => __( 'The permalink of the blog.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'readonly'    => true,
 					'type'        => 'string',
 					'format'      => 'uri',
 				),
 				'description'   => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'The description of the blog.', 'buddyboss-platform' ),
+					'description' => __( 'The description of the blog.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'readonly'    => true,
 					'type'        => 'string',
 				),
 				'path'          => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'The path of the blog.', 'buddyboss-platform' ),
+					'description' => __( 'The path of the blog.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'readonly'    => true,
 					'type'        => 'string',
 				),
 				'domain'        => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'the domain of the blog.', 'buddyboss-platform' ),
+					'description' => __( 'the domain of the blog.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'readonly'    => true,
 					'type'        => 'string',
 				),
 				'last_activity' => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( "The last activity date from the blog, in the site's timezone.", 'buddyboss-platform' ),
+					'description' => __( "The last activity date from the blog, in the site's timezone.", 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'type'        => 'string',
 					'format'      => 'date-time',
 				),
@@ -476,7 +476,7 @@ class BBoss_REST_Blogs_Endpoint extends WP_REST_Controller {
 
 			$avatar_properties['full'] = array(
 				/* translators: 1: Full avatar width in pixels. 2: Full avatar height in pixels */
-				'description' => sprintf( __( 'Avatar URL with full image size (%1$d x %2$d pixels).', 'buddyboss-platform' ), bboss_core_number_format( bboss_core_avatar_full_width() ), bboss_core_number_format( bboss_core_avatar_full_height() ) ),
+				'description' => sprintf( __( 'Avatar URL with full image size (%1$d x %2$d pixels).', 'buddyboss-community-social-network-groups-forums-messaging' ), bboss_core_number_format( bboss_core_avatar_full_width() ), bboss_core_number_format( bboss_core_avatar_full_height() ) ),
 				'type'        => 'string',
 				'format'      => 'uri',
 				'context'     => array( 'embed', 'view', 'edit' ),
@@ -484,14 +484,14 @@ class BBoss_REST_Blogs_Endpoint extends WP_REST_Controller {
 
 			$avatar_properties['thumb'] = array(
 				/* translators: 1: Thumb avatar width in pixels. 2: Thumb avatar height in pixels */
-				'description' => sprintf( __( 'Avatar URL with thumb image size (%1$d x %2$d pixels).', 'buddyboss-platform' ), bboss_core_number_format( bboss_core_avatar_thumb_width() ), bboss_core_number_format( bboss_core_avatar_thumb_height() ) ),
+				'description' => sprintf( __( 'Avatar URL with thumb image size (%1$d x %2$d pixels).', 'buddyboss-community-social-network-groups-forums-messaging' ), bboss_core_number_format( bboss_core_avatar_thumb_width() ), bboss_core_number_format( bboss_core_avatar_thumb_height() ) ),
 				'type'        => 'string',
 				'format'      => 'uri',
 				'context'     => array( 'embed', 'view', 'edit' ),
 			);
 
 			$schema['properties']['avatar_urls'] = array(
-				'description' => __( 'Avatar URLs for the blog.', 'buddyboss-platform' ),
+				'description' => __( 'Avatar URLs for the blog.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				'type'        => 'object',
 				'context'     => array( 'embed', 'view', 'edit' ),
 				'readonly'    => true,
@@ -520,7 +520,7 @@ class BBoss_REST_Blogs_Endpoint extends WP_REST_Controller {
 		$params['context']['default'] = 'view';
 
 		$params['user_id'] = array(
-			'description'       => __( 'ID of the user whose blogs user can post to.', 'buddyboss-platform' ),
+			'description'       => __( 'ID of the user whose blogs user can post to.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'default'           => 0,
 			'type'              => 'integer',
 			'sanitize_callback' => 'absint',
@@ -528,7 +528,7 @@ class BBoss_REST_Blogs_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['include'] = array(
-			'description'       => __( 'Ensure result set includes specific IDs.', 'buddyboss-platform' ),
+			'description'       => __( 'Ensure result set includes specific IDs.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'default'           => array(),
 			'type'              => 'array',
 			'items'             => array( 'type' => 'integer' ),
@@ -537,7 +537,7 @@ class BBoss_REST_Blogs_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['type'] = array(
-			'description'       => __( 'Limit result set to items with a specific type.', 'buddyboss-platform' ),
+			'description'       => __( 'Limit result set to items with a specific type.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'default'           => 'active',
 			'type'              => 'string',
 			'enum'              => array( 'active', 'alphabetical', 'newest', 'random' ),

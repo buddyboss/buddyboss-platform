@@ -23,7 +23,7 @@ defined( 'ABSPATH' ) || exit;
 
 	<div class="bbp-reply-title">
 
-		<h3><?php esc_html_e( 'In reply to: ', 'buddyboss-platform' ); ?>
+		<h3><?php esc_html_e( 'In reply to: ', 'buddyboss-community-social-network-groups-forums-messaging' ); ?>
 		<a class="bbp-topic-permalink" href="<?php bboss_bbp_topic_permalink( bboss_bbp_get_reply_topic_id() ); ?>"><?php bboss_bbp_topic_title( bboss_bbp_get_reply_topic_id() ); ?></a></h3>
 
 	</div><!-- .bbp-reply-title -->

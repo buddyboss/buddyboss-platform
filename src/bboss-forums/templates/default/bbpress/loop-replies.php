@@ -17,13 +17,13 @@ defined( 'ABSPATH' ) || exit;
 
 	<li class="bbp-header">
 
-		<div class="bbp-reply-author"><?php esc_html_e( 'Author', 'buddyboss-platform' ); ?></div><!-- .bbp-reply-author -->
+		<div class="bbp-reply-author"><?php esc_html_e( 'Author', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></div><!-- .bbp-reply-author -->
 
 		<div class="bbp-reply-content">
 
 			<?php if ( ! bboss_bbp_show_lead_topic() ) : ?>
 
-				<?php esc_html_e( 'Posts', 'buddyboss-platform' ); ?>
+				<?php esc_html_e( 'Posts', 'buddyboss-community-social-network-groups-forums-messaging' ); ?>
 
 				<?php bboss_bbp_topic_subscription_link(); ?>
 
@@ -31,7 +31,7 @@ defined( 'ABSPATH' ) || exit;
 
 			<?php else : ?>
 
-				<?php esc_html_e( 'Replies', 'buddyboss-platform' ); ?>
+				<?php esc_html_e( 'Replies', 'buddyboss-community-social-network-groups-forums-messaging' ); ?>
 
 			<?php endif; ?>
 
@@ -62,17 +62,17 @@ defined( 'ABSPATH' ) || exit;
 
 	<li class="bbp-footer">
 
-		<div class="bbp-reply-author"><?php esc_html_e( 'Author', 'buddyboss-platform' ); ?></div>
+		<div class="bbp-reply-author"><?php esc_html_e( 'Author', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></div>
 
 		<div class="bbp-reply-content">
 
 			<?php if ( ! bboss_bbp_show_lead_topic() ) : ?>
 
-				<?php esc_html_e( 'Posts', 'buddyboss-platform' ); ?>
+				<?php esc_html_e( 'Posts', 'buddyboss-community-social-network-groups-forums-messaging' ); ?>
 
 			<?php else : ?>
 
-				<?php esc_html_e( 'Replies', 'buddyboss-platform' ); ?>
+				<?php esc_html_e( 'Replies', 'buddyboss-community-social-network-groups-forums-messaging' ); ?>
 
 			<?php endif; ?>
 

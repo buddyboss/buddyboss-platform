@@ -321,8 +321,8 @@ if ( ! class_exists( 'BBoss_Admin' ) ) :
 			// the label is "Settings" (not "Settings 2.0") so end users don't see transitional naming.
 			$hooks[] = add_submenu_page(
 				$this->settings_page,
-				__( 'BuddyBoss Settings', 'buddyboss-platform' ),
-				__( 'Settings', 'buddyboss-platform' ),
+				__( 'BuddyBoss Settings', 'buddyboss-community-social-network-groups-forums-messaging' ),
+				__( 'Settings', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				$this->capability,
 				'bb-settings',
 				function_exists( 'bboss_admin_settings_page' ) ? 'bboss_admin_settings_page' : 'bboss_core_admin_settings'
@@ -406,8 +406,8 @@ if ( ! class_exists( 'BBoss_Admin' ) ) :
 
 			$hooks[] = add_submenu_page(
 				'bp-general-settings',
-				__( 'BuddyBoss Help', 'buddyboss-platform' ),
-				__( 'Help', 'buddyboss-platform' ),
+				__( 'BuddyBoss Help', 'buddyboss-community-social-network-groups-forums-messaging' ),
+				__( 'Help', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				$this->capability,
 				'bp-general-settings',
 				'bboss_core_admin_backpat_page'
@@ -426,8 +426,8 @@ if ( ! class_exists( 'BBoss_Admin' ) ) :
 			// Add the option pages.
 			$hooks[] = add_submenu_page(
 				$this->child_settings_page,
-				__( 'BuddyBoss Settings', 'buddyboss-platform' ),
-				__( 'BuddyBoss', 'buddyboss-platform' ),
+				__( 'BuddyBoss Settings', 'buddyboss-community-social-network-groups-forums-messaging' ),
+				__( 'BuddyBoss', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				$this->capability,
 				'admin.php?page=bb-settings'
 			);
@@ -451,8 +451,8 @@ if ( ! class_exists( 'BBoss_Admin' ) ) :
 			// the label is "Settings" (not "Settings 2.0") so end users don't see transitional naming.
 			$hooks[] = add_submenu_page(
 				$this->settings_page,
-				__( 'BuddyBoss Settings', 'buddyboss-platform' ),
-				__( 'Settings', 'buddyboss-platform' ),
+				__( 'BuddyBoss Settings', 'buddyboss-community-social-network-groups-forums-messaging' ),
+				__( 'Settings', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				$this->capability,
 				'bb-settings',
 				function_exists( 'bboss_admin_settings_page' ) ? 'bboss_admin_settings_page' : 'bboss_core_admin_settings'
@@ -474,8 +474,8 @@ if ( ! class_exists( 'BBoss_Admin' ) ) :
 			// are redirected server-side by `bb_redirect_legacy_help_page()`.
 			$hooks[] = add_submenu_page(
 				$this->settings_page,
-				__( 'Help', 'buddyboss-platform' ),
-				__( 'Help', 'buddyboss-platform' ),
+				__( 'Help', 'buddyboss-community-social-network-groups-forums-messaging' ),
+				__( 'Help', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				$this->capability,
 				'admin.php?page=bb-settings&tab=help',
 				''
@@ -552,7 +552,7 @@ if ( ! class_exists( 'BBoss_Admin' ) ) :
 				'',                                                // menu_title (empty so screen readers skip it).
 				$this->capability,                                  // capability.
 				'bb-settings',                                       // menu_slug — drives the parent's href.
-				__( 'BuddyBoss Settings', 'buddyboss-platform' ),            // page_title — keeps <title> intact when this row matches first.
+				__( 'BuddyBoss Settings', 'buddyboss-community-social-network-groups-forums-messaging' ),            // page_title — keeps <title> intact when this row matches first.
 				'bb-default-page-link hidden',                      // 5th element: classes on the rendered <li>.
 			);
 			array_unshift( $submenu['buddyboss-platform'], $bb_default_row );
@@ -587,8 +587,8 @@ if ( ! class_exists( 'BBoss_Admin' ) ) :
 
 			// Appearance > Emails.
 			$hooks[] = add_theme_page(
-				__( 'Emails', 'buddyboss-platform' ),
-				__( 'Emails', 'buddyboss-platform' ),
+				__( 'Emails', 'buddyboss-community-social-network-groups-forums-messaging' ),
+				__( 'Emails', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				$this->capability,
 				'bp-emails-customizer-redirect',
 				'bboss_email_redirect_to_customizer'
@@ -598,8 +598,8 @@ if ( ! class_exists( 'BBoss_Admin' ) ) :
 				$email_url = 'admin.php?page=bb-settings&tab=emails&panel=all_emails';
 				$hooks[]   = add_submenu_page(
 					'buddyboss-platform',
-					__( 'Emails', 'buddyboss-platform' ),
-					__( 'Emails', 'buddyboss-platform' ),
+					__( 'Emails', 'buddyboss-community-social-network-groups-forums-messaging' ),
+					__( 'Emails', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'bp_moderate',
 					$email_url,
 					''
@@ -618,8 +618,8 @@ if ( ! class_exists( 'BBoss_Admin' ) ) :
 				// Add our screen.
 				$hook = add_submenu_page(
 					'buddyboss-platform',
-					__( 'Emails', 'buddyboss-platform' ),
-					__( 'Emails', 'buddyboss-platform' ),
+					__( 'Emails', 'buddyboss-community-social-network-groups-forums-messaging' ),
+					__( 'Emails', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'bp_moderate',
 					$email_url,
 					''
@@ -675,9 +675,9 @@ if ( ! class_exists( 'BBoss_Admin' ) ) :
 			return array_merge(
 				$links,
 				array(
-					'settings'      => '<a href="' . esc_url( bboss_get_admin_url( 'admin.php?page=bb-settings' ) ) . '">' . esc_html__( 'Settings', 'buddyboss-platform' ) . '</a>',
-					'about'         => '<a href="' . esc_url( bboss_get_admin_url( '?hello=buddyboss' ) ) . '">' . esc_html__( 'About', 'buddyboss-platform' ) . '</a>',
-					'release_notes' => '<a href="javascript:void(0);" id="bb-plugin-release-link">' . esc_html__( 'Release Notes', 'buddyboss-platform' ) . '</a>',
+					'settings'      => '<a href="' . esc_url( bboss_get_admin_url( 'admin.php?page=bb-settings' ) ) . '">' . esc_html__( 'Settings', 'buddyboss-community-social-network-groups-forums-messaging' ) . '</a>',
+					'about'         => '<a href="' . esc_url( bboss_get_admin_url( '?hello=buddyboss' ) ) . '">' . esc_html__( 'About', 'buddyboss-community-social-network-groups-forums-messaging' ) . '</a>',
+					'release_notes' => '<a href="javascript:void(0);" id="bb-plugin-release-link">' . esc_html__( 'Release Notes', 'buddyboss-community-social-network-groups-forums-messaging' ) . '</a>',
 				)
 			);
 		}
@@ -727,8 +727,8 @@ if ( ! class_exists( 'BBoss_Admin' ) ) :
 					array(
 						'ajax_url'           => admin_url( 'admin-ajax.php' ),
 						'bb_help_url'        => $bp_help_base_url,
-						'bb_help_title'      => esc_html__( 'Docs', 'buddyboss-platform' ),
-						'bb_help_no_network' => __( '<strong>You are offline.</strong> Documentation requires internet access.', 'buddyboss-platform' ),
+						'bb_help_title'      => esc_html__( 'Docs', 'buddyboss-community-social-network-groups-forums-messaging' ),
+						'bb_help_no_network' => __( '<strong>You are offline.</strong> Documentation requires internet access.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					)
 				);
 			}

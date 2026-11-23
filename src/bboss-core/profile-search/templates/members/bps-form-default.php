@@ -21,10 +21,10 @@ if ( ! isset( $options['collapsible'] ) ) {
 
 if ( is_admin() ) {
 	?>
-	<p><strong><?php esc_html_e( 'Collapsible Form', 'buddyboss-platform' ); ?></strong></p>
+	<p><strong><?php esc_html_e( 'Collapsible Form', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></strong></p>
 	<select name="options[collapsible]">
-		<option value='Yes' <?php selected( $options['collapsible'], 'Yes' ); ?>><?php esc_html_e( 'Yes', 'buddyboss-platform' ); ?></option>
-		<option value='No' <?php selected( $options['collapsible'], 'No' ); ?>><?php esc_html_e( 'No', 'buddyboss-platform' ); ?></option>
+		<option value='Yes' <?php selected( $options['collapsible'], 'Yes' ); ?>><?php esc_html_e( 'Yes', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></option>
+		<option value='No' <?php selected( $options['collapsible'], 'No' ); ?>><?php esc_html_e( 'No', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></option>
 	</select>
 	<?php
 	return 'end_of_options';
@@ -131,12 +131,12 @@ foreach ( $F->fields as $f ) {
 			break;
 
 		case 'distance':
-			$of          = __( 'of', 'buddyboss-platform' );
-			$km          = __( 'km', 'buddyboss-platform' );
-			$miles       = __( 'miles', 'buddyboss-platform' );
-			$placeholder = __( 'Start typing, then select a location', 'buddyboss-platform' );
+			$of          = __( 'of', 'buddyboss-community-social-network-groups-forums-messaging' );
+			$km          = __( 'km', 'buddyboss-community-social-network-groups-forums-messaging' );
+			$miles       = __( 'miles', 'buddyboss-community-social-network-groups-forums-messaging' );
+			$placeholder = __( 'Start typing, then select a location', 'buddyboss-community-social-network-groups-forums-messaging' );
 			$icon_url    = bboss()->plugin_url . 'bboss-core/profile-search/templates/members/locator.png';
-			$icon_title  = __( 'get current location', 'buddyboss-platform' );
+			$icon_title  = __( 'get current location', 'buddyboss-community-social-network-groups-forums-messaging' );
 			?>
 			<input type="number" min="1" style="width: 5em;" name="<?php echo esc_attr( $name . '[distance]' ); ?>" value="<?php echo esc_attr( $value['distance'] ); ?>">
 			<select name="<?php echo esc_attr( $name . '[units]' ); ?>">
@@ -210,7 +210,7 @@ foreach ( $F->fields as $f ) {
 				?>
 					name="<?php echo esc_attr( $name ); ?>" value="<?php echo $key; ?>"> <?php echo $label; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $key/$label pre-escaped via esc_attr() in bp_ps_escaped_form_data47(). ?></label><br>
 			<?php } ?>
-			<a href="javascript:bp_ps_clear_radio('<?php echo esc_attr( $id ); ?>_wrap')"><?php esc_html_e( 'Clear', 'buddyboss-platform' ); ?></a><br>
+			<a href="javascript:bp_ps_clear_radio('<?php echo esc_attr( $id ); ?>_wrap')"><?php esc_html_e( 'Clear', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></a><br>
 			<?php
 			break;
 
@@ -240,7 +240,7 @@ foreach ( $F->fields as $f ) {
 }
 ?>
 		<div>
-			<input type="submit" value="<?php esc_html_e( 'Search', 'buddyboss-platform' ); ?>">
+			<input type="submit" value="<?php esc_html_e( 'Search', 'buddyboss-community-social-network-groups-forums-messaging' ); ?>">
 		</div>
 	</form>
 

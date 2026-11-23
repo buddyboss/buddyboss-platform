@@ -189,15 +189,15 @@ function bboss_core_register_common_scripts() {
 	 */
 	$bp_select2 = array(
 		'i18n' => array(
-			'errorLoading'     => esc_js( __( 'The results could not be loaded.', 'buddyboss-platform' ) ),
-			'inputTooLong'     => esc_js( __( 'Please delete %% character', 'buddyboss-platform' ) ),
-			'inputTooShort'    => esc_js( __( 'Please enter %% or more characters', 'buddyboss-platform' ) ),
-			'loadingMore'      => esc_js( __( 'Loading more results…', 'buddyboss-platform' ) ),
-			'maximumSelected'  => esc_js( __( 'You can only select %% item', 'buddyboss-platform' ) ),
-			'noResults'        => esc_js( __( 'No results found', 'buddyboss-platform' ) ),
-			'searching'        => esc_js( __( 'Searching…', 'buddyboss-platform' ) ),
-			'removeAllItems'   => esc_js( __( 'Remove all items', 'buddyboss-platform' ) ),
-			'msginputTooShort' => esc_js( __( 'Start typing to find members', 'buddyboss-platform' ) ),
+			'errorLoading'     => esc_js( __( 'The results could not be loaded.', 'buddyboss-community-social-network-groups-forums-messaging' ) ),
+			'inputTooLong'     => esc_js( __( 'Please delete %% character', 'buddyboss-community-social-network-groups-forums-messaging' ) ),
+			'inputTooShort'    => esc_js( __( 'Please enter %% or more characters', 'buddyboss-community-social-network-groups-forums-messaging' ) ),
+			'loadingMore'      => esc_js( __( 'Loading more results…', 'buddyboss-community-social-network-groups-forums-messaging' ) ),
+			'maximumSelected'  => esc_js( __( 'You can only select %% item', 'buddyboss-community-social-network-groups-forums-messaging' ) ),
+			'noResults'        => esc_js( __( 'No results found', 'buddyboss-community-social-network-groups-forums-messaging' ) ),
+			'searching'        => esc_js( __( 'Searching…', 'buddyboss-community-social-network-groups-forums-messaging' ) ),
+			'removeAllItems'   => esc_js( __( 'Remove all items', 'buddyboss-community-social-network-groups-forums-messaging' ) ),
+			'msginputTooShort' => esc_js( __( 'Start typing to find members', 'buddyboss-community-social-network-groups-forums-messaging' ) ),
 		),
 	);
 
@@ -207,17 +207,17 @@ function bboss_core_register_common_scripts() {
 	 * Translate EmojineArea
 	 */
 	$bp_emojionearea = array(
-		'recent'            => __( 'Recent', 'buddyboss-platform' ),
-		'smileys_people'    => __( 'Smileys & People', 'buddyboss-platform' ),
-		'animals_nature'    => __( 'Animals & Nature', 'buddyboss-platform' ),
-		'food_drink'        => __( 'Food & Drink', 'buddyboss-platform' ),
-		'activity'          => __( 'Activity', 'buddyboss-platform' ),
-		'travel_places'     => __( 'Travel & Places', 'buddyboss-platform' ),
-		'objects'           => __( 'Objects', 'buddyboss-platform' ),
-		'symbols'           => __( 'Symbols', 'buddyboss-platform' ),
-		'flags'             => __( 'Flags', 'buddyboss-platform' ),
-		'tones'             => __( 'Diversity', 'buddyboss-platform' ),
-		'searchPlaceholder' => __( 'Search', 'buddyboss-platform' ),
+		'recent'            => __( 'Recent', 'buddyboss-community-social-network-groups-forums-messaging' ),
+		'smileys_people'    => __( 'Smileys & People', 'buddyboss-community-social-network-groups-forums-messaging' ),
+		'animals_nature'    => __( 'Animals & Nature', 'buddyboss-community-social-network-groups-forums-messaging' ),
+		'food_drink'        => __( 'Food & Drink', 'buddyboss-community-social-network-groups-forums-messaging' ),
+		'activity'          => __( 'Activity', 'buddyboss-community-social-network-groups-forums-messaging' ),
+		'travel_places'     => __( 'Travel & Places', 'buddyboss-community-social-network-groups-forums-messaging' ),
+		'objects'           => __( 'Objects', 'buddyboss-community-social-network-groups-forums-messaging' ),
+		'symbols'           => __( 'Symbols', 'buddyboss-community-social-network-groups-forums-messaging' ),
+		'flags'             => __( 'Flags', 'buddyboss-community-social-network-groups-forums-messaging' ),
+		'tones'             => __( 'Diversity', 'buddyboss-community-social-network-groups-forums-messaging' ),
+		'searchPlaceholder' => __( 'Search', 'buddyboss-community-social-network-groups-forums-messaging' ),
 	);
 
 	wp_localize_script( 'emojionearea', 'bp_emojionearea', $bp_emojionearea );
@@ -229,17 +229,17 @@ function bboss_core_register_common_scripts() {
 		'bp-media-dropzone',
 		'bp_media_dropzone',
 		array(
-			'dictDefaultMessage'           => __( "Drop files here to upload", 'buddyboss-platform' ),
-			'dictFallbackMessage'          => __( "Your browser does not support drag'n'drop file uploads.", 'buddyboss-platform' ),
-			'dictFallbackText'             => __( "Please use the fallback form below to upload your files like in the olden days.", 'buddyboss-platform' ),
-			'dictFileTooBig'               => __( "Sorry, file size is too big ({{filesize}} MB). Max file size limit: {{maxFilesize}} MB.", 'buddyboss-platform' ),
-			'dictInvalidFileType'          => __( "You can't upload files of this type.", 'buddyboss-platform' ),
-			'dictResponseError'            => __( "Server responded with {{statusCode}} code.", 'buddyboss-platform' ),
-			'dictCancelUpload'             => __( "Cancel upload", 'buddyboss-platform' ),
-			'dictUploadCanceled'           => __( "Upload canceled.", 'buddyboss-platform' ),
-			'dictCancelUploadConfirmation' => __( "Are you sure you want to cancel this upload?", 'buddyboss-platform' ),
-			'dictRemoveFile'               => __( "Remove file", 'buddyboss-platform' ),
-			'dictMaxFilesExceeded'         => __( "You cannot upload more than 10 files at a time.", 'buddyboss-platform' ),
+			'dictDefaultMessage'           => __( "Drop files here to upload", 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'dictFallbackMessage'          => __( "Your browser does not support drag'n'drop file uploads.", 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'dictFallbackText'             => __( "Please use the fallback form below to upload your files like in the olden days.", 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'dictFileTooBig'               => __( "Sorry, file size is too big ({{filesize}} MB). Max file size limit: {{maxFilesize}} MB.", 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'dictInvalidFileType'          => __( "You can't upload files of this type.", 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'dictResponseError'            => __( "Server responded with {{statusCode}} code.", 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'dictCancelUpload'             => __( "Cancel upload", 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'dictUploadCanceled'           => __( "Upload canceled.", 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'dictCancelUploadConfirmation' => __( "Are you sure you want to cancel this upload?", 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'dictRemoveFile'               => __( "Remove file", 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'dictMaxFilesExceeded'         => __( "You cannot upload more than 10 files at a time.", 'buddyboss-community-social-network-groups-forums-messaging' ),
 		)
 	);
 }
@@ -338,7 +338,7 @@ function bboss_core_confirmation_js() {
 		'bp-confirm',
 		'BP_Confirm',
 		array(
-			'are_you_sure' => __( 'Are you sure?', 'buddyboss-platform' ),
+			'are_you_sure' => __( 'Are you sure?', 'buddyboss-community-social-network-groups-forums-messaging' ),
 		)
 	);
 
@@ -745,30 +745,30 @@ function bboss_core_enqueue_livestamp() {
 				array(
 					'relativeTime' => array(
 						/* Translators: %s is the relative time (eg: in a few seconds). */
-						'future' => __( 'in %s', 'buddyboss-platform' ),
+						'future' => __( 'in %s', 'buddyboss-community-social-network-groups-forums-messaging' ),
 						/* translators: %s: the human time diff. */
-						'past'   => __( '%s ago', 'buddyboss-platform' ),
-						's'      => __( 'second', 'buddyboss-platform' ),
+						'past'   => __( '%s ago', 'buddyboss-community-social-network-groups-forums-messaging' ),
+						's'      => __( 'second', 'buddyboss-community-social-network-groups-forums-messaging' ),
 						/* translators: %d: number of seconds. */
-						'ss'     => __( '%d seconds', 'buddyboss-platform' ),
-						'm'      => __( 'a minute', 'buddyboss-platform' ),
+						'ss'     => __( '%d seconds', 'buddyboss-community-social-network-groups-forums-messaging' ),
+						'm'      => __( 'a minute', 'buddyboss-community-social-network-groups-forums-messaging' ),
 						/* Translators: %d is the amount of minutes. */
-						'mm'     => __( '%d minutes', 'buddyboss-platform' ),
-						'h'      => __( 'an hour', 'buddyboss-platform' ),
+						'mm'     => __( '%d minutes', 'buddyboss-community-social-network-groups-forums-messaging' ),
+						'h'      => __( 'an hour', 'buddyboss-community-social-network-groups-forums-messaging' ),
 						/* Translators: %d is the amount of hours. */
-						'hh'     => __( '%d hours', 'buddyboss-platform' ),
-						'd'      => __( 'a day', 'buddyboss-platform' ),
+						'hh'     => __( '%d hours', 'buddyboss-community-social-network-groups-forums-messaging' ),
+						'd'      => __( 'a day', 'buddyboss-community-social-network-groups-forums-messaging' ),
 						/* Translators: %d is the amount of days. */
-						'dd'     => __( '%d days', 'buddyboss-platform' ),
-						'w'      => __( 'a week', 'buddyboss-platform' ),
+						'dd'     => __( '%d days', 'buddyboss-community-social-network-groups-forums-messaging' ),
+						'w'      => __( 'a week', 'buddyboss-community-social-network-groups-forums-messaging' ),
 						/* Translators: %d is the amount of weeks. */
-						'ww'     => __( '%d weeks', 'buddyboss-platform' ),
-						'M'      => __( 'a month', 'buddyboss-platform' ),
+						'ww'     => __( '%d weeks', 'buddyboss-community-social-network-groups-forums-messaging' ),
+						'M'      => __( 'a month', 'buddyboss-community-social-network-groups-forums-messaging' ),
 						/* Translators: %d is the amount of months. */
-						'MM'     => __( '%d months', 'buddyboss-platform' ),
-						'y'      => __( 'a year', 'buddyboss-platform' ),
+						'MM'     => __( '%d months', 'buddyboss-community-social-network-groups-forums-messaging' ),
+						'y'      => __( 'a year', 'buddyboss-community-social-network-groups-forums-messaging' ),
 						/* Translators: %d is the amount of years. */
-						'yy'     => __( '%d years', 'buddyboss-platform' ),
+						'yy'     => __( '%d years', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					),
 				)
 			)
@@ -794,24 +794,24 @@ function bboss_core_enqueue_livestamp() {
 				MINUTE_IN_SECONDS,
 				1,
 			),
-			'unknown_text'      => apply_filters( 'bp_core_time_since_unknown_text', esc_html__( 'sometime', 'buddyboss-platform' ) ),
-			'right_now_text'    => apply_filters( 'bp_core_time_since_right_now_text', esc_html__( 'Just now', 'buddyboss-platform' ) ),
+			'unknown_text'      => apply_filters( 'bp_core_time_since_unknown_text', esc_html__( 'sometime', 'buddyboss-community-social-network-groups-forums-messaging' ) ),
+			'right_now_text'    => apply_filters( 'bp_core_time_since_right_now_text', esc_html__( 'Just now', 'buddyboss-community-social-network-groups-forums-messaging' ) ),
 			/* translators: %s: human-readable time span. */
-			'ago_text'          => apply_filters( 'bp_core_time_since_ago_text', esc_html__( '%s ago', 'buddyboss-platform' ) ),
-			'second_text'       => __( 'a second', 'buddyboss-platform' ),
-			'seconds_text'      => __( 'seconds', 'buddyboss-platform' ),
-			'minute_text'       => __( 'a minute', 'buddyboss-platform' ),
-			'minutes_text'      => __( 'minutes', 'buddyboss-platform' ),
-			'hour_text'         => __( 'an hour', 'buddyboss-platform' ),
-			'hours_text'        => __( 'hours', 'buddyboss-platform' ),
-			'day_text'          => __( 'a day', 'buddyboss-platform' ),
-			'days_text'         => __( 'days', 'buddyboss-platform' ),
-			'week_text'         => __( 'a week', 'buddyboss-platform' ),
-			'weeks_text'        => __( 'weeks', 'buddyboss-platform' ),
-			'month_text'        => __( 'a month', 'buddyboss-platform' ),
-			'months_text'       => __( 'months', 'buddyboss-platform' ),
-			'year_text'         => __( 'a year', 'buddyboss-platform' ),
-			'years_text'        => __( 'years', 'buddyboss-platform' ),
+			'ago_text'          => apply_filters( 'bp_core_time_since_ago_text', esc_html__( '%s ago', 'buddyboss-community-social-network-groups-forums-messaging' ) ),
+			'second_text'       => __( 'a second', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'seconds_text'      => __( 'seconds', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'minute_text'       => __( 'a minute', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'minutes_text'      => __( 'minutes', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'hour_text'         => __( 'an hour', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'hours_text'        => __( 'hours', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'day_text'          => __( 'a day', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'days_text'         => __( 'days', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'week_text'         => __( 'a week', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'weeks_text'        => __( 'weeks', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'month_text'        => __( 'a month', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'months_text'       => __( 'months', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'year_text'         => __( 'a year', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'years_text'        => __( 'years', 'buddyboss-community-social-network-groups-forums-messaging' ),
 		)
 	);
 
@@ -881,9 +881,9 @@ function bboss_core_register_page_js() {
 			'ajaxurl'        => bboss_core_ajax_url(),
 			'field_id'       => 'field_' . bboss_get_xprofile_member_type_field_id(),
 			'nonce'          => wp_create_nonce( 'bp-core-register-page-js' ),
-			'mismatch_email' => __( 'Mismatch', 'buddyboss-platform' ),
-			'valid_email'    => __( 'Enter valid email', 'buddyboss-platform' ),
-			'required_field' => __( 'This is a required field.', 'buddyboss-platform' ),
+			'mismatch_email' => __( 'Mismatch', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'valid_email'    => __( 'Enter valid email', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'required_field' => __( 'This is a required field.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 		);
 
 		wp_localize_script( 'bp-register-page', 'BP_Register', apply_filters( 'bp_core_register_js_settings', $data ) );

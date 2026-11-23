@@ -35,9 +35,9 @@ function bboss_notifications_action_delete() {
 
 	// Check the nonce and delete the notification.
 	if ( bboss_verify_nonce_request( 'bp_notification_delete_' . $id ) && bboss_notifications_delete_notification( $id ) ) {
-		bboss_core_add_message( __( 'Notification successfully deleted.', 'buddyboss-platform' ) );
+		bboss_core_add_message( __( 'Notification successfully deleted.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 	} else {
-		bboss_core_add_message( __( 'There was a problem deleting that notification.', 'buddyboss-platform' ), 'error' );
+		bboss_core_add_message( __( 'There was a problem deleting that notification.', 'buddyboss-community-social-network-groups-forums-messaging' ), 'error' );
 	}
 
 	// Redirect.

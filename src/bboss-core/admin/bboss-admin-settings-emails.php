@@ -27,8 +27,8 @@ function bboss_admin_settings_register_emails_feature() {
 	bboss_register_feature(
 		'emails',
 		array(
-			'label'              => __( 'Emails', 'buddyboss-platform' ),
-			'description'        => __( 'Manage email templates sent by BuddyBoss.', 'buddyboss-platform' ),
+			'label'              => __( 'Emails', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'description'        => __( 'Manage email templates sent by BuddyBoss.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'icon'               => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-envelope-simple',
@@ -56,7 +56,7 @@ function bboss_admin_settings_register_emails_feature() {
 		'emails',
 		'all_emails',
 		array(
-			'title'      => __( 'Emails', 'buddyboss-platform' ),
+			'title'      => __( 'Emails', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'icon'       => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-list-bullets',

@@ -90,15 +90,15 @@ function bboss_bookmark_add( $args ) {
 	);
 
 	if ( empty( $r['type'] ) ) {
-		return new WP_Error( 'bb_bookmark_no_type', __( 'A bookmark type is required.', 'buddyboss-platform' ), array( 'status' => 400 ) );
+		return new WP_Error( 'bb_bookmark_no_type', __( 'A bookmark type is required.', 'buddyboss-community-social-network-groups-forums-messaging' ), array( 'status' => 400 ) );
 	}
 
 	if ( empty( $r['item_id'] ) ) {
-		return new WP_Error( 'bb_bookmark_no_item', __( 'An item ID is required to create a bookmark.', 'buddyboss-platform' ), array( 'status' => 400 ) );
+		return new WP_Error( 'bb_bookmark_no_item', __( 'An item ID is required to create a bookmark.', 'buddyboss-community-social-network-groups-forums-messaging' ), array( 'status' => 400 ) );
 	}
 
 	if ( empty( $r['user_id'] ) ) {
-		return new WP_Error( 'bb_bookmark_no_user', __( 'You must be logged in to bookmark.', 'buddyboss-platform' ), array( 'status' => 401 ) );
+		return new WP_Error( 'bb_bookmark_no_user', __( 'You must be logged in to bookmark.', 'buddyboss-community-social-network-groups-forums-messaging' ), array( 'status' => 401 ) );
 	}
 
 	$existing = bboss_bookmark_get_by_item( $r['type'], (int) $r['item_id'], (int) $r['user_id'], (int) $r['blog_id'] );
@@ -130,7 +130,7 @@ function bboss_bookmark_add( $args ) {
 			return (int) $existing->id;
 		}
 
-		return new WP_Error( 'bb_bookmark_not_created', __( 'The bookmark could not be saved.', 'buddyboss-platform' ), array( 'status' => 500 ) );
+		return new WP_Error( 'bb_bookmark_not_created', __( 'The bookmark could not be saved.', 'buddyboss-community-social-network-groups-forums-messaging' ), array( 'status' => 500 ) );
 	}
 
 	/**
@@ -393,15 +393,15 @@ function bboss_bookmark_toggle( $type, $item_id, $user_id = 0 ) {
 	$user_id = ! empty( $user_id ) ? (int) $user_id : get_current_user_id();
 
 	if ( empty( $user_id ) ) {
-		return new WP_Error( 'bb_bookmark_no_user', __( 'You must be logged in to bookmark.', 'buddyboss-platform' ), array( 'status' => 401 ) );
+		return new WP_Error( 'bb_bookmark_no_user', __( 'You must be logged in to bookmark.', 'buddyboss-community-social-network-groups-forums-messaging' ), array( 'status' => 401 ) );
 	}
 
 	if ( empty( $type ) || empty( bboss_bookmark_register_types( $type ) ) ) {
-		return new WP_Error( 'bb_bookmark_invalid_type', __( 'This item cannot be bookmarked.', 'buddyboss-platform' ), array( 'status' => 400 ) );
+		return new WP_Error( 'bb_bookmark_invalid_type', __( 'This item cannot be bookmarked.', 'buddyboss-community-social-network-groups-forums-messaging' ), array( 'status' => 400 ) );
 	}
 
 	if ( empty( $item_id ) ) {
-		return new WP_Error( 'bb_bookmark_no_item', __( 'An item ID is required to bookmark.', 'buddyboss-platform' ), array( 'status' => 400 ) );
+		return new WP_Error( 'bb_bookmark_no_item', __( 'An item ID is required to bookmark.', 'buddyboss-community-social-network-groups-forums-messaging' ), array( 'status' => 400 ) );
 	}
 
 	$existing = bboss_bookmark_get_by_item( $type, $item_id, $user_id );
@@ -411,7 +411,7 @@ function bboss_bookmark_toggle( $type, $item_id, $user_id = 0 ) {
 	// or deleted — otherwise the bookmark is stuck in their list forever.
 	if ( ! empty( $existing->id ) && 1 === (int) $existing->status ) {
 		if ( ! bboss_bookmark_delete( (int) $existing->id ) ) {
-			return new WP_Error( 'bb_bookmark_not_removed', __( 'The bookmark could not be removed.', 'buddyboss-platform' ), array( 'status' => 500 ) );
+			return new WP_Error( 'bb_bookmark_not_removed', __( 'The bookmark could not be removed.', 'buddyboss-community-social-network-groups-forums-messaging' ), array( 'status' => 500 ) );
 		}
 
 		return false;

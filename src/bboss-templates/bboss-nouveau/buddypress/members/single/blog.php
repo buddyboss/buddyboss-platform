@@ -61,15 +61,15 @@ $bb_blog_member_query = new WP_Query( apply_filters( 'bb_blog_member_posts_query
 				'base'      => get_pagenum_link( 1 ) . '%_%',
 				'format'    => '?paged=%#%',
 				'mid_size'  => 2,
-				'prev_text' => esc_html__( 'Previous', 'buddyboss-platform' ),
-				'next_text' => esc_html__( 'Next', 'buddyboss-platform' ),
+				'prev_text' => esc_html__( 'Previous', 'buddyboss-community-social-network-groups-forums-messaging' ),
+				'next_text' => esc_html__( 'Next', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			)
 		);
 
 		if ( $bb_blog_pagination_links ) {
 			printf(
 				'<nav class="navigation pagination" aria-label="%1$s"><div class="nav-links">%2$s</div></nav>',
-				esc_attr__( 'Posts pagination', 'buddyboss-platform' ),
+				esc_attr__( 'Posts pagination', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				$bb_blog_pagination_links // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- core pagination HTML.
 			);
 		}
@@ -79,10 +79,10 @@ $bb_blog_member_query = new WP_Query( apply_filters( 'bb_blog_member_posts_query
 			<i class="bb-icon-info"></i>
 			<?php
 			if ( $bb_blog_is_owner ) {
-				esc_html_e( "You haven't written any blog posts yet.", 'buddyboss-platform' );
+				esc_html_e( "You haven't written any blog posts yet.", 'buddyboss-community-social-network-groups-forums-messaging' );
 			} else {
 				/* translators: %s: member display name. */
-				printf( esc_html__( '%s has not written any blog posts yet.', 'buddyboss-platform' ), esc_html( bboss_get_displayed_user_fullname() ) );
+				printf( esc_html__( '%s has not written any blog posts yet.', 'buddyboss-community-social-network-groups-forums-messaging' ), esc_html( bboss_get_displayed_user_fullname() ) );
 			}
 			?>
 		</p>

@@ -98,7 +98,7 @@ class BBoss_REST_Activity_Details_Endpoint extends WP_REST_Controller {
 	public function get_items_permissions_check( $request ) {
 		$retval = new WP_Error(
 			'bp_rest_component_required',
-			__( 'Sorry, Activity component was not enabled.', 'buddyboss-platform' ),
+			__( 'Sorry, Activity component was not enabled.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			array(
 				'status' => '404',
 			)
@@ -133,7 +133,7 @@ class BBoss_REST_Activity_Details_Endpoint extends WP_REST_Controller {
 			'properties' => array(
 				'nav'     => array(
 					'context'     => array( 'embed', 'view' ),
-					'description' => __( 'Activity directory tabs.', 'buddyboss-platform' ),
+					'description' => __( 'Activity directory tabs.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'type'        => 'object',
 					'readonly'    => true,
 					'items'       => array(
@@ -142,13 +142,13 @@ class BBoss_REST_Activity_Details_Endpoint extends WP_REST_Controller {
 				),
 				'filters' => array(
 					'context'     => array( 'embed', 'view' ),
-					'description' => __( 'Activity Filter options', 'buddyboss-platform' ),
+					'description' => __( 'Activity Filter options', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'type'        => 'array',
 					'readonly'    => true,
 				),
 				'post_in' => array(
 					'context'     => array( 'embed', 'view' ),
-					'description' => __( 'Activity contains from.', 'buddyboss-platform' ),
+					'description' => __( 'Activity contains from.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'type'        => 'array',
 					'readonly'    => true,
 				),
@@ -158,7 +158,7 @@ class BBoss_REST_Activity_Details_Endpoint extends WP_REST_Controller {
 		if ( function_exists( 'bboss_activity_get_visibility_levels' ) ) {
 			$schema['properties']['privacy'] = array(
 				'context'     => array( 'embed', 'view' ),
-				'description' => __( 'Activity Privacy.', 'buddyboss-platform' ),
+				'description' => __( 'Activity Privacy.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				'type'        => 'array',
 				'readonly'    => true,
 			);
@@ -244,7 +244,7 @@ class BBoss_REST_Activity_Details_Endpoint extends WP_REST_Controller {
 			$activity_filters = $this->bp_rest_legacy_get_activity_filters();
 		}
 
-		$filters = array( '-1' => __( '-- Everything --', 'buddyboss-platform' ) ) + $activity_filters;
+		$filters = array( '-1' => __( '-- Everything --', 'buddyboss-community-social-network-groups-forums-messaging' ) ) + $activity_filters;
 		return $filters;
 	}
 
@@ -255,7 +255,7 @@ class BBoss_REST_Activity_Details_Endpoint extends WP_REST_Controller {
 	 */
 	public function get_activities_post_in() {
 		$post_in    = array();
-		$post_in[0] = __( 'My Profile', 'buddyboss-platform' );
+		$post_in[0] = __( 'My Profile', 'buddyboss-community-social-network-groups-forums-messaging' );
 
 		if ( bboss_is_active( 'groups' ) ) {
 			$args   = array(
@@ -283,7 +283,7 @@ class BBoss_REST_Activity_Details_Endpoint extends WP_REST_Controller {
 		$nav_items = array();
 
 		$nav_items['all'] = array(
-			'text'     => __( 'All Members', 'buddyboss-platform' ),
+			'text'     => __( 'All Members', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'position' => 5,
 		);
 
@@ -291,21 +291,21 @@ class BBoss_REST_Activity_Details_Endpoint extends WP_REST_Controller {
 
 			if ( bboss_is_active( 'friends' ) && bboss_get_total_friend_count( bboss_loggedin_user_id() ) ) {
 				$nav_items['friends'] = array(
-					'text'     => __( 'My Friends', 'buddyboss-platform' ),
+					'text'     => __( 'My Friends', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'position' => 15,
 				);
 			}
 
 			if ( bboss_is_active( 'groups' ) && bboss_get_total_group_count_for_user( bboss_loggedin_user_id() ) ) {
 				$nav_items['groups'] = array(
-					'text'     => __( 'My Groups', 'buddyboss-platform' ),
+					'text'     => __( 'My Groups', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'position' => 25,
 				);
 			}
 
 			if ( bboss_get_total_favorite_count_for_user( bboss_loggedin_user_id() ) ) {
 				$nav_items['favorites'] = array(
-					'text'     => __( 'My Favorites', 'buddyboss-platform' ),
+					'text'     => __( 'My Favorites', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'position' => 35,
 				);
 			}
@@ -313,7 +313,7 @@ class BBoss_REST_Activity_Details_Endpoint extends WP_REST_Controller {
 			if ( bboss_activity_do_mentions() ) {
 				if ( bboss_get_total_mention_count_for_user( bboss_loggedin_user_id() ) ) {
 					$nav_items['mentions'] = array(
-						'text'     => __( 'Mentions', 'buddyboss-platform' ),
+						'text'     => __( 'Mentions', 'buddyboss-community-social-network-groups-forums-messaging' ),
 						'position' => 45,
 					);
 				}

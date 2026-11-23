@@ -721,11 +721,11 @@ function bboss_activity_truncate_entry( $text, $args = array() ) {
 	 *
 	 * @param string $value Internationalized "Read more" text.
 	 */
-	$append_text = apply_filters( 'bp_activity_excerpt_append_text', __( ' Read more', 'buddyboss-platform' ) );
+	$append_text = apply_filters( 'bp_activity_excerpt_append_text', __( ' Read more', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 
 	$excerpt_length = bboss_activity_get_excerpt_length();
 
-	$args = bboss_parse_args( $args, array( 'ending' => __( '&hellip;', 'buddyboss-platform' ) ) );
+	$args = bboss_parse_args( $args, array( 'ending' => __( '&hellip;', 'buddyboss-community-social-network-groups-forums-messaging' ) ) );
 
 	// Run the text through the excerpt function. If it's too short, the original text will be returned.
 	$excerpt = bboss_create_excerpt( $text, $excerpt_length, $args );
@@ -787,7 +787,7 @@ function bboss_activity_link_preview( $content, $activity ) {
 	}
 
 	$description = $preview_data['description'];
-	$read_more   = ' &hellip; <a class="activity-link-preview-more" href="' . esc_url( $preview_data['url'] ) . '" target="_blank" rel="nofollow">' . __( 'Continue reading', 'buddyboss-platform' ) . '</a>';
+	$read_more   = ' &hellip; <a class="activity-link-preview-more" href="' . esc_url( $preview_data['url'] ) . '" target="_blank" rel="nofollow">' . __( 'Continue reading', 'buddyboss-community-social-network-groups-forums-messaging' ) . '</a>';
 	$description = wp_trim_words( $description, 40, $read_more );
 
 	$content = make_clickable( $content );
@@ -1061,7 +1061,7 @@ function bboss_activity_heartbeat_strings( $strings = array() ) {
 	$strings = array_merge(
 		$strings,
 		array(
-			'newest' => __( 'Load Newest', 'buddyboss-platform' ),
+			'newest' => __( 'Load Newest', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'pulse'  => absint( $pulse ),
 		)
 	);
@@ -2825,7 +2825,7 @@ function bboss_blogs_activity_content_with_read_more( $content, $activity ) {
 				$content = bboss_create_excerpt( bboss_strip_script_and_style_tags( html_entity_decode( $blog_post->post_content, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) ) );
 			}
 
-			if ( false !== strrpos( $content, __( '&hellip;', 'buddyboss-platform' ) ) ) {
+			if ( false !== strrpos( $content, __( '&hellip;', 'buddyboss-community-social-network-groups-forums-messaging' ) ) ) {
 				$content = str_replace( ' [&hellip;]', '&hellip;', $content );
 				$content = apply_filters_ref_array( 'bp_get_activity_content', array( $content, $activity ) );
 				preg_match( '/<iframe.*src=\"(.*)\".*><\/iframe>/isU', $content, $matches );
@@ -2849,9 +2849,9 @@ function bboss_blogs_activity_content_with_read_more( $content, $activity ) {
 	} elseif ( 'blogs' === $activity->component && 'new_blog_comment' === $activity->type && $activity->secondary_item_id && $activity->secondary_item_id > 0 ) {
 		$comment = get_comment( $activity->secondary_item_id );
 		$content = bboss_create_excerpt( html_entity_decode( $comment->comment_content ) );
-		if ( false !== strrpos( $content, __( '&hellip;', 'buddyboss-platform' ) ) ) {
+		if ( false !== strrpos( $content, __( '&hellip;', 'buddyboss-community-social-network-groups-forums-messaging' ) ) ) {
 			$content     = str_replace( ' [&hellip;]', '&hellip;', $content );
-			$append_text = apply_filters( 'bp_activity_excerpt_append_text', __( ' Read more', 'buddyboss-platform' ) );
+			$append_text = apply_filters( 'bp_activity_excerpt_append_text', __( ' Read more', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 			$content     = wpautop( sprintf( '%1$s<span class="activity-blog-post-link"><a href="%2$s" rel="nofollow">%3$s</a></span>', $content, get_comment_link( $activity->secondary_item_id ), $append_text ) );
 		}
 	}
@@ -2886,9 +2886,9 @@ function bboss_blogs_activity_comment_content_with_read_more( $content, $activit
 				if ( ! empty( $comment->comment_content ) ) {
 					if ( apply_filters( 'bp_blogs_activity_comment_content_with_read_more', true ) ) {
 						$content = bboss_create_excerpt( make_clickable( html_entity_decode( $comment->comment_content, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) ) );
-						if ( false !== strrpos( $content, __( '&hellip;', 'buddyboss-platform' ) ) ) {
+						if ( false !== strrpos( $content, __( '&hellip;', 'buddyboss-community-social-network-groups-forums-messaging' ) ) ) {
 							$content = str_replace( ' [&hellip;]', '&hellip;', $content );
-							$append_text = apply_filters( 'bp_activity_excerpt_append_text', __( ' Read more', 'buddyboss-platform' ) );
+							$append_text = apply_filters( 'bp_activity_excerpt_append_text', __( ' Read more', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 							$content = sprintf( '%1$s<span class="activity-blog-post-link"><a href="%2$s" rel="nofollow">%3$s</a></span>', $content, get_comment_link( $comment_id ), $append_text );
 						}
 					} else {
@@ -3602,9 +3602,9 @@ function bboss_activity_screen_notification_settings() {
 		<thead>
 		<tr>
 			<th class="icon">&nbsp;</th>
-			<th class="title"><?php esc_html_e( 'Activity Feed', 'buddyboss-platform' ); ?></th>
-			<th class="yes"><?php esc_html_e( 'Yes', 'buddyboss-platform' ); ?></th>
-			<th class="no"><?php esc_html_e( 'No', 'buddyboss-platform' ); ?></th>
+			<th class="title"><?php esc_html_e( 'Activity Feed', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></th>
+			<th class="yes"><?php esc_html_e( 'Yes', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></th>
+			<th class="no"><?php esc_html_e( 'No', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></th>
 		</tr>
 		</thead>
 
@@ -3615,19 +3615,19 @@ function bboss_activity_screen_notification_settings() {
 			?>
 			<tr id="activity-notification-settings-mentions">
 				<td>&nbsp;</td>
-				<td><?php /* translators: %s: the member's @mention name. */ printf( esc_html__( 'A member mentions you in an update using "@%s"', 'buddyboss-platform' ), esc_html( bboss_activity_get_user_mentionname( $current_user->ID ) ) ); ?></td>
+				<td><?php /* translators: %s: the member's @mention name. */ printf( esc_html__( 'A member mentions you in an update using "@%s"', 'buddyboss-community-social-network-groups-forums-messaging' ), esc_html( bboss_activity_get_user_mentionname( $current_user->ID ) ) ); ?></td>
 				<td class="yes">
 					<div class="bp-radio-wrap">
 						<input type="radio" name="notifications[notification_activity_new_mention]" id="notification-activity-new-mention-yes" class="bs-styled-radio"
 							   value="yes" <?php checked( $mention, 'yes', true ); ?> />
-						<label for="notification-activity-new-mention-yes"><span class="bp-screen-reader-text"><?php esc_html_e( 'Yes, send email', 'buddyboss-platform' ); ?></span></label>
+						<label for="notification-activity-new-mention-yes"><span class="bp-screen-reader-text"><?php esc_html_e( 'Yes, send email', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></span></label>
 					</div>
 				</td>
 				<td class="no">
 					<div class="bp-radio-wrap">
 						<input type="radio" name="notifications[notification_activity_new_mention]" id="notification-activity-new-mention-no" class="bs-styled-radio"
 							   value="no" <?php checked( $mention, 'no', true ); ?> />
-						<label for="notification-activity-new-mention-no"><span class="bp-screen-reader-text"><?php esc_html_e( 'No, do not send email', 'buddyboss-platform' ); ?></span></label>
+						<label for="notification-activity-new-mention-no"><span class="bp-screen-reader-text"><?php esc_html_e( 'No, do not send email', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></span></label>
 					</div>
 				</td>
 			</tr>
@@ -3635,19 +3635,19 @@ function bboss_activity_screen_notification_settings() {
 
 		<tr id="activity-notification-settings-replies">
 			<td>&nbsp;</td>
-			<td><?php esc_html_e( "A member replies to an update or comment you've posted", 'buddyboss-platform' ); ?></td>
+			<td><?php esc_html_e( "A member replies to an update or comment you've posted", 'buddyboss-community-social-network-groups-forums-messaging' ); ?></td>
 			<td class="yes">
 				<div class="bp-radio-wrap">
 					<input type="radio" name="notifications[notification_activity_new_reply]" id="notification-activity-new-reply-yes" class="bs-styled-radio"
 						   value="yes" <?php checked( $reply, 'yes', true ); ?> />
-					<label for="notification-activity-new-reply-yes"><span class="bp-screen-reader-text"><?php esc_html_e( 'Yes, send email', 'buddyboss-platform' ); ?></span></label>
+					<label for="notification-activity-new-reply-yes"><span class="bp-screen-reader-text"><?php esc_html_e( 'Yes, send email', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></span></label>
 				</div>
 			</td>
 			<td class="no">
 				<div class="bp-radio-wrap">
 					<input type="radio" name="notifications[notification_activity_new_reply]" id="notification-activity-new-reply-no" class="bs-styled-radio"
 						   value="no" <?php checked( $reply, 'no', true ); ?> />
-					<label for="notification-activity-new-reply-no"><span class="bp-screen-reader-text"><?php esc_html_e( 'No, do not send email', 'buddyboss-platform' ); ?></span></label>
+					<label for="notification-activity-new-reply-no"><span class="bp-screen-reader-text"><?php esc_html_e( 'No, do not send email', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></span></label>
 				</div>
 			</td>
 		</tr>

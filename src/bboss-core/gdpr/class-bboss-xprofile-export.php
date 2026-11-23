@@ -26,7 +26,7 @@ final class BBoss_Xprofile_Export extends BBoss_Export {
 
 		if ( null === $instance ) {
 			$instance = new BBoss_Xprofile_Export();
-			$instance->setup( 'bp_xprofile', __( 'User Profile Information', 'buddyboss-platform' ) );
+			$instance->setup( 'bp_xprofile', __( 'User Profile Information', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 		}
 
 		return $instance;
@@ -77,24 +77,24 @@ final class BBoss_Xprofile_Export extends BBoss_Export {
 		}
 
 		if ( empty( $avatar ) || ! $avatar ) {
-			$avatar = __( 'N/A', 'buddyboss-platform' );
+			$avatar = __( 'N/A', 'buddyboss-community-social-network-groups-forums-messaging' );
 		}
 		if ( empty( $cover_photo ) || ! $cover_photo ) {
-			$cover_photo = __( 'N/A', 'buddyboss-platform' );
+			$cover_photo = __( 'N/A', 'buddyboss-community-social-network-groups-forums-messaging' );
 		}
 
 		$data[] = array(
-			'name'  => __( 'Avatar', 'buddyboss-platform' ),
+			'name'  => __( 'Avatar', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'value' => $avatar,
 		);
 		$data[] = array(
-			'name'  => __( 'Cover Photo', 'buddyboss-platform' ),
+			'name'  => __( 'Cover Photo', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'value' => $cover_photo,
 		);
 
 		$export_items[] = array(
 			'group_id'    => "{$this->exporter_name}-cover-avatar",
-			'group_label' => __( 'User Profile - Avatar & Cover Photos', 'buddyboss-platform' ),
+			'group_label' => __( 'User Profile - Avatar & Cover Photos', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'item_id'     => "{$this->exporter_name}-assets-{$user->ID}",
 			'data'        => $data,
 		);
@@ -109,7 +109,7 @@ final class BBoss_Xprofile_Export extends BBoss_Export {
 
 			$group_id    = $xgroup;
 			// translators: %s: the XProfile field group name.
-			$group_label = sprintf( __( 'User Profile - %s', 'buddyboss-platform' ), $xgroup );
+			$group_label = sprintf( __( 'User Profile - %s', 'buddyboss-community-social-network-groups-forums-messaging' ), $xgroup );
 			$item_id     = "{$this->exporter_name}-{$group_id}";
 
 			$data = array();
@@ -117,7 +117,7 @@ final class BBoss_Xprofile_Export extends BBoss_Export {
 			foreach ( $items as $item ) {
 				$val = trim( $item['value'] );
 				if ( empty( $val ) ) {
-					$val = __( 'N/A', 'buddyboss-platform' );
+					$val = __( 'N/A', 'buddyboss-community-social-network-groups-forums-messaging' );
 				}
 				$data[] = array(
 					'name'  => $item['name'],

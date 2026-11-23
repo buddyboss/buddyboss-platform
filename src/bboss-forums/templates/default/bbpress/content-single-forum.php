@@ -23,7 +23,7 @@ defined( 'ABSPATH' ) || exit;
 
 	<?php if ( bboss_bbp_get_forum_report_link( array( 'id' => bboss_bbp_get_forum_id() ) ) ) { ?>
 		<div class="bb_more_options action">
-			<a href="#" class="bb_more_options_action" aria-label="<?php esc_attr_e( 'More options', 'buddyboss-platform' ); ?>">
+			<a href="#" class="bb_more_options_action" aria-label="<?php esc_attr_e( 'More options', 'buddyboss-community-social-network-groups-forums-messaging' ); ?>">
 				<i class="bb-icon-f bb-icon-ellipsis-v"></i>
 			</a>
 			<div class="bb_more_options_list bb_more_dropdown">

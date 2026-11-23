@@ -49,8 +49,8 @@ function bboss_admin_settings_register_search_feature() {
 	bboss_register_feature(
 		'search',
 		array(
-			'label'              => __( 'Network Search', 'buddyboss-platform' ),
-			'description'        => __( 'Allow members to search the entire site, and manage what media and post types can be found in the sites network search.', 'buddyboss-platform' ),
+			'label'              => __( 'Network Search', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'description'        => __( 'Allow members to search the entire site, and manage what media and post types can be found in the sites network search.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'icon'               => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-magnifying-glass',
@@ -87,7 +87,7 @@ function bboss_admin_settings_register_search_feature() {
 		'search',
 		'network_search',
 		array(
-			'title'      => __( 'Network Search', 'buddyboss-platform' ),
+			'title'      => __( 'Network Search', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'icon'       => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-list-magnifying-glass',
@@ -102,7 +102,7 @@ function bboss_admin_settings_register_search_feature() {
 		'search',
 		'pages_posts',
 		array(
-			'title' => __( 'Pages and Posts Search', 'buddyboss-platform' ),
+			'title' => __( 'Pages and Posts Search', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'icon'  => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-file-magnifying-glass',
@@ -116,7 +116,7 @@ function bboss_admin_settings_register_search_feature() {
 		'search',
 		'autocomplete',
 		array(
-			'title'    => __( 'Autocomplete Settings', 'buddyboss-platform' ),
+			'title'    => __( 'Autocomplete Settings', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'icon'     => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-spinner-gap',

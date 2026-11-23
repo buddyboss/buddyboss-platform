@@ -121,7 +121,7 @@ function bboss_bbp_new_reply_handler( $action = '' ) {
 
 	// Nonce check.
 	if ( ! bboss_bbp_verify_nonce_request( 'bbp-new-reply' ) ) {
-		bboss_bbp_add_error( 'bbp_new_reply_nonce', __( '<strong>ERROR</strong>: Are you sure you wanted to do that?', 'buddyboss-platform' ) );
+		bboss_bbp_add_error( 'bbp_new_reply_nonce', __( '<strong>ERROR</strong>: Are you sure you wanted to do that?', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 		return;
 	}
 
@@ -147,7 +147,7 @@ function bboss_bbp_new_reply_handler( $action = '' ) {
 
 		// User cannot create replies.
 		if ( ! current_user_can( 'publish_replies' ) ) {
-			bboss_bbp_add_error( 'bbp_reply_permissions', __( '<strong>ERROR</strong>: You do not have permission to reply.', 'buddyboss-platform' ) );
+			bboss_bbp_add_error( 'bbp_reply_permissions', __( '<strong>ERROR</strong>: You do not have permission to reply.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 		}
 
 		// Reply author is current user.
@@ -159,11 +159,11 @@ function bboss_bbp_new_reply_handler( $action = '' ) {
 
 	// Topic id was not passed.
 	if ( empty( $_POST['bbp_topic_id'] ) ) {
-		bboss_bbp_add_error( 'bbp_reply_topic_id', __( '<strong>ERROR</strong>: Discussion ID is missing.', 'buddyboss-platform' ) );
+		bboss_bbp_add_error( 'bbp_reply_topic_id', __( '<strong>ERROR</strong>: Discussion ID is missing.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 
 		// Topic id is not a number.
 	} elseif ( ! is_numeric( $_POST['bbp_topic_id'] ) ) {
-		bboss_bbp_add_error( 'bbp_reply_topic_id', __( '<strong>ERROR</strong>: Discussion ID must be a number.', 'buddyboss-platform' ) );
+		bboss_bbp_add_error( 'bbp_reply_topic_id', __( '<strong>ERROR</strong>: Discussion ID must be a number.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 
 		// Topic id might be valid.
 	} else {
@@ -173,11 +173,11 @@ function bboss_bbp_new_reply_handler( $action = '' ) {
 
 		// Topic id is a negative number.
 		if ( 0 > $posted_topic_id ) {
-			bboss_bbp_add_error( 'bbp_reply_topic_id', __( '<strong>ERROR</strong>: Discussion ID cannot be a negative number.', 'buddyboss-platform' ) );
+			bboss_bbp_add_error( 'bbp_reply_topic_id', __( '<strong>ERROR</strong>: Discussion ID cannot be a negative number.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 
 			// Topic does not exist.
 		} elseif ( ! bboss_bbp_get_topic( $posted_topic_id ) ) {
-			bboss_bbp_add_error( 'bbp_reply_topic_id', __( '<strong>ERROR</strong>: Discussion does not exist.', 'buddyboss-platform' ) );
+			bboss_bbp_add_error( 'bbp_reply_topic_id', __( '<strong>ERROR</strong>: Discussion does not exist.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 
 			// Use the POST'ed topic id.
 		} else {
@@ -196,11 +196,11 @@ function bboss_bbp_new_reply_handler( $action = '' ) {
 
 		// Empty Forum id was passed.
 		if ( empty( $_POST['bbp_forum_id'] ) ) {
-			bboss_bbp_add_error( 'bbp_reply_forum_id', __( '<strong>ERROR</strong>: Forum ID is missing.', 'buddyboss-platform' ) );
+			bboss_bbp_add_error( 'bbp_reply_forum_id', __( '<strong>ERROR</strong>: Forum ID is missing.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 
 			// Forum id is not a number.
 		} elseif ( ! is_numeric( $_POST['bbp_forum_id'] ) ) {
-			bboss_bbp_add_error( 'bbp_reply_forum_id', __( '<strong>ERROR</strong>: Forum ID must be a number.', 'buddyboss-platform' ) );
+			bboss_bbp_add_error( 'bbp_reply_forum_id', __( '<strong>ERROR</strong>: Forum ID must be a number.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 
 			// Forum id might be valid.
 		} else {
@@ -210,15 +210,15 @@ function bboss_bbp_new_reply_handler( $action = '' ) {
 
 			// Forum id is empty.
 			if ( 0 === $posted_forum_id ) {
-				bboss_bbp_add_error( 'bbp_topic_forum_id', __( '<strong>ERROR</strong>: Forum ID is missing.', 'buddyboss-platform' ) );
+				bboss_bbp_add_error( 'bbp_topic_forum_id', __( '<strong>ERROR</strong>: Forum ID is missing.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 
 				// Forum id is a negative number.
 			} elseif ( 0 > $posted_forum_id ) {
-				bboss_bbp_add_error( 'bbp_topic_forum_id', __( '<strong>ERROR</strong>: Forum ID cannot be a negative number.', 'buddyboss-platform' ) );
+				bboss_bbp_add_error( 'bbp_topic_forum_id', __( '<strong>ERROR</strong>: Forum ID cannot be a negative number.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 
 				// Forum does not exist.
 			} elseif ( ! bboss_bbp_get_forum( $posted_forum_id ) ) {
-				bboss_bbp_add_error( 'bbp_topic_forum_id', __( '<strong>ERROR</strong>: Forum does not exist.', 'buddyboss-platform' ) );
+				bboss_bbp_add_error( 'bbp_topic_forum_id', __( '<strong>ERROR</strong>: Forum does not exist.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 
 				// Use the POST'ed forum id.
 			} else {
@@ -232,20 +232,20 @@ function bboss_bbp_new_reply_handler( $action = '' ) {
 
 		// Forum is a category.
 		if ( bboss_bbp_is_forum_category( $forum_id ) ) {
-			bboss_bbp_add_error( 'bbp_new_reply_forum_category', __( '<strong>ERROR</strong>: This forum is a category. No replies can be created in this forum.', 'buddyboss-platform' ) );
+			bboss_bbp_add_error( 'bbp_new_reply_forum_category', __( '<strong>ERROR</strong>: This forum is a category. No replies can be created in this forum.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 
 			// Forum is not a category.
 		} else {
 
 			// Forum is closed and user cannot access.
 			if ( bboss_bbp_is_forum_closed( $forum_id ) && ! current_user_can( 'edit_forum', $forum_id ) ) {
-				bboss_bbp_add_error( 'bbp_new_reply_forum_closed', __( '<strong>ERROR</strong>: This forum has been closed to new replies.', 'buddyboss-platform' ) );
+				bboss_bbp_add_error( 'bbp_new_reply_forum_closed', __( '<strong>ERROR</strong>: This forum has been closed to new replies.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 			}
 
 			// Forum is private and user cannot access.
 			if ( bboss_bbp_is_forum_private( $forum_id ) ) {
 				if ( ! current_user_can( 'read_private_forums' ) ) {
-					bboss_bbp_add_error( 'bbp_new_reply_forum_private', __( '<strong>ERROR</strong>: This forum is private and you do not have the capability to read or create new replies in it.', 'buddyboss-platform' ) );
+					bboss_bbp_add_error( 'bbp_new_reply_forum_private', __( '<strong>ERROR</strong>: This forum is private and you do not have the capability to read or create new replies in it.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 				}
 
 				// Forum is hidden and user cannot access.
@@ -254,7 +254,7 @@ function bboss_bbp_new_reply_handler( $action = '' ) {
 				add_filter( 'bbp_map_meta_caps', 'bboss_map_group_forum_reply_meta_caps', 10, 4 );
 
 				if ( ! current_user_can( 'read_hidden_forums' ) ) {
-					bboss_bbp_add_error( 'bbp_new_reply_forum_hidden', __( '<strong>ERROR</strong>: This forum is hidden and you do not have the capability to read or create new replies in it.', 'buddyboss-platform' ) );
+					bboss_bbp_add_error( 'bbp_new_reply_forum_hidden', __( '<strong>ERROR</strong>: This forum is hidden and you do not have the capability to read or create new replies in it.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 				}
 
 				remove_filter( 'bbp_map_meta_caps', 'bboss_map_group_forum_reply_meta_caps', 10, 4 );
@@ -299,7 +299,7 @@ function bboss_bbp_new_reply_handler( $action = '' ) {
 		 && empty( $_POST['bbp_document'] )
 		 && ( false === bboss_bbp_use_autoembed() || ( false !== bboss_bbp_use_autoembed() && empty( $link_preview_post_data['link_url'] ) ) )
 	) {
-		bboss_bbp_add_error( 'bbp_reply_content', __( '<strong>ERROR</strong>: Your reply cannot be empty.', 'buddyboss-platform' ) );
+		bboss_bbp_add_error( 'bbp_reply_content', __( '<strong>ERROR</strong>: Your reply cannot be empty.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 	}
 
 	if ( empty( $forum_id ) ) {
@@ -309,35 +309,35 @@ function bboss_bbp_new_reply_handler( $action = '' ) {
 	if ( ! empty( $_POST['bbp_media'] ) ) {
 		$can_send_media = bboss_user_has_access_upload_media( 0, bboss_loggedin_user_id(), $forum_id, 0, 'forum' );
 		if ( ! $can_send_media ) {
-			bboss_bbp_add_error( 'bbp_topic_media', __( '<strong>ERROR</strong>: You don\'t have access to send the media.', 'buddyboss-platform' ) );
+			bboss_bbp_add_error( 'bbp_topic_media', __( '<strong>ERROR</strong>: You don\'t have access to send the media.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 		}
 	}
 
 	if ( ! empty( $_POST['bbp_document'] ) ) {
 		$can_send_document = bboss_user_has_access_upload_document( 0, bboss_loggedin_user_id(), $forum_id, 0, 'forum' );
 		if ( ! $can_send_document ) {
-			bboss_bbp_add_error( 'bbp_topic_document', __( '<strong>ERROR</strong>: You don\'t have access to send the document.', 'buddyboss-platform' ) );
+			bboss_bbp_add_error( 'bbp_topic_document', __( '<strong>ERROR</strong>: You don\'t have access to send the document.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 		}
 	}
 
 	if ( ! empty( $_POST['bbp_video'] ) ) {
 		$can_send_video = bboss_user_has_access_upload_video( 0, bboss_loggedin_user_id(), $forum_id, 0, 'forum' );
 		if ( ! $can_send_video ) {
-			bboss_bbp_add_error( 'bbp_topic_video', __( '<strong>ERROR</strong>: You don\'t have access to send the video.', 'buddyboss-platform' ) );
+			bboss_bbp_add_error( 'bbp_topic_video', __( '<strong>ERROR</strong>: You don\'t have access to send the video.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 		}
 	}
 
 	if ( ! empty( $_POST['bbp_media_gif'] ) ) {
 		$can_send_gif = bboss_user_has_access_upload_gif( 0, bboss_loggedin_user_id(), $forum_id, 0, 'forum' );
 		if ( ! $can_send_gif ) {
-			bboss_bbp_add_error( 'bbp_topic_gif', __( '<strong>ERROR</strong>: You don\'t have access to send the gif.', 'buddyboss-platform' ) );
+			bboss_bbp_add_error( 'bbp_topic_gif', __( '<strong>ERROR</strong>: You don\'t have access to send the gif.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 		}
 	}
 
 	/** Reply Flooding */
 
 	if ( ! bboss_bbp_check_for_flood( $anonymous_data, $reply_author ) ) {
-		bboss_bbp_add_error( 'bbp_reply_flood', __( '<strong>ERROR</strong>: Slow down; you move too fast.', 'buddyboss-platform' ) );
+		bboss_bbp_add_error( 'bbp_reply_flood', __( '<strong>ERROR</strong>: Slow down; you move too fast.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 	}
 
 	/** Reply Duplicate */
@@ -351,13 +351,13 @@ function bboss_bbp_new_reply_handler( $action = '' ) {
 			'anonymous_data' => $anonymous_data,
 		)
 	) ) {
-		bboss_bbp_add_error( 'bbp_reply_duplicate', __( '<strong>ERROR</strong>: Duplicate reply detected; it looks as though you\'ve already said that!', 'buddyboss-platform' ) );
+		bboss_bbp_add_error( 'bbp_reply_duplicate', __( '<strong>ERROR</strong>: Duplicate reply detected; it looks as though you\'ve already said that!', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 	}
 
 	/** Reply Blacklist */
 
 	if ( ! bboss_bbp_check_for_blacklist( $anonymous_data, $reply_author, $reply_title, $reply_content ) ) {
-		bboss_bbp_add_error( 'bbp_reply_blacklist', __( '<strong>ERROR</strong>: Your reply cannot be created at this time.', 'buddyboss-platform' ) );
+		bboss_bbp_add_error( 'bbp_reply_blacklist', __( '<strong>ERROR</strong>: Your reply cannot be created at this time.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 	}
 
 	/** Reply Status */
@@ -382,7 +382,7 @@ function bboss_bbp_new_reply_handler( $action = '' ) {
 
 	// If topic is closed, moderators can still reply.
 	if ( bboss_bbp_is_topic_closed( $topic_id ) && ! current_user_can( 'moderate' ) ) {
-		bboss_bbp_add_error( 'bbp_reply_topic_closed', __( '<strong>ERROR</strong>: Discussion is closed.', 'buddyboss-platform' ) );
+		bboss_bbp_add_error( 'bbp_reply_topic_closed', __( '<strong>ERROR</strong>: Discussion is closed.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 	}
 
 	/** Topic Tags */
@@ -450,7 +450,7 @@ function bboss_bbp_new_reply_handler( $action = '' ) {
 
 		// Term error.
 		if ( is_wp_error( $terms ) ) {
-			bboss_bbp_add_error( 'bbp_reply_tags', __( '<strong>ERROR</strong>: There was a problem adding the tags to the topic.', 'buddyboss-platform' ) );
+			bboss_bbp_add_error( 'bbp_reply_tags', __( '<strong>ERROR</strong>: There was a problem adding the tags to the topic.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 		}
 
 		/** Trash Check */
@@ -541,11 +541,11 @@ function bboss_bbp_new_reply_handler( $action = '' ) {
 		// WP_Error.
 	} elseif ( is_wp_error( $reply_id ) && $reply_id->get_error_message() ) {
 		/* translators: %s: error message. */
-		bboss_bbp_add_error( 'bbp_reply_error', sprintf( __( '<strong>Error</strong>: The following problem(s) occurred: %s', 'buddyboss-platform' ), $reply_id->get_error_message() ) );
+		bboss_bbp_add_error( 'bbp_reply_error', sprintf( __( '<strong>Error</strong>: The following problem(s) occurred: %s', 'buddyboss-community-social-network-groups-forums-messaging' ), $reply_id->get_error_message() ) );
 
 		// Generic error.
 	} else {
-		bboss_bbp_add_error( 'bbp_reply_error', __( '<strong>Error</strong>: The reply was not created.', 'buddyboss-platform' ) );
+		bboss_bbp_add_error( 'bbp_reply_error', __( '<strong>Error</strong>: The reply was not created.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 	}
 
 }
@@ -599,7 +599,7 @@ function bboss_bbp_edit_reply_handler( $action = '' ) {
 
 	// Reply id was not passed.
 	if ( empty( $_POST['bbp_reply_id'] ) ) {
-		bboss_bbp_add_error( 'bbp_edit_reply_id', __( '<strong>ERROR</strong>: Reply ID not found.', 'buddyboss-platform' ) );
+		bboss_bbp_add_error( 'bbp_edit_reply_id', __( '<strong>ERROR</strong>: Reply ID not found.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 		return;
 
 		// Reply id was passed.
@@ -610,13 +610,13 @@ function bboss_bbp_edit_reply_handler( $action = '' ) {
 
 	// Nonce check.
 	if ( ! bboss_bbp_verify_nonce_request( 'bbp-edit-reply_' . $reply_id ) ) {
-		bboss_bbp_add_error( 'bbp_edit_reply_nonce', __( '<strong>ERROR</strong>: Are you sure you wanted to do that?', 'buddyboss-platform' ) );
+		bboss_bbp_add_error( 'bbp_edit_reply_nonce', __( '<strong>ERROR</strong>: Are you sure you wanted to do that?', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 		return;
 	}
 
 	// Reply does not exist.
 	if ( empty( $reply ) ) {
-		bboss_bbp_add_error( 'bbp_edit_reply_not_found', __( '<strong>ERROR</strong>: The reply you want to edit was not found.', 'buddyboss-platform' ) );
+		bboss_bbp_add_error( 'bbp_edit_reply_not_found', __( '<strong>ERROR</strong>: The reply you want to edit was not found.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 		return;
 
 		// Reply exists.
@@ -627,7 +627,7 @@ function bboss_bbp_edit_reply_handler( $action = '' ) {
 
 			// User cannot edit this reply.
 			if ( ! current_user_can( 'edit_reply', $reply_id ) ) {
-				bboss_bbp_add_error( 'bbp_edit_reply_permissions', __( '<strong>ERROR</strong>: You do not have permission to edit that reply.', 'buddyboss-platform' ) );
+				bboss_bbp_add_error( 'bbp_edit_reply_permissions', __( '<strong>ERROR</strong>: You do not have permission to edit that reply.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 				return;
 			}
 
@@ -662,26 +662,26 @@ function bboss_bbp_edit_reply_handler( $action = '' ) {
 
 		// Forum is a category.
 		if ( bboss_bbp_is_forum_category( $forum_id ) ) {
-			bboss_bbp_add_error( 'bbp_edit_reply_forum_category', __( '<strong>ERROR</strong>: This forum is a category. No replies can be created in this forum.', 'buddyboss-platform' ) );
+			bboss_bbp_add_error( 'bbp_edit_reply_forum_category', __( '<strong>ERROR</strong>: This forum is a category. No replies can be created in this forum.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 
 			// Forum is not a category.
 		} else {
 
 			// Forum is closed and user cannot access.
 			if ( bboss_bbp_is_forum_closed( $forum_id ) && ! current_user_can( 'edit_forum', $forum_id ) ) {
-				bboss_bbp_add_error( 'bbp_edit_reply_forum_closed', __( '<strong>ERROR</strong>: This forum has been closed to new replies.', 'buddyboss-platform' ) );
+				bboss_bbp_add_error( 'bbp_edit_reply_forum_closed', __( '<strong>ERROR</strong>: This forum has been closed to new replies.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 			}
 
 			// Forum is private and user cannot access.
 			if ( bboss_bbp_is_forum_private( $forum_id ) ) {
 				if ( ! current_user_can( 'read_private_forums' ) ) {
-					bboss_bbp_add_error( 'bbp_edit_reply_forum_private', __( '<strong>ERROR</strong>: This forum is private and you do not have the capability to read or create new replies in it.', 'buddyboss-platform' ) );
+					bboss_bbp_add_error( 'bbp_edit_reply_forum_private', __( '<strong>ERROR</strong>: This forum is private and you do not have the capability to read or create new replies in it.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 				}
 
 				// Forum is hidden and user cannot access.
 			} elseif ( bboss_bbp_is_forum_hidden( $forum_id ) ) {
 				if ( ! current_user_can( 'read_hidden_forums' ) ) {
-					bboss_bbp_add_error( 'bbp_edit_reply_forum_hidden', __( '<strong>ERROR</strong>: This forum is hidden and you do not have the capability to read or create new replies in it.', 'buddyboss-platform' ) );
+					bboss_bbp_add_error( 'bbp_edit_reply_forum_hidden', __( '<strong>ERROR</strong>: This forum is hidden and you do not have the capability to read or create new replies in it.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 				}
 			}
 		}
@@ -716,18 +716,18 @@ function bboss_bbp_edit_reply_handler( $action = '' ) {
 		&& empty( $_POST['bbp_document'] )
 		&& ( false === bboss_bbp_use_autoembed() || ( false !== bboss_bbp_use_autoembed() && empty( $link_preview_post_data['link_url'] ) ) )
 	) {
-		bboss_bbp_add_error( 'bbp_edit_reply_content', __( '<strong>ERROR</strong>: Your reply cannot be empty.', 'buddyboss-platform' ) );
+		bboss_bbp_add_error( 'bbp_edit_reply_content', __( '<strong>ERROR</strong>: Your reply cannot be empty.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 	}
 
 	/** Reply Blacklist */
 
 	if ( ! bboss_bbp_check_for_blacklist( $anonymous_data, $reply_author, $reply_title, $reply_content ) ) {
-		bboss_bbp_add_error( 'bbp_reply_blacklist', __( '<strong>ERROR</strong>: Your reply cannot be edited at this time.', 'buddyboss-platform' ) );
+		bboss_bbp_add_error( 'bbp_reply_blacklist', __( '<strong>ERROR</strong>: Your reply cannot be edited at this time.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 	}
 
 	// Reply past edit lock checking.
 	if ( ! current_user_can( 'edit_others_replies' ) && bboss_bbp_past_edit_lock( $reply->post_date_gmt ) ) {
-		bboss_bbp_add_error( 'bbp_reply_edit_lock', __( '<strong>ERROR</strong>: Your reply cannot be edited now.', 'buddyboss-platform' ) );
+		bboss_bbp_add_error( 'bbp_reply_edit_lock', __( '<strong>ERROR</strong>: Your reply cannot be edited now.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 	}
 
 	/** Reply Status */
@@ -823,7 +823,7 @@ function bboss_bbp_edit_reply_handler( $action = '' ) {
 
 	// Term error.
 	if ( is_wp_error( $terms ) ) {
-		bboss_bbp_add_error( 'bbp_reply_tags', __( '<strong>ERROR</strong>: There was a problem adding the tags to the topic.', 'buddyboss-platform' ) );
+		bboss_bbp_add_error( 'bbp_reply_tags', __( '<strong>ERROR</strong>: There was a problem adding the tags to the topic.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 	}
 
 	/** Revisions */
@@ -879,7 +879,7 @@ function bboss_bbp_edit_reply_handler( $action = '' ) {
 
 	} else {
 		$append_error = ( is_wp_error( $reply_id ) && $reply_id->get_error_message() ) ? $reply_id->get_error_message() . ' ' : '';
-		bboss_bbp_add_error( 'bbp_reply_error', sprintf( /* translators: %s: additional error details (may be empty). */ __( '<strong>ERROR</strong>: The following problem(s) have been found with your reply:%sPlease try again.', 'buddyboss-platform' ), $append_error ) );
+		bboss_bbp_add_error( 'bbp_reply_error', sprintf( /* translators: %s: additional error details (may be empty). */ __( '<strong>ERROR</strong>: The following problem(s) have been found with your reply:%sPlease try again.', 'buddyboss-community-social-network-groups-forums-messaging' ), $append_error ) );
 	}
 }
 
@@ -1377,7 +1377,7 @@ function bboss_bbp_move_reply_handler( $action = '' ) {
 	/** Move Reply */
 
 	if ( empty( $_POST['bbp_reply_id'] ) ) {
-		bboss_bbp_add_error( 'bbp_move_reply_reply_id', __( '<strong>ERROR</strong>: Reply ID to move not found!', 'buddyboss-platform' ) );
+		bboss_bbp_add_error( 'bbp_move_reply_reply_id', __( '<strong>ERROR</strong>: Reply ID to move not found!', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 	} else {
 		$move_reply_id = (int) $_POST['bbp_reply_id'];
 	}
@@ -1386,7 +1386,7 @@ function bboss_bbp_move_reply_handler( $action = '' ) {
 
 	// Reply exists.
 	if ( empty( $move_reply ) ) {
-		bboss_bbp_add_error( 'bbp_mover_reply_r_not_found', __( '<strong>ERROR</strong>: The reply you want to move was not found.', 'buddyboss-platform' ) );
+		bboss_bbp_add_error( 'bbp_mover_reply_r_not_found', __( '<strong>ERROR</strong>: The reply you want to move was not found.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 	}
 
 	/** Topic to Move From */
@@ -1396,18 +1396,18 @@ function bboss_bbp_move_reply_handler( $action = '' ) {
 
 	// No topic.
 	if ( empty( $source_topic ) ) {
-		bboss_bbp_add_error( 'bbp_move_reply_source_not_found', __( '<strong>ERROR</strong>: The discussion you want to move from was not found.', 'buddyboss-platform' ) );
+		bboss_bbp_add_error( 'bbp_move_reply_source_not_found', __( '<strong>ERROR</strong>: The discussion you want to move from was not found.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 	}
 
 	// Nonce check failed.
 	if ( ! bboss_bbp_verify_nonce_request( 'bbp-move-reply_' . $move_reply->ID ) ) {
-		bboss_bbp_add_error( 'bbp_move_reply_nonce', __( '<strong>ERROR</strong>: Are you sure you wanted to do that?', 'buddyboss-platform' ) );
+		bboss_bbp_add_error( 'bbp_move_reply_nonce', __( '<strong>ERROR</strong>: Are you sure you wanted to do that?', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 		return;
 	}
 
 	// Use cannot edit topic.
 	if ( ! current_user_can( 'edit_topic', $source_topic->ID ) ) {
-		bboss_bbp_add_error( 'bbp_move_reply_source_permission', __( '<strong>ERROR</strong>: You do not have the permissions to edit the source discussion.', 'buddyboss-platform' ) );
+		bboss_bbp_add_error( 'bbp_move_reply_source_permission', __( '<strong>ERROR</strong>: You do not have the permissions to edit the source discussion.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 	}
 
 	// How to move.
@@ -1417,7 +1417,7 @@ function bboss_bbp_move_reply_handler( $action = '' ) {
 
 	// Invalid move option.
 	if ( empty( $move_option ) || ! in_array( $move_option, array( 'existing', 'topic' ) ) ) {
-		bboss_bbp_add_error( 'bbp_move_reply_option', __( '<strong>ERROR</strong>: You need to choose a valid move option.', 'buddyboss-platform' ) );
+		bboss_bbp_add_error( 'bbp_move_reply_option', __( '<strong>ERROR</strong>: You need to choose a valid move option.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 
 		// Valid move option.
 	} else {
@@ -1429,7 +1429,7 @@ function bboss_bbp_move_reply_handler( $action = '' ) {
 			case 'existing':
 				// Get destination topic id.
 				if ( empty( $_POST['bbp_destination_topic'] ) ) {
-					bboss_bbp_add_error( 'bbp_move_reply_destination_id', __( '<strong>ERROR</strong>: Destination discussion ID not found!', 'buddyboss-platform' ) );
+					bboss_bbp_add_error( 'bbp_move_reply_destination_id', __( '<strong>ERROR</strong>: Destination discussion ID not found!', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 				} else {
 					$destination_topic_id = (int) $_POST['bbp_destination_topic'];
 				}
@@ -1439,12 +1439,12 @@ function bboss_bbp_move_reply_handler( $action = '' ) {
 
 				// No destination topic.
 				if ( empty( $destination_topic ) ) {
-					bboss_bbp_add_error( 'bbp_move_reply_destination_not_found', __( '<strong>ERROR</strong>: The discussion you want to move to was not found!', 'buddyboss-platform' ) );
+					bboss_bbp_add_error( 'bbp_move_reply_destination_not_found', __( '<strong>ERROR</strong>: The discussion you want to move to was not found!', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 				}
 
 				// User cannot edit the destination topic.
 				if ( ! current_user_can( 'edit_topic', $destination_topic->ID ) ) {
-					bboss_bbp_add_error( 'bbp_move_reply_destination_permission', __( '<strong>ERROR</strong>: You do not have the permissions to edit the destination discussion!', 'buddyboss-platform' ) );
+					bboss_bbp_add_error( 'bbp_move_reply_destination_permission', __( '<strong>ERROR</strong>: You do not have the permissions to edit the destination discussion!', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 				}
 
 				// Bump the reply position.
@@ -1455,7 +1455,7 @@ function bboss_bbp_move_reply_handler( $action = '' ) {
 					array(
 						'ID'          => $move_reply->ID,
 						/* translators: %s: destination topic title. */
-						'post_title'  => sprintf( __( 'Reply To: %s', 'buddyboss-platform' ), $destination_topic->post_title ),
+						'post_title'  => sprintf( __( 'Reply To: %s', 'buddyboss-community-social-network-groups-forums-messaging' ), $destination_topic->post_title ),
 						'post_name'   => false, // will be automatically generated
 						'post_parent' => $destination_topic->ID,
 						'menu_order'  => $reply_position,
@@ -1502,12 +1502,12 @@ function bboss_bbp_move_reply_handler( $action = '' ) {
 
 					// Shouldn't happen.
 					if ( false === $destination_topic_id || is_wp_error( $destination_topic_id ) || empty( $destination_topic ) ) {
-						bboss_bbp_add_error( 'bbp_move_reply_destination_reply', __( '<strong>ERROR</strong>: There was a problem converting the reply into the discussion. Please try again.', 'buddyboss-platform' ) );
+						bboss_bbp_add_error( 'bbp_move_reply_destination_reply', __( '<strong>ERROR</strong>: There was a problem converting the reply into the discussion. Please try again.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 					}
 
 					// User cannot publish posts.
 				} else {
-					bboss_bbp_add_error( 'bbp_move_reply_destination_permission', __( '<strong>ERROR</strong>: You do not have the permissions to create new discussions. The reply could not be converted into a discussion.', 'buddyboss-platform' ) );
+					bboss_bbp_add_error( 'bbp_move_reply_destination_permission', __( '<strong>ERROR</strong>: You do not have the permissions to create new discussions. The reply could not be converted into a discussion.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 				}
 
 				break;
@@ -1702,12 +1702,12 @@ function bboss_bbp_toggle_reply_handler( $action = '' ) {
 			$args         = array( 'author_id' => $author_id, 'forum_id' => $forum_id );
 			$allow_delete = bboss_moderator_can_delete_topic_reply( $reply, $args );
 			if ( ! $allow_delete ) {
-				bboss_bbp_add_error( 'bbp_toggle_reply_permission', __( '<strong>ERROR:</strong> You do not have the permission to do that!', 'buddyboss-platform' ) );
+				bboss_bbp_add_error( 'bbp_toggle_reply_permission', __( '<strong>ERROR:</strong> You do not have the permission to do that!', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 
 				return;
 			}
 		} else {
-			bboss_bbp_add_error( 'bbp_toggle_reply_permission', __( '<strong>ERROR:</strong> You do not have the permission to do that!', 'buddyboss-platform' ) );
+			bboss_bbp_add_error( 'bbp_toggle_reply_permission', __( '<strong>ERROR:</strong> You do not have the permission to do that!', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 
 			return;
 		}
@@ -1722,7 +1722,7 @@ function bboss_bbp_toggle_reply_handler( $action = '' ) {
 
 			$is_spam  = bboss_bbp_is_reply_spam( $reply_id );
 			$success  = $is_spam ? bboss_bbp_unspam_reply( $reply_id ) : bboss_bbp_spam_reply( $reply_id );
-			$failure  = $is_spam ? __( '<strong>ERROR</strong>: There was a problem unmarking the reply as spam!', 'buddyboss-platform' ) : __( '<strong>ERROR</strong>: There was a problem marking the reply as spam!', 'buddyboss-platform' );
+			$failure  = $is_spam ? __( '<strong>ERROR</strong>: There was a problem unmarking the reply as spam!', 'buddyboss-community-social-network-groups-forums-messaging' ) : __( '<strong>ERROR</strong>: There was a problem marking the reply as spam!', 'buddyboss-community-social-network-groups-forums-messaging' );
 			$view_all = ! $is_spam;
 
 			break;
@@ -1741,7 +1741,7 @@ function bboss_bbp_toggle_reply_handler( $action = '' ) {
 
 					$view_all = true;
 					$success  = wp_trash_post( $reply_id );
-					$failure  = __( '<strong>ERROR</strong>: There was a problem trashing the reply!', 'buddyboss-platform' );
+					$failure  = __( '<strong>ERROR</strong>: There was a problem trashing the reply!', 'buddyboss-community-social-network-groups-forums-messaging' );
 
 					break;
 
@@ -1749,7 +1749,7 @@ function bboss_bbp_toggle_reply_handler( $action = '' ) {
 					check_ajax_referer( 'untrash-' . bboss_bbp_get_reply_post_type() . '_' . $reply_id );
 
 					$success = wp_untrash_post( $reply_id );
-					$failure = __( '<strong>ERROR</strong>: There was a problem untrashing the reply!', 'buddyboss-platform' );
+					$failure = __( '<strong>ERROR</strong>: There was a problem untrashing the reply!', 'buddyboss-community-social-network-groups-forums-messaging' );
 
 					break;
 
@@ -1757,7 +1757,7 @@ function bboss_bbp_toggle_reply_handler( $action = '' ) {
 					check_ajax_referer( 'delete-' . bboss_bbp_get_reply_post_type() . '_' . $reply_id );
 
 					$success = wp_delete_post( $reply_id );
-					$failure = __( '<strong>ERROR</strong>: There was a problem deleting the reply!', 'buddyboss-platform' );
+					$failure = __( '<strong>ERROR</strong>: There was a problem deleting the reply!', 'buddyboss-community-social-network-groups-forums-messaging' );
 
 					break;
 			}
@@ -2316,9 +2316,9 @@ function bboss_bbp_display_replies_feed_rss2( $replies_query = array() ) {
 	if ( bboss_bbp_is_single_topic() && bboss_bbp_user_can_view_forum( array( 'forum_id' => bboss_bbp_get_topic_forum_id() ) ) ) {
 		$title = apply_filters( 'wp_title_rss', get_wp_title_rss() );
 	} elseif ( ! bboss_bbp_show_lead_topic() ) {
-		$title = ' &#187; ' . __( 'All Posts', 'buddyboss-platform' );
+		$title = ' &#187; ' . __( 'All Posts', 'buddyboss-community-social-network-groups-forums-messaging' );
 	} else {
-		$title = ' &#187; ' . __( 'All Replies', 'buddyboss-platform' );
+		$title = ' &#187; ' . __( 'All Replies', 'buddyboss-community-social-network-groups-forums-messaging' );
 	}
 
 	// Display the feed
@@ -2364,7 +2364,7 @@ function bboss_bbp_display_replies_feed_rss2( $replies_query = array() ) {
 
 						<description>
 							<![CDATA[
-							<p><?php /* translators: %s: number of replies. */ printf( esc_html__( 'Replies: %s', 'buddyboss-platform' ), esc_html( bboss_bbp_get_topic_reply_count() ) ); ?></p>
+							<p><?php /* translators: %s: number of replies. */ printf( esc_html__( 'Replies: %s', 'buddyboss-community-social-network-groups-forums-messaging' ), esc_html( bboss_bbp_get_topic_reply_count() ) ); ?></p>
 							<?php bboss_bbp_topic_content(); ?>
 							]]>
 						</description>
@@ -2654,7 +2654,7 @@ function bboss_bbp_validate_reply_to( $reply_to = 0, $reply_id = 0 ) {
  * @since BuddyBoss 1.0.0
  */
 function bboss_bbp_adjust_forum_role_labels( $author_role, $args ) {
-	$display_role = __( 'Member', 'buddyboss-platform' );
+	$display_role = __( 'Member', 'buddyboss-community-social-network-groups-forums-messaging' );
 	$reply_id     = bboss_bbp_get_reply_id( $args['reply_id'] );
 	$author_id    = bboss_bbp_get_reply_author_id( $reply_id );
 
@@ -2675,20 +2675,20 @@ function bboss_bbp_adjust_forum_role_labels( $author_role, $args ) {
 		}
 	} else {
 		if ( ! $author_id ) {
-			$display_role = __( 'Guest', 'buddyboss-platform' );
+			$display_role = __( 'Guest', 'buddyboss-community-social-network-groups-forums-messaging' );
 		} else {
 
 			if ( empty( get_userdata( $author_id ) ) ) {
-				$display_role = __( 'Deleted User', 'buddyboss-platform' );
+				$display_role = __( 'Deleted User', 'buddyboss-community-social-network-groups-forums-messaging' );
 			} else {
 				$user_roles = array_values( get_userdata( $author_id )->roles );
 
 				if ( array_intersect( $user_roles, array( bboss_bbp_get_keymaster_role(), 'administrator' ) ) ) {
-					$display_role = __( 'Administrator', 'buddyboss-platform' );
+					$display_role = __( 'Administrator', 'buddyboss-community-social-network-groups-forums-messaging' );
 				}
 
 				if ( array_intersect( $user_roles, array( bboss_bbp_get_moderator_role(), 'editor' ) ) ) {
-					$display_role = __( 'Moderator', 'buddyboss-platform' );
+					$display_role = __( 'Moderator', 'buddyboss-community-social-network-groups-forums-messaging' );
 				}
 			}
 		}

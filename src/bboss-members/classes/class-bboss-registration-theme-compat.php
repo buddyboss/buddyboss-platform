@@ -100,19 +100,19 @@ class BBoss_Registration_Theme_Compat {
 		// Registration page.
 		if ( bboss_is_register_page() ) {
 			$actual_page_id = bboss_core_get_directory_page_id( 'register' );
-			$title = __( 'Create an Account', 'buddyboss-platform' );
+			$title = __( 'Create an Account', 'buddyboss-community-social-network-groups-forums-messaging' );
 
 			if ( 'completed-confirmation' == bboss_get_current_signup_step() ) {
-				$title = __( 'We\'re almost there!', 'buddyboss-platform' );
+				$title = __( 'We\'re almost there!', 'buddyboss-community-social-network-groups-forums-messaging' );
 			}
 
 			// Activation page.
 		} else {
 			$actual_page_id = bboss_core_get_directory_page_id( 'activate' );
-			$title = __( 'Activate Your Account', 'buddyboss-platform' );
+			$title = __( 'Activate Your Account', 'buddyboss-community-social-network-groups-forums-messaging' );
 
 			if ( bboss_account_was_activated() ) {
-				$title = __( 'Account Activated', 'buddyboss-platform' );
+				$title = __( 'Account Activated', 'buddyboss-community-social-network-groups-forums-messaging' );
 			}
 		}
 

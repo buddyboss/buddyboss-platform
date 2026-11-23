@@ -13,12 +13,12 @@ defined( 'ABSPATH' ) || exit;
 
 ?>
 <script type="text/html" id="tmpl-editor-toolbar">
-		<div class="post-elements-buttons-item show-toolbar" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Show formatting', 'buddyboss-platform' ); ?>" data-bp-tooltip-hide="<?php esc_html_e( 'Hide formatting', 'buddyboss-platform' ); ?>" data-bp-tooltip-show="<?php esc_attr_e( 'Show formatting', 'buddyboss-platform' ); ?>">
-			<a href="#" id="show-toolbar-button" class="toolbar-button bp-tooltip" aria-label="<?php esc_attr_e( 'Show formatting', 'buddyboss-platform' ); ?>">
+		<div class="post-elements-buttons-item show-toolbar" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Show formatting', 'buddyboss-community-social-network-groups-forums-messaging' ); ?>" data-bp-tooltip-hide="<?php esc_html_e( 'Hide formatting', 'buddyboss-community-social-network-groups-forums-messaging' ); ?>" data-bp-tooltip-show="<?php esc_attr_e( 'Show formatting', 'buddyboss-community-social-network-groups-forums-messaging' ); ?>">
+			<a href="#" id="show-toolbar-button" class="toolbar-button bp-tooltip" aria-label="<?php esc_attr_e( 'Show formatting', 'buddyboss-community-social-network-groups-forums-messaging' ); ?>">
 				<span class="bb-icon-l bb-icon-font"></span>
 			</a>
 		</div>
-	<div class="post-elements-buttons-item post-mention bp-tooltip" data-bp-tooltip-pos="up-right" data-bp-tooltip="<?php esc_attr_e( 'Mention someone', 'buddyboss-platform' ); ?>">
+	<div class="post-elements-buttons-item post-mention bp-tooltip" data-bp-tooltip-pos="up-right" data-bp-tooltip="<?php esc_attr_e( 'Mention someone', 'buddyboss-community-social-network-groups-forums-messaging' ); ?>">
 		<span class="toolbar-button">
 			<i class="bb-icon-l bb-icon-at"></i>
 		</span>
@@ -45,6 +45,6 @@ defined( 'ABSPATH' ) || exit;
 		)
 	) :
 		?>
-		<div class="post-elements-buttons-item post-emoji bp-tooltip" data-bp-tooltip-pos="up-right" data-bp-tooltip="<?php esc_attr_e( 'Emoji', 'buddyboss-platform' ); ?>"></div>
+		<div class="post-elements-buttons-item post-emoji bp-tooltip" data-bp-tooltip-pos="up-right" data-bp-tooltip="<?php esc_attr_e( 'Emoji', 'buddyboss-community-social-network-groups-forums-messaging' ); ?>"></div>
 	<?php endif; ?>
 </script>

@@ -83,7 +83,7 @@ export function StatusCheckField( { field, values, disabled } ) {
 					} else {
 						setResult( {
 							status: 'warning',
-							message: ( data.data && data.data.message ) || __( 'Unable to perform check.', 'buddyboss-platform' ),
+							message: ( data.data && data.data.message ) || __( 'Unable to perform check.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 						} );
 					}
 				} )
@@ -95,7 +95,7 @@ export function StatusCheckField( { field, values, disabled } ) {
 					setIsChecking( false );
 					setResult( {
 						status: 'warning',
-						message: __( 'An error occurred while checking.', 'buddyboss-platform' ),
+						message: __( 'An error occurred while checking.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					} );
 				} );
 		};
@@ -150,7 +150,7 @@ export function StatusCheckField( { field, values, disabled } ) {
 			{ isChecking && (
 				<div className="bb-admin-status-check__loading">
 					<span className="bb-admin-status-check__spinner" />
-					<span>{ __( 'Checking...', 'buddyboss-platform' ) }</span>
+					<span>{ __( 'Checking...', 'buddyboss-community-social-network-groups-forums-messaging' ) }</span>
 				</div>
 			) }
 

@@ -520,19 +520,19 @@ function bboss_core_install_default_profiles_fields() {
 
 	// These values should only be updated if they are not already present.
 	if ( ! bboss_get_option( 'bp-xprofile-base-group-name' ) ) {
-		bboss_update_option( 'bp-xprofile-base-group-name', __( 'General', 'buddyboss-platform' ) );
+		bboss_update_option( 'bp-xprofile-base-group-name', __( 'General', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 	}
 
 	if ( ! bboss_get_option( 'bp-xprofile-firstname-field-name' ) ) {
-		bboss_update_option( 'bp-xprofile-firstname-field-name', __( 'First Name', 'buddyboss-platform' ) );
+		bboss_update_option( 'bp-xprofile-firstname-field-name', __( 'First Name', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 	}
 
 	if ( ! bboss_get_option( 'bp-xprofile-lastname-field-name' ) ) {
-		bboss_update_option( 'bp-xprofile-lastname-field-name', __( 'Last Name', 'buddyboss-platform' ) );
+		bboss_update_option( 'bp-xprofile-lastname-field-name', __( 'Last Name', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 	}
 
 	if ( ! bboss_get_option( 'bp-xprofile-nickname-field-name' ) ) {
-		bboss_update_option( 'bp-xprofile-nickname-field-name', __( 'Nickname', 'buddyboss-platform' ) );
+		bboss_update_option( 'bp-xprofile-nickname-field-name', __( 'Nickname', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 	}
 
 	// Insert the default group and fields.

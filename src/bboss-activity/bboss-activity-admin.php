@@ -26,7 +26,7 @@ function bboss_activity_add_admin_menu() {
 		: admin_url( 'admin.php?page=bb-settings&tab=activity&panel=all_activities' );
 
 	$submenu['buddyboss-platform'][] = array(
-		__( 'Activity', 'buddyboss-platform' ),
+		__( 'Activity', 'buddyboss-community-social-network-groups-forums-messaging' ),
 		'bp_moderate',
 		$settings_url,
 	);

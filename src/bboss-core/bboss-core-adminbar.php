@@ -34,7 +34,7 @@ function bboss_admin_bar_my_account_root() {
 			array(
 				'parent' => 'my-account',
 				'id'     => 'my-account-buddypress',
-				'title'  => __( 'My Account', 'buddyboss-platform' ),
+				'title'  => __( 'My Account', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				'group'  => true,
 				'meta'   => array(
 					'class' => 'ab-sub-secondary',
@@ -59,7 +59,7 @@ function bboss_core_load_admin_bar() {
 
 	// Hide the WordPress Toolbar and show the BuddyBar.
 	if ( ! bboss_use_wp_admin_bar() ) {
-		_doing_it_wrong( __FUNCTION__, esc_html__( 'The BuddyBar is no longer supported. Please migrate to the WordPress toolbar as soon as possible.', 'buddyboss-platform' ), '2.1.0' );
+		_doing_it_wrong( __FUNCTION__, esc_html__( 'The BuddyBar is no longer supported. Please migrate to the WordPress toolbar as soon as possible.', 'buddyboss-community-social-network-groups-forums-messaging' ), '2.1.0' );
 
 		// Load deprecated code if not available.
 		if ( ! function_exists( 'bboss_core_admin_bar' ) ) {
@@ -181,7 +181,7 @@ function bboss_wp_admin_bar_my_account_menu( $wp_admin_bar ) {
 		if ( 'nickname' !== $current_value ) {
 
 			$username = bboss_activity_get_user_mentionname( $current_user->ID );
-			$at = __( '@', 'buddyboss-platform' );
+			$at = __( '@', 'buddyboss-community-social-network-groups-forums-messaging' );
 			if ( '' !== $username ) {
 				$user_info .= "<span class='username'>{$at}{$username}</span>";
 			} else {
@@ -207,7 +207,7 @@ function bboss_wp_admin_bar_my_account_menu( $wp_admin_bar ) {
 			array(
 				'parent' => 'user-actions',
 				'id'     => 'edit-profile',
-				'title'  => __( 'Edit My Profile', 'buddyboss-platform' ),
+				'title'  => __( 'Edit My Profile', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				'href'   => $profile_url,
 			)
 		);
@@ -217,7 +217,7 @@ function bboss_wp_admin_bar_my_account_menu( $wp_admin_bar ) {
 		array(
 			'parent' => 'user-actions',
 			'id'     => 'logout',
-			'title'  => __( 'Log Out', 'buddyboss-platform' ),
+			'title'  => __( 'Log Out', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'href'   => wp_logout_url(),
 		)
 	);

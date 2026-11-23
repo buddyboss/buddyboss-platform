@@ -513,7 +513,7 @@ function bboss_activity_get_post_type_tracking_args( $post_type ) {
 
 		// Fall back to a generic name.
 	} else {
-		$post_type_activity->admin_filter = __( 'New item published', 'buddyboss-platform' );
+		$post_type_activity->admin_filter = __( 'New item published', 'buddyboss-community-social-network-groups-forums-messaging' );
 	}
 
 	// Check for the front filter in the post type labels.
@@ -546,7 +546,7 @@ function bboss_activity_get_post_type_tracking_args( $post_type ) {
 
 			// Fall back to a generic name.
 		} else {
-			$post_type_activity->comments_tracking->admin_filter = __( 'New item comment posted', 'buddyboss-platform' );
+			$post_type_activity->comments_tracking->admin_filter = __( 'New item comment posted', 'buddyboss-community-social-network-groups-forums-messaging' );
 		}
 
 		$post_type_activity->comments_tracking->format_callback = $post_type_activity->comment_format_callback;
@@ -557,7 +557,7 @@ function bboss_activity_get_post_type_tracking_args( $post_type ) {
 
 			// Fall back to a generic name.
 		} else {
-			$post_type_activity->comments_tracking->front_filter = __( 'Item comments', 'buddyboss-platform' );
+			$post_type_activity->comments_tracking->front_filter = __( 'Item comments', 'buddyboss-community-social-network-groups-forums-messaging' );
 		}
 
 		$post_type_activity->comments_tracking->contexts = $post_type_activity->contexts;
@@ -982,7 +982,7 @@ function bboss_activity_add_user_favorite( $activity_id, $user_id = 0, $args = a
 	if ( ! $reaction ) {
 		return ( 'bool' === $r['error_type'] ) ? false : new WP_Error(
 			'bp_activity_add_user_favorite_disabled',
-			esc_html__( 'Reactions are not available.', 'buddyboss-platform' )
+			esc_html__( 'Reactions are not available.', 'buddyboss-community-social-network-groups-forums-messaging' )
 		);
 	}
 
@@ -998,7 +998,7 @@ function bboss_activity_add_user_favorite( $activity_id, $user_id = 0, $args = a
 	) {
 		return ( 'bool' === $r['error_type'] ) ? false : new WP_Error(
 			'bp_activity_add_user_favorite_not_allowed',
-			__( 'Sorry, you are not allowed to create user reaction.', 'buddyboss-platform' )
+			__( 'Sorry, you are not allowed to create user reaction.', 'buddyboss-community-social-network-groups-forums-messaging' )
 		);
 	}
 
@@ -1012,7 +1012,7 @@ function bboss_activity_add_user_favorite( $activity_id, $user_id = 0, $args = a
 		} else {
 			return new WP_Error(
 				'bp_activity_add_user_favorite_disabled_temporarily',
-				esc_html__( 'Reactions are temporarily disabled by site admin, please try again later', 'buddyboss-platform' )
+				esc_html__( 'Reactions are temporarily disabled by site admin, please try again later', 'buddyboss-community-social-network-groups-forums-messaging' )
 			);
 		}
 	}
@@ -1023,7 +1023,7 @@ function bboss_activity_add_user_favorite( $activity_id, $user_id = 0, $args = a
 		if ( empty( $active_reactions ) || empty( $active_reactions[ $r['reaction_id'] ] ) ) {
 			return ( 'bool' === $r['error_type'] ) ? false : new WP_Error(
 				'bp_activity_add_user_favorite_disabled_temporarily',
-				esc_html__( 'Reactions are temporarily disabled by site admin, please try again later', 'buddyboss-platform' )
+				esc_html__( 'Reactions are temporarily disabled by site admin, please try again later', 'buddyboss-community-social-network-groups-forums-messaging' )
 			);
 		}
 	}
@@ -1110,7 +1110,7 @@ function bboss_activity_remove_user_favorite( $activity_id, $user_id = 0, $args 
 	if ( ! $reaction ) {
 		return ( 'bool' === $r['error_type'] ) ? false : new WP_Error(
 			'bp_activity_remove_user_favorite_disabled',
-			esc_html__( 'Reactions are not available.', 'buddyboss-platform' )
+			esc_html__( 'Reactions are not available.', 'buddyboss-community-social-network-groups-forums-messaging' )
 		);
 	}
 
@@ -1124,7 +1124,7 @@ function bboss_activity_remove_user_favorite( $activity_id, $user_id = 0, $args 
 		} else {
 			return new WP_Error(
 				'bp_activity_add_user_favorite_disabled_temporarily',
-				esc_html__( 'Reactions are temporarily disabled by site admin, please try again later', 'buddyboss-platform' )
+				esc_html__( 'Reactions are temporarily disabled by site admin, please try again later', 'buddyboss-community-social-network-groups-forums-messaging' )
 			);
 		}
 	}
@@ -1144,7 +1144,7 @@ function bboss_activity_remove_user_favorite( $activity_id, $user_id = 0, $args 
 		} else {
 			return new WP_Error(
 				'bp_activity_add_user_favorite_disabled_temporarily',
-				esc_html__( 'Reactions are temporarily disabled by site admin, please try again later', 'buddyboss-platform' )
+				esc_html__( 'Reactions are temporarily disabled by site admin, please try again later', 'buddyboss-community-social-network-groups-forums-messaging' )
 			);
 		}
 	}
@@ -1199,10 +1199,10 @@ function bboss_activity_favorites_upgrade_data() {
 			$admin_url = bboss_get_admin_url( add_query_arg( array( 'page' => 'bb-settings', 'tab' => 'tools', 'panel' => 'repair_platform' ), 'admin.php' ) );
 			$notice    = sprintf(
 				'%1$s <a href="%2$s">%3$s</a> %4$s',
-				__( 'Due to the large size of your users table, you need to manually update user activity favorites data via BuddyBoss > ', 'buddyboss-platform' ),
+				__( 'Due to the large size of your users table, you need to manually update user activity favorites data via BuddyBoss > ', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				esc_url( $admin_url ),
-				__( 'Tools', 'buddyboss-platform' ),
-				__( ' > Repair Community. Check the box "Update activity favorites data" and click on "Repair Items". ', 'buddyboss-platform' )
+				__( 'Tools', 'buddyboss-community-social-network-groups-forums-messaging' ),
+				__( ' > Repair Community. Check the box "Update activity favorites data" and click on "Repair Items". ', 'buddyboss-community-social-network-groups-forums-messaging' )
 			);
 
 			bboss_core_add_admin_notice( $notice, 'error' );
@@ -1666,18 +1666,18 @@ function bboss_activity_register_activity_actions() {
 	bboss_activity_set_action(
 		$bp->activity->id,
 		'activity_update',
-		__( 'Posted a status update', 'buddyboss-platform' ),
+		__( 'Posted a status update', 'buddyboss-community-social-network-groups-forums-messaging' ),
 		'bboss_activity_format_activity_action_activity_update',
-		__( 'Updates', 'buddyboss-platform' ),
+		__( 'Updates', 'buddyboss-community-social-network-groups-forums-messaging' ),
 		array( 'activity', 'group', 'member', 'member_groups' )
 	);
 
 	bboss_activity_set_action(
 		$bp->activity->id,
 		'activity_comment',
-		__( 'Replied to a status update', 'buddyboss-platform' ),
+		__( 'Replied to a status update', 'buddyboss-community-social-network-groups-forums-messaging' ),
 		'bboss_activity_format_activity_action_activity_comment',
-		__( 'Activity Comments', 'buddyboss-platform' )
+		__( 'Activity Comments', 'buddyboss-community-social-network-groups-forums-messaging' )
 	);
 
 	/**
@@ -1725,7 +1725,7 @@ function bboss_activity_generate_action_string( $activity ) {
 		$actions->{$activity->component}->{$activity->type} = array(
 			'key'             => $activity->type,
 			/* translators: %s: post type name. */
-			'value'           => sprintf( __( 'New %s published', 'buddyboss-platform' ), str_replace( 'new_blog_', '', $activity->type ) ),
+			'value'           => sprintf( __( 'New %s published', 'buddyboss-community-social-network-groups-forums-messaging' ), str_replace( 'new_blog_', '', $activity->type ) ),
 			'format_callback' => 'bboss_blogs_format_activity_action_disabled_post_type_feed',
 			'label'           => ucwords( str_replace( 'new_blog_', '', $activity->type ) ),
 			'context'         => array( 'activity', 'member' ),
@@ -1777,15 +1777,15 @@ function bboss_activity_format_activity_action_activity_update( $action, $activi
 
 		$action = sprintf(
 			/* translators: 1: author user link, 2: mentioned users links, 3: " and " separator, 4: last mentioned user link. */
-			__( '%1$s <span class="activity-to">to</span> %2$s%3$s%4$s', 'buddyboss-platform' ),
+			__( '%1$s <span class="activity-to">to</span> %2$s%3$s%4$s', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			bboss_core_get_userlink( $activity->user_id ),
 			$mentioned_users_link ? implode( ', ', $mentioned_users_link ) : '',
-			$mentioned_users_link ? __( ' and ', 'buddyboss-platform' ) : '',
+			$mentioned_users_link ? __( ' and ', 'buddyboss-community-social-network-groups-forums-messaging' ) : '',
 			$last_user_link
 		);
 	} else {
 		/* translators: %s: author user link. */
-		$action = sprintf( __( '%s posted an update', 'buddyboss-platform' ), bboss_core_get_userlink( $activity->user_id ) );
+		$action = sprintf( __( '%s posted an update', 'buddyboss-community-social-network-groups-forums-messaging' ), bboss_core_get_userlink( $activity->user_id ) );
 	}
 
 	/**
@@ -1810,7 +1810,7 @@ function bboss_activity_format_activity_action_activity_update( $action, $activi
  */
 function bboss_activity_format_activity_action_activity_comment( $action, $activity ) {
 	/* translators: %s: author user link. */
-	$action = sprintf( __( '%s posted a new activity comment', 'buddyboss-platform' ), bboss_core_get_userlink( $activity->user_id ) );
+	$action = sprintf( __( '%s posted a new activity comment', 'buddyboss-community-social-network-groups-forums-messaging' ), bboss_core_get_userlink( $activity->user_id ) );
 
 	/**
 	 * Filters the formatted activity action comment string.
@@ -1860,14 +1860,14 @@ function bboss_activity_format_activity_action_custom_post_type_post( $action, $
 			$action = sprintf( $bp->activity->track[ $activity->type ]->new_post_type_action_ms, $user_link, $post_url, $blog_link );
 		} else {
 			/* translators: 1: member profile link, 2: post URL, 3: site link. */
-			$action = sprintf( __( '%1$s wrote a new <a href="%2$s">item</a>, on the site %3$s', 'buddyboss-platform' ), $user_link, esc_url( $post_url ), $blog_link );
+			$action = sprintf( __( '%1$s wrote a new <a href="%2$s">item</a>, on the site %3$s', 'buddyboss-community-social-network-groups-forums-messaging' ), $user_link, esc_url( $post_url ), $blog_link );
 		}
 	} else {
 		if ( ! empty( $bp->activity->track[ $activity->type ]->new_post_type_action ) ) {
 			$action = sprintf( $bp->activity->track[ $activity->type ]->new_post_type_action, $user_link, $post_url );
 		} else {
 			/* translators: 1: member profile link, 2: post URL. */
-			$action = sprintf( __( '%1$s wrote a new <a href="%2$s">item</a>', 'buddyboss-platform' ), $user_link, esc_url( $post_url ) );
+			$action = sprintf( __( '%1$s wrote a new <a href="%2$s">item</a>', 'buddyboss-community-social-network-groups-forums-messaging' ), $user_link, esc_url( $post_url ) );
 		}
 	}
 
@@ -1913,14 +1913,14 @@ function bboss_activity_format_activity_action_custom_post_type_comment( $action
 			$action = sprintf( $bp->activity->track[ $activity->type ]->new_post_type_comment_action_ms, $user_link, $activity->primary_link, $blog_link );
 		} else {
 			/* translators: 1: author user link, 2: item URL, 3: site link. */
-			$action = sprintf( __( '%1$s commented on the <a href="%2$s">item</a>, on the site %3$s', 'buddyboss-platform' ), $user_link, $activity->primary_link, $blog_link );
+			$action = sprintf( __( '%1$s commented on the <a href="%2$s">item</a>, on the site %3$s', 'buddyboss-community-social-network-groups-forums-messaging' ), $user_link, $activity->primary_link, $blog_link );
 		}
 	} else {
 		if ( ! empty( $bp->activity->track[ $activity->type ]->new_post_type_comment_action ) ) {
 			$action = sprintf( $bp->activity->track[ $activity->type ]->new_post_type_comment_action, $user_link, $activity->primary_link );
 		} else {
 			/* translators: 1: author user link, 2: item URL. */
-			$action = sprintf( __( '%1$s commented on the <a href="%2$s">item</a>', 'buddyboss-platform' ), $user_link, $activity->primary_link );
+			$action = sprintf( __( '%1$s commented on the <a href="%2$s">item</a>', 'buddyboss-community-social-network-groups-forums-messaging' ), $user_link, $activity->primary_link );
 		}
 	}
 
@@ -2303,7 +2303,7 @@ function bboss_activity_post_update( $args = '' ) {
 
 	if ( bboss_is_user_inactive( $r['user_id'] ) ) {
 		if ( 'wp_error' === $r['error_type'] ) {
-			return new WP_Error( 'bp_activity_inactive_user', __( 'User account has not yet been activated.', 'buddyboss-platform' ) );
+			return new WP_Error( 'bp_activity_inactive_user', __( 'User account has not yet been activated.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 		}
 		return false;
 	}
@@ -2360,8 +2360,8 @@ function bboss_activity_post_update( $args = '' ) {
 					// bp_activity_user_can_edit() is false both for an expired window and for a
 					// feature the admin switched off; blaming the timer for the latter is wrong.
 					$edit_error = bboss_is_activity_edit_enabled()
-						? __( 'Allowed time for editing this activity is passed already, you can not edit now.', 'buddyboss-platform' )
-						: __( 'Editing activity posts is currently disabled.', 'buddyboss-platform' );
+						? __( 'Allowed time for editing this activity is passed already, you can not edit now.', 'buddyboss-community-social-network-groups-forums-messaging' )
+						: __( 'Editing activity posts is currently disabled.', 'buddyboss-community-social-network-groups-forums-messaging' );
 
 					return new WP_Error( 'error', $edit_error );
 				} else {
@@ -3061,11 +3061,11 @@ function bboss_activity_new_comment( $args = '' ) {
 	}
 
 	// Default error message.
-	$feedback = __( 'There was an error posting your reply. Please try again.', 'buddyboss-platform' );
+	$feedback = __( 'There was an error posting your reply. Please try again.', 'buddyboss-community-social-network-groups-forums-messaging' );
 
 	// Bail if the activity comments closed.
 	if ( bboss_is_close_activity_comments_enabled() && bboss_is_activity_comments_closed( $r['activity_id'] ) ) {
-		$error = new WP_Error( 'closed_activity_comments', __( 'The comments are closed for the activity.', 'buddyboss-platform' ) );
+		$error = new WP_Error( 'closed_activity_comments', __( 'The comments are closed for the activity.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 
 		if ( 'wp_error' === $r['error_type'] ) {
 			return $error;
@@ -3101,7 +3101,7 @@ function bboss_activity_new_comment( $args = '' ) {
 
 		// Bail if the parent activity comment does not exist.
 		if ( empty( $comment_activity->date_recorded ) ) {
-			$error = new WP_Error( 'missing_activity', __( 'The item you were replying to no longer exists.', 'buddyboss-platform' ) );
+			$error = new WP_Error( 'missing_activity', __( 'The item you were replying to no longer exists.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 
 			if ( 'wp_error' === $r['error_type'] ) {
 				return $error;
@@ -3160,7 +3160,7 @@ function bboss_activity_new_comment( $args = '' ) {
 
 	// Bail if the parent activity does not exist.
 	if ( empty( $activity->date_recorded ) ) {
-		$error = new WP_Error( 'missing_activity', __( 'The item you were replying to no longer exists.', 'buddyboss-platform' ) );
+		$error = new WP_Error( 'missing_activity', __( 'The item you were replying to no longer exists.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 
 		if ( 'wp_error' === $r['error_type'] ) {
 			return $error;
@@ -3199,7 +3199,7 @@ function bboss_activity_new_comment( $args = '' ) {
 			)
 		)
 	) {
-		$error = new WP_Error( 'bp_activity_comment_not_allowed', __( 'Sorry, you are not allowed to create an activity comment.', 'buddyboss-platform' ) );
+		$error = new WP_Error( 'bp_activity_comment_not_allowed', __( 'Sorry, you are not allowed to create an activity comment.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 
 		if ( 'wp_error' === $r['error_type'] ) {
 			return $error;
@@ -3244,8 +3244,8 @@ function bboss_activity_new_comment( $args = '' ) {
 					// bb_activity_comment_user_can_edit() is false both for an expired window and
 					// for a feature the admin switched off; blaming the timer for the latter is wrong.
 					$comment_edit_error = bboss_is_activity_comment_edit_enabled()
-						? __( 'Allowed time for editing this activity comment is passed already, you can not edit now.', 'buddyboss-platform' )
-						: __( 'Editing activity comments is currently disabled.', 'buddyboss-platform' );
+						? __( 'Allowed time for editing this activity comment is passed already, you can not edit now.', 'buddyboss-community-social-network-groups-forums-messaging' )
+						: __( 'Editing activity comments is currently disabled.', 'buddyboss-community-social-network-groups-forums-messaging' );
 
 					return new WP_Error( 'error', $comment_edit_error );
 				} else {
@@ -4100,7 +4100,7 @@ function bboss_activity_thumbnail_content_images( $content, $link = false, $args
 			$ratio      = (int) $width / (int) $height;
 			$new_height = (int) $height >= 100 ? 100 : $height;
 			$new_width  = $new_height * $ratio;
-			$image      = '<img src="' . esc_url( $src ) . '" width="' . absint( $new_width ) . '" height="' . absint( $new_height ) . '" alt="' . __( 'Thumbnail', 'buddyboss-platform' ) . '" class="align-left thumbnail" />';
+			$image      = '<img src="' . esc_url( $src ) . '" width="' . absint( $new_width ) . '" height="' . absint( $new_height ) . '" alt="' . __( 'Thumbnail', 'buddyboss-community-social-network-groups-forums-messaging' ) . '" class="align-left thumbnail" />';
 
 			if ( ! empty( $link ) ) {
 				$image = '<a href="' . esc_url( $link ) . '">' . $image . '</a>';
@@ -4505,24 +4505,24 @@ function bboss_activity_at_message_notification( $activity_id, $receiver_user_id
 			if ( ! empty( $activity->item_id ) ) {
 				$parent_activity = new BBoss_Activity_Activity( $activity->item_id );
 				if ( ! empty( $parent_activity ) && 'blogs' === $parent_activity->component ) {
-					$notification_type_html = esc_html__( 'post', 'buddyboss-platform' );
+					$notification_type_html = esc_html__( 'post', 'buddyboss-community-social-network-groups-forums-messaging' );
 					$title_text             = get_the_title( $parent_activity->secondary_item_id );
 					$message_link           = get_permalink( $parent_activity->secondary_item_id );
 				} else {
-					$notification_type_html = esc_html__( 'post', 'buddyboss-platform' );
+					$notification_type_html = esc_html__( 'post', 'buddyboss-community-social-network-groups-forums-messaging' );
 				}
 			} else {
-				$notification_type_html = esc_html__( 'post', 'buddyboss-platform' );
+				$notification_type_html = esc_html__( 'post', 'buddyboss-community-social-network-groups-forums-messaging' );
 			}
-			$reply_text = esc_html__( 'View Comment', 'buddyboss-platform' );
+			$reply_text = esc_html__( 'View Comment', 'buddyboss-community-social-network-groups-forums-messaging' );
 		} elseif ( 'blogs' === $activity->component ) {
-			$notification_type_html = esc_html__( 'post', 'buddyboss-platform' );
-			$reply_text             = esc_html__( 'View Post', 'buddyboss-platform' );
+			$notification_type_html = esc_html__( 'post', 'buddyboss-community-social-network-groups-forums-messaging' );
+			$reply_text             = esc_html__( 'View Post', 'buddyboss-community-social-network-groups-forums-messaging' );
 			$title_text             = get_the_title( $activity->secondary_item_id );
 			$message_link           = get_permalink( $activity->secondary_item_id );
 		} else {
-			$notification_type_html = esc_html__( 'post', 'buddyboss-platform' );
-			$reply_text             = esc_html__( 'View Post', 'buddyboss-platform' );
+			$notification_type_html = esc_html__( 'post', 'buddyboss-community-social-network-groups-forums-messaging' );
+			$reply_text             = esc_html__( 'View Post', 'buddyboss-community-social-network-groups-forums-messaging' );
 		}
 
 		$args = array(
@@ -5679,7 +5679,7 @@ function bboss_activity_action_parse_url() {
 
 	// Check if URL is validated.
 	if ( ! filter_var( $url, FILTER_VALIDATE_URL ) ) {
-		wp_send_json( array( 'error' => __( 'URL is not valid.', 'buddyboss-platform' ) ) );
+		wp_send_json( array( 'error' => __( 'URL is not valid.', 'buddyboss-community-social-network-groups-forums-messaging' ) ) );
 	}
 
 	// Get URL parsed data.
@@ -5687,7 +5687,7 @@ function bboss_activity_action_parse_url() {
 
 	// If empty data then send error.
 	if ( empty( $parse_url_data ) ) {
-		wp_send_json( array( 'error' => esc_html__( 'There was a problem generating a link preview.', 'buddyboss-platform' ) ) );
+		wp_send_json( array( 'error' => esc_html__( 'There was a problem generating a link preview.', 'buddyboss-community-social-network-groups-forums-messaging' ) ) );
 	}
 
 	// send json success.
@@ -6259,28 +6259,28 @@ function bboss_activity_following_post_notification( $args ) {
 	if ( $media_ids ) {
 		$media_ids = array_filter( ! is_array( $media_ids ) ? explode( ',', $media_ids ) : $media_ids );
 		if ( count( $media_ids ) > 1 ) {
-			$text = __( 'some photos', 'buddyboss-platform' );
+			$text = __( 'some photos', 'buddyboss-community-social-network-groups-forums-messaging' );
 		} else {
-			$text = __( 'a photo', 'buddyboss-platform' );
+			$text = __( 'a photo', 'buddyboss-community-social-network-groups-forums-messaging' );
 		}
 	} elseif ( $document_ids ) {
 		$document_ids = array_filter( ! is_array( $document_ids ) ? explode( ',', $document_ids ) : $document_ids );
 		if ( count( $document_ids ) > 1 ) {
-			$text = __( 'some documents', 'buddyboss-platform' );
+			$text = __( 'some documents', 'buddyboss-community-social-network-groups-forums-messaging' );
 		} else {
-			$text = __( 'a document', 'buddyboss-platform' );
+			$text = __( 'a document', 'buddyboss-community-social-network-groups-forums-messaging' );
 		}
 	} elseif ( $video_ids ) {
 		$video_ids = array_filter( ! is_array( $video_ids ) ? explode( ',', $video_ids ) : $video_ids );
 		if ( count( $video_ids ) > 1 ) {
-			$text = __( 'some videos', 'buddyboss-platform' );
+			$text = __( 'some videos', 'buddyboss-community-social-network-groups-forums-messaging' );
 		} else {
-			$text = __( 'a video', 'buddyboss-platform' );
+			$text = __( 'a video', 'buddyboss-community-social-network-groups-forums-messaging' );
 		}
 	} elseif ( ! empty( $poll_id ) ) {
-		$text = __( 'a new poll', 'buddyboss-platform' );
+		$text = __( 'a new poll', 'buddyboss-community-social-network-groups-forums-messaging' );
 	} else {
-		$text = __( 'an update', 'buddyboss-platform' );
+		$text = __( 'an update', 'buddyboss-community-social-network-groups-forums-messaging' );
 	}
 
 	$args = array(
@@ -6467,7 +6467,7 @@ function bboss_activity_get_types_list() {
 					$new_types
 				);
 
-				$new_types['friendship_accepted,friendship_created'] = __( 'Friendships', 'buddyboss-platform' );
+				$new_types['friendship_accepted,friendship_created'] = __( 'Friendships', 'buddyboss-community-social-network-groups-forums-messaging' );
 			}
 		}
 
@@ -7207,23 +7207,23 @@ function bboss_get_close_activity_comments_notice( $activity_id = 0 ) {
 	if ( ! empty( $activity->id ) && bboss_is_close_activity_comments_enabled() && bboss_is_activity_comments_closed( $activity->id ) ) {
 		$closer_id     = bboss_get_activity_comments_closer_id( $activity->id );
 		/* translators: %s: member display name. */
-		$closed_notice = sprintf( esc_html__( '%s turned off commenting for this post', 'buddyboss-platform' ), bboss_core_get_user_displayname( $closer_id ) );
+		$closed_notice = sprintf( esc_html__( '%s turned off commenting for this post', 'buddyboss-community-social-network-groups-forums-messaging' ), bboss_core_get_user_displayname( $closer_id ) );
 		if ( $closer_id === bboss_loggedin_user_id() ) {
-			$closed_notice = esc_html__( 'You turned off commenting for this post', 'buddyboss-platform' );
+			$closed_notice = esc_html__( 'You turned off commenting for this post', 'buddyboss-community-social-network-groups-forums-messaging' );
 		} elseif ( bboss_is_active( 'groups' ) && 'groups' === $activity->component && ! empty( $activity->item_id ) ) {
 			$group = bboss_groups_get_group( $activity->item_id );
 			if ( bboss_groups_is_user_admin( $closer_id, $activity->item_id ) ) {
-				$closed_notice = esc_html__( 'An organizer turned off commenting for this post', 'buddyboss-platform' );
+				$closed_notice = esc_html__( 'An organizer turned off commenting for this post', 'buddyboss-community-social-network-groups-forums-messaging' );
 			} elseif ( bboss_groups_is_user_mod( $closer_id, $activity->item_id ) ) {
-				$closed_notice = esc_html__( 'A moderator turned off commenting for this post', 'buddyboss-platform' );
+				$closed_notice = esc_html__( 'A moderator turned off commenting for this post', 'buddyboss-community-social-network-groups-forums-messaging' );
 			} elseif ( bboss_user_can( $closer_id, 'administrator' ) && 'public' === $group->status ) {
-				$closed_notice = esc_html__( 'An admin turned off commenting for this post', 'buddyboss-platform' );
+				$closed_notice = esc_html__( 'An admin turned off commenting for this post', 'buddyboss-community-social-network-groups-forums-messaging' );
 			} else {
 				/* translators: %s: member display name. */
-				$closed_notice = sprintf( esc_html__( '%s turned off commenting for this post', 'buddyboss-platform' ), bboss_core_get_user_displayname( $closer_id ) );
+				$closed_notice = sprintf( esc_html__( '%s turned off commenting for this post', 'buddyboss-community-social-network-groups-forums-messaging' ), bboss_core_get_user_displayname( $closer_id ) );
 			}
 		} elseif ( bboss_user_can( $closer_id, 'administrator' ) ) {
-			$closed_notice = esc_html__( 'An admin turned off commenting for this post', 'buddyboss-platform' );
+			$closed_notice = esc_html__( 'An admin turned off commenting for this post', 'buddyboss-community-social-network-groups-forums-messaging' );
 		}
 	}
 
@@ -7664,16 +7664,16 @@ function bboss_validate_activity_privacy( $args ) {
 	if ( ! empty( $activity->privacy ) ) {
 		if ( 'onlyme' === $activity->privacy && $activity->user_id !== $args['user_id'] ) {
 			if ( 'new_comment' === $args['validate_action'] ) {
-				return new WP_Error( 'error', __( 'Sorry, You cannot add comments on `Only Me` activity.', 'buddyboss-platform' ) );
+				return new WP_Error( 'error', __( 'Sorry, You cannot add comments on `Only Me` activity.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 			}
 			if (
 				'reaction' === $args['validate_action'] &&
 				in_array( $args['activity_type'], array( 'activity', 'activity_comment' ), true )
 			) {
-				return new WP_Error( 'error', __( 'Sorry, You cannot perform reactions on `Only Me` activity.', 'buddyboss-platform' ) );
+				return new WP_Error( 'error', __( 'Sorry, You cannot perform reactions on `Only Me` activity.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 			}
 			if ( 'view_activity' === $args['validate_action'] ) {
-				return new WP_Error( 'error', __( 'Sorry, You cannot view on `Only Me` activity.', 'buddyboss-platform' ) );
+				return new WP_Error( 'error', __( 'Sorry, You cannot view on `Only Me` activity.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 			}
 		} elseif (
 			'friends' === $activity->privacy &&
@@ -7684,21 +7684,21 @@ function bboss_validate_activity_privacy( $args ) {
 			)
 		) {
 			if ( 'new_comment' === $args['validate_action'] ) {
-				return new WP_Error( 'error', __( 'Sorry, please establish a friendship with the author of the activity to add a comment.', 'buddyboss-platform' ) );
+				return new WP_Error( 'error', __( 'Sorry, please establish a friendship with the author of the activity to add a comment.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 			}
 			if (
 				'reaction' === $args['validate_action'] &&
 				in_array( $args['activity_type'], array( 'activity', 'activity_comment' ), true )
 			) {
-				return new WP_Error( 'error', __( 'Sorry, please establish a friendship with the author of the activity to perform a reaction.', 'buddyboss-platform' ) );
+				return new WP_Error( 'error', __( 'Sorry, please establish a friendship with the author of the activity to perform a reaction.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 			}
 			if ( 'view_activity' === $args['validate_action'] ) {
-				return new WP_Error( 'error', __( 'Sorry, please establish a friendship with the author of the activity to view.', 'buddyboss-platform' ) );
+				return new WP_Error( 'error', __( 'Sorry, please establish a friendship with the author of the activity to view.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 			}
 		} elseif ( 'loggedin' === $activity->privacy && empty( $args['user_id'] ) ) {
 			// Check the user being validated, not the current request, so CLI and cron callers that pass a member still pass.
 			if ( 'view_activity' === $args['validate_action'] ) {
-				return new WP_Error( 'error', __( 'Sorry, You cannot view on this activity.', 'buddyboss-platform' ) );
+				return new WP_Error( 'error', __( 'Sorry, You cannot view on this activity.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 			}
 		}
 	}
@@ -8162,10 +8162,10 @@ function bboss_blogs_format_activity_action_disabled_post_type_feed( $action, $a
 
 	if ( is_multisite() ) {
 		/* translators: 1: member profile link, 2: site link. */
-		$action = sprintf( __( '%1$s posted a new post, on the site %2$s', 'buddyboss-platform' ), $user_link, '<a href="' . esc_url( $blog_url ) . '">' . esc_html( $blog_name ) . '</a>' );
+		$action = sprintf( __( '%1$s posted a new post, on the site %2$s', 'buddyboss-community-social-network-groups-forums-messaging' ), $user_link, '<a href="' . esc_url( $blog_url ) . '">' . esc_html( $blog_name ) . '</a>' );
 	} else {
 		/* translators: %s: author user link. */
-		$action = sprintf( __( '%1$s posted a new post.', 'buddyboss-platform' ), $user_link );
+		$action = sprintf( __( '%1$s posted a new post.', 'buddyboss-community-social-network-groups-forums-messaging' ), $user_link );
 	}
 
 	/**
@@ -8434,7 +8434,7 @@ function bboss_validate_activity_post_title( $post_title, ?BBoss_Activity_Activi
 	// Check if title is required and empty.
 	if ( bboss_is_activity_post_title_enabled() && empty( $post_title ) ) {
 		$result['valid']   = false;
-		$result['message'] = __( 'Please enter a title for your activity.', 'buddyboss-platform' );
+		$result['message'] = __( 'Please enter a title for your activity.', 'buddyboss-community-social-network-groups-forums-messaging' );
 
 		return $result;
 	}
@@ -8448,7 +8448,7 @@ function bboss_validate_activity_post_title( $post_title, ?BBoss_Activity_Activi
 			$result['valid']   = false;
 			$result['message'] = sprintf(
 			/* translators: 1: maximum length of the post title, 2: current length of the post title. */
-				__( 'Title must be less than %1$d characters. You used %2$d characters.', 'buddyboss-platform' ),
+				__( 'Title must be less than %1$d characters. You used %2$d characters.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				$max_length,
 				$current_length
 			);

@@ -21,7 +21,7 @@ export function ReactionInfo({ field, onOpenMigrationWizard }) {
 	// Get the description text and link from field config
 	const description = field.description || '';
 	const link = field.link || {};
-	const linkText = link.text || __('migration wizard', 'buddyboss-platform');
+	const linkText = link.text || __('migration wizard', 'buddyboss-community-social-network-groups-forums-messaging');
 
 	if (!description) {
 		return null;

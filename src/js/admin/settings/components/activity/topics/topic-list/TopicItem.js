@@ -28,8 +28,8 @@ import { __ } from '@wordpress/i18n';
 export function TopicItem( { topic, onEdit, onDelete, dragHandleProps, isDragging, isDragOver } ) {
 	var pType = topic.permission_type;
 	var permissionLabel = 'mods_admins' === pType || 'Admins' === pType
-		? __( 'Admins', 'buddyboss-platform' )
-		: __( 'Anyone', 'buddyboss-platform' );
+		? __( 'Admins', 'buddyboss-community-social-network-groups-forums-messaging' )
+		: __( 'Anyone', 'buddyboss-community-social-network-groups-forums-messaging' );
 
 	var classNames = 'bb-topic-list__item';
 	if ( isDragging ) {
@@ -56,7 +56,7 @@ export function TopicItem( { topic, onEdit, onDelete, dragHandleProps, isDraggin
 			<div className="bb-topic-list__actions">
 				<DropdownMenu
 					icon={ <i className="bb-icons-rl-dots-three"></i> }
-					label={ __( 'More options', 'buddyboss-platform' ) }
+					label={ __( 'More options', 'buddyboss-community-social-network-groups-forums-messaging' ) }
 					className="bb-topic-list__menu-btn"
 				>
 					{ function ( { onClose } ) {
@@ -70,7 +70,7 @@ export function TopicItem( { topic, onEdit, onDelete, dragHandleProps, isDraggin
 										onEdit( topic );
 									} }
 								>
-									{ __( 'Edit', 'buddyboss-platform' ) }
+									{ __( 'Edit', 'buddyboss-community-social-network-groups-forums-messaging' ) }
 								</MenuItem>
 								<MenuItem
 									icon={ <BBIcon name="trash" /> }
@@ -81,7 +81,7 @@ export function TopicItem( { topic, onEdit, onDelete, dragHandleProps, isDraggin
 										onDelete( topic );
 									} }
 								>
-									{ __( 'Delete', 'buddyboss-platform' ) }
+									{ __( 'Delete', 'buddyboss-community-social-network-groups-forums-messaging' ) }
 								</MenuItem>
 							</MenuGroup>
 						);

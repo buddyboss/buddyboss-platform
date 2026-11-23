@@ -120,10 +120,10 @@ class BBoss_Moderation_Members extends BBoss_Moderation_Abstract {
 	 * @return mixed
 	 */
 	public function add_content_types( $content_types ) {
-		$content_types[ self::$moderation_type ] = __( 'User', 'buddyboss-platform' );
+		$content_types[ self::$moderation_type ] = __( 'User', 'buddyboss-community-social-network-groups-forums-messaging' );
 
 		if ( bboss_is_moderation_member_reporting_enable() ) {
-			$content_types[ self::$moderation_type_report ] = __( 'Report Member', 'buddyboss-platform' );
+			$content_types[ self::$moderation_type_report ] = __( 'Report Member', 'buddyboss-community-social-network-groups-forums-messaging' );
 		}
 
 		return $content_types;

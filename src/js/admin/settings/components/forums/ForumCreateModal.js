@@ -139,7 +139,7 @@ export function ForumCreateModal( { isOpen, onClose, onCreated, forumBaseSlug, c
 		} );
 
 		if ( ! opened ) {
-			setError( __( 'The WordPress Media Library is not available.', 'buddyboss-platform' ) );
+			setError( __( 'The WordPress Media Library is not available.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 		}
 	};
 
@@ -161,7 +161,7 @@ export function ForumCreateModal( { isOpen, onClose, onCreated, forumBaseSlug, c
 	var handleCreate = function () {
 		var nameVal = registeredValues.name || '';
 		if ( ! nameVal.trim() ) {
-			setError( __( 'Forum name is required.', 'buddyboss-platform' ) );
+			setError( __( 'Forum name is required.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 			return;
 		}
 
@@ -188,14 +188,14 @@ export function ForumCreateModal( { isOpen, onClose, onCreated, forumBaseSlug, c
 					onCreated( response.data.forum_id );
 				}
 			} else {
-				setError( ( response.data && response.data.message ) || __( 'Failed to create forum.', 'buddyboss-platform' ) );
+				setError( ( response.data && response.data.message ) || __( 'Failed to create forum.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 			}
 		} ).catch( function () {
 			if ( ! isMountedRef.current ) {
 				return;
 			}
 			setIsSaving( false );
-			setError( __( 'An error occurred. Please try again.', 'buddyboss-platform' ) );
+			setError( __( 'An error occurred. Please try again.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 		} );
 	};
 
@@ -321,7 +321,7 @@ export function ForumCreateModal( { isOpen, onClose, onCreated, forumBaseSlug, c
 
 	return (
 		<Modal
-			title={ __( 'Create New Forum', 'buddyboss-platform' ) }
+			title={ __( 'Create New Forum', 'buddyboss-community-social-network-groups-forums-messaging' ) }
 			onRequestClose={ handleClose }
 			className="bb-forum-modal bb-forum-create-modal bb-admin-settings-modal"
 			shouldCloseOnClickOutside={ false }
@@ -335,7 +335,7 @@ export function ForumCreateModal( { isOpen, onClose, onCreated, forumBaseSlug, c
 
 				<div className="bb-forum-modal__image-field bb-forum-create-modal__image-field">
 					<label className="components-base-control__label" htmlFor="bb-forum-create-image">
-						{ __( 'Feature Image (Optional)', 'buddyboss-platform' ) }
+						{ __( 'Feature Image (Optional)', 'buddyboss-community-social-network-groups-forums-messaging' ) }
 					</label>
 					{ imageUrl ? (
 						<div className="bb-forum-modal__image-preview">
@@ -346,7 +346,7 @@ export function ForumCreateModal( { isOpen, onClose, onCreated, forumBaseSlug, c
 									onClick={ openMediaLibrary }
 									className="bb-forum-modal__replace-image"
 								>
-									{ __( 'Replace', 'buddyboss-platform' ) }
+									{ __( 'Replace', 'buddyboss-community-social-network-groups-forums-messaging' ) }
 								</Button>
 								<Button
 									variant="secondary"
@@ -354,7 +354,7 @@ export function ForumCreateModal( { isOpen, onClose, onCreated, forumBaseSlug, c
 									onClick={ handleRemoveImage }
 									className="bb-forum-modal__remove-image"
 								>
-									{ __( 'Reset', 'buddyboss-platform' ) }
+									{ __( 'Reset', 'buddyboss-community-social-network-groups-forums-messaging' ) }
 								</Button>
 							</div>
 						</div>
@@ -368,7 +368,7 @@ export function ForumCreateModal( { isOpen, onClose, onCreated, forumBaseSlug, c
 						</button>
 					) }
 					<p className="bb-forum-create-modal__image-help">
-						{ __( 'For best results, use an image at least 1500px by 300px or higher.', 'buddyboss-platform' ) }
+						{ __( 'For best results, use an image at least 1500px by 300px or higher.', 'buddyboss-community-social-network-groups-forums-messaging' ) }
 					</p>
 				</div>
 			</div>
@@ -379,7 +379,7 @@ export function ForumCreateModal( { isOpen, onClose, onCreated, forumBaseSlug, c
 					onClick={ handleClose }
 					disabled={ isSaving }
 				>
-					{ __( 'Cancel', 'buddyboss-platform' ) }
+					{ __( 'Cancel', 'buddyboss-community-social-network-groups-forums-messaging' ) }
 				</Button>
 				<Button
 					variant="primary"
@@ -387,7 +387,7 @@ export function ForumCreateModal( { isOpen, onClose, onCreated, forumBaseSlug, c
 					isBusy={ isSaving }
 					disabled={ isSaving || ! ( registeredValues.name || '' ).trim() }
 				>
-					{ __( 'Save', 'buddyboss-platform' ) }
+					{ __( 'Save', 'buddyboss-community-social-network-groups-forums-messaging' ) }
 				</Button>
 			</div>
 		</Modal>

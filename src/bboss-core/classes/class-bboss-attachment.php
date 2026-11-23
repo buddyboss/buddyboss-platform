@@ -155,16 +155,16 @@ abstract class BBoss_Attachment {
 		 * Custom errors will start at 9 code
 		 */
 		$upload_errors = array(
-			0 => __( 'The file was uploaded successfully', 'buddyboss-platform' ),
-			1 => __( 'The uploaded file exceeds the maximum allowed file size for this site', 'buddyboss-platform' ),
+			0 => __( 'The file was uploaded successfully', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			1 => __( 'The uploaded file exceeds the maximum allowed file size for this site', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			/* translators: %s: maximum file size. */
-			2 => sprintf( __( 'The uploaded file exceeds the maximum allowed file size of: %s', 'buddyboss-platform' ), size_format( $this->original_max_filesize ) ),
-			3 => __( 'The uploaded file was only partially uploaded.', 'buddyboss-platform' ),
-			4 => __( 'No file was uploaded.', 'buddyboss-platform' ),
+			2 => sprintf( __( 'The uploaded file exceeds the maximum allowed file size of: %s', 'buddyboss-community-social-network-groups-forums-messaging' ), size_format( $this->original_max_filesize ) ),
+			3 => __( 'The uploaded file was only partially uploaded.', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			4 => __( 'No file was uploaded.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			5 => '',
-			6 => __( 'Missing a temporary folder.', 'buddyboss-platform' ),
-			7 => __( 'Failed to write file to disk.', 'buddyboss-platform' ),
-			8 => __( 'File upload stopped by extension.', 'buddyboss-platform' ),
+			6 => __( 'Missing a temporary folder.', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			7 => __( 'Failed to write file to disk.', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			8 => __( 'File upload stopped by extension.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 		);
 
 		if ( ! array_intersect_key( $upload_errors, (array) $param ) ) {
@@ -467,12 +467,12 @@ abstract class BBoss_Attachment {
 		);
 
 		if ( empty( $r['original_file'] ) || ! file_exists( $r['original_file'] ) ) {
-			$wp_error->add( 'crop_error', __( 'Cropping the file failed: missing source file.', 'buddyboss-platform' ) );
+			$wp_error->add( 'crop_error', __( 'Cropping the file failed: missing source file.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 			return $wp_error;
 		}
 
 		// Check image file pathes.
-		$path_error = __( 'Cropping the file failed: the file path is not allowed.', 'buddyboss-platform' );
+		$path_error = __( 'Cropping the file failed: the file path is not allowed.', 'buddyboss-community-social-network-groups-forums-messaging' );
 
 		// Make sure it's coming from an uploaded file.
 		if ( false === strpos( $r['original_file'], $this->upload_path ) ) {
@@ -494,13 +494,13 @@ abstract class BBoss_Attachment {
 		$check_types = array(
 			'src_file' => array(
 				'file'  => $r['original_file'],
-				'error' => __( 'source file', 'buddyboss-platform' ),
+				'error' => __( 'source file', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			),
 		);
 		if ( ! empty( $r['dst_file'] ) ) {
 			$check_types['dst_file'] = array(
 				'file'  => $r['dst_file'],
-				'error' => __( 'destination file', 'buddyboss-platform' ),
+				'error' => __( 'destination file', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			);
 		}
 
@@ -523,7 +523,7 @@ abstract class BBoss_Attachment {
 
 			if ( empty( $ext ) || empty( $supported_image_types[ $ext ] ) ) {
 				/* translators: %s: file name. */
-				$wp_error->add( 'crop_error', sprintf( __( 'Cropping the file failed: %s is not a supported image file.', 'buddyboss-platform' ), $file['error'] ) );
+				$wp_error->add( 'crop_error', sprintf( __( 'Cropping the file failed: %s is not a supported image file.', 'buddyboss-community-social-network-groups-forums-messaging' ), $file['error'] ) );
 				return $wp_error;
 			}
 		}
@@ -556,8 +556,8 @@ abstract class BBoss_Attachment {
 			'file_data_name'    => $this->file_input,
 			'max_file_size'     => $this->original_max_filesize,
 			'feedback_messages' => array(
-				1 => __( 'Sorry, uploading the file failed.', 'buddyboss-platform' ),
-				2 => __( 'File successfully uploaded.', 'buddyboss-platform' ),
+				1 => __( 'Sorry, uploading the file failed.', 'buddyboss-community-social-network-groups-forums-messaging' ),
+				2 => __( 'File successfully uploaded.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			),
 		);
 
@@ -659,7 +659,7 @@ abstract class BBoss_Attachment {
 
 		if ( is_wp_error( $editor ) ) {
 			if ( ! bboss_is_gd_or_imagick_library_enabled() ) {
-				return new WP_Error( 'image_no_editor', esc_html__( 'Missing image editor! Enable GD or Imagick library.', 'buddyboss-platform' ) );
+				return new WP_Error( 'image_no_editor', esc_html__( 'Missing image editor! Enable GD or Imagick library.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 			}
 
 			return $editor;

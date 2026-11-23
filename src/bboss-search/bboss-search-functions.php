@@ -343,7 +343,7 @@ function bboss_search_pagination_page_counts( $total_items, $items_per_page, $cu
 		<div class="pag-data">
 			<?php
 			/* translators: 1: starting result number, 2: ending result number, 3: total number of results. */
-			printf( esc_html__( 'Viewing %1$d - %2$d of %3$d results', 'buddyboss-platform' ), (int) $from_num, (int) min( $total_items, $to_num ), (int) $total_items );
+			printf( esc_html__( 'Viewing %1$d - %2$d of %3$d results', 'buddyboss-community-social-network-groups-forums-messaging' ), (int) $from_num, (int) min( $total_items, $to_num ), (int) $total_items );
 			?>
 		</div>
 	</div>
@@ -361,23 +361,23 @@ function bboss_search_pagination_page_counts( $total_items, $items_per_page, $cu
 function bboss_search_items() {
 
 	$items = array(
-		'posts'          => __( 'Blog Posts', 'buddyboss-platform' ),
-		'pages'          => __( 'Pages', 'buddyboss-platform' ),
-		'posts_comments' => __( 'Post Comments', 'buddyboss-platform' ),
-		'members'        => __( 'Members', 'buddyboss-platform' ),
+		'posts'          => __( 'Blog Posts', 'buddyboss-community-social-network-groups-forums-messaging' ),
+		'pages'          => __( 'Pages', 'buddyboss-community-social-network-groups-forums-messaging' ),
+		'posts_comments' => __( 'Post Comments', 'buddyboss-community-social-network-groups-forums-messaging' ),
+		'members'        => __( 'Members', 'buddyboss-community-social-network-groups-forums-messaging' ),
 	);
 
 	// forums?
 
-	$items['forum'] = __( 'Forums', 'buddyboss-platform' );
-	$items['topic'] = __( 'Forum Discussions', 'buddyboss-platform' );
-	$items['reply'] = __( 'Forum Replies', 'buddyboss-platform' );
+	$items['forum'] = __( 'Forums', 'buddyboss-community-social-network-groups-forums-messaging' );
+	$items['topic'] = __( 'Forum Discussions', 'buddyboss-community-social-network-groups-forums-messaging' );
+	$items['reply'] = __( 'Forum Replies', 'buddyboss-community-social-network-groups-forums-messaging' );
 
 	// other buddypress components
 	$bp_components = array(
-		'groups'   => __( 'Groups', 'buddyboss-platform' ),
-		'activity' => __( 'Activity', 'buddyboss-platform' ),
-		'messages' => __( 'Messages', 'buddyboss-platform' ),
+		'groups'   => __( 'Groups', 'buddyboss-community-social-network-groups-forums-messaging' ),
+		'activity' => __( 'Activity', 'buddyboss-community-social-network-groups-forums-messaging' ),
+		'messages' => __( 'Messages', 'buddyboss-community-social-network-groups-forums-messaging' ),
 		/*
 		 should we search notifications as well?
 		'notifications'	=> __( 'Notifications', 'buddyboss' ), */
@@ -389,7 +389,7 @@ function bboss_search_items() {
 			$items[ $component ] = $label;
 
 			if ( 'activity' === $component ) {
-				$items['activity_comment'] = __( 'Activity Comments', 'buddyboss-platform' );
+				$items['activity_comment'] = __( 'Activity Comments', 'buddyboss-community-social-network-groups-forums-messaging' );
 			}
 		}
 	}
@@ -507,10 +507,10 @@ function bboss_search_body_class( $wp_classes ) {
  */
 function bboss_get_search_user_fields() {
 	return array(
-		'user_meta'    => __( 'User Meta', 'buddyboss-platform' ),
-		'display_name' => __( 'Display Name', 'buddyboss-platform' ),
-		'user_email'   => __( 'User Email', 'buddyboss-platform' ),
-		'user_login'   => __( 'Username', 'buddyboss-platform' ),
+		'user_meta'    => __( 'User Meta', 'buddyboss-community-social-network-groups-forums-messaging' ),
+		'display_name' => __( 'Display Name', 'buddyboss-community-social-network-groups-forums-messaging' ),
+		'user_email'   => __( 'User Email', 'buddyboss-community-social-network-groups-forums-messaging' ),
+		'user_login'   => __( 'Username', 'buddyboss-community-social-network-groups-forums-messaging' ),
 	);
 }
 
@@ -818,7 +818,7 @@ function bboss_search_get_search_stopwords() {
 		_x(
 			'about,an,are,as,at,be,by,com,for,from,how,in,is,it,of,on,or,that,the,this,to,was,what,when,where,who,will,with,www',
 			'Comma-separated list of search stopwords in your language',
-			'buddyboss-platform'
+			'buddyboss-community-social-network-groups-forums-messaging'
 		)
 	);
 

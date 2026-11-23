@@ -359,41 +359,41 @@ function bboss_forums_notification_settings() {
 		<thead>
 		<tr>
 			<th class="icon"></th>
-			<th class="title"><?php esc_html_e( 'Forums', 'buddyboss-platform' ); ?></th>
-			<th class="yes"><?php esc_html_e( 'Yes', 'buddyboss-platform' ); ?></th>
-			<th class="no"><?php esc_html_e( 'No', 'buddyboss-platform' ); ?></th>
+			<th class="title"><?php esc_html_e( 'Forums', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></th>
+			<th class="yes"><?php esc_html_e( 'Yes', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></th>
+			<th class="no"><?php esc_html_e( 'No', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></th>
 		</tr>
 		</thead>
 		<tbody>
 		<tr id="forums-notification-settings-new-message">
 			<td></td>
-			<td><?php esc_html_e( 'A member replies to a discussion you are subscribed to', 'buddyboss-platform' ); ?></td>
+			<td><?php esc_html_e( 'A member replies to a discussion you are subscribed to', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></td>
 			<td class="yes">
 				<div class="bp-radio-wrap">
 					<input type="radio" name="notifications[notification_forums_following_reply]" id="notification-forums-reply-new-messages-yes" class="bs-styled-radio" value="yes" <?php checked( $notification_forums_following_reply, 'yes', true ); ?> />
-					<label for="notification-forums-reply-new-messages-yes"><span class="bp-screen-reader-text"><?php esc_html_e( 'Yes, send email', 'buddyboss-platform' ); ?></span></label>
+					<label for="notification-forums-reply-new-messages-yes"><span class="bp-screen-reader-text"><?php esc_html_e( 'Yes, send email', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></span></label>
 				</div>
 			</td>
 			<td class="no">
 				<div class="bp-radio-wrap">
 					<input type="radio" name="notifications[notification_forums_following_reply]" id="notification-forums-reply-new-messages-no" class="bs-styled-radio" value="no" <?php checked( $notification_forums_following_reply, 'no', true ); ?> />
-					<label for="notification-forums-reply-new-messages-no"><span class="bp-screen-reader-text"><?php esc_html_e( 'No, do not send email', 'buddyboss-platform' ); ?></span></label>
+					<label for="notification-forums-reply-new-messages-no"><span class="bp-screen-reader-text"><?php esc_html_e( 'No, do not send email', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></span></label>
 				</div>
 			</td>
 		</tr>
 		<tr id="forums-notification-settings-new-message">
 			<td></td>
-			<td><?php esc_html_e( 'A member creates a discussion in a forum you are subscribed to', 'buddyboss-platform' ); ?></td>
+			<td><?php esc_html_e( 'A member creates a discussion in a forum you are subscribed to', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></td>
 			<td class="yes">
 				<div class="bp-radio-wrap">
 					<input type="radio" name="notifications[notification_forums_following_topic]" id="notification-forums-topic-new-messages-yes" class="bs-styled-radio" value="yes" <?php checked( $notification_forums_following_topic, 'yes', true ); ?> />
-					<label for="notification-forums-topic-new-messages-yes"><span class="bp-screen-reader-text"><?php esc_html_e( 'Yes, send email', 'buddyboss-platform' ); ?></span></label>
+					<label for="notification-forums-topic-new-messages-yes"><span class="bp-screen-reader-text"><?php esc_html_e( 'Yes, send email', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></span></label>
 				</div>
 			</td>
 			<td class="no">
 				<div class="bp-radio-wrap">
 					<input type="radio" name="notifications[notification_forums_following_topic]" id="notification-forums-topic-new-messages-no" class="bs-styled-radio" value="no" <?php checked( $notification_forums_following_topic, 'no', true ); ?> />
-					<label for="notification-forums-topic-new-messages-no"><span class="bp-screen-reader-text"><?php esc_html_e( 'No, do not send email', 'buddyboss-platform' ); ?></span></label>
+					<label for="notification-forums-topic-new-messages-no"><span class="bp-screen-reader-text"><?php esc_html_e( 'No, do not send email', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></span></label>
 				</div>
 			</td>
 		</tr>
@@ -712,7 +712,7 @@ function bboss_post_topic_reply_draft() {
 
 				$primary_rejected  = true;
 				$primary_rejection = array(
-					'message' => __( 'Your draft is too large to save. Please remove some content and try again.', 'buddyboss-platform' ),
+					'message' => __( 'Your draft is too large to save. Please remove some content and try again.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				);
 			}
 
@@ -733,7 +733,7 @@ function bboss_post_topic_reply_draft() {
 
 					$primary_rejected  = true;
 					$primary_rejection = array(
-						'message' => __( 'Your draft is too large to save. Please remove some content and try again.', 'buddyboss-platform' ),
+						'message' => __( 'Your draft is too large to save. Please remove some content and try again.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					);
 				}
 			}
@@ -852,7 +852,7 @@ function bboss_post_topic_reply_draft() {
 					// primary write here is safe.
 					$primary_rejected  = true;
 					$primary_rejection = array(
-						'message' => __( 'Your draft has too many attachments to save. Please remove some and try again.', 'buddyboss-platform' ),
+						'message' => __( 'Your draft has too many attachments to save. Please remove some and try again.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					);
 				}
 
@@ -909,7 +909,7 @@ function bboss_post_topic_reply_draft() {
 					// primary write here is safe.
 					$primary_rejected  = true;
 					$primary_rejection = array(
-						'message' => __( 'Your draft has too many attachments to save. Please remove some and try again.', 'buddyboss-platform' ),
+						'message' => __( 'Your draft has too many attachments to save. Please remove some and try again.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					);
 				}
 
@@ -966,7 +966,7 @@ function bboss_post_topic_reply_draft() {
 					// primary write here is safe.
 					$primary_rejected  = true;
 					$primary_rejection = array(
-						'message' => __( 'Your draft has too many attachments to save. Please remove some and try again.', 'buddyboss-platform' ),
+						'message' => __( 'Your draft has too many attachments to save. Please remove some and try again.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					);
 				}
 
@@ -1015,7 +1015,7 @@ function bboss_post_topic_reply_draft() {
 
 				$primary_rejected  = true;
 				$primary_rejection = array(
-					'message' => __( 'Your draft is too large to save. Please remove some content and try again.', 'buddyboss-platform' ),
+					'message' => __( 'Your draft is too large to save. Please remove some content and try again.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				);
 			}
 
@@ -1391,7 +1391,7 @@ function bboss_post_topic_reply_draft() {
 
 				wp_send_json_error(
 					array(
-						'message' => __( 'Your draft could not be saved because you have too many saved drafts. Please discard some drafts and try again.', 'buddyboss-platform' ),
+						'message' => __( 'Your draft could not be saved because you have too many saved drafts. Please discard some drafts and try again.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					)
 				);
 			}
@@ -1428,8 +1428,8 @@ function bboss_post_topic_reply_draft() {
 					// data is what leaves no room, discarding drafts cannot help,
 					// because the eviction loop only ever deletes drafts.
 					$budget_message = 'meta_budget' === $budget_reason
-						? __( 'Your draft could not be saved. Please copy your text before leaving this page.', 'buddyboss-platform' )
-						: __( 'Your draft could not be saved because you have too many saved drafts. Please discard some drafts and try again.', 'buddyboss-platform' );
+						? __( 'Your draft could not be saved. Please copy your text before leaving this page.', 'buddyboss-community-social-network-groups-forums-messaging' )
+						: __( 'Your draft could not be saved because you have too many saved drafts. Please discard some drafts and try again.', 'buddyboss-community-social-network-groups-forums-messaging' );
 
 					wp_send_json_error(
 						array(
@@ -1777,8 +1777,8 @@ function bboss_forum_add_content_popup() {
 					<div class="modal-wrapper">
 						<div class="modal-container">
 							<header class="bb-model-header">
-								<h4><span class="target_name"><?php echo esc_html__( 'Forum Description', 'buddyboss-platform' ); ?></span></h4>
-								<a class="bb-close-action-popup bb-model-close-button" href="#" aria-label="<?php esc_attr_e( 'Close', 'buddyboss-platform' ); ?>">
+								<h4><span class="target_name"><?php echo esc_html__( 'Forum Description', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></span></h4>
+								<a class="bb-close-action-popup bb-model-close-button" href="#" aria-label="<?php esc_attr_e( 'Close', 'buddyboss-community-social-network-groups-forums-messaging' ); ?>">
 									<span class="bb-icon-l bb-icon-times"></span>
 								</a>
 							</header>

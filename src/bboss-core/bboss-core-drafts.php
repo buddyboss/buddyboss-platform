@@ -1741,7 +1741,7 @@ function bboss_draft_activity_publish_key( $fallback_key, $user_id ) {
  * @return string
  */
 function bboss_draft_conflict_message() {
-	return __( 'A different version of this draft is already saved. Copy your text, then reload the page to see it.', 'buddyboss-platform' );
+	return __( 'A different version of this draft is already saved. Copy your text, then reload the page to see it.', 'buddyboss-community-social-network-groups-forums-messaging' );
 }
 
 /**

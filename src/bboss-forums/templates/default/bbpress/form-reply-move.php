@@ -23,29 +23,29 @@ defined( 'ABSPATH' ) || exit;
 
 				<fieldset class="bbp-form">
 
-					<legend><?php /* translators: %s: reply title. */ printf( esc_html__( 'Move reply "%s"', 'buddyboss-platform' ), esc_html( bboss_bbp_get_reply_title() ) ); ?></legend>
+					<legend><?php /* translators: %s: reply title. */ printf( esc_html__( 'Move reply "%s"', 'buddyboss-community-social-network-groups-forums-messaging' ), esc_html( bboss_bbp_get_reply_title() ) ); ?></legend>
 
 					<div>
 
 						<div class="bp-feedback info">
 							<span class="bp-icon" aria-hidden="true"></span>
-							<p><?php esc_html_e( 'You can either make this reply a new discussion with a new title, or merge it into an existing discussion.', 'buddyboss-platform' ); ?></p>
+							<p><?php esc_html_e( 'You can either make this reply a new discussion with a new title, or merge it into an existing discussion.', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></p>
 						</div>
 
 						<div class="bp-feedback info">
 							<span class="bp-icon" aria-hidden="true"></span>
-							<p><?php esc_html_e( 'If you choose an existing discussion, replies will be ordered by the time and date they were created.', 'buddyboss-platform' ); ?></p>
+							<p><?php esc_html_e( 'If you choose an existing discussion, replies will be ordered by the time and date they were created.', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></p>
 						</div>
 
 						<fieldset class="bbp-form">
-							<legend><?php esc_html_e( 'Move Method', 'buddyboss-platform' ); ?></legend>
+							<legend><?php esc_html_e( 'Move Method', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></legend>
 
 							<div>
 								<div class="bp-radio-wrap">
 									<input name="bbp_reply_move_option" id="bbp_reply_move_option_reply" class="bs-styled-radio" type="radio" checked="checked" value="topic" tabindex="<?php bboss_bbp_tab_index(); ?>" />
-									<label for="bbp_reply_move_option_reply"><?php /* translators: %s: forum title. */ echo wp_kses_post( sprintf( __( 'New discussion in <strong>%s</strong> titled:', 'buddyboss-platform' ), esc_html( bboss_bbp_get_forum_title( bboss_bbp_get_reply_forum_id( bboss_bbp_get_reply_id() ) ) ) ) ); ?></label>
+									<label for="bbp_reply_move_option_reply"><?php /* translators: %s: forum title. */ echo wp_kses_post( sprintf( __( 'New discussion in <strong>%s</strong> titled:', 'buddyboss-community-social-network-groups-forums-messaging' ), esc_html( bboss_bbp_get_forum_title( bboss_bbp_get_reply_forum_id( bboss_bbp_get_reply_id() ) ) ) ) ); ?></label>
 								</div>
-								<input type="text" id="bbp_reply_move_destination_title" value="<?php /* translators: %s: reply title. */ printf( esc_html__( 'Moved: %s', 'buddyboss-platform' ), esc_html( bboss_bbp_get_reply_title() ) ); ?>" tabindex="<?php bboss_bbp_tab_index(); ?>" size="35" name="bbp_reply_move_destination_title" />
+								<input type="text" id="bbp_reply_move_destination_title" value="<?php /* translators: %s: reply title. */ printf( esc_html__( 'Moved: %s', 'buddyboss-community-social-network-groups-forums-messaging' ), esc_html( bboss_bbp_get_reply_title() ) ); ?>" tabindex="<?php bboss_bbp_tab_index(); ?>" size="35" name="bbp_reply_move_destination_title" />
 							</div>
 
 							<?php
@@ -61,7 +61,7 @@ defined( 'ABSPATH' ) || exit;
 								<div>
 									<div class="bp-radio-wrap">
 										<input name="bbp_reply_move_option" id="bbp_reply_move_option_existing" class="bs-styled-radio" type="radio" value="existing" tabindex="<?php bboss_bbp_tab_index(); ?>" />
-										<label for="bbp_reply_move_option_existing"><?php esc_html_e( 'Use an existing discussion in this forum:', 'buddyboss-platform' ); ?></label>
+										<label for="bbp_reply_move_option_existing"><?php esc_html_e( 'Use an existing discussion in this forum:', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></label>
 									</div>
 
 									<?php
@@ -83,11 +83,11 @@ defined( 'ABSPATH' ) || exit;
 
 						<div class="bp-feedback error">
 							<span class="bp-icon" aria-hidden="true"></span>
-							<p><?php echo wp_kses_post( __( '<strong>WARNING:</strong> This process cannot be undone.', 'buddyboss-platform' ) ); ?></p>
+							<p><?php echo wp_kses_post( __( '<strong>WARNING:</strong> This process cannot be undone.', 'buddyboss-community-social-network-groups-forums-messaging' ) ); ?></p>
 						</div>
 
 						<div class="bbp-submit-wrapper">
-							<button type="submit" tabindex="<?php bboss_bbp_tab_index(); ?>" id="bbp_move_reply_submit" name="bbp_move_reply_submit" class="button submit"><?php esc_html_e( 'Submit', 'buddyboss-platform' ); ?></button>
+							<button type="submit" tabindex="<?php bboss_bbp_tab_index(); ?>" id="bbp_move_reply_submit" name="bbp_move_reply_submit" class="button submit"><?php esc_html_e( 'Submit', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></button>
 						</div>
 					</div>
 
@@ -100,7 +100,7 @@ defined( 'ABSPATH' ) || exit;
 	<?php else : ?>
 
 		<div id="no-reply-<?php bboss_bbp_reply_id(); ?>" class="bbp-no-reply">
-			<div class="entry-content"><?php is_user_logged_in() ? esc_html_e( 'You do not have the permissions to edit this reply!', 'buddyboss-platform' ) : esc_html_e( 'You cannot edit this reply.', 'buddyboss-platform' ); ?></div>
+			<div class="entry-content"><?php is_user_logged_in() ? esc_html_e( 'You do not have the permissions to edit this reply!', 'buddyboss-community-social-network-groups-forums-messaging' ) : esc_html_e( 'You cannot edit this reply.', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></div>
 		</div>
 
 	<?php endif; ?>

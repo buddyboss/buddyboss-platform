@@ -230,7 +230,7 @@ if ( ! class_exists( 'BBoss_Reaction' ) ) {
 				register_post_type(
 					self::$post_type,
 					array(
-						'description'         => __( 'Reactions', 'buddyboss-platform' ),
+						'description'         => __( 'Reactions', 'buddyboss-community-social-network-groups-forums-messaging' ),
 						'labels'              => $this->bb_get_reaction_post_type_labels(),
 						'menu_icon'           => 'dashicons-reaction-alt',
 						'public'              => false,
@@ -253,22 +253,22 @@ if ( ! class_exists( 'BBoss_Reaction' ) ) {
 		 */
 		public function bb_get_reaction_post_type_labels() {
 			return array(
-				'add_new'               => __( 'New Reaction', 'buddyboss-platform' ),
-				'add_new_item'          => __( 'Add New Reaction', 'buddyboss-platform' ),
-				'all_items'             => __( 'All Reactions', 'buddyboss-platform' ),
-				'edit_item'             => __( 'Edit Reaction', 'buddyboss-platform' ),
-				'filter_items_list'     => __( 'Filter Reaction list', 'buddyboss-platform' ),
-				'items_list'            => __( 'Reaction list', 'buddyboss-platform' ),
-				'items_list_navigation' => __( 'Reaction list navigation', 'buddyboss-platform' ),
-				'menu_name'             => __( 'Reactions', 'buddyboss-platform' ),
-				'name'                  => __( 'Reactions', 'buddyboss-platform' ),
-				'new_item'              => __( 'New Reaction', 'buddyboss-platform' ),
-				'not_found'             => __( 'No reactions found', 'buddyboss-platform' ),
-				'not_found_in_trash'    => __( 'No reactions found in trash', 'buddyboss-platform' ),
-				'search_items'          => __( 'Search Reactions', 'buddyboss-platform' ),
-				'singular_name'         => __( 'Reaction', 'buddyboss-platform' ),
-				'uploaded_to_this_item' => __( 'Uploaded to this reaction', 'buddyboss-platform' ),
-				'view_item'             => __( 'View Reaction', 'buddyboss-platform' ),
+				'add_new'               => __( 'New Reaction', 'buddyboss-community-social-network-groups-forums-messaging' ),
+				'add_new_item'          => __( 'Add New Reaction', 'buddyboss-community-social-network-groups-forums-messaging' ),
+				'all_items'             => __( 'All Reactions', 'buddyboss-community-social-network-groups-forums-messaging' ),
+				'edit_item'             => __( 'Edit Reaction', 'buddyboss-community-social-network-groups-forums-messaging' ),
+				'filter_items_list'     => __( 'Filter Reaction list', 'buddyboss-community-social-network-groups-forums-messaging' ),
+				'items_list'            => __( 'Reaction list', 'buddyboss-community-social-network-groups-forums-messaging' ),
+				'items_list_navigation' => __( 'Reaction list navigation', 'buddyboss-community-social-network-groups-forums-messaging' ),
+				'menu_name'             => __( 'Reactions', 'buddyboss-community-social-network-groups-forums-messaging' ),
+				'name'                  => __( 'Reactions', 'buddyboss-community-social-network-groups-forums-messaging' ),
+				'new_item'              => __( 'New Reaction', 'buddyboss-community-social-network-groups-forums-messaging' ),
+				'not_found'             => __( 'No reactions found', 'buddyboss-community-social-network-groups-forums-messaging' ),
+				'not_found_in_trash'    => __( 'No reactions found in trash', 'buddyboss-community-social-network-groups-forums-messaging' ),
+				'search_items'          => __( 'Search Reactions', 'buddyboss-community-social-network-groups-forums-messaging' ),
+				'singular_name'         => __( 'Reaction', 'buddyboss-community-social-network-groups-forums-messaging' ),
+				'uploaded_to_this_item' => __( 'Uploaded to this reaction', 'buddyboss-community-social-network-groups-forums-messaging' ),
+				'view_item'             => __( 'View Reaction', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			);
 		}
 
@@ -671,7 +671,7 @@ if ( ! class_exists( 'BBoss_Reaction' ) ) {
 				if ( 'wp_error' === $r['error_type'] ) {
 					return new WP_Error(
 						'bb_user_reactions_invalid_item_type',
-						__( 'The item type is invalid.', 'buddyboss-platform' )
+						__( 'The item type is invalid.', 'buddyboss-community-social-network-groups-forums-messaging' )
 					);
 				}
 
@@ -689,27 +689,27 @@ if ( ! class_exists( 'BBoss_Reaction' ) ) {
 			// Reaction need reaction ID.
 			if ( empty( $r['reaction_id'] ) ) {
 				if ( 'wp_error' === $r['error_type'] ) {
-					return new WP_Error( 'bb_user_reactions_empty_reaction_id', __( 'The reaction ID is required to add reaction.', 'buddyboss-platform' ) );
+					return new WP_Error( 'bb_user_reactions_empty_reaction_id', __( 'The reaction ID is required to add reaction.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 				}
 
 				return false;
 				// Reaction need item type.
 			} elseif ( empty( $r['item_type'] ) ) {
 				if ( 'wp_error' === $r['error_type'] ) {
-					return new WP_Error( 'bb_user_reactions_empty_item_type', __( 'The item type is required to add reaction.', 'buddyboss-platform' ) );
+					return new WP_Error( 'bb_user_reactions_empty_item_type', __( 'The item type is required to add reaction.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 				}
 
 				return false;
 				// Reaction need item id.
 			} elseif ( empty( $r['item_id'] ) ) {
 				if ( 'wp_error' === $r['error_type'] ) {
-					return new WP_Error( 'bb_user_reactions_empty_item_id', __( 'The item id is required to add reaction.', 'buddyboss-platform' ) );
+					return new WP_Error( 'bb_user_reactions_empty_item_id', __( 'The item id is required to add reaction.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 				}
 
 				return false;
 			} elseif ( empty( $r['user_id'] ) ) {
 				if ( 'wp_error' === $r['error_type'] ) {
-					return new WP_Error( 'bb_user_reactions_empty_user_id', __( 'Invalid User ID.', 'buddyboss-platform' ) );
+					return new WP_Error( 'bb_user_reactions_empty_user_id', __( 'Invalid User ID.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 				}
 
 				return false;
@@ -776,7 +776,7 @@ if ( ! class_exists( 'BBoss_Reaction' ) ) {
 			// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 			if ( false === $wpdb->query( $sql ) ) {
 				if ( 'wp_error' === $r['error_type'] ) {
-					return new WP_Error( 'bb_reaction_cannot_add', __( 'There is an error while adding the reaction.', 'buddyboss-platform' ) );
+					return new WP_Error( 'bb_reaction_cannot_add', __( 'There is an error while adding the reaction.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 				} else {
 					return false;
 				}
@@ -925,7 +925,7 @@ if ( ! class_exists( 'BBoss_Reaction' ) ) {
 				if ( 'wp_error' === $r['error_type'] ) {
 					return new WP_Error(
 						'bb_user_remove_reactions_invalid_argument',
-						__( 'Invalid request.', 'buddyboss-platform' )
+						__( 'Invalid request.', 'buddyboss-community-social-network-groups-forums-messaging' )
 					);
 				}
 
@@ -947,7 +947,7 @@ if ( ! class_exists( 'BBoss_Reaction' ) ) {
 				if ( 'wp_error' === $r['error_type'] ) {
 					return new WP_Error(
 						'bb_user_remove_reactions_invalid_request',
-						__( 'Unable to removing the reaction.', 'buddyboss-platform' )
+						__( 'Unable to removing the reaction.', 'buddyboss-community-social-network-groups-forums-messaging' )
 					);
 				}
 
@@ -1029,7 +1029,7 @@ if ( ! class_exists( 'BBoss_Reaction' ) ) {
 					if ( 'wp_error' === $r['error_type'] ) {
 						return new WP_Error(
 							'bb_user_reactions_invalid_item_type',
-							__( 'The item type is invalid.', 'buddyboss-platform' )
+							__( 'The item type is invalid.', 'buddyboss-community-social-network-groups-forums-messaging' )
 						);
 					}
 
@@ -1601,7 +1601,7 @@ if ( ! class_exists( 'BBoss_Reaction' ) ) {
 			// Reaction need reaction ID.
 			if ( empty( $r['name'] ) ) {
 				if ( 'wp_error' === $r['error_type'] ) {
-					return new WP_Error( 'bb_reaction_data_empty_name', __( 'The item summary is required to add reaction data.', 'buddyboss-platform' ) );
+					return new WP_Error( 'bb_reaction_data_empty_name', __( 'The item summary is required to add reaction data.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 				}
 
 				return false;
@@ -1657,7 +1657,7 @@ if ( ! class_exists( 'BBoss_Reaction' ) ) {
 			// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 			if ( false === $wpdb->query( $sql ) ) {
 				if ( 'wp_error' === $r['error_type'] ) {
-					return new WP_Error( 'bb_reaction_cannot_add', __( 'There is an error while adding the reaction data.', 'buddyboss-platform' ) );
+					return new WP_Error( 'bb_reaction_cannot_add', __( 'There is an error while adding the reaction data.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 				} else {
 					return false;
 				}

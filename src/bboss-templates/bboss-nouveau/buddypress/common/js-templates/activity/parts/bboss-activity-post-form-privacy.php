@@ -24,13 +24,13 @@ defined( 'ABSPATH' ) || exit;
 						<span class="privacy-sub-label">
 							<?php
 							if ( 'public' === $key ) {
-								esc_html_e( 'Visible to anyone, on or off this site', 'buddyboss-platform' );
+								esc_html_e( 'Visible to anyone, on or off this site', 'buddyboss-community-social-network-groups-forums-messaging' );
 							} elseif ( 'loggedin' === $key ) {
-								esc_html_e( 'Visible to all members on this site', 'buddyboss-platform' );
+								esc_html_e( 'Visible to all members on this site', 'buddyboss-community-social-network-groups-forums-messaging' );
 							} elseif ( 'friends' === $key ) {
-								esc_html_e( 'Visible only to your connections', 'buddyboss-platform' );
+								esc_html_e( 'Visible only to your connections', 'buddyboss-community-social-network-groups-forums-messaging' );
 							} elseif ( 'onlyme' === $key ) {
-								esc_html_e( 'Visible only to you', 'buddyboss-platform' );
+								esc_html_e( 'Visible only to you', 'buddyboss-community-social-network-groups-forums-messaging' );
 							}
 							?>
 						</span>
@@ -51,11 +51,11 @@ defined( 'ABSPATH' ) || exit;
 					<div class="privacy-tag-wrapper">
 						<span class="privacy-figure privacy-figure--group"></span>
 						<div class="privacy-tag">
-							<div class="privacy-label"><?php esc_html_e( 'Post in Group', 'buddyboss-platform' ); ?><i class="bb-icon-l bb-icon-angle-right"></i></div>
-							<span class="privacy-sub-label"><?php esc_html_e( 'Visible to members of a group', 'buddyboss-platform' ); ?></span>
+							<div class="privacy-label"><?php esc_html_e( 'Post in Group', 'buddyboss-community-social-network-groups-forums-messaging' ); ?><i class="bb-icon-l bb-icon-angle-right"></i></div>
+							<span class="privacy-sub-label"><?php esc_html_e( 'Visible to members of a group', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></span>
 						</div>
 					</div>
-					<span class="privacy-radio"><input type="radio" id="group" class="bp-activity-privacy__input" name="privacy" value="group" data-title="<?php esc_html_e( 'Group', 'buddyboss-platform' ); ?>"><span></span></span>
+					<span class="privacy-radio"><input type="radio" id="group" class="bp-activity-privacy__input" name="privacy" value="group" data-title="<?php esc_html_e( 'Group', 'buddyboss-community-social-network-groups-forums-messaging' ); ?>"><span></span></span>
 				</label>
 				<?php
 			}

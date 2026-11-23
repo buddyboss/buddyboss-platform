@@ -128,7 +128,7 @@ function bboss_bbp_new_topic_handler( $action = '' ) {
 
 	// Nonce check.
 	if ( ! bboss_bbp_verify_nonce_request( 'bbp-new-topic' ) ) {
-		bboss_bbp_add_error( 'bbp_new_topic_nonce', __( '<strong>ERROR</strong>: Are you sure you wanted to do that?', 'buddyboss-platform' ) );
+		bboss_bbp_add_error( 'bbp_new_topic_nonce', __( '<strong>ERROR</strong>: Are you sure you wanted to do that?', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 		return;
 	}
 
@@ -156,7 +156,7 @@ function bboss_bbp_new_topic_handler( $action = '' ) {
 
 		// User cannot create topics.
 		if ( ! current_user_can( 'publish_topics' ) ) {
-			bboss_bbp_add_error( 'bbp_topic_permissions', __( '<strong>ERROR</strong>: You do not have permission to create new discussions.', 'buddyboss-platform' ) );
+			bboss_bbp_add_error( 'bbp_topic_permissions', __( '<strong>ERROR</strong>: You do not have permission to create new discussions.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 			return;
 		}
 
@@ -182,7 +182,7 @@ function bboss_bbp_new_topic_handler( $action = '' ) {
 
 	// No topic title.
 	if ( empty( $topic_title ) ) {
-		bboss_bbp_add_error( 'bbp_topic_title', __( '<strong>ERROR</strong>: Your discussion needs a subject.', 'buddyboss-platform' ) );
+		bboss_bbp_add_error( 'bbp_topic_title', __( '<strong>ERROR</strong>: Your discussion needs a subject.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 	}
 
 	/** Topic Content */
@@ -211,7 +211,7 @@ function bboss_bbp_new_topic_handler( $action = '' ) {
 			)
 		)
 	) {
-		bboss_bbp_add_error( 'bbp_topic_content', __( '<strong>ERROR</strong>: Your discussion cannot be empty.', 'buddyboss-platform' ) );
+		bboss_bbp_add_error( 'bbp_topic_content', __( '<strong>ERROR</strong>: Your discussion cannot be empty.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 	}
 
 	/** Topic Forum */
@@ -221,11 +221,11 @@ function bboss_bbp_new_topic_handler( $action = '' ) {
 
 		// Empty Forum id was passed.
 		if ( empty( $_POST['bbp_forum_id'] ) ) {
-			bboss_bbp_add_error( 'bbp_topic_forum_id', __( '<strong>ERROR</strong>: Forum ID is missing.', 'buddyboss-platform' ) );
+			bboss_bbp_add_error( 'bbp_topic_forum_id', __( '<strong>ERROR</strong>: Forum ID is missing.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 
 			// Forum id is not a number.
 		} elseif ( ! is_numeric( $_POST['bbp_forum_id'] ) ) {
-			bboss_bbp_add_error( 'bbp_topic_forum_id', __( '<strong>ERROR</strong>: Forum ID must be a number.', 'buddyboss-platform' ) );
+			bboss_bbp_add_error( 'bbp_topic_forum_id', __( '<strong>ERROR</strong>: Forum ID must be a number.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 
 			// Forum id might be valid.
 		} else {
@@ -235,15 +235,15 @@ function bboss_bbp_new_topic_handler( $action = '' ) {
 
 			// Forum id is empty.
 			if ( 0 === $posted_forum_id ) {
-				bboss_bbp_add_error( 'bbp_topic_forum_id', __( '<strong>ERROR</strong>: Forum ID is missing.', 'buddyboss-platform' ) );
+				bboss_bbp_add_error( 'bbp_topic_forum_id', __( '<strong>ERROR</strong>: Forum ID is missing.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 
 				// Forum id is a negative number.
 			} elseif ( 0 > $posted_forum_id ) {
-				bboss_bbp_add_error( 'bbp_topic_forum_id', __( '<strong>ERROR</strong>: Forum ID cannot be a negative number.', 'buddyboss-platform' ) );
+				bboss_bbp_add_error( 'bbp_topic_forum_id', __( '<strong>ERROR</strong>: Forum ID cannot be a negative number.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 
 				// Forum does not exist.
 			} elseif ( ! bboss_bbp_get_forum( $posted_forum_id ) ) {
-				bboss_bbp_add_error( 'bbp_topic_forum_id', __( '<strong>ERROR</strong>: Forum does not exist.', 'buddyboss-platform' ) );
+				bboss_bbp_add_error( 'bbp_topic_forum_id', __( '<strong>ERROR</strong>: Forum does not exist.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 
 				// Use the POST'ed forum id.
 			} else {
@@ -257,26 +257,26 @@ function bboss_bbp_new_topic_handler( $action = '' ) {
 
 		// Forum is a category.
 		if ( bboss_bbp_is_forum_category( $forum_id ) ) {
-			bboss_bbp_add_error( 'bbp_new_topic_forum_category', __( '<strong>ERROR</strong>: This forum is a category. No discussions can be created in this forum.', 'buddyboss-platform' ) );
+			bboss_bbp_add_error( 'bbp_new_topic_forum_category', __( '<strong>ERROR</strong>: This forum is a category. No discussions can be created in this forum.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 
 			// Forum is not a category.
 		} else {
 
 			// Forum is closed and user cannot access.
 			if ( bboss_bbp_is_forum_closed( $forum_id ) && ! current_user_can( 'edit_forum', $forum_id ) ) {
-				bboss_bbp_add_error( 'bbp_new_topic_forum_closed', __( '<strong>ERROR</strong>: This forum has been closed to new discussions.', 'buddyboss-platform' ) );
+				bboss_bbp_add_error( 'bbp_new_topic_forum_closed', __( '<strong>ERROR</strong>: This forum has been closed to new discussions.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 			}
 
 			// Forum is private and user cannot access.
 			if ( bboss_bbp_is_forum_private( $forum_id ) ) {
 				if ( ! current_user_can( 'read_private_forums' ) ) {
-					bboss_bbp_add_error( 'bbp_new_topic_forum_private', __( '<strong>ERROR</strong>: This forum is private and you do not have the capability to read or create new discussions in it.', 'buddyboss-platform' ) );
+					bboss_bbp_add_error( 'bbp_new_topic_forum_private', __( '<strong>ERROR</strong>: This forum is private and you do not have the capability to read or create new discussions in it.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 				}
 
 				// Forum is hidden and user cannot access.
 			} elseif ( bboss_bbp_is_forum_hidden( $forum_id ) ) {
 				if ( ! current_user_can( 'read_hidden_forums' ) ) {
-					bboss_bbp_add_error( 'bbp_new_topic_forum_hidden', __( '<strong>ERROR</strong>: This forum is hidden and you do not have the capability to read or create new discussions in it.', 'buddyboss-platform' ) );
+					bboss_bbp_add_error( 'bbp_new_topic_forum_hidden', __( '<strong>ERROR</strong>: This forum is hidden and you do not have the capability to read or create new discussions in it.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 				}
 			}
 		}
@@ -285,35 +285,35 @@ function bboss_bbp_new_topic_handler( $action = '' ) {
 	if ( ! empty( $_POST['bbp_media'] ) ) {
 		$can_send_media = bboss_user_has_access_upload_media( 0, bboss_loggedin_user_id(), $forum_id, 0 );
 		if ( ! $can_send_media ) {
-			bboss_bbp_add_error( 'bbp_topic_media', __( '<strong>ERROR</strong>: You don\'t have access to send the media.', 'buddyboss-platform' ) );
+			bboss_bbp_add_error( 'bbp_topic_media', __( '<strong>ERROR</strong>: You don\'t have access to send the media.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 		}
 	}
 
 	if ( ! empty( $_POST['bbp_document'] ) ) {
 		$can_send_document = bboss_user_has_access_upload_document( 0, bboss_loggedin_user_id(), $forum_id, 0 );
 		if ( ! $can_send_document ) {
-			bboss_bbp_add_error( 'bbp_topic_document', __( '<strong>ERROR</strong>: You don\'t have access to send the document.', 'buddyboss-platform' ) );
+			bboss_bbp_add_error( 'bbp_topic_document', __( '<strong>ERROR</strong>: You don\'t have access to send the document.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 		}
 	}
 
 	if ( ! empty( $_POST['bbp_video'] ) ) {
 		$can_send_video = bboss_user_has_access_upload_video( 0, bboss_loggedin_user_id(), $forum_id, 0 );
 		if ( ! $can_send_video ) {
-			bboss_bbp_add_error( 'bbp_topic_video', __( '<strong>ERROR</strong>: You don\'t have access to send the video.', 'buddyboss-platform' ) );
+			bboss_bbp_add_error( 'bbp_topic_video', __( '<strong>ERROR</strong>: You don\'t have access to send the video.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 		}
 	}
 
 	if ( ! empty( $_POST['bbp_media_gif'] ) ) {
 		$can_send_gif = bboss_user_has_access_upload_gif( 0, bboss_loggedin_user_id(), $forum_id, 0, 'forum' );
 		if ( ! $can_send_gif ) {
-			bboss_bbp_add_error( 'bbp_topic_gif', __( '<strong>ERROR</strong>: You don\'t have access to send the gif.', 'buddyboss-platform' ) );
+			bboss_bbp_add_error( 'bbp_topic_gif', __( '<strong>ERROR</strong>: You don\'t have access to send the gif.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 		}
 	}
 
 	/** Topic Flooding */
 
 	if ( ! bboss_bbp_check_for_flood( $anonymous_data, $topic_author ) ) {
-		bboss_bbp_add_error( 'bbp_topic_flood', __( '<strong>ERROR</strong>: Slow down; you move too fast.', 'buddyboss-platform' ) );
+		bboss_bbp_add_error( 'bbp_topic_flood', __( '<strong>ERROR</strong>: Slow down; you move too fast.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 	}
 
 	/** Topic Duplicate */
@@ -326,13 +326,13 @@ function bboss_bbp_new_topic_handler( $action = '' ) {
 			'anonymous_data' => $anonymous_data,
 		)
 	) ) {
-		bboss_bbp_add_error( 'bbp_topic_duplicate', __( '<strong>ERROR</strong>: Duplicate discussion detected; it looks as though you\'ve already said that!', 'buddyboss-platform' ) );
+		bboss_bbp_add_error( 'bbp_topic_duplicate', __( '<strong>ERROR</strong>: Duplicate discussion detected; it looks as though you\'ve already said that!', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 	}
 
 	/** Topic Blacklist */
 
 	if ( ! bboss_bbp_check_for_blacklist( $anonymous_data, $topic_author, $topic_title, $topic_content ) ) {
-		bboss_bbp_add_error( 'bbp_topic_blacklist', __( '<strong>ERROR</strong>: Your discussion cannot be created at this time.', 'buddyboss-platform' ) );
+		bboss_bbp_add_error( 'bbp_topic_blacklist', __( '<strong>ERROR</strong>: Your discussion cannot be created at this time.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 	}
 
 	/** Topic Status */
@@ -503,11 +503,11 @@ function bboss_bbp_new_topic_handler( $action = '' ) {
 		// WP_Error.
 	} elseif ( is_wp_error( $topic_id ) && $topic_id->get_error_message() ) {
 		/* translators: %s: error message. */
-		bboss_bbp_add_error( 'bbp_topic_error', sprintf( __( '<strong>Error</strong>: The following problem(s) occurred: %s', 'buddyboss-platform' ), $topic_id->get_error_message() ) );
+		bboss_bbp_add_error( 'bbp_topic_error', sprintf( __( '<strong>Error</strong>: The following problem(s) occurred: %s', 'buddyboss-community-social-network-groups-forums-messaging' ), $topic_id->get_error_message() ) );
 
 	// Generic error.
 	} else {
-		bboss_bbp_add_error( 'bbp_topic_error', __( '<strong>Error</strong>: The topic was not created.', 'buddyboss-platform' ) );
+		bboss_bbp_add_error( 'bbp_topic_error', __( '<strong>Error</strong>: The topic was not created.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 	}
 }
 
@@ -563,7 +563,7 @@ function bboss_bbp_edit_topic_handler( $action = '' ) {
 
 	// Topic id was not passed.
 	if ( empty( $_POST['bbp_topic_id'] ) ) {
-		bboss_bbp_add_error( 'bbp_edit_topic_id', __( '<strong>ERROR</strong>: Discussion ID not found.', 'buddyboss-platform' ) );
+		bboss_bbp_add_error( 'bbp_edit_topic_id', __( '<strong>ERROR</strong>: Discussion ID not found.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 		return;
 
 		// Topic id was passed.
@@ -574,7 +574,7 @@ function bboss_bbp_edit_topic_handler( $action = '' ) {
 
 	// Topic does not exist.
 	if ( empty( $topic ) ) {
-		bboss_bbp_add_error( 'bbp_edit_topic_not_found', __( '<strong>ERROR</strong>: The discussion you want to edit was not found.', 'buddyboss-platform' ) );
+		bboss_bbp_add_error( 'bbp_edit_topic_not_found', __( '<strong>ERROR</strong>: The discussion you want to edit was not found.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 		return;
 
 		// Topic exists.
@@ -585,7 +585,7 @@ function bboss_bbp_edit_topic_handler( $action = '' ) {
 
 			// User cannot edit this topic.
 			if ( ! current_user_can( 'edit_topic', $topic_id ) ) {
-				bboss_bbp_add_error( 'bbp_edit_topic_permissions', __( '<strong>ERROR</strong>: You do not have permission to edit that discussion.', 'buddyboss-platform' ) );
+				bboss_bbp_add_error( 'bbp_edit_topic_permissions', __( '<strong>ERROR</strong>: You do not have permission to edit that discussion.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 			}
 
 			// Set topic author.
@@ -601,7 +601,7 @@ function bboss_bbp_edit_topic_handler( $action = '' ) {
 
 	// Nonce check.
 	if ( ! bboss_bbp_verify_nonce_request( 'bbp-edit-topic_' . $topic_id ) ) {
-		bboss_bbp_add_error( 'bbp_edit_topic_nonce', __( '<strong>ERROR</strong>: Are you sure you wanted to do that?', 'buddyboss-platform' ) );
+		bboss_bbp_add_error( 'bbp_edit_topic_nonce', __( '<strong>ERROR</strong>: Are you sure you wanted to do that?', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 		return;
 	}
 
@@ -616,7 +616,7 @@ function bboss_bbp_edit_topic_handler( $action = '' ) {
 
 	// Forum id was not passed.
 	if ( empty( $_POST['bbp_forum_id'] ) ) {
-		bboss_bbp_add_error( 'bbp_topic_forum_id', __( '<strong>ERROR</strong>: Forum ID is missing.', 'buddyboss-platform' ) );
+		bboss_bbp_add_error( 'bbp_topic_forum_id', __( '<strong>ERROR</strong>: Forum ID is missing.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 
 		// Forum id was passed.
 	} elseif ( is_numeric( $_POST['bbp_forum_id'] ) ) {
@@ -631,26 +631,26 @@ function bboss_bbp_edit_topic_handler( $action = '' ) {
 
 		// Forum is a category.
 		if ( bboss_bbp_is_forum_category( $forum_id ) ) {
-			bboss_bbp_add_error( 'bbp_edit_topic_forum_category', __( '<strong>ERROR</strong>: This forum is a category. No topics can be created in it.', 'buddyboss-platform' ) );
+			bboss_bbp_add_error( 'bbp_edit_topic_forum_category', __( '<strong>ERROR</strong>: This forum is a category. No topics can be created in it.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 
 			// Forum is not a category.
 		} else {
 
 			// Forum is closed and user cannot access.
 			if ( bboss_bbp_is_forum_closed( $forum_id ) && ! current_user_can( 'edit_forum', $forum_id ) ) {
-				bboss_bbp_add_error( 'bbp_edit_topic_forum_closed', __( '<strong>ERROR</strong>: This forum has been closed to new discussions.', 'buddyboss-platform' ) );
+				bboss_bbp_add_error( 'bbp_edit_topic_forum_closed', __( '<strong>ERROR</strong>: This forum has been closed to new discussions.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 			}
 
 			// Forum is private and user cannot access.
 			if ( bboss_bbp_is_forum_private( $forum_id ) ) {
 				if ( ! current_user_can( 'read_private_forums' ) ) {
-					bboss_bbp_add_error( 'bbp_edit_topic_forum_private', __( '<strong>ERROR</strong>: This forum is private and you do not have the capability to read or create new discussions in it.', 'buddyboss-platform' ) );
+					bboss_bbp_add_error( 'bbp_edit_topic_forum_private', __( '<strong>ERROR</strong>: This forum is private and you do not have the capability to read or create new discussions in it.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 				}
 
 				// Forum is hidden and user cannot access.
 			} elseif ( bboss_bbp_is_forum_hidden( $forum_id ) ) {
 				if ( ! current_user_can( 'read_hidden_forums' ) ) {
-					bboss_bbp_add_error( 'bbp_edit_topic_forum_hidden', __( '<strong>ERROR</strong>: This forum is hidden and you do not have the capability to read or create new discussions in it.', 'buddyboss-platform' ) );
+					bboss_bbp_add_error( 'bbp_edit_topic_forum_hidden', __( '<strong>ERROR</strong>: This forum is hidden and you do not have the capability to read or create new discussions in it.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 				}
 			}
 		}
@@ -667,7 +667,7 @@ function bboss_bbp_edit_topic_handler( $action = '' ) {
 
 	// No topic title.
 	if ( empty( $topic_title ) ) {
-		bboss_bbp_add_error( 'bbp_edit_topic_title', __( '<strong>ERROR</strong>: Your discussion needs a subject.', 'buddyboss-platform' ) );
+		bboss_bbp_add_error( 'bbp_edit_topic_title', __( '<strong>ERROR</strong>: Your discussion needs a subject.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 	}
 
 	/** Topic Content */
@@ -695,18 +695,18 @@ function bboss_bbp_edit_topic_handler( $action = '' ) {
 			)
 		)
 	) {
-		bboss_bbp_add_error( 'bbp_edit_topic_content', __( '<strong>ERROR</strong>: Your discussion cannot be empty.', 'buddyboss-platform' ) );
+		bboss_bbp_add_error( 'bbp_edit_topic_content', __( '<strong>ERROR</strong>: Your discussion cannot be empty.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 	}
 
 	/** Topic Blacklist */
 
 	if ( ! bboss_bbp_check_for_blacklist( $anonymous_data, $topic_author, $topic_title, $topic_content ) ) {
-		bboss_bbp_add_error( 'bbp_topic_blacklist', __( '<strong>ERROR</strong>: Your discussion cannot be edited at this time.', 'buddyboss-platform' ) );
+		bboss_bbp_add_error( 'bbp_topic_blacklist', __( '<strong>ERROR</strong>: Your discussion cannot be edited at this time.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 	}
 
 	// Topic past edit lock checking.
 	if ( ! current_user_can( 'edit_others_topics' ) && bboss_bbp_past_edit_lock( $topic->post_date_gmt ) ) {
-		bboss_bbp_add_error( 'bbp_reply_edit_lock', __( '<strong>ERROR</strong>: Your reply cannot be edited now.', 'buddyboss-platform' ) );
+		bboss_bbp_add_error( 'bbp_reply_edit_lock', __( '<strong>ERROR</strong>: Your reply cannot be edited now.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 	}
 
 	/** Topic Status */
@@ -900,7 +900,7 @@ function bboss_bbp_edit_topic_handler( $action = '' ) {
 
 	} else {
 		$append_error = ( is_wp_error( $topic_id ) && $topic_id->get_error_message() ) ? $topic_id->get_error_message() . ' ' : '';
-		bboss_bbp_add_error( 'bbp_topic_error', sprintf( /* translators: %s: additional error details (may be empty). */ __( '<strong>ERROR</strong>: The following problem(s) have been found with your topic:%sPlease try again.', 'buddyboss-platform' ), $append_error ) );
+		bboss_bbp_add_error( 'bbp_topic_error', sprintf( /* translators: %s: additional error details (may be empty). */ __( '<strong>ERROR</strong>: The following problem(s) have been found with your topic:%sPlease try again.', 'buddyboss-community-social-network-groups-forums-messaging' ), $append_error ) );
 	}
 }
 
@@ -1287,25 +1287,25 @@ function bboss_bbp_merge_topic_handler( $action = '' ) {
 
 	// Topic id.
 	if ( empty( $_POST['bbp_topic_id'] ) ) {
-		bboss_bbp_add_error( 'bbp_merge_topic_source_id', __( '<strong>ERROR</strong>: Discussion ID not found.', 'buddyboss-platform' ) );
+		bboss_bbp_add_error( 'bbp_merge_topic_source_id', __( '<strong>ERROR</strong>: Discussion ID not found.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 	} else {
 		$source_topic_id = (int) $_POST['bbp_topic_id'];
 	}
 
 	// Nonce check.
 	if ( ! bboss_bbp_verify_nonce_request( 'bbp-merge-topic_' . $source_topic_id ) ) {
-		bboss_bbp_add_error( 'bbp_merge_topic_nonce', __( '<strong>ERROR</strong>: Are you sure you wanted to do that?', 'buddyboss-platform' ) );
+		bboss_bbp_add_error( 'bbp_merge_topic_nonce', __( '<strong>ERROR</strong>: Are you sure you wanted to do that?', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 		return;
 
 		// Source topic not found.
 	} elseif ( ! $source_topic = bboss_bbp_get_topic( $source_topic_id ) ) {
-		bboss_bbp_add_error( 'bbp_merge_topic_source_not_found', __( '<strong>ERROR</strong>: The discussion you want to merge was not found.', 'buddyboss-platform' ) );
+		bboss_bbp_add_error( 'bbp_merge_topic_source_not_found', __( '<strong>ERROR</strong>: The discussion you want to merge was not found.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 		return;
 	}
 
 	// Cannot edit source topic.
 	if ( ! current_user_can( 'edit_topic', $source_topic->ID ) ) {
-		bboss_bbp_add_error( 'bbp_merge_topic_source_permission', __( '<strong>ERROR</strong>: You do not have the permissions to edit the source discussion.', 'buddyboss-platform' ) );
+		bboss_bbp_add_error( 'bbp_merge_topic_source_permission', __( '<strong>ERROR</strong>: You do not have the permissions to edit the source discussion.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 		return;
 	}
 
@@ -1313,19 +1313,19 @@ function bboss_bbp_merge_topic_handler( $action = '' ) {
 
 	// Topic id.
 	if ( empty( $_POST['bbp_destination_topic'] ) ) {
-		bboss_bbp_add_error( 'bbp_merge_topic_destination_id', __( '<strong>ERROR</strong>: Destination discussion ID not found.', 'buddyboss-platform' ) );
+		bboss_bbp_add_error( 'bbp_merge_topic_destination_id', __( '<strong>ERROR</strong>: Destination discussion ID not found.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 	} else {
 		$destination_topic_id = (int) $_POST['bbp_destination_topic'];
 	}
 
 	// Destination topic not found.
 	if ( ! $destination_topic = bboss_bbp_get_topic( $destination_topic_id ) ) {
-		bboss_bbp_add_error( 'bbp_merge_topic_destination_not_found', __( '<strong>ERROR</strong>: The discussion you want to merge to was not found.', 'buddyboss-platform' ) );
+		bboss_bbp_add_error( 'bbp_merge_topic_destination_not_found', __( '<strong>ERROR</strong>: The discussion you want to merge to was not found.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 	}
 
 	// Cannot edit destination topic.
 	if ( ! current_user_can( 'edit_topic', $destination_topic->ID ) ) {
-		bboss_bbp_add_error( 'bbp_merge_topic_destination_permission', __( '<strong>ERROR</strong>: You do not have the permissions to edit the destination discussion.', 'buddyboss-platform' ) );
+		bboss_bbp_add_error( 'bbp_merge_topic_destination_permission', __( '<strong>ERROR</strong>: You do not have the permissions to edit the destination discussion.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 	}
 
 	// Bail if errors.
@@ -1465,7 +1465,7 @@ function bboss_bbp_merge_topic_handler( $action = '' ) {
 				array(
 					'ID'          => $reply->ID,
 					/* translators: %s: destination topic title. */
-					'post_title'  => sprintf( __( 'Reply To: %s', 'buddyboss-platform' ), $destination_topic->post_title ),
+					'post_title'  => sprintf( __( 'Reply To: %s', 'buddyboss-community-social-network-groups-forums-messaging' ), $destination_topic->post_title ),
 					'post_name'   => false,
 					'post_type'   => bboss_bbp_get_reply_post_type(),
 					'post_parent' => $destination_topic->ID,
@@ -1612,7 +1612,7 @@ function bboss_bbp_split_topic_handler( $action = '' ) {
 	/** Split Reply */
 
 	if ( empty( $_POST['bbp_reply_id'] ) ) {
-		bboss_bbp_add_error( 'bbp_split_topic_reply_id', __( '<strong>ERROR</strong>: Reply ID to split the topic from not found!', 'buddyboss-platform' ) );
+		bboss_bbp_add_error( 'bbp_split_topic_reply_id', __( '<strong>ERROR</strong>: Reply ID to split the topic from not found!', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 	} else {
 		$from_reply_id = (int) $_POST['bbp_reply_id'];
 	}
@@ -1621,7 +1621,7 @@ function bboss_bbp_split_topic_handler( $action = '' ) {
 
 	// Reply exists.
 	if ( empty( $from_reply ) ) {
-		bboss_bbp_add_error( 'bbp_split_topic_r_not_found', __( '<strong>ERROR</strong>: The reply you want to split from was not found.', 'buddyboss-platform' ) );
+		bboss_bbp_add_error( 'bbp_split_topic_r_not_found', __( '<strong>ERROR</strong>: The reply you want to split from was not found.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 	}
 
 	/** Topic to Split */
@@ -1631,18 +1631,18 @@ function bboss_bbp_split_topic_handler( $action = '' ) {
 
 	// No topic.
 	if ( empty( $source_topic ) ) {
-		bboss_bbp_add_error( 'bbp_split_topic_source_not_found', __( '<strong>ERROR</strong>: The topic you want to split was not found.', 'buddyboss-platform' ) );
+		bboss_bbp_add_error( 'bbp_split_topic_source_not_found', __( '<strong>ERROR</strong>: The topic you want to split was not found.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 	}
 
 	// Nonce check failed.
 	if ( ! bboss_bbp_verify_nonce_request( 'bbp-split-topic_' . $source_topic->ID ) ) {
-		bboss_bbp_add_error( 'bbp_split_topic_nonce', __( '<strong>ERROR</strong>: Are you sure you wanted to do that?', 'buddyboss-platform' ) );
+		bboss_bbp_add_error( 'bbp_split_topic_nonce', __( '<strong>ERROR</strong>: Are you sure you wanted to do that?', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 		return;
 	}
 
 	// Use cannot edit topic.
 	if ( ! current_user_can( 'edit_topic', $source_topic->ID ) ) {
-		bboss_bbp_add_error( 'bbp_split_topic_source_permission', __( '<strong>ERROR</strong>: You do not have the permissions to edit the source discussion.', 'buddyboss-platform' ) );
+		bboss_bbp_add_error( 'bbp_split_topic_source_permission', __( '<strong>ERROR</strong>: You do not have the permissions to edit the source discussion.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 	}
 
 	// How to Split.
@@ -1652,7 +1652,7 @@ function bboss_bbp_split_topic_handler( $action = '' ) {
 
 	// Invalid split option.
 	if ( empty( $split_option ) || ! in_array( $split_option, array( 'existing', 'reply' ) ) ) {
-		bboss_bbp_add_error( 'bbp_split_topic_option', __( '<strong>ERROR</strong>: You need to choose a valid split option.', 'buddyboss-platform' ) );
+		bboss_bbp_add_error( 'bbp_split_topic_option', __( '<strong>ERROR</strong>: You need to choose a valid split option.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 
 		// Valid Split Option.
 	} else {
@@ -1664,7 +1664,7 @@ function bboss_bbp_split_topic_handler( $action = '' ) {
 			case 'existing':
 				// Get destination topic id.
 				if ( empty( $_POST['bbp_destination_topic'] ) ) {
-					bboss_bbp_add_error( 'bbp_split_topic_destination_id', __( '<strong>ERROR</strong>: Destination discussion ID not found!', 'buddyboss-platform' ) );
+					bboss_bbp_add_error( 'bbp_split_topic_destination_id', __( '<strong>ERROR</strong>: Destination discussion ID not found!', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 				} else {
 					$destination_topic_id = (int) $_POST['bbp_destination_topic'];
 				}
@@ -1674,12 +1674,12 @@ function bboss_bbp_split_topic_handler( $action = '' ) {
 
 				// No destination topic.
 				if ( empty( $destination_topic ) ) {
-					bboss_bbp_add_error( 'bbp_split_topic_destination_not_found', __( '<strong>ERROR</strong>: The discussion you want to split to was not found!', 'buddyboss-platform' ) );
+					bboss_bbp_add_error( 'bbp_split_topic_destination_not_found', __( '<strong>ERROR</strong>: The discussion you want to split to was not found!', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 				}
 
 				// User cannot edit the destination topic.
 				if ( ! current_user_can( 'edit_topic', $destination_topic->ID ) ) {
-					bboss_bbp_add_error( 'bbp_split_topic_destination_permission', __( '<strong>ERROR</strong>: You do not have the permissions to edit the destination discussion!', 'buddyboss-platform' ) );
+					bboss_bbp_add_error( 'bbp_split_topic_destination_permission', __( '<strong>ERROR</strong>: You do not have the permissions to edit the destination discussion!', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 				}
 
 				break;
@@ -1718,12 +1718,12 @@ function bboss_bbp_split_topic_handler( $action = '' ) {
 
 					// Shouldn't happen.
 					if ( false === $destination_topic_id || is_wp_error( $destination_topic_id ) || empty( $destination_topic ) ) {
-						bboss_bbp_add_error( 'bbp_split_topic_destination_reply', __( '<strong>ERROR</strong>: There was a problem converting the reply into the discussion. Please try again.', 'buddyboss-platform' ) );
+						bboss_bbp_add_error( 'bbp_split_topic_destination_reply', __( '<strong>ERROR</strong>: There was a problem converting the reply into the discussion. Please try again.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 					}
 
 					// User cannot publish posts.
 				} else {
-					bboss_bbp_add_error( 'bbp_split_topic_destination_permission', __( '<strong>ERROR</strong>: You do not have the permissions to create new topics. The reply could not be converted into a discussion.', 'buddyboss-platform' ) );
+					bboss_bbp_add_error( 'bbp_split_topic_destination_permission', __( '<strong>ERROR</strong>: You do not have the permissions to create new topics. The reply could not be converted into a discussion.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 				}
 
 				break;
@@ -1832,7 +1832,7 @@ function bboss_bbp_split_topic_handler( $action = '' ) {
 				array(
 					'ID'          => $reply->ID,
 					/* translators: %s: destination topic title. */
-					'post_title'  => sprintf( __( 'Reply To: %s', 'buddyboss-platform' ), $destination_topic->post_title ),
+					'post_title'  => sprintf( __( 'Reply To: %s', 'buddyboss-community-social-network-groups-forums-messaging' ), $destination_topic->post_title ),
 					'post_name'   => false, // will be automatically generated.
 					'post_parent' => $destination_topic->ID,
 					'guid'        => '',
@@ -2007,7 +2007,7 @@ function bboss_bbp_edit_topic_tag_handler( $action = '' ) {
 	// Tag does not exist.
 	if ( is_wp_error( $tag ) && $tag->get_error_message() ) {
 		/* translators: %s: error message. */
-		bboss_bbp_add_error( 'bbp_manage_topic_invalid_tag', sprintf( __( '<strong>ERROR</strong>: The following problem(s) have been found while getting the tag: %s', 'buddyboss-platform' ), $tag->get_error_message() ) );
+		bboss_bbp_add_error( 'bbp_manage_topic_invalid_tag', sprintf( __( '<strong>ERROR</strong>: The following problem(s) have been found while getting the tag: %s', 'buddyboss-community-social-network-groups-forums-messaging' ), $tag->get_error_message() ) );
 		return;
 	}
 
@@ -2018,19 +2018,19 @@ function bboss_bbp_edit_topic_tag_handler( $action = '' ) {
 		case 'bbp-update-topic-tag':
 			// Nonce check.
 			if ( ! bboss_bbp_verify_nonce_request( 'update-tag_' . $tag_id ) ) {
-				bboss_bbp_add_error( 'bbp_manage_topic_tag_update_nonce', __( '<strong>ERROR</strong>: Are you sure you wanted to do that?', 'buddyboss-platform' ) );
+				bboss_bbp_add_error( 'bbp_manage_topic_tag_update_nonce', __( '<strong>ERROR</strong>: Are you sure you wanted to do that?', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 				return;
 			}
 
 			// Can user edit topic tags?.
 			if ( ! current_user_can( 'edit_topic_tags' ) ) {
-				bboss_bbp_add_error( 'bbp_manage_topic_tag_update_permissions', __( '<strong>ERROR</strong>: You do not have the permissions to edit the discussion tags.', 'buddyboss-platform' ) );
+				bboss_bbp_add_error( 'bbp_manage_topic_tag_update_permissions', __( '<strong>ERROR</strong>: You do not have the permissions to edit the discussion tags.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 				return;
 			}
 
 			// No tag name was provided.
 			if ( empty( $_POST['tag-name'] ) || ! $name = $_POST['tag-name'] ) {
-				bboss_bbp_add_error( 'bbp_manage_topic_tag_update_name', __( '<strong>ERROR</strong>: You need to enter a tag name.', 'buddyboss-platform' ) );
+				bboss_bbp_add_error( 'bbp_manage_topic_tag_update_name', __( '<strong>ERROR</strong>: You need to enter a tag name.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 				return;
 			}
 
@@ -2048,7 +2048,7 @@ function bboss_bbp_edit_topic_tag_handler( $action = '' ) {
 			// Cannot update tag.
 			if ( is_wp_error( $tag ) && $tag->get_error_message() ) {
 				/* translators: %s: error message. */
-				bboss_bbp_add_error( 'bbp_manage_topic_tag_update_error', sprintf( __( '<strong>ERROR</strong>: The following problem(s) have been found while updating the tag: %s', 'buddyboss-platform' ), $tag->get_error_message() ) );
+				bboss_bbp_add_error( 'bbp_manage_topic_tag_update_error', sprintf( __( '<strong>ERROR</strong>: The following problem(s) have been found while updating the tag: %s', 'buddyboss-community-social-network-groups-forums-messaging' ), $tag->get_error_message() ) );
 				return;
 			}
 
@@ -2064,19 +2064,19 @@ function bboss_bbp_edit_topic_tag_handler( $action = '' ) {
 		case 'bbp-merge-topic-tag':
 			// Nonce check.
 			if ( ! bboss_bbp_verify_nonce_request( 'merge-tag_' . $tag_id ) ) {
-				bboss_bbp_add_error( 'bbp_manage_topic_tag_merge_nonce', __( '<strong>ERROR</strong>: Are you sure you wanted to do that?', 'buddyboss-platform' ) );
+				bboss_bbp_add_error( 'bbp_manage_topic_tag_merge_nonce', __( '<strong>ERROR</strong>: Are you sure you wanted to do that?', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 				return;
 			}
 
 			// Can user edit topic tags?.
 			if ( ! current_user_can( 'edit_topic_tags' ) ) {
-				bboss_bbp_add_error( 'bbp_manage_topic_tag_merge_permissions', __( '<strong>ERROR</strong>: You do not have the permissions to edit the discussion tags.', 'buddyboss-platform' ) );
+				bboss_bbp_add_error( 'bbp_manage_topic_tag_merge_permissions', __( '<strong>ERROR</strong>: You do not have the permissions to edit the discussion tags.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 				return;
 			}
 
 			// No tag name was provided.
 			if ( empty( $_POST['tag-existing-name'] ) || ! $name = $_POST['tag-existing-name'] ) {
-				bboss_bbp_add_error( 'bbp_manage_topic_tag_merge_name', __( '<strong>ERROR</strong>: You need to enter a tag name.', 'buddyboss-platform' ) );
+				bboss_bbp_add_error( 'bbp_manage_topic_tag_merge_name', __( '<strong>ERROR</strong>: You need to enter a tag name.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 				return;
 			}
 
@@ -2088,7 +2088,7 @@ function bboss_bbp_edit_topic_tag_handler( $action = '' ) {
 			// Problem inserting the new term.
 			if ( is_wp_error( $tag ) && $tag->get_error_message() ) {
 				/* translators: %s: error message. */
-				bboss_bbp_add_error( 'bbp_manage_topic_tag_merge_error', sprintf( __( '<strong>ERROR</strong>: The following problem(s) have been found while merging the tags: %s', 'buddyboss-platform' ), $tag->get_error_message() ) );
+				bboss_bbp_add_error( 'bbp_manage_topic_tag_merge_error', sprintf( __( '<strong>ERROR</strong>: The following problem(s) have been found while merging the tags: %s', 'buddyboss-community-social-network-groups-forums-messaging' ), $tag->get_error_message() ) );
 				return;
 			}
 
@@ -2097,7 +2097,7 @@ function bboss_bbp_edit_topic_tag_handler( $action = '' ) {
 
 			// Attempting to merge a tag into itself.
 			if ( $tag_id === $to_tag ) {
-				bboss_bbp_add_error( 'bbp_manage_topic_tag_merge_same', __( '<strong>ERROR</strong>: The tags which are being merged can not be the same.', 'buddyboss-platform' ) );
+				bboss_bbp_add_error( 'bbp_manage_topic_tag_merge_same', __( '<strong>ERROR</strong>: The tags which are being merged can not be the same.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 				return;
 			}
 
@@ -2114,7 +2114,7 @@ function bboss_bbp_edit_topic_tag_handler( $action = '' ) {
 			// Error merging the terms.
 			if ( is_wp_error( $tag ) && $tag->get_error_message() ) {
 				/* translators: %s: error message. */
-				bboss_bbp_add_error( 'bbp_manage_topic_tag_merge_error', sprintf( __( '<strong>ERROR</strong>: The following problem(s) have been found while merging the tags: %s', 'buddyboss-platform' ), $tag->get_error_message() ) );
+				bboss_bbp_add_error( 'bbp_manage_topic_tag_merge_error', sprintf( __( '<strong>ERROR</strong>: The following problem(s) have been found while merging the tags: %s', 'buddyboss-community-social-network-groups-forums-messaging' ), $tag->get_error_message() ) );
 				return;
 			}
 
@@ -2130,13 +2130,13 @@ function bboss_bbp_edit_topic_tag_handler( $action = '' ) {
 		case 'bbp-delete-topic-tag':
 			// Nonce check.
 			if ( ! bboss_bbp_verify_nonce_request( 'delete-tag_' . $tag_id ) ) {
-				bboss_bbp_add_error( 'bbp_manage_topic_tag_delete_nonce', __( '<strong>ERROR</strong>: Are you sure you wanted to do that?', 'buddyboss-platform' ) );
+				bboss_bbp_add_error( 'bbp_manage_topic_tag_delete_nonce', __( '<strong>ERROR</strong>: Are you sure you wanted to do that?', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 				return;
 			}
 
 			// Can user delete topic tags?.
 			if ( ! current_user_can( 'delete_topic_tags' ) ) {
-				bboss_bbp_add_error( 'bbp_manage_topic_tag_delete_permissions', __( '<strong>ERROR</strong>: You do not have the permissions to delete the discussion tags.', 'buddyboss-platform' ) );
+				bboss_bbp_add_error( 'bbp_manage_topic_tag_delete_permissions', __( '<strong>ERROR</strong>: You do not have the permissions to delete the discussion tags.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 				return;
 			}
 
@@ -2146,7 +2146,7 @@ function bboss_bbp_edit_topic_tag_handler( $action = '' ) {
 			// Error deleting term.
 			if ( is_wp_error( $tag ) && $tag->get_error_message() ) {
 				/* translators: %s: error message. */
-				bboss_bbp_add_error( 'bbp_manage_topic_tag_delete_error', sprintf( __( '<strong>ERROR</strong>: The following problem(s) have been found while deleting the tag: %s', 'buddyboss-platform' ), $tag->get_error_message() ) );
+				bboss_bbp_add_error( 'bbp_manage_topic_tag_delete_error', sprintf( __( '<strong>ERROR</strong>: The following problem(s) have been found while deleting the tag: %s', 'buddyboss-community-social-network-groups-forums-messaging' ), $tag->get_error_message() ) );
 				return;
 			}
 
@@ -2183,11 +2183,11 @@ function bboss_bbp_get_topic_statuses( $topic_id = 0 ) {
 	return (array) apply_filters(
 		'bbp_get_topic_statuses',
 		array(
-			bboss_bbp_get_public_status_id()  => _x( 'Open', 'Open the topic', 'buddyboss-platform' ),
-			bboss_bbp_get_closed_status_id()  => _x( 'Closed', 'Close the topic', 'buddyboss-platform' ),
-			bboss_bbp_get_spam_status_id()    => _x( 'Spam', 'Spam the topic', 'buddyboss-platform' ),
-			bboss_bbp_get_trash_status_id()   => _x( 'Trash', 'Trash the topic', 'buddyboss-platform' ),
-			bboss_bbp_get_pending_status_id() => _x( 'Pending', 'Unapprove the topic', 'buddyboss-platform' ),
+			bboss_bbp_get_public_status_id()  => _x( 'Open', 'Open the topic', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			bboss_bbp_get_closed_status_id()  => _x( 'Closed', 'Close the topic', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			bboss_bbp_get_spam_status_id()    => _x( 'Spam', 'Spam the topic', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			bboss_bbp_get_trash_status_id()   => _x( 'Trash', 'Trash the topic', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			bboss_bbp_get_pending_status_id() => _x( 'Pending', 'Unapprove the topic', 'buddyboss-community-social-network-groups-forums-messaging' ),
 		),
 		$topic_id
 	);
@@ -2206,9 +2206,9 @@ function bboss_bbp_get_topic_types( $topic_id = 0 ) {
 	return (array) apply_filters(
 		'bbp_get_topic_types',
 		array(
-			'unstick' => __( 'Normal', 'buddyboss-platform' ),
-			'stick'   => __( 'Sticky', 'buddyboss-platform' ),
-			'super'   => __( 'Super Sticky', 'buddyboss-platform' ),
+			'unstick' => __( 'Normal', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'stick'   => __( 'Sticky', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'super'   => __( 'Super Sticky', 'buddyboss-community-social-network-groups-forums-messaging' ),
 		),
 		$topic_id
 	);
@@ -2343,12 +2343,12 @@ function bboss_bbp_toggle_topic_handler( $action = '' ) {
 			$args         = array( 'author_id' => $author_id, 'forum_id' => $forum_id );
 			$allow_delete = bboss_moderator_can_delete_topic_reply( $topic, $args );
 			if ( ! $allow_delete ) {
-				bboss_bbp_add_error( 'bbp_toggle_topic_permission', __( '<strong>ERROR:</strong> You do not have the permission to do that!', 'buddyboss-platform' ) );
+				bboss_bbp_add_error( 'bbp_toggle_topic_permission', __( '<strong>ERROR:</strong> You do not have the permission to do that!', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 
 				return;
 			}
 		} else {
-			bboss_bbp_add_error( 'bbp_toggle_topic_permission', __( '<strong>ERROR:</strong> You do not have the permission to do that!', 'buddyboss-platform' ) );
+			bboss_bbp_add_error( 'bbp_toggle_topic_permission', __( '<strong>ERROR:</strong> You do not have the permission to do that!', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 
 			return;
 		}
@@ -2363,7 +2363,7 @@ function bboss_bbp_toggle_topic_handler( $action = '' ) {
 
 			$is_open = bboss_bbp_is_topic_open( $topic_id );
 			$success = true === $is_open ? bboss_bbp_close_topic( $topic_id ) : bboss_bbp_open_topic( $topic_id );
-			$failure = true === $is_open ? __( '<strong>ERROR</strong>: There was a problem closing the discussion.', 'buddyboss-platform' ) : __( '<strong>ERROR</strong>: There was a problem opening the discussion.', 'buddyboss-platform' );
+			$failure = true === $is_open ? __( '<strong>ERROR</strong>: There was a problem closing the discussion.', 'buddyboss-community-social-network-groups-forums-messaging' ) : __( '<strong>ERROR</strong>: There was a problem opening the discussion.', 'buddyboss-community-social-network-groups-forums-messaging' );
 
 			break;
 
@@ -2374,7 +2374,7 @@ function bboss_bbp_toggle_topic_handler( $action = '' ) {
 			$is_sticky = bboss_bbp_is_topic_sticky( $topic_id );
 			$is_super  = false === $is_sticky && ! empty( $_GET['super'] ) && ( '1' === $_GET['super'] ) ? true : false;
 			$success   = true === $is_sticky ? bboss_bbp_unstick_topic( $topic_id ) : bboss_bbp_stick_topic( $topic_id, $is_super );
-			$failure   = true === $is_sticky ? __( '<strong>ERROR</strong>: There was a problem unsticking the discussion.', 'buddyboss-platform' ) : __( '<strong>ERROR</strong>: There was a problem sticking the discussion.', 'buddyboss-platform' );
+			$failure   = true === $is_sticky ? __( '<strong>ERROR</strong>: There was a problem unsticking the discussion.', 'buddyboss-community-social-network-groups-forums-messaging' ) : __( '<strong>ERROR</strong>: There was a problem sticking the discussion.', 'buddyboss-community-social-network-groups-forums-messaging' );
 
 			break;
 
@@ -2384,7 +2384,7 @@ function bboss_bbp_toggle_topic_handler( $action = '' ) {
 
 			$is_spam  = bboss_bbp_is_topic_spam( $topic_id );
 			$success  = true === $is_spam ? bboss_bbp_unspam_topic( $topic_id ) : bboss_bbp_spam_topic( $topic_id );
-			$failure  = true === $is_spam ? __( '<strong>ERROR</strong>: There was a problem unmarking the discussion as spam.', 'buddyboss-platform' ) : __( '<strong>ERROR</strong>: There was a problem marking the discussion as spam.', 'buddyboss-platform' );
+			$failure  = true === $is_spam ? __( '<strong>ERROR</strong>: There was a problem unmarking the discussion as spam.', 'buddyboss-community-social-network-groups-forums-messaging' ) : __( '<strong>ERROR</strong>: There was a problem marking the discussion as spam.', 'buddyboss-community-social-network-groups-forums-messaging' );
 			$view_all = ! $is_spam;
 
 			break;
@@ -2403,7 +2403,7 @@ function bboss_bbp_toggle_topic_handler( $action = '' ) {
 
 					$view_all = true;
 					$success  = wp_trash_post( $topic_id );
-					$failure  = __( '<strong>ERROR</strong>: There was a problem trashing the discussion.', 'buddyboss-platform' );
+					$failure  = __( '<strong>ERROR</strong>: There was a problem trashing the discussion.', 'buddyboss-community-social-network-groups-forums-messaging' );
 
 					break;
 
@@ -2414,7 +2414,7 @@ function bboss_bbp_toggle_topic_handler( $action = '' ) {
 					if ( $success ) {
 						$success = wp_publish_post( $topic_id );
 					}
-					$failure = __( '<strong>ERROR</strong>: There was a problem untrashing the discussion.', 'buddyboss-platform' );
+					$failure = __( '<strong>ERROR</strong>: There was a problem untrashing the discussion.', 'buddyboss-community-social-network-groups-forums-messaging' );
 
 					break;
 
@@ -2422,7 +2422,7 @@ function bboss_bbp_toggle_topic_handler( $action = '' ) {
 					check_ajax_referer( 'delete-' . bboss_bbp_get_topic_post_type() . '_' . $topic_id );
 
 					$success = wp_delete_post( $topic_id );
-					$failure = __( '<strong>ERROR</strong>: There was a problem deleting the discussion.', 'buddyboss-platform' );
+					$failure = __( '<strong>ERROR</strong>: There was a problem deleting the discussion.', 'buddyboss-community-social-network-groups-forums-messaging' );
 
 					break;
 			}
@@ -3860,7 +3860,7 @@ function bboss_bbp_display_topics_feed_rss2( $topics_query = array() ) {
 
 	<channel>
 
-		<title><?php bloginfo_rss( 'name' ); ?> &#187; <?php esc_html_e( 'All Discussions', 'buddyboss-platform' ); ?></title>
+		<title><?php bloginfo_rss( 'name' ); ?> &#187; <?php esc_html_e( 'All Discussions', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></title>
 		<atom:link href="<?php self_link(); ?>" rel="self" type="application/rss+xml" />
 		<link><?php self_link(); ?></link>
 		<description></description>
@@ -3888,7 +3888,7 @@ function bboss_bbp_display_topics_feed_rss2( $topics_query = array() ) {
 
 					<description>
 						<![CDATA[
-						<p><?php /* translators: %s: number. */ printf( esc_html__( 'Replies: %s', 'buddyboss-platform' ), esc_html( bboss_bbp_get_topic_reply_count() ) ); ?></p>
+						<p><?php /* translators: %s: number. */ printf( esc_html__( 'Replies: %s', 'buddyboss-community-social-network-groups-forums-messaging' ), esc_html( bboss_bbp_get_topic_reply_count() ) ); ?></p>
 						<?php bboss_bbp_topic_content(); ?>
 						]]>
 					</description>

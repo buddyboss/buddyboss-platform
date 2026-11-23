@@ -74,7 +74,7 @@ class BBoss_REST_Moderation_Report_Endpoint extends WP_REST_Controller {
 		$fields = array(
 			'type'        => 'radio',
 			'name'        => 'report_category',
-			'label'       => esc_html__( 'Report Content', 'buddyboss-platform' ),
+			'label'       => esc_html__( 'Report Content', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'description' => '',
 			'is_required' => true,
 			'options'     => array(),
@@ -106,7 +106,7 @@ class BBoss_REST_Moderation_Report_Endpoint extends WP_REST_Controller {
 		$fields['options'][] = array(
 			'id'                => '',
 			'type'              => 'option',
-			'name'              => esc_html__( 'Other', 'buddyboss-platform' ),
+			'name'              => esc_html__( 'Other', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'description'       => '',
 			'show_when'         => 'content_members',
 			'is_default_option' => ( 1 === $count ),
@@ -165,7 +165,7 @@ class BBoss_REST_Moderation_Report_Endpoint extends WP_REST_Controller {
 		$retval[] = array(
 			'type'        => 'submit',
 			'name'        => '',
-			'label'       => esc_attr__( 'Send Report', 'buddyboss-platform' ),
+			'label'       => esc_attr__( 'Send Report', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'description' => '',
 			'is_required' => false,
 			'options'     => array(),
@@ -202,7 +202,7 @@ class BBoss_REST_Moderation_Report_Endpoint extends WP_REST_Controller {
 	public function get_items_permissions_check( $request ) {
 		$retval = new WP_Error(
 			'bp_rest_authorization_required',
-			__( 'Sorry, you need to be logged in to view the block members.', 'buddyboss-platform' ),
+			__( 'Sorry, you need to be logged in to view the block members.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			array(
 				'status' => rest_authorization_required_code(),
 			)
@@ -254,7 +254,7 @@ class BBoss_REST_Moderation_Report_Endpoint extends WP_REST_Controller {
 		if ( 'other' === $args['category_id'] && empty( $args['note'] ) ) {
 			return new WP_Error(
 				'rest_missing_callback_param',
-				__( 'Missing parameter(s): note', 'buddyboss-platform' ),
+				__( 'Missing parameter(s): note', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				array(
 					'status' => 400,
 					'params' => array( 'note' ),
@@ -271,7 +271,7 @@ class BBoss_REST_Moderation_Report_Endpoint extends WP_REST_Controller {
 		if ( empty( $item_sub_id ) || empty( $item_sub_type ) ) {
 			return new WP_Error(
 				'bp_rest_moderation_invalid_report',
-				__( 'Sorry, Invalid item to report.', 'buddyboss-platform' ),
+				__( 'Sorry, Invalid item to report.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				array(
 					'status' => 400,
 				)
@@ -280,8 +280,8 @@ class BBoss_REST_Moderation_Report_Endpoint extends WP_REST_Controller {
 
 		if ( bboss_moderation_report_exist( $item_sub_id, $item_sub_type ) ) {
 			$message = ( BBoss_Moderation_Members::$moderation_type_report === $item_sub_type ) ?
-			__( 'You have already reported this Member.', 'buddyboss-platform' ) :
-			__( 'Sorry, Already reported this item.', 'buddyboss-platform' );
+			__( 'You have already reported this Member.', 'buddyboss-community-social-network-groups-forums-messaging' ) :
+			__( 'Sorry, Already reported this item.', 'buddyboss-community-social-network-groups-forums-messaging' );
 			return new WP_Error(
 				'bp_rest_moderation_already_reported',
 				$message,
@@ -303,7 +303,7 @@ class BBoss_REST_Moderation_Report_Endpoint extends WP_REST_Controller {
 		if ( empty( $report->id ) || empty( $report->report_id ) ) {
 			return new WP_Error(
 				'bp_rest_moderation_report_error',
-				__( 'Sorry, something goes wrong please try again.', 'buddyboss-platform' ),
+				__( 'Sorry, something goes wrong please try again.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				array(
 					'status' => 400,
 				)
@@ -340,7 +340,7 @@ class BBoss_REST_Moderation_Report_Endpoint extends WP_REST_Controller {
 	public function create_item_permissions_check( $request ) {
 		$retval = new WP_Error(
 			'bp_rest_authorization_required',
-			__( 'Sorry, you are not allowed to report a moderation.', 'buddyboss-platform' ),
+			__( 'Sorry, you are not allowed to report a moderation.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			array(
 				'status' => rest_authorization_required_code(),
 			)
@@ -354,7 +354,7 @@ class BBoss_REST_Moderation_Report_Endpoint extends WP_REST_Controller {
 			if ( ! bboss_moderation_user_can( (int) $request['item_id'], $content_type ) ) {
 				$retval = new WP_Error(
 					'bp_rest_invalid_item',
-					__( 'Sorry, you are not allowed to report this item.', 'buddyboss-platform' ),
+					__( 'Sorry, you are not allowed to report this item.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					array(
 						'status' => rest_authorization_required_code(),
 					)
@@ -588,7 +588,7 @@ class BBoss_REST_Moderation_Report_Endpoint extends WP_REST_Controller {
 			$reports_terms = array_map( 'strval', $reports_terms );
 
 			$args['report_category'] = array(
-				'description'       => __( 'Report Content', 'buddyboss-platform' ),
+				'description'       => __( 'Report Content', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				'type'              => 'string',
 				'required'          => true,
 				'sanitize_callback' => 'sanitize_key',
@@ -597,7 +597,7 @@ class BBoss_REST_Moderation_Report_Endpoint extends WP_REST_Controller {
 			);
 
 			$args['note'] = array(
-				'description'       => __( 'User Notes for the other type of report.', 'buddyboss-platform' ),
+				'description'       => __( 'User Notes for the other type of report.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				'type'              => 'string',
 				'default'           => '',
 				'sanitize_callback' => 'sanitize_key',
@@ -605,7 +605,7 @@ class BBoss_REST_Moderation_Report_Endpoint extends WP_REST_Controller {
 			);
 
 			$args['item_id'] = array(
-				'description'       => __( 'Unique identifier for the content to report.', 'buddyboss-platform' ),
+				'description'       => __( 'Unique identifier for the content to report.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				'type'              => 'integer',
 				'required'          => true,
 				'sanitize_callback' => 'sanitize_key',
@@ -619,7 +619,7 @@ class BBoss_REST_Moderation_Report_Endpoint extends WP_REST_Controller {
 			}
 
 			$args['item_type'] = array(
-				'description'       => __( 'Component type to report.', 'buddyboss-platform' ),
+				'description'       => __( 'Component type to report.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				'type'              => 'string',
 				'required'          => true,
 				'enum'              => array_keys( $content_types ),
@@ -675,111 +675,111 @@ class BBoss_REST_Moderation_Report_Endpoint extends WP_REST_Controller {
 			'properties' => array(
 				'type'          => array(
 					'context'     => array( 'view' ),
-					'description' => __( 'Field type name.', 'buddyboss-platform' ),
+					'description' => __( 'Field type name.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'readonly'    => true,
 					'type'        => 'string',
 				),
 				'name'          => array(
 					'context'     => array( 'view' ),
-					'description' => __( 'Name of the field.', 'buddyboss-platform' ),
+					'description' => __( 'Name of the field.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'readonly'    => true,
 					'type'        => 'string',
 				),
 				'label'         => array(
 					'context'     => array( 'view' ),
-					'description' => __( 'Label of the field.', 'buddyboss-platform' ),
+					'description' => __( 'Label of the field.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'readonly'    => true,
 					'type'        => 'string',
 				),
 				'description'   => array(
 					'context'     => array( 'view' ),
-					'description' => __( 'Field explanation to understand the purpose.', 'buddyboss-platform' ),
+					'description' => __( 'Field explanation to understand the purpose.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'readonly'    => true,
 					'type'        => 'string',
 				),
 				'is_required'   => array(
 					'context'     => array( 'view' ),
-					'description' => __( 'Check the field if required or not.', 'buddyboss-platform' ),
+					'description' => __( 'Check the field if required or not.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'readonly'    => true,
 					'type'        => 'boolean',
 				),
 				'options'       => array(
 					'context'     => array( 'view' ),
-					'description' => __( 'Options set for the fields.', 'buddyboss-platform' ),
+					'description' => __( 'Options set for the fields.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'readonly'    => true,
 					'type'        => 'object',
 				),
 				'id'            => array(
 					'context'     => array( 'edit' ),
-					'description' => __( 'A unique numeric ID for the moderation.', 'buddyboss-platform' ),
+					'description' => __( 'A unique numeric ID for the moderation.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'readonly'    => true,
 					'type'        => 'integer',
 				),
 				'report_id'     => array(
 					'context'     => array( 'edit' ),
-					'description' => __( 'A unique numeric ID for the moderation report.', 'buddyboss-platform' ),
+					'description' => __( 'A unique numeric ID for the moderation report.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'readonly'    => true,
 					'type'        => 'integer',
 				),
 				'blog_id'       => array(
 					'context'     => array( 'edit' ),
-					'description' => __( 'Current Site ID.', 'buddyboss-platform' ),
+					'description' => __( 'Current Site ID.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'readonly'    => true,
 					'type'        => 'integer',
 				),
 				'user_id'       => array(
 					'context'     => array( 'edit' ),
-					'description' => __( 'Reported user ID.', 'buddyboss-platform' ),
+					'description' => __( 'Reported user ID.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'readonly'    => true,
 					'type'        => 'integer',
 				),
 				'item_id'       => array(
 					'context'     => array( 'edit' ),
-					'description' => __( 'Reported Item ID.', 'buddyboss-platform' ),
+					'description' => __( 'Reported Item ID.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'readonly'    => true,
 					'type'        => 'integer',
 				),
 				'item_type'     => array(
 					'context'     => array( 'edit' ),
-					'description' => __( 'Reported Item Type.', 'buddyboss-platform' ),
+					'description' => __( 'Reported Item Type.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'readonly'    => true,
 					'type'        => 'string',
 				),
 				'content'       => array(
 					'context'     => array( 'edit' ),
-					'description' => __( 'The report description.', 'buddyboss-platform' ),
+					'description' => __( 'The report description.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'readonly'    => true,
 					'type'        => 'string',
 				),
 				'category_id'   => array(
 					'context'     => array( 'edit' ),
-					'description' => __( 'Report Category ID.', 'buddyboss-platform' ),
+					'description' => __( 'Report Category ID.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'readonly'    => true,
 					'type'        => 'integer',
 				),
 				'date_created'  => array(
 					'context'     => array( 'edit' ),
-					'description' => __( 'Report created date.', 'buddyboss-platform' ),
+					'description' => __( 'Report created date.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'readonly'    => true,
 					'type'        => 'string',
 					'format'      => 'date-time',
 				),
 				'last_updated'  => array(
 					'context'     => array( 'edit' ),
-					'description' => __( 'Report updated date.', 'buddyboss-platform' ),
+					'description' => __( 'Report updated date.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'readonly'    => true,
 					'type'        => 'string',
 					'format'      => 'date-time',
 				),
 				'hide_sitewide' => array(
 					'context'     => array( 'edit' ),
-					'description' => __( 'Whether it is hidden of all or not.', 'buddyboss-platform' ),
+					'description' => __( 'Whether it is hidden of all or not.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'readonly'    => true,
 					'type'        => 'boolean',
 				),
 				'count'         => array(
 					'context'     => array( 'edit' ),
-					'description' => __( 'Number of time item was reported.', 'buddyboss-platform' ),
+					'description' => __( 'Number of time item was reported.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'readonly'    => true,
 					'type'        => 'integer',
 				),

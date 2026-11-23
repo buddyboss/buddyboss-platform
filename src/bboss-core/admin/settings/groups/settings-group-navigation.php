@@ -31,7 +31,7 @@ function bboss_groups_register_navigation_panel_fields() {
 		'group_navigation',
 		'group_navigation_settings',
 		array(
-			'title'    => __( 'Group Navigation', 'buddyboss-platform' ),
+			'title'    => __( 'Group Navigation', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'order'    => 10,
 			'help_url' => '638208',
 		)
@@ -44,9 +44,9 @@ function bboss_groups_register_navigation_panel_fields() {
 		'group_navigation_settings',
 		array(
 			'name'              => 'bb_group_nav_display',
-			'label'             => __( 'Layout', 'buddyboss-platform' ),
+			'label'             => __( 'Layout', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'type'              => 'toggle',
-			'description'       => __( 'Display the group navigation vertically', 'buddyboss-platform' ),
+			'description'       => __( 'Display the group navigation vertically', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'default'           => 0,
 			'order'             => 10,
 			'sanitize_callback' => 'absint',
@@ -60,8 +60,8 @@ function bboss_groups_register_navigation_panel_fields() {
 		'group_navigation_settings',
 		array(
 			'name'              => 'bb_group_default_tab',
-			'label'             => __( 'Default Tab', 'buddyboss-platform' ),
-			'description'       => __( 'The dropdown only shows tabs that are available to all groups.', 'buddyboss-platform' ),
+			'label'             => __( 'Default Tab', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'description'       => __( 'The dropdown only shows tabs that are available to all groups.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'type'              => 'select',
 			'default'           => 'members',
 			'options'           => array(), // Populated at AJAX time via bb_group_navigation_enrich_field_data() so options reflect current component state.
@@ -78,7 +78,7 @@ function bboss_groups_register_navigation_panel_fields() {
 		'group_navigation',
 		'group_navigation_order',
 		array(
-			'title' => __( 'Navigation Order', 'buddyboss-platform' ),
+			'title' => __( 'Navigation Order', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'order' => 20,
 		)
 	);
@@ -127,33 +127,33 @@ function bboss_get_group_default_tab_options() {
 		$options = apply_filters(
 			'group_default_tab_options_list',
 			array(
-				'members'  => __( 'Members', 'buddyboss-platform' ),
-				'activity' => __( 'Feed', 'buddyboss-platform' ),
+				'members'  => __( 'Members', 'buddyboss-community-social-network-groups-forums-messaging' ),
+				'activity' => __( 'Feed', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			)
 		);
 	} else {
 		$options = apply_filters(
 			'group_default_tab_options_list',
 			array(
-				'members' => __( 'Members', 'buddyboss-platform' ),
+				'members' => __( 'Members', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			)
 		);
 	}
 
 	if ( bboss_is_active( 'media' ) && bboss_is_group_media_support_enabled() ) {
-		$options['photos'] = __( 'Photos', 'buddyboss-platform' );
+		$options['photos'] = __( 'Photos', 'buddyboss-community-social-network-groups-forums-messaging' );
 	}
 
 	if ( bboss_is_active( 'media' ) && bboss_is_group_albums_support_enabled() ) {
-		$options['albums'] = __( 'Albums', 'buddyboss-platform' );
+		$options['albums'] = __( 'Albums', 'buddyboss-community-social-network-groups-forums-messaging' );
 	}
 
 	if ( bboss_is_active( 'media' ) && bboss_is_group_document_support_enabled() ) {
-		$options['documents'] = __( 'Documents', 'buddyboss-platform' );
+		$options['documents'] = __( 'Documents', 'buddyboss-community-social-network-groups-forums-messaging' );
 	}
 
 	if ( bboss_is_active( 'video' ) && function_exists( 'bboss_is_group_video_support_enabled' ) && bboss_is_group_video_support_enabled() ) {
-		$options['videos'] = __( 'Videos', 'buddyboss-platform' );
+		$options['videos'] = __( 'Videos', 'buddyboss-community-social-network-groups-forums-messaging' );
 	}
 
 	// Convert to Settings 2.0 select format.

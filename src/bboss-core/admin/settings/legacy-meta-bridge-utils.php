@@ -2521,7 +2521,7 @@ function bboss_legacy_run_cpt_bridge_box( $registry, $component, $box, &$order, 
 					'nonce_param'        => 'nonce',
 					'search_placeholder' => isset( $ajax_select_resolver['placeholder'] )
 						? $ajax_select_resolver['placeholder']
-						: __( 'Search', 'buddyboss-platform' ),
+						: __( 'Search', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'string_ids'         => true,
 					'resolver'           => $resolver_key,
 					'selected_items'     => array(),
@@ -2756,7 +2756,7 @@ function bboss_legacy_ajax_select_search() {
 			echo wp_json_encode( array( 'matches' => array() ) );
 			wp_die();
 		}
-		wp_send_json_error( array( 'message' => __( 'Unauthorized', 'buddyboss-platform' ) ), 403 );
+		wp_send_json_error( array( 'message' => __( 'Unauthorized', 'buddyboss-community-social-network-groups-forums-messaging' ) ), 403 );
 	};
 
 	if ( ! bboss_current_user_can( 'bp_moderate' ) ) {

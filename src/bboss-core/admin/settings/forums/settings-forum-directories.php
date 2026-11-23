@@ -41,9 +41,9 @@ function bboss_forums_register_directories_panel_fields() {
 		'forum_directories',
 		'forum_directories_section',
 		array(
-			'title'       => __( 'Forum Directories', 'buddyboss-platform' ),
+			'title'       => __( 'Forum Directories', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			/* translators: %s: Shortcodes link. */
-			'description' => sprintf( __( 'Customize your Forums directory. Use <a href="%s" target="_blank">Shortcodes</a> for more flexibility.', 'buddyboss-platform' ), $shortcodes_url ),
+			'description' => sprintf( __( 'Customize your Forums directory. Use <a href="%s" target="_blank">Shortcodes</a> for more flexibility.', 'buddyboss-community-social-network-groups-forums-messaging' ), $shortcodes_url ),
 			'order'       => 10,
 			'help_url'    => '636170',
 		)
@@ -59,13 +59,13 @@ function bboss_forums_register_directories_panel_fields() {
 		'forum_directories_section',
 		array(
 			'name'              => '_bbp_include_root',
-			'label'             => __( 'Forums Prefix', 'buddyboss-platform' ),
+			'label'             => __( 'Forums Prefix', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'type'              => 'toggle',
-			'description'       => __( 'Prefix forum content with the Forums page slug (Recommended)', 'buddyboss-platform' ),
+			'description'       => __( 'Prefix forum content with the Forums page slug (Recommended)', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'default'           => bboss_bbp_include_root_slug(),
 			'sanitize_callback' => 'absint',
 			/* translators: %s: Forums page link. */
-			'help_text'         => sprintf( __( 'When enabled, it adds the <a href="%s">Forums page</a> slug to all forum URLs for cleaner, more organized links.', 'buddyboss-platform' ), $forums_page_url ),
+			'help_text'         => sprintf( __( 'When enabled, it adds the <a href="%s">Forums page</a> slug to all forum URLs for cleaner, more organized links.', 'buddyboss-community-social-network-groups-forums-messaging' ), $forums_page_url ),
 			'order'             => 10,
 		)
 	);
@@ -77,17 +77,17 @@ function bboss_forums_register_directories_panel_fields() {
 		'forum_directories_section',
 		array(
 			'name'              => '_bbp_show_on_root',
-			'label'             => __( 'Forums Directory Shows', 'buddyboss-platform' ),
+			'label'             => __( 'Forums Directory Shows', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'type'              => 'radio',
 			'default'           => bboss_bbp_show_on_root(),
 			'sanitize_callback' => 'sanitize_text_field',
 			'options'           => array(
 				array(
-					'label' => __( 'Forum Index', 'buddyboss-platform' ),
+					'label' => __( 'Forum Index', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'value' => 'forums',
 				),
 				array(
-					'label' => __( 'Discussions by Last Post', 'buddyboss-platform' ),
+					'label' => __( 'Discussions by Last Post', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'value' => 'topics',
 				),
 			),

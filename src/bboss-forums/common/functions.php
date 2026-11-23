@@ -110,20 +110,20 @@ function bboss_bbp_time_since( $older_date, $newer_date = false, $gmt = false ) 
 function bboss_bbp_get_time_since( $older_date, $newer_date = false, $gmt = false ) {
 
 	// Setup the strings
-	$unknown_text   = apply_filters( 'bbp_core_time_since_unknown_text', __( 'sometime', 'buddyboss-platform' ) );
-	$right_now_text = apply_filters( 'bbp_core_time_since_right_now_text', __( 'right now', 'buddyboss-platform' ) );
+	$unknown_text   = apply_filters( 'bbp_core_time_since_unknown_text', __( 'sometime', 'buddyboss-community-social-network-groups-forums-messaging' ) );
+	$right_now_text = apply_filters( 'bbp_core_time_since_right_now_text', __( 'right now', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 	/* translators: %s: human-readable time span. */
-	$ago_text       = apply_filters( 'bbp_core_time_since_ago_text', __( '%s ago', 'buddyboss-platform' ) );
+	$ago_text       = apply_filters( 'bbp_core_time_since_ago_text', __( '%s ago', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 
 	// array of time period chunks
 	$chunks = array(
-		array( 60 * 60 * 24 * 365, __( 'year', 'buddyboss-platform' ), __( 'years', 'buddyboss-platform' ) ),
-		array( 60 * 60 * 24 * 30, __( 'month', 'buddyboss-platform' ), __( 'months', 'buddyboss-platform' ) ),
-		array( 60 * 60 * 24 * 7, __( 'week', 'buddyboss-platform' ), __( 'weeks', 'buddyboss-platform' ) ),
-		array( 60 * 60 * 24, __( 'day', 'buddyboss-platform' ), __( 'days', 'buddyboss-platform' ) ),
-		array( 60 * 60, __( 'hour', 'buddyboss-platform' ), __( 'hours', 'buddyboss-platform' ) ),
-		array( 60, __( 'minute', 'buddyboss-platform' ), __( 'minutes', 'buddyboss-platform' ) ),
-		array( 1, __( 'second', 'buddyboss-platform' ), __( 'seconds', 'buddyboss-platform' ) ),
+		array( 60 * 60 * 24 * 365, __( 'year', 'buddyboss-community-social-network-groups-forums-messaging' ), __( 'years', 'buddyboss-community-social-network-groups-forums-messaging' ) ),
+		array( 60 * 60 * 24 * 30, __( 'month', 'buddyboss-community-social-network-groups-forums-messaging' ), __( 'months', 'buddyboss-community-social-network-groups-forums-messaging' ) ),
+		array( 60 * 60 * 24 * 7, __( 'week', 'buddyboss-community-social-network-groups-forums-messaging' ), __( 'weeks', 'buddyboss-community-social-network-groups-forums-messaging' ) ),
+		array( 60 * 60 * 24, __( 'day', 'buddyboss-community-social-network-groups-forums-messaging' ), __( 'days', 'buddyboss-community-social-network-groups-forums-messaging' ) ),
+		array( 60 * 60, __( 'hour', 'buddyboss-community-social-network-groups-forums-messaging' ), __( 'hours', 'buddyboss-community-social-network-groups-forums-messaging' ) ),
+		array( 60, __( 'minute', 'buddyboss-community-social-network-groups-forums-messaging' ), __( 'minutes', 'buddyboss-community-social-network-groups-forums-messaging' ) ),
+		array( 1, __( 'second', 'buddyboss-community-social-network-groups-forums-messaging' ), __( 'seconds', 'buddyboss-community-social-network-groups-forums-messaging' ) ),
 	);
 
 	if ( ! empty( $older_date ) && ! is_numeric( $older_date ) ) {
@@ -178,7 +178,7 @@ function bboss_bbp_get_time_since( $older_date, $newer_date = false, $gmt = fals
 
 				// Add to output var
 				if ( 0 != $count2 ) {
-					$output .= ( 1 == $count2 ) ? _x( ',', 'Separator in time since', 'buddyboss-platform' ) . ' 1 ' . $name2 : _x( ',', 'Separator in time since', 'buddyboss-platform' ) . ' ' . $count2 . ' ' . $chunks[ $i + 1 ][2];
+					$output .= ( 1 == $count2 ) ? _x( ',', 'Separator in time since', 'buddyboss-community-social-network-groups-forums-messaging' ) . ' 1 ' . $name2 : _x( ',', 'Separator in time since', 'buddyboss-community-social-network-groups-forums-messaging' ) . ' ' . $count2 . ' ' . $chunks[ $i + 1 ][2];
 				}
 			}
 
@@ -576,11 +576,11 @@ function bboss_bbp_get_statistics( $args = '' ) {
 
 			// Generate the hidden topic count's title attribute.
 			/* translators: %s: private topics count */
-			$topic_titles[] = ! empty( $topics['private'] ) ? sprintf( __( 'Private: %s', 'buddyboss-platform' ), bboss_bbp_number_format_i18n( $topics['private'] ) ) : '';
+			$topic_titles[] = ! empty( $topics['private'] ) ? sprintf( __( 'Private: %s', 'buddyboss-community-social-network-groups-forums-messaging' ), bboss_bbp_number_format_i18n( $topics['private'] ) ) : '';
 			/* translators: %s: spammed topics count */
-			$topic_titles[] = ! empty( $topics['spammed'] ) ? sprintf( __( 'Spammed: %s', 'buddyboss-platform' ), bboss_bbp_number_format_i18n( $topics['spammed'] ) ) : '';
+			$topic_titles[] = ! empty( $topics['spammed'] ) ? sprintf( __( 'Spammed: %s', 'buddyboss-community-social-network-groups-forums-messaging' ), bboss_bbp_number_format_i18n( $topics['spammed'] ) ) : '';
 			/* translators: %s: trashed topics count */
-			$topic_titles[] = ! empty( $topics['trashed'] ) ? sprintf( __( 'Trashed: %s', 'buddyboss-platform' ), bboss_bbp_number_format_i18n( $topics['trashed'] ) ) : '';
+			$topic_titles[] = ! empty( $topics['trashed'] ) ? sprintf( __( 'Trashed: %s', 'buddyboss-community-social-network-groups-forums-messaging' ), bboss_bbp_number_format_i18n( $topics['trashed'] ) ) : '';
 
 			// Compile the hidden topic title.
 			$hidden_topic_title = implode( ' | ', array_filter( $topic_titles ) );
@@ -615,11 +615,11 @@ function bboss_bbp_get_statistics( $args = '' ) {
 
 			// Generate the hidden topic count's title attribute.
 			/* translators: %s: private replies count */
-			$reply_titles[] = ! empty( $replies['private'] ) ? sprintf( __( 'Private: %s', 'buddyboss-platform' ), bboss_bbp_number_format_i18n( $replies['private'] ) ) : '';
+			$reply_titles[] = ! empty( $replies['private'] ) ? sprintf( __( 'Private: %s', 'buddyboss-community-social-network-groups-forums-messaging' ), bboss_bbp_number_format_i18n( $replies['private'] ) ) : '';
 			/* translators: %s: spammed replies count */
-			$reply_titles[] = ! empty( $replies['spammed'] ) ? sprintf( __( 'Spammed: %s', 'buddyboss-platform' ), bboss_bbp_number_format_i18n( $replies['spammed'] ) ) : '';
+			$reply_titles[] = ! empty( $replies['spammed'] ) ? sprintf( __( 'Spammed: %s', 'buddyboss-community-social-network-groups-forums-messaging' ), bboss_bbp_number_format_i18n( $replies['spammed'] ) ) : '';
 			/* translators: %s: trashed replies count */
-			$reply_titles[] = ! empty( $replies['trashed'] ) ? sprintf( __( 'Trashed: %s', 'buddyboss-platform' ), bboss_bbp_number_format_i18n( $replies['trashed'] ) ) : '';
+			$reply_titles[] = ! empty( $replies['trashed'] ) ? sprintf( __( 'Trashed: %s', 'buddyboss-community-social-network-groups-forums-messaging' ), bboss_bbp_number_format_i18n( $replies['trashed'] ) ) : '';
 
 			// Compile the hidden replies title.
 			$hidden_reply_title = implode( ' | ', array_filter( $reply_titles ) );
@@ -715,12 +715,12 @@ function bboss_bbp_filter_anonymous_post_data( $args = '' ) {
 	// Filter variables and add errors if necessary
 	$r['bbp_anonymous_name'] = apply_filters( 'bbp_pre_anonymous_post_author_name', $r['bbp_anonymous_name'] );
 	if ( empty( $r['bbp_anonymous_name'] ) ) {
-		bboss_bbp_add_error( 'bbp_anonymous_name', __( '<strong>ERROR</strong>: Invalid author name submitted!', 'buddyboss-platform' ) );
+		bboss_bbp_add_error( 'bbp_anonymous_name', __( '<strong>ERROR</strong>: Invalid author name submitted!', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 	}
 
 	$r['bbp_anonymous_email'] = apply_filters( 'bbp_pre_anonymous_post_author_email', $r['bbp_anonymous_email'] );
 	if ( empty( $r['bbp_anonymous_email'] ) ) {
-		bboss_bbp_add_error( 'bbp_anonymous_email', __( '<strong>ERROR</strong>: Invalid email address submitted!', 'buddyboss-platform' ) );
+		bboss_bbp_add_error( 'bbp_anonymous_email', __( '<strong>ERROR</strong>: Invalid email address submitted!', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 	}
 
 	// Website is optional
@@ -2266,7 +2266,7 @@ function bboss_bbp_set_404() {
 	global $wp_query;
 
 	if ( ! isset( $wp_query ) ) {
-		_doing_it_wrong( __FUNCTION__, esc_html__( 'Conditional query tags do not work before the query is run. Before then, they always return false.', 'buddyboss-platform' ), '3.1' );
+		_doing_it_wrong( __FUNCTION__, esc_html__( 'Conditional query tags do not work before the query is run. Before then, they always return false.', 'buddyboss-community-social-network-groups-forums-messaging' ), '3.1' );
 		return false;
 	}
 

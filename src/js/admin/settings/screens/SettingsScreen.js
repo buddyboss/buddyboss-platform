@@ -226,7 +226,7 @@ export function SettingsScreen({ onNavigate }) {
 		const featureLabel = currentFeature?.label || featureId;
 
 		// Show saving toast.
-		setToast({ status: 'saving', message: __('Saving changes...', 'buddyboss-platform') });
+		setToast({ status: 'saving', message: __('Saving changes...', 'buddyboss-community-social-network-groups-forums-messaging') });
 
 		// 1. Optimistic update — instant UI feedback.
 		setFeatures((prev) =>
@@ -332,8 +332,8 @@ export function SettingsScreen({ onNavigate }) {
 
 					// Show success toast.
 					const successMessage = checked
-						? sprintf( __( '%s has been enabled.', 'buddyboss-platform' ), featureLabel )
-						: sprintf( __( '%s has been disabled.', 'buddyboss-platform' ), featureLabel );
+						? sprintf( __( '%s has been enabled.', 'buddyboss-community-social-network-groups-forums-messaging' ), featureLabel )
+						: sprintf( __( '%s has been disabled.', 'buddyboss-community-social-network-groups-forums-messaging' ), featureLabel );
 					setToast({ status: 'success', message: successMessage });
 				} else {
 					// Server rejected — revert.
@@ -347,7 +347,7 @@ export function SettingsScreen({ onNavigate }) {
 					// Show error toast.
 					setToast({
 						status: 'error',
-						message: response.data?.message || __('Failed to update feature. Please try again.', 'buddyboss-platform'),
+						message: response.data?.message || __('Failed to update feature. Please try again.', 'buddyboss-community-social-network-groups-forums-messaging'),
 					});
 				}
 			})
@@ -376,7 +376,7 @@ export function SettingsScreen({ onNavigate }) {
 				// Show error toast.
 				setToast({
 					status: 'error',
-					message: __('Failed to update feature. Please try again.', 'buddyboss-platform'),
+					message: __('Failed to update feature. Please try again.', 'buddyboss-community-social-network-groups-forums-messaging'),
 				});
 			});
 	};
@@ -412,8 +412,8 @@ export function SettingsScreen({ onNavigate }) {
 		setToast({
 			status: 'saving',
 			message: isInstall
-				? sprintf( __( 'Installing & activating %s...', 'buddyboss-platform' ), label )
-				: sprintf( __( 'Activating %s...', 'buddyboss-platform' ), label ),
+				? sprintf( __( 'Installing & activating %s...', 'buddyboss-community-social-network-groups-forums-messaging' ), label )
+				: sprintf( __( 'Activating %s...', 'buddyboss-community-social-network-groups-forums-messaging' ), label ),
 		});
 
 		var formData = new FormData();
@@ -429,8 +429,8 @@ export function SettingsScreen({ onNavigate }) {
 					setToast({
 						status: 'success',
 						message: isInstall
-							? sprintf( __( '%s has been installed and activated.', 'buddyboss-platform' ), label )
-							: sprintf( __( '%s has been activated.', 'buddyboss-platform' ), label ),
+							? sprintf( __( '%s has been installed and activated.', 'buddyboss-community-social-network-groups-forums-messaging' ), label )
+							: sprintf( __( '%s has been activated.', 'buddyboss-community-social-network-groups-forums-messaging' ), label ),
 					});
 
 					// Refresh the features grid in-place. The placeholder
@@ -454,14 +454,14 @@ export function SettingsScreen({ onNavigate }) {
 				} else {
 					var errorMsg = ( response && response.data && response.data.message )
 						? response.data.message
-						: __('Failed to process. Please try again.', 'buddyboss-platform');
+						: __('Failed to process. Please try again.', 'buddyboss-community-social-network-groups-forums-messaging');
 					setToast({ status: 'error', message: errorMsg });
 				}
 			})
 			.catch(function() {
 				setToast({
 					status: 'error',
-					message: __('Failed to process. Please try again.', 'buddyboss-platform'),
+					message: __('Failed to process. Please try again.', 'buddyboss-community-social-network-groups-forums-messaging'),
 				});
 			});
 	};
@@ -484,19 +484,19 @@ export function SettingsScreen({ onNavigate }) {
 							className={`bb-admin-settings__filter-tab ${ 'all' === activeFilter ? 'bb-admin-settings__filter-tab--active' : '' }`}
 							onClick={() => setActiveFilter('all')}
 						>
-							{__('All', 'buddyboss-platform')} ({filterCounts.all})
+							{__('All', 'buddyboss-community-social-network-groups-forums-messaging')} ({filterCounts.all})
 						</button>
 						<button
 							className={`bb-admin-settings__filter-tab ${ 'active' === activeFilter ? 'bb-admin-settings__filter-tab--active' : '' }`}
 							onClick={() => setActiveFilter('active')}
 						>
-							{__('Active', 'buddyboss-platform')} ({filterCounts.active})
+							{__('Active', 'buddyboss-community-social-network-groups-forums-messaging')} ({filterCounts.active})
 						</button>
 						<button
 							className={`bb-admin-settings__filter-tab ${ 'inactive' === activeFilter ? 'bb-admin-settings__filter-tab--active' : '' }`}
 							onClick={() => setActiveFilter('inactive')}
 						>
-							{__('Inactive', 'buddyboss-platform')} ({filterCounts.inactive})
+							{__('Inactive', 'buddyboss-community-social-network-groups-forums-messaging')} ({filterCounts.inactive})
 						</button>
 					</div>
 
@@ -506,16 +506,16 @@ export function SettingsScreen({ onNavigate }) {
 							value={selectedCategory}
 							onChange={(e) => setSelectedCategory(e.target.value)}
 						>
-							<option value="">{__('All', 'buddyboss-platform')}</option>
+							<option value="">{__('All', 'buddyboss-community-social-network-groups-forums-messaging')}</option>
 							{Object.keys(categoryCounts).map((category) => (
 								<option key={category} value={category}>
 									{ 'community' === category
-										? __('Community', 'buddyboss-platform')
+										? __('Community', 'buddyboss-community-social-network-groups-forums-messaging')
 										: 'add-ons' === category
-										? __('Add-ons', 'buddyboss-platform')
+										? __('Add-ons', 'buddyboss-community-social-network-groups-forums-messaging')
 										: 'tools' === category
-										? __('Tools', 'buddyboss-platform')
-										: __('Integrations', 'buddyboss-platform') }
+										? __('Tools', 'buddyboss-community-social-network-groups-forums-messaging')
+										: __('Integrations', 'buddyboss-community-social-network-groups-forums-messaging') }
 								</option>
 							))}
 						</select>
@@ -530,14 +530,14 @@ export function SettingsScreen({ onNavigate }) {
 							<div className={ 'community' === category ? 'bb-admin-settings__category-divider' : 'bb-admin-settings__category-divider bb-admin-settings__category-divider--with-line' }>
 								<h2 className="bb-admin-settings__category-title">
 									{ 'community' === category
-										? __('BUDDYBOSS COMMUNITY SETTINGS', 'buddyboss-platform')
+										? __('BUDDYBOSS COMMUNITY SETTINGS', 'buddyboss-community-social-network-groups-forums-messaging')
 										: 'add-ons' === category
-										? __('BUDDYBOSS ADD-ONS', 'buddyboss-platform')
+										? __('BUDDYBOSS ADD-ONS', 'buddyboss-community-social-network-groups-forums-messaging')
 										: 'integrations' === category
-										? __('BUDDYBOSS INTEGRATIONS', 'buddyboss-platform')
+										? __('BUDDYBOSS INTEGRATIONS', 'buddyboss-community-social-network-groups-forums-messaging')
 										: 'tools' === category
-										? __('TOOLS', 'buddyboss-platform')
-										: __('BUDDYBOSS INTEGRATIONS', 'buddyboss-platform') }
+										? __('TOOLS', 'buddyboss-community-social-network-groups-forums-messaging')
+										: __('BUDDYBOSS INTEGRATIONS', 'buddyboss-community-social-network-groups-forums-messaging') }
 								</h2>
 							</div>
 
@@ -557,10 +557,10 @@ export function SettingsScreen({ onNavigate }) {
 											>
 												<i className="bb-icons-rl bb-icons-rl-crown-simple"></i>
 												{'plus' === feature.upgrade_tier
-													? __('UPGRADE SCALE', 'buddyboss-platform')
+													? __('UPGRADE SCALE', 'buddyboss-community-social-network-groups-forums-messaging')
 													: 'start' === feature.upgrade_tier
-														? __('UPGRADE START', 'buddyboss-platform')
-														: __('UPGRADE LAUNCH', 'buddyboss-platform')}
+														? __('UPGRADE START', 'buddyboss-community-social-network-groups-forums-messaging')
+														: __('UPGRADE LAUNCH', 'buddyboss-community-social-network-groups-forums-messaging')}
 											</button>
 										)}
 										{/* Card Body */}
@@ -615,7 +615,7 @@ export function SettingsScreen({ onNavigate }) {
 
 											{/* Description */}
 											<p className="bb-admin-settings__feature-description">
-												{feature.description || __('No description available.', 'buddyboss-platform')}
+												{feature.description || __('No description available.', 'buddyboss-community-social-network-groups-forums-messaging')}
 											</p>
 										</div>
 
@@ -632,7 +632,7 @@ export function SettingsScreen({ onNavigate }) {
 														disabled={!!feature.requires_unmet}
 														onClick={feature.requires_unmet ? undefined : () => handleAddonAction(feature, 'install')}
 													>
-														{__('Install & Activate', 'buddyboss-platform')}
+														{__('Install & Activate', 'buddyboss-community-social-network-groups-forums-messaging')}
 													</Button>
 												) : feature.is_placeholder && 'installed_inactive' === feature.plugin_status && feature.plugin_slug ? (
 													<Button
@@ -641,7 +641,7 @@ export function SettingsScreen({ onNavigate }) {
 														disabled={!!feature.requires_unmet}
 														onClick={feature.requires_unmet ? undefined : () => handleAddonAction(feature, 'activate')}
 													>
-														{__('Activate', 'buddyboss-platform')}
+														{__('Activate', 'buddyboss-community-social-network-groups-forums-messaging')}
 													</Button>
 												) : feature.is_placeholder ? (
 													<Button
@@ -650,7 +650,7 @@ export function SettingsScreen({ onNavigate }) {
 														disabled
 													>
 														<i className="bb-icon-settings"></i>
-														{__('Settings', 'buddyboss-platform')}
+														{__('Settings', 'buddyboss-community-social-network-groups-forums-messaging')}
 													</Button>
 												) : feature.settings_route ? (
 													( () => {
@@ -681,7 +681,7 @@ export function SettingsScreen({ onNavigate }) {
 																aria-busy={isTogglingThis ? 'true' : undefined}
 															>
 																<i className="bb-icon-settings"></i>
-																{__('Settings', 'buddyboss-platform')}
+																{__('Settings', 'buddyboss-community-social-network-groups-forums-messaging')}
 															</Button>
 														);
 													} )()
@@ -698,7 +698,7 @@ export function SettingsScreen({ onNavigate }) {
 												<span className="screen-reader-text">
 													{ sprintf(
 														/* translators: %s: feature label */
-														__( 'Toggle %s', 'buddyboss-platform' ),
+														__( 'Toggle %s', 'buddyboss-community-social-network-groups-forums-messaging' ),
 														feature.label
 													) }
 												</span>
@@ -713,7 +713,7 @@ export function SettingsScreen({ onNavigate }) {
 
 				{filteredFeatures.length === 0 && (
 					<div className="bb-admin-settings__empty">
-						<p>{__('No features found matching your filters.', 'buddyboss-platform')}</p>
+						<p>{__('No features found matching your filters.', 'buddyboss-community-social-network-groups-forums-messaging')}</p>
 					</div>
 				)}
 			</div>

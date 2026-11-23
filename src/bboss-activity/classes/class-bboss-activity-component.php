@@ -175,15 +175,15 @@ class BBoss_Activity_Component extends BBoss_Component {
 
 		// Register the visibility levels. See bp_activity_get_visibility_levels() to filter.
 		$this->visibility_levels = array(
-			'public'   => __( 'Public', 'buddyboss-platform' ),
-			'loggedin' => __( 'All Members', 'buddyboss-platform' ),
+			'public'   => __( 'Public', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'loggedin' => __( 'All Members', 'buddyboss-community-social-network-groups-forums-messaging' ),
 		);
 
 		if ( bboss_is_active( 'friends' ) ) {
-			$this->visibility_levels['friends'] = __( 'My Connections', 'buddyboss-platform' );
+			$this->visibility_levels['friends'] = __( 'My Connections', 'buddyboss-community-social-network-groups-forums-messaging' );
 		}
 
-		$this->visibility_levels['onlyme'] = __( 'Only Me', 'buddyboss-platform' );
+		$this->visibility_levels['onlyme'] = __( 'Only Me', 'buddyboss-community-social-network-groups-forums-messaging' );
 
 		$this->published_status = 'published';
 		$this->scheduled_status = 'scheduled';
@@ -212,7 +212,7 @@ class BBoss_Activity_Component extends BBoss_Component {
 			'has_directory'         => true,
 			'directory_title'       => isset( $bp->pages->activity->title ) ? $bp->pages->activity->title : $default_directory_title,
 			'notification_callback' => 'bboss_activity_format_notifications',
-			'search_string'         => __( 'Search Feed&hellip;', 'buddyboss-platform' ),
+			'search_string'         => __( 'Search Feed&hellip;', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'global_tables'         => $global_tables,
 			'meta_tables'           => $meta_tables,
 		);
@@ -271,7 +271,7 @@ class BBoss_Activity_Component extends BBoss_Component {
 
 		// Add 'Activity' to the main navigation.
 		$main_nav = array(
-			'name'                => __( 'Timeline', 'buddyboss-platform' ),
+			'name'                => __( 'Timeline', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'slug'                => $slug,
 			'position'            => 25,
 			'screen_function'     => 'bboss_activity_screen_my_activity',
@@ -307,11 +307,11 @@ class BBoss_Activity_Component extends BBoss_Component {
 				if ( ! empty( $count ) ) {
 					$title = sprintf(
 						/* translators: %s: Unread mention count for the current user */
-						__( 'Mentions %s', 'buddyboss-platform' ),
+						__( 'Mentions %s', 'buddyboss-community-social-network-groups-forums-messaging' ),
 						'<span class="count">' . bboss_core_number_format( $count ) . '</span>'
 					);
 				} else {
-					$title = __( 'Mentions', 'buddyboss-platform' );
+					$title = __( 'Mentions', 'buddyboss-community-social-network-groups-forums-messaging' );
 				}
 			}
 
@@ -319,7 +319,7 @@ class BBoss_Activity_Component extends BBoss_Component {
 			$wp_admin_nav[] = array(
 				'parent' => bboss()->my_account_menu_id,
 				'id'     => 'my-account-' . $this->id,
-				'title'  => __( 'Timeline', 'buddyboss-platform' ),
+				'title'  => __( 'Timeline', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				'href'   => $activity_link,
 			);
 		}
@@ -339,14 +339,14 @@ class BBoss_Activity_Component extends BBoss_Component {
 			$bp = bboss();
 
 			if ( bboss_is_my_profile() ) {
-				$bp->bp_options_title = __( 'My Activity', 'buddyboss-platform' );
+				$bp->bp_options_title = __( 'My Activity', 'buddyboss-community-social-network-groups-forums-messaging' );
 			} else {
 				$bp->bp_options_avatar = bboss_core_fetch_avatar(
 					array(
 						'item_id' => bboss_displayed_user_id(),
 						'type'    => 'thumb',
 						/* translators: %s: displayed user's full name. */
-						'alt'     => sprintf( __( 'Profile photo of %s', 'buddyboss-platform' ), bboss_get_displayed_user_fullname() ),
+						'alt'     => sprintf( __( 'Profile photo of %s', 'buddyboss-community-social-network-groups-forums-messaging' ), bboss_get_displayed_user_fullname() ),
 					)
 				);
 				$bp->bp_options_title  = bboss_get_displayed_user_fullname();

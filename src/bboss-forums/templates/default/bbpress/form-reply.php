@@ -31,7 +31,7 @@ defined( 'ABSPATH' ) || exit;
 				<legend>
 					<?php
 					/* translators: %s: topic title or reply reference. */
-					printf( esc_html__( 'Reply To: %s', 'buddyboss-platform' ), ( bboss_bbp_get_form_reply_to() ) ? /* translators: 1: reply ID, 2: topic title. */ sprintf( esc_html__( 'Reply #%1$s in %2$s', 'buddyboss-platform' ), bboss_bbp_get_form_reply_to(), bboss_bbp_get_topic_title() ) : bboss_bbp_get_topic_title() ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bbp_get_form_reply_to() returns an int; bbp_get_topic_title() self-escapes via its filter.
+					printf( esc_html__( 'Reply To: %s', 'buddyboss-community-social-network-groups-forums-messaging' ), ( bboss_bbp_get_form_reply_to() ) ? /* translators: 1: reply ID, 2: topic title. */ sprintf( esc_html__( 'Reply #%1$s in %2$s', 'buddyboss-community-social-network-groups-forums-messaging' ), bboss_bbp_get_form_reply_to(), bboss_bbp_get_topic_title() ) : bboss_bbp_get_topic_title() ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bbp_get_form_reply_to() returns an int; bbp_get_topic_title() self-escapes via its filter.
 					?>
 				</legend>
 
@@ -41,7 +41,7 @@ defined( 'ABSPATH' ) || exit;
 
 					<div class="bp-feedback info">
 						<span class="bp-icon" aria-hidden="true"></span>
-						<p><?php esc_html_e( 'This discussion is marked as closed to new replies, however your posting capabilities still allow you to do so.', 'buddyboss-platform' ); ?></p>
+						<p><?php esc_html_e( 'This discussion is marked as closed to new replies, however your posting capabilities still allow you to do so.', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></p>
 					</div>
 
 				<?php endif; ?>
@@ -63,7 +63,7 @@ defined( 'ABSPATH' ) || exit;
 					<?php if ( ! ( bboss_bbp_use_wp_editor() || current_user_can( 'unfiltered_html' ) ) ) : ?>
 
 						<p class="form-allowed-tags">
-							<label><?php echo wp_kses_post( __( 'You may use these <abbr title="HyperText Markup Language">HTML</abbr> tags and attributes:', 'buddyboss-platform' ) ); ?></label><br />
+							<label><?php echo wp_kses_post( __( 'You may use these <abbr title="HyperText Markup Language">HTML</abbr> tags and attributes:', 'buddyboss-community-social-network-groups-forums-messaging' ) ); ?></label><br />
 							<code><?php bboss_bbp_allowed_tags(); ?></code>
 						</p>
 
@@ -80,7 +80,7 @@ defined( 'ABSPATH' ) || exit;
 
 						<p>
 							<input type="hidden" value="<?php echo ( ! empty( $get_the_tags ) ) ? esc_attr( $get_the_tags ) : ''; ?>" name="bbp_topic_tags" class="bbp_topic_tags" id="bbp_topic_tags" >
-							<select name="bbp_topic_tags_dropdown[]" class="bbp_topic_tags_dropdown" id="bbp_topic_tags_dropdown" placeholder="<?php esc_html_e( 'Type one or more tags, comma separated', 'buddyboss-platform' ); ?>" autocomplete="off" multiple="multiple" style="width: 100%" tabindex="<?php bboss_bbp_tab_index(); ?>">
+							<select name="bbp_topic_tags_dropdown[]" class="bbp_topic_tags_dropdown" id="bbp_topic_tags_dropdown" placeholder="<?php esc_html_e( 'Type one or more tags, comma separated', 'buddyboss-community-social-network-groups-forums-messaging' ); ?>" autocomplete="off" multiple="multiple" style="width: 100%" tabindex="<?php bboss_bbp_tab_index(); ?>">
 								<?php
 								if ( ! empty( $get_the_tags ) ) {
 									$get_the_tags = explode( ',', $get_the_tags );
@@ -127,11 +127,11 @@ defined( 'ABSPATH' ) || exit;
 										)
 									) {
 										?>
-										<label for="bbp_topic_subscription"><?php esc_html_e( 'Notify the author of follow-up replies via email', 'buddyboss-platform' ); ?></label>
+										<label for="bbp_topic_subscription"><?php esc_html_e( 'Notify the author of follow-up replies via email', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></label>
 										<?php
 									} else {
 										?>
-										<label for="bbp_topic_subscription"><?php esc_html_e( 'Notify the author of follow-up replies', 'buddyboss-platform' ); ?></label>
+										<label for="bbp_topic_subscription"><?php esc_html_e( 'Notify the author of follow-up replies', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></label>
 										<?php
 									}
 								else :
@@ -145,11 +145,11 @@ defined( 'ABSPATH' ) || exit;
 										)
 									) {
 										?>
-										<label for="bbp_topic_subscription"><?php esc_html_e( 'Notify me of new replies by email', 'buddyboss-platform' ); ?></label>
+										<label for="bbp_topic_subscription"><?php esc_html_e( 'Notify me of new replies by email', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></label>
 										<?php
 									} else {
 										?>
-										<label for="bbp_topic_subscription"><?php esc_html_e( 'Notify me of new replies', 'buddyboss-platform' ); ?></label>
+										<label for="bbp_topic_subscription"><?php esc_html_e( 'Notify me of new replies', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></label>
 										<?php
 									}
 								endif;
@@ -170,11 +170,11 @@ defined( 'ABSPATH' ) || exit;
 						<fieldset class="bbp-form">
 							<div class="bp-checkbox-wrap">
 								<input name="bbp_log_reply_edit" id="bbp_log_reply_edit" class="bs-styled-checkbox" type="checkbox" value="1" <?php bboss_bbp_form_reply_log_edit(); ?> tabindex="<?php bboss_bbp_tab_index(); ?>" />
-								<label for="bbp_log_reply_edit"><?php esc_html_e( 'Keep a log of this edit:', 'buddyboss-platform' ); ?></label>
+								<label for="bbp_log_reply_edit"><?php esc_html_e( 'Keep a log of this edit:', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></label>
 							</div>
 
 							<div>
-								<label for="bbp_reply_edit_reason"><?php printf( esc_html__( 'Optional reason for editing:', 'buddyboss-platform' ), esc_html( bboss_bbp_get_current_user_name() ) ); ?></label><br />
+								<label for="bbp_reply_edit_reason"><?php printf( esc_html__( 'Optional reason for editing:', 'buddyboss-community-social-network-groups-forums-messaging' ), esc_html( bboss_bbp_get_current_user_name() ) ); ?></label><br />
 								<input type="text" value="<?php bboss_bbp_form_reply_edit_reason(); ?>" tabindex="<?php bboss_bbp_tab_index(); ?>" size="40" name="bbp_reply_edit_reason" id="bbp_reply_edit_reason" />
 							</div>
 						</fieldset>
@@ -191,9 +191,9 @@ defined( 'ABSPATH' ) || exit;
 
 						<?php bboss_bbp_cancel_reply_to_link(); ?>
 
-						<button type="button" tabindex="<?php bboss_bbp_tab_index(); ?>" id="bb_reply_discard_draft" name="bb_reply_discard_draft" class="button discard small bb_discard_topic_reply_draft"><?php esc_html_e( 'Discard Draft', 'buddyboss-platform' ); ?></button>
+						<button type="button" tabindex="<?php bboss_bbp_tab_index(); ?>" id="bb_reply_discard_draft" name="bb_reply_discard_draft" class="button discard small bb_discard_topic_reply_draft"><?php esc_html_e( 'Discard Draft', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></button>
 
-						<button type="submit" tabindex="<?php bboss_bbp_tab_index(); ?>" id="bbp_reply_submit" name="bbp_reply_submit" class="button submit"><?php esc_html_e( 'Post', 'buddyboss-platform' ); ?></button>
+						<button type="submit" tabindex="<?php bboss_bbp_tab_index(); ?>" id="bbp_reply_submit" name="bbp_reply_submit" class="button submit"><?php esc_html_e( 'Post', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></button>
 
 						<?php do_action( 'bbp_theme_after_reply_form_submit_button' ); ?>
 
@@ -220,7 +220,7 @@ defined( 'ABSPATH' ) || exit;
 			<p>
 				<?php
 				/* translators: %s: discussion title. */
-				printf( esc_html__( 'The discussion "%s" is closed to new replies.', 'buddyboss-platform' ), bboss_bbp_get_topic_title() ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bbp_get_topic_title() self-escapes via its filter.
+				printf( esc_html__( 'The discussion "%s" is closed to new replies.', 'buddyboss-community-social-network-groups-forums-messaging' ), bboss_bbp_get_topic_title() ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bbp_get_topic_title() self-escapes via its filter.
 				?>
 			</p>
 		</div>
@@ -231,7 +231,7 @@ defined( 'ABSPATH' ) || exit;
 	<div id="no-reply-<?php bboss_bbp_topic_id(); ?>" class="bbp-no-reply">
 		<div class="bp-feedback info">
 			<span class="bp-icon" aria-hidden="true"></span>
-			<p><?php /* translators: %s: forum title. */ printf( esc_html__( 'The forum "%s" is closed to new discussions and replies.', 'buddyboss-platform' ), esc_html( bboss_bbp_get_forum_title( bboss_bbp_get_topic_forum_id() ) ) ); ?></p>
+			<p><?php /* translators: %s: forum title. */ printf( esc_html__( 'The forum "%s" is closed to new discussions and replies.', 'buddyboss-community-social-network-groups-forums-messaging' ), esc_html( bboss_bbp_get_forum_title( bboss_bbp_get_topic_forum_id() ) ) ); ?></p>
 		</div>
 	</div>
 
@@ -240,7 +240,7 @@ defined( 'ABSPATH' ) || exit;
 	<div id="no-reply-<?php bboss_bbp_topic_id(); ?>" class="bbp-no-reply">
 		<div class="bp-feedback info">
 			<span class="bp-icon" aria-hidden="true"></span>
-			<p><?php is_user_logged_in() ? esc_html_e( 'You cannot reply to this discussion.', 'buddyboss-platform' ) : esc_html_e( 'Log in  to reply.', 'buddyboss-platform' ); ?></p>
+			<p><?php is_user_logged_in() ? esc_html_e( 'You cannot reply to this discussion.', 'buddyboss-community-social-network-groups-forums-messaging' ) : esc_html_e( 'Log in  to reply.', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></p>
 		</div>
 	</div>
 

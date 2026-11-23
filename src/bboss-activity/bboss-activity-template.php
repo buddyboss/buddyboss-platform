@@ -492,7 +492,7 @@ function bboss_get_activity_pagination_count() {
 	$total     = bboss_core_number_format( $activities_template->total_activity_count );
 
 	/* translators: 1: number, 2: number, 3: number. */
-	$message = sprintf( _n( 'Viewing 1 item', 'Viewing %1$s - %2$s of %3$s items', $activities_template->total_activity_count, 'buddyboss-platform' ), $from_num, $to_num, $total ); // phpcs:ignore WordPress.WP.I18n.MissingSingularPlaceholder -- Singular keeps its literal form to preserve existing translations (msgid unchanged); upstream BuddyPress pagination string.
+	$message = sprintf( _n( 'Viewing 1 item', 'Viewing %1$s - %2$s of %3$s items', $activities_template->total_activity_count, 'buddyboss-community-social-network-groups-forums-messaging' ), $from_num, $to_num, $total ); // phpcs:ignore WordPress.WP.I18n.MissingSingularPlaceholder -- Singular keeps its literal form to preserve existing translations (msgid unchanged); upstream BuddyPress pagination string.
 
 	return $message;
 }
@@ -1103,7 +1103,7 @@ function bboss_get_activity_avatar( $args = '' ) {
 
 	// Prepend some descriptive text to alt.
 	/* translators: %s: member display name. */
-	$alt_default = ! empty( $dn_default ) ? sprintf( __( 'Profile photo of %s', 'buddyboss-platform' ), $dn_default ) : __( 'Profile photo', 'buddyboss-platform' );
+	$alt_default = ! empty( $dn_default ) ? sprintf( __( 'Profile photo of %s', 'buddyboss-community-social-network-groups-forums-messaging' ), $dn_default ) : __( 'Profile photo', 'buddyboss-community-social-network-groups-forums-messaging' );
 
 	$defaults = array(
 		'alt'     => $alt_default,
@@ -1262,11 +1262,11 @@ function bboss_get_activity_secondary_avatar( $args = '' ) {
 			}
 
 			if ( empty( $alt ) ) {
-				$alt = __( 'Group logo', 'buddyboss-platform' );
+				$alt = __( 'Group logo', 'buddyboss-community-social-network-groups-forums-messaging' );
 
 				if ( ! empty( $name ) ) {
 					/* translators: %s: group name. */
-					$alt = sprintf( __( 'Group logo of %s', 'buddyboss-platform' ), $name );
+					$alt = sprintf( __( 'Group logo of %s', 'buddyboss-community-social-network-groups-forums-messaging' ), $name );
 				}
 			}
 
@@ -1278,7 +1278,7 @@ function bboss_get_activity_secondary_avatar( $args = '' ) {
 
 			if ( empty( $alt ) ) {
 				/* translators: %s: site name. */
-				$alt = sprintf( __( 'Profile photo of the author of the site %s', 'buddyboss-platform' ), get_blog_option( $item_id, 'blogname' ) );
+				$alt = sprintf( __( 'Profile photo of the author of the site %s', 'buddyboss-community-social-network-groups-forums-messaging' ), get_blog_option( $item_id, 'blogname' ) );
 			}
 
 			break;
@@ -1289,7 +1289,7 @@ function bboss_get_activity_secondary_avatar( $args = '' ) {
 
 			if ( empty( $alt ) ) {
 				/* translators: %s: member display name. */
-				$alt = sprintf( __( 'Profile photo of %s', 'buddyboss-platform' ), bboss_core_get_user_displayname( $activities_template->activity->secondary_item_id ) );
+				$alt = sprintf( __( 'Profile photo of %s', 'buddyboss-community-social-network-groups-forums-messaging' ), bboss_core_get_user_displayname( $activities_template->activity->secondary_item_id ) );
 			}
 
 			if ( ! empty( $item_id ) ) {
@@ -1309,7 +1309,7 @@ function bboss_get_activity_secondary_avatar( $args = '' ) {
 
 			if ( empty( $alt ) ) {
 				/* translators: %s: Member display name. */
-				$alt = sprintf( __( 'Profile photo of %s', 'buddyboss-platform' ), bboss_activity_get_item_user_displayname( $activities_template->activity ) );
+				$alt = sprintf( __( 'Profile photo of %s', 'buddyboss-community-social-network-groups-forums-messaging' ), bboss_activity_get_item_user_displayname( $activities_template->activity ) );
 			}
 
 			break;
@@ -2072,7 +2072,7 @@ function bboss_activity_recurse_comments( $comment, $args = array() ) {
 				$comment->top_level_count > $r['comment_load_limit']
 			)
 		) {
-			echo '<a href="javascript:void(0);" class="view-more-comments">' . esc_html__( 'View more comments', 'buddyboss-platform' ) . '</a>';
+			echo '<a href="javascript:void(0);" class="view-more-comments">' . esc_html__( 'View more comments', 'buddyboss-community-social-network-groups-forums-messaging' ) . '</a>';
 		}
 
 		/**
@@ -2095,10 +2095,10 @@ function bboss_activity_recurse_comments( $comment, $args = array() ) {
 			)
 		) {
 			if ( ! empty( $r['parent_comment_id'] ) && $r['main_activity_id'] !== $r['parent_comment_id'] ) {
-				$view_more_text = __( 'View more replies', 'buddyboss-platform' );
+				$view_more_text = __( 'View more replies', 'buddyboss-community-social-network-groups-forums-messaging' );
 				$view_more_icon = "<i class='bb-icon-l bb-icon-corner-right'></i>";
 			} else {
-				$view_more_text = __( 'View more comments', 'buddyboss-platform' );
+				$view_more_text = __( 'View more comments', 'buddyboss-community-social-network-groups-forums-messaging' );
 				$view_more_icon = '';
 			}
 
@@ -2494,7 +2494,7 @@ function bboss_activity_get_comment_count( $deprecated = null ) {
 	// Deprecated notice about $args.
 	if ( ! empty( $deprecated ) ) {
 		/* translators: 1: function name, 2: file path. */
-		_deprecated_argument( __FUNCTION__, '1.2', sprintf( esc_html__( '%1$s no longer accepts arguments. See the inline documentation at %2$s for more details.', 'buddyboss-platform' ), __FUNCTION__, __FILE__ ) );
+		_deprecated_argument( __FUNCTION__, '1.2', sprintf( esc_html__( '%1$s no longer accepts arguments. See the inline documentation at %2$s for more details.', 'buddyboss-community-social-network-groups-forums-messaging' ), __FUNCTION__, __FILE__ ) );
 	}
 
 	$count = $activities_template->activity->all_child_count ?? 0;
@@ -3047,7 +3047,7 @@ function bboss_get_activity_delete_link() {
 		$class = 'delete-activity-single';
 	}
 
-	$link = '<a href="' . esc_url( $url ) . '" class="button item-button bp-secondary-action ' . $class . ' confirm" rel="nofollow">' . __( 'Delete', 'buddyboss-platform' ) . '</a>';
+	$link = '<a href="' . esc_url( $url ) . '" class="button item-button bp-secondary-action ' . $class . ' confirm" rel="nofollow">' . __( 'Delete', 'buddyboss-community-social-network-groups-forums-messaging' ) . '</a>';
 
 	/**
 	 * Filters the activity delete link.
@@ -3151,7 +3151,7 @@ function bboss_get_activity_latest_update( $user_id = 0 ) {
 		'%s <a href="%s">%s</a>',
 		$latest_update,
 		esc_url_raw( bboss_activity_get_permalink( $update['id'] ) ),
-		esc_attr__( 'View', 'buddyboss-platform' )
+		esc_attr__( 'View', 'buddyboss-community-social-network-groups-forums-messaging' )
 	);
 
 	/**
@@ -3262,7 +3262,7 @@ function bboss_get_activity_filter_links( $args = false ) {
 	$link = remove_query_arg( 'afilter', $link );
 
 	if ( isset( $_GET['afilter'] ) ) {
-		$component_links[] = '<' . $tag . ' id="afilter-clear"><a href="' . esc_url( $link ) . '">' . __( 'Clear Filter', 'buddyboss-platform' ) . '</a></' . $tag . '>';
+		$component_links[] = '<' . $tag . ' id="afilter-clear"><a href="' . esc_url( $link ) . '">' . __( 'Clear Filter', 'buddyboss-community-social-network-groups-forums-messaging' ) . '</a></' . $tag . '>';
 	}
 
 	/**
@@ -3558,7 +3558,7 @@ function bboss_get_mentioned_user_display_name( $user_id_or_username = false ) {
 
 	// If user somehow has no name, return this really lame string.
 	if ( empty( $name ) ) {
-		$name = __( 'a user', 'buddyboss-platform' );
+		$name = __( 'a user', 'buddyboss-community-social-network-groups-forums-messaging' );
 	}
 
 	/**
@@ -4153,7 +4153,7 @@ function bboss_get_activity_feed_item_description() {
 function bboss_activity_sitewide_feed() {
 	?>
 
-	<link rel="alternate" type="application/rss+xml" title="<?php bloginfo( 'name' ); ?> | <?php esc_html_e( 'Site Wide Activity RSS Feed', 'buddyboss-platform' ); ?>" href="<?php bboss_sitewide_activity_feed_link(); ?>" />
+	<link rel="alternate" type="application/rss+xml" title="<?php bloginfo( 'name' ); ?> | <?php esc_html_e( 'Site Wide Activity RSS Feed', 'buddyboss-community-social-network-groups-forums-messaging' ); ?>" href="<?php bboss_sitewide_activity_feed_link(); ?>" />
 
 	<?php
 }
@@ -4390,16 +4390,16 @@ function bboss_get_add_follow_button( $leader_id = false, $follower_id = false, 
 				'wrapper_class'     => 'follow-button following',
 				'wrapper_id'        => 'follow-button-' . $leader_id,
 				'link_href'         => wp_nonce_url( bboss_loggedin_user_domain() . bboss_get_follow_slug() . '/stop-following/' . $leader_id . '/', 'follow_unfollow' ),
-				'link_text'         => esc_html__( 'Following', 'buddyboss-platform' ),
+				'link_text'         => esc_html__( 'Following', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				'link_id'           => 'follow-' . $leader_id,
 				'link_rel'          => 'stop',
 				'link_class'        => 'follow-button following stop bp-toggle-action-button',
-				'data-balloon'      => esc_html__( 'Stop Following', 'buddyboss-platform' ),
+				'data-balloon'      => esc_html__( 'Stop Following', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				'button_attr'       => array(
 					'data-bp-nonce'        => wp_nonce_url( bboss_loggedin_user_domain() . bboss_get_follow_slug() . '/stop-following/' . $leader_id . '/', 'follow_unfollow' ),
 					'hover_type'           => $button_args['button_attr']['hover_type'] ?? false,
-					'data-title'           => esc_html__( 'Unfollow', 'buddyboss-platform' ),
-					'data-title-displayed' => esc_html__( 'Following', 'buddyboss-platform' ),
+					'data-title'           => esc_html__( 'Unfollow', 'buddyboss-community-social-network-groups-forums-messaging' ),
+					'data-title-displayed' => esc_html__( 'Following', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				),
 			),
 			$button_args
@@ -4414,7 +4414,7 @@ function bboss_get_add_follow_button( $leader_id = false, $follower_id = false, 
 				'wrapper_class'     => 'follow-button not_following',
 				'wrapper_id'        => 'follow-button-' . $leader_id,
 				'link_href'         => wp_nonce_url( bboss_loggedin_user_domain() . bboss_get_follow_slug() . '/start-following/' . $leader_id . '/', 'follow_follow' ),
-				'link_text'         => esc_html__( 'Follow', 'buddyboss-platform' ),
+				'link_text'         => esc_html__( 'Follow', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				'link_id'           => 'follow-' . $leader_id,
 				'link_rel'          => 'start',
 				'link_class'        => 'follow-button not_following start',

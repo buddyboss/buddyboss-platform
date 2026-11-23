@@ -46,21 +46,21 @@ function bboss_bbp_get_forum_post_type_labels() {
 	return apply_filters(
 		'bbp_get_forum_post_type_labels',
 		array(
-			'name'               => __( 'Forums', 'buddyboss-platform' ),
-			'menu_name'          => __( 'All Forums', 'buddyboss-platform' ),
-			'singular_name'      => __( 'Forum', 'buddyboss-platform' ),
-			'all_items'          => __( 'All Forums', 'buddyboss-platform' ),
-			'add_new'            => __( 'New Forum', 'buddyboss-platform' ),
-			'add_new_item'       => __( 'Create New Forum', 'buddyboss-platform' ),
-			'edit'               => __( 'Edit', 'buddyboss-platform' ),
-			'edit_item'          => __( 'Edit Forum', 'buddyboss-platform' ),
-			'new_item'           => __( 'New Forum', 'buddyboss-platform' ),
-			'view'               => __( 'View Forum', 'buddyboss-platform' ),
-			'view_item'          => __( 'View Forum', 'buddyboss-platform' ),
-			'search_items'       => __( 'Search Forums', 'buddyboss-platform' ),
-			'not_found'          => __( 'No forums found', 'buddyboss-platform' ),
-			'not_found_in_trash' => __( 'No forums found in trash', 'buddyboss-platform' ),
-			'parent_item_colon'  => __( 'Parent Forum:', 'buddyboss-platform' ),
+			'name'               => __( 'Forums', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'menu_name'          => __( 'All Forums', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'singular_name'      => __( 'Forum', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'all_items'          => __( 'All Forums', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'add_new'            => __( 'New Forum', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'add_new_item'       => __( 'Create New Forum', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'edit'               => __( 'Edit', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'edit_item'          => __( 'Edit Forum', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'new_item'           => __( 'New Forum', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'view'               => __( 'View Forum', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'view_item'          => __( 'View Forum', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'search_items'       => __( 'Search Forums', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'not_found'          => __( 'No forums found', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'not_found_in_trash' => __( 'No forums found in trash', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'parent_item_colon'  => __( 'Parent Forum:', 'buddyboss-community-social-network-groups-forums-messaging' ),
 		)
 	);
 }
@@ -713,7 +713,7 @@ function bboss_bbp_get_forum_freshness_link( $forum_id = 0 ) {
 	if ( ! empty( $time_since ) && ! empty( $link_url ) ) {
 		$anchor = '<a href="' . esc_url( $link_url ) . '" title="' . esc_attr( $title ) . '">' . esc_html( $time_since ) . '</a>';
 	} else {
-		$anchor = esc_html__( 'No Discussions', 'buddyboss-platform' );
+		$anchor = esc_html__( 'No Discussions', 'buddyboss-community-social-network-groups-forums-messaging' );
 	}
 
 	return apply_filters( 'bbp_get_forum_freshness_link', $anchor, $forum_id, $time_since, $link_url, $title, $active_id );
@@ -1066,12 +1066,12 @@ function bboss_bbp_get_forum_index_pagination_count() {
 	// Several forums in a forum index with a single page
 	if ( empty( $to_num ) ) {
 		/* translators: %1$s: total number of forums. */
-		$retstr = sprintf( _n( 'Viewing %1$s forum', 'Viewing %1$s forums', $total_int, 'buddyboss-platform' ), $total );
+		$retstr = sprintf( _n( 'Viewing %1$s forum', 'Viewing %1$s forums', $total_int, 'buddyboss-community-social-network-groups-forums-messaging' ), $total );
 
 		// Several forums in a forum index with several pages
 	} else {
 		/* translators: 2: number shown on this page, 3: last item number on this page, 4: total number of forums. */
-		$retstr = sprintf( _n( 'Viewing %2$s of %4$s forums', 'Viewing %2$s - %3$s of %4$s forums', $total_int, 'buddyboss-platform' ), $bbp->forum_query->post_count, $from_num, $to_num, $total ); // phpcs:ignore WordPress.WP.I18n.MissingSingularPlaceholder -- Singular keeps its literal form to preserve existing translations (msgid unchanged); upstream BuddyPress pagination string.
+		$retstr = sprintf( _n( 'Viewing %2$s of %4$s forums', 'Viewing %2$s - %3$s of %4$s forums', $total_int, 'buddyboss-community-social-network-groups-forums-messaging' ), $bbp->forum_query->post_count, $from_num, $to_num, $total ); // phpcs:ignore WordPress.WP.I18n.MissingSingularPlaceholder -- Singular keeps its literal form to preserve existing translations (msgid unchanged); upstream BuddyPress pagination string.
 	}
 
 	// Filter and return
@@ -1145,8 +1145,8 @@ function bboss_bbp_get_forum_subscription_link( $args = array() ) {
 			'user_id'     => 0,
 			'before'      => '',
 			'after'       => '',
-			'subscribe'   => __( 'Subscribe', 'buddyboss-platform' ),
-			'unsubscribe' => __( 'Unsubscribe', 'buddyboss-platform' ),
+			'subscribe'   => __( 'Subscribe', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'unsubscribe' => __( 'Unsubscribe', 'buddyboss-community-social-network-groups-forums-messaging' ),
 		),
 		'get_forum_subscribe_link'
 	);
@@ -1633,7 +1633,7 @@ function bboss_bbp_get_forum_topics_link( $forum_id = 0 ) {
 	$forum    = bboss_bbp_get_forum( $forum_id );
 	$forum_id = $forum->ID;
 	/* translators: %s: number of discussions. */
-	$topics   = sprintf( _n( '%s discussion', '%s discussions', bboss_bbp_get_forum_topic_count( $forum_id, true, false ), 'buddyboss-platform' ), bboss_bbp_get_forum_topic_count( $forum_id ) );
+	$topics   = sprintf( _n( '%s discussion', '%s discussions', bboss_bbp_get_forum_topic_count( $forum_id, true, false ), 'buddyboss-community-social-network-groups-forums-messaging' ), bboss_bbp_get_forum_topic_count( $forum_id ) );
 	$retval   = '';
 	$link     = bboss_bbp_get_forum_permalink( $forum_id );
 
@@ -1653,7 +1653,7 @@ function bboss_bbp_get_forum_topics_link( $forum_id = 0 ) {
 		// Hidden text.
 		$deleted_num = bboss_bbp_get_forum_topic_count_hidden( $forum_id, false, false );
 		/* translators: %s: number of hidden discussions. */
-		$extra       = ' ' . sprintf( _n( '(+%s hidden)', '(+%s hidden)', $deleted_int, 'buddyboss-platform' ), $deleted_num );
+		$extra       = ' ' . sprintf( _n( '(+%s hidden)', '(+%s hidden)', $deleted_int, 'buddyboss-community-social-network-groups-forums-messaging' ), $deleted_num );
 
 		// Hidden link.
 		$retval .= ! bboss_bbp_get_view_all( 'edit_others_topics' )
@@ -2930,7 +2930,7 @@ function bboss_bbp_get_forum_topics_feed_link( $forum_id = 0 ) {
 			);
 		}
 
-		$link = '<a href="' . esc_url( $url ) . '" class="bbp-forum-rss-link topics"><span>' . esc_attr__( 'Discussions', 'buddyboss-platform' ) . '</span></a>';
+		$link = '<a href="' . esc_url( $url ) . '" class="bbp-forum-rss-link topics"><span>' . esc_attr__( 'Discussions', 'buddyboss-community-social-network-groups-forums-messaging' ) . '</span></a>';
 	}
 
 	return apply_filters( 'bbp_get_forum_topics_feed_link', $link, $url, $forum_id );
@@ -2999,7 +2999,7 @@ function bboss_bbp_get_forum_replies_feed_link( $forum_id = 0 ) {
 			);
 		}
 
-		$link = '<a href="' . esc_url( $url ) . '" class="bbp-forum-rss-link replies"><span>' . esc_html__( 'Replies', 'buddyboss-platform' ) . '</span></a>';
+		$link = '<a href="' . esc_url( $url ) . '" class="bbp-forum-rss-link replies"><span>' . esc_html__( 'Replies', 'buddyboss-community-social-network-groups-forums-messaging' ) . '</span></a>';
 	}
 
 	return apply_filters( 'bbp_get_forum_replies_feed_link', $link, $url, $forum_id );
@@ -3056,7 +3056,7 @@ function bboss_bbp_get_forum_content_excerpt_view_more( $forum_id = 0, $length =
 	$template_forum_ids[] = $forum_id;
 
 	if ( empty( $forum_link ) ) {
-		$forum_link = '... <br/> <a href="#single-forum-description-popup-' . esc_attr( $forum_id ) . '" class="bb-more-link show-action-popup button outline">' . esc_html__( 'View more', 'buddyboss-platform' ) . '</a>';
+		$forum_link = '... <br/> <a href="#single-forum-description-popup-' . esc_attr( $forum_id ) . '" class="bb-more-link show-action-popup button outline">' . esc_html__( 'View more', 'buddyboss-community-social-network-groups-forums-messaging' ) . '</a>';
 	}
 
 	/**

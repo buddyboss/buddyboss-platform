@@ -29,10 +29,10 @@ function bboss_activity_action_sitewide_feed() {
 			'id'            => 'sitewide',
 
 			/* translators: Sitewide activity RSS title - "[Site Name] | Site Wide Activity" */
-			'title'         => sprintf( __( '%s | Site-Wide Activity', 'buddyboss-platform' ), bboss_get_site_name() ),
+			'title'         => sprintf( __( '%s | Site-Wide Activity', 'buddyboss-community-social-network-groups-forums-messaging' ), bboss_get_site_name() ),
 
 			'link'          => bboss_get_activity_directory_permalink(),
-			'description'   => __( 'Activity feed for the entire site.', 'buddyboss-platform' ),
+			'description'   => __( 'Activity feed for the entire site.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'activity_args' => 'display_comments=threaded',
 		)
 	);
@@ -59,11 +59,11 @@ function bboss_activity_action_personal_feed() {
 			'id'            => 'personal',
 
 			/* translators: Personal activity RSS title - "[Site Name] | [User Display Name] | Activity" */
-			'title'         => sprintf( __( '%1$s | %2$s | Activity', 'buddyboss-platform' ), bboss_get_site_name(), $displayed_user_fullname ),
+			'title'         => sprintf( __( '%1$s | %2$s | Activity', 'buddyboss-community-social-network-groups-forums-messaging' ), bboss_get_site_name(), $displayed_user_fullname ),
 
 			'link'          => trailingslashit( bboss_displayed_user_domain() . bboss_get_activity_slug() ),
 			/* translators: Activity feed for [User Display Name]. */
-			'description'   => sprintf( __( 'Activity feed for %s.', 'buddyboss-platform' ), $displayed_user_fullname ),
+			'description'   => sprintf( __( 'Activity feed for %s.', 'buddyboss-community-social-network-groups-forums-messaging' ), $displayed_user_fullname ),
 			'activity_args' => 'user_id=' . bboss_displayed_user_id(),
 		)
 	);
@@ -90,11 +90,11 @@ function bboss_activity_action_friends_feed() {
 			'id'            => 'friends',
 
 			/* translators: Connections activity RSS title - "[Site Name] | [User Display Name] | Connections Activity" */
-			'title'         => sprintf( __( '%1$s | %2$s | Connections Activity', 'buddyboss-platform' ), bboss_get_site_name(), $displayed_user_fullname ),
+			'title'         => sprintf( __( '%1$s | %2$s | Connections Activity', 'buddyboss-community-social-network-groups-forums-messaging' ), bboss_get_site_name(), $displayed_user_fullname ),
 
 			'link'          => trailingslashit( bboss_displayed_user_domain() . bboss_get_activity_slug() . '/' . bboss_get_friends_slug() ),
 			/* translators: Activity feed for [User Display Name]'s connections. */
-			'description'   => sprintf( __( "Activity feed for %s's connections.", 'buddyboss-platform' ), $displayed_user_fullname ),
+			'description'   => sprintf( __( "Activity feed for %s's connections.", 'buddyboss-community-social-network-groups-forums-messaging' ), $displayed_user_fullname ),
 			'activity_args' => 'scope=friends',
 		)
 	);
@@ -125,12 +125,12 @@ function bboss_activity_action_my_groups_feed() {
 			'id'            => 'mygroups',
 
 			/* translators: Member groups activity RSS title - "[Site Name] | [User Display Name] | Groups Activity" */
-			'title'         => sprintf( __( '%1$s | %2$s | Group Activity', 'buddyboss-platform' ), bboss_get_site_name(), $displayed_user_fullname ),
+			'title'         => sprintf( __( '%1$s | %2$s | Group Activity', 'buddyboss-community-social-network-groups-forums-messaging' ), bboss_get_site_name(), $displayed_user_fullname ),
 
 			'link'          => trailingslashit( bboss_displayed_user_domain() . bboss_get_activity_slug() . '/' . bboss_get_groups_slug() ),
 
 			/* translators: Public group activity feed of which [User Display Name] is a member. */
-			'description'   => sprintf( __( 'Public group activity feed of which %s is a member.', 'buddyboss-platform' ), $displayed_user_fullname ),
+			'description'   => sprintf( __( 'Public group activity feed of which %s is a member.', 'buddyboss-community-social-network-groups-forums-messaging' ), $displayed_user_fullname ),
 			'activity_args' => array(
 				'object'           => bboss()->groups->id,
 				'primary_id'       => $group_ids,
@@ -165,12 +165,12 @@ function bboss_activity_action_mentions_feed() {
 			'id'            => 'mentions',
 
 			/* translators: User mentions activity RSS title - "[Site Name] | [User Display Name] | Mentions" */
-			'title'         => sprintf( __( '%1$s | %2$s | Mentions', 'buddyboss-platform' ), bboss_get_site_name(), $displayed_user_fullname ),
+			'title'         => sprintf( __( '%1$s | %2$s | Mentions', 'buddyboss-community-social-network-groups-forums-messaging' ), bboss_get_site_name(), $displayed_user_fullname ),
 
 			'link'          => bboss_displayed_user_domain() . bboss_get_activity_slug() . '/mentions/',
 
 			/* translators: Activity feed mentioning [User Display Name]. */
-			'description'   => sprintf( __( 'Activity feed mentioning %s.', 'buddyboss-platform' ), $displayed_user_fullname ),
+			'description'   => sprintf( __( 'Activity feed mentioning %s.', 'buddyboss-community-social-network-groups-forums-messaging' ), $displayed_user_fullname ),
 			'activity_args' => array(
 				'search_terms' => '@' . bboss_core_get_username( bboss_displayed_user_id() ),
 			),
@@ -203,12 +203,12 @@ function bboss_activity_action_favorites_feed() {
 			'id'            => 'favorites',
 
 			/* translators: User activity saved RSS title - "[Site Name] | [User Display Name] | Favorites" */
-			'title'         => sprintf( __( '%1$s | %2$s | Favorites', 'buddyboss-platform' ), bboss_get_site_name(), $displayed_user_fullname ),
+			'title'         => sprintf( __( '%1$s | %2$s | Favorites', 'buddyboss-community-social-network-groups-forums-messaging' ), bboss_get_site_name(), $displayed_user_fullname ),
 
 			'link'          => bboss_displayed_user_domain() . bboss_get_activity_slug() . '/favorites/',
 
 			/* translators: Activity feed of [User Display Name]'s saved posts. */
-			'description'   => sprintf( __( "Activity feed of %s's saved posts.", 'buddyboss-platform' ), $displayed_user_fullname ),
+			'description'   => sprintf( __( "Activity feed of %s's saved posts.", 'buddyboss-community-social-network-groups-forums-messaging' ), $displayed_user_fullname ),
 			'activity_args' => 'include=' . $fav_ids,
 		)
 	);

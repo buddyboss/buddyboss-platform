@@ -46,21 +46,21 @@ function bboss_bbp_get_reply_post_type_labels() {
 	return apply_filters(
 		'bbp_get_reply_post_type_labels',
 		array(
-			'name'               => __( 'Replies', 'buddyboss-platform' ),
-			'menu_name'          => __( 'Replies', 'buddyboss-platform' ),
-			'singular_name'      => __( 'Reply', 'buddyboss-platform' ),
-			'all_items'          => __( 'All Replies', 'buddyboss-platform' ),
-			'add_new'            => __( 'New Reply', 'buddyboss-platform' ),
-			'add_new_item'       => __( 'Create New Reply', 'buddyboss-platform' ),
-			'edit'               => __( 'Edit', 'buddyboss-platform' ),
-			'edit_item'          => __( 'Edit Reply', 'buddyboss-platform' ),
-			'new_item'           => __( 'New Reply', 'buddyboss-platform' ),
-			'view'               => __( 'View Reply', 'buddyboss-platform' ),
-			'view_item'          => __( 'View Reply', 'buddyboss-platform' ),
-			'search_items'       => __( 'Search Replies', 'buddyboss-platform' ),
-			'not_found'          => __( 'No replies found', 'buddyboss-platform' ),
-			'not_found_in_trash' => __( 'No replies found in trash', 'buddyboss-platform' ),
-			'parent_item_colon'  => __( 'Discussion:', 'buddyboss-platform' ),
+			'name'               => __( 'Replies', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'menu_name'          => __( 'Replies', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'singular_name'      => __( 'Reply', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'all_items'          => __( 'All Replies', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'add_new'            => __( 'New Reply', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'add_new_item'       => __( 'Create New Reply', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'edit'               => __( 'Edit', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'edit_item'          => __( 'Edit Reply', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'new_item'           => __( 'New Reply', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'view'               => __( 'View Reply', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'view_item'          => __( 'View Reply', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'search_items'       => __( 'Search Replies', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'not_found'          => __( 'No replies found', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'not_found_in_trash' => __( 'No replies found in trash', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'parent_item_colon'  => __( 'Discussion:', 'buddyboss-community-social-network-groups-forums-messaging' ),
 		)
 	);
 }
@@ -615,7 +615,7 @@ function bboss_bbp_get_reply_title_fallback( $post_title = '', $post_id = 0 ) {
 
 	// Get empty reply title fallback.
 	/* translators: %s: discussion title. */
-	$reply_title = sprintf( __( 'Reply To: %s', 'buddyboss-platform' ), $topic_title );
+	$reply_title = sprintf( __( 'Reply To: %s', 'buddyboss-community-social-network-groups-forums-messaging' ), $topic_title );
 
 	return apply_filters( 'bbp_get_reply_title_fallback', $reply_title, $post_id, $topic_title );
 }
@@ -761,7 +761,7 @@ function bboss_bbp_get_reply_post_date( $reply_id = 0, $humanize = false, $gmt =
 		$date   = get_post_time( get_option( 'date_format' ), $gmt, $reply_id, true );
 		$time   = get_post_time( get_option( 'time_format' ), $gmt, $reply_id, true );
 		/* translators: 1: date or time, 2: date or time. */
-		$result = sprintf( _x( '%1$s at %2$s', 'date at time', 'buddyboss-platform' ), $date, $time );
+		$result = sprintf( _x( '%1$s at %2$s', 'date at time', 'buddyboss-community-social-network-groups-forums-messaging' ), $date, $time );
 	}
 
 	return apply_filters( 'bbp_get_reply_post_date', $result, $reply_id, $humanize, $gmt, $date, $time );
@@ -873,10 +873,10 @@ function bboss_bbp_get_reply_revision_log( $reply_id = 0 ) {
 		$r .= "\t" . '<li id="bbp-reply-revision-log-' . esc_attr( $reply_id ) . '-item-' . esc_attr( $revision->ID ) . '" class="bbp-reply-revision-log-item">' . "\n";
 		if ( ! empty( $reason ) ) {
 			/* translators: 1: time since the edit, 2: editor display name, 3: edit reason. */
-			$r .= "\t\t" . sprintf( esc_html__( 'This reply was modified %1$s by %2$s. Reason: %3$s', 'buddyboss-platform' ), esc_html( $since ), $author, esc_html( $reason ) ) . "\n";
+			$r .= "\t\t" . sprintf( esc_html__( 'This reply was modified %1$s by %2$s. Reason: %3$s', 'buddyboss-community-social-network-groups-forums-messaging' ), esc_html( $since ), $author, esc_html( $reason ) ) . "\n";
 		} else {
 			/* translators: 1: time since the edit, 2: editor display name. */
-			$r .= "\t\t" . sprintf( esc_html__( 'This reply was modified %1$s by %2$s.', 'buddyboss-platform' ), esc_html( $since ), $author ) . "\n";
+			$r .= "\t\t" . sprintf( esc_html__( 'This reply was modified %1$s by %2$s.', 'buddyboss-community-social-network-groups-forums-messaging' ), esc_html( $since ), $author ) . "\n";
 		}
 		$r .= "\t" . '</li>' . "\n";
 
@@ -1211,7 +1211,7 @@ function bboss_bbp_get_reply_author_display_name( $reply_id = 0, $viewer_user_id
 
 	// If nothing could be found anywhere, use Anonymous.
 	if ( empty( $author_name ) ) {
-		$author_name = __( 'Anonymous', 'buddyboss-platform' );
+		$author_name = __( 'Anonymous', 'buddyboss-community-social-network-groups-forums-messaging' );
 	}
 
 	// Encode possible UTF8 display names (utf8_encode() is deprecated since PHP 8.2).
@@ -1341,7 +1341,7 @@ function bboss_bbp_get_reply_author_link( $args = '' ) {
 		// Tweak link title if empty
 		if ( empty( $r['link_title'] ) ) {
 			/* translators: %s: reply author display name. */
-			$link_title = sprintf( empty( $anonymous ) ? __( 'View %s\'s profile', 'buddyboss-platform' ) : __( 'Visit %s\'s website', 'buddyboss-platform' ), bboss_bbp_get_reply_author_display_name( $reply_id ) );
+			$link_title = sprintf( empty( $anonymous ) ? __( 'View %s\'s profile', 'buddyboss-community-social-network-groups-forums-messaging' ) : __( 'Visit %s\'s website', 'buddyboss-community-social-network-groups-forums-messaging' ), bboss_bbp_get_reply_author_display_name( $reply_id ) );
 
 			// Use what was passed if not
 		} else {
@@ -1807,7 +1807,7 @@ function bboss_bbp_get_reply_to_link( $args = array() ) {
 			'id'          => 0,
 			'link_before' => '',
 			'link_after'  => '',
-			'reply_text'  => __( 'Reply', 'buddyboss-platform' ),
+			'reply_text'  => __( 'Reply', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'depth'       => 0,
 			'add_below'   => 'post',
 			'respond_id'  => 'new-reply-' . bboss_bbp_get_topic_id(),
@@ -1850,7 +1850,7 @@ function bboss_bbp_get_reply_to_link( $args = array() ) {
 
 	// Add $uri to the array, to be passed through the filter
 	$r['uri'] = $uri;
-	$retval   = $r['link_before'] . '<a href="' . esc_url( $r['uri'] ) . '" class="bbp-reply-to-link" data-balloon=" ' . esc_html__( 'Reply', 'buddyboss-platform' ) . ' " data-balloon-pos="up" ' . $onclick . '><i class="bb-icon-l bb-icon-reply"></i><span class="bb-forum-reply-text">' . esc_html( $r['reply_text'] ) . '</span></a>' . $r['link_after'];
+	$retval   = $r['link_before'] . '<a href="' . esc_url( $r['uri'] ) . '" class="bbp-reply-to-link" data-balloon=" ' . esc_html__( 'Reply', 'buddyboss-community-social-network-groups-forums-messaging' ) . ' " data-balloon-pos="up" ' . $onclick . '><i class="bb-icon-l bb-icon-reply"></i><span class="bb-forum-reply-text">' . esc_html( $r['reply_text'] ) . '</span></a>' . $r['link_after'];
 
 	return apply_filters( 'bbp_get_reply_to_link', $retval, $r, $args );
 }
@@ -1886,7 +1886,7 @@ function bboss_bbp_get_cancel_reply_to_link( $text = '' ) {
 
 	// Set default text
 	if ( empty( $text ) ) {
-		$text = __( 'Cancel', 'buddyboss-platform' );
+		$text = __( 'Cancel', 'buddyboss-community-social-network-groups-forums-messaging' );
 	}
 
 	$reply_to = isset( $_GET['bbp_reply_to'] ) ? (int) $_GET['bbp_reply_to'] : 0;
@@ -2124,7 +2124,7 @@ function bboss_bbp_get_reply_edit_link( $args = '' ) {
 			'id'          => 0,
 			'link_before' => '',
 			'link_after'  => '',
-			'edit_text'   => esc_html__( 'Edit', 'buddyboss-platform' ),
+			'edit_text'   => esc_html__( 'Edit', 'buddyboss-community-social-network-groups-forums-messaging' ),
 		),
 		'get_reply_edit_link'
 	);
@@ -2263,9 +2263,9 @@ function bboss_bbp_get_reply_trash_link( $args = '' ) {
 			'link_before'  => '',
 			'link_after'   => '',
 			'sep'          => ' | ',
-			'trash_text'   => esc_html__( 'Trash', 'buddyboss-platform' ),
-			'restore_text' => esc_html__( 'Restore', 'buddyboss-platform' ),
-			'delete_text'  => esc_html__( 'Delete', 'buddyboss-platform' ),
+			'trash_text'   => esc_html__( 'Trash', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'restore_text' => esc_html__( 'Restore', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'delete_text'  => esc_html__( 'Delete', 'buddyboss-community-social-network-groups-forums-messaging' ),
 		),
 		'get_reply_trash_link'
 	);
@@ -2292,7 +2292,7 @@ function bboss_bbp_get_reply_trash_link( $args = '' ) {
 	}
 
 	if ( bboss_bbp_is_reply_trash( $reply->ID ) ) {
-		$actions['untrash'] = '<a title="' . esc_attr__( 'Restore this item from the Trash', 'buddyboss-platform' ) . '" href="' . esc_url(
+		$actions['untrash'] = '<a title="' . esc_attr__( 'Restore this item from the Trash', 'buddyboss-community-social-network-groups-forums-messaging' ) . '" href="' . esc_url(
 			wp_nonce_url(
 				add_query_arg(
 					array(
@@ -2305,7 +2305,7 @@ function bboss_bbp_get_reply_trash_link( $args = '' ) {
 			)
 		) . '" class="bbp-reply-restore-link">' . $r['restore_text'] . '</a>';
 	} elseif ( EMPTY_TRASH_DAYS ) {
-		$actions['trash'] = '<a title="' . esc_attr__( 'Move this item to the Trash', 'buddyboss-platform' ) . '" href="' . esc_url(
+		$actions['trash'] = '<a title="' . esc_attr__( 'Move this item to the Trash', 'buddyboss-community-social-network-groups-forums-messaging' ) . '" href="' . esc_url(
 			wp_nonce_url(
 				add_query_arg(
 					array(
@@ -2320,7 +2320,7 @@ function bboss_bbp_get_reply_trash_link( $args = '' ) {
 	}
 
 	if ( bboss_bbp_is_reply_trash( $reply->ID ) || ! EMPTY_TRASH_DAYS ) {
-		$actions['delete'] = '<a title="' . esc_attr__( 'Delete this item permanently', 'buddyboss-platform' ) . '" href="' . esc_url(
+		$actions['delete'] = '<a title="' . esc_attr__( 'Delete this item permanently', 'buddyboss-community-social-network-groups-forums-messaging' ) . '" href="' . esc_url(
 			wp_nonce_url(
 				add_query_arg(
 					array(
@@ -2331,7 +2331,7 @@ function bboss_bbp_get_reply_trash_link( $args = '' ) {
 				),
 				'delete-' . $reply->post_type . '_' . $reply->ID
 			)
-		) . '" onclick="return confirm(\'' . esc_js( __( 'Are you sure you want to delete that permanently?', 'buddyboss-platform' ) ) . '\' );" class="bbp-reply-delete-link">' . $r['delete_text'] . '</a>';
+		) . '" onclick="return confirm(\'' . esc_js( __( 'Are you sure you want to delete that permanently?', 'buddyboss-community-social-network-groups-forums-messaging' ) ) . '\' );" class="bbp-reply-delete-link">' . $r['delete_text'] . '</a>';
 	}
 
 	// Process the admin links
@@ -2387,8 +2387,8 @@ function bboss_bbp_get_reply_spam_link( $args = '' ) {
 			'id'          => 0,
 			'link_before' => '',
 			'link_after'  => '',
-			'spam_text'   => esc_html__( 'Spam', 'buddyboss-platform' ),
-			'unspam_text' => esc_html__( 'Unspam', 'buddyboss-platform' ),
+			'spam_text'   => esc_html__( 'Spam', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'unspam_text' => esc_html__( 'Unspam', 'buddyboss-community-social-network-groups-forums-messaging' ),
 		),
 		'get_reply_spam_link'
 	);
@@ -2463,8 +2463,8 @@ function bboss_bbp_get_reply_move_link( $args = '' ) {
 			'id'          => 0,
 			'link_before' => '',
 			'link_after'  => '',
-			'split_text'  => esc_html__( 'Move', 'buddyboss-platform' ),
-			'split_title' => esc_attr__( 'Move this reply', 'buddyboss-platform' ),
+			'split_text'  => esc_html__( 'Move', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'split_title' => esc_attr__( 'Move this reply', 'buddyboss-community-social-network-groups-forums-messaging' ),
 		),
 		'get_reply_move_link'
 	);
@@ -2540,8 +2540,8 @@ function bboss_bbp_get_topic_split_link( $args = '' ) {
 			'id'          => 0,
 			'link_before' => '',
 			'link_after'  => '',
-			'split_text'  => esc_html__( 'Split', 'buddyboss-platform' ),
-			'split_title' => esc_attr__( 'Split the topic from this reply', 'buddyboss-platform' ),
+			'split_text'  => esc_html__( 'Split', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'split_title' => esc_attr__( 'Split the topic from this reply', 'buddyboss-community-social-network-groups-forums-messaging' ),
 		),
 		'get_topic_split_link'
 	);
@@ -2646,7 +2646,7 @@ function bboss_bbp_get_topic_pagination_count() {
 
 	if( (int) $total_pages > 1 ) {
 		/* translators: 1: current page number, 2: total number of pages. */
-		$retstr = sprintf( __( 'Page %1$s of %2$s', 'buddyboss-platform' ), $curr_page, $total_pages );
+		$retstr = sprintf( __( 'Page %1$s of %2$s', 'buddyboss-community-social-network-groups-forums-messaging' ), $curr_page, $total_pages );
 	}
 
 	// Filter and return

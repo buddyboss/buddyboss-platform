@@ -29,8 +29,8 @@ function bboss_admin_settings_register_activity_feature() {
 	bboss_register_feature(
 		'activity',
 		array(
-			'label'              => __( 'Activity Feeds', 'buddyboss-platform' ),
-			'description'        => __( 'Provide global, personal, and group activity feeds that support threaded commenting, direct posting, @mentions, and email notifications.', 'buddyboss-platform' ),
+			'label'              => __( 'Activity Feeds', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'description'        => __( 'Provide global, personal, and group activity feeds that support threaded commenting, direct posting, @mentions, and email notifications.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'icon'               => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-pulse',
@@ -73,7 +73,7 @@ function bboss_admin_settings_register_activity_feature() {
 		'activity',
 		'activity_settings',
 		array(
-			'title'      => __( 'Activity Settings', 'buddyboss-platform' ),
+			'title'      => __( 'Activity Settings', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'icon'       => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-pulse',
@@ -97,7 +97,7 @@ function bboss_admin_settings_register_activity_feature() {
 		'activity',
 		'activity_comments',
 		array(
-			'title'      => __( 'Activity Comments', 'buddyboss-platform' ),
+			'title'      => __( 'Activity Comments', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'icon'       => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-chat-text',
@@ -121,7 +121,7 @@ function bboss_admin_settings_register_activity_feature() {
 		'activity',
 		'activity_topics',
 		array(
-			'title'      => __( 'Activity Topics', 'buddyboss-platform' ),
+			'title'      => __( 'Activity Topics', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'icon'       => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-squares-four',
@@ -145,7 +145,7 @@ function bboss_admin_settings_register_activity_feature() {
 		'activity',
 		'posts_visibility',
 		array(
-			'title'      => __( 'Posts Visibility', 'buddyboss-platform' ),
+			'title'      => __( 'Posts Visibility', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'icon'       => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-eye',
@@ -161,7 +161,7 @@ function bboss_admin_settings_register_activity_feature() {
 		'activity',
 		'activity_sharing',
 		array(
-			'title'      => __( 'Activity Sharing', 'buddyboss-platform' ),
+			'title'      => __( 'Activity Sharing', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'icon'       => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-share-fat',
@@ -177,7 +177,7 @@ function bboss_admin_settings_register_activity_feature() {
 		'activity',
 		'access_controls',
 		array(
-			'title' => __( 'Access Controls', 'buddyboss-platform' ),
+			'title' => __( 'Access Controls', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'icon'  => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-lock-simple',
@@ -191,7 +191,7 @@ function bboss_admin_settings_register_activity_feature() {
 		'activity',
 		'all_activities',
 		array(
-			'title'      => __( 'All Activities', 'buddyboss-platform' ),
+			'title'      => __( 'All Activities', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'icon'       => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-list-dashes',
@@ -210,7 +210,7 @@ function bboss_admin_settings_register_activity_feature() {
 	// Build edit time options once; shared by Panel 1 (Edit Activity) and Panel 2 (Edit Comment).
 	$edit_time_options = array(
 		array(
-			'label' => __( 'Forever', 'buddyboss-platform' ),
+			'label' => __( 'Forever', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'value' => -1,
 		),
 	);

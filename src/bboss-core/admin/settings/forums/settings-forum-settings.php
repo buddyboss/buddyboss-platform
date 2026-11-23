@@ -28,7 +28,7 @@ function bboss_forums_register_settings_panel_fields() {
 		'forum_settings',
 		'forum_settings_section',
 		array(
-			'title'       => __( 'Forum Settings', 'buddyboss-platform' ),
+			'title'       => __( 'Forum Settings', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'description' => '',
 			'order'       => 10,
 			'help_url'    => '636159',
@@ -42,13 +42,13 @@ function bboss_forums_register_settings_panel_fields() {
 		'forum_settings_section',
 		array(
 			'name'              => '_bbp_edit_lock',
-			'label'             => __( 'Disallow Editing After', 'buddyboss-platform' ),
+			'label'             => __( 'Disallow Editing After', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'type'              => 'number',
 			'default'           => (int) get_option( '_bbp_edit_lock', 5 ),
 			'sanitize_callback' => 'absint',
 			'min'               => 0,
 			'step'              => 1,
-			'suffix'            => __( 'minutes', 'buddyboss-platform' ),
+			'suffix'            => __( 'minutes', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'order'             => 10,
 		)
 	);
@@ -60,13 +60,13 @@ function bboss_forums_register_settings_panel_fields() {
 		'forum_settings_section',
 		array(
 			'name'              => '_bbp_throttle_time',
-			'label'             => __( 'Throttle Posting Every', 'buddyboss-platform' ),
+			'label'             => __( 'Throttle Posting Every', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'type'              => 'number',
 			'default'           => (int) get_option( '_bbp_throttle_time', 10 ),
 			'sanitize_callback' => 'absint',
 			'min'               => 0,
 			'step'              => 1,
-			'suffix'            => __( 'seconds', 'buddyboss-platform' ),
+			'suffix'            => __( 'seconds', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'order'             => 20,
 		)
 	);
@@ -88,10 +88,10 @@ function bboss_forums_register_settings_panel_fields() {
 		'forum_settings_section',
 		array(
 			'name'                 => '_bbp_allow_threaded_replies',
-			'label'                => __( 'Reply Threading', 'buddyboss-platform' ),
+			'label'                => __( 'Reply Threading', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'type'                 => 'toggle',
 			/* translators: %s: Thread depth select control. */
-			'description'          => __( 'Enable threaded (nested) replies %s levels deep', 'buddyboss-platform' ),
+			'description'          => __( 'Enable threaded (nested) replies %s levels deep', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'default'              => bboss_bbp_allow_threaded_replies(),
 			'sanitize_callback'    => 'absint',
 			'description_controls' => array(
@@ -115,7 +115,7 @@ function bboss_forums_register_settings_panel_fields() {
 		'forum_settings',
 		'forum_per_page_section',
 		array(
-			'title'       => __( 'Discussions and Replies Per Page', 'buddyboss-platform' ),
+			'title'       => __( 'Discussions and Replies Per Page', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'description' => '',
 			'order'       => 20,
 			'help_url'    => '636161',
@@ -129,13 +129,13 @@ function bboss_forums_register_settings_panel_fields() {
 		'forum_per_page_section',
 		array(
 			'name'              => '_bbp_forums_per_page',
-			'label'             => __( 'Forums', 'buddyboss-platform' ),
+			'label'             => __( 'Forums', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'type'              => 'number',
 			'default'           => bboss_bbp_get_forums_per_page(),
 			'sanitize_callback' => 'absint',
 			'min'               => 1,
 			'step'              => 1,
-			'suffix'            => __( 'per page', 'buddyboss-platform' ),
+			'suffix'            => __( 'per page', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'order'             => 10,
 		)
 	);
@@ -147,13 +147,13 @@ function bboss_forums_register_settings_panel_fields() {
 		'forum_per_page_section',
 		array(
 			'name'              => '_bbp_topics_per_page',
-			'label'             => __( 'Discussions', 'buddyboss-platform' ),
+			'label'             => __( 'Discussions', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'type'              => 'number',
 			'default'           => bboss_bbp_get_topics_per_page(),
 			'sanitize_callback' => 'absint',
 			'min'               => 1,
 			'step'              => 1,
-			'suffix'            => __( 'per page', 'buddyboss-platform' ),
+			'suffix'            => __( 'per page', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'order'             => 20,
 		)
 	);
@@ -165,13 +165,13 @@ function bboss_forums_register_settings_panel_fields() {
 		'forum_per_page_section',
 		array(
 			'name'              => '_bbp_replies_per_page',
-			'label'             => __( 'Replies', 'buddyboss-platform' ),
+			'label'             => __( 'Replies', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'type'              => 'number',
 			'default'           => bboss_bbp_get_replies_per_page(),
 			'sanitize_callback' => 'absint',
 			'min'               => 1,
 			'step'              => 1,
-			'suffix'            => __( 'per page', 'buddyboss-platform' ),
+			'suffix'            => __( 'per page', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'order'             => 30,
 		)
 	);
@@ -184,7 +184,7 @@ function bboss_forums_register_settings_panel_fields() {
 		'forum_settings',
 		'forum_per_rss_page_section',
 		array(
-			'title'       => __( 'Discussions and Replies Per RSS Page', 'buddyboss-platform' ),
+			'title'       => __( 'Discussions and Replies Per RSS Page', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'description' => '',
 			'order'       => 30,
 			'help_url'    => '636163',
@@ -198,13 +198,13 @@ function bboss_forums_register_settings_panel_fields() {
 		'forum_per_rss_page_section',
 		array(
 			'name'              => '_bbp_topics_per_rss_page',
-			'label'             => __( 'Discussions', 'buddyboss-platform' ),
+			'label'             => __( 'Discussions', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'type'              => 'number',
 			'default'           => bboss_bbp_get_topics_per_rss_page(),
 			'sanitize_callback' => 'absint',
 			'min'               => 1,
 			'step'              => 1,
-			'suffix'            => __( 'per page', 'buddyboss-platform' ),
+			'suffix'            => __( 'per page', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'order'             => 10,
 		)
 	);
@@ -216,13 +216,13 @@ function bboss_forums_register_settings_panel_fields() {
 		'forum_per_rss_page_section',
 		array(
 			'name'              => '_bbp_replies_per_rss_page',
-			'label'             => __( 'Replies', 'buddyboss-platform' ),
+			'label'             => __( 'Replies', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'type'              => 'number',
 			'default'           => bboss_bbp_get_replies_per_rss_page(),
 			'sanitize_callback' => 'absint',
 			'min'               => 1,
 			'step'              => 1,
-			'suffix'            => __( 'per page', 'buddyboss-platform' ),
+			'suffix'            => __( 'per page', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'order'             => 20,
 		)
 	);

@@ -48,7 +48,7 @@ trait BBoss_REST_Attachments {
 				"bp_rest_attachments_{$this->object}_cover_upload_error",
 				sprintf(
 					/* translators: %s: the upload error message */
-					__( 'Upload Failed! Error was: %s', 'buddyboss-platform' ),
+					__( 'Upload Failed! Error was: %s', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					$uploaded_image['error']
 				),
 				array(
@@ -71,7 +71,7 @@ trait BBoss_REST_Attachments {
 		if ( ! $bp_attachments_uploads_dir ) {
 			return new WP_Error(
 				"bp_rest_attachments_{$this->object}_cover_upload_error",
-				__( 'The BuddyPress attachments uploads directory is not set.', 'buddyboss-platform' ),
+				__( 'The BuddyPress attachments uploads directory is not set.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				array(
 					'status' => 500,
 					'reason' => 'attachments_upload_dir',
@@ -91,7 +91,7 @@ trait BBoss_REST_Attachments {
 		if ( 1 === validate_file( $cover_dir ) || ! is_dir( $cover_dir ) ) {
 			return new WP_Error(
 				"bp_rest_attachments_{$this->object}_cover_upload_error",
-				__( 'The cover image directory is not valid.', 'buddyboss-platform' ),
+				__( 'The cover image directory is not valid.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				array(
 					'status' => 500,
 					'reason' => 'cover_image_dir',
@@ -116,12 +116,12 @@ trait BBoss_REST_Attachments {
 		// Bail if any error happened.
 		if ( ! $cover ) {
 
-			$error_message = esc_html__( 'There was a problem uploading the cover image.', 'buddyboss-platform' );
+			$error_message = esc_html__( 'There was a problem uploading the cover image.', 'buddyboss-community-social-network-groups-forums-messaging' );
 			$error_reason  = 'unknown';
 
 			if ( ! bboss_is_gd_or_imagick_library_enabled() ) {
 				/* translators: %s: error message. */
-				$error_message = sprintf( esc_html__( 'Upload Error: %s', 'buddyboss-platform' ), esc_html__( 'Missing image editor! Enable GD or Imagick library.', 'buddyboss-platform' ) );
+				$error_message = sprintf( esc_html__( 'Upload Error: %s', 'buddyboss-community-social-network-groups-forums-messaging' ), esc_html__( 'Missing image editor! Enable GD or Imagick library.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 				$error_reason  = 'image_no_editor';
 			}
 
@@ -210,7 +210,7 @@ trait BBoss_REST_Attachments {
 				"bp_rest_attachments_{$this->object}_avatar_upload_error",
 				sprintf(
 					/* translators: %s: the upload error message */
-					__( 'Upload failed! Error was: %s.', 'buddyboss-platform' ),
+					__( 'Upload failed! Error was: %s.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					$avatar_original['error']
 				),
 				array(
@@ -241,7 +241,7 @@ trait BBoss_REST_Attachments {
 				"bp_rest_attachments_{$this->object}_avatar_error",
 				sprintf(
 					/* translators: %1$s and %2$s is replaced with the correct sizes. */
-					__( 'You have selected an image that is smaller than recommended. For best results, upload a picture larger than %1$s x %2$s pixels.', 'buddyboss-platform' ),
+					__( 'You have selected an image that is smaller than recommended. For best results, upload a picture larger than %1$s x %2$s pixels.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					$full_width,
 					$full_height
 				),
@@ -315,7 +315,7 @@ trait BBoss_REST_Attachments {
 				"bp_rest_attachments_{$this->object}_avatar_upload_error",
 				sprintf(
 					/* translators: %s: the upload error message */
-					__( 'Upload Error: %s', 'buddyboss-platform' ),
+					__( 'Upload Error: %s', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					$resized->get_error_message()
 				),
 				array(
@@ -341,7 +341,7 @@ trait BBoss_REST_Attachments {
 				"bp_rest_attachments_{$this->object}_avatar_upload_error",
 				sprintf(
 					/* translators: %s: the upload error message */
-					__( 'Upload failed! Error was: %s', 'buddyboss-platform' ),
+					__( 'Upload failed! Error was: %s', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					$img_dir->get_error_message()
 				),
 				array(
@@ -418,7 +418,7 @@ trait BBoss_REST_Attachments {
 				"bp_rest_attachments_{$this->object}_avatar_crop_error",
 				sprintf(
 					/* translators: %s is replaced with object type. */
-					__( 'There was a problem cropping your %s photo.', 'buddyboss-platform' ),
+					__( 'There was a problem cropping your %s photo.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					$this->object
 				),
 				array(

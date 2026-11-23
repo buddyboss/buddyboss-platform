@@ -162,21 +162,21 @@ function normalizeMemberTypes( value ) {
  * @since BuddyBoss [BBVERSION]
  */
 var ROLE_LABELS_MAP = {
-	organizer: __( 'Organizers', 'buddyboss-platform' ),
-	moderator: __( 'Moderators', 'buddyboss-platform' ),
-	member: __( 'Members', 'buddyboss-platform' ),
+	organizer: __( 'Organizers', 'buddyboss-community-social-network-groups-forums-messaging' ),
+	moderator: __( 'Moderators', 'buddyboss-community-social-network-groups-forums-messaging' ),
+	member: __( 'Members', 'buddyboss-community-social-network-groups-forums-messaging' ),
 };
 
 var SINGULAR_PLACEHOLDERS = {
-	organizer: __( 'e.g. Organizer', 'buddyboss-platform' ),
-	moderator: __( 'e.g. Moderator', 'buddyboss-platform' ),
-	member: __( 'e.g. Member', 'buddyboss-platform' ),
+	organizer: __( 'e.g. Organizer', 'buddyboss-community-social-network-groups-forums-messaging' ),
+	moderator: __( 'e.g. Moderator', 'buddyboss-community-social-network-groups-forums-messaging' ),
+	member: __( 'e.g. Member', 'buddyboss-community-social-network-groups-forums-messaging' ),
 };
 
 var PLURAL_PLACEHOLDERS = {
-	organizer: __( 'e.g. Organizers', 'buddyboss-platform' ),
-	moderator: __( 'e.g. Moderators', 'buddyboss-platform' ),
-	member: __( 'e.g. Members', 'buddyboss-platform' ),
+	organizer: __( 'e.g. Organizers', 'buddyboss-community-social-network-groups-forums-messaging' ),
+	moderator: __( 'e.g. Moderators', 'buddyboss-community-social-network-groups-forums-messaging' ),
+	member: __( 'e.g. Members', 'buddyboss-community-social-network-groups-forums-messaging' ),
 };
 
 export function GroupTypeModal( { isOpen, onClose, onSave, groupType, memberTypes } ) {
@@ -311,7 +311,7 @@ export function GroupTypeModal( { isOpen, onClose, onSave, groupType, memberType
 		}
 
 		if ( ! formData.name.trim() ) {
-			setError( __( 'Group type name is required.', 'buddyboss-platform' ) );
+			setError( __( 'Group type name is required.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 			return;
 		}
 
@@ -405,12 +405,12 @@ export function GroupTypeModal( { isOpen, onClose, onSave, groupType, memberType
 						onSave();
 					}
 				} else {
-					setError( ( response.data && response.data.message ) || __( 'Failed to save group type.', 'buddyboss-platform' ) );
+					setError( ( response.data && response.data.message ) || __( 'Failed to save group type.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 				}
 			} )
 			.catch( function () {
 				setIsSaving( false );
-				setError( __( 'Failed to save group type.', 'buddyboss-platform' ) );
+				setError( __( 'Failed to save group type.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 			} );
 	}, [ formData, groupType, onSave, isSaving ] );
 
@@ -425,8 +425,8 @@ export function GroupTypeModal( { isOpen, onClose, onSave, groupType, memberType
 		? '[group type="' + groupType.name + '"]'
 		: '';
 	var modalTitle = isEditing
-		? __( 'Edit Group Type', 'buddyboss-platform' )
-		: __( 'Add New Group Type', 'buddyboss-platform' );
+		? __( 'Edit Group Type', 'buddyboss-community-social-network-groups-forums-messaging' )
+		: __( 'Add New Group Type', 'buddyboss-community-social-network-groups-forums-messaging' );
 
 	return (
 		<Modal
@@ -449,7 +449,7 @@ export function GroupTypeModal( { isOpen, onClose, onSave, groupType, memberType
 					{/* Name */}
 					<div className="bb-admin-group-type-modal__section">
 						<TextControl
-							label={ __( 'Name', 'buddyboss-platform' ) }
+							label={ __( 'Name', 'buddyboss-community-social-network-groups-forums-messaging' ) }
 							value={ formData.name }
 							onChange={ function ( val ) { updateField( 'name', val ); } }
 							required
@@ -460,12 +460,12 @@ export function GroupTypeModal( { isOpen, onClose, onSave, groupType, memberType
 					<div className="bb-admin-group-type-modal__section">
 						<div className="bb-admin-group-type-modal__row">
 							<TextControl
-								label={ __( 'Singular Label', 'buddyboss-platform' ) }
+								label={ __( 'Singular Label', 'buddyboss-community-social-network-groups-forums-messaging' ) }
 								value={ formData.singular_label }
 								onChange={ function ( val ) { updateField( 'singular_label', val ); } }
 							/>
 							<TextControl
-								label={ __( 'Plural Label', 'buddyboss-platform' ) }
+								label={ __( 'Plural Label', 'buddyboss-community-social-network-groups-forums-messaging' ) }
 								value={ formData.plural_label }
 								onChange={ function ( val ) { updateField( 'plural_label', val ); } }
 							/>
@@ -475,7 +475,7 @@ export function GroupTypeModal( { isOpen, onClose, onSave, groupType, memberType
 					{/* Group Roles (Optional) */}
 					<div className="bb-admin-group-type-modal__section">
 						<h4 className="bb-admin-group-type-modal__section-title">
-							{ __( 'Group Roles (Optional)', 'buddyboss-platform' ) }
+							{ __( 'Group Roles (Optional)', 'buddyboss-community-social-network-groups-forums-messaging' ) }
 						</h4>
 
 						{ [ 'organizer', 'moderator', 'member' ].map( function ( role ) {
@@ -484,13 +484,13 @@ export function GroupTypeModal( { isOpen, onClose, onSave, groupType, memberType
 									<span className="bb-admin-group-type-modal__role-label">{ ROLE_LABELS_MAP[ role ] }</span>
 									<div className="bb-admin-group-type-modal__row">
 										<TextControl
-											label={ __( 'Singular Label', 'buddyboss-platform' ) }
+											label={ __( 'Singular Label', 'buddyboss-community-social-network-groups-forums-messaging' ) }
 											value={ formData.role_labels[ role ].singular }
 											onChange={ function ( val ) { updateRoleLabel( role, 'singular', val ); } }
 											placeholder={ SINGULAR_PLACEHOLDERS[ role ] }
 										/>
 										<TextControl
-											label={ __( 'Plural Label', 'buddyboss-platform' ) }
+											label={ __( 'Plural Label', 'buddyboss-community-social-network-groups-forums-messaging' ) }
 											value={ formData.role_labels[ role ].plural }
 											onChange={ function ( val ) { updateRoleLabel( role, 'plural', val ); } }
 											placeholder={ PLURAL_PLACEHOLDERS[ role ] }
@@ -504,15 +504,15 @@ export function GroupTypeModal( { isOpen, onClose, onSave, groupType, memberType
 					{/* Groups Directory Permissions */}
 					<div className="bb-admin-group-type-modal__section">
 						<h4 className="bb-admin-group-type-modal__section-title">
-							{ __( 'Groups Directory Permissions', 'buddyboss-platform' ) }
+							{ __( 'Groups Directory Permissions', 'buddyboss-community-social-network-groups-forums-messaging' ) }
 						</h4>
 						<CheckboxControl
-							label={ __( 'Display this group type in "Types" filter in Groups Directory', 'buddyboss-platform' ) }
+							label={ __( 'Display this group type in "Types" filter in Groups Directory', 'buddyboss-community-social-network-groups-forums-messaging' ) }
 							checked={ !! formData.enable_filter }
 							onChange={ function ( val ) { updateField( 'enable_filter', val ? 1 : 0 ); } }
 						/>
 						<CheckboxControl
-							label={ __( 'Hide all groups of this type from Groups Directory', 'buddyboss-platform' ) }
+							label={ __( 'Hide all groups of this type from Groups Directory', 'buddyboss-community-social-network-groups-forums-messaging' ) }
 							checked={ !! formData.enable_remove }
 							onChange={ function ( val ) { updateField( 'enable_remove', val ? 1 : 0 ); } }
 						/>
@@ -521,10 +521,10 @@ export function GroupTypeModal( { isOpen, onClose, onSave, groupType, memberType
 					{/* Group Type Invites */}
 					<div className="bb-admin-group-type-modal__section">
 						<h4 className="bb-admin-group-type-modal__section-title">
-							{ __( 'Group Type Invites', 'buddyboss-platform' ) }
+							{ __( 'Group Type Invites', 'buddyboss-community-social-network-groups-forums-messaging' ) }
 						</h4>
 						<CheckboxControl
-							label={ __( "Members already in a group of this type can't be invited to another", 'buddyboss-platform' ) }
+							label={ __( "Members already in a group of this type can't be invited to another", 'buddyboss-community-social-network-groups-forums-messaging' ) }
 							checked={ !! formData.restrict_invites }
 							onChange={ function ( val ) { updateField( 'restrict_invites', val ? 1 : 0 ); } }
 						/>
@@ -534,20 +534,20 @@ export function GroupTypeModal( { isOpen, onClose, onSave, groupType, memberType
 					{ availableMemberTypes.length > 0 && (
 						<div className="bb-admin-group-type-modal__section">
 							<h4 className="bb-admin-group-type-modal__section-title">
-								{ __( 'Profile Type Invites', 'buddyboss-platform' ) }
+								{ __( 'Profile Type Invites', 'buddyboss-community-social-network-groups-forums-messaging' ) }
 							</h4>
 							<SelectControl
 								value={ formData.member_type_invites_mode }
 								options={ [
-									{ label: __( 'All Profile Types', 'buddyboss-platform' ), value: 'all' },
-									{ label: __( 'Selected Profile Types', 'buddyboss-platform' ), value: 'selected' },
-									{ label: __( 'None', 'buddyboss-platform' ), value: 'none' },
+									{ label: __( 'All Profile Types', 'buddyboss-community-social-network-groups-forums-messaging' ), value: 'all' },
+									{ label: __( 'Selected Profile Types', 'buddyboss-community-social-network-groups-forums-messaging' ), value: 'selected' },
+									{ label: __( 'None', 'buddyboss-community-social-network-groups-forums-messaging' ), value: 'none' },
 								] }
 								onChange={ function ( val ) { updateField( 'member_type_invites_mode', val ); } }
 							/>
 							<p
 								className="bb-admin-group-type-modal__section-description"
-								dangerouslySetInnerHTML={ { __html: sanitizeHtml( __( 'Select which profile types are allowed to send a request to join this group. Members restricted by <a href="admin.php?page=bb-settings&tab=groups&panel=access_controls">Group Access</a> settings cannot send a request, even if their profile type is allowed above.', 'buddyboss-platform' ) ) } }
+								dangerouslySetInnerHTML={ { __html: sanitizeHtml( __( 'Select which profile types are allowed to send a request to join this group. Members restricted by <a href="admin.php?page=bb-settings&tab=groups&panel=access_controls">Group Access</a> settings cannot send a request, even if their profile type is allowed above.', 'buddyboss-community-social-network-groups-forums-messaging' ) ) } }
 							/>
 							{ 'selected' === formData.member_type_invites_mode && (
 								<div className="bb-admin-group-type-modal__member-types-grid">
@@ -573,20 +573,20 @@ export function GroupTypeModal( { isOpen, onClose, onSave, groupType, memberType
 					{ availableMemberTypes.length > 0 && (
 						<div className="bb-admin-group-type-modal__section">
 							<h4 className="bb-admin-group-type-modal__section-title">
-								{ __( 'Profile Type Joining', 'buddyboss-platform' ) }
+								{ __( 'Profile Type Joining', 'buddyboss-community-social-network-groups-forums-messaging' ) }
 							</h4>
 							<SelectControl
 								value={ formData.member_type_join_mode }
 								options={ [
-									{ label: __( 'All Profile Types', 'buddyboss-platform' ), value: 'all' },
-									{ label: __( 'Selected Profile Types', 'buddyboss-platform' ), value: 'selected' },
-									{ label: __( 'None', 'buddyboss-platform' ), value: 'none' },
+									{ label: __( 'All Profile Types', 'buddyboss-community-social-network-groups-forums-messaging' ), value: 'all' },
+									{ label: __( 'Selected Profile Types', 'buddyboss-community-social-network-groups-forums-messaging' ), value: 'selected' },
+									{ label: __( 'None', 'buddyboss-community-social-network-groups-forums-messaging' ), value: 'none' },
 								] }
 								onChange={ function ( val ) { updateField( 'member_type_join_mode', val ); } }
 							/>
 							<p
 								className="bb-admin-group-type-modal__section-description"
-								dangerouslySetInnerHTML={ { __html: sanitizeHtml( __( 'Select which profile types can join private groups with this group type without approval. Members restricted by <a href="admin.php?page=bb-settings&tab=groups&panel=access_controls">Group Access</a> settings cannot join, even if their profile type is allowed above.', 'buddyboss-platform' ) ) } }
+								dangerouslySetInnerHTML={ { __html: sanitizeHtml( __( 'Select which profile types can join private groups with this group type without approval. Members restricted by <a href="admin.php?page=bb-settings&tab=groups&panel=access_controls">Group Access</a> settings cannot join, even if their profile type is allowed above.', 'buddyboss-community-social-network-groups-forums-messaging' ) ) } }
 							/>
 							{ 'selected' === formData.member_type_join_mode && (
 								<div className="bb-admin-group-type-modal__member-types-grid">
@@ -611,11 +611,11 @@ export function GroupTypeModal( { isOpen, onClose, onSave, groupType, memberType
 					{/* Visibility */}
 					<div className="bb-admin-group-type-modal__section">
 						<SelectControl
-							label={ __( 'Visibility', 'buddyboss-platform' ) }
+							label={ __( 'Visibility', 'buddyboss-community-social-network-groups-forums-messaging' ) }
 							value={ formData.visibility }
 							options={ [
-								{ label: __( 'Public', 'buddyboss-platform' ), value: 'public' },
-								{ label: __( 'Private', 'buddyboss-platform' ), value: 'private' },
+								{ label: __( 'Public', 'buddyboss-community-social-network-groups-forums-messaging' ), value: 'public' },
+								{ label: __( 'Private', 'buddyboss-community-social-network-groups-forums-messaging' ), value: 'private' },
 							] }
 							onChange={ function ( val ) { updateField( 'visibility', val ); } }
 						/>
@@ -624,11 +624,11 @@ export function GroupTypeModal( { isOpen, onClose, onSave, groupType, memberType
 					{/* Label Color */}
 					<div className="bb-admin-group-type-modal__section">
 						<SelectControl
-							label={ __( 'Label Color', 'buddyboss-platform' ) }
+							label={ __( 'Label Color', 'buddyboss-community-social-network-groups-forums-messaging' ) }
 							value={ formData.label_color.type }
 							options={ [
-								{ label: __( 'Default', 'buddyboss-platform' ), value: 'default' },
-								{ label: __( 'Custom', 'buddyboss-platform' ), value: 'custom' },
+								{ label: __( 'Default', 'buddyboss-community-social-network-groups-forums-messaging' ), value: 'default' },
+								{ label: __( 'Custom', 'buddyboss-community-social-network-groups-forums-messaging' ), value: 'custom' },
 							] }
 							onChange={ function ( val ) { updateLabelColor( 'type', val ); } }
 						/>
@@ -637,7 +637,7 @@ export function GroupTypeModal( { isOpen, onClose, onSave, groupType, memberType
 							<div className="bb-admin-group-type-modal__color-pickers">
 								<div className="bb-admin-group-type-modal__color-field">
 									<label className="bb-admin-group-type-modal__color-label">
-										{ __( 'Background Color', 'buddyboss-platform' ) }
+										{ __( 'Background Color', 'buddyboss-community-social-network-groups-forums-messaging' ) }
 									</label>
 									<div className="bb-admin-group-type-modal__color-input-row">
 										<input
@@ -645,7 +645,7 @@ export function GroupTypeModal( { isOpen, onClose, onSave, groupType, memberType
 											value={ formData.label_color.background_color || '#000000' }
 											onChange={ function ( e ) { updateLabelColor( 'background_color', e.target.value ); } }
 											className="bb-admin-group-type-modal__color-swatch"
-											aria-label={ __( 'Background Color', 'buddyboss-platform' ) }
+											aria-label={ __( 'Background Color', 'buddyboss-community-social-network-groups-forums-messaging' ) }
 										/>
 										<input
 											type="text"
@@ -656,13 +656,13 @@ export function GroupTypeModal( { isOpen, onClose, onSave, groupType, memberType
 											} }
 											className="bb-admin-group-type-modal__color-hex"
 											maxLength="6"
-											aria-label={ __( 'Background Color hex value', 'buddyboss-platform' ) }
+											aria-label={ __( 'Background Color hex value', 'buddyboss-community-social-network-groups-forums-messaging' ) }
 										/>
 									</div>
 								</div>
 								<div className="bb-admin-group-type-modal__color-field">
 									<label className="bb-admin-group-type-modal__color-label">
-										{ __( 'Text Color', 'buddyboss-platform' ) }
+										{ __( 'Text Color', 'buddyboss-community-social-network-groups-forums-messaging' ) }
 									</label>
 									<div className="bb-admin-group-type-modal__color-input-row">
 										<input
@@ -670,7 +670,7 @@ export function GroupTypeModal( { isOpen, onClose, onSave, groupType, memberType
 											value={ formData.label_color.text_color || '#ffffff' }
 											onChange={ function ( e ) { updateLabelColor( 'text_color', e.target.value ); } }
 											className="bb-admin-group-type-modal__color-swatch"
-											aria-label={ __( 'Text Color', 'buddyboss-platform' ) }
+											aria-label={ __( 'Text Color', 'buddyboss-community-social-network-groups-forums-messaging' ) }
 										/>
 										<input
 											type="text"
@@ -681,7 +681,7 @@ export function GroupTypeModal( { isOpen, onClose, onSave, groupType, memberType
 											} }
 											className="bb-admin-group-type-modal__color-hex"
 											maxLength="6"
-											aria-label={ __( 'Text Color hex value', 'buddyboss-platform' ) }
+											aria-label={ __( 'Text Color hex value', 'buddyboss-community-social-network-groups-forums-messaging' ) }
 										/>
 									</div>
 								</div>
@@ -693,7 +693,7 @@ export function GroupTypeModal( { isOpen, onClose, onSave, groupType, memberType
 					{ groupTypeShortcode && (
 						<div className="bb-admin-group-type-modal__section">
 							<h4 className="bb-admin-group-type-modal__section-title">
-								{ __( 'Shortcode', 'buddyboss-platform' ) }
+								{ __( 'Shortcode', 'buddyboss-community-social-network-groups-forums-messaging' ) }
 							</h4>
 							<div className="bb-admin-group-type-modal__shortcode-row">
 								<input
@@ -712,21 +712,21 @@ export function GroupTypeModal( { isOpen, onClose, onSave, groupType, memberType
 										}
 										navigator.clipboard.writeText( groupTypeShortcode ).then( function () {
 											window.dispatchEvent( new CustomEvent( 'bb-settings-toast', {
-												detail: { status: 'success', message: __( 'Copied to clipboard.', 'buddyboss-platform' ) },
+												detail: { status: 'success', message: __( 'Copied to clipboard.', 'buddyboss-community-social-network-groups-forums-messaging' ) },
 											} ) );
 										} ).catch( function () {
 											window.dispatchEvent( new CustomEvent( 'bb-settings-toast', {
-												detail: { status: 'error', message: __( 'Failed to copy to clipboard.', 'buddyboss-platform' ) },
+												detail: { status: 'error', message: __( 'Failed to copy to clipboard.', 'buddyboss-community-social-network-groups-forums-messaging' ) },
 											} ) );
 										} );
 									} }
-									aria-label={ __( 'Copy shortcode', 'buddyboss-platform' ) }
+									aria-label={ __( 'Copy shortcode', 'buddyboss-community-social-network-groups-forums-messaging' ) }
 								>
 									<i className="bb-icons-rl bb-icons-rl-copy"></i>
 								</button>
 							</div>
 							<p className="bb-admin-group-type-modal__section-description">
-								{ __( 'Add this shortcode to any WordPress page to display all groups of this type on a dedicated page.', 'buddyboss-platform' ) }
+								{ __( 'Add this shortcode to any WordPress page to display all groups of this type on a dedicated page.', 'buddyboss-community-social-network-groups-forums-messaging' ) }
 							</p>
 						</div>
 					) }
@@ -738,7 +738,7 @@ export function GroupTypeModal( { isOpen, onClose, onSave, groupType, memberType
 					onClick={ onClose }
 					disabled={ isSaving }
 				>
-					{ __( 'Cancel', 'buddyboss-platform' ) }
+					{ __( 'Cancel', 'buddyboss-community-social-network-groups-forums-messaging' ) }
 				</Button>
 				<Button
 					variant="primary"
@@ -746,7 +746,7 @@ export function GroupTypeModal( { isOpen, onClose, onSave, groupType, memberType
 					isBusy={ isSaving }
 					disabled={ isSaving || ! formData.name.trim() }
 				>
-					{ isSaving ? __( 'Saving...', 'buddyboss-platform' ) : ( isEditing ? __( 'Update', 'buddyboss-platform' ) : __( 'Save', 'buddyboss-platform' ) ) }
+					{ isSaving ? __( 'Saving...', 'buddyboss-community-social-network-groups-forums-messaging' ) : ( isEditing ? __( 'Update', 'buddyboss-community-social-network-groups-forums-messaging' ) : __( 'Save', 'buddyboss-community-social-network-groups-forums-messaging' ) ) }
 				</Button>
 			</div>
 		</Modal>

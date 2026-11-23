@@ -35,7 +35,7 @@ function bboss_register_default_taxonomies() {
 		apply_filters(
 			'bp_register_email_tax_type',
 			array(
-				'description'   => __( 'BuddyBoss email types', 'buddyboss-platform' ),
+				'description'   => __( 'BuddyBoss email types', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				'labels'        => bboss_get_email_tax_type_labels(),
 				'meta_box_cb'   => 'bboss_email_tax_type_metabox',
 				'public'        => false,

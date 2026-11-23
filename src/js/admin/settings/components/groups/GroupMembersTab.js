@@ -31,10 +31,10 @@ import { safeUrl } from '../../utils/sanitize';
  * @type {Array}
  */
 var roleOptions = [
-	{ label: __( 'Organizer', 'buddyboss-platform' ), value: 'admin' },
-	{ label: __( 'Moderator', 'buddyboss-platform' ), value: 'mod' },
-	{ label: __( 'Member', 'buddyboss-platform' ), value: 'member' },
-	{ label: __( 'Banned', 'buddyboss-platform' ), value: 'banned' },
+	{ label: __( 'Organizer', 'buddyboss-community-social-network-groups-forums-messaging' ), value: 'admin' },
+	{ label: __( 'Moderator', 'buddyboss-community-social-network-groups-forums-messaging' ), value: 'mod' },
+	{ label: __( 'Member', 'buddyboss-community-social-network-groups-forums-messaging' ), value: 'member' },
+	{ label: __( 'Banned', 'buddyboss-community-social-network-groups-forums-messaging' ), value: 'banned' },
 ];
 
 /**
@@ -386,7 +386,7 @@ export function GroupMembersTab( { groupId, setNotice, saveRef } ) {
 					// ajaxFetch, so no other AJAX caller's behaviour changes.
 					return Promise.resolve( op() ).then( function ( response ) {
 						if ( response && false === response.success ) {
-							throw new Error( ( response.data && response.data.message ) || __( 'Failed to update member role.', 'buddyboss-platform' ) );
+							throw new Error( ( response.data && response.data.message ) || __( 'Failed to update member role.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 						}
 						return response;
 					} );
@@ -975,7 +975,7 @@ export function GroupMembersTab( { groupId, setNotice, saveRef } ) {
 		var pageNumbers = getPageNumbers( currentPage, totalPages );
 
 		return (
-			<div className="bb-group-members-tab__pagination" role="navigation" aria-label={ __( 'Pagination', 'buddyboss-platform' ) }>
+			<div className="bb-group-members-tab__pagination" role="navigation" aria-label={ __( 'Pagination', 'buddyboss-community-social-network-groups-forums-messaging' ) }>
 				<button
 					type="button"
 					className="bb-group-members-tab__page-arrow"
@@ -983,7 +983,7 @@ export function GroupMembersTab( { groupId, setNotice, saveRef } ) {
 					onClick={ function () {
 						handlePageChange( role, currentPage - 1 );
 					} }
-					aria-label={ __( 'Previous page', 'buddyboss-platform' ) }
+					aria-label={ __( 'Previous page', 'buddyboss-community-social-network-groups-forums-messaging' ) }
 				>
 					<i className="bb-icons-rl bb-icons-rl-caret-left" aria-hidden="true"></i>
 				</button>
@@ -1023,7 +1023,7 @@ export function GroupMembersTab( { groupId, setNotice, saveRef } ) {
 					onClick={ function () {
 						handlePageChange( role, currentPage + 1 );
 					} }
-					aria-label={ __( 'Next page', 'buddyboss-platform' ) }
+					aria-label={ __( 'Next page', 'buddyboss-community-social-network-groups-forums-messaging' ) }
 				>
 					<i className="bb-icons-rl bb-icons-rl-caret-right" aria-hidden="true"></i>
 				</button>
@@ -1074,7 +1074,7 @@ export function GroupMembersTab( { groupId, setNotice, saveRef } ) {
 									handleRemoveMember( member.user_id );
 								}
 							} }
-							title={ __( 'Remove member', 'buddyboss-platform' ) }
+							title={ __( 'Remove member', 'buddyboss-community-social-network-groups-forums-messaging' ) }
 						>
 							<i className="bb-icons-rl bb-icons-rl-x"></i>
 						</button>
@@ -1104,7 +1104,7 @@ export function GroupMembersTab( { groupId, setNotice, saveRef } ) {
 			{ /* Add Member Autocomplete */ }
 			<div className="bb-group-members-tab__add-member">
 				<label className="bb-admin-meta-field__label">
-					{ __( 'Add New Members', 'buddyboss-platform' ) }
+					{ __( 'Add New Members', 'buddyboss-community-social-network-groups-forums-messaging' ) }
 				</label>
 				<div className="bb-group-members-tab__add-row">
 					<div className="bb-group-members-tab__autocomplete-wrapper">
@@ -1123,22 +1123,22 @@ export function GroupMembersTab( { groupId, setNotice, saveRef } ) {
 									setShowSuggestions( false );
 								}, 200 );
 							} }
-							placeholder={ __( 'Type username to add', 'buddyboss-platform' ) }
+							placeholder={ __( 'Type username to add', 'buddyboss-community-social-network-groups-forums-messaging' ) }
 							className="bb-group-members-tab__search-input"
 							role="combobox"
 							aria-autocomplete="list"
 							aria-expanded={ showSuggestions }
-							aria-label={ __( 'Search members', 'buddyboss-platform' ) }
+							aria-label={ __( 'Search members', 'buddyboss-community-social-network-groups-forums-messaging' ) }
 						/>
 						{ showSuggestions && (
-						<div className="bb-group-members-tab__suggestions" role="listbox" aria-label={ __( 'User suggestions', 'buddyboss-platform' ) }>
+						<div className="bb-group-members-tab__suggestions" role="listbox" aria-label={ __( 'User suggestions', 'buddyboss-community-social-network-groups-forums-messaging' ) }>
 							{ isSearching ? (
 								<div className="bb-group-members-tab__suggestions-loading">
 									<Spinner />
 								</div>
 							) : 0 === suggestions.length ? (
 								<div className="bb-group-members-tab__suggestions-empty">
-									{ __( 'No users found.', 'buddyboss-platform' ) }
+									{ __( 'No users found.', 'buddyboss-community-social-network-groups-forums-messaging' ) }
 								</div>
 							) : (
 								suggestions.map( function ( user ) {
@@ -1177,7 +1177,7 @@ export function GroupMembersTab( { groupId, setNotice, saveRef } ) {
 						onClick={ handleAddMember }
 					>
 						<i className="bb-icons-rl-plus"></i>
-						{ __( 'Add', 'buddyboss-platform' ) }
+						{ __( 'Add', 'buddyboss-community-social-network-groups-forums-messaging' ) }
 					</Button>
 				</div>
 			</div>
@@ -1194,8 +1194,8 @@ export function GroupMembersTab( { groupId, setNotice, saveRef } ) {
 					<input
 						type="search"
 						className="bb-group-members-tab__filter-search-input"
-						placeholder={ __( 'Search member', 'buddyboss-platform' ) }
-						aria-label={ __( 'Search member', 'buddyboss-platform' ) }
+						placeholder={ __( 'Search member', 'buddyboss-community-social-network-groups-forums-messaging' ) }
+						aria-label={ __( 'Search member', 'buddyboss-community-social-network-groups-forums-messaging' ) }
 						value={ memberFilterQuery }
 						onChange={ function ( e ) {
 							setMemberFilterQuery( e.target.value );
@@ -1209,15 +1209,15 @@ export function GroupMembersTab( { groupId, setNotice, saveRef } ) {
 				<div className="bb-group-members-tab__filter-role">
 					<SelectControl
 						hideLabelFromVision
-						label={ __( 'Filter by role', 'buddyboss-platform' ) }
+						label={ __( 'Filter by role', 'buddyboss-community-social-network-groups-forums-messaging' ) }
 						value={ roleFilter }
 						onChange={ setRoleFilter }
 						options={ [
-							{ value: 'all',    label: hasLoadedOnce ? sprintf( __( 'All (%d)', 'buddyboss-platform' ),       roleCounts.all )    : __( 'All', 'buddyboss-platform' ) },
-							{ value: 'admin',  label: hasLoadedOnce ? sprintf( __( 'Organizer (%d)', 'buddyboss-platform' ), roleCounts.admin )  : __( 'Organizer', 'buddyboss-platform' ) },
-							{ value: 'mod',    label: hasLoadedOnce ? sprintf( __( 'Moderator (%d)', 'buddyboss-platform' ), roleCounts.mod )    : __( 'Moderator', 'buddyboss-platform' ) },
-							{ value: 'member', label: hasLoadedOnce ? sprintf( __( 'Member (%d)', 'buddyboss-platform' ),    roleCounts.member ) : __( 'Member', 'buddyboss-platform' ) },
-							{ value: 'banned', label: hasLoadedOnce ? sprintf( __( 'Banned (%d)', 'buddyboss-platform' ),    roleCounts.banned ) : __( 'Banned', 'buddyboss-platform' ) },
+							{ value: 'all',    label: hasLoadedOnce ? sprintf( __( 'All (%d)', 'buddyboss-community-social-network-groups-forums-messaging' ),       roleCounts.all )    : __( 'All', 'buddyboss-community-social-network-groups-forums-messaging' ) },
+							{ value: 'admin',  label: hasLoadedOnce ? sprintf( __( 'Organizer (%d)', 'buddyboss-community-social-network-groups-forums-messaging' ), roleCounts.admin )  : __( 'Organizer', 'buddyboss-community-social-network-groups-forums-messaging' ) },
+							{ value: 'mod',    label: hasLoadedOnce ? sprintf( __( 'Moderator (%d)', 'buddyboss-community-social-network-groups-forums-messaging' ), roleCounts.mod )    : __( 'Moderator', 'buddyboss-community-social-network-groups-forums-messaging' ) },
+							{ value: 'member', label: hasLoadedOnce ? sprintf( __( 'Member (%d)', 'buddyboss-community-social-network-groups-forums-messaging' ),    roleCounts.member ) : __( 'Member', 'buddyboss-community-social-network-groups-forums-messaging' ) },
+							{ value: 'banned', label: hasLoadedOnce ? sprintf( __( 'Banned (%d)', 'buddyboss-community-social-network-groups-forums-messaging' ),    roleCounts.banned ) : __( 'Banned', 'buddyboss-community-social-network-groups-forums-messaging' ) },
 						] }
 					/>
 				</div>
@@ -1312,7 +1312,7 @@ export function GroupMembersTab( { groupId, setNotice, saveRef } ) {
 									<div className="bb-group-members-tab__filter-empty" role="status">
 										{ sprintf(
 											/* translators: %s is the current search query. */
-											__( 'No members match “%s”.', 'buddyboss-platform' ),
+											__( 'No members match “%s”.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 											memberFilterQuery
 										) }
 									</div>
@@ -1325,14 +1325,14 @@ export function GroupMembersTab( { groupId, setNotice, saveRef } ) {
 							//    e.g. an admin selects "Moderator (0)".
 							if ( 'all' !== roleFilter ) {
 								var emptyRoleLabels = {
-									admin:  __( 'No organizers in this group yet.', 'buddyboss-platform' ),
-									mod:    __( 'No moderators in this group yet.', 'buddyboss-platform' ),
-									member: __( 'No members in this group yet.', 'buddyboss-platform' ),
-									banned: __( 'No banned members in this group.', 'buddyboss-platform' ),
+									admin:  __( 'No organizers in this group yet.', 'buddyboss-community-social-network-groups-forums-messaging' ),
+									mod:    __( 'No moderators in this group yet.', 'buddyboss-community-social-network-groups-forums-messaging' ),
+									member: __( 'No members in this group yet.', 'buddyboss-community-social-network-groups-forums-messaging' ),
+									banned: __( 'No banned members in this group.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 								};
 								return (
 									<div className="bb-group-members-tab__filter-empty" role="status">
-										{ emptyRoleLabels[ roleFilter ] || __( 'No members found.', 'buddyboss-platform' ) }
+										{ emptyRoleLabels[ roleFilter ] || __( 'No members found.', 'buddyboss-community-social-network-groups-forums-messaging' ) }
 									</div>
 								);
 							}
@@ -1341,7 +1341,7 @@ export function GroupMembersTab( { groupId, setNotice, saveRef } ) {
 							//    happened) → fall back to a generic notice.
 							return (
 								<div className="bb-group-members-tab__filter-empty" role="status">
-									{ __( 'This group has no members yet.', 'buddyboss-platform' ) }
+									{ __( 'This group has no members yet.', 'buddyboss-community-social-network-groups-forums-messaging' ) }
 								</div>
 							);
 						}

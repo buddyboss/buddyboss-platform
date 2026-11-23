@@ -16,9 +16,9 @@ defined( 'ABSPATH' ) || exit;
 <div id="bp-hello-container" class="bp-hello-buddyboss" role="dialog" aria-labelledby="bp-hello-title" style="display: none">
 	<div class="bp-hello-header" role="document">
 		<div class="bp-hello-close">
-			<button type="button" class="close-modal button bp-tooltip" data-bp-tooltip-pos="left" data-bp-tooltip="<?php esc_attr_e('Close pop-up', 'buddyboss-platform' ); ?>">
+			<button type="button" class="close-modal button bp-tooltip" data-bp-tooltip-pos="left" data-bp-tooltip="<?php esc_attr_e('Close pop-up', 'buddyboss-community-social-network-groups-forums-messaging' ); ?>">
 				<?php
-				esc_html_e( 'Close', 'buddyboss-platform' );
+				esc_html_e( 'Close', 'buddyboss-community-social-network-groups-forums-messaging' );
 				?>
 			</button>
 		</div>
@@ -42,13 +42,13 @@ defined( 'ABSPATH' ) || exit;
         <div class="bp-spam-action-msg" style="display: none">
 			<?php
 			/* translators: %s: Moderation component activation URL. */
-			printf( wp_kses_post( __( 'To suspend members who are creating spam in your network, activate the <a href="%s" >Moderation</a> component.', 'buddyboss-platform' ) ), esc_url( $component_link ) );
+			printf( wp_kses_post( __( 'To suspend members who are creating spam in your network, activate the <a href="%s" >Moderation</a> component.', 'buddyboss-community-social-network-groups-forums-messaging' ) ), esc_url( $component_link ) );
 			?>
         </div>
         <div class="bp-not-spam-action-msg" style="display: none;">
 	        <?php
 	        /* translators: %s: Moderation component activation URL. */
-	        printf( wp_kses_post( __( 'To unsuspend members who are not creating spam anymore in your network, activate the <a href="%s" >Moderation</a> component.', 'buddyboss-platform' ) ), esc_url( $component_link ) );
+	        printf( wp_kses_post( __( 'To unsuspend members who are not creating spam anymore in your network, activate the <a href="%s" >Moderation</a> component.', 'buddyboss-community-social-network-groups-forums-messaging' ) ), esc_url( $component_link ) );
 	        ?>
         </div>
     </div>

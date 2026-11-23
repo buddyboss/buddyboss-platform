@@ -86,8 +86,8 @@ function bboss_blog_rl_archive_close() {
 	the_posts_pagination(
 		array(
 			'mid_size'  => 2,
-			'prev_text' => esc_html__( 'Previous', 'buddyboss-platform' ),
-			'next_text' => esc_html__( 'Next', 'buddyboss-platform' ),
+			'prev_text' => esc_html__( 'Previous', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'next_text' => esc_html__( 'Next', 'buddyboss-community-social-network-groups-forums-messaging' ),
 		)
 	);
 }
@@ -120,7 +120,7 @@ function bboss_blog_setup_profile_nav() {
 
 	bboss_core_new_nav_item(
 		array(
-			'name'                    => __( 'Blogs', 'buddyboss-platform' ),
+			'name'                    => __( 'Blogs', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'slug'                    => 'blog',
 			'position'                => 90,
 			'screen_function'         => 'bboss_blog_screen_member_posts',

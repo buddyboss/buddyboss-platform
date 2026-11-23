@@ -345,7 +345,7 @@ class BBoss_AS3CF_Plugin_Compatibility {
 	public function bb_media_offload_delivery_provider( $delivery_provider ) {
 
 		$wp_offload_media  = bboss_get_option( Amazon_S3_And_CloudFront::SETTINGS_KEY );
-		$delivery_provider = ! empty( $wp_offload_media['delivery-provider'] ) && 'storage' !== $wp_offload_media['delivery-provider'] ? ucwords( $wp_offload_media['delivery-provider'] ) : __( 'Amazon S3', 'buddyboss-platform' );
+		$delivery_provider = ! empty( $wp_offload_media['delivery-provider'] ) && 'storage' !== $wp_offload_media['delivery-provider'] ? ucwords( $wp_offload_media['delivery-provider'] ) : __( 'Amazon S3', 'buddyboss-community-social-network-groups-forums-messaging' );
 
 		return $delivery_provider;
 	}

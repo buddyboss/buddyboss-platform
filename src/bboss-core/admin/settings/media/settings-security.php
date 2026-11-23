@@ -33,7 +33,7 @@ function bboss_media_register_security_panel_fields() {
 		'security_performance',
 		'security_settings',
 		array(
-			'title' => __( 'Media Security & Performance', 'buddyboss-platform' ),
+			'title' => __( 'Media Security & Performance', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'order' => 10,
 		)
 	);
@@ -45,9 +45,9 @@ function bboss_media_register_security_panel_fields() {
 		'security_settings',
 		array(
 			'name'              => 'bp_media_symlink_support',
-			'label'             => __( 'Symbolic Links', 'buddyboss-platform' ),
-			'description'       => __( 'Enable symbolic links', 'buddyboss-platform' ),
-			'help_text'         => __( 'Symbolic links create secure "shortcuts" to media files uploaded by members, optimizing performance. If disabled, a fallback method will protect your files. If you experience media display issues, try turning off this option.', 'buddyboss-platform' ),
+			'label'             => __( 'Symbolic Links', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'description'       => __( 'Enable symbolic links', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'help_text'         => __( 'Symbolic links create secure "shortcuts" to media files uploaded by members, optimizing performance. If disabled, a fallback method will protect your files. If you experience media display issues, try turning off this option.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'type'              => 'toggle',
 			'default'           => 0,
 			'sanitize_callback' => 'bboss_media_sanitize_symlink_support',
@@ -83,10 +83,10 @@ function bboss_media_register_security_panel_fields() {
 		'security_settings',
 		array(
 			'name'              => 'bp_media_symlink_direct_access',
-			'label'             => __( 'Direct Links', 'buddyboss-platform' ),
+			'label'             => __( 'Direct Links', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'description'       => sprintf(
 				/* translators: 1: Opening anchor tag for Media Permissions link, 2: Closing anchor tag. */
-				__( 'If our plugin is unable to automatically block direct access to your media files and folders, please follow the steps in our %1$sMedia Permissions%2$s tutorial to configure your server.', 'buddyboss-platform' ),
+				__( 'If our plugin is unable to automatically block direct access to your media files and folders, please follow the steps in our %1$sMedia Permissions%2$s tutorial to configure your server.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				'<a href="https://www.buddyboss.com/resources/docs/components/media/media-permissions/" target="_blank" rel="noopener noreferrer">',
 				'</a>'
 			),

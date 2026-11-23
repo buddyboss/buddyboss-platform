@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
 
 ?>
 
-<h2 class="screen-heading view-profile-screen"><?php esc_html_e( 'View Profile', 'buddyboss-platform' ); ?></h2>
+<h2 class="screen-heading view-profile-screen"><?php esc_html_e( 'View Profile', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></h2>
 <?php
 bboss_nouveau_xprofile_hook( 'before', 'loop_content' );
 
@@ -83,9 +83,9 @@ if ( bboss_has_profile() ) {
 		<p>
 			<?php
 			if ( bboss_is_my_profile() ) {
-				esc_html_e( 'You have not yet added details to your profile.', 'buddyboss-platform' );
+				esc_html_e( 'You have not yet added details to your profile.', 'buddyboss-community-social-network-groups-forums-messaging' );
 			} else {
-				esc_html_e( 'This member has not yet added details to their profile.', 'buddyboss-platform' );
+				esc_html_e( 'This member has not yet added details to their profile.', 'buddyboss-community-social-network-groups-forums-messaging' );
 			}
 			?>
 		</p>

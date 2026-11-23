@@ -36,7 +36,7 @@ class BBoss_Bbp_Gdpr_Topics {
 	 */
 	function register_exporter( $exporters ) {
 		$exporters['bbp-topic'] = array(
-			'exporter_friendly_name' => __( 'Forum Discussions', 'buddyboss-platform' ),
+			'exporter_friendly_name' => __( 'Forum Discussions', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'callback'               => array( $this, 'topics_exporter' ),
 		);
 
@@ -54,7 +54,7 @@ class BBoss_Bbp_Gdpr_Topics {
 	 */
 	function erase_exporter( $erasers ) {
 		$erasers['bbp-topic'] = array(
-			'eraser_friendly_name' => __( 'Forum Discussions', 'buddyboss-platform' ),
+			'eraser_friendly_name' => __( 'Forum Discussions', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'callback'             => array( $this, 'topics_eraser' ),
 		);
 
@@ -95,38 +95,38 @@ class BBoss_Bbp_Gdpr_Topics {
 
 				$group_id = 'bbp-topics';
 
-				$group_label = __( 'Forum Discussions', 'buddyboss-platform' );
+				$group_label = __( 'Forum Discussions', 'buddyboss-community-social-network-groups-forums-messaging' );
 
 				$permalink = get_permalink( $topic->ID );
 
 				// Plugins can add as many items in the item data array as they want
 				$data = array(
 					array(
-						'name'  => __( 'Discussion Author', 'buddyboss-platform' ),
+						'name'  => __( 'Discussion Author', 'buddyboss-community-social-network-groups-forums-messaging' ),
 						'value' => $user->display_name,
 					),
 					array(
-						'name'  => __( 'Discussion Author Email', 'buddyboss-platform' ),
+						'name'  => __( 'Discussion Author Email', 'buddyboss-community-social-network-groups-forums-messaging' ),
 						'value' => $user->user_email,
 					),
 					array(
-						'name'  => __( 'Discussion Title', 'buddyboss-platform' ),
+						'name'  => __( 'Discussion Title', 'buddyboss-community-social-network-groups-forums-messaging' ),
 						'value' => $topic->post_title,
 					),
 					array(
-						'name'  => __( 'Discussion Content', 'buddyboss-platform' ),
+						'name'  => __( 'Discussion Content', 'buddyboss-community-social-network-groups-forums-messaging' ),
 						'value' => $topic->post_content,
 					),
 					array(
-						'name'  => __( 'Discussion Date', 'buddyboss-platform' ),
+						'name'  => __( 'Discussion Date', 'buddyboss-community-social-network-groups-forums-messaging' ),
 						'value' => $topic->post_date,
 					),
 					array(
-						'name'  => __( 'Discussion URL', 'buddyboss-platform' ),
+						'name'  => __( 'Discussion URL', 'buddyboss-community-social-network-groups-forums-messaging' ),
 						'value' => $permalink,
 					),
 					array(
-						'name'  => __( 'Discussion Name', 'buddyboss-platform' ),
+						'name'  => __( 'Discussion Name', 'buddyboss-community-social-network-groups-forums-messaging' ),
 						'value' => get_the_title( $topic->post_parent ),
 					),
 				);

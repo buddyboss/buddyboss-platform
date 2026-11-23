@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
 	<?php do_action( 'bbp_template_before_user_profile' ); ?>
 
 	<div id="bbp-user-profile" class="bbp-user-profile">
-		<h2 class="entry-title"><?php esc_html_e( 'Profile', 'buddyboss-platform' ); ?></h2>
+		<h2 class="entry-title"><?php esc_html_e( 'Profile', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></h2>
 		<div class="bbp-user-section">
 
 			<?php if ( bboss_bbp_get_displayed_user_field( 'description' ) ) : ?>
@@ -23,9 +23,9 @@ defined( 'ABSPATH' ) || exit;
 
 			<?php endif; ?>
 
-			<p class="bbp-user-forum-role"><?php /* translators: %s: forum role name. */ printf( esc_html__( 'Forum Role: %s', 'buddyboss-platform' ), bboss_bbp_get_user_display_role() ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bbp_get_user_display_role() is self-escaping. ?></p>
-			<p class="bbp-user-topic-count"><?php /* translators: %s: number of discussions started. */ printf( esc_html__( 'Discussions Started: %s', 'buddyboss-platform' ), esc_html( bboss_bbp_get_user_topic_count_raw() ) ); ?></p>
-			<p class="bbp-user-reply-count"><?php /* translators: %s: number of replies created. */ printf( esc_html__( 'Replies Created: %s', 'buddyboss-platform' ), esc_html( bboss_bbp_get_user_reply_count_raw() ) ); ?></p>
+			<p class="bbp-user-forum-role"><?php /* translators: %s: forum role name. */ printf( esc_html__( 'Forum Role: %s', 'buddyboss-community-social-network-groups-forums-messaging' ), bboss_bbp_get_user_display_role() ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bbp_get_user_display_role() is self-escaping. ?></p>
+			<p class="bbp-user-topic-count"><?php /* translators: %s: number of discussions started. */ printf( esc_html__( 'Discussions Started: %s', 'buddyboss-community-social-network-groups-forums-messaging' ), esc_html( bboss_bbp_get_user_topic_count_raw() ) ); ?></p>
+			<p class="bbp-user-reply-count"><?php /* translators: %s: number of replies created. */ printf( esc_html__( 'Replies Created: %s', 'buddyboss-community-social-network-groups-forums-messaging' ), esc_html( bboss_bbp_get_user_reply_count_raw() ) ); ?></p>
 		</div>
 	</div><!-- #bbp-author-topics-started -->
 

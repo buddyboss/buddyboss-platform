@@ -35,7 +35,7 @@ function bboss_core_admin_get_directory_pages() {
 
 	if ( function_exists( 'bboss_nouveau_get_appearance_settings' ) ) {
 		if ( bboss_nouveau_get_appearance_settings( 'user_front_page' ) ) {
-			$directory_pages['profile_dashboard'] = __( 'Profile Dashboard', 'buddyboss-platform' );
+			$directory_pages['profile_dashboard'] = __( 'Profile Dashboard', 'buddyboss-community-social-network-groups-forums-messaging' );
 		}
 	}
 
@@ -43,18 +43,18 @@ function bboss_core_admin_get_directory_pages() {
 	if ( bboss_is_active( 'forums' ) ) {
 
 		if ( bboss_is_active( 'groups' ) ) {
-			$directory_pages = bboss_array_insert_after( $directory_pages, 'groups', array( 'new_forums_page' => __( 'Forums', 'buddyboss-platform' ) ) );
+			$directory_pages = bboss_array_insert_after( $directory_pages, 'groups', array( 'new_forums_page' => __( 'Forums', 'buddyboss-community-social-network-groups-forums-messaging' ) ) );
 		} else {
-			$directory_pages = bboss_array_insert_after( $directory_pages, 'members', array( 'new_forums_page' => __( 'Forums', 'buddyboss-platform' ) ) );
+			$directory_pages = bboss_array_insert_after( $directory_pages, 'members', array( 'new_forums_page' => __( 'Forums', 'buddyboss-community-social-network-groups-forums-messaging' ) ) );
 		}
 	}
 
 	if ( bboss_is_active( 'media' ) && ( bboss_is_profile_document_support_enabled() || bboss_is_forums_document_support_enabled() || bboss_is_group_document_support_enabled() || bboss_is_messages_document_support_enabled() ) ) {
-		$directory_pages['document'] = __( 'Documents', 'buddyboss-platform' );
+		$directory_pages['document'] = __( 'Documents', 'buddyboss-community-social-network-groups-forums-messaging' );
 	}
 
 	if ( bboss_is_active( 'media' ) && function_exists( 'bboss_is_profile_video_support_enabled' ) &&  ( bboss_is_profile_video_support_enabled() || bboss_is_forums_video_support_enabled() || bboss_is_group_video_support_enabled() || bboss_is_messages_video_support_enabled() ) ) {
-		$directory_pages['video'] = __( 'Videos', 'buddyboss-platform' );
+		$directory_pages['video'] = __( 'Videos', 'buddyboss-community-social-network-groups-forums-messaging' );
 	}
 
 	/** Directory Display */
@@ -97,10 +97,10 @@ function bboss_array_insert_after( array $array, $key, array $new ) {
  */
 function bboss_core_admin_get_static_pages() {
 	$static_pages = array(
-		'register' => __( 'Register Form', 'buddyboss-platform' ),
-		'terms'    => __( 'Terms of Service', 'buddyboss-platform' ),
-		'privacy'  => __( 'Privacy Policy', 'buddyboss-platform' ),
-		'activate' => __( 'Activate Account', 'buddyboss-platform' ),
+		'register' => __( 'Register Form', 'buddyboss-community-social-network-groups-forums-messaging' ),
+		'terms'    => __( 'Terms of Service', 'buddyboss-community-social-network-groups-forums-messaging' ),
+		'privacy'  => __( 'Privacy Policy', 'buddyboss-community-social-network-groups-forums-messaging' ),
+		'activate' => __( 'Activate Account', 'buddyboss-community-social-network-groups-forums-messaging' ),
 	);
 
 	/**

@@ -55,7 +55,7 @@ export function PasswordField( props ) {
 				onClick={ function() {
 					setIsVisible( ! isVisible );
 				} }
-				aria-label={ isVisible ? __( 'Hide value', 'buddyboss-platform' ) : __( 'Show value', 'buddyboss-platform' ) }
+				aria-label={ isVisible ? __( 'Hide value', 'buddyboss-community-social-network-groups-forums-messaging' ) : __( 'Show value', 'buddyboss-community-social-network-groups-forums-messaging' ) }
 				tabIndex={ 0 }
 				disabled={ disabled }
 			>

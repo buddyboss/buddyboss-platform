@@ -26,7 +26,7 @@ function bboss_groups_register_images_panel_fields() {
 		'group_images',
 		'group_avatar',
 		array(
-			'title'       => __( 'Group Avatar', 'buddyboss-platform' ),
+			'title'       => __( 'Group Avatar', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'description' => '',
 			'order'       => 10,
 			'help_url'    => '636128',
@@ -42,10 +42,10 @@ function bboss_groups_register_images_panel_fields() {
 		'group_avatar',
 		array(
 			'name'              => 'bp-disable-group-avatar-uploads',
-			'label'             => __( 'Group Avatars', 'buddyboss-platform' ),
+			'label'             => __( 'Group Avatars', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'type'              => 'toggle',
-			'description'       => __( 'Enable avatars for groups', 'buddyboss-platform' ),
-			'help_text'         => __( 'When enabled, group organizers will be able to upload avatars in the group\'s settings.', 'buddyboss-platform' ),
+			'description'       => __( 'Enable avatars for groups', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'help_text'         => __( 'When enabled, group organizers will be able to upload avatars in the group\'s settings.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'default'           => bboss_disable_group_avatar_uploads(),
 			'sanitize_callback' => 'absint',
 			'invert_value'      => true,
@@ -60,12 +60,12 @@ function bboss_groups_register_images_panel_fields() {
 		'group_avatar',
 		array(
 			'name'              => 'bp-default-group-avatar-type',
-			'label'             => __( 'Default Group Avatar', 'buddyboss-platform' ),
+			'label'             => __( 'Default Group Avatar', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'type'              => 'image_radio',
 			'description'       => empty( _wp_image_editor_choose() )
 				? sprintf(
 					/* translators: %s: Imagick link. */
-					__( 'Note: Your server needs %s installed to use the "Group Name" option.', 'buddyboss-platform' ),
+					__( 'Note: Your server needs %s installed to use the "Group Name" option.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'<a href="https://github.com/ImageMagick/ImageMagick" target="_blank">Imagick</a>'
 				)
 				: '',
@@ -73,17 +73,17 @@ function bboss_groups_register_images_panel_fields() {
 			'sanitize_callback' => 'bboss_groups_sanitize_avatar_type',
 			'options'           => array(
 				array(
-					'label' => __( 'BuddyBoss', 'buddyboss-platform' ),
+					'label' => __( 'BuddyBoss', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'value' => 'buddyboss',
 					'image' => 'avatar-buddyboss',
 				),
 				array(
-					'label' => __( 'Group Name', 'buddyboss-platform' ),
+					'label' => __( 'Group Name', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'value' => 'group-name',
 					'image' => 'avatar-name',
 				),
 				array(
-					'label' => __( 'Custom', 'buddyboss-platform' ),
+					'label' => __( 'Custom', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'value' => 'custom',
 					'image' => 'avatar-custom',
 				),
@@ -94,7 +94,7 @@ function bboss_groups_register_images_panel_fields() {
 				'item_id'     => 0,
 				'item_type'   => 'default',
 				'url_getter'  => 'bboss_get_default_custom_upload_group_avatar',
-				'label'       => __( 'Upload Custom Avatar', 'buddyboss-platform' ),
+				'label'       => __( 'Upload Custom Avatar', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				/* translators: 1: avatar width in pixels, 2: avatar height in pixels. */
 				'help_text'   => '', // Injected at AJAX time via bb_groups_enrich_avatar_upload_help_text() — avatar dimensions not available at registration.
 				'conditional' => array(
@@ -124,7 +124,7 @@ function bboss_groups_register_images_panel_fields() {
 		'group_images',
 		'group_cover',
 		array(
-			'title'       => __( 'Group Cover Image', 'buddyboss-platform' ),
+			'title'       => __( 'Group Cover Image', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'description' => '',
 			'order'       => 20,
 			'help_url'    => '636133',
@@ -140,10 +140,10 @@ function bboss_groups_register_images_panel_fields() {
 		'group_cover',
 		array(
 			'name'              => 'bp-disable-group-cover-image-uploads',
-			'label'             => __( 'Group Cover Image', 'buddyboss-platform' ),
+			'label'             => __( 'Group Cover Image', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'type'              => 'toggle',
-			'description'       => __( 'Enable cover images for groups', 'buddyboss-platform' ),
-			'help_text'         => __( 'When enabled, group organizers will be able to upload cover images in the group\'s settings.', 'buddyboss-platform' ),
+			'description'       => __( 'Enable cover images for groups', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'help_text'         => __( 'When enabled, group organizers will be able to upload cover images in the group\'s settings.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'default'           => bboss_disable_group_cover_image_uploads(),
 			'sanitize_callback' => 'absint',
 			'invert_value'      => true,
@@ -158,24 +158,24 @@ function bboss_groups_register_images_panel_fields() {
 		'group_cover',
 		array(
 			'name'              => 'bp-default-group-cover-type',
-			'label'             => __( 'Default Group Cover Image', 'buddyboss-platform' ),
+			'label'             => __( 'Default Group Cover Image', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'type'              => 'image_radio',
 			'description'       => '',
 			'default'           => bboss_get_default_group_cover_type(),
 			'sanitize_callback' => 'bboss_groups_sanitize_cover_type',
 			'options'           => array(
 				array(
-					'label' => __( 'BuddyBoss', 'buddyboss-platform' ),
+					'label' => __( 'BuddyBoss', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'value' => 'buddyboss',
 					'image' => 'cover-buddyboss',
 				),
 				array(
-					'label' => __( 'None', 'buddyboss-platform' ),
+					'label' => __( 'None', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'value' => 'none',
 					'image' => 'cover-none',
 				),
 				array(
-					'label' => __( 'Custom', 'buddyboss-platform' ),
+					'label' => __( 'Custom', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'value' => 'custom',
 					'image' => 'cover-custom',
 				),
@@ -186,7 +186,7 @@ function bboss_groups_register_images_panel_fields() {
 				'item_id'     => 0,
 				'item_type'   => 'default',
 				'url_getter'  => 'bboss_get_default_custom_upload_group_cover',
-				'label'       => __( 'Upload Custom Cover', 'buddyboss-platform' ),
+				'label'       => __( 'Upload Custom Cover', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				'help_text'   => '', // help_text + dimensions both injected at AJAX time via bb_groups_enrich_cover_upload_help_text() — theme compat is not loaded at registration time and bb_attachments_get_default_custom_cover_image_dimensions() would fatal.
 				'conditional' => array(
 					'value' => 'custom',
@@ -208,7 +208,7 @@ function bboss_groups_register_images_panel_fields() {
 		'group_cover',
 		array(
 			'name'              => 'bb-cover-group-width',
-			'label'             => __( 'Cover Image Sizes', 'buddyboss-platform' ),
+			'label'             => __( 'Cover Image Sizes', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'type'              => 'select',
 			'description'       => '',
 			'default'           => bboss_get_group_cover_image_width(),
@@ -216,11 +216,11 @@ function bboss_groups_register_images_panel_fields() {
 			'pro_only'          => true,
 			'options'           => array(
 				array(
-					'label' => __( 'Default', 'buddyboss-platform' ),
+					'label' => __( 'Default', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'value' => 'default',
 				),
 				array(
-					'label' => __( 'Full Width', 'buddyboss-platform' ),
+					'label' => __( 'Full Width', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'value' => 'full',
 				),
 			),
@@ -230,7 +230,7 @@ function bboss_groups_register_images_panel_fields() {
 			),
 			'group'             => array(
 				'key'   => 'cover_image_sizes',
-				'label' => __( 'Width', 'buddyboss-platform' ),
+				'label' => __( 'Width', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			),
 			'order'             => 30,
 		)
@@ -245,17 +245,17 @@ function bboss_groups_register_images_panel_fields() {
 			'name'              => 'bb-cover-group-height',
 			'label'             => '',
 			'type'              => 'select',
-			'description'       => __( 'Changing the size of your cover images will reposition those already uploaded by members.', 'buddyboss-platform' ),
+			'description'       => __( 'Changing the size of your cover images will reposition those already uploaded by members.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'default'           => bboss_get_group_cover_image_height(),
 			'sanitize_callback' => 'bboss_groups_sanitize_cover_height',
 			'pro_only'          => true,
 			'options'           => array(
 				array(
-					'label' => __( 'Small', 'buddyboss-platform' ),
+					'label' => __( 'Small', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'value' => 'small',
 				),
 				array(
-					'label' => __( 'Large', 'buddyboss-platform' ),
+					'label' => __( 'Large', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'value' => 'large',
 				),
 			),
@@ -265,7 +265,7 @@ function bboss_groups_register_images_panel_fields() {
 			),
 			'group'             => array(
 				'key'   => 'cover_image_sizes',
-				'label' => __( 'Height', 'buddyboss-platform' ),
+				'label' => __( 'Height', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			),
 			'order'             => 40,
 		)

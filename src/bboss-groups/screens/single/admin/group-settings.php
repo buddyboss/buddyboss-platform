@@ -114,9 +114,9 @@ function bboss_groups_screen_group_admin_settings() {
 		}
 
 		if ( ! bboss_groups_edit_group_settings( $_POST['group-id'], $enable_forum, $status, $invite_status, $activity_feed_status, $parent_id, $media_status, $document_status, $video_status, $album_status, $message_status ) ) {
-			bboss_core_add_message( __( 'There was an error updating group settings. Please try again.', 'buddyboss-platform' ), 'error' );
+			bboss_core_add_message( __( 'There was an error updating group settings. Please try again.', 'buddyboss-community-social-network-groups-forums-messaging' ), 'error' );
 		} else {
-			bboss_core_add_message( __( 'Group settings were successfully updated.', 'buddyboss-platform' ) );
+			bboss_core_add_message( __( 'Group settings were successfully updated.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 		}
 
 		/**

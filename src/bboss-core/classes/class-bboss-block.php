@@ -80,7 +80,7 @@ class BBoss_Block {
 	 */
 	public function __construct( $args ) {
 		if ( ! did_action( 'bb_blocks_init' ) ) {
-			_doing_it_wrong( __METHOD__, esc_html__( 'BB Blocks needs to be registered hooking `bb_blocks_init`', 'buddyboss-platform' ), '2.9.00' );
+			_doing_it_wrong( __METHOD__, esc_html__( 'BB Blocks needs to be registered hooking `bb_blocks_init`', 'buddyboss-community-social-network-groups-forums-messaging' ), '2.9.00' );
 		}
 
 		$min          = bboss_core_get_minified_asset_suffix();
@@ -128,7 +128,7 @@ class BBoss_Block {
 		}
 
 		if ( ! isset( $wp_args['name'] ) || ! $wp_args['name'] || ! isset( $wp_args['editor_script'] ) || ! $wp_args['editor_script'] ) {
-			$this->block = new WP_Error( 'missing_parameters', __( 'The `name` or `editor_script` required keys are missing.', 'buddyboss-platform' ) );
+			$this->block = new WP_Error( 'missing_parameters', __( 'The `name` or `editor_script` required keys are missing.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 		} else {
 			if ( isset( $wp_args['api_version'], $args['plugin_url'] ) && 2 === (int) $wp_args['api_version'] ) {
 				foreach ( array( 'editor_script', 'editor_style', 'script', 'style', 'view_script' ) as $asset_key ) {
@@ -193,7 +193,7 @@ class BBoss_Block {
 			}
 
 			if ( ! isset( $this->registered_scripts['editor_script'] ) || ! $this->registered_scripts['editor_script'] ) {
-				$this->block = new WP_Error( 'script_registration_error', __( 'The required `editor_script` could not be registered.', 'buddyboss-platform' ) );
+				$this->block = new WP_Error( 'script_registration_error', __( 'The required `editor_script` could not be registered.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 
 				// Register the styles.
 			} else {

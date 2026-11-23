@@ -47,13 +47,13 @@ defined( 'ABSPATH' ) || exit;
 	</div>
 	<div class="bb-rl-login-header-actions">
 		<?php if ( is_user_logged_in() ) : ?>
-			<a href="<?php echo esc_url( wp_logout_url() ); ?>" class="bb-rl-button bb-rl-button--secondary-fill bb-rl-button--small"><?php esc_html_e( 'Sign Out', 'buddyboss-platform' ); ?></a>
+			<a href="<?php echo esc_url( wp_logout_url() ); ?>" class="bb-rl-button bb-rl-button--secondary-fill bb-rl-button--small"><?php esc_html_e( 'Sign Out', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></a>
 		<?php elseif ( bboss_is_register_page() ) : ?>
-			<span class="bb-rl-login-header-actions-text"><?php esc_html_e( 'Already have an account?', 'buddyboss-platform' ); ?></span>
-			<a href="<?php echo esc_url( wp_login_url() ); ?>" class="bb-rl-button bb-rl-button--secondary-fill bb-rl-button--small"><?php esc_html_e( 'Sign In', 'buddyboss-platform' ); ?></a>
+			<span class="bb-rl-login-header-actions-text"><?php esc_html_e( 'Already have an account?', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></span>
+			<a href="<?php echo esc_url( wp_login_url() ); ?>" class="bb-rl-button bb-rl-button--secondary-fill bb-rl-button--small"><?php esc_html_e( 'Sign In', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></a>
 		<?php else : ?>
-			<span class="bb-rl-login-header-actions-text"><?php esc_html_e( 'Don\'t have an account?', 'buddyboss-platform' ); ?></span>
-			<a href="<?php echo esc_url( wp_registration_url() ); ?>" class="bb-rl-button bb-rl-button--secondary-fill bb-rl-button--small"><?php esc_html_e( 'Sign Up', 'buddyboss-platform' ); ?></a>
+			<span class="bb-rl-login-header-actions-text"><?php esc_html_e( 'Don\'t have an account?', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></span>
+			<a href="<?php echo esc_url( wp_registration_url() ); ?>" class="bb-rl-button bb-rl-button--secondary-fill bb-rl-button--small"><?php esc_html_e( 'Sign Up', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></a>
 		<?php endif; ?>
 	</div>
 </header>

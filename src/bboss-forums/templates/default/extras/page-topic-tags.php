@@ -28,7 +28,7 @@ get_header(); ?>
 				if ( get_the_content() ) {
 					the_content();
 				} else {
-					echo wp_kses_post( __( '<p>This is a collection of tags that are currently popular on our forums.</p>', 'buddyboss-platform' ) );
+					echo wp_kses_post( __( '<p>This is a collection of tags that are currently popular on our forums.</p>', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 				}
 				?>
 

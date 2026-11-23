@@ -67,7 +67,7 @@ export function AddonActivateButton( { action, slug, label, className, nonceKey,
 			setError(
 				__(
 					'This action is not available right now. Please reload the page and try again.',
-					'buddyboss-platform'
+					'buddyboss-community-social-network-groups-forums-messaging'
 				)
 			);
 			return;
@@ -98,7 +98,7 @@ export function AddonActivateButton( { action, slug, label, className, nonceKey,
 				const message =
 					response && response.data && response.data.message
 						? response.data.message
-						: __( 'Activation failed. Please try again.', 'buddyboss-platform' );
+						: __( 'Activation failed. Please try again.', 'buddyboss-community-social-network-groups-forums-messaging' );
 
 				setError( message );
 				setBusy( false );
@@ -108,7 +108,7 @@ export function AddonActivateButton( { action, slug, label, className, nonceKey,
 				if ( err && 'AbortError' === err.name ) {
 					return;
 				}
-				setError( __( 'Activation failed. Please try again.', 'buddyboss-platform' ) );
+				setError( __( 'Activation failed. Please try again.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 				setBusy( false );
 			} );
 	};
@@ -122,7 +122,7 @@ export function AddonActivateButton( { action, slug, label, className, nonceKey,
 				disabled={ busy }
 				aria-busy={ busy ? 'true' : undefined }
 			>
-				{ busy ? ( busyLabel || __( 'Activating…', 'buddyboss-platform' ) ) : label }
+				{ busy ? ( busyLabel || __( 'Activating…', 'buddyboss-community-social-network-groups-forums-messaging' ) ) : label }
 			</button>
 			{ error && (
 				<p className="bb-admin-empty-state__error" role="alert">

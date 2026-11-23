@@ -69,7 +69,7 @@ export default function RepairPlatform() {
 			if ( ! groups[ cat ] ) {
 				groups[ cat ] = {
 					id: cat,
-					label: __( 'Other', 'buddyboss-platform' ),
+					label: __( 'Other', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					order: 999,
 					items: [],
 				};
@@ -112,7 +112,7 @@ export default function RepairPlatform() {
 			return;
 		}
 		if ( isNetworkAdmin && '' === selectedSiteId ) {
-			setError( __( 'Please select a site before repairing.', 'buddyboss-platform' ) );
+			setError( __( 'Please select a site before repairing.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 			return;
 		}
 
@@ -192,8 +192,8 @@ export default function RepairPlatform() {
 					success: !! ( json && json.success ),
 					message: ( json && json.data && json.data.message )
 						|| ( json && json.success
-							? __( 'Repaired', 'buddyboss-platform' )
-							: __( 'Failed', 'buddyboss-platform' ) ),
+							? __( 'Repaired', 'buddyboss-community-social-network-groups-forums-messaging' )
+							: __( 'Failed', 'buddyboss-community-social-network-groups-forums-messaging' ) ),
 					// Server-extracted fields from `bb_admin_repair_extract_count_summary()`
 					// — present on all responses since the Settings 2.0 Tools release.
 					count:   ( json && json.data && typeof json.data.count !== 'undefined' ) ? json.data.count : null,
@@ -212,7 +212,7 @@ export default function RepairPlatform() {
 					id: itemId,
 					label: item.label,
 					success: false,
-					message: __( 'Network error', 'buddyboss-platform' ),
+					message: __( 'Network error', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				} );
 			}
 		}
@@ -241,9 +241,9 @@ export default function RepairPlatform() {
 			{ isNetworkAdmin && (
 				<div className="bb-tools-repair-platform__site-selector">
 					<SelectControl
-						label={ __( 'Select a site to repair', 'buddyboss-platform' ) }
+						label={ __( 'Select a site to repair', 'buddyboss-community-social-network-groups-forums-messaging' ) }
 						value={ selectedSiteId }
-						options={ [ { value: '', label: __( '— Select a site —', 'buddyboss-platform' ) } ].concat(
+						options={ [ { value: '', label: __( '— Select a site —', 'buddyboss-community-social-network-groups-forums-messaging' ) } ].concat(
 							networkSites.map( function ( s ) {
 								return {
 									value: String( s.blog_id ),
@@ -270,7 +270,7 @@ export default function RepairPlatform() {
 
 			<div className="bb-tools-repair-platform__select-all">
 				<CheckboxControl
-					label={ __( 'Select All', 'buddyboss-platform' ) }
+					label={ __( 'Select All', 'buddyboss-community-social-network-groups-forums-messaging' ) }
 					checked={ allChecked }
 					onChange={ handleSelectAll }
 				/>
@@ -306,7 +306,7 @@ export default function RepairPlatform() {
 					onClick={ handleRepair }
 					disabled={ 0 === selectedIds.size }
 				>
-					{ __( 'Repair Items', 'buddyboss-platform' ) }
+					{ __( 'Repair Items', 'buddyboss-community-social-network-groups-forums-messaging' ) }
 				</Button>
 			</div>
 

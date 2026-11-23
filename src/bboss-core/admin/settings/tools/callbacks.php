@@ -80,7 +80,7 @@ function bboss_tools_get_license_url() {
  */
 function bboss_tools_ajax_check_plugin_state() {
 	if ( ! current_user_can( 'manage_options' ) ) {
-		wp_send_json_error( array( 'message' => __( 'Permission denied.', 'buddyboss-platform' ) ), 403 );
+		wp_send_json_error( array( 'message' => __( 'Permission denied.', 'buddyboss-community-social-network-groups-forums-messaging' ) ), 403 );
 	}
 	check_ajax_referer( 'bb_admin_settings', '_ajax_nonce' );
 
@@ -134,7 +134,7 @@ add_action( 'wp_ajax_bb_tools_check_plugin_state', 'bboss_tools_ajax_check_plugi
  */
 function bboss_tools_ajax_activate_plugin() {
 	if ( ! current_user_can( 'activate_plugins' ) ) {
-		wp_send_json_error( array( 'message' => __( 'Permission denied.', 'buddyboss-platform' ) ), 403 );
+		wp_send_json_error( array( 'message' => __( 'Permission denied.', 'buddyboss-community-social-network-groups-forums-messaging' ) ), 403 );
 	}
 	check_ajax_referer( 'bb_admin_settings', '_ajax_nonce' );
 
@@ -151,7 +151,7 @@ function bboss_tools_ajax_activate_plugin() {
 		}
 		wp_send_json_error(
 			array(
-				'message' => __( 'Plugin activation failed. Please try again.', 'buddyboss-platform' ),
+				'message' => __( 'Plugin activation failed. Please try again.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				'detail'  => defined( 'WP_DEBUG' ) && WP_DEBUG ? $result->get_error_message() : '',
 			)
 		);

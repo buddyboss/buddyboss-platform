@@ -97,7 +97,7 @@ defined( 'ABSPATH' ) || exit;
 function bboss_legacy_wpf_register_ajax_resolvers( $resolvers ) {
 	$resolvers['wpf_tags'] = array(
 		'match'         => 'select4-wpf-tags',
-		'placeholder'   => __( 'Select tags', 'buddyboss-platform' ),
+		'placeholder'   => __( 'Select tags', 'buddyboss-community-social-network-groups-forums-messaging' ),
 		'search'        => function ( $query, $page ) {
 			unset( $page ); // Tag lists are small — returned unpaginated.
 			if ( ! function_exists( 'wp_fusion' ) || empty( wp_fusion()->settings ) ) {
@@ -133,7 +133,7 @@ function bboss_legacy_wpf_register_ajax_resolvers( $resolvers ) {
 		$resolvers['wpf_tags']['allow_create']  = true;
 		$resolvers['wpf_tags']['create_action'] = 'bb_legacy_wpf_create_tag';
 		/* translators: %s: the tag name the admin typed. */
-		$resolvers['wpf_tags']['create_label'] = __( 'Create "%s"', 'buddyboss-platform' );
+		$resolvers['wpf_tags']['create_label'] = __( 'Create "%s"', 'buddyboss-community-social-network-groups-forums-messaging' );
 	}
 
 	// Shared between this resolver's `search` and `has_more` closures so the page
@@ -143,7 +143,7 @@ function bboss_legacy_wpf_register_ajax_resolvers( $resolvers ) {
 
 	$resolvers['wpf_redirect'] = array(
 		'match'         => 'select4-select-page',
-		'placeholder'   => __( 'Select a page', 'buddyboss-platform' ),
+		'placeholder'   => __( 'Select a page', 'buddyboss-community-social-network-groups-forums-messaging' ),
 		'search'        => function ( $query, $page ) use ( &$redirect_max_pages ) {
 			$wp_query = new WP_Query(
 				array(
@@ -311,13 +311,13 @@ function bboss_legacy_wpf_crm_supports_tag_create() {
  */
 function bboss_legacy_wpf_create_tag() {
 	if ( ! bboss_current_user_can( 'bp_moderate' ) ) {
-		wp_send_json_error( array( 'message' => __( 'Unauthorized', 'buddyboss-platform' ) ), 403 );
+		wp_send_json_error( array( 'message' => __( 'Unauthorized', 'buddyboss-community-social-network-groups-forums-messaging' ) ), 403 );
 	}
 
 	check_ajax_referer( 'bb_admin_settings', 'nonce' );
 
 	if ( ! bboss_legacy_wpf_crm_supports_tag_create() ) {
-		wp_send_json_error( array( 'message' => __( 'This CRM does not support creating tags.', 'buddyboss-platform' ) ), 400 );
+		wp_send_json_error( array( 'message' => __( 'This CRM does not support creating tags.', 'buddyboss-community-social-network-groups-forums-messaging' ) ), 400 );
 	}
 
 	// Not sanitize_text_field() — see bb_legacy_wpf_sanitize_group_tag_ids()
@@ -327,7 +327,7 @@ function bboss_legacy_wpf_create_tag() {
 	$term = bboss_legacy_wpf_sanitize_group_tag_ids( array( $term ) );
 	$term = isset( $term[0] ) ? $term[0] : '';
 	if ( '' === $term ) {
-		wp_send_json_error( array( 'message' => __( 'Tag name is empty.', 'buddyboss-platform' ) ), 400 );
+		wp_send_json_error( array( 'message' => __( 'Tag name is empty.', 'buddyboss-community-social-network-groups-forums-messaging' ) ), 400 );
 	}
 
 	$crm      = wp_fusion()->crm;
@@ -346,7 +346,7 @@ function bboss_legacy_wpf_create_tag() {
 				// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log -- Gated behind WP_DEBUG; intentional debug-only log.
 				error_log( 'bb_legacy_wpf_create_tag: ' . $created->get_error_code() );
 			}
-			wp_send_json_error( array( 'message' => __( 'Failed to create tag.', 'buddyboss-platform' ) ), 400 );
+			wp_send_json_error( array( 'message' => __( 'Failed to create tag.', 'buddyboss-community-social-network-groups-forums-messaging' ) ), 400 );
 		}
 		$tag_id = (string) $created;
 	}
@@ -665,7 +665,7 @@ function bboss_legacy_wpf_group_tag_extra_data( $saved, $max = null ) {
 		'ajax_action'         => 'bb_legacy_ajax_select_search',
 		'ajax_nonce'          => wp_create_nonce( 'bb_admin_settings' ),
 		'nonce_param'         => 'nonce',
-		'search_placeholder'  => 1 === (int) $max ? __( 'Select tag', 'buddyboss-platform' ) : __( 'Select tags', 'buddyboss-platform' ),
+		'search_placeholder'  => 1 === (int) $max ? __( 'Select tag', 'buddyboss-community-social-network-groups-forums-messaging' ) : __( 'Select tags', 'buddyboss-community-social-network-groups-forums-messaging' ),
 		'string_ids'          => true,
 		'resolver'            => 'wpf_tags',
 		'selected_items'      => array(),
@@ -680,7 +680,7 @@ function bboss_legacy_wpf_group_tag_extra_data( $saved, $max = null ) {
 		$extra['allow_create']  = true;
 		$extra['create_action'] = 'bb_legacy_wpf_create_tag';
 		/* translators: %s: the tag name the admin typed. */
-		$extra['create_label'] = __( 'Create "%s"', 'buddyboss-platform' );
+		$extra['create_label'] = __( 'Create "%s"', 'buddyboss-community-social-network-groups-forums-messaging' );
 	}
 
 	foreach ( (array) $saved as $tag_id ) {
@@ -717,7 +717,7 @@ function bboss_legacy_wpf_register_group_fields( $registry, $component ) {
 		return;
 	}
 
-	$group_label = __( 'WP Fusion - Group Settings', 'buddyboss-platform' );
+	$group_label = __( 'WP Fusion - Group Settings', 'buddyboss-community-social-network-groups-forums-messaging' );
 
 	// Anchor to the modal's `details` tab — same default the groups auto-bridge
 	// uses (`bb_legacy_meta_field_tab`), and the tab GroupEditModal always
@@ -728,8 +728,8 @@ function bboss_legacy_wpf_register_group_fields( $registry, $component ) {
 		$component,
 		'wpf_group_apply_tags',
 		array(
-			'label'             => __( 'Apply Tags', 'buddyboss-platform' ),
-			'description'       => __( 'Select tags to apply when a user joins this group.', 'buddyboss-platform' ),
+			'label'             => __( 'Apply Tags', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'description'       => __( 'Select tags to apply when a user joins this group.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'type'              => 'ajax_multiselect',
 			'order'             => 6100,
 			'context'           => 'after',
@@ -756,9 +756,9 @@ function bboss_legacy_wpf_register_group_fields( $registry, $component ) {
 		$component,
 		'wpf_group_tag_link',
 		array(
-			'label'             => __( 'Link with Tag', 'buddyboss-platform' ),
-			'description'       => __( 'Select a tag to link with this group. When the tag is applied, the user will automatically be enrolled. When the tag is removed the user will be unenrolled.', 'buddyboss-platform' )
-				. ' ' . __( 'Warning: users can choose to leave a social group. If a user leaves this group, the linked tag will be removed. For this reason it\'s recommended not to link this tag to anything else (for example a course).', 'buddyboss-platform' ),
+			'label'             => __( 'Link with Tag', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'description'       => __( 'Select a tag to link with this group. When the tag is applied, the user will automatically be enrolled. When the tag is removed the user will be unenrolled.', 'buddyboss-community-social-network-groups-forums-messaging' )
+				. ' ' . __( 'Warning: users can choose to leave a social group. If a user leaves this group, the linked tag will be removed. For this reason it\'s recommended not to link this tag to anything else (for example a course).', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'type'              => 'ajax_multiselect',
 			'order'             => 6110,
 			'context'           => 'after',
@@ -787,8 +787,8 @@ function bboss_legacy_wpf_register_group_fields( $registry, $component ) {
 		$component,
 		'wpf_group_organizer_tag',
 		array(
-			'label'             => __( 'Link with Tag - Group Organizer', 'buddyboss-platform' ),
-			'description'       => __( 'When the linked tag is applied, the user will automatically be added to the group and promoted to organizer. When the tag is removed, the user will be demoted from organizer to regular group member.', 'buddyboss-platform' ),
+			'label'             => __( 'Link with Tag - Group Organizer', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'description'       => __( 'When the linked tag is applied, the user will automatically be added to the group and promoted to organizer. When the tag is removed, the user will be demoted from organizer to regular group member.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'type'              => 'ajax_multiselect',
 			'order'             => 6120,
 			'context'           => 'after',

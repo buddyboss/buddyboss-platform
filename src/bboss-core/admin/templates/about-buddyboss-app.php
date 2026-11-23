@@ -17,13 +17,13 @@ defined( 'ABSPATH' ) || exit;
 <div id="bp-hello-container" class="bp-hello-buddyboss-app bb-onload-modal" role="dialog" aria-labelledby="bp-hello-title" style="display: none;">
 	<div class="bp-hello-header" role="document">
 		<div class="bp-hello-close">
-			<button type="button" class="close-modal button bp-tooltip" data-bp-tooltip-pos="down" data-bp-tooltip="<?php esc_attr_e( 'Close pop-up', 'buddyboss-platform' ); ?>">
-				<?php esc_html_e( 'Close', 'buddyboss-platform' ); ?>
+			<button type="button" class="close-modal button bp-tooltip" data-bp-tooltip-pos="down" data-bp-tooltip="<?php esc_attr_e( 'Close pop-up', 'buddyboss-community-social-network-groups-forums-messaging' ); ?>">
+				<?php esc_html_e( 'Close', 'buddyboss-community-social-network-groups-forums-messaging' ); ?>
 			</button>
 		</div>
 
 		<div class="bp-hello-title">
-			<h1 id="bp-hello-title" tabindex="-1"><?php esc_html_e( 'Video Demo of BuddyBoss App', 'buddyboss-platform' ); ?></h1>
+			<h1 id="bp-hello-title" tabindex="-1"><?php esc_html_e( 'Video Demo of BuddyBoss App', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></h1>
 		</div>
 	</div>
 
@@ -50,9 +50,9 @@ defined( 'ABSPATH' ) || exit;
 					<?php
 					printf(
 						'<a class="youtube" title="%1$s" href="%2$s"><span class="screen-reader-text">%3$s</span></a>',
-						esc_attr__( 'Follow BuddyBoss on YouTube', 'buddyboss-platform' ),
+						esc_attr__( 'Follow BuddyBoss on YouTube', 'buddyboss-community-social-network-groups-forums-messaging' ),
 						esc_url( 'https://www.youtube.com/c/BuddybossWP' ),
-						esc_html__( 'Follow BuddyBoss on YouTube', 'buddyboss-platform' )
+						esc_html__( 'Follow BuddyBoss on YouTube', 'buddyboss-community-social-network-groups-forums-messaging' )
 					);
 					?>
 				</li>
@@ -61,9 +61,9 @@ defined( 'ABSPATH' ) || exit;
 					<?php
 					printf(
 						'<a class="twitter" title="%1$s" href="%2$s"><span class="screen-reader-text">%3$s</span></a>',
-						esc_attr__( 'Follow BuddyBoss on Twitter', 'buddyboss-platform' ),
+						esc_attr__( 'Follow BuddyBoss on Twitter', 'buddyboss-community-social-network-groups-forums-messaging' ),
 						esc_url( 'https://twitter.com/BuddyBossWP' ),
-						esc_html__( 'Follow BuddyBoss on Twitter', 'buddyboss-platform' )
+						esc_html__( 'Follow BuddyBoss on Twitter', 'buddyboss-community-social-network-groups-forums-messaging' )
 					);
 					?>
 				</li>
@@ -72,9 +72,9 @@ defined( 'ABSPATH' ) || exit;
 					<?php
 					printf(
 						'<a class="facebook" title="%1$s" href="%2$s"><span class="screen-reader-text">%3$s</span></a>',
-						esc_attr__( 'Follow BuddyBoss on Facebook', 'buddyboss-platform' ),
+						esc_attr__( 'Follow BuddyBoss on Facebook', 'buddyboss-community-social-network-groups-forums-messaging' ),
 						esc_url( 'https://facebook.com/BuddyBossWP/' ),
-						esc_html__( 'Follow BuddyBoss on Facebook', 'buddyboss-platform' )
+						esc_html__( 'Follow BuddyBoss on Facebook', 'buddyboss-community-social-network-groups-forums-messaging' )
 					);
 					?>
 				</li>

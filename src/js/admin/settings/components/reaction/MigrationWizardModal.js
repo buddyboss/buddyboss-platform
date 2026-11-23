@@ -38,7 +38,7 @@ import { formatNumber } from '../../utils/format';
 
 export function MigrationWizardModal( { isOpen, onClose, migrationData } ) {
 	const [ loading, setLoading ]                     = useState( true );
-	const [ wizardLabel, setWizardLabel ]             = useState( __( 'Migration wizard', 'buddyboss-platform' ) );
+	const [ wizardLabel, setWizardLabel ]             = useState( __( 'Migration wizard', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 	const [ wizardData, setWizardData ]               = useState( null );
 	const [ currentScreen, setCurrentScreen ]         = useState( 1 );
 	const [ selectedReactions, setSelectedReactions ] = useState( {} );
@@ -93,14 +93,14 @@ export function MigrationWizardModal( { isOpen, onClose, migrationData } ) {
 		const noticeAction = ( migrationDataRef.current && migrationDataRef.current.action ) || '';
 		setWizardLabel(
 			'like_to_emotions_action' === noticeAction
-				? __( 'Convert Likes', 'buddyboss-platform' )
+				? __( 'Convert Likes', 'buddyboss-community-social-network-groups-forums-messaging' )
 				: 'emotions_to_like_action' === noticeAction
-					? __( 'Convert Reactions', 'buddyboss-platform' )
-					: __( 'Migration wizard', 'buddyboss-platform' )
+					? __( 'Convert Reactions', 'buddyboss-community-social-network-groups-forums-messaging' )
+					: __( 'Migration wizard', 'buddyboss-community-social-network-groups-forums-messaging' )
 		);
 
 		if ( ! window.bbReactionAdminVars || ! window.bbReactionAdminVars.ajax_url ) {
-			setError( __( 'Unable to load migration wizard.', 'buddyboss-platform' ) );
+			setError( __( 'Unable to load migration wizard.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 			setLoading( false );
 			return;
 		}
@@ -178,7 +178,7 @@ export function MigrationWizardModal( { isOpen, onClose, migrationData } ) {
 					} else if ( response.data.message ) {
 						setError( response.data.message );
 					} else {
-						setError( __( 'Migration wizard data is unavailable. Please update BuddyBoss Pro.', 'buddyboss-platform' ) );
+						setError( __( 'Migration wizard data is unavailable. Please update BuddyBoss Pro.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 					}
 				} else if ( response.data && response.data.message ) {
 					setError( response.data.message );
@@ -186,7 +186,7 @@ export function MigrationWizardModal( { isOpen, onClose, migrationData } ) {
 					if ( window.console && window.console.error ) {
 						window.console.error( 'Migration wizard AJAX returned no usable payload:', response );
 					}
-					setError( __( 'Unable to load migration wizard.', 'buddyboss-platform' ) );
+					setError( __( 'Unable to load migration wizard.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 				}
 				setLoading( false );
 			} )
@@ -197,8 +197,8 @@ export function MigrationWizardModal( { isOpen, onClose, migrationData } ) {
 				setError(
 					sprintf(
 						/* translators: %s: short error description (HTTP status or parse error). */
-						__( 'Unable to load migration wizard (%s).', 'buddyboss-platform' ),
-						err && err.message ? err.message : __( 'unknown error', 'buddyboss-platform' )
+						__( 'Unable to load migration wizard (%s).', 'buddyboss-community-social-network-groups-forums-messaging' ),
+						err && err.message ? err.message : __( 'unknown error', 'buddyboss-community-social-network-groups-forums-messaging' )
 					)
 				);
 				setLoading( false );
@@ -252,7 +252,7 @@ export function MigrationWizardModal( { isOpen, onClose, migrationData } ) {
 
 	const targetLabel = useMemo( function () {
 		if ( ! isFooterWizard ) {
-			return __( 'Likes', 'buddyboss-platform' );
+			return __( 'Likes', 'buddyboss-community-social-network-groups-forums-messaging' );
 		}
 		if ( ! wizardData || ! Array.isArray( wizardData.target_emotions ) ) {
 			return '';
@@ -313,13 +313,13 @@ export function MigrationWizardModal( { isOpen, onClose, migrationData } ) {
 					setSubmitting( false );
 					setError(
 						( response.data && response.data.message )
-							|| __( 'Migration failed. Please try again.', 'buddyboss-platform' )
+							|| __( 'Migration failed. Please try again.', 'buddyboss-community-social-network-groups-forums-messaging' )
 					);
 				}
 			} )
 			.catch( function () {
 				setSubmitting( false );
-				setError( __( 'Migration failed. Please try again.', 'buddyboss-platform' ) );
+				setError( __( 'Migration failed. Please try again.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 			} );
 	}, [ isFooterWizard, needsTargetSelect, selectedReactions, targetEmotion ] );
 
@@ -362,7 +362,7 @@ export function MigrationWizardModal( { isOpen, onClose, migrationData } ) {
 								className="components-button is-primary"
 								onClick={ onClose }
 							>
-								{ __( 'Close', 'buddyboss-platform' ) }
+								{ __( 'Close', 'buddyboss-community-social-network-groups-forums-messaging' ) }
 							</button>
 						</div>
 					</div>
@@ -371,16 +371,16 @@ export function MigrationWizardModal( { isOpen, onClose, migrationData } ) {
 				{ ! loading && ! error && wizardData && wizardData.no_data && (
 					<div className="bb-admin-migration-modal__wizard bb-admin-migration-modal__wizard--no-data">
 						<p className="bb-admin-migration-modal__no-data-heading">
-							<strong>{ __( 'You have no reactions to convert', 'buddyboss-platform' ) }</strong>
+							<strong>{ __( 'You have no reactions to convert', 'buddyboss-community-social-network-groups-forums-messaging' ) }</strong>
 						</p>
-						<p>{ wizardData.no_data_message || __( 'No reactions are available to convert.', 'buddyboss-platform' ) }</p>
+						<p>{ wizardData.no_data_message || __( 'No reactions are available to convert.', 'buddyboss-community-social-network-groups-forums-messaging' ) }</p>
 						<div className="bb-admin-migration-modal__footer">
 							<button
 								type="button"
 								className="components-button is-primary"
 								onClick={ onClose }
 							>
-								{ __( 'Close', 'buddyboss-platform' ) }
+								{ __( 'Close', 'buddyboss-community-social-network-groups-forums-messaging' ) }
 							</button>
 						</div>
 					</div>
@@ -390,22 +390,22 @@ export function MigrationWizardModal( { isOpen, onClose, migrationData } ) {
 					<div className="bb-admin-migration-modal__wizard bb-admin-migration-modal__wizard--screen-1">
 						{ 'like_to_emotions_action' === migrationAction && migrationCount > 0 ? (
 							<p>
-								{ __( 'This action will convert the ', 'buddyboss-platform' ) }
+								{ __( 'This action will convert the ', 'buddyboss-community-social-network-groups-forums-messaging' ) }
 								<strong>
 									{ sprintf(
 										/* translators: %s: formatted reaction count. */
-										__( '%s Likes', 'buddyboss-platform' ),
+										__( '%s Likes', 'buddyboss-community-social-network-groups-forums-messaging' ),
 										formatNumber( migrationCount )
 									) }
 								</strong>
 								{ ' ' }
-								{ __( 'previously submitted by members on your site to an Emotion of your choice. You can perform this action at any point in the future using this migration wizard.', 'buddyboss-platform' ) }
+								{ __( 'previously submitted by members on your site to an Emotion of your choice. You can perform this action at any point in the future using this migration wizard.', 'buddyboss-community-social-network-groups-forums-messaging' ) }
 							</p>
 						) : (
 							<p>
 								{ needsTargetSelect
-									? __( 'This action will convert reactions previously submitted by members on your site to an Emotion of your choice. Reactions not selected can be converted at any point in the future using this migration wizard.', 'buddyboss-platform' )
-									: __( 'This action will convert reactions previously submitted by members on your site to Likes. Reactions not selected can be converted at any point in the future using the migration wizard.', 'buddyboss-platform' )
+									? __( 'This action will convert reactions previously submitted by members on your site to an Emotion of your choice. Reactions not selected can be converted at any point in the future using this migration wizard.', 'buddyboss-community-social-network-groups-forums-messaging' )
+									: __( 'This action will convert reactions previously submitted by members on your site to Likes. Reactions not selected can be converted at any point in the future using the migration wizard.', 'buddyboss-community-social-network-groups-forums-messaging' )
 								}
 							</p>
 						) }
@@ -418,8 +418,8 @@ export function MigrationWizardModal( { isOpen, onClose, migrationData } ) {
 								<p className="bb-admin-migration-modal__section-heading">
 									<strong>
 										{ needsTargetSelect
-											? __( 'Which reactions do you want to convert?', 'buddyboss-platform' )
-											: __( 'Which reactions do you want to convert to Likes?', 'buddyboss-platform' )
+											? __( 'Which reactions do you want to convert?', 'buddyboss-community-social-network-groups-forums-messaging' )
+											: __( 'Which reactions do you want to convert to Likes?', 'buddyboss-community-social-network-groups-forums-messaging' )
 										}
 									</strong>
 								</p>
@@ -433,7 +433,7 @@ export function MigrationWizardModal( { isOpen, onClose, migrationData } ) {
 													key={ r.id }
 													label={ sprintf(
 														/* translators: 1: reaction label, 2: formatted count. */
-														__( '%1$s (%2$s)', 'buddyboss-platform' ),
+														__( '%1$s (%2$s)', 'buddyboss-community-social-network-groups-forums-messaging' ),
 														r.label,
 														formatNumber( r.count )
 													) }
@@ -450,10 +450,10 @@ export function MigrationWizardModal( { isOpen, onClose, migrationData } ) {
 											className="bb-admin-migration-modal__reactions-group-toggle"
 											label={ sprintf(
 												/* translators: 1: "Emotions" or "All emotions", 2: formatted total. */
-												__( '%1$s (%2$s)', 'buddyboss-platform' ),
+												__( '%1$s (%2$s)', 'buddyboss-community-social-network-groups-forums-messaging' ),
 												isFooterWizard
-													? __( 'Emotions', 'buddyboss-platform' )
-													: __( 'All emotions', 'buddyboss-platform' ),
+													? __( 'Emotions', 'buddyboss-community-social-network-groups-forums-messaging' )
+													: __( 'All emotions', 'buddyboss-community-social-network-groups-forums-messaging' ),
 												formatNumber( emotionTotalCount )
 											) }
 											checked={ allEmotionsChecked }
@@ -469,7 +469,7 @@ export function MigrationWizardModal( { isOpen, onClose, migrationData } ) {
 													<CheckboxControl
 														label={ sprintf(
 															/* translators: 1: emotion label, 2: formatted count. */
-															__( '%1$s (%2$s)', 'buddyboss-platform' ),
+															__( '%1$s (%2$s)', 'buddyboss-community-social-network-groups-forums-messaging' ),
 															r.label,
 															formatNumber( r.count )
 														) }
@@ -490,8 +490,8 @@ export function MigrationWizardModal( { isOpen, onClose, migrationData } ) {
 								<p className="bb-admin-migration-modal__section-heading">
 									<strong>
 										{ 'like_to_emotions_action' === migrationAction
-											? __( 'Which Emotion would you like to convert your Likes to?', 'buddyboss-platform' )
-											: __( 'Which Emotion would you like to convert your reactions to?', 'buddyboss-platform' )
+											? __( 'Which Emotion would you like to convert your Likes to?', 'buddyboss-community-social-network-groups-forums-messaging' )
+											: __( 'Which Emotion would you like to convert your reactions to?', 'buddyboss-community-social-network-groups-forums-messaging' )
 										}
 									</strong>
 								</p>
@@ -499,7 +499,7 @@ export function MigrationWizardModal( { isOpen, onClose, migrationData } ) {
 									className="bb-admin-migration-modal__target-select"
 									value={ targetEmotion }
 									options={ [
-										{ value: '', label: __( 'Select an emotion', 'buddyboss-platform' ) },
+										{ value: '', label: __( 'Select an emotion', 'buddyboss-community-social-network-groups-forums-messaging' ) },
 										...wizardData.target_emotions.map( function ( opt ) {
 											return { value: String( opt.value ), label: opt.label };
 										} )
@@ -516,7 +516,7 @@ export function MigrationWizardModal( { isOpen, onClose, migrationData } ) {
 								className="components-button is-secondary"
 								onClick={ onClose }
 							>
-								{ __( 'Cancel', 'buddyboss-platform' ) }
+								{ __( 'Cancel', 'buddyboss-community-social-network-groups-forums-messaging' ) }
 							</button>
 							<button
 								type="button"
@@ -524,7 +524,7 @@ export function MigrationWizardModal( { isOpen, onClose, migrationData } ) {
 								onClick={ function () { setCurrentScreen( 2 ); } }
 								disabled={ ! canContinue }
 							>
-								{ __( 'Continue', 'buddyboss-platform' ) }
+								{ __( 'Continue', 'buddyboss-community-social-network-groups-forums-messaging' ) }
 							</button>
 						</div>
 					</div>
@@ -539,7 +539,7 @@ export function MigrationWizardModal( { isOpen, onClose, migrationData } ) {
 									'You are about to convert %1$d reaction to %2$s.',
 									'You are about to convert %1$d reactions to %2$s.',
 									selectedCount,
-									'buddyboss-platform'
+									'buddyboss-community-social-network-groups-forums-messaging'
 								),
 								selectedCount,
 								targetLabel
@@ -547,14 +547,14 @@ export function MigrationWizardModal( { isOpen, onClose, migrationData } ) {
 						</p>
 
 						<ul className="bb-admin-migration-modal__warnings">
-							<li>{ __( 'The new reactions will be immediately visible on your site after being converted.', 'buddyboss-platform' ) }</li>
-							<li>{ __( 'Depending on the amount of data to convert, the migration may take a while.', 'buddyboss-platform' ) }</li>
-							<li>{ __( 'You will be unable to edit reactions while the conversion is in progress.', 'buddyboss-platform' ) }</li>
-							<li>{ __( 'This action cannot be undone, but you can convert reactions to another reaction in the future.', 'buddyboss-platform' ) }</li>
-							<li>{ __( 'We recommend backing up your site before migrating and performing this action during an off-peak period.', 'buddyboss-platform' ) }</li>
+							<li>{ __( 'The new reactions will be immediately visible on your site after being converted.', 'buddyboss-community-social-network-groups-forums-messaging' ) }</li>
+							<li>{ __( 'Depending on the amount of data to convert, the migration may take a while.', 'buddyboss-community-social-network-groups-forums-messaging' ) }</li>
+							<li>{ __( 'You will be unable to edit reactions while the conversion is in progress.', 'buddyboss-community-social-network-groups-forums-messaging' ) }</li>
+							<li>{ __( 'This action cannot be undone, but you can convert reactions to another reaction in the future.', 'buddyboss-community-social-network-groups-forums-messaging' ) }</li>
+							<li>{ __( 'We recommend backing up your site before migrating and performing this action during an off-peak period.', 'buddyboss-community-social-network-groups-forums-messaging' ) }</li>
 						</ul>
 
-						<p>{ __( 'Do you want to start the conversion now?', 'buddyboss-platform' ) }</p>
+						<p>{ __( 'Do you want to start the conversion now?', 'buddyboss-community-social-network-groups-forums-messaging' ) }</p>
 
 						<div className="bb-admin-migration-modal__footer">
 							<button
@@ -563,7 +563,7 @@ export function MigrationWizardModal( { isOpen, onClose, migrationData } ) {
 								onClick={ function () { setCurrentScreen( 1 ); } }
 								disabled={ submitting }
 							>
-								{ __( 'Back', 'buddyboss-platform' ) }
+								{ __( 'Back', 'buddyboss-community-social-network-groups-forums-messaging' ) }
 							</button>
 							<button
 								type="button"
@@ -571,7 +571,7 @@ export function MigrationWizardModal( { isOpen, onClose, migrationData } ) {
 								onClick={ handleStartConversion }
 								disabled={ submitting }
 							>
-								{ submitting ? __( 'Converting…', 'buddyboss-platform' ) : __( 'Start conversion', 'buddyboss-platform' ) }
+								{ submitting ? __( 'Converting…', 'buddyboss-community-social-network-groups-forums-messaging' ) : __( 'Start conversion', 'buddyboss-community-social-network-groups-forums-messaging' ) }
 							</button>
 						</div>
 					</div>

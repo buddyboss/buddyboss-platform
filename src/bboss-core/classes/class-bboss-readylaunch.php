@@ -537,9 +537,9 @@ if ( ! class_exists( 'BBoss_Readylaunch' ) ) {
 		public function bb_rl_notifications_mark_unread_link( $link = '' ) {
 			return $this->bb_rl_notifications_link(
 				$link,
-				__( 'Mark as unread', 'buddyboss-platform' ),
+				__( 'Mark as unread', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				'bb-icons-rl-eye-slash',
-				__( 'Mark as unread', 'buddyboss-platform' )
+				__( 'Mark as unread', 'buddyboss-community-social-network-groups-forums-messaging' )
 			);
 		}
 
@@ -555,9 +555,9 @@ if ( ! class_exists( 'BBoss_Readylaunch' ) ) {
 		public function bb_rl_notifications_mark_read_link( $link = '' ) {
 			return $this->bb_rl_notifications_link(
 				$link,
-				__( 'Mark as read', 'buddyboss-platform' ),
+				__( 'Mark as read', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				'bb-icons-rl-check',
-				__( 'Mark as read', 'buddyboss-platform' )
+				__( 'Mark as read', 'buddyboss-community-social-network-groups-forums-messaging' )
 			);
 		}
 
@@ -573,9 +573,9 @@ if ( ! class_exists( 'BBoss_Readylaunch' ) ) {
 		public function bb_rl_notifications_delete_link( $link = '' ) {
 			return $this->bb_rl_notifications_link(
 				$link,
-				__( 'Delete notification', 'buddyboss-platform' ),
+				__( 'Delete notification', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				'bb-icons-rl-trash',
-				__( 'Delete notification', 'buddyboss-platform' )
+				__( 'Delete notification', 'buddyboss-community-social-network-groups-forums-messaging' )
 			);
 		}
 
@@ -713,21 +713,21 @@ if ( ! class_exists( 'BBoss_Readylaunch' ) ) {
 					if ( 'activity_feed' === $key && bboss_is_active( 'activity' ) ) {
 						$is_active     = true;
 						$item['url']   = bboss_get_activity_directory_permalink();
-						$item['label'] = __( 'News Feed', 'buddyboss-platform' );
+						$item['label'] = __( 'News Feed', 'buddyboss-community-social-network-groups-forums-messaging' );
 					} elseif ( 'members' === $key ) {
 						$is_active     = true;
 						$item['url']   = bboss_get_members_directory_permalink();
-						$item['label'] = __( 'Members', 'buddyboss-platform' );
+						$item['label'] = __( 'Members', 'buddyboss-community-social-network-groups-forums-messaging' );
 					} elseif ( 'groups' === $key && bboss_is_active( 'groups' ) ) {
 						$is_active     = true;
 						$item['url']   = bboss_get_groups_directory_permalink();
-						$item['label'] = __( 'Groups', 'buddyboss-platform' );
+						$item['label'] = __( 'Groups', 'buddyboss-community-social-network-groups-forums-messaging' );
 					} elseif ( 'forums' === $key && bboss_is_active( 'forums' ) ) {
 						$is_active     = true;
 						$item['url']   = bboss_bbp_get_forums_url();
-						$item['label'] = __( 'Forums', 'buddyboss-platform' );
+						$item['label'] = __( 'Forums', 'buddyboss-community-social-network-groups-forums-messaging' );
 					} elseif ( 'courses' === $key ) {
-						$item['label'] = __( 'Courses', 'buddyboss-platform' );
+						$item['label'] = __( 'Courses', 'buddyboss-community-social-network-groups-forums-messaging' );
 						$item['url']   = '';
 
 						/**
@@ -777,11 +777,11 @@ if ( ! class_exists( 'BBoss_Readylaunch' ) ) {
 					} elseif ( 'messages' === $key && bboss_is_active( 'messages' ) && is_user_logged_in() ) {
 						$is_active     = true;
 						$item['url']   = trailingslashit( bboss_loggedin_user_domain() . bboss_get_messages_slug() );
-						$item['label'] = __( 'Messages', 'buddyboss-platform' );
+						$item['label'] = __( 'Messages', 'buddyboss-community-social-network-groups-forums-messaging' );
 					} elseif ( 'notifications' === $key && bboss_is_active( 'notifications' ) && is_user_logged_in() ) {
 						$is_active     = true;
 						$item['url']   = bboss_get_notifications_permalink();
-						$item['label'] = __( 'Notifications', 'buddyboss-platform' );
+						$item['label'] = __( 'Notifications', 'buddyboss-community-social-network-groups-forums-messaging' );
 					}
 					if ( $is_active ) {
 						if ( ! empty( $item['icon'] ) ) {
@@ -1058,13 +1058,13 @@ if ( ! class_exists( 'BBoss_Readylaunch' ) ) {
 			$nav_menu_locations = get_theme_mod( 'nav_menu_locations', array() );
 			if ( empty( $nav_menu_locations ) || isset( $nav_menu_locations['bb-readylaunch'] ) ) {
 				register_nav_menus(
-					array( 'bb-readylaunch' => __( 'ReadyLaunch', 'buddyboss-platform' ) )
+					array( 'bb-readylaunch' => __( 'ReadyLaunch', 'buddyboss-community-social-network-groups-forums-messaging' ) )
 				);
 			}
 
 			// Define the menus to create.
 			$menus = array(
-				'readylaunch' => __( 'ReadyLaunch', 'buddyboss-platform' ),
+				'readylaunch' => __( 'ReadyLaunch', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			);
 
 			foreach ( $menus as $menu_slug => $menu_name ) {
@@ -1352,10 +1352,10 @@ if ( ! class_exists( 'BBoss_Readylaunch' ) ) {
 					'bb-rl-members',
 					'bbReadyLaunchMembersVars',
 					array(
-						'invite_invalid_name_message' => esc_html__( 'Name is required.', 'buddyboss-platform' ),
-						'invite_valid_email'          => esc_html__( 'Please enter a valid email address.', 'buddyboss-platform' ),
-						'invite_sending_invite'       => esc_html__( 'Sending invitation', 'buddyboss-platform' ),
-						'invite_error_notice'         => esc_html__( 'There was an error submitting the form. Please try again.', 'buddyboss-platform' ),
+						'invite_invalid_name_message' => esc_html__( 'Name is required.', 'buddyboss-community-social-network-groups-forums-messaging' ),
+						'invite_valid_email'          => esc_html__( 'Please enter a valid email address.', 'buddyboss-community-social-network-groups-forums-messaging' ),
+						'invite_sending_invite'       => esc_html__( 'Sending invitation', 'buddyboss-community-social-network-groups-forums-messaging' ),
+						'invite_error_notice'         => esc_html__( 'There was an error submitting the form. Please try again.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					)
 				);
 			}
@@ -1373,9 +1373,9 @@ if ( ! class_exists( 'BBoss_Readylaunch' ) ) {
 				array(
 					'ajax_url'           => admin_url( 'admin-ajax.php' ),
 					'nonce'              => wp_create_nonce( 'bb-readylaunch' ),
-					'more_nav'           => esc_html__( 'More', 'buddyboss-platform' ),
-					'filter_all'         => esc_html__( 'All', 'buddyboss-platform' ),
-					'notification_error' => esc_html__( 'Failed to load data. Please try again.', 'buddyboss-platform' ),
+					'more_nav'           => esc_html__( 'More', 'buddyboss-community-social-network-groups-forums-messaging' ),
+					'filter_all'         => esc_html__( 'All', 'buddyboss-community-social-network-groups-forums-messaging' ),
+					'notification_error' => esc_html__( 'Failed to load data. Please try again.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				)
 			);
 
@@ -1696,9 +1696,9 @@ if ( ! class_exists( 'BBoss_Readylaunch' ) ) {
 				)
 			);
 
-			$title          = ! empty( $args['heading'] ) ? $args['heading'] : __( 'Courses', 'buddyboss-platform' );
+			$title          = ! empty( $args['heading'] ) ? $args['heading'] : __( 'Courses', 'buddyboss-community-social-network-groups-forums-messaging' );
 			$items          = ! empty( $args['items'] ) ? $args['items'] : array();
-			$error_text     = ! empty( $args['error_text'] ) ? $args['error_text'] : __( 'There are no courses to display.', 'buddyboss-platform' );
+			$error_text     = ! empty( $args['error_text'] ) ? $args['error_text'] : __( 'There are no courses to display.', 'buddyboss-community-social-network-groups-forums-messaging' );
 			$has_more_items = ! empty( $args['has_more_items'] ) ? $args['has_more_items'] : false;
 			?>
 			<div class="bb-rl-list">
@@ -1760,7 +1760,7 @@ if ( ! class_exists( 'BBoss_Readylaunch' ) ) {
 							?>
 									<a href="<?php echo ! empty( $args['show_more_link'] ) ? esc_url( $args['show_more_link'] ) : ''; ?>" class="bb-rl-show-more">
 										<i class="bb-icons-rl-caret-down"></i>
-								<?php echo esc_html__( 'Show More', 'buddyboss-platform' ); ?>
+								<?php echo esc_html__( 'Show More', 'buddyboss-community-social-network-groups-forums-messaging' ); ?>
 									</a>
 								<?php
 						}
@@ -2179,7 +2179,7 @@ if ( ! class_exists( 'BBoss_Readylaunch' ) ) {
 		 */
 		public function bb_nouveau_get_filter_label_hook( $label, $component ) {
 			if ( 'members' === $component['object'] || 'groups' === $component['object'] ) {
-				$label = __( 'Sort by', 'buddyboss-platform' );
+				$label = __( 'Sort by', 'buddyboss-community-social-network-groups-forums-messaging' );
 			}
 
 			return $label;
@@ -2262,12 +2262,12 @@ if ( ! class_exists( 'BBoss_Readylaunch' ) ) {
 			// Add custom class to span tags (disabled or active links).
 			$output = str_replace( 'page-numbers', 'bb-rl-page-numbers', $output );
 
-			$prev_label = esc_html__( 'Prev', 'buddyboss-platform' );
-			$next_label = esc_html__( 'Next', 'buddyboss-platform' );
+			$prev_label = esc_html__( 'Prev', 'buddyboss-community-social-network-groups-forums-messaging' );
+			$next_label = esc_html__( 'Next', 'buddyboss-community-social-network-groups-forums-messaging' );
 
 			// Use prev_text and next_text passed in the paginate_links arguments.
-			$prev_text = $args['prev_text'] ?? __( '&larr; Prev', 'buddyboss-platform' );
-			$next_text = $args['next_text'] ?? __( 'Next &rarr;', 'buddyboss-platform' );
+			$prev_text = $args['prev_text'] ?? __( '&larr; Prev', 'buddyboss-community-social-network-groups-forums-messaging' );
+			$next_text = $args['next_text'] ?? __( 'Next &rarr;', 'buddyboss-community-social-network-groups-forums-messaging' );
 
 			// Ensure Previous and Next links are always visible (even if disabled).
 			if ( strpos( $output, 'prev bb-rl-page-numbers' ) === false ) {
@@ -2314,7 +2314,7 @@ if ( ! class_exists( 'BBoss_Readylaunch' ) ) {
 		 */
 		public function bb_rl_invite_form_callback() {
 			$response = array(
-				'message' => esc_html__( 'Unable to send invite.', 'buddyboss-platform' ),
+				'message' => esc_html__( 'Unable to send invite.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				'type'    => 'error',
 			);
 
@@ -2325,7 +2325,7 @@ if ( ! class_exists( 'BBoss_Readylaunch' ) ) {
 				! empty( $nonce ) &&
 				! wp_verify_nonce( $nonce, 'bb_rl_invite_form_action' )
 			) {
-				$response['message'] = esc_html__( 'Nonce verification failed.', 'buddyboss-platform' );
+				$response['message'] = esc_html__( 'Nonce verification failed.', 'buddyboss-community-social-network-groups-forums-messaging' );
 				wp_send_json_error( $response );
 			}
 
@@ -2333,7 +2333,7 @@ if ( ! class_exists( 'BBoss_Readylaunch' ) ) {
 
 			// Check if the user is logged in.
 			if ( ! $loggedin_user_id ) {
-				$response['message'] = esc_html__( 'You should be logged in to send an invite.', 'buddyboss-platform' );
+				$response['message'] = esc_html__( 'You should be logged in to send an invite.', 'buddyboss-community-social-network-groups-forums-messaging' );
 				wp_send_json_error( $response );
 			}
 
@@ -2343,16 +2343,16 @@ if ( ! class_exists( 'BBoss_Readylaunch' ) ) {
 
 			$email = strtolower( sanitize_email( wp_unslash( $_POST['bb-rl-invite-email'] ) ) );
 			if ( email_exists( $email ) ) {
-				$response['message'] = esc_html__( 'Email address already exists.', 'buddyboss-platform' );
+				$response['message'] = esc_html__( 'Email address already exists.', 'buddyboss-community-social-network-groups-forums-messaging' );
 				wp_send_json_error( $response );
 			} elseif ( bboss_is_email_address_already_invited( $email, $loggedin_user_id ) ) {
-				$response['message'] = esc_html__( 'The email has already been invited', 'buddyboss-platform' );
+				$response['message'] = esc_html__( 'The email has already been invited', 'buddyboss-community-social-network-groups-forums-messaging' );
 				wp_send_json_error( $response );
 			} elseif ( ! bboss_is_allowed_register_email_address( $email ) ) {
-				$response['message'] = esc_html__( 'Email address restricted.', 'buddyboss-platform' );
+				$response['message'] = esc_html__( 'Email address restricted.', 'buddyboss-community-social-network-groups-forums-messaging' );
 				wp_send_json_error( $response );
 			} elseif ( ! bboss_allow_user_to_send_invites() ) {
-				$response['message'] = esc_html__( 'Sorry, you don\'t have permission to view invites profile type.', 'buddyboss-platform' );
+				$response['message'] = esc_html__( 'Sorry, you don\'t have permission to view invites profile type.', 'buddyboss-community-social-network-groups-forums-messaging' );
 				wp_send_json_error( $response );
 			}
 
@@ -2447,7 +2447,7 @@ if ( ! class_exists( 'BBoss_Readylaunch' ) ) {
 
 			wp_send_json_success(
 				array(
-					'message' => esc_html__( 'Invitation sent successfully', 'buddyboss-platform' ),
+					'message' => esc_html__( 'Invitation sent successfully', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'type'    => 'success',
 				)
 			);
@@ -2501,7 +2501,7 @@ if ( ! class_exists( 'BBoss_Readylaunch' ) ) {
 		 * @return array $args Filtered arguments.
 		 */
 		public function bb_rl_override_send_message_button_text( $args ) {
-			$args['data-balloon'] = esc_html__( 'Message', 'buddyboss-platform' );
+			$args['data-balloon'] = esc_html__( 'Message', 'buddyboss-community-social-network-groups-forums-messaging' );
 
 			return $args;
 		}
@@ -2700,7 +2700,7 @@ if ( ! class_exists( 'BBoss_Readylaunch' ) ) {
 						'class' => 'button edit-profile',
 						'href'  => bboss_loggedin_user_domain() . 'profile/edit/',
 					),
-					'link_text'         => esc_html__( 'Edit Profile', 'buddyboss-platform' ),
+					'link_text'         => esc_html__( 'Edit Profile', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'link_url'          => bboss_loggedin_user_domain() . 'profile/edit/',
 					'link_class'        => 'bb-rl-edit-profile',
 					'prefix_link_text'  => '<i class="bb-icons-rl-pencil-simple-line"></i>',
@@ -2717,12 +2717,12 @@ if ( ! class_exists( 'BBoss_Readylaunch' ) ) {
 			}
 
 			if ( ! empty( $buttons['reject_friendship'] ) && bboss_is_current_action( 'requests' ) ) {
-				$buttons['reject_friendship']['link_text']        = esc_html__( 'Reject', 'buddyboss-platform' );
+				$buttons['reject_friendship']['link_text']        = esc_html__( 'Reject', 'buddyboss-community-social-network-groups-forums-messaging' );
 				$buttons['reject_friendship']['prefix_link_text'] = '<i class="bb-icons-rl-x"></i>';
 			}
 
 			if ( ! empty( $buttons['accept_friendship'] ) && bboss_is_current_action( 'requests' ) ) {
-				$buttons['accept_friendship']['link_text']        = esc_html__( 'Accept', 'buddyboss-platform' );
+				$buttons['accept_friendship']['link_text']        = esc_html__( 'Accept', 'buddyboss-community-social-network-groups-forums-messaging' );
 				$buttons['accept_friendship']['prefix_link_text'] = '<i class="bb-icons-rl-check"></i>';
 			}
 
@@ -2739,26 +2739,26 @@ if ( ! class_exists( 'BBoss_Readylaunch' ) ) {
 		 * @return array $strings The modified JS strings.
 		 */
 		public function bb_rl_modify_js_strings( $strings ) {
-			$translated_string = __( '\'s post', 'buddyboss-platform' );
+			$translated_string = __( '\'s post', 'buddyboss-community-social-network-groups-forums-messaging' );
 
 			if ( bboss_is_active( 'media' ) || bboss_is_active( 'video' ) || bboss_is_active( 'document' ) ) {
 				$strings['media']['i18n_strings']['theater_title'] = $translated_string;
-				$strings['media']['create_album_title']            = esc_html__( 'Create new album', 'buddyboss-platform' );
-				$strings['media']['create_folder']                 = esc_html__( 'Create new folder', 'buddyboss-platform' );
-				$strings['media']['bb_rl_invalid_media_type']      = __( 'Different types of media cannot be uploaded to a post', 'buddyboss-platform' );
+				$strings['media']['create_album_title']            = esc_html__( 'Create new album', 'buddyboss-community-social-network-groups-forums-messaging' );
+				$strings['media']['create_folder']                 = esc_html__( 'Create new folder', 'buddyboss-community-social-network-groups-forums-messaging' );
+				$strings['media']['bb_rl_invalid_media_type']      = __( 'Different types of media cannot be uploaded to a post', 'buddyboss-community-social-network-groups-forums-messaging' );
 			}
 
 			if ( bboss_is_active( 'messages' ) ) {
-				$strings['messages']['i18n']['to_placeholder'] = __( 'Start typing a name', 'buddyboss-platform' );
+				$strings['messages']['i18n']['to_placeholder'] = __( 'Start typing a name', 'buddyboss-community-social-network-groups-forums-messaging' );
 			}
 
 			if ( bboss_is_active( 'moderation' ) ) {
-				$strings['moderation']['block_member'] = __( 'Block member', 'buddyboss-platform' );
+				$strings['moderation']['block_member'] = __( 'Block member', 'buddyboss-community-social-network-groups-forums-messaging' );
 			}
 
 			if ( bboss_is_active( 'groups' ) ) {
-				$strings['groups']['i18n']['sending_request']      = esc_html__( 'Sending request', 'buddyboss-platform' );
-				$strings['groups']['i18n']['cancel_request_group'] = esc_html__( 'Canceling request', 'buddyboss-platform' );
+				$strings['groups']['i18n']['sending_request']      = esc_html__( 'Sending request', 'buddyboss-community-social-network-groups-forums-messaging' );
+				$strings['groups']['i18n']['cancel_request_group'] = esc_html__( 'Canceling request', 'buddyboss-community-social-network-groups-forums-messaging' );
 				$strings['groups']['member_invites_none']          = bboss_nouveau_get_user_feedback( 'member-invites-none' );
 			}
 
@@ -2859,7 +2859,7 @@ JS;
 				if ( empty( $message ) ) {
 					return sprintf(
 						'<div class="login-heading"><h2>%s</h2></div>',
-						__( 'Sign in to your account', 'buddyboss-platform' )
+						__( 'Sign in to your account', 'buddyboss-community-social-network-groups-forums-messaging' )
 					);
 				} else {
 					return $message;
@@ -2876,7 +2876,7 @@ JS;
 		 */
 		public function bb_rl_login_custom_form() {
 			?>
-			<p class="lostmenot"><a href="<?php echo esc_url( wp_lostpassword_url() ); ?>"><?php esc_html_e( 'Forgot Password?', 'buddyboss-platform' ); ?></a></p>
+			<p class="lostmenot"><a href="<?php echo esc_url( wp_lostpassword_url() ); ?>"><?php esc_html_e( 'Forgot Password?', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></a></p>
 			<?php
 		}
 
@@ -3155,7 +3155,7 @@ JS;
 				true
 			);
 
-			wp_set_script_translations( 'buddyboss-readylaunch-header-editor-script', 'buddyboss-platform', bboss()->plugin_dir . 'languages/' );
+			wp_set_script_translations( 'buddyboss-readylaunch-header-editor-script', 'buddyboss-community-social-network-groups-forums-messaging', bboss()->plugin_dir . 'languages/' );
 
 			// Register the view script.
 			wp_register_script(
@@ -3172,13 +3172,13 @@ JS;
 				array(
 					'ajax_url'           => admin_url( 'admin-ajax.php' ),
 					'nonce'              => wp_create_nonce( 'bb-readylaunch' ),
-					'more_nav'           => esc_html__( 'More', 'buddyboss-platform' ),
-					'filter_all'         => esc_html__( 'All', 'buddyboss-platform' ),
-					'notification_error' => esc_html__( 'Failed to load data. Please try again.', 'buddyboss-platform' ),
+					'more_nav'           => esc_html__( 'More', 'buddyboss-community-social-network-groups-forums-messaging' ),
+					'filter_all'         => esc_html__( 'All', 'buddyboss-community-social-network-groups-forums-messaging' ),
+					'notification_error' => esc_html__( 'Failed to load data. Please try again.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				)
 			);
 
-			wp_set_script_translations( 'bb-readylaunch-header-view', 'buddyboss-platform', bboss()->plugin_dir . 'languages/' );
+			wp_set_script_translations( 'bb-readylaunch-header-view', 'buddyboss-community-social-network-groups-forums-messaging', bboss()->plugin_dir . 'languages/' );
 
 			wp_register_style(
 				'bb-icons-rl-css',
@@ -3727,9 +3727,9 @@ JS;
 				'bb-readylaunch-forums-js',
 				'bbrlForumsEditorJsStrs',
 				array(
-					'description' => __( 'Write a description', 'buddyboss-platform' ),
-					'type_reply'  => __( 'Type your reply here', 'buddyboss-platform' ),
-					'type_topic'  => __( 'Type your discussion content here', 'buddyboss-platform' ),
+					'description' => __( 'Write a description', 'buddyboss-community-social-network-groups-forums-messaging' ),
+					'type_reply'  => __( 'Type your reply here', 'buddyboss-community-social-network-groups-forums-messaging' ),
+					'type_topic'  => __( 'Type your discussion content here', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				)
 			);
 
@@ -3739,11 +3739,11 @@ JS;
 			}
 
 			$common_array = array(
-				'loading_text' => __( 'Loading', 'buddyboss-platform' ),
+				'loading_text' => __( 'Loading', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				'ajax_url'     => bboss_core_ajax_url(),
 				'nonce'        => wp_create_nonce( 'search_tag' ),
 				'load'         => $no_load_topic,
-				'tag_text'     => __( 'Add Tags:', 'buddyboss-platform' ),
+				'tag_text'     => __( 'Add Tags:', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			);
 
 			wp_localize_script( 'bb-readylaunch-forums-js', 'bbrlForumsCommonJsData', $common_array );
@@ -3756,15 +3756,15 @@ JS;
 					'bbpReplyAjaxJS',
 					array(
 						'bbp_ajaxurl'          => bboss_bbp_get_ajax_url(),
-						'generic_ajax_error'   => esc_html__( 'Something went wrong. Refresh your browser and try again.', 'buddyboss-platform' ),
+						'generic_ajax_error'   => esc_html__( 'Something went wrong. Refresh your browser and try again.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 						'is_user_logged_in'    => is_user_logged_in(),
 						'reply_nonce'          => wp_create_nonce( 'reply-ajax_' . get_the_ID() ),
 						'topic_id'             => bboss_bbp_get_topic_id(),
 						'reply_form_html'      => $reply_form_html,
 						'threaded_reply'       => bboss_bbp_allow_threaded_replies(),
 						'threaded_reply_depth' => bboss_bbp_thread_replies_depth(),
-						'reply_to_text'        => esc_html__( 'Reply to', 'buddyboss-platform' ),
-						'type_reply_here_text' => esc_html__( 'Type your reply here', 'buddyboss-platform' ),
+						'reply_to_text'        => esc_html__( 'Reply to', 'buddyboss-community-social-network-groups-forums-messaging' ),
+						'type_reply_here_text' => esc_html__( 'Type your reply here', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					)
 				);
 			}
@@ -3815,8 +3815,8 @@ JS;
 					'button_element'    => 'a',
 					'link_text'         => sprintf(
 						'<span class="bp-screen-reader-text">%1$s</span> <span class="comment-count">%2$s</span>',
-						esc_html__( 'Quick Reply', 'buddyboss-platform' ),
-						esc_html__( 'Quick Reply', 'buddyboss-platform' )
+						esc_html__( 'Quick Reply', 'buddyboss-community-social-network-groups-forums-messaging' ),
+						esc_html__( 'Quick Reply', 'buddyboss-community-social-network-groups-forums-messaging' )
 					),
 					'button_attr'       => array(
 						'class'            => 'bb-icon-l button bb-icon-comment bp-secondary-action',
@@ -3955,11 +3955,11 @@ JS;
 			if ( bboss_bbp_show_lead_topic() ) {
 				$topic_reply_count = (int) bboss_bbp_get_topic_reply_count( $topic_id );
 				echo esc_html( $topic_reply_count );
-				$topic_reply_text = 1 !== $topic_reply_count ? esc_html__( 'Replies', 'buddyboss-platform' ) : esc_html__( 'Reply', 'buddyboss-platform' );
+				$topic_reply_text = 1 !== $topic_reply_count ? esc_html__( 'Replies', 'buddyboss-community-social-network-groups-forums-messaging' ) : esc_html__( 'Reply', 'buddyboss-community-social-network-groups-forums-messaging' );
 			} else {
 				$topic_post_count = (int) bboss_bbp_get_topic_post_count( $topic_id );
 				echo esc_html( $topic_post_count );
-				$topic_reply_text = 1 !== $topic_post_count ? esc_html__( 'Posts', 'buddyboss-platform' ) : esc_html__( 'Post', 'buddyboss-platform' );
+				$topic_reply_text = 1 !== $topic_post_count ? esc_html__( 'Posts', 'buddyboss-community-social-network-groups-forums-messaging' ) : esc_html__( 'Post', 'buddyboss-community-social-network-groups-forums-messaging' );
 			}
 			echo ' ' . wp_kses_post( $topic_reply_text );
 			$topic_total_reply_count_html = ob_get_clean();
@@ -4221,7 +4221,7 @@ JS;
 				// Add "ago" if it's not already there.
 				$active_time = sprintf(
 					/* translators: %s: forum freshness link */
-					apply_filters( 'bbp_core_time_since_ago_text', __( '%s ago', 'buddyboss-platform' ) ),
+					apply_filters( 'bbp_core_time_since_ago_text', __( '%s ago', 'buddyboss-community-social-network-groups-forums-messaging' ) ),
 					$first_part
 				);
 			}
@@ -4251,7 +4251,7 @@ JS;
 			if ( $time_since ) {
 				return sprintf(
 					/* translators: %s: forum freshness link */
-					__( '<span>Active</span> %s', 'buddyboss-platform' ),
+					__( '<span>Active</span> %s', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					$anchor
 				);
 			}
@@ -4273,7 +4273,7 @@ JS;
 				return $r;
 			}
 
-			$r['super_text'] = __( 'Super Sticky', 'buddyboss-platform' );
+			$r['super_text'] = __( 'Super Sticky', 'buddyboss-community-social-network-groups-forums-messaging' );
 
 			return $r;
 		}
@@ -4291,7 +4291,7 @@ JS;
 		 */
 		public function bb_rl_get_nav_link_text( $link_text, $nav_item, $bp_nouveau ) {
 			if ( 'subscriptions' === $nav_item->slug ) {
-				$link_text = esc_html__( 'Group Subscriptions', 'buddyboss-platform' );
+				$link_text = esc_html__( 'Group Subscriptions', 'buddyboss-community-social-network-groups-forums-messaging' );
 			}
 
 			return $link_text;
@@ -4315,7 +4315,7 @@ JS;
 			$current_action_variables = function_exists( 'bboss_action_variables' ) ? bboss_action_variables() : array();
 			$current_action_variables = ! empty( $current_action_variables ) ? $current_action_variables[0] : '';
 			if ( 'groups' === $current_component && 'members' === $current_action_variables ) {
-				$default_text = __( 'Search member', 'buddyboss-platform' );
+				$default_text = __( 'Search member', 'buddyboss-community-social-network-groups-forums-messaging' );
 			}
 
 			return $default_text;
@@ -4346,7 +4346,7 @@ JS;
 		public function bb_rl_overwrite_login_email_field_label( $translated_text, $text, $domain ) {
 			if ( 'Username or Email Address' === $text && 'default' === $domain ) {
 				remove_filter( 'gettext', array( $this, 'bb_rl_overwrite_login_email_field_label' ) );
-				return __( 'Email', 'buddyboss-platform' );
+				return __( 'Email', 'buddyboss-community-social-network-groups-forums-messaging' );
 			}
 
 			return $translated_text;
@@ -4364,7 +4364,7 @@ JS;
 		public function bb_rl_wp_login_errors( $errors ) {
 			if ( isset( $_GET['loggedout'] ) && $_GET['loggedout'] ) {
 				$errors->remove( 'loggedout' );
-				$notice  = esc_html__( 'You are logged out', 'buddyboss-platform' );
+				$notice  = esc_html__( 'You are logged out', 'buddyboss-community-social-network-groups-forums-messaging' );
 				$notice .= ' <span class="bb-rl-updated-close"><i class="bb-icons-rl-x"></i></span>';
 				$errors->add( 'loggedout', $notice, 'message' );
 			}
@@ -4401,11 +4401,11 @@ JS;
 		 * @return array Modified visibility levels.
 		 */
 		public function bb_rl_modify_visibility_levels( $visibility_levels ) {
-			$visibility_levels['loggedin'] = __( 'All members', 'buddyboss-platform' );
+			$visibility_levels['loggedin'] = __( 'All members', 'buddyboss-community-social-network-groups-forums-messaging' );
 			if ( bboss_is_active( 'friends' ) ) {
-				$visibility_levels['friends'] = __( 'My connections', 'buddyboss-platform' );
+				$visibility_levels['friends'] = __( 'My connections', 'buddyboss-community-social-network-groups-forums-messaging' );
 			}
-			$visibility_levels['onlyme'] = __( 'Only me', 'buddyboss-platform' );
+			$visibility_levels['onlyme'] = __( 'Only me', 'buddyboss-community-social-network-groups-forums-messaging' );
 
 			return $visibility_levels;
 		}
@@ -4426,21 +4426,21 @@ JS;
 			}
 
 			if ( false !== strpos( $button['link_href'], '/remove-friend/' ) ) {
-				$remove_connection_text = __( 'Remove connection', 'buddyboss-platform' );
+				$remove_connection_text = __( 'Remove connection', 'buddyboss-community-social-network-groups-forums-messaging' );
 				$button['data-balloon'] = $remove_connection_text;
 				if ( empty( $button['is_tooltips'] ) ) {
 					$button['link_class']               .= ' bb-rl-primary-hover-action';
 					$button['button_attr']['data-hover'] = $remove_connection_text;
 				}
 			} elseif ( false !== strpos( $button['link_href'], '/requests/cancel' ) ) {
-				$cancel_request_text    = __( 'Cancel request', 'buddyboss-platform' );
+				$cancel_request_text    = __( 'Cancel request', 'buddyboss-community-social-network-groups-forums-messaging' );
 				$button['data-balloon'] = $cancel_request_text;
 				if ( empty( $button['is_tooltips'] ) ) {
 					$button['link_class']               .= ' bb-rl-primary-hover-action';
 					$button['button_attr']['data-hover'] = $cancel_request_text;
 				}
 			} elseif ( false !== strpos( $button['link_href'], '/requests/' ) ) {
-				$accept_request_text    = __( 'Review request', 'buddyboss-platform' );
+				$accept_request_text    = __( 'Review request', 'buddyboss-community-social-network-groups-forums-messaging' );
 				$button['data-balloon'] = $accept_request_text;
 				if ( empty( $button['is_tooltips'] ) ) {
 					$button['link_class']               .= ' bb-rl-primary-hover-action';
@@ -4470,8 +4470,8 @@ JS;
 		 */
 		public function bb_rl_modify_notifications_filters( $output ) {
 			$output = str_replace(
-				esc_html__( '- View All -', 'buddyboss-platform' ),
-				esc_html__( 'View All', 'buddyboss-platform' ),
+				esc_html__( '- View All -', 'buddyboss-community-social-network-groups-forums-messaging' ),
+				esc_html__( 'View All', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				$output
 			);
 
@@ -4493,7 +4493,7 @@ JS;
 			$register_date        = date_i18n( 'd M Y', strtotime( $register_date ) );
 			$user_registered_date = sprintf(
 				/* translators: 1: User joined date. */
-				esc_html__( 'Joined %s', 'buddyboss-platform' ),
+				esc_html__( 'Joined %s', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				esc_html( $register_date )
 			);
 
@@ -4514,7 +4514,7 @@ JS;
 				return $button;
 			}
 
-			$button['link_text'] = str_replace( __( 'Report Member', 'buddyboss-platform' ), __( 'Report', 'buddyboss-platform' ), $button['link_text'] );
+			$button['link_text'] = str_replace( __( 'Report Member', 'buddyboss-community-social-network-groups-forums-messaging' ), __( 'Report', 'buddyboss-community-social-network-groups-forums-messaging' ), $button['link_text'] );
 
 			return $button;
 		}
@@ -4567,7 +4567,7 @@ JS;
 		 */
 		public function bb_rl_modify_bp_nouveau_get_submit_button( $actions ) {
 			if ( isset( $actions['member-group-invites']['attributes']['value'] ) ) {
-				$actions['member-group-invites']['attributes']['value'] = esc_html__( 'Save Changes', 'buddyboss-platform' );
+				$actions['member-group-invites']['attributes']['value'] = esc_html__( 'Save Changes', 'buddyboss-community-social-network-groups-forums-messaging' );
 			}
 
 			return $actions;
@@ -4583,11 +4583,11 @@ JS;
 		 * @return array Modified visibility levels.
 		 */
 		public function bb_rl_modify_xprofile_visibility_levels( $visibility_levels ) {
-			$visibility_levels['loggedin']['label'] = __( 'All members', 'buddyboss-platform' );
+			$visibility_levels['loggedin']['label'] = __( 'All members', 'buddyboss-community-social-network-groups-forums-messaging' );
 			if ( bboss_is_active( 'friends' ) ) {
-				$visibility_levels['friends']['label'] = __( 'My connections', 'buddyboss-platform' );
+				$visibility_levels['friends']['label'] = __( 'My connections', 'buddyboss-community-social-network-groups-forums-messaging' );
 			}
-			$visibility_levels['adminsonly']['label'] = __( 'Only me', 'buddyboss-platform' );
+			$visibility_levels['adminsonly']['label'] = __( 'Only me', 'buddyboss-community-social-network-groups-forums-messaging' );
 
 			return $visibility_levels;
 		}
@@ -4599,7 +4599,7 @@ JS;
 		 */
 		public function bb_rl_document_rename_and_privacy_update() {
 			$response = array(
-				'feedback' => esc_html__( 'There was a problem performing this action. Please try again.', 'buddyboss-platform' ),
+				'feedback' => esc_html__( 'There was a problem performing this action. Please try again.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			);
 
 			// Bail if not a POST action.
@@ -4613,7 +4613,7 @@ JS;
 			}
 
 			if ( ! is_user_logged_in() ) {
-				$response['feedback'] = esc_html__( 'Please login to perform this action.', 'buddyboss-platform' );
+				$response['feedback'] = esc_html__( 'Please login to perform this action.', 'buddyboss-community-social-network-groups-forums-messaging' );
 				wp_send_json_error( $response );
 			}
 
@@ -4644,7 +4644,7 @@ JS;
 			if ( 'document' === $type ) {
 				// Check permission.
 				if ( ! bp_document_user_can_edit( $document_id ) ) {
-					$response['feedback'] = esc_html__( 'You don\'t have permission to edit this document.', 'buddyboss-platform' );
+					$response['feedback'] = esc_html__( 'You don\'t have permission to edit this document.', 'buddyboss-community-social-network-groups-forums-messaging' );
 					wp_send_json_error( $response );
 				}
 
@@ -4655,7 +4655,7 @@ JS;
 						$result['name']    = $name;
 						$result['renamed'] = true;
 					} else {
-						$response['feedback'] = is_string( $renamed ) && '' !== $renamed ? $renamed : esc_html__( 'Failed to rename document.', 'buddyboss-platform' );
+						$response['feedback'] = is_string( $renamed ) && '' !== $renamed ? $renamed : esc_html__( 'Failed to rename document.', 'buddyboss-community-social-network-groups-forums-messaging' );
 						wp_send_json_error( $response );
 					}
 				}
@@ -4664,7 +4664,7 @@ JS;
 				if ( $update_privacy && ! empty( $privacy ) ) {
 					$document_visibilities = bp_document_get_visibility_levels();
 					if ( ! array_key_exists( $privacy, $document_visibilities ) ) {
-						$response['feedback'] = esc_html__( 'Invalid privacy status.', 'buddyboss-platform' );
+						$response['feedback'] = esc_html__( 'Invalid privacy status.', 'buddyboss-community-social-network-groups-forums-messaging' );
 						wp_send_json_error( $response );
 					}
 
@@ -4711,7 +4711,7 @@ JS;
 				// Handle folder type.
 				// Check permission.
 				if ( ! bp_folder_user_can_edit( $document_id ) ) {
-					$response['feedback'] = esc_html__( 'You don\'t have permission to edit this folder.', 'buddyboss-platform' );
+					$response['feedback'] = esc_html__( 'You don\'t have permission to edit this folder.', 'buddyboss-community-social-network-groups-forums-messaging' );
 					wp_send_json_error( $response );
 				}
 
@@ -4722,7 +4722,7 @@ JS;
 						$result['name']    = $name;
 						$result['renamed'] = true;
 					} else {
-						$response['feedback'] = esc_html__( 'Failed to rename folder.', 'buddyboss-platform' );
+						$response['feedback'] = esc_html__( 'Failed to rename folder.', 'buddyboss-community-social-network-groups-forums-messaging' );
 						wp_send_json_error( $response );
 					}
 				}
@@ -4731,7 +4731,7 @@ JS;
 				if ( $update_privacy && ! empty( $privacy ) ) {
 					$document_visibilities = bp_document_get_visibility_levels();
 					if ( ! array_key_exists( $privacy, $document_visibilities ) ) {
-						$response['feedback'] = esc_html__( 'Invalid privacy status.', 'buddyboss-platform' );
+						$response['feedback'] = esc_html__( 'Invalid privacy status.', 'buddyboss-community-social-network-groups-forums-messaging' );
 						wp_send_json_error( $response );
 					}
 

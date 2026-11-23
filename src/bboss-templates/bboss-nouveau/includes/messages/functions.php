@@ -154,55 +154,55 @@ function bboss_nouveau_messages_localize_scripts( $params = array() ) {
 
 	$params['messages'] = array(
 		'i18n'                       => array(
-			'search_recipients' => __( 'Search members', 'buddyboss-platform' ),
+			'search_recipients' => __( 'Search members', 'buddyboss-community-social-network-groups-forums-messaging' ),
 		),
 		'errors'                     => array(
-			'send_to'         => __( 'Please add at least one recipient.', 'buddyboss-platform' ),
-			'message_content' => __( 'Please add some content to your message.', 'buddyboss-platform' ),
-			'no_messages'     => __( 'Sorry, no messages were found.', 'buddyboss-platform' ),
-			'media_fail'      => __( 'To change the media type, remove existing media from your post.', 'buddyboss-platform' ),
+			'send_to'         => __( 'Please add at least one recipient.', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'message_content' => __( 'Please add some content to your message.', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'no_messages'     => __( 'Sorry, no messages were found.', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'media_fail'      => __( 'To change the media type, remove existing media from your post.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 		),
 		'nonces'                     => array(
 			'send'           => wp_create_nonce( 'messages_send_message' ),
 			'load_recipient' => wp_create_nonce( 'messages_load_recipient' ),
 		),
-		'loading'                    => __( 'Loading messages.', 'buddyboss-platform' ),
+		'loading'                    => __( 'Loading messages.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 		'doingAction'                => array(
-			'read'          => __( 'Marking read.', 'buddyboss-platform' ),
-			'unread'        => __( 'Marking unread.', 'buddyboss-platform' ),
-			'delete'        => __( 'Deleting messages.', 'buddyboss-platform' ),
-			'star'          => __( 'Starring messages.', 'buddyboss-platform' ),
-			'unstar'        => __( 'Unstarring messages.', 'buddyboss-platform' ),
-			'hide_thread'   => __( 'Archiving conversation.', 'buddyboss-platform' ),
-			'unhide_thread' => __( 'Unarchiving conversation.', 'buddyboss-platform' ),
+			'read'          => __( 'Marking read.', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'unread'        => __( 'Marking unread.', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'delete'        => __( 'Deleting messages.', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'star'          => __( 'Starring messages.', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'unstar'        => __( 'Unstarring messages.', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'hide_thread'   => __( 'Archiving conversation.', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'unhide_thread' => __( 'Unarchiving conversation.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 		),
-		'type_message'               => __( 'Write a message...', 'buddyboss-platform' ),
-		'delete_confirmation'        => __( 'Are you sure you want to permanently delete all of your messages from this conversation? This cannot be undone.', 'buddyboss-platform' ),
-		'delete_thread_confirmation' => __( 'As a site admin you are able to delete conversations. Are you sure you want to permanently delete this conversation and all of its messages? This cannot be undone.', 'buddyboss-platform' ),
+		'type_message'               => __( 'Write a message...', 'buddyboss-community-social-network-groups-forums-messaging' ),
+		'delete_confirmation'        => __( 'Are you sure you want to permanently delete all of your messages from this conversation? This cannot be undone.', 'buddyboss-community-social-network-groups-forums-messaging' ),
+		'delete_thread_confirmation' => __( 'As a site admin you are able to delete conversations. Are you sure you want to permanently delete this conversation and all of its messages? This cannot be undone.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 		'bulk_actions'               => bboss_nouveau_messages_get_bulk_actions(),
-		'howtoBulk'                  => __( 'Use the select box to define your bulk action and click on the &#10003; button to apply.', 'buddyboss-platform' ),
+		'howtoBulk'                  => __( 'Use the select box to define your bulk action and click on the &#10003; button to apply.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 		'toOthers'                   => array(
-			'one'   => __( '1 other', 'buddyboss-platform' ),
+			'one'   => __( '1 other', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			/* translators: %d: number of other recipients. */
-			'more'  => __( '%d others', 'buddyboss-platform' ),
-			'other' => __( 'others', 'buddyboss-platform' ),
+			'more'  => __( '%d others', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'other' => __( 'others', 'buddyboss-community-social-network-groups-forums-messaging' ),
 		),
 		'rootUrl'                    => urldecode( wp_parse_url( trailingslashit( bboss_displayed_user_domain() . bboss_get_messages_slug() ), PHP_URL_PATH ) ),
 		'hasThreads'                 => bboss_has_message_threads( bboss_ajax_querystring( 'messages' ) ),
-		'today'                      => __( 'Today', 'buddyboss-platform' ),
+		'today'                      => __( 'Today', 'buddyboss-community-social-network-groups-forums-messaging' ),
 		'video_default_url'          => ( function_exists( 'bb_get_video_default_placeholder_image' ) && ! empty( bb_get_video_default_placeholder_image() ) ? bb_get_video_default_placeholder_image() : '' ),
 		'message_url'                => trailingslashit( bboss_loggedin_user_domain() . bboss_get_messages_slug() ),
 		'message_archived_url'       => trailingslashit( bboss_get_messages_archived_url() ),
 		'current_thread_id'          => (int) bboss_action_variable( 0 ),
 		'is_blocked_by_members'      => function_exists( 'bboss_moderation_get_blocked_by_user_ids' ) ? bboss_moderation_get_blocked_by_user_ids( get_current_user_id() ) : array(),
 		'current_thread_type'        => $current_thread_type,
-		'gif_media'                  => __( 'Sent a gif', 'buddyboss-platform' ),
-		'single_media'               => __( 'Sent a photo', 'buddyboss-platform' ),
-		'multiple_media'             => __( 'Sent some photos', 'buddyboss-platform' ),
-		'single_video'               => __( 'Sent a video', 'buddyboss-platform' ),
-		'multiple_video'             => __( 'Sent some videos', 'buddyboss-platform' ),
-		'single_document'            => __( 'Sent a document', 'buddyboss-platform' ),
-		'multiple_document'          => __( 'Sent some documents', 'buddyboss-platform' ),
+		'gif_media'                  => __( 'Sent a gif', 'buddyboss-community-social-network-groups-forums-messaging' ),
+		'single_media'               => __( 'Sent a photo', 'buddyboss-community-social-network-groups-forums-messaging' ),
+		'multiple_media'             => __( 'Sent some photos', 'buddyboss-community-social-network-groups-forums-messaging' ),
+		'single_video'               => __( 'Sent a video', 'buddyboss-community-social-network-groups-forums-messaging' ),
+		'multiple_video'             => __( 'Sent some videos', 'buddyboss-community-social-network-groups-forums-messaging' ),
+		'single_document'            => __( 'Sent a document', 'buddyboss-community-social-network-groups-forums-messaging' ),
+		'multiple_document'          => __( 'Sent some documents', 'buddyboss-community-social-network-groups-forums-messaging' ),
 	);
 
 	// Star private messages.
@@ -211,12 +211,12 @@ function bboss_nouveau_messages_localize_scripts( $params = array() ) {
 			$params['messages'],
 			array(
 				'strings'          => array(
-					'text_unstar'         => __( 'Unstar', 'buddyboss-platform' ),
-					'text_star'           => __( 'Star', 'buddyboss-platform' ),
-					'title_unstar'        => __( 'Starred', 'buddyboss-platform' ),
-					'title_star'          => __( 'Not starred', 'buddyboss-platform' ),
-					'title_unstar_thread' => __( 'Remove all starred messages in this thread', 'buddyboss-platform' ),
-					'title_star_thread'   => __( 'Star the first message in this thread', 'buddyboss-platform' ),
+					'text_unstar'         => __( 'Unstar', 'buddyboss-community-social-network-groups-forums-messaging' ),
+					'text_star'           => __( 'Star', 'buddyboss-community-social-network-groups-forums-messaging' ),
+					'title_unstar'        => __( 'Starred', 'buddyboss-community-social-network-groups-forums-messaging' ),
+					'title_star'          => __( 'Not starred', 'buddyboss-community-social-network-groups-forums-messaging' ),
+					'title_unstar_thread' => __( 'Remove all starred messages in this thread', 'buddyboss-community-social-network-groups-forums-messaging' ),
+					'title_star_thread'   => __( 'Star the first message in this thread', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				),
 				'is_single_thread' => (int) bboss_is_messages_conversation(),
 				'star_counter'     => 0,
@@ -339,7 +339,7 @@ function bboss_nouveau_format_notice_notification_for_user( $array ) {
 	}
 
 	return array(
-		'text' => __( 'New sitewide notice', 'buddyboss-platform' ),
+		'text' => __( 'New sitewide notice', 'buddyboss-community-social-network-groups-forums-messaging' ),
 		'link' => bboss_loggedin_user_domain(),
 	);
 }
@@ -575,7 +575,7 @@ function bboss_nouveau_messages_notification_filters() {
 	bboss_nouveau_notifications_register_filter(
 		array(
 			'id'       => 'new_message',
-			'label'    => __( 'New private messages', 'buddyboss-platform' ),
+			'label'    => __( 'New private messages', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'position' => 115,
 		)
 	);

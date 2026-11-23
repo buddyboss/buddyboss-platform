@@ -65,7 +65,7 @@ class BBoss_REST_Subscriptions_Endpoint extends WP_REST_Controller {
 			array(
 				'args'        => array(
 					'id' => array(
-						'description' => __( 'A unique numeric ID for the Subscription.', 'buddyboss-platform' ),
+						'description' => __( 'A unique numeric ID for the Subscription.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 						'type'        => 'integer',
 					),
 				),
@@ -182,7 +182,7 @@ class BBoss_REST_Subscriptions_Endpoint extends WP_REST_Controller {
 	public function get_items_permissions_check( $request ) {
 		$retval = new WP_Error(
 			'bp_rest_authorization_required',
-			__( 'Sorry, you are not allowed to view subscription.', 'buddyboss-platform' ),
+			__( 'Sorry, you are not allowed to view subscription.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			array(
 				'status' => rest_authorization_required_code(),
 			)
@@ -232,7 +232,7 @@ class BBoss_REST_Subscriptions_Endpoint extends WP_REST_Controller {
 		} elseif ( ! is_numeric( $subscription_id ) ) {
 			return new WP_Error(
 				'bp_rest_user_cannot_create_subscription',
-				__( 'There is an error while adding the subscription.', 'buddyboss-platform' ),
+				__( 'There is an error while adding the subscription.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				array(
 					'status' => 500,
 				)
@@ -270,7 +270,7 @@ class BBoss_REST_Subscriptions_Endpoint extends WP_REST_Controller {
 		if ( ! is_user_logged_in() ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
-				__( 'Sorry, you are not allowed to create subscription.', 'buddyboss-platform' ),
+				__( 'Sorry, you are not allowed to create subscription.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				array(
 					'status' => rest_authorization_required_code(),
 				)
@@ -334,7 +334,7 @@ class BBoss_REST_Subscriptions_Endpoint extends WP_REST_Controller {
 	public function get_item_permissions_check( $request ) {
 		$retval = new WP_Error(
 			'bp_rest_authorization_required',
-			__( 'Sorry, you are not allowed to view subscription.', 'buddyboss-platform' ),
+			__( 'Sorry, you are not allowed to view subscription.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			array(
 				'status' => rest_authorization_required_code(),
 			)
@@ -343,7 +343,7 @@ class BBoss_REST_Subscriptions_Endpoint extends WP_REST_Controller {
 		if ( is_user_logged_in() ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
-				__( 'Sorry, you cannot view the subscription.', 'buddyboss-platform' ),
+				__( 'Sorry, you cannot view the subscription.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				array(
 					'status' => rest_authorization_required_code(),
 				)
@@ -353,7 +353,7 @@ class BBoss_REST_Subscriptions_Endpoint extends WP_REST_Controller {
 			if ( empty( $subscription->id ) ) {
 				$retval = new WP_Error(
 					'bp_rest_subscription_invalid_id',
-					__( 'Invalid subscription ID.', 'buddyboss-platform' ),
+					__( 'Invalid subscription ID.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					array(
 						'status' => 404,
 					)
@@ -396,11 +396,11 @@ class BBoss_REST_Subscriptions_Endpoint extends WP_REST_Controller {
 		$previous     = $this->prepare_item_for_response( $subscription, $request );
 
 		if ( ! bboss_delete_subscription( $subscription->id ) ) {
-			$error = __( 'There was a problem unsubscribing.', 'buddyboss-platform' );
+			$error = __( 'There was a problem unsubscribing.', 'buddyboss-community-social-network-groups-forums-messaging' );
 			if ( isset( $previous->data, $previous->data['title'] ) && ! empty( $previous->data['title'] ) ) {
 				$error = sprintf(
 				/* translators: %s is forum/discussion title */
-					__( 'There was a problem unsubscribing from %s', 'buddyboss-platform' ),
+					__( 'There was a problem unsubscribing from %s', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					$previous->data['title']
 				);
 			}
@@ -477,7 +477,7 @@ class BBoss_REST_Subscriptions_Endpoint extends WP_REST_Controller {
 	public function delete_item_permissions_check( $request ) {
 		$retval = new WP_Error(
 			'bp_rest_authorization_required',
-			__( 'Sorry, you need to be logged in to delete this subscription.', 'buddyboss-platform' ),
+			__( 'Sorry, you need to be logged in to delete this subscription.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			array(
 				'status' => rest_authorization_required_code(),
 			)
@@ -486,7 +486,7 @@ class BBoss_REST_Subscriptions_Endpoint extends WP_REST_Controller {
 		if ( is_user_logged_in() ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
-				__( 'Sorry, you are not allowed to delete this subscription.', 'buddyboss-platform' ),
+				__( 'Sorry, you are not allowed to delete this subscription.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				array(
 					'status' => rest_authorization_required_code(),
 				)
@@ -497,7 +497,7 @@ class BBoss_REST_Subscriptions_Endpoint extends WP_REST_Controller {
 			if ( empty( $subscription->id ) ) {
 				$retval = new WP_Error(
 					'bp_rest_subscription_invalid_id',
-					__( 'Invalid subscription ID.', 'buddyboss-platform' ),
+					__( 'Invalid subscription ID.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					array(
 						'status' => 404,
 					)
@@ -568,7 +568,7 @@ class BBoss_REST_Subscriptions_Endpoint extends WP_REST_Controller {
 	public function get_type_items_permissions_check( $request ) {
 		$retval = new WP_Error(
 			'bp_rest_authorization_required',
-			__( 'Sorry, you are not allowed to view subscription types.', 'buddyboss-platform' ),
+			__( 'Sorry, you are not allowed to view subscription types.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			array(
 				'status' => rest_authorization_required_code(),
 			)
@@ -866,7 +866,7 @@ class BBoss_REST_Subscriptions_Endpoint extends WP_REST_Controller {
 		$params['context']['default'] = 'view';
 
 		$params['exclude'] = array(
-			'description'       => __( 'Ensure result set excludes specific IDs.', 'buddyboss-platform' ),
+			'description'       => __( 'Ensure result set excludes specific IDs.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'default'           => array(),
 			'type'              => 'array',
 			'items'             => array( 'type' => 'integer' ),
@@ -875,7 +875,7 @@ class BBoss_REST_Subscriptions_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['include'] = array(
-			'description'       => __( 'Ensure result set includes specific IDs.', 'buddyboss-platform' ),
+			'description'       => __( 'Ensure result set includes specific IDs.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'default'           => array(),
 			'type'              => 'array',
 			'items'             => array( 'type' => 'integer' ),
@@ -884,7 +884,7 @@ class BBoss_REST_Subscriptions_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['order'] = array(
-			'description'       => __( 'Order sort attribute ascending or descending.', 'buddyboss-platform' ),
+			'description'       => __( 'Order sort attribute ascending or descending.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'default'           => 'desc',
 			'type'              => 'string',
 			'enum'              => array( 'asc', 'desc' ),
@@ -893,7 +893,7 @@ class BBoss_REST_Subscriptions_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['order_by'] = array(
-			'description'       => __( 'Order by a specific parameter.', 'buddyboss-platform' ),
+			'description'       => __( 'Order by a specific parameter.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'default'           => 'date_recorded',
 			'type'              => 'string',
 			'enum'              => array( 'id', 'type', 'item_id', 'date_recorded' ),
@@ -901,7 +901,7 @@ class BBoss_REST_Subscriptions_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['blog_id'] = array(
-			'description'       => __( 'The ID of the current blog site.', 'buddyboss-platform' ),
+			'description'       => __( 'The ID of the current blog site.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'default'           => get_current_blog_id(),
 			'type'              => 'integer',
 			'sanitize_callback' => 'absint',
@@ -909,7 +909,7 @@ class BBoss_REST_Subscriptions_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['type'] = array(
-			'description'       => __( 'Limit result set to items with a specific subscription type.', 'buddyboss-platform' ),
+			'description'       => __( 'Limit result set to items with a specific subscription type.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'type'              => 'string',
 			'enum'              => array_keys( bboss_get_subscriptions_types() ),
 			'sanitize_callback' => 'sanitize_key',
@@ -917,7 +917,7 @@ class BBoss_REST_Subscriptions_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['item_id'] = array(
-			'description'       => __( 'Limit result set to items with a specific prime association ID.', 'buddyboss-platform' ),
+			'description'       => __( 'Limit result set to items with a specific prime association ID.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'default'           => 0,
 			'type'              => 'integer',
 			'sanitize_callback' => 'absint',
@@ -925,7 +925,7 @@ class BBoss_REST_Subscriptions_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['secondary_id'] = array(
-			'description'       => __( 'Limit result set to items with a specific secondary association ID.', 'buddyboss-platform' ),
+			'description'       => __( 'Limit result set to items with a specific secondary association ID.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'default'           => 0,
 			'type'              => 'integer',
 			'sanitize_callback' => 'absint',
@@ -933,7 +933,7 @@ class BBoss_REST_Subscriptions_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['status'] = array(
-			'description'       => __( 'Limit result set to active subscriptions or not.', 'buddyboss-platform' ),
+			'description'       => __( 'Limit result set to active subscriptions or not.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'default'           => 1,
 			'type'              => 'integer',
 			'enum'              => array( 0, 1 ),
@@ -993,83 +993,83 @@ class BBoss_REST_Subscriptions_Endpoint extends WP_REST_Controller {
 			'properties' => array(
 				'id'                => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'A unique numeric ID for the subscription.', 'buddyboss-platform' ),
+					'description' => __( 'A unique numeric ID for the subscription.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'readonly'    => true,
 					'type'        => 'integer',
 				),
 				'blog_id'           => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'The ID of the current blog site.', 'buddyboss-platform' ),
+					'description' => __( 'The ID of the current blog site.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'type'        => 'integer',
 					'default'     => get_current_blog_id(),
 				),
 				'user_id'           => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'The ID of the user who created the subscription.', 'buddyboss-platform' ),
+					'description' => __( 'The ID of the user who created the subscription.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'type'        => 'integer',
 					'default'     => bboss_loggedin_user_id(),
 				),
 				'type'              => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'The type of the subscription.', 'buddyboss-platform' ),
+					'description' => __( 'The type of the subscription.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'enum'        => array_keys( bboss_get_subscriptions_types() ),
 					'type'        => 'string',
 				),
 				'item_id'           => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'The ID of subscription item.', 'buddyboss-platform' ),
+					'description' => __( 'The ID of subscription item.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'type'        => 'integer',
 				),
 				'secondary_item_id' => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'ID of the subscription item parent.', 'buddyboss-platform' ),
+					'description' => __( 'ID of the subscription item parent.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'type'        => 'integer',
 				),
 				'date_created'      => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'The date the Subscription was created, in the site\'s timezone.', 'buddyboss-platform' ),
+					'description' => __( 'The date the Subscription was created, in the site\'s timezone.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'readonly'    => true,
 					'type'        => 'string',
 					'format'      => 'date-time',
 				),
 				'status'            => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Whether to check the subscription is active or not.', 'buddyboss-platform' ),
+					'description' => __( 'Whether to check the subscription is active or not.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'type'        => 'integer',
 				),
 				'title'             => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Subscription item title.', 'buddyboss-platform' ),
+					'description' => __( 'Subscription item title.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'type'        => 'string',
 					'readonly'    => true,
 				),
 				'description_html'  => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Subscription item description.', 'buddyboss-platform' ),
+					'description' => __( 'Subscription item description.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'type'        => 'string',
 					'readonly'    => true,
 				),
 				'parent_html'       => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Subscription item parent title.', 'buddyboss-platform' ),
+					'description' => __( 'Subscription item parent title.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'type'        => 'string',
 					'readonly'    => true,
 				),
 				'icon'              => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Avatar/Image URLs of the item.', 'buddyboss-platform' ),
+					'description' => __( 'Avatar/Image URLs of the item.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'type'        => 'object',
 					'readonly'    => true,
 					'properties'  => array(
 						'full'  => array(
 							'context'     => array( 'embed', 'view', 'edit' ),
-							'description' => __( 'Avatar/Image URL with full image size.', 'buddyboss-platform' ),
+							'description' => __( 'Avatar/Image URL with full image size.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 							'type'        => 'string',
 							'format'      => 'uri',
 						),
 						'thumb' => array(
 							'context'     => array( 'embed', 'view', 'edit' ),
-							'description' => __( 'Avatar/Image URL with thumb image size.', 'buddyboss-platform' ),
+							'description' => __( 'Avatar/Image URL with thumb image size.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 							'type'        => 'string',
 							'format'      => 'uri',
 						),
@@ -1077,7 +1077,7 @@ class BBoss_REST_Subscriptions_Endpoint extends WP_REST_Controller {
 				),
 				'link'              => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Subscription item link.', 'buddyboss-platform' ),
+					'description' => __( 'Subscription item link.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'type'        => 'string',
 					'readonly'    => true,
 				),
@@ -1105,19 +1105,19 @@ class BBoss_REST_Subscriptions_Endpoint extends WP_REST_Controller {
 			'properties' => array(
 				'type'  => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'The type of the subscription.', 'buddyboss-platform' ),
+					'description' => __( 'The type of the subscription.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'type'        => 'string',
 					'readonly'    => true,
 				),
 				'label' => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Label of subscription type.', 'buddyboss-platform' ),
+					'description' => __( 'Label of subscription type.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'type'        => 'string',
 					'readonly'    => true,
 				),
 				'count' => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Count of the subscription items.', 'buddyboss-platform' ),
+					'description' => __( 'Count of the subscription items.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'type'        => 'string',
 					'readonly'    => true,
 				),
@@ -1158,7 +1158,7 @@ class BBoss_REST_Subscriptions_Endpoint extends WP_REST_Controller {
 
 		$retval = new WP_Error(
 			'bp_rest_authorization_required',
-			__( 'Sorry, you are not allowed to create subscription.', 'buddyboss-platform' ),
+			__( 'Sorry, you are not allowed to create subscription.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			array(
 				'status' => rest_authorization_required_code(),
 			)
@@ -1172,7 +1172,7 @@ class BBoss_REST_Subscriptions_Endpoint extends WP_REST_Controller {
 		if ( bboss_loggedin_user_id() !== $user_id ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
-				__( 'Sorry, you are not allowed to create subscription.', 'buddyboss-platform' ),
+				__( 'Sorry, you are not allowed to create subscription.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				array(
 					'status' => rest_authorization_required_code(),
 				)
@@ -1180,7 +1180,7 @@ class BBoss_REST_Subscriptions_Endpoint extends WP_REST_Controller {
 		} elseif ( empty( $item_id ) ) {
 			$retval = new WP_Error(
 				'bp_rest_subscription_required_item_id',
-				__( 'The item ID is required.', 'buddyboss-platform' ),
+				__( 'The item ID is required.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				array(
 					'status' => 400,
 				)
@@ -1188,7 +1188,7 @@ class BBoss_REST_Subscriptions_Endpoint extends WP_REST_Controller {
 		} elseif ( empty( $type ) ) {
 			$retval = new WP_Error(
 				'bp_rest_subscription_required_item_type',
-				__( 'The item type is required.', 'buddyboss-platform' ),
+				__( 'The item type is required.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				array(
 					'status' => 400,
 				)

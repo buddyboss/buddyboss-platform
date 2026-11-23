@@ -213,18 +213,18 @@ if ( ! class_exists( 'BBoss_BBP_BuddyPress_Activity' ) ) :
 				bboss_activity_set_action(
 					$key,
 					$this->topic_create,
-					esc_html__( 'New forum discussion', 'buddyboss-platform' ),
+					esc_html__( 'New forum discussion', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					array( $this, 'bbp_format_activity_action_new_topic' ),
-					esc_html__( 'Discussions', 'buddyboss-platform' ),
+					esc_html__( 'Discussions', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					$value
 				);
 
 				bboss_activity_set_action(
 					$key,
 					$this->reply_create,
-					esc_html__( 'New forum reply', 'buddyboss-platform' ),
+					esc_html__( 'New forum reply', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					array( $this, 'bbp_format_activity_action_new_reply' ),
-					esc_html__( 'Replies', 'buddyboss-platform' ),
+					esc_html__( 'Replies', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					$value
 				);
 			}
@@ -433,7 +433,7 @@ if ( ! class_exists( 'BBoss_BBP_BuddyPress_Activity' ) ) :
 			// Topic.
 			$topic_permalink = ( ! empty( $topic->ID ) && bboss_bbp_is_reply( $topic->ID ) ) ? bboss_bbp_get_reply_url( $topic->ID ) : bboss_bbp_get_topic_permalink( $topic_id );
 			$topic_title     = get_post_field( 'post_title', $topic_id, 'raw' );
-			$reply_to_text   = ( ! empty( $topic->ID ) && bboss_bbp_is_reply( $topic->ID ) ) ? sprintf( '<span class="bb-reply-lable">%1$s</span>', esc_html__( 'Reply to', 'buddyboss-platform' ) ) : '';
+			$reply_to_text   = ( ! empty( $topic->ID ) && bboss_bbp_is_reply( $topic->ID ) ) ? sprintf( '<span class="bb-reply-lable">%1$s</span>', esc_html__( 'Reply to', 'buddyboss-community-social-network-groups-forums-messaging' ) ) : '';
 
 			if ( ! bboss_is_rest() ) {
 				// Check if link embed or link preview and append the content accordingly.
@@ -516,8 +516,8 @@ if ( ! class_exists( 'BBoss_BBP_BuddyPress_Activity' ) ) :
 					'button_element'    => 'a',
 					'link_text'         => sprintf(
 						'<span class="bp-screen-reader-text">%1$s</span> <span class="comment-count">%2$s</span>',
-						__( 'Join Discussion', 'buddyboss-platform' ),
-						__( 'Join Discussion', 'buddyboss-platform' )
+						__( 'Join Discussion', 'buddyboss-community-social-network-groups-forums-messaging' ),
+						__( 'Join Discussion', 'buddyboss-community-social-network-groups-forums-messaging' )
 					),
 					'button_attr'       => array(
 						'class'         => 'button bb-icon-l bb-icon-comments-square bp-secondary-action',
@@ -565,8 +565,8 @@ if ( ! class_exists( 'BBoss_BBP_BuddyPress_Activity' ) ) :
 					'button_element'    => 'a',
 					'link_text'         => sprintf(
 						'<span class="bp-screen-reader-text">%1$s</span> <span class="comment-count">%2$s</span>',
-						__( 'Join Discussion', 'buddyboss-platform' ),
-						__( 'Join Discussion', 'buddyboss-platform' )
+						__( 'Join Discussion', 'buddyboss-community-social-network-groups-forums-messaging' ),
+						__( 'Join Discussion', 'buddyboss-community-social-network-groups-forums-messaging' )
 					),
 					'button_attr'       => array(
 						'class'         => 'button bb-icon-l bb-icon-comments-square bp-secondary-action',
@@ -959,7 +959,7 @@ if ( ! class_exists( 'BBoss_BBP_BuddyPress_Activity' ) ) :
 
 			return sprintf(
 				/* translators: 1: user profile link, 2: topic link, 3: group link. */
-				esc_html__( '%1$s started the discussion %2$s in the group %3$s', 'buddyboss-platform' ),
+				esc_html__( '%1$s started the discussion %2$s in the group %3$s', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				$user_link,
 				$topic_link,
 				$group_link
@@ -992,7 +992,7 @@ if ( ! class_exists( 'BBoss_BBP_BuddyPress_Activity' ) ) :
 
 			return sprintf(
 				/* translators: 1: user profile link, 2: topic link, 3: group link. */
-				esc_html__( '%1$s replied to the discussion %2$s in the group %3$s', 'buddyboss-platform' ),
+				esc_html__( '%1$s replied to the discussion %2$s in the group %3$s', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				$user_link,
 				$topic_link,
 				$group_link
@@ -1263,9 +1263,9 @@ if ( ! class_exists( 'BBoss_BBP_BuddyPress_Activity' ) ) :
 			// Filter & return.
 			return (array) apply_filters( 'bbp_get_activity_actions', array(
 				/* translators: 1: user profile link, 2: topic link, 3: forum link. */
-				'topic' => esc_html__( '%1$s started the discussion %2$s in the forum %3$s', 'buddyboss-platform' ),
+				'topic' => esc_html__( '%1$s started the discussion %2$s in the forum %3$s', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				/* translators: 1: user profile link, 2: topic link, 3: forum link. */
-				'reply' => esc_html__( '%1$s replied to the discussion %2$s in the forum %3$s', 'buddyboss-platform' )
+				'reply' => esc_html__( '%1$s replied to the discussion %2$s in the forum %3$s', 'buddyboss-community-social-network-groups-forums-messaging' )
 			) );
 		}
 	}

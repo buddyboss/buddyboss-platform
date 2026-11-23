@@ -115,11 +115,11 @@ function bboss_core_admin_backpat_page() {
 	$settings_url = add_query_arg( 'page', 'bp-components', $url ); ?>
 
 	<div class="wrap">
-		<h2><?php esc_html_e( 'Why have all my BuddyPress menus disappeared?', 'buddyboss-platform' ); ?></h2>
+		<h2><?php esc_html_e( 'Why have all my BuddyPress menus disappeared?', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></h2>
 
-		<p><?php esc_html_e( 'Don\'t worry! We\'ve moved the BuddyPress options into more convenient and easier to find locations. You\'re seeing this page because you are running a legacy BuddyPress plugin which has not been updated.', 'buddyboss-platform' ); ?></p>
+		<p><?php esc_html_e( 'Don\'t worry! We\'ve moved the BuddyPress options into more convenient and easier to find locations. You\'re seeing this page because you are running a legacy BuddyPress plugin which has not been updated.', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></p>
 		<?php /* translators: 1: Settings > BuddyPress URL, 2: Settings 2.0 profile fields URL. */ ?>
-		<p><?php echo wp_kses_post( sprintf( __( 'Components, Pages, Settings, and Forums, have been moved to <a href="%1$s">Settings &gt; BuddyPress</a>. Profile Fields has been moved to <a href="%2$s">Settings 2.0</a>.', 'buddyboss-platform' ), esc_url( $settings_url ), esc_url( bboss_get_feature_settings_url( 'members', 'profile_fields' ) ) ) ); ?></p>
+		<p><?php echo wp_kses_post( sprintf( __( 'Components, Pages, Settings, and Forums, have been moved to <a href="%1$s">Settings &gt; BuddyPress</a>. Profile Fields has been moved to <a href="%2$s">Settings 2.0</a>.', 'buddyboss-community-social-network-groups-forums-messaging' ), esc_url( $settings_url ), esc_url( bboss_get_feature_settings_url( 'members', 'profile_fields' ) ) ) ); ?></p>
 	</div>
 
 	<?php
@@ -254,7 +254,7 @@ function bboss_core_activation_notice() {
 	// Add notice if no rewrite rules are enabled.
 	if ( empty( $wp_rewrite->permalink_structure ) ) {
 		/* translators: %s: URL of the Pages settings screen. */
-		bboss_core_add_admin_notice( sprintf( __( '<strong>BuddyBoss Platform is almost ready</strong>. You must <a href="%s">update your permalink structure</a> to something other than the default for it to work.', 'buddyboss-platform' ), admin_url( 'options-permalink.php' ) ), 'error' );
+		bboss_core_add_admin_notice( sprintf( __( '<strong>BuddyBoss Platform is almost ready</strong>. You must <a href="%s">update your permalink structure</a> to something other than the default for it to work.', 'buddyboss-community-social-network-groups-forums-messaging' ), admin_url( 'options-permalink.php' ) ), 'error' );
 	}
 
 	// Get BuddyPress instance.
@@ -295,12 +295,12 @@ function bboss_core_activation_notice() {
 	if ( bboss_get_signup_allowed() && ! $allow_custom_registration ) {
 		$wp_page_components[] = array(
 			'id'   => 'activate',
-			'name' => __( 'Activate', 'buddyboss-platform' ),
+			'name' => __( 'Activate', 'buddyboss-community-social-network-groups-forums-messaging' ),
 		);
 
 		$wp_page_components[] = array(
 			'id'   => 'register',
-			'name' => __( 'Register', 'buddyboss-platform' ),
+			'name' => __( 'Register', 'buddyboss-community-social-network-groups-forums-messaging' ),
 		);
 	}
 
@@ -362,7 +362,7 @@ function bboss_core_activation_notice() {
 					/* translators: %s: comma-separated component names (wrapped in <strong>). */
 					__(
 						'The following active BuddyBoss Components do not have associated WordPress Pages: %s.',
-						'buddyboss-platform'
+						'buddyboss-community-social-network-groups-forums-messaging'
 					),
 					'<strong>' . implode(
 						'</strong>, <strong>',
@@ -377,7 +377,7 @@ function bboss_core_activation_notice() {
 					/* translators: %s: comma-separated component names (wrapped in <strong>). */
 					__(
 						'The following active BuddyBoss Components do not have associated WordPress Pages: %s.',
-						'buddyboss-platform'
+						'buddyboss-community-social-network-groups-forums-messaging'
 					),
 					'<strong>' . implode(
 						'</strong>, <strong>',
@@ -385,7 +385,7 @@ function bboss_core_activation_notice() {
 					) . '</strong>'
 				),
 				esc_url( $admin_url ),
-				__( 'Repair', 'buddyboss-platform' )
+				__( 'Repair', 'buddyboss-community-social-network-groups-forums-messaging' )
 			);
 		}
 
@@ -428,7 +428,7 @@ function bboss_core_activation_notice() {
 					/* translators: %s: comma-separated page names (wrapped in <strong>). */
 					__(
 						'Each BuddyBoss Component needs its own WordPress page. The following WordPress Pages have more than one component associated with them: %s.',
-						'buddyboss-platform'
+						'buddyboss-community-social-network-groups-forums-messaging'
 					),
 					'<strong>' . implode( '</strong>, <strong>', array_map( 'esc_html', $dupe_names ) ) . '</strong>'
 				)
@@ -440,12 +440,12 @@ function bboss_core_activation_notice() {
 					/* translators: %s: comma-separated page names (wrapped in <strong>). */
 					__(
 						'Each BuddyBoss Component needs its own WordPress page. The following WordPress Pages have more than one component associated with them: %s.',
-						'buddyboss-platform'
+						'buddyboss-community-social-network-groups-forums-messaging'
 					),
 					'<strong>' . implode( '</strong>, <strong>', array_map( 'esc_html', $dupe_names ) ) . '</strong>'
 				),
 				esc_url( $admin_url ),
-				__( 'Repair', 'buddyboss-platform' )
+				__( 'Repair', 'buddyboss-community-social-network-groups-forums-messaging' )
 			);
 		}
 
@@ -534,7 +534,7 @@ function bboss_print_legacy_theme_deprecated_notice() {
 	$theme_link = 'BuddyBoss Theme';
 	$message = sprintf(
 		/* translators: 1: link to the BuddyPress Legacy template documentation, 2: link to the BuddyBoss Theme. */
-		__( 'You are using an old theme and/or BuddyPress addon that relies on the older %1$s templates, and some things may not work properly. Consider switching to our %2$s and/or removing the BuddyPress addon that is using old methods.', 'buddyboss-platform' ),
+		__( 'You are using an old theme and/or BuddyPress addon that relies on the older %1$s templates, and some things may not work properly. Consider switching to our %2$s and/or removing the BuddyPress addon that is using old methods.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 		'<a href="https://www.buddyboss.com/resources/docs/development/theme-development/theme-compatibility/" target="_blank" rel="noopener">BuddyPress Legacy</a>',
 		$theme_link
 	);
@@ -737,7 +737,7 @@ function bboss_core_get_admin_tabs( $active_tab = '' ) {
 			// any page still rendering this tab bar (e.g. bp-help) doesn't
 			// have to depend on the bp-tools redirect to land users correctly.
 			'href'  => bboss_get_admin_url( add_query_arg( array( 'page' => 'bb-settings', 'tab' => 'tools' ), 'admin.php' ) ),
-			'name'  => __( 'Tools', 'buddyboss-platform' ),
+			'name'  => __( 'Tools', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'class' => 'bp-tools',
 		),
 		// '6' was the Help tab — intentionally left absent (Help moved to Settings 2.0).
@@ -989,15 +989,15 @@ function bboss_core_add_contextual_help( $screen = '' ) {
 			$screen->add_help_tab(
 				array(
 					'id'      => 'bp-comp-overview',
-					'title'   => __( 'Overview', 'buddyboss-platform' ),
+					'title'   => __( 'Overview', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'content' => bboss_core_add_contextual_help_content( 'bp-comp-overview' ),
 				)
 			);
 
 			// Help panel - sidebar links.
 			$screen->set_help_sidebar(
-				'<p><strong>' . __( 'For more information:', 'buddyboss-platform' ) . '</strong></p>' .
-				'<p>' . __( '<a href="https://www.buddyboss.com/resources/">Documentation</a>', 'buddyboss-platform' ) . '</p>'
+				'<p><strong>' . __( 'For more information:', 'buddyboss-community-social-network-groups-forums-messaging' ) . '</strong></p>' .
+				'<p>' . __( '<a href="https://www.buddyboss.com/resources/">Documentation</a>', 'buddyboss-community-social-network-groups-forums-messaging' ) . '</p>'
 			);
 
 			break;
@@ -1008,15 +1008,15 @@ function bboss_core_add_contextual_help( $screen = '' ) {
 			$screen->add_help_tab(
 				array(
 					'id'      => 'bp-page-overview',
-					'title'   => __( 'Overview', 'buddyboss-platform' ),
+					'title'   => __( 'Overview', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'content' => bboss_core_add_contextual_help_content( 'bp-page-overview' ),
 				)
 			);
 
 			// Help panel - sidebar links.
 			$screen->set_help_sidebar(
-				'<p><strong>' . __( 'For more information:', 'buddyboss-platform' ) . '</strong></p>' .
-				'<p>' . __( '<a href="https://www.buddyboss.com/resources/">Documentation</a>', 'buddyboss-platform' ) . '</p>'
+				'<p><strong>' . __( 'For more information:', 'buddyboss-community-social-network-groups-forums-messaging' ) . '</strong></p>' .
+				'<p>' . __( '<a href="https://www.buddyboss.com/resources/">Documentation</a>', 'buddyboss-community-social-network-groups-forums-messaging' ) . '</p>'
 			);
 
 			break;
@@ -1027,15 +1027,15 @@ function bboss_core_add_contextual_help( $screen = '' ) {
 			$screen->add_help_tab(
 				array(
 					'id'      => 'bp-settings-overview',
-					'title'   => __( 'Overview', 'buddyboss-platform' ),
+					'title'   => __( 'Overview', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'content' => bboss_core_add_contextual_help_content( 'bp-settings-overview' ),
 				)
 			);
 
 			// Help panel - sidebar links.
 			$screen->set_help_sidebar(
-				'<p><strong>' . __( 'For more information:', 'buddyboss-platform' ) . '</strong></p>' .
-				'<p>' . __( '<a href="https://www.buddyboss.com/resources/">Documentation</a>', 'buddyboss-platform' ) . '</p>'
+				'<p><strong>' . __( 'For more information:', 'buddyboss-community-social-network-groups-forums-messaging' ) . '</strong></p>' .
+				'<p>' . __( '<a href="https://www.buddyboss.com/resources/">Documentation</a>', 'buddyboss-community-social-network-groups-forums-messaging' ) . '</p>'
 			);
 
 			break;
@@ -1060,19 +1060,19 @@ function bboss_core_add_contextual_help_content( $tab = '' ) {
 
 	switch ( $tab ) {
 		case 'bp-comp-overview':
-			$retval = __( 'By default, several BuddyBoss components are enabled. You can selectively enable or disable any of the components by using the form below. Your BuddyBoss installation will continue to function. However, the features of the disabled components will no longer be accessible to anyone using the site.', 'buddyboss-platform' );
+			$retval = __( 'By default, several BuddyBoss components are enabled. You can selectively enable or disable any of the components by using the form below. Your BuddyBoss installation will continue to function. However, the features of the disabled components will no longer be accessible to anyone using the site.', 'buddyboss-community-social-network-groups-forums-messaging' );
 			break;
 
 		case 'bp-page-overview':
-			$retval = __( 'BuddyBoss Components use WordPress Pages for their root directory/archive pages. You can change the page associations for each active component by using the form below.', 'buddyboss-platform' );
+			$retval = __( 'BuddyBoss Components use WordPress Pages for their root directory/archive pages. You can change the page associations for each active component by using the form below.', 'buddyboss-community-social-network-groups-forums-messaging' );
 			break;
 
 		case 'bp-settings-overview':
-			$retval = __( 'Extra configuration settings are provided and activated. You can selectively enable or disable any setting by using the form on this screen.', 'buddyboss-platform' );
+			$retval = __( 'Extra configuration settings are provided and activated. You can selectively enable or disable any setting by using the form on this screen.', 'buddyboss-community-social-network-groups-forums-messaging' );
 			break;
 
 		case 'bp-profile-overview':
-			$retval = __( 'Your users will distinguish themselves through their profile page. Create relevant profile fields that will show on each users profile.', 'buddyboss-platform' ) . '<br /><br />' . __( 'Note: Any fields in the first group will appear on the signup page.', 'buddyboss-platform' );
+			$retval = __( 'Your users will distinguish themselves through their profile page. Create relevant profile fields that will show on each users profile.', 'buddyboss-community-social-network-groups-forums-messaging' ) . '<br /><br />' . __( 'Note: Any fields in the first group will appear on the signup page.', 'buddyboss-community-social-network-groups-forums-messaging' );
 			break;
 
 		default:
@@ -1270,17 +1270,17 @@ function bboss_admin_do_wp_nav_menu_meta_box() {
 
 	$tabs = array();
 
-	$tabs['loggedin']['label'] = __( 'Logged-In', 'buddyboss-platform' );
+	$tabs['loggedin']['label'] = __( 'Logged-In', 'buddyboss-community-social-network-groups-forums-messaging' );
 	$tabs['loggedin']['pages'] = bboss_nav_menu_get_loggedin_pages();
 
-	$tabs['loggedout']['label'] = __( 'Logged-Out', 'buddyboss-platform' );
+	$tabs['loggedout']['label'] = __( 'Logged-Out', 'buddyboss-community-social-network-groups-forums-messaging' );
 	$tabs['loggedout']['pages'] = bboss_nav_menu_get_loggedout_pages();
 
 	?>
 
 	<div id="buddypress-menu" class="posttypediv">
-		<h4><?php esc_html_e( 'Logged-In', 'buddyboss-platform' ); ?></h4>
-		<p><?php esc_html_e( '<em>Logged-In</em> links are relative to the current user, and are not visible to visitors who are not logged in.', 'buddyboss-platform' ); ?></p>
+		<h4><?php esc_html_e( 'Logged-In', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></h4>
+		<p><?php esc_html_e( '<em>Logged-In</em> links are relative to the current user, and are not visible to visitors who are not logged in.', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></p>
 
 		<div id="tabs-panel-posttype-<?php echo esc_attr( $post_type_name ); ?>-loggedin" class="tabs-panel tabs-panel-active">
 			<ul id="buddypress-menu-checklist-loggedin" class="categorychecklist form-no-clear">
@@ -1288,8 +1288,8 @@ function bboss_admin_do_wp_nav_menu_meta_box() {
 			</ul>
 		</div>
 
-		<h4><?php esc_html_e( 'Logged-Out', 'buddyboss-platform' ); ?></h4>
-		<p><?php esc_html_e( '<em>Logged-Out</em> links are not visible to users who are logged in.', 'buddyboss-platform' ); ?></p>
+		<h4><?php esc_html_e( 'Logged-Out', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></h4>
+		<p><?php esc_html_e( '<em>Logged-Out</em> links are not visible to users who are logged in.', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></p>
 
 		<div id="tabs-panel-posttype-<?php echo esc_attr( $post_type_name ); ?>-loggedout" class="tabs-panel tabs-panel-active">
 			<ul id="buddypress-menu-checklist-loggedout" class="categorychecklist form-no-clear">
@@ -1322,7 +1322,7 @@ function bboss_admin_do_wp_nav_menu_meta_box() {
 					)
 				);
 				?>
-				#buddypress-menu" class="select-all"><?php esc_html_e( 'Select All', 'buddyboss-platform' ); ?></a>
+				#buddypress-menu" class="select-all"><?php esc_html_e( 'Select All', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></a>
 			</span>
 			<span class="add-to-menu">
 				<input type="submit"
@@ -1331,7 +1331,7 @@ function bboss_admin_do_wp_nav_menu_meta_box() {
 					wp_nav_menu_disabled_check( $nav_menu_selected_id );
 				endif;
 				?>
-				class="button-secondary submit-add-to-menu right" value="<?php esc_attr_e( 'Add to Menu', 'buddyboss-platform' ); ?>" name="add-custom-menu-item" id="submit-buddypress-menu"/>
+				class="button-secondary submit-add-to-menu right" value="<?php esc_attr_e( 'Add to Menu', 'buddyboss-community-social-network-groups-forums-messaging' ); ?>" name="add-custom-menu-item" id="submit-buddypress-menu"/>
 				<span class="spinner"></span>
 			</span>
 		</p>
@@ -1361,7 +1361,7 @@ function bboss_admin_email_maybe_add_translation_notice() {
 	bboss_core_add_admin_notice(
 		sprintf(
 			/* translators: %s: URL of the BuddyBoss Tools screen. */
-			__( 'Are these emails not written in your site\'s language? Go to <a href="%s">BuddyBoss Tools and try the "reinstall emails"</a> tool.', 'buddyboss-platform' ),
+			__( 'Are these emails not written in your site\'s language? Go to <a href="%s">BuddyBoss Tools and try the "reinstall emails"</a> tool.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			esc_url(
 				add_query_arg(
 					array(
@@ -1392,7 +1392,7 @@ function bboss_admin_email_add_codex_notice() {
 	bboss_core_add_admin_notice(
 		sprintf(
 			/* translators: %s: URL of the email tokens documentation. */
-			__( 'Phrases wrapped in braces <code>{{ }}</code> are email tokens. <a href="%s">Learn about email tokens</a>.', 'buddyboss-platform' ),
+			__( 'Phrases wrapped in braces <code>{{ }}</code> are email tokens. <a href="%s">Learn about email tokens</a>.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			bboss_get_admin_url(
 				add_query_arg(
 					array(
@@ -1453,7 +1453,7 @@ function bboss_email_tax_type_metabox( $post, $box ) {
 			</ul>
 		</div>
 
-		<p><?php esc_html_e( 'Choose when this email will be sent.', 'buddyboss-platform' ); ?></p>
+		<p><?php esc_html_e( 'Choose when this email will be sent.', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></p>
 	</div>
 	<?php
 }
@@ -1466,7 +1466,7 @@ function bboss_email_tax_type_metabox( $post, $box ) {
 function bboss_email_custom_metaboxes() {
 	// Remove default 'Excerpt' metabox and replace with our own.
 	remove_meta_box( 'postexcerpt', null, 'normal' );
-	add_meta_box( 'postexcerpt', __( 'Plain text email content', 'buddyboss-platform' ), 'bboss_email_plaintext_metabox', null, 'normal', 'high' );
+	add_meta_box( 'postexcerpt', __( 'Plain text email content', 'buddyboss-community-social-network-groups-forums-messaging' ), 'bboss_email_plaintext_metabox', null, 'normal', 'high' );
 }
 
 add_action( 'add_meta_boxes_' . bboss_get_email_post_type(), 'bboss_email_custom_metaboxes' );
@@ -1486,13 +1486,13 @@ function bboss_email_plaintext_metabox( $post ) {
 	<label class="screen-reader-text" for="excerpt">
 		<?php
 		/* translators: accessibility text */
-		esc_html_e( 'Plain text email content', 'buddyboss-platform' );
+		esc_html_e( 'Plain text email content', 'buddyboss-community-social-network-groups-forums-messaging' );
 		?>
 	</label>
 	<textarea rows="5" cols="40" name="excerpt"
 						id="excerpt"><?php echo esc_textarea( $post->post_excerpt ); ?></textarea>
 
-	<p><?php esc_html_e( 'Most email clients support HTML email. However, some people prefer to receive plain text email. Enter a plain text alternative version of your email here.', 'buddyboss-platform' ); ?></p>
+	<p><?php esc_html_e( 'Most email clients support HTML email. However, some people prefer to receive plain text email. Enter a plain text alternative version of your email here.', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></p>
 	<!-- accesslint:endignore -->
 	<?php
 }
@@ -1582,10 +1582,10 @@ function bboss_core_admin_user_row_actions( $actions, $user_object ) {
 			// members is also deactivated the function is undefined. Gate the
 			// call so the row action degrades gracefully instead of fatalling.
 			if ( bboss_is_active( 'members' ) && function_exists( 'bboss_is_user_spammer' ) && bboss_is_user_spammer( $user_id ) ) {
-				$actions['ham'] = sprintf( '<a class="bp-show-moderation-alert" href="javascript:void(0);" data-action="not-spam">%1$s</a>', esc_html__( 'Not Spam', 'buddyboss-platform' ) );
+				$actions['ham'] = sprintf( '<a class="bp-show-moderation-alert" href="javascript:void(0);" data-action="not-spam">%1$s</a>', esc_html__( 'Not Spam', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 				// If not already spammed, create spam link.
 			} else {
-				$actions['spam'] = sprintf( '<a class="submitdelete bp-show-moderation-alert" href="javascript:void(0);" data-action="spam">%1$s</a>', esc_html__( 'Spam', 'buddyboss-platform' ) );
+				$actions['spam'] = sprintf( '<a class="submitdelete bp-show-moderation-alert" href="javascript:void(0);" data-action="spam">%1$s</a>', esc_html__( 'Spam', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 			}
 		} else {
 			if ( bboss_moderation_is_user_suspended( $user_id ) ) {
@@ -1603,8 +1603,8 @@ function bboss_core_admin_user_row_actions( $actions, $user_object ) {
 					'<a class="ham %1$s" href="%2$s" data-action="unsuspend" %3$s>%4$s</a>',
 					! empty( $meta_value ) ? 'disabled' : 'bp-unsuspend-user',
 					! empty( $meta_value ) ? '#' : esc_url( $unsuspend_link ),
-					! empty( $meta_value ) ? 'data-bp-tooltip-pos="up" data-bp-tooltip="' . esc_attr__( 'The background process is currently in the queue. Please refresh the page after a short while', 'buddyboss-platform' ) . '"' : '',
-					esc_html__( 'Unsuspend', 'buddyboss-platform' ),
+					! empty( $meta_value ) ? 'data-bp-tooltip-pos="up" data-bp-tooltip="' . esc_attr__( 'The background process is currently in the queue. Please refresh the page after a short while', 'buddyboss-community-social-network-groups-forums-messaging' ) . '"' : '',
+					esc_html__( 'Unsuspend', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				);
 
 				// If not already spammed, create spam link.
@@ -1623,8 +1623,8 @@ function bboss_core_admin_user_row_actions( $actions, $user_object ) {
 					'<a class="submitdelete %1$s" href="%2$s" data-action="suspend" %3$s>%4$s</a>',
 					! empty( $meta_value ) ? 'disabled' : 'bp-suspend-user',
 					! empty( $meta_value ) ? '#' : esc_url( $suspend_link ),
-					! empty( $meta_value ) ? 'data-bp-tooltip-pos="up" data-bp-tooltip="' . esc_attr__( 'The background process is currently in the queue. Please refresh the page after a short while', 'buddyboss-platform' ) . '"' : '',
-					esc_html__( 'Suspend', 'buddyboss-platform' )
+					! empty( $meta_value ) ? 'data-bp-tooltip-pos="up" data-bp-tooltip="' . esc_attr__( 'The background process is currently in the queue. Please refresh the page after a short while', 'buddyboss-community-social-network-groups-forums-messaging' ) . '"' : '',
+					esc_html__( 'Suspend', 'buddyboss-community-social-network-groups-forums-messaging' )
 				);
 			}
 
@@ -1634,7 +1634,7 @@ function bboss_core_admin_user_row_actions( $actions, $user_object ) {
 
 	// Create a "View" link.
 	$url             = bboss_core_get_user_domain( $user_id );
-	$actions['view'] = sprintf( '<a href="%1$s">%2$s</a>', esc_url( $url ), esc_html__( 'View', 'buddyboss-platform' ) );
+	$actions['view'] = sprintf( '<a href="%1$s">%2$s</a>', esc_url( $url ), esc_html__( 'View', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 
 	// Return new actions.
 	return $actions;
@@ -1706,9 +1706,9 @@ function bboss_core_admin_user_manage_spammers() {
 	if ( ! empty( $updated ) && in_array( $updated, array( 'marked-suspend', 'marked-unsuspend' ) ) ) {
 
 		if ( 'marked-suspend' === $updated ) {
-			$notice = __( 'Member suspended.', 'buddyboss-platform' );
+			$notice = __( 'Member suspended.', 'buddyboss-community-social-network-groups-forums-messaging' );
 		} else {
-			$notice = __( 'Member unsuspended.', 'buddyboss-platform' );
+			$notice = __( 'Member unsuspended.', 'buddyboss-community-social-network-groups-forums-messaging' );
 		}
 
 		bboss_core_add_admin_notice( $notice );
@@ -1926,7 +1926,7 @@ function bboss_core_admin_create_background_page() {
 	}
 
 	$response = array(
-		'feedback' => __( 'Added successfully', 'buddyboss-platform' ),
+		'feedback' => __( 'Added successfully', 'buddyboss-community-social-network-groups-forums-messaging' ),
 		'type'     => 'success',
 		'url'      => add_query_arg(
 			array(
@@ -1954,7 +1954,7 @@ function bboss_discussion_page_show_notice_in_avatar_section() {
 
 		$avatar_notice = sprintf(
 			/* translators: %s: URL of the Discussion settings screen. */
-			__( 'Profile avatars are currently provided by the BuddyBoss Platform. To use the WordPress avatar system, change the <strong>Profile Avatars</strong> setting to "WordPress" in the <a href="%s">Profile</a> settings.', 'buddyboss-platform' ),
+			__( 'Profile avatars are currently provided by the BuddyBoss Platform. To use the WordPress avatar system, change the <strong>Profile Avatars</strong> setting to "WordPress" in the <a href="%s">Profile</a> settings.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			add_query_arg(
 				array(
 					'page' => 'bp-settings',
@@ -2099,7 +2099,7 @@ function bboss_document_ajax_check_file_mime_type() {
 	check_ajax_referer( 'bb_admin_settings', 'nonce' );
 
 	if ( ! bboss_current_user_can( 'bp_moderate' ) ) {
-		wp_send_json_error( array( 'message' => __( 'Unauthorized.', 'buddyboss-platform' ) ) );
+		wp_send_json_error( array( 'message' => __( 'Unauthorized.', 'buddyboss-community-social-network-groups-forums-messaging' ) ) );
 	}
 
 	$response = array();
@@ -2176,14 +2176,14 @@ function bboss_core_get_moderation_admin_tabs( $active_tab = '' ) {
 	if ( bboss_is_moderation_member_blocking_enable() ) {
 		$tabs[] = array(
 			'href'  => bboss_get_admin_url( 'admin.php?page=bb-settings&tab=moderation&panel=flagged_members' ),
-			'name'  => esc_html__( 'Flagged Members', 'buddyboss-platform' ),
+			'name'  => esc_html__( 'Flagged Members', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'class' => 'bp-blocked-members',
 		);
 	}
 
 	$tabs[] = array(
 		'href'  => bboss_get_admin_url( 'admin.php?page=bb-settings&tab=moderation&panel=reported_content' ),
-		'name'  => esc_html__( 'Reported Content', 'buddyboss-platform' ),
+		'name'  => esc_html__( 'Reported Content', 'buddyboss-community-social-network-groups-forums-messaging' ),
 		'class' => 'bp-reported-content',
 	);
 
@@ -2219,9 +2219,9 @@ function bboss_get_pro_label_notice( $type = 'default' ) {
 	if ( function_exists( 'bb_platform_pro' ) && version_compare( bb_platform_pro()->version, '1.1.9.1', '<=' ) ) {
 		$bb_pro_notice = sprintf(
 			'<br/><span class="bb-head-notice"> %1$s <strong>%2$s</strong> %3$s</span>',
-			esc_html__( 'Update to', 'buddyboss-platform' ),
-			esc_html__( 'BuddyBoss Platform Pro 1.2.0', 'buddyboss-platform' ),
-			esc_html__( 'to unlock', 'buddyboss-platform' )
+			esc_html__( 'Update to', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			esc_html__( 'BuddyBoss Platform Pro 1.2.0', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			esc_html__( 'to unlock', 'buddyboss-community-social-network-groups-forums-messaging' )
 		);
 	} elseif (
 		function_exists( 'bb_platform_pro' ) &&
@@ -2255,18 +2255,18 @@ function bboss_get_pro_label_notice( $type = 'default' ) {
 	) {
 		$bb_pro_notice = sprintf(
 			'<br/><span class="bb-head-notice"> %1$s <strong>%2$s</strong> %3$s</span>',
-			esc_html__( 'Update', 'buddyboss-platform' ),
-			esc_html__( 'BuddyBoss Platform Pro', 'buddyboss-platform' ),
-			esc_html__( 'to unlock', 'buddyboss-platform' )
+			esc_html__( 'Update', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			esc_html__( 'BuddyBoss Platform Pro', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			esc_html__( 'to unlock', 'buddyboss-community-social-network-groups-forums-messaging' )
 		);
 	} elseif ( ! function_exists( 'bb_platform_pro' ) || ( function_exists( 'bb_pro_should_lock_features' ) ? bb_pro_should_lock_features() : ! bbp_pro_is_license_valid() ) ) {
 		// Builds without upsell links (the wordpress.org edition) add no "Install ... to unlock" notice.
 		// @bbwt-com-start pro-field-upgrade-links
 		$bb_pro_notice = sprintf(
 			'<br/><span class="bb-head-notice"> %1$s <a target="_blank" href="https://www.buddyboss.com/platform/">%2$s</a> %3$s</span>',
-			esc_html__( 'Install', 'buddyboss-platform' ),
-			esc_html__( 'BuddyBoss Platform Pro', 'buddyboss-platform' ),
-			esc_html__( 'to unlock', 'buddyboss-platform' )
+			esc_html__( 'Install', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			esc_html__( 'BuddyBoss Platform Pro', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			esc_html__( 'to unlock', 'buddyboss-community-social-network-groups-forums-messaging' )
 		);
 		// @bbwt-com-end pro-field-upgrade-links
 	}
@@ -2482,14 +2482,14 @@ function bboss_sync_blogs_component_state( $is_feed_enabled_cb ) {
 function bboss_admin_verify_ajax_request( $nonce_action ) {
 	if ( ! bboss_current_user_can( 'bp_moderate' ) ) {
 		wp_send_json_error(
-			array( 'message' => __( 'Permission denied.', 'buddyboss-platform' ) ),
+			array( 'message' => __( 'Permission denied.', 'buddyboss-community-social-network-groups-forums-messaging' ) ),
 			403
 		);
 	}
 
 	if ( ! check_ajax_referer( $nonce_action, 'nonce', false ) ) {
 		wp_send_json_error(
-			array( 'message' => __( 'Security check failed.', 'buddyboss-platform' ) ),
+			array( 'message' => __( 'Security check failed.', 'buddyboss-community-social-network-groups-forums-messaging' ) ),
 			403
 		);
 	}

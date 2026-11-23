@@ -24,8 +24,8 @@ class BBoss_Group_Members_Widget extends WP_Widget {
 	public function __construct() {
 		parent::__construct(
 			'bb_group_members_widget',
-			esc_html__( 'Group Members', 'buddyboss-platform' ),
-			array( 'description' => esc_html__( 'Displays group members with tabs.', 'buddyboss-platform' ) )
+			esc_html__( 'Group Members', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			array( 'description' => esc_html__( 'Displays group members with tabs.', 'buddyboss-community-social-network-groups-forums-messaging' ) )
 		);
 
 		add_action( 'wp_ajax_widget_groups_members_list', array( $this, 'groups_ajax_widget_groups_members_list' ) );
@@ -158,7 +158,7 @@ class BBoss_Group_Members_Widget extends WP_Widget {
 		} else {
 			?>
 			<li class="bb-rl-group-members-empty widget-error">
-				<?php esc_html_e( 'There are no members to display.', 'buddyboss-platform' ); ?>
+				<?php esc_html_e( 'There are no members to display.', 'buddyboss-community-social-network-groups-forums-messaging' ); ?>
 			</li>
 			<?php
 		}
@@ -195,22 +195,22 @@ class BBoss_Group_Members_Widget extends WP_Widget {
 		$tabs        = array(
 			'active'      => array(
 				'id'    => 'bb-rl-active-groups-members',
-				'label' => __( 'Active', 'buddyboss-platform' ),
+				'label' => __( 'Active', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			),
 			'last_joined' => array(
 				'id'    => 'bb-rl-newest-groups-members',
-				'label' => __( 'New', 'buddyboss-platform' ),
+				'label' => __( 'New', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			),
 			'popular'     => array(
 				'id'    => 'bb-rl-popular-groups-members',
-				'label' => __( 'Popular', 'buddyboss-platform' ),
+				'label' => __( 'Popular', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			),
 		);
 		?>
 		<div class="widget-header">
-			<h2 class="widget-title"><?php esc_html_e( 'Group members', 'buddyboss-platform' ); ?></h2>
+			<h2 class="widget-title"><?php esc_html_e( 'Group members', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></h2>
 			<a href="<?php echo esc_url( bboss_get_group_permalink( bboss_groups_get_group( $group_id ) ) ); ?>" class="widget-link">
-				<?php esc_html_e( 'See all', 'buddyboss-platform' ); ?>
+				<?php esc_html_e( 'See all', 'buddyboss-community-social-network-groups-forums-messaging' ); ?>
 			</a>
 		</div>
 		<div class="bb-rl-group-members-list-options item-options" id="bb-rl-groups-members-list-options">

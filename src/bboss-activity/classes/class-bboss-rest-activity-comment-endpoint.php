@@ -77,7 +77,7 @@ class BBoss_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 			array(
 				'args'        => array(
 					'comment_id' => array(
-						'description' => __( 'A unique numeric ID for the activity comment.', 'buddyboss-platform' ),
+						'description' => __( 'A unique numeric ID for the activity comment.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 						'type'        => 'integer',
 					),
 				),
@@ -136,7 +136,7 @@ class BBoss_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 		if ( empty( $activity->id ) ) {
 			return new WP_Error(
 				'bp_rest_invalid_id',
-				__( 'Invalid activity ID.', 'buddyboss-platform' ),
+				__( 'Invalid activity ID.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				array(
 					'status' => 404,
 				)
@@ -197,7 +197,7 @@ class BBoss_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 		if ( function_exists( 'bboss_rest_enable_private_network' ) && true === bboss_rest_enable_private_network() && ! is_user_logged_in() ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
-				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss-platform' ),
+				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				array(
 					'status' => rest_authorization_required_code(),
 				)
@@ -207,7 +207,7 @@ class BBoss_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 		if ( true === $retval && ! bboss_is_active( 'activity' ) ) {
 			$retval = new WP_Error(
 				'bp_rest_component_required',
-				__( 'Sorry, Activity component was not enabled.', 'buddyboss-platform' ),
+				__( 'Sorry, Activity component was not enabled.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				array(
 					'status' => '404',
 				)
@@ -217,7 +217,7 @@ class BBoss_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 		if ( true === $retval && ! $this->can_see( $request ) ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
-				__( 'Sorry, you cannot view the activity comment.', 'buddyboss-platform' ),
+				__( 'Sorry, you cannot view the activity comment.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				array(
 					'status' => rest_authorization_required_code(),
 				)
@@ -259,7 +259,7 @@ class BBoss_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 		if ( empty( $activity_comment->id ) ) {
 			return new WP_Error(
 				'bp_rest_invalid_id',
-				__( 'Invalid activity comment ID.', 'buddyboss-platform' ),
+				__( 'Invalid activity comment ID.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				array(
 					'status' => 404,
 				)
@@ -267,7 +267,7 @@ class BBoss_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 		} elseif ( $activity_comment->item_id !== (int) $request['id'] ) {
 			return new WP_Error(
 				'bp_rest_invalid_id',
-				__( 'Invalid activity ID.', 'buddyboss-platform' ),
+				__( 'Invalid activity ID.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				array(
 					'status' => 404,
 				)
@@ -310,7 +310,7 @@ class BBoss_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 		if ( function_exists( 'bboss_rest_enable_private_network' ) && true === bboss_rest_enable_private_network() && ! is_user_logged_in() ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
-				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss-platform' ),
+				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				array(
 					'status' => rest_authorization_required_code(),
 				)
@@ -320,7 +320,7 @@ class BBoss_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 		if ( true === $retval && ! $this->can_see( $request ) ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
-				__( 'Sorry, you cannot view the activity comment.', 'buddyboss-platform' ),
+				__( 'Sorry, you cannot view the activity comment.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				array(
 					'status' => rest_authorization_required_code(),
 				)
@@ -362,7 +362,7 @@ class BBoss_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 		if ( true === $this->activity_endpoint->bp_rest_activity_content_validate( $request ) ) {
 			return new WP_Error(
 				'bp_rest_comment_blank_content',
-				__( 'Please do not leave the comment area blank.', 'buddyboss-platform' ),
+				__( 'Please do not leave the comment area blank.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				array(
 					'status' => 400,
 				)
@@ -379,7 +379,7 @@ class BBoss_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 				if ( ! $can_send_media ) {
 					return new WP_Error(
 						'bp_rest_bp_activity_media',
-						__( 'You don\'t have access to send the media.', 'buddyboss-platform' ),
+						__( 'You don\'t have access to send the media.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 						array(
 							'status' => 400,
 						)
@@ -392,7 +392,7 @@ class BBoss_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 				if ( ! $can_send_document ) {
 					return new WP_Error(
 						'bp_rest_bp_activity_document',
-						__( 'You don\'t have access to send the document.', 'buddyboss-platform' ),
+						__( 'You don\'t have access to send the document.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 						array(
 							'status' => 400,
 						)
@@ -405,7 +405,7 @@ class BBoss_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 				if ( ! $can_send_video ) {
 					return new WP_Error(
 						'bp_rest_bp_activity_video',
-						__( 'You don\'t have access to send the video.', 'buddyboss-platform' ),
+						__( 'You don\'t have access to send the video.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 						array(
 							'status' => 400,
 						)
@@ -418,7 +418,7 @@ class BBoss_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 				if ( ! $can_send_gif ) {
 					return new WP_Error(
 						'bp_rest_bp_activity_gif',
-						__( 'You don\'t have access to send the gif.', 'buddyboss-platform' ),
+						__( 'You don\'t have access to send the gif.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 						array(
 							'status' => 400,
 						)
@@ -452,7 +452,7 @@ class BBoss_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 
 			return new WP_Error(
 				'comment_error',
-				is_wp_error( $comment_id ) ? esc_html( $comment_id->get_error_message() ) : __( 'There was an error posting your reply. Please try again.', 'buddyboss-platform' ),
+				is_wp_error( $comment_id ) ? esc_html( $comment_id->get_error_message() ) : __( 'There was an error posting your reply. Please try again.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				array(
 					'status' => isset( $status_by_code[ $error_code ] ) ? $status_by_code[ $error_code ] : 500,
 				)
@@ -526,7 +526,7 @@ class BBoss_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 	public function create_item_permissions_check( $request ) {
 		$retval = new WP_Error(
 			'bp_rest_authorization_required',
-			__( 'Sorry, you are not allowed to create an activity comment.', 'buddyboss-platform' ),
+			__( 'Sorry, you are not allowed to create an activity comment.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			array(
 				'status' => rest_authorization_required_code(),
 			)
@@ -539,7 +539,7 @@ class BBoss_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 			if ( empty( $activity ) || empty( $activity->id ) ) {
 				$retval = new WP_Error(
 					'bp_rest_invalid_id',
-					__( 'Invalid activity ID.', 'buddyboss-platform' ),
+					__( 'Invalid activity ID.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					array(
 						'status' => 404,
 					)
@@ -548,7 +548,7 @@ class BBoss_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 				// Commenting returns the whole thread, so the user must be able to read the activity.
 				$retval = new WP_Error(
 					'bp_rest_authorization_required',
-					__( 'Sorry, you are not allowed to create an activity comment.', 'buddyboss-platform' ),
+					__( 'Sorry, you are not allowed to create an activity comment.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					array(
 						'status' => rest_authorization_required_code(),
 					)
@@ -560,7 +560,7 @@ class BBoss_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 			) {
 				$retval = new WP_Error(
 					'bp_rest_authorization_required',
-					__( 'Sorry, you are not allowed to create an activity comment. The comments are closed for the activity.', 'buddyboss-platform' ),
+					__( 'Sorry, you are not allowed to create an activity comment. The comments are closed for the activity.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					array(
 						'status' => rest_authorization_required_code(),
 					)
@@ -708,7 +708,7 @@ class BBoss_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 	public function update_item_permissions_check( $request ) {
 		$retval = new WP_Error(
 			'bp_rest_authorization_required',
-			__( 'Sorry, you are not allowed to update this activity comment.', 'buddyboss-platform' ),
+			__( 'Sorry, you are not allowed to update this activity comment.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			array(
 				'status' => rest_authorization_required_code(),
 			)
@@ -720,7 +720,7 @@ class BBoss_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 			if ( empty( $activity_comment->id ) ) {
 				$retval = new WP_Error(
 					'bp_rest_invalid_id',
-					__( 'Invalid activity comment ID.', 'buddyboss-platform' ),
+					__( 'Invalid activity comment ID.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					array(
 						'status' => 404,
 					)
@@ -733,7 +733,7 @@ class BBoss_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 			) {
 				$retval = new WP_Error(
 					'bp_rest_authorization_required',
-					__( 'Sorry, you are not allowed to update this activity comment. The comments are closed for the activity.', 'buddyboss-platform' ),
+					__( 'Sorry, you are not allowed to update this activity comment. The comments are closed for the activity.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					array(
 						'status' => rest_authorization_required_code(),
 					)
@@ -750,7 +750,7 @@ class BBoss_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 			) {
 				$retval = new WP_Error(
 					'bp_rest_authorization_required',
-					__( 'Sorry, you are not allowed to update this activity comment.', 'buddyboss-platform' ),
+					__( 'Sorry, you are not allowed to update this activity comment.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					array(
 						'status' => rest_authorization_required_code(),
 					)
@@ -801,7 +801,7 @@ class BBoss_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 		if ( ! $retval ) {
 			return new WP_Error(
 				'bp_rest_activity_comment_cannot_delete',
-				__( 'Could not delete the activity comment.', 'buddyboss-platform' ),
+				__( 'Could not delete the activity comment.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				array(
 					'status' => 500,
 				)
@@ -842,7 +842,7 @@ class BBoss_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 	public function delete_item_permissions_check( $request ) {
 		$retval = new WP_Error(
 			'bp_rest_authorization_required',
-			__( 'Sorry, you are not allowed to delete this activity comment.', 'buddyboss-platform' ),
+			__( 'Sorry, you are not allowed to delete this activity comment.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			array(
 				'status' => rest_authorization_required_code(),
 			)
@@ -854,7 +854,7 @@ class BBoss_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 			if ( empty( $activity_comment->id ) ) {
 				$retval = new WP_Error(
 					'bp_rest_invalid_id',
-					__( 'Invalid activity comment ID.', 'buddyboss-platform' ),
+					__( 'Invalid activity comment ID.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					array(
 						'status' => 404,
 					)
@@ -862,7 +862,7 @@ class BBoss_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 			} elseif ( $activity_comment->item_id !== (int) $request['id'] ) {
 				$retval = new WP_Error(
 					'bp_rest_invalid_id',
-					__( 'Invalid activity ID.', 'buddyboss-platform' ),
+					__( 'Invalid activity ID.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					array(
 						'status' => 404,
 					)
@@ -901,14 +901,14 @@ class BBoss_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 			$args['context']['default'] = 'edit';
 
 			$args['content'] = array(
-				'description'       => __( 'The content for the comment.', 'buddyboss-platform' ),
+				'description'       => __( 'The content for the comment.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				'required'          => false,
 				'type'              => 'string',
 				'validate_callback' => 'rest_validate_request_arg',
 			);
 
 			$args['parent_id'] = array(
-				'description'       => __( 'Parent comment ID.', 'buddyboss-platform' ),
+				'description'       => __( 'Parent comment ID.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				'type'              => 'integer',
 				'sanitize_callback' => 'absint',
 				'validate_callback' => 'rest_validate_request_arg',
@@ -940,13 +940,13 @@ class BBoss_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 			'properties' => array(
 				'created'  => array(
 					'context'     => array( 'embed', 'edit' ),
-					'description' => __( 'Whether the comment created or not.', 'buddyboss-platform' ),
+					'description' => __( 'Whether the comment created or not.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'type'        => 'boolean',
 					'readonly'    => true,
 				),
 				'comments' => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'A list of comments for activity.', 'buddyboss-platform' ),
+					'description' => __( 'A list of comments for activity.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'type'        => 'object',
 					'readonly'    => true,
 					'properties'  => $this->activity_endpoint->get_item_schema()['properties'],
@@ -976,13 +976,13 @@ class BBoss_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 		unset( $params['search'], $params['page'], $params['per_page'] );
 
 		$params['id'] = array(
-			'description' => __( 'A unique numeric ID for the activity.', 'buddyboss-platform' ),
+			'description' => __( 'A unique numeric ID for the activity.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'type'        => 'integer',
 			'required'    => true,
 		);
 
 		$params['display_comments'] = array(
-			'description'       => __( 'Comments by default, stream for within stream display, threaded for below each activity item.', 'buddyboss-platform' ),
+			'description'       => __( 'Comments by default, stream for within stream display, threaded for below each activity item.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'default'           => 'threaded',
 			'enum'              => array( 'stream', 'threaded' ),
 			'type'              => 'string',
@@ -1102,7 +1102,7 @@ class BBoss_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 		if ( true === $this->activity_endpoint->bp_rest_activity_content_validate( $request ) ) {
 			$is_validate = new WP_Error(
 				'bp_rest_comment_blank_content',
-				__( 'Please do not leave the comment area blank.', 'buddyboss-platform' ),
+				__( 'Please do not leave the comment area blank.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				array(
 					'status' => 400,
 				)
@@ -1119,7 +1119,7 @@ class BBoss_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 				if ( ! $can_send_media ) {
 					$is_validate = new WP_Error(
 						'bp_rest_bp_activity_media',
-						__( 'You don\'t have access to send the media.', 'buddyboss-platform' ),
+						__( 'You don\'t have access to send the media.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 						array(
 							'status' => 400,
 						)
@@ -1132,7 +1132,7 @@ class BBoss_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 				if ( ! $can_send_document ) {
 					$is_validate = new WP_Error(
 						'bp_rest_bp_activity_document',
-						__( 'You don\'t have access to send the document.', 'buddyboss-platform' ),
+						__( 'You don\'t have access to send the document.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 						array(
 							'status' => 400,
 						)
@@ -1145,7 +1145,7 @@ class BBoss_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 				if ( ! $can_send_video ) {
 					$is_validate = new WP_Error(
 						'bp_rest_bp_activity_video',
-						__( 'You don\'t have access to send the video.', 'buddyboss-platform' ),
+						__( 'You don\'t have access to send the video.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 						array(
 							'status' => 400,
 						)
@@ -1158,7 +1158,7 @@ class BBoss_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 				if ( ! $can_send_gif ) {
 					$is_validate = new WP_Error(
 						'bp_rest_bp_activity_gif',
-						__( 'You don\'t have access to send the gif.', 'buddyboss-platform' ),
+						__( 'You don\'t have access to send the gif.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 						array(
 							'status' => 400,
 						)

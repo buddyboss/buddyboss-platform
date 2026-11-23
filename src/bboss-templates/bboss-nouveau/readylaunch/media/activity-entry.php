@@ -58,7 +58,7 @@ $more_media     = $media_count > $max_length;
 		if ( $can_move || $can_delete ) {
 			if ( bboss_loggedin_user_id() === $media_user_id || bboss_current_user_can( 'bp_moderate' ) ) {
 				?>
-				<a href="#" class="bb_rl_more_dropdown__action" data-balloon-pos="up" data-balloon="<?php esc_attr_e( 'More actions', 'buddyboss-platform' ); ?>">
+				<a href="#" class="bb_rl_more_dropdown__action" data-balloon-pos="up" data-balloon="<?php esc_attr_e( 'More actions', 'buddyboss-community-social-network-groups-forums-messaging' ); ?>">
 					<i class="bb-icons-rl-dots-three"></i>
 				</a>
 				<div class="bb-rl-media-action_list bb_rl_more_dropdown">
@@ -67,14 +67,14 @@ $more_media     = $media_count > $max_length;
 						if ( ! in_array( $db_privacy, array( 'forums', 'message' ), true ) ) {
 							if ( $is_comment_pic ) {
 								?>
-								<li class="bb_rl_move_file bb-rl-media-action-class bb-rl-move-disabled" data-balloon-pos="down" data-balloon="<?php esc_html_e( 'Photo inherits activity privacy in comment. You are not allowed to move.', 'buddyboss-platform' ); ?>">
-									<a href="#"><?php esc_attr_e( 'Move', 'buddyboss-platform' ); ?></a>
+								<li class="bb_rl_move_file bb-rl-media-action-class bb-rl-move-disabled" data-balloon-pos="down" data-balloon="<?php esc_html_e( 'Photo inherits activity privacy in comment. You are not allowed to move.', 'buddyboss-community-social-network-groups-forums-messaging' ); ?>">
+									<a href="#"><?php esc_attr_e( 'Move', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></a>
 								</li>
 								<?php
 							} elseif ( $can_move ) {
 								?>
 								<li class="bb_rl_move_file bb-rl-media-action-class">
-									<a href="#" data-media-id="<?php echo esc_attr( $bp_get_media_id ); ?>" data-action="activity" data-parent-activity-id="<?php echo esc_attr( $media_parent_activity_id ); ?>" data-item-activity-id="<?php echo esc_attr( $media_activity_id ); ?>" data-type="<?php echo esc_attr( $move_type ); ?>" id="<?php echo esc_attr( $move_id ); ?>" class="ac-media-move"><?php esc_attr_e( 'Move', 'buddyboss-platform' ); ?></a>
+									<a href="#" data-media-id="<?php echo esc_attr( $bp_get_media_id ); ?>" data-action="activity" data-parent-activity-id="<?php echo esc_attr( $media_parent_activity_id ); ?>" data-item-activity-id="<?php echo esc_attr( $media_activity_id ); ?>" data-type="<?php echo esc_attr( $move_type ); ?>" id="<?php echo esc_attr( $move_id ); ?>" class="ac-media-move"><?php esc_attr_e( 'Move', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></a>
 								</li>
 								<?php
 							}
@@ -83,7 +83,7 @@ $more_media     = $media_count > $max_length;
 							$item_id = ( bboss_is_active( 'activity' ) ) ? ( bboss_get_activity_comment_id() ?? bboss_get_activity_id() ) : 0;
 							?>
 							<li class="bb_rl_delete_file bb-rl-media-action-class">
-								<a class="bb-rl-media-file-delete" data-item-activity-id="<?php echo esc_attr( $item_id ); ?>" data-parent-activity-id="<?php echo esc_attr( $media_parent_activity_id ); ?>" data-item-from="activity" data-item-id="<?php echo esc_attr( $bp_get_media_id ); ?>" data-type="media" href="#"><?php esc_html_e( 'Delete', 'buddyboss-platform' ); ?></a>
+								<a class="bb-rl-media-file-delete" data-item-activity-id="<?php echo esc_attr( $item_id ); ?>" data-parent-activity-id="<?php echo esc_attr( $media_parent_activity_id ); ?>" data-item-from="activity" data-item-id="<?php echo esc_attr( $bp_get_media_id ); ?>" data-type="media" href="#"><?php esc_html_e( 'Delete', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></a>
 							</li>
 							<?php
 						}
@@ -113,7 +113,7 @@ $more_media     = $media_count > $max_length;
 		if ( $media_count > $max_length && ( $max_length - 1 ) === $media_template->current_media ) {
 			$count = $media_count - $max_length;
 			?>
-			<span class="bb-rl-photos-length"><span><strong>+<?php echo esc_html( $count ); ?></strong> <span><?php esc_html_e( 'more photos', 'buddyboss-platform' ); ?></span></span></span>
+			<span class="bb-rl-photos-length"><span><strong>+<?php echo esc_html( $count ); ?></strong> <span><?php esc_html_e( 'more photos', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></span></span></span>
 			<?php
 		}
 		?>

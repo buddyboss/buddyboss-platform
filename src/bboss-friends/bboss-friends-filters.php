@@ -401,42 +401,42 @@ function bboss_friends_screen_notification_settings() {
 		<thead>
 		<tr>
 			<th class="icon"></th>
-			<th class="title"><?php esc_html_e( 'Connections', 'buddyboss-platform' ); ?></th>
-			<th class="yes"><?php esc_html_e( 'Yes', 'buddyboss-platform' ); ?></th>
-			<th class="no"><?php esc_html_e( 'No', 'buddyboss-platform' ); ?></th>
+			<th class="title"><?php esc_html_e( 'Connections', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></th>
+			<th class="yes"><?php esc_html_e( 'Yes', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></th>
+			<th class="no"><?php esc_html_e( 'No', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></th>
 		</tr>
 		</thead>
 
 		<tbody>
 		<tr id="friends-notification-settings-request">
 			<td></td>
-			<td><?php esc_html_e( 'A member invites you to connect', 'buddyboss-platform' ); ?></td>
+			<td><?php esc_html_e( 'A member invites you to connect', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></td>
 			<td class="yes">
 				<div class="bp-radio-wrap">
 					<input type="radio" name="notifications[notification_friends_friendship_request]" id="notification-friends-friendship-request-yes" class="bs-styled-radio" value="yes" <?php checked( $send_requests, 'yes', true ); ?> />
-					<label for="notification-friends-friendship-request-yes"><span class="bp-screen-reader-text"><?php esc_html_e( 'Yes, send email', 'buddyboss-platform' ); ?></span></label>
+					<label for="notification-friends-friendship-request-yes"><span class="bp-screen-reader-text"><?php esc_html_e( 'Yes, send email', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></span></label>
 				</div>
 			</td>
 			<td class="no">
 				<div class="bp-radio-wrap">
 					<input type="radio" name="notifications[notification_friends_friendship_request]" id="notification-friends-friendship-request-no" class="bs-styled-radio" value="no" <?php checked( $send_requests, 'no', true ); ?> />
-					<label for="notification-friends-friendship-request-no"><span class="bp-screen-reader-text"><?php esc_html_e( 'No, do not send email', 'buddyboss-platform' ); ?></span></label>
+					<label for="notification-friends-friendship-request-no"><span class="bp-screen-reader-text"><?php esc_html_e( 'No, do not send email', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></span></label>
 				</div>
 			</td>
 		</tr>
 		<tr id="friends-notification-settings-accepted">
 			<td></td>
-			<td><?php esc_html_e( 'A member accepts your connection request', 'buddyboss-platform' ); ?></td>
+			<td><?php esc_html_e( 'A member accepts your connection request', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></td>
 			<td class="yes">
 				<div class="bp-radio-wrap">
 					<input type="radio" name="notifications[notification_friends_friendship_accepted]" id="notification-friends-friendship-accepted-yes" class="bs-styled-radio" value="yes" <?php checked( $accept_requests, 'yes', true ); ?> />
-					<label for="notification-friends-friendship-accepted-yes"><span class="bp-screen-reader-text"><?php esc_html_e( 'Yes, send email', 'buddyboss-platform' ); ?></span></label>
+					<label for="notification-friends-friendship-accepted-yes"><span class="bp-screen-reader-text"><?php esc_html_e( 'Yes, send email', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></span></label>
 				</div>
 			</td>
 			<td class="no">
 				<div class="bp-radio-wrap">
 					<input type="radio" name="notifications[notification_friends_friendship_accepted]" id="notification-friends-friendship-accepted-no" class="bs-styled-radio" value="no" <?php checked( $accept_requests, 'no', true ); ?> />
-					<label for="notification-friends-friendship-accepted-no"><span class="bp-screen-reader-text"><?php esc_html_e( 'No, do not send email', 'buddyboss-platform' ); ?></span></label>
+					<label for="notification-friends-friendship-accepted-no"><span class="bp-screen-reader-text"><?php esc_html_e( 'No, do not send email', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></span></label>
 				</div>
 			</td>
 		</tr>

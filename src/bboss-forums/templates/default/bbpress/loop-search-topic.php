@@ -25,18 +25,18 @@ defined( 'ABSPATH' ) || exit;
 
 		<?php do_action( 'bbp_theme_before_topic_title' ); ?>
 
-		<h3><?php esc_html_e( 'Discussion: ', 'buddyboss-platform' ); ?>
+		<h3><?php esc_html_e( 'Discussion: ', 'buddyboss-community-social-network-groups-forums-messaging' ); ?>
 		<a href="<?php bboss_bbp_topic_permalink(); ?>"><?php bboss_bbp_topic_title(); ?></a></h3>
 
 		<div class="bbp-topic-title-meta">
 
 			<?php if ( function_exists( 'bboss_bbp_is_forum_group_forum' ) && bboss_bbp_is_forum_group_forum( bboss_bbp_get_topic_forum_id() ) ) : ?>
 
-				<?php esc_html_e( 'in group forum ', 'buddyboss-platform' ); ?>
+				<?php esc_html_e( 'in group forum ', 'buddyboss-community-social-network-groups-forums-messaging' ); ?>
 
 			<?php else : ?>
 
-				<?php esc_html_e( 'in forum ', 'buddyboss-platform' ); ?>
+				<?php esc_html_e( 'in forum ', 'buddyboss-community-social-network-groups-forums-messaging' ); ?>
 
 			<?php endif; ?>
 

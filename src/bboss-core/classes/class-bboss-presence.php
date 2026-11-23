@@ -826,7 +826,7 @@ if ( ! class_exists( 'BBoss_Presence' ) ) {
 				header( 'Content-Type: application/json' );
 				$retval = new WP_Error(
 					'bp_rest_authorization_required',
-					__( 'Sorry, you are not allowed to perform this action.', 'buddyboss-platform' ),
+					__( 'Sorry, you are not allowed to perform this action.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					array(
 						'status' => 401,
 					)
@@ -841,7 +841,7 @@ if ( ! class_exists( 'BBoss_Presence' ) ) {
 				$retval = new WP_Error(
 					'rest_missing_callback_param',
 					/* translators: %s: List of required parameters. */
-					sprintf( __( 'Missing parameter(s): %s', 'buddyboss-platform' ), 'ids' ),
+					sprintf( __( 'Missing parameter(s): %s', 'buddyboss-community-social-network-groups-forums-messaging' ), 'ids' ),
 					array(
 						'status' => 400,
 						'params' => array( 'ids' ),
@@ -859,7 +859,7 @@ if ( ! class_exists( 'BBoss_Presence' ) ) {
 			$arguments = array(
 				'args' => array(
 					'ids' => array(
-						'description'       => __( 'A unique users IDs of the member.', 'buddyboss-platform' ),
+						'description'       => __( 'A unique users IDs of the member.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 						'type'              => 'array',
 						'required'          => true,
 						'items'             => array( 'type' => 'integer' ),
@@ -877,7 +877,7 @@ if ( ! class_exists( 'BBoss_Presence' ) ) {
 			$invalid_params = array();
 
 			if ( false === $valid_check ) {
-				$invalid_params['ids'] = __( 'Invalid parameter.', 'buddyboss-platform' );
+				$invalid_params['ids'] = __( 'Invalid parameter.', 'buddyboss-community-social-network-groups-forums-messaging' );
 			}
 
 			if ( is_wp_error( $valid_check ) ) {
@@ -889,7 +889,7 @@ if ( ! class_exists( 'BBoss_Presence' ) ) {
 				$retval = new WP_Error(
 					'rest_invalid_param',
 					/* translators: %s: List of invalid parameters. */
-					sprintf( __( 'Invalid parameter(s): %s', 'buddyboss-platform' ), implode( ', ', array_keys( $invalid_params ) ) ),
+					sprintf( __( 'Invalid parameter(s): %s', 'buddyboss-community-social-network-groups-forums-messaging' ), implode( ', ', array_keys( $invalid_params ) ) ),
 					array(
 						'status'  => 400,
 						'params'  => $invalid_params,
@@ -938,7 +938,7 @@ if ( ! class_exists( 'BBoss_Presence' ) ) {
 		 * @since BuddyBoss 2.7.90
 		 */
 		public function bb_load_translations() {
-			$domain = 'buddyboss-platform';
+			$domain = 'buddyboss-community-social-network-groups-forums-messaging';
 			if ( function_exists( 'is_textdomain_loaded' ) && ! is_textdomain_loaded( $domain ) ) {
 				$mofile_custom  = sprintf( '%s-%s.mo', $domain, get_locale() );
 				$buddyboss_lang = WP_PLUGIN_DIR . '/buddyboss-platform/languages/';

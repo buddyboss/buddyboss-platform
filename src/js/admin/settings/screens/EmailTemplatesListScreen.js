@@ -41,9 +41,9 @@ import { EmailMissingModal } from '../components/emails/EmailMissingModal';
  * @type {Array}
  */
 var sortOptions = [
-	{ label: __( 'Newest', 'buddyboss-platform' ), value: 'newest' },
-	{ label: __( 'Oldest', 'buddyboss-platform' ), value: 'oldest' },
-	{ label: __( 'Last Modified', 'buddyboss-platform' ), value: 'last_modified' },
+	{ label: __( 'Newest', 'buddyboss-community-social-network-groups-forums-messaging' ), value: 'newest' },
+	{ label: __( 'Oldest', 'buddyboss-community-social-network-groups-forums-messaging' ), value: 'oldest' },
+	{ label: __( 'Last Modified', 'buddyboss-community-social-network-groups-forums-messaging' ), value: 'last_modified' },
 ];
 
 /**
@@ -402,13 +402,13 @@ export default function EmailTemplatesListScreen( props ) {
 				} else {
 					setToast( {
 						status: 'error',
-						message: ( response.data && response.data.message ) || __( 'Something went wrong.', 'buddyboss-platform' ),
+						message: ( response.data && response.data.message ) || __( 'Something went wrong.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					} );
 				}
 			} )
 			.catch( function() {
 				setBulkProcessing( false );
-				setToast( { status: 'error', message: __( 'Something went wrong.', 'buddyboss-platform' ) } );
+				setToast( { status: 'error', message: __( 'Something went wrong.', 'buddyboss-community-social-network-groups-forums-messaging' ) } );
 			} );
 	}, [ bulkAction, selectedIds, bulkProcessing, page, sort, search, fetchTemplates ] );
 
@@ -418,9 +418,9 @@ export default function EmailTemplatesListScreen( props ) {
 
 	// Build bulk action options for the dropdown — Edit + Delete per Figma.
 	var bulkActionOptions = [
-		{ label: __( 'Bulk actions', 'buddyboss-platform' ), value: '' },
-		{ label: __( 'Edit', 'buddyboss-platform' ), value: 'bulk_edit' },
-		{ label: __( 'Delete', 'buddyboss-platform' ), value: 'delete' },
+		{ label: __( 'Bulk actions', 'buddyboss-community-social-network-groups-forums-messaging' ), value: '' },
+		{ label: __( 'Edit', 'buddyboss-community-social-network-groups-forums-messaging' ), value: 'bulk_edit' },
+		{ label: __( 'Delete', 'buddyboss-community-social-network-groups-forums-messaging' ), value: 'delete' },
 	];
 
 	// Derive custom column keys from server-provided columns (third-party plugins like WPML).
@@ -435,7 +435,7 @@ export default function EmailTemplatesListScreen( props ) {
 			{/* Header */}
 			<div className="bb-email-templates-list__header">
 				<h2 className="bb-email-templates-list__title">
-					{ __( 'Email Templates', 'buddyboss-platform' ) }
+					{ __( 'Email Templates', 'buddyboss-community-social-network-groups-forums-messaging' ) }
 				</h2>
 				<a
 					href="themes.php?page=bp-emails-customizer-redirect"
@@ -444,7 +444,7 @@ export default function EmailTemplatesListScreen( props ) {
 					rel="noopener noreferrer"
 				>
 					<i className="bb-icons-rl bb-icons-rl-gear" />
-					{ __( 'Customize Layout', 'buddyboss-platform' ) }
+					{ __( 'Customize Layout', 'buddyboss-community-social-network-groups-forums-messaging' ) }
 				</a>
 				<Button
 					className="bb-email-templates-list__create-btn is-primary"
@@ -454,7 +454,7 @@ export default function EmailTemplatesListScreen( props ) {
 					} }
 				>
 					<i className="bb-icons-rl bb-icons-rl-plus" />
-					{ __( 'Add New Email', 'buddyboss-platform' ) }
+					{ __( 'Add New Email', 'buddyboss-community-social-network-groups-forums-messaging' ) }
 				</Button>
 			</div>
 
@@ -466,7 +466,7 @@ export default function EmailTemplatesListScreen( props ) {
 						<span>
 							{ sprintf(
 								/* translators: %d: number of missing emails */
-								__( 'Email Missing (%d)', 'buddyboss-platform' ),
+								__( 'Email Missing (%d)', 'buddyboss-community-social-network-groups-forums-messaging' ),
 								missingCount
 							) }
 						</span>
@@ -479,7 +479,7 @@ export default function EmailTemplatesListScreen( props ) {
 							setMissingModalOpen( true );
 						} }
 					>
-						{ __( 'Add Missing Email', 'buddyboss-platform' ) }
+						{ __( 'Add Missing Email', 'buddyboss-community-social-network-groups-forums-messaging' ) }
 						<i className="bb-icons-rl-plus"></i>
 					</a>
 				</div>
@@ -501,7 +501,7 @@ export default function EmailTemplatesListScreen( props ) {
 							onClick={ handleBulkApply }
 							disabled={ ! bulkAction || 0 === selectedIds.length || bulkProcessing }
 						>
-							{ __( 'Apply', 'buddyboss-platform' ) }
+							{ __( 'Apply', 'buddyboss-community-social-network-groups-forums-messaging' ) }
 						</Button>
 					</div>
 				</div>
@@ -512,11 +512,11 @@ export default function EmailTemplatesListScreen( props ) {
 						<SelectControl
 							value={ filter }
 							options={ views ? [
-								{ label: sprintf( __( 'All (%d)', 'buddyboss-platform' ), views.all || 0 ), value: 'all' },
-								{ label: sprintf( __( 'Published (%d)', 'buddyboss-platform' ), views.publish || 0 ), value: 'publish' },
-								{ label: sprintf( __( 'Draft (%d)', 'buddyboss-platform' ), views.draft || 0 ), value: 'draft' },
+								{ label: sprintf( __( 'All (%d)', 'buddyboss-community-social-network-groups-forums-messaging' ), views.all || 0 ), value: 'all' },
+								{ label: sprintf( __( 'Published (%d)', 'buddyboss-community-social-network-groups-forums-messaging' ), views.publish || 0 ), value: 'publish' },
+								{ label: sprintf( __( 'Draft (%d)', 'buddyboss-community-social-network-groups-forums-messaging' ), views.draft || 0 ), value: 'draft' },
 							] : [
-								{ label: sprintf( __( 'All (%d)', 'buddyboss-platform' ), total ), value: 'all' },
+								{ label: sprintf( __( 'All (%d)', 'buddyboss-community-social-network-groups-forums-messaging' ), total ), value: 'all' },
 							] }
 							onChange={ handleFilterChange }
 							__nextHasNoMarginBottom
@@ -538,7 +538,7 @@ export default function EmailTemplatesListScreen( props ) {
 						<input
 							type="text"
 							className="bb-email-templates-list__search-input bb-admin-list-search__input"
-							placeholder={ __( 'Search emails', 'buddyboss-platform' ) }
+							placeholder={ __( 'Search emails', 'buddyboss-community-social-network-groups-forums-messaging' ) }
 							value={ searchInput }
 							onChange={ handleSearchChange }
 						/>
@@ -555,8 +555,8 @@ export default function EmailTemplatesListScreen( props ) {
 				) : 0 === items.length ? (
 					<div className="bb-email-templates-list__empty bb-admin-list-table__empty">
 						{ search
-							? __( 'No email templates found matching your search.', 'buddyboss-platform' )
-							: __( 'No email templates found.', 'buddyboss-platform' )
+							? __( 'No email templates found matching your search.', 'buddyboss-community-social-network-groups-forums-messaging' )
+							: __( 'No email templates found.', 'buddyboss-community-social-network-groups-forums-messaging' )
 						}
 					</div>
 				) : (
@@ -571,7 +571,7 @@ export default function EmailTemplatesListScreen( props ) {
 									/>
 								</th>
 								<th className="bb-email-templates-list__th--title">
-									{ __( 'Title', 'buddyboss-platform' ) }
+									{ __( 'Title', 'buddyboss-community-social-network-groups-forums-messaging' ) }
 								</th>
 								{ customColumnKeys.map( function( key ) {
 									return (
@@ -581,10 +581,10 @@ export default function EmailTemplatesListScreen( props ) {
 									);
 								} ) }
 								<th className="bb-email-templates-list__th--description">
-									{ __( 'Situations', 'buddyboss-platform' ) }
+									{ __( 'Situations', 'buddyboss-community-social-network-groups-forums-messaging' ) }
 								</th>
 								<th className="bb-email-templates-list__th--date">
-									{ __( 'Published', 'buddyboss-platform' ) }
+									{ __( 'Published', 'buddyboss-community-social-network-groups-forums-messaging' ) }
 								</th>
 								<th className="bb-email-templates-list__th--actions"></th>
 							</tr>
@@ -644,7 +644,7 @@ export default function EmailTemplatesListScreen( props ) {
 										<td className="bb-email-templates-list__td--actions bb-admin-actions-toggle">
 											<DropdownMenu
 												icon={ <i className="bb-icons-rl-dots-three"></i> }
-												label={ __( 'More options', 'buddyboss-platform' ) }
+												label={ __( 'More options', 'buddyboss-community-social-network-groups-forums-messaging' ) }
 											>
 												{ function( { onClose } ) {
 													return (
@@ -657,7 +657,7 @@ export default function EmailTemplatesListScreen( props ) {
 																	} }
 																>
 																	<i className="bb-icons-rl bb-icons-rl-eye"></i>
-																	{ __( 'Preview', 'buddyboss-platform' ) }
+																	{ __( 'Preview', 'buddyboss-community-social-network-groups-forums-messaging' ) }
 																	<i className="bb-icons-rl bb-icons-rl-arrow-up-right bb-icons-external"></i>
 																</MenuItem>
 															) }
@@ -669,7 +669,7 @@ export default function EmailTemplatesListScreen( props ) {
 																} }
 															>
 																<i className="bb-icons-rl bb-icons-rl-note-pencil"></i>
-																{ __( 'Edit', 'buddyboss-platform' ) }
+																{ __( 'Edit', 'buddyboss-community-social-network-groups-forums-messaging' ) }
 															</MenuItem>
 															<MenuItem
 																isDestructive
@@ -680,7 +680,7 @@ export default function EmailTemplatesListScreen( props ) {
 																} }
 															>
 																<i className="bb-icons-rl bb-icons-rl-trash"></i>
-																{ __( 'Delete', 'buddyboss-platform' ) }
+																{ __( 'Delete', 'buddyboss-community-social-network-groups-forums-messaging' ) }
 															</MenuItem>
 														</MenuGroup>
 													);
@@ -731,7 +731,7 @@ export default function EmailTemplatesListScreen( props ) {
 					setEditEmailId( 0 );
 					isFirstLoad.current = true;
 					fetchTemplates( { fetchPage: page, fetchSort: sort, fetchSearch: search } );
-					setToast( { status: 'success', message: __( 'Email template saved.', 'buddyboss-platform' ) } );
+					setToast( { status: 'success', message: __( 'Email template saved.', 'buddyboss-community-social-network-groups-forums-messaging' ) } );
 				} }
 			/>
 
@@ -750,18 +750,18 @@ export default function EmailTemplatesListScreen( props ) {
 					setBulkAction( '' );
 					isFirstLoad.current = true;
 					fetchTemplates( { fetchPage: page, fetchSort: sort, fetchSearch: search } );
-					setToast( { status: 'success', message: __( 'Email templates updated.', 'buddyboss-platform' ) } );
+					setToast( { status: 'success', message: __( 'Email templates updated.', 'buddyboss-community-social-network-groups-forums-messaging' ) } );
 				} }
 			/>
 
 			{/* Single Delete Confirmation Modal */}
 			<DeleteConfirmModal
 				isOpen={ !! deleteItem }
-				singleTitle={ __( 'Delete email template?', 'buddyboss-platform' ) }
+				singleTitle={ __( 'Delete email template?', 'buddyboss-community-social-network-groups-forums-messaging' ) }
 				items={ deleteItem ? [ { id: deleteItem.id, title: deleteItem.title } ] : [] }
-				warningText={ __( 'This permanently deletes email templates and cannot be undone.', 'buddyboss-platform' ) }
-				description={ __( 'Deleting the email template will remove it from the list and automatically unlink it from any associated situations.', 'buddyboss-platform' ) }
-				confirmLabel={ __( 'I understand that this deletes the email template.', 'buddyboss-platform' ) }
+				warningText={ __( 'This permanently deletes email templates and cannot be undone.', 'buddyboss-community-social-network-groups-forums-messaging' ) }
+				description={ __( 'Deleting the email template will remove it from the list and automatically unlink it from any associated situations.', 'buddyboss-community-social-network-groups-forums-messaging' ) }
+				confirmLabel={ __( 'I understand that this deletes the email template.', 'buddyboss-community-social-network-groups-forums-messaging' ) }
 				confirmChecked={ deleteConfirmChecked }
 				onConfirmChange={ setDeleteConfirmChecked }
 				onConfirm={ function () {
@@ -782,13 +782,13 @@ export default function EmailTemplatesListScreen( props ) {
 							} else {
 								setToast( {
 									status: 'error',
-									message: ( response.data && response.data.message ) || __( 'Something went wrong.', 'buddyboss-platform' ),
+									message: ( response.data && response.data.message ) || __( 'Something went wrong.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 								} );
 							}
 						} )
 						.catch( function () {
 							setBulkProcessing( false );
-							setToast( { status: 'error', message: __( 'Something went wrong.', 'buddyboss-platform' ) } );
+							setToast( { status: 'error', message: __( 'Something went wrong.', 'buddyboss-community-social-network-groups-forums-messaging' ) } );
 						} );
 				} }
 				onClose={ function () { setDeleteItem( null ); setDeleteConfirmChecked( false ); } }

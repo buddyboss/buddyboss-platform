@@ -20,18 +20,18 @@ defined( 'ABSPATH' ) || exit;
 						<?php
 						printf(
 							/* translators: %s: reported content type. */
-							esc_html__( 'Report %s', 'buddyboss-platform' ),
+							esc_html__( 'Report %s', 'buddyboss-community-social-network-groups-forums-messaging' ),
 							'<span class="bp-reported-type"></span>'
 						);
 						?>
 					</h4>
-					<button title="<?php esc_html_e( 'Close (Esc)', 'buddyboss-platform' ); ?>" type="button" class="mfp-close">
+					<button title="<?php esc_html_e( 'Close (Esc)', 'buddyboss-community-social-network-groups-forums-messaging' ); ?>" type="button" class="mfp-close">
 						<span class="bb-icon-l bb-icon-times"></span>
 					</button>
 				</header>
 				<div class="bp-feedback bp-feedback-v2 error" id="notes-error" style="display: none;">
 					<span class="bp-icon" aria-hidden="true"></span>
-					<p><?php esc_html_e( 'There was a problem reporting this post.', 'buddyboss-platform' ); ?></p>
+					<p><?php esc_html_e( 'There was a problem reporting this post.', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></p>
 				</div>
 				<?php
 				$reports_terms = get_terms(
@@ -68,18 +68,18 @@ defined( 'ABSPATH' ) || exit;
 						<div class="form-item">
 							<label for="report-category-other">
 								<input type="radio" id="report-category-other" name="report_category" value="other">
-								<span><?php esc_html_e( 'Other', 'buddyboss-platform' ); ?></span>
+								<span><?php esc_html_e( 'Other', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></span>
 							</label>
 						</div>
 						<div class="form-item bp-hide">
 							<label for="report-note">
-								<span class="screen-reader-text"><?php esc_html_e( 'Report note', 'buddyboss-platform' ); ?></span>
-								<textarea id="report-note" placeholder="<?php esc_attr_e( 'Enter your reason for reporting...', 'buddyboss-platform' ); ?>" name="note" class="bp-other-report-cat"></textarea>
+								<span class="screen-reader-text"><?php esc_html_e( 'Report note', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></span>
+								<textarea id="report-note" placeholder="<?php esc_attr_e( 'Enter your reason for reporting...', 'buddyboss-community-social-network-groups-forums-messaging' ); ?>" name="note" class="bp-other-report-cat"></textarea>
 							</label>
 						</div>
 						<footer class="bb-model-footer">
-							<input type="button" class="bb-cancel-report-content button" value="<?php esc_attr_e( 'Cancel', 'buddyboss-platform' ); ?>"/>
-							<button type="submit" class="report-submit button"><?php esc_attr_e( 'Report', 'buddyboss-platform' ); ?></button>
+							<input type="button" class="bb-cancel-report-content button" value="<?php esc_attr_e( 'Cancel', 'buddyboss-community-social-network-groups-forums-messaging' ); ?>"/>
+							<button type="submit" class="report-submit button"><?php esc_attr_e( 'Report', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></button>
 							<input type="hidden" name="content_id" class="bp-content-id"/>
 							<input type="hidden" name="content_type" class="bp-content-type"/>
 							<input type="hidden" name="_wpnonce" class="bp-nonce"/>

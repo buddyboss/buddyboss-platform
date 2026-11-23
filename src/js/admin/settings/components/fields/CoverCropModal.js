@@ -76,7 +76,7 @@ function sendAjax( ajaxUrl, action, formData, signal ) {
 		// throw a cryptic `Unexpected token '<'`.
 		var contentType = response.headers.get( 'content-type' ) || '';
 		if ( -1 === contentType.indexOf( 'application/json' ) ) {
-			throw new Error( __( 'Unexpected server response.', 'buddyboss-platform' ) );
+			throw new Error( __( 'Unexpected server response.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 		}
 		return response.json();
 	} );
@@ -417,7 +417,7 @@ export function CoverCropModal( { imageUrl, basename, originalName, nonces, uplo
 		// server validation responds `Invalid object.`, and the admin sees
 		// what looks like a server bug for a misconfigured field registration.
 		if ( 'user' !== uploadConfig.object && 'group' !== uploadConfig.object ) {
-			setError( __( 'Upload configuration is invalid (missing object).', 'buddyboss-platform' ) );
+			setError( __( 'Upload configuration is invalid (missing object).', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 			return;
 		}
 
@@ -469,7 +469,7 @@ export function CoverCropModal( { imageUrl, basename, originalName, nonces, uplo
 				if ( response.success && response.data && response.data.url ) {
 					onSave( response.data.url );
 				} else {
-					var msg = ( response.data && response.data.message ) || __( 'Crop failed.', 'buddyboss-platform' );
+					var msg = ( response.data && response.data.message ) || __( 'Crop failed.', 'buddyboss-community-social-network-groups-forums-messaging' );
 					setError( msg );
 					setSaving( false );
 				}
@@ -478,7 +478,7 @@ export function CoverCropModal( { imageUrl, basename, originalName, nonces, uplo
 				if ( 'AbortError' === err.name ) {
 					return;
 				}
-				setError( err.message || __( 'Crop failed.', 'buddyboss-platform' ) );
+				setError( err.message || __( 'Crop failed.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 				setSaving( false );
 			} );
 	};
@@ -501,20 +501,20 @@ export function CoverCropModal( { imageUrl, basename, originalName, nonces, uplo
 			className="bb-admin-image-upload__crop-overlay"
 			role="dialog"
 			aria-modal="true"
-			aria-label={ __( 'Upload Custom Cover', 'buddyboss-platform' ) }
+			aria-label={ __( 'Upload Custom Cover', 'buddyboss-community-social-network-groups-forums-messaging' ) }
 		>
 			<div className="bb-admin-image-upload__crop-modal">
 				{ /* Header: title left, close (✕) right, divider underneath (border-bottom on .__crop-header). */ }
 				<div className="bb-admin-image-upload__crop-header">
 					<h3 className="bb-admin-image-upload__crop-title">
-						{ __( 'Upload Custom Cover', 'buddyboss-platform' ) }
+						{ __( 'Upload Custom Cover', 'buddyboss-community-social-network-groups-forums-messaging' ) }
 					</h3>
 					<button
 						type="button"
 						className="bb-admin-image-upload__crop-close"
 						onClick={ onCancel }
 						disabled={ saving }
-						aria-label={ __( 'Close', 'buddyboss-platform' ) }
+						aria-label={ __( 'Close', 'buddyboss-community-social-network-groups-forums-messaging' ) }
 					>
 						<i className="bb-icons-rl bb-icons-rl-x" aria-hidden="true"></i>
 					</button>
@@ -569,7 +569,7 @@ export function CoverCropModal( { imageUrl, basename, originalName, nonces, uplo
 						onClick={ onCancel }
 						disabled={ saving }
 					>
-						{ __( 'Cancel', 'buddyboss-platform' ) }
+						{ __( 'Cancel', 'buddyboss-community-social-network-groups-forums-messaging' ) }
 					</button>
 					<button
 						type="button"
@@ -577,7 +577,7 @@ export function CoverCropModal( { imageUrl, basename, originalName, nonces, uplo
 						onClick={ handleCropSave }
 						disabled={ saving || ! imgLoaded }
 					>
-						{ saving ? __( 'Uploading…', 'buddyboss-platform' ) : __( 'Crop & Upload', 'buddyboss-platform' ) }
+						{ saving ? __( 'Uploading…', 'buddyboss-community-social-network-groups-forums-messaging' ) : __( 'Crop & Upload', 'buddyboss-community-social-network-groups-forums-messaging' ) }
 					</button>
 				</div>
 			</div>

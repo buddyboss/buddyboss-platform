@@ -16,18 +16,18 @@ defined( 'ABSPATH' ) || exit;
 	<h3>
 		<span class="activity-header-data">
 			<# if ( data.privacy_modal === 'profile' ) {  #>
-				<?php esc_html_e( 'Who can see your post?', 'buddyboss-platform' ); ?>
+				<?php esc_html_e( 'Who can see your post?', 'buddyboss-community-social-network-groups-forums-messaging' ); ?>
 			<# } else if ( data.privacy_modal === 'group' ) { #>
-				<?php esc_html_e( 'Select a group', 'buddyboss-platform' ); ?>
+				<?php esc_html_e( 'Select a group', 'buddyboss-community-social-network-groups-forums-messaging' ); ?>
 			<# } else { #>
 				<# if ( data.edit_activity === true ) {  #>
 					<# if ( data.activity_action_type === 'scheduled' ) {  #>
-						<?php esc_html_e( 'Edit Scheduled Post', 'buddyboss-platform' ); ?>
+						<?php esc_html_e( 'Edit Scheduled Post', 'buddyboss-community-social-network-groups-forums-messaging' ); ?>
 					<# } else { #>
-						<?php esc_html_e( 'Edit post', 'buddyboss-platform' ); ?>
+						<?php esc_html_e( 'Edit post', 'buddyboss-community-social-network-groups-forums-messaging' ); ?>
 					<# } #>
 				<# } else { #>
-					<?php esc_html_e( 'Create a post', 'buddyboss-platform' ); ?>
+					<?php esc_html_e( 'Create a post', 'buddyboss-community-social-network-groups-forums-messaging' ); ?>
 				<# } #>
 			<# } #>
 		</span>

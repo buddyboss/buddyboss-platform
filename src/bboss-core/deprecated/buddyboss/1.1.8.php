@@ -229,16 +229,16 @@ function bboss_get_group_type_post_type_labels() {
 	 * @param array $value Associative array (name => label).
 	 */
 	return apply_filters( 'bp_get_group_type_post_type_labels', array(
-		'add_new_item'          => __( 'New Group Type', 'buddyboss-platform' ),
-		'all_items'             => __( 'Group Types', 'buddyboss-platform' ),
-		'edit_item'             => __( 'Edit Group Type', 'buddyboss-platform' ),
-		'menu_name'             => __( 'Social Groups', 'buddyboss-platform' ),
-		'name'                  => __( 'Group Types', 'buddyboss-platform' ),
-		'new_item'              => __( 'New Group Type', 'buddyboss-platform' ),
-		'not_found'             => __( 'No Group Types found', 'buddyboss-platform' ),
-		'not_found_in_trash'    => __( 'No Group Types found in trash', 'buddyboss-platform' ),
-		'search_items'          => __( 'Search Group Types', 'buddyboss-platform' ),
-		'singular_name'         => __( 'Group Type', 'buddyboss-platform' ),
+		'add_new_item'          => __( 'New Group Type', 'buddyboss-community-social-network-groups-forums-messaging' ),
+		'all_items'             => __( 'Group Types', 'buddyboss-community-social-network-groups-forums-messaging' ),
+		'edit_item'             => __( 'Edit Group Type', 'buddyboss-community-social-network-groups-forums-messaging' ),
+		'menu_name'             => __( 'Social Groups', 'buddyboss-community-social-network-groups-forums-messaging' ),
+		'name'                  => __( 'Group Types', 'buddyboss-community-social-network-groups-forums-messaging' ),
+		'new_item'              => __( 'New Group Type', 'buddyboss-community-social-network-groups-forums-messaging' ),
+		'not_found'             => __( 'No Group Types found', 'buddyboss-community-social-network-groups-forums-messaging' ),
+		'not_found_in_trash'    => __( 'No Group Types found in trash', 'buddyboss-community-social-network-groups-forums-messaging' ),
+		'search_items'          => __( 'Search Group Types', 'buddyboss-community-social-network-groups-forums-messaging' ),
+		'singular_name'         => __( 'Group Type', 'buddyboss-community-social-network-groups-forums-messaging' ),
 	) );
 }
 

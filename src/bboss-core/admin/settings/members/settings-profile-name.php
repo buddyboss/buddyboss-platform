@@ -26,7 +26,7 @@ function bboss_members_register_profile_name_panel_fields() {
 		'profile_name',
 		'profile_name',
 		array(
-			'title'       => __( 'Profile Name', 'buddyboss-platform' ),
+			'title'       => __( 'Profile Name', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'description' => '',
 			'order'       => 10,
 		)
@@ -39,11 +39,11 @@ function bboss_members_register_profile_name_panel_fields() {
 		'profile_name',
 		array(
 			'name'              => 'bp-display-name-format',
-			'label'             => __( 'Display Name Format', 'buddyboss-platform' ),
+			'label'             => __( 'Display Name Format', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'type'              => 'select',
 			'description'       => sprintf(
 				/* translators: %s: Repair Community link. */
-				__( 'After the format has been updated, remember to run <a href="%s">Repair Community</a> tools to update all the users.', 'buddyboss-platform' ),
+				__( 'After the format has been updated, remember to run <a href="%s">Repair Community</a> tools to update all the users.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				esc_url(
 					add_query_arg(
 						array(
@@ -60,15 +60,15 @@ function bboss_members_register_profile_name_panel_fields() {
 			'sanitize_callback' => 'bboss_members_sanitize_display_name_format',
 			'options'           => array(
 				array(
-					'label' => __( 'First Name', 'buddyboss-platform' ),
+					'label' => __( 'First Name', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'value' => 'first_name',
 				),
 				array(
-					'label' => __( 'First Name & Last Name', 'buddyboss-platform' ),
+					'label' => __( 'First Name & Last Name', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'value' => 'first_last_name',
 				),
 				array(
-					'label' => __( 'Nickname', 'buddyboss-platform' ),
+					'label' => __( 'Nickname', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'value' => 'nickname',
 				),
 			),
@@ -87,9 +87,9 @@ function bboss_members_register_profile_name_panel_fields() {
 		'profile_name',
 		array(
 			'name'              => 'bp-display-name-fn-first-name',
-			'label'             => __( 'Display Name Fields', 'buddyboss-platform' ),
+			'label'             => __( 'Display Name Fields', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'type'              => 'toggle',
-			'description'       => __( 'First Name', 'buddyboss-platform' ),
+			'description'       => __( 'First Name', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'default'           => 1,
 			'disabled'          => true,
 			'sanitize_callback' => 'absint',
@@ -112,7 +112,7 @@ function bboss_members_register_profile_name_panel_fields() {
 			'name'              => 'bp-hide-last-name',
 			'label'             => '',
 			'type'              => 'toggle',
-			'description'       => __( 'Last Name', 'buddyboss-platform' ),
+			'description'       => __( 'Last Name', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'default'           => absint( bboss_hide_last_name() ),
 			'sanitize_callback' => 'absint',
 			'conditional'       => array(
@@ -133,11 +133,11 @@ function bboss_members_register_profile_name_panel_fields() {
 			'name'              => 'bp-display-name-fn-nickname',
 			'label'             => '',
 			'type'              => 'toggle',
-			'description'       => __( 'Nickname', 'buddyboss-platform' ),
+			'description'       => __( 'Nickname', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'default'           => 1,
 			'disabled'          => true,
 			'sanitize_callback' => 'absint',
-			'help_text'         => __( 'If you disable "Last Name" field, it will not appear anywhere in the network.', 'buddyboss-platform' ),
+			'help_text'         => __( 'If you disable "Last Name" field, it will not appear anywhere in the network.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'conditional'       => array(
 				'field' => 'bp-display-name-format',
 				'value' => 'first_name',
@@ -158,9 +158,9 @@ function bboss_members_register_profile_name_panel_fields() {
 		'profile_name',
 		array(
 			'name'              => 'bp-display-name-fln-first-name',
-			'label'             => __( 'Display Name Fields', 'buddyboss-platform' ),
+			'label'             => __( 'Display Name Fields', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'type'              => 'toggle',
-			'description'       => __( 'First Name', 'buddyboss-platform' ),
+			'description'       => __( 'First Name', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'default'           => 1,
 			'disabled'          => true,
 			'sanitize_callback' => 'absint',
@@ -182,7 +182,7 @@ function bboss_members_register_profile_name_panel_fields() {
 			'name'              => 'bp-display-name-fln-last-name',
 			'label'             => '',
 			'type'              => 'toggle',
-			'description'       => __( 'Last Name', 'buddyboss-platform' ),
+			'description'       => __( 'Last Name', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'default'           => 1,
 			'disabled'          => true,
 			'sanitize_callback' => 'absint',
@@ -204,11 +204,11 @@ function bboss_members_register_profile_name_panel_fields() {
 			'name'              => 'bp-display-name-fln-nickname',
 			'label'             => '',
 			'type'              => 'toggle',
-			'description'       => __( 'Nickname', 'buddyboss-platform' ),
+			'description'       => __( 'Nickname', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'default'           => 1,
 			'disabled'          => true,
 			'sanitize_callback' => 'absint',
-			'help_text'         => __( 'All name fields are required with this format. Best used for professional networks.', 'buddyboss-platform' ),
+			'help_text'         => __( 'All name fields are required with this format. Best used for professional networks.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'conditional'       => array(
 				'field' => 'bp-display-name-format',
 				'value' => 'first_last_name',
@@ -230,9 +230,9 @@ function bboss_members_register_profile_name_panel_fields() {
 		'profile_name',
 		array(
 			'name'              => 'bp-hide-nickname-first-name',
-			'label'             => __( 'Display Name Fields', 'buddyboss-platform' ),
+			'label'             => __( 'Display Name Fields', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'type'              => 'toggle',
-			'description'       => __( 'First Name', 'buddyboss-platform' ),
+			'description'       => __( 'First Name', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'default'           => absint( bboss_hide_nickname_first_name() ),
 			'sanitize_callback' => 'absint',
 			'conditional'       => array(
@@ -254,7 +254,7 @@ function bboss_members_register_profile_name_panel_fields() {
 			'name'              => 'bp-hide-nickname-last-name',
 			'label'             => '',
 			'type'              => 'toggle',
-			'description'       => __( 'Last Name', 'buddyboss-platform' ),
+			'description'       => __( 'Last Name', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'default'           => absint( bboss_hide_nickname_last_name() ),
 			'sanitize_callback' => 'absint',
 			'conditional'       => array(
@@ -275,11 +275,11 @@ function bboss_members_register_profile_name_panel_fields() {
 			'name'              => 'bp-display-name-nn-nickname',
 			'label'             => '',
 			'type'              => 'toggle',
-			'description'       => __( 'Nickname', 'buddyboss-platform' ),
+			'description'       => __( 'Nickname', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'default'           => 1,
 			'disabled'          => true,
 			'sanitize_callback' => 'absint',
-			'help_text'         => __( 'If you disable "First Name" and "Last Name" fields, they will not appear anywhere in the network. This allows your members to be fully anonymous (if they use a pseudonym for their nickname).', 'buddyboss-platform' ),
+			'help_text'         => __( 'If you disable "First Name" and "Last Name" fields, they will not appear anywhere in the network. This allows your members to be fully anonymous (if they use a pseudonym for their nickname).', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'conditional'       => array(
 				'field' => 'bp-display-name-format',
 				'value' => 'nickname',
@@ -304,7 +304,7 @@ function bboss_members_register_profile_name_panel_fields() {
 		'profile_name',
 		'profile_link',
 		array(
-			'title'       => __( 'Profile Link', 'buddyboss-platform' ),
+			'title'       => __( 'Profile Link', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'description' => '',
 			'order'       => 20,
 			'help_url'    => '635988',
@@ -318,18 +318,18 @@ function bboss_members_register_profile_name_panel_fields() {
 		'profile_link',
 		array(
 			'name'              => 'bb_profile_slug_format',
-			'label'             => __( 'Link Format', 'buddyboss-platform' ),
+			'label'             => __( 'Link Format', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'type'              => 'radio',
-			'description'       => __( 'Select the format for members\' profile links (e.g., /members/username). Both formats work, so switching won\'t break existing links.', 'buddyboss-platform' ),
+			'description'       => __( 'Select the format for members\' profile links (e.g., /members/username). Both formats work, so switching won\'t break existing links.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'default'           => bboss_get_profile_slug_format(),
 			'sanitize_callback' => 'bboss_members_sanitize_slug_format',
 			'options'           => array(
 				array(
-					'label' => __( 'Username', 'buddyboss-platform' ),
+					'label' => __( 'Username', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'value' => 'username',
 				),
 				array(
-					'label' => __( 'Unique Identifier', 'buddyboss-platform' ),
+					'label' => __( 'Unique Identifier', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'value' => 'unique_identifier',
 				),
 			),
@@ -353,7 +353,7 @@ function bboss_members_register_profile_name_panel_fields() {
 		'profile_name',
 		'user_settings',
 		array(
-			'title' => __( 'User Settings', 'buddyboss-platform' ),
+			'title' => __( 'User Settings', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'order' => 30,
 			'help_url'   => '635990',
 		)
@@ -368,9 +368,9 @@ function bboss_members_register_profile_name_panel_fields() {
 		'user_settings',
 		array(
 			'name'              => 'bp-disable-account-deletion',
-			'label'             => __( 'Account Deletion', 'buddyboss-platform' ),
+			'label'             => __( 'Account Deletion', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'type'              => 'toggle',
-			'description'       => __( 'Allow members to delete their profiles', 'buddyboss-platform' ),
+			'description'       => __( 'Allow members to delete their profiles', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'default'           => bboss_disable_account_deletion( false ),
 			'sanitize_callback' => 'absint',
 			'invert_value'      => true,

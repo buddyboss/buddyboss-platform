@@ -35,8 +35,8 @@ $bb_recaptcha_icon = array(
 bboss_register_integration(
 	'recaptcha',
 	array(
-		'label'              => __( 'reCAPTCHA', 'buddyboss-platform' ),
-		'description'        => __( 'Protect your community from spam and bot registrations with Google\'s invisible and checkbox verification.', 'buddyboss-platform' ),
+		'label'              => __( 'reCAPTCHA', 'buddyboss-community-social-network-groups-forums-messaging' ),
+		'description'        => __( 'Protect your community from spam and bot registrations with Google\'s invisible and checkbox verification.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 		'icon'               => $bb_recaptcha_icon,
 		'license_tier'       => 'free',
 		'standalone'         => true,

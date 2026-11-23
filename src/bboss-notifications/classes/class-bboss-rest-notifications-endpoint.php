@@ -57,7 +57,7 @@ class BBoss_REST_Notifications_Endpoint extends WP_REST_Controller {
 			array(
 				'args'   => array(
 					'id' => array(
-						'description' => __( 'A unique numeric ID for the notification.', 'buddyboss-platform' ),
+						'description' => __( 'A unique numeric ID for the notification.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 						'type'        => 'integer',
 					),
 				),
@@ -170,7 +170,7 @@ class BBoss_REST_Notifications_Endpoint extends WP_REST_Controller {
 	public function get_items_permissions_check( $request ) {
 		$retval = new WP_Error(
 			'bp_rest_authorization_required',
-			__( 'Sorry, you are not allowed to see the notifications.', 'buddyboss-platform' ),
+			__( 'Sorry, you are not allowed to see the notifications.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			array(
 				'status' => rest_authorization_required_code(),
 			)
@@ -181,7 +181,7 @@ class BBoss_REST_Notifications_Endpoint extends WP_REST_Controller {
 			if ( bboss_loggedin_user_id() !== $request['user_id'] && ! $this->can_see() ) {
 				$retval = new WP_Error(
 					'bp_rest_authorization_required',
-					__( 'Sorry, you are not allowed to see the notifications.', 'buddyboss-platform' ),
+					__( 'Sorry, you are not allowed to see the notifications.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					array(
 						'status' => rest_authorization_required_code(),
 					)
@@ -250,7 +250,7 @@ class BBoss_REST_Notifications_Endpoint extends WP_REST_Controller {
 	public function get_item_permissions_check( $request ) {
 		$retval = new WP_Error(
 			'bp_rest_authorization_required',
-			__( 'Sorry, you are not allowed to see the notification.', 'buddyboss-platform' ),
+			__( 'Sorry, you are not allowed to see the notification.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			array(
 				'status' => rest_authorization_required_code(),
 			)
@@ -263,7 +263,7 @@ class BBoss_REST_Notifications_Endpoint extends WP_REST_Controller {
 			if ( is_null( $notification->item_id ) ) {
 				$retval = new WP_Error(
 					'bp_rest_notification_invalid_id',
-					__( 'Invalid notification ID.', 'buddyboss-platform' ),
+					__( 'Invalid notification ID.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					array(
 						'status' => 404,
 					)
@@ -271,7 +271,7 @@ class BBoss_REST_Notifications_Endpoint extends WP_REST_Controller {
 			} elseif ( ! $this->can_see( $notification->id ) ) {
 				$retval = new WP_Error(
 					'bp_rest_authorization_required',
-					__( 'Sorry, you cannot view this notification.', 'buddyboss-platform' ),
+					__( 'Sorry, you cannot view this notification.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					array(
 						'status' => rest_authorization_required_code(),
 					)
@@ -341,7 +341,7 @@ class BBoss_REST_Notifications_Endpoint extends WP_REST_Controller {
 		if ( ! is_numeric( $notification_id ) ) {
 			return new WP_Error(
 				'bp_rest_user_cannot_create_notification',
-				__( 'Cannot create new notification.', 'buddyboss-platform' ),
+				__( 'Cannot create new notification.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				array(
 					'status' => 500,
 				)
@@ -423,7 +423,7 @@ class BBoss_REST_Notifications_Endpoint extends WP_REST_Controller {
 		if ( $request['is_new'] === $notification->is_new ) {
 			return new WP_Error(
 				'bp_rest_user_cannot_update_notification_status',
-				__( 'Notification is already with the status you are trying to update into.', 'buddyboss-platform' ),
+				__( 'Notification is already with the status you are trying to update into.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				array(
 					'status' => 500,
 				)
@@ -436,7 +436,7 @@ class BBoss_REST_Notifications_Endpoint extends WP_REST_Controller {
 		if ( ! (bool) $updated ) {
 			return new WP_Error(
 				'bp_rest_user_cannot_update_notification',
-				__( 'Cannot update the status of this notification.', 'buddyboss-platform' ),
+				__( 'Cannot update the status of this notification.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				array(
 					'status' => 500,
 				)
@@ -522,7 +522,7 @@ class BBoss_REST_Notifications_Endpoint extends WP_REST_Controller {
 		if ( ! BBoss_Notifications_Notification::delete( array( 'id' => $notification->id ) ) ) {
 			return new WP_Error(
 				'bp_rest_notification_invalid_id',
-				__( 'Invalid notification ID.', 'buddyboss-platform' ),
+				__( 'Invalid notification ID.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				array(
 					'status' => 404,
 				)
@@ -1005,66 +1005,66 @@ class BBoss_REST_Notifications_Endpoint extends WP_REST_Controller {
 			'properties' => array(
 				'id'                => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'A unique numeric ID for the notification.', 'buddyboss-platform' ),
+					'description' => __( 'A unique numeric ID for the notification.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'readonly'    => true,
 					'type'        => 'integer',
 				),
 				'user_id'           => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'The ID of the user the notification is addressed to.', 'buddyboss-platform' ),
+					'description' => __( 'The ID of the user the notification is addressed to.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'type'        => 'integer',
 					'default'     => bboss_loggedin_user_id(),
 				),
 				'item_id'           => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'The ID of the item associated with the notification.', 'buddyboss-platform' ),
+					'description' => __( 'The ID of the item associated with the notification.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'type'        => 'integer',
 				),
 				'secondary_item_id' => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'The ID of the secondary item associated with the notification.', 'buddyboss-platform' ),
+					'description' => __( 'The ID of the secondary item associated with the notification.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'type'        => 'integer',
 				),
 				'component'         => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'The name of the BuddyPress component the notification relates to.', 'buddyboss-platform' ),
+					'description' => __( 'The name of the BuddyPress component the notification relates to.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'type'        => 'string',
 				),
 				'action'            => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'The name of the component\'s action the notification is about.', 'buddyboss-platform' ),
+					'description' => __( 'The name of the component\'s action the notification is about.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'type'        => 'string',
 				),
 				'date'              => array(
-					'description' => __( 'The date the notification was created, in the site\'s timezone.', 'buddyboss-platform' ),
+					'description' => __( 'The date the notification was created, in the site\'s timezone.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'type'        => 'string',
 					'format'      => 'date-time',
 					'context'     => array( 'embed', 'view', 'edit' ),
 				),
 				'is_new'            => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Whether it\'s a new notification or not.', 'buddyboss-platform' ),
+					'description' => __( 'Whether it\'s a new notification or not.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'type'        => 'integer',
 					'default'     => 1,
 				),
 				'object'            => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'The name of the notification object.', 'buddyboss-platform' ),
+					'description' => __( 'The name of the notification object.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'type'        => 'string',
 				),
 				'object_id'         => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'The ID of the notification object.', 'buddyboss-platform' ),
+					'description' => __( 'The ID of the notification object.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'type'        => 'integer',
 				),
 				'description'       => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Description of notification.', 'buddyboss-platform' ),
+					'description' => __( 'Description of notification.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'type'        => 'object',
 					'readonly'    => true,
 					'properties'  => array(
 						'rendered' => array(
-							'description' => __( 'HTML description for the object, transformed for display.', 'buddyboss-platform' ),
+							'description' => __( 'HTML description for the object, transformed for display.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 							'type'        => 'string',
 							'context'     => array( 'embed', 'view', 'edit' ),
 							'readonly'    => true,
@@ -1073,17 +1073,17 @@ class BBoss_REST_Notifications_Endpoint extends WP_REST_Controller {
 				),
 				'link_url'          => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Link URL for the notification.', 'buddyboss-platform' ),
+					'description' => __( 'Link URL for the notification.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'type'        => 'string',
 				),
 				'rest_actions'      => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Rest Actions which perform accept/reject based on the status.', 'buddyboss-platform' ),
+					'description' => __( 'Rest Actions which perform accept/reject based on the status.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'type'        => 'object',
 				),
 				'readonly'          => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Readonly for the moderated members notification.', 'buddyboss-platform' ),
+					'description' => __( 'Readonly for the moderated members notification.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'type'        => 'object',
 				),
 			),
@@ -1093,7 +1093,7 @@ class BBoss_REST_Notifications_Endpoint extends WP_REST_Controller {
 
 		$avatar_properties['full'] = array(
 			/* translators: Full image size for the member Avatar */
-			'description' => sprintf( __( 'Avatar URL with full image size (%1$d x %2$d pixels).', 'buddyboss-platform' ), bboss_core_number_format( bboss_core_avatar_full_width() ), bboss_core_number_format( bboss_core_avatar_full_height() ) ),
+			'description' => sprintf( __( 'Avatar URL with full image size (%1$d x %2$d pixels).', 'buddyboss-community-social-network-groups-forums-messaging' ), bboss_core_number_format( bboss_core_avatar_full_width() ), bboss_core_number_format( bboss_core_avatar_full_height() ) ),
 			'type'        => 'string',
 			'format'      => 'uri',
 			'context'     => array( 'embed', 'view', 'edit' ),
@@ -1101,14 +1101,14 @@ class BBoss_REST_Notifications_Endpoint extends WP_REST_Controller {
 
 		$avatar_properties['thumb'] = array(
 			/* translators: Thumb image size for the member Avatar */
-			'description' => sprintf( __( 'Avatar URL with thumb image size (%1$d x %2$d pixels).', 'buddyboss-platform' ), bboss_core_number_format( bboss_core_avatar_thumb_width() ), bboss_core_number_format( bboss_core_avatar_thumb_height() ) ),
+			'description' => sprintf( __( 'Avatar URL with thumb image size (%1$d x %2$d pixels).', 'buddyboss-community-social-network-groups-forums-messaging' ), bboss_core_number_format( bboss_core_avatar_thumb_width() ), bboss_core_number_format( bboss_core_avatar_thumb_height() ) ),
 			'type'        => 'string',
 			'format'      => 'uri',
 			'context'     => array( 'embed', 'view', 'edit' ),
 		);
 
 		$schema['properties']['avatar_urls'] = array(
-			'description' => __( 'Avatar URLs for the notification.', 'buddyboss-platform' ),
+			'description' => __( 'Avatar URLs for the notification.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'type'        => 'object',
 			'context'     => array( 'embed', 'view', 'edit' ),
 			'readonly'    => true,
@@ -1137,7 +1137,7 @@ class BBoss_REST_Notifications_Endpoint extends WP_REST_Controller {
 		unset( $params['search'] );
 
 		$params['order_by'] = array(
-			'description'       => __( 'Name of the field to order according to.', 'buddyboss-platform' ),
+			'description'       => __( 'Name of the field to order according to.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'default'           => 'id',
 			'type'              => 'string',
 			'enum'              => array(
@@ -1154,7 +1154,7 @@ class BBoss_REST_Notifications_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['sort_order'] = array(
-			'description'       => __( 'Order sort attribute ascending or descending.', 'buddyboss-platform' ),
+			'description'       => __( 'Order sort attribute ascending or descending.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'default'           => 'ASC',
 			'type'              => 'string',
 			'enum'              => array( 'ASC', 'DESC' ),
@@ -1163,7 +1163,7 @@ class BBoss_REST_Notifications_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['component_name'] = array(
-			'description'       => __( 'Limit result set to notifications associated with a specific component', 'buddyboss-platform' ),
+			'description'       => __( 'Limit result set to notifications associated with a specific component', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'default'           => '',
 			'type'              => 'string',
 			'sanitize_callback' => 'sanitize_text_field',
@@ -1171,7 +1171,7 @@ class BBoss_REST_Notifications_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['component_action'] = array(
-			'description'       => __( 'Limit result set to notifications associated with a specific component\'s action name.', 'buddyboss-platform' ),
+			'description'       => __( 'Limit result set to notifications associated with a specific component\'s action name.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'default'           => '',
 			'type'              => 'string',
 			'sanitize_callback' => 'sanitize_text_field',
@@ -1179,7 +1179,7 @@ class BBoss_REST_Notifications_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['user_id'] = array(
-			'description'       => __( 'Limit result set to notifications addressed to a specific user.', 'buddyboss-platform' ),
+			'description'       => __( 'Limit result set to notifications addressed to a specific user.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'default'           => bboss_loggedin_user_id(),
 			'type'              => 'integer',
 			'sanitize_callback' => 'absint',
@@ -1187,7 +1187,7 @@ class BBoss_REST_Notifications_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['item_id'] = array(
-			'description'       => __( 'Limit result set to notifications associated with a specific item ID.', 'buddyboss-platform' ),
+			'description'       => __( 'Limit result set to notifications associated with a specific item ID.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'default'           => 0,
 			'type'              => 'integer',
 			'sanitize_callback' => 'absint',
@@ -1195,7 +1195,7 @@ class BBoss_REST_Notifications_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['secondary_item_id'] = array(
-			'description'       => __( 'Limit result set to notifications associated with a specific secondary item ID.', 'buddyboss-platform' ),
+			'description'       => __( 'Limit result set to notifications associated with a specific secondary item ID.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'default'           => 0,
 			'type'              => 'integer',
 			'sanitize_callback' => 'absint',
@@ -1203,7 +1203,7 @@ class BBoss_REST_Notifications_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['is_new'] = array(
-			'description'       => __( 'Limit result set to items from specific states.', 'buddyboss-platform' ),
+			'description'       => __( 'Limit result set to items from specific states.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'default'           => true,
 			'type'              => 'boolean',
 			'sanitize_callback' => 'rest_sanitize_boolean',
@@ -1257,9 +1257,9 @@ class BBoss_REST_Notifications_Endpoint extends WP_REST_Controller {
 					if ( $friendship->id === $notification->secondary_item_id ) {
 
 						if ( ! empty( $friendship->is_confirmed ) ) {
-							$data['status'] = __( 'Accepted', 'buddyboss-platform' );
+							$data['status'] = __( 'Accepted', 'buddyboss-community-social-network-groups-forums-messaging' );
 						} else {
-							$data['status']             = __( 'Pending', 'buddyboss-platform' );
+							$data['status']             = __( 'Pending', 'buddyboss-community-social-network-groups-forums-messaging' );
 							$data['accept']['endpoint'] = rest_url( $this->namespace . '/' . bboss()->friends->id . '/' . $friendship->id );
 							$data['accept']['method']   = 'PATCH';
 							$data['accept']['link_url'] = bboss_loggedin_user_domain() . bboss_get_friends_slug();
@@ -1269,7 +1269,7 @@ class BBoss_REST_Notifications_Endpoint extends WP_REST_Controller {
 							$data['reject']['link_url'] = bboss_loggedin_user_domain() . bboss_get_friends_slug();
 						}
 					} else {
-						$data['status'] = __( 'Rejected', 'buddyboss-platform' );
+						$data['status'] = __( 'Rejected', 'buddyboss-community-social-network-groups-forums-messaging' );
 					}
 				}
 				break;
@@ -1284,7 +1284,7 @@ class BBoss_REST_Notifications_Endpoint extends WP_REST_Controller {
 					$group     = bboss_groups_get_group( $notification->item_id );
 					$is_member = bboss_groups_is_user_member( $notification->secondary_item_id, $notification->item_id );
 					if ( ! empty( $is_member ) ) {
-						$data['status'] = __( 'Accepted', 'buddyboss-platform' );
+						$data['status'] = __( 'Accepted', 'buddyboss-community-social-network-groups-forums-messaging' );
 					} else {
 						$requests = bboss_groups_get_requests(
 							array(
@@ -1296,9 +1296,9 @@ class BBoss_REST_Notifications_Endpoint extends WP_REST_Controller {
 						if ( ! empty( $requests ) ) {
 							$current_request = current( $requests );
 							if ( ! empty( $current_request->accepted ) ) {
-								$data['status'] = __( 'Accepted', 'buddyboss-platform' );
+								$data['status'] = __( 'Accepted', 'buddyboss-community-social-network-groups-forums-messaging' );
 							} else {
-								$data['status']             = __( 'Pending', 'buddyboss-platform' );
+								$data['status']             = __( 'Pending', 'buddyboss-community-social-network-groups-forums-messaging' );
 								$data['accept']['endpoint'] = rest_url( $this->namespace . '/' . bboss()->groups->id . '/membership-requests/' . $current_request->id );
 								$data['accept']['method']   = 'PATCH';
 								$data['accept']['link_url'] = trailingslashit( bboss_get_group_permalink( $group ) . 'members' );
@@ -1308,7 +1308,7 @@ class BBoss_REST_Notifications_Endpoint extends WP_REST_Controller {
 								$data['reject']['link_url'] = trailingslashit( bboss_get_group_permalink( $group ) . 'members' );
 							}
 						} else {
-							$data['status'] = __( 'Rejected', 'buddyboss-platform' );
+							$data['status'] = __( 'Rejected', 'buddyboss-community-social-network-groups-forums-messaging' );
 						}
 					}
 				}
@@ -1320,7 +1320,7 @@ class BBoss_REST_Notifications_Endpoint extends WP_REST_Controller {
 					$group     = bboss_groups_get_group( $notification->item_id );
 					$is_member = bboss_groups_is_user_member( $notification->user_id, $notification->item_id );
 					if ( ! empty( $is_member ) ) {
-						$data['status'] = __( 'Accepted', 'buddyboss-platform' );
+						$data['status'] = __( 'Accepted', 'buddyboss-community-social-network-groups-forums-messaging' );
 					} else {
 						$invites = bboss_groups_get_invites(
 							array(
@@ -1332,9 +1332,9 @@ class BBoss_REST_Notifications_Endpoint extends WP_REST_Controller {
 						if ( ! empty( $invites ) ) {
 							$current_invites = current( $invites );
 							if ( ! empty( $current_invites->accepted ) ) {
-								$data['status'] = __( 'Accepted', 'buddyboss-platform' );
+								$data['status'] = __( 'Accepted', 'buddyboss-community-social-network-groups-forums-messaging' );
 							} else {
-								$data['status']             = __( 'Pending', 'buddyboss-platform' );
+								$data['status']             = __( 'Pending', 'buddyboss-community-social-network-groups-forums-messaging' );
 								$data['accept']['endpoint'] = rest_url( $this->namespace . '/' . bboss()->groups->id . '/invites/' . $current_invites->id );
 								$data['accept']['method']   = 'PATCH';
 								$data['accept']['link_url'] = bboss_get_group_permalink( $group );
@@ -1344,7 +1344,7 @@ class BBoss_REST_Notifications_Endpoint extends WP_REST_Controller {
 								$data['reject']['link_url'] = bboss_get_group_permalink( $group );
 							}
 						} else {
-							$data['status'] = __( 'Rejected', 'buddyboss-platform' );
+							$data['status'] = __( 'Rejected', 'buddyboss-community-social-network-groups-forums-messaging' );
 						}
 					}
 				}
@@ -1537,7 +1537,7 @@ class BBoss_REST_Notifications_Endpoint extends WP_REST_Controller {
 	public function update_read_permissions_check( $request ) {
 		$retval = new WP_Error(
 			'bp_rest_authorization_required',
-			__( 'Sorry, you are not allowed to see the notification.', 'buddyboss-platform' ),
+			__( 'Sorry, you are not allowed to see the notification.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			array(
 				'status' => rest_authorization_required_code(),
 			)

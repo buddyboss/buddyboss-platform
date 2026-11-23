@@ -23,16 +23,16 @@ style="display: none;">
 					<?php
 					esc_attr_e(
 						'Close pop-up',
-						'buddyboss-platform'
+						'buddyboss-community-social-network-groups-forums-messaging'
 					);
 					?>
 						">
-				<?php esc_html_e( 'Close', 'buddyboss-platform' ); ?>
+				<?php esc_html_e( 'Close', 'buddyboss-community-social-network-groups-forums-messaging' ); ?>
 			</button>
 		</div>
 
 		<div class="bp-hello-title">
-			<h1 id="bp-hello-title" tabindex="-1"><?php esc_html_e( 'Notice', 'buddyboss-platform' ); ?></h1>
+			<h1 id="bp-hello-title" tabindex="-1"><?php esc_html_e( 'Notice', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></h1>
 		</div>
 	</div>
 	<div class="bp-hello-content">
@@ -42,12 +42,12 @@ style="display: none;">
 	<div class="bp-hello-footer">
 		<button class="close-modal button">
 			<?php
-			esc_html_e( 'Cancel', 'buddyboss-platform' );
+			esc_html_e( 'Cancel', 'buddyboss-community-social-network-groups-forums-messaging' );
 			?>
 		</button>
 		<button class="component-deactivate button">
 			<?php
-			esc_html_e( 'Yes I understand, Deactivate', 'buddyboss-platform' );
+			esc_html_e( 'Yes I understand, Deactivate', 'buddyboss-community-social-network-groups-forums-messaging' );
 			?>
 		</button>
 	</div>

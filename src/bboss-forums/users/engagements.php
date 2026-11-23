@@ -627,15 +627,15 @@ function bboss_bbp_favorites_handler( $action = '' ) {
 
 	// Check for empty topic.
 	if ( empty( $topic_id ) ) {
-		bboss_bbp_add_error( 'bbp_favorite_topic_id', __( '<strong>Error</strong>: No topic was found. Which topic are you marking/unmarking as favorite?', 'buddyboss-platform' ) );
+		bboss_bbp_add_error( 'bbp_favorite_topic_id', __( '<strong>Error</strong>: No topic was found. Which topic are you marking/unmarking as favorite?', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 
 		// Check nonce.
 	} elseif ( ! bboss_bbp_verify_nonce_request( 'toggle-favorite_' . $topic_id ) ) {
-		bboss_bbp_add_error( 'bbp_favorite_nonce', __( '<strong>Error</strong>: Are you sure you wanted to do that?', 'buddyboss-platform' ) );
+		bboss_bbp_add_error( 'bbp_favorite_nonce', __( '<strong>Error</strong>: Are you sure you wanted to do that?', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 
 		// Check current user's ability to edit the user.
 	} elseif ( ! current_user_can( 'edit_user', $user_id ) ) {
-		bboss_bbp_add_error( 'bbp_favorite_permission', __( '<strong>Error</strong>: You do not have permission to edit favorites for that user.', 'buddyboss-platform' ) );
+		bboss_bbp_add_error( 'bbp_favorite_permission', __( '<strong>Error</strong>: You do not have permission to edit favorites for that user.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 	}
 
 	// Bail if errors.
@@ -681,9 +681,9 @@ function bboss_bbp_favorites_handler( $action = '' ) {
 
 		// Fail! Handle errors.
 	} elseif ( 'bbp_favorite_remove' === $action ) {
-		bboss_bbp_add_error( 'bbp_favorite_remove', __( '<strong>Error</strong>: There was a problem removing that topic from favorites.', 'buddyboss-platform' ) );
+		bboss_bbp_add_error( 'bbp_favorite_remove', __( '<strong>Error</strong>: There was a problem removing that topic from favorites.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 	} elseif ( 'bbp_favorite_add' === $action ) {
-		bboss_bbp_add_error( 'bbp_favorite_add', __( '<strong>Error</strong>: There was a problem favoriting that topic.', 'buddyboss-platform' ) );
+		bboss_bbp_add_error( 'bbp_favorite_add', __( '<strong>Error</strong>: There was a problem favoriting that topic.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 	}
 
 	return (bool) $success;

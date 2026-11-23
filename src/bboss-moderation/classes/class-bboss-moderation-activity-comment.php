@@ -112,7 +112,7 @@ class BBoss_Moderation_Activity_Comment extends BBoss_Moderation_Abstract {
 	 * @return mixed
 	 */
 	public function add_content_types( $content_types ) {
-		$content_types[ self::$moderation_type ] = __( 'Activity Comments', 'buddyboss-platform' );
+		$content_types[ self::$moderation_type ] = __( 'Activity Comments', 'buddyboss-community-social-network-groups-forums-messaging' );
 
 		return $content_types;
 	}
@@ -293,7 +293,7 @@ class BBoss_Moderation_Activity_Comment extends BBoss_Moderation_Abstract {
 			return $button_text;
 		}
 
-		$button_text = esc_html__( 'Report Comment', 'buddyboss-platform' );
+		$button_text = esc_html__( 'Report Comment', 'buddyboss-community-social-network-groups-forums-messaging' );
 
 		return $button_text;
 	}
@@ -315,7 +315,7 @@ class BBoss_Moderation_Activity_Comment extends BBoss_Moderation_Abstract {
 			return $content_type;
 		}
 
-		$content_type = esc_html__( 'Comment', 'buddyboss-platform' );
+		$content_type = esc_html__( 'Comment', 'buddyboss-community-social-network-groups-forums-messaging' );
 
 		return $content_type;
 	}

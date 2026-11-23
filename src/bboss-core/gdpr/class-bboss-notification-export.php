@@ -24,7 +24,7 @@ final class BBoss_Notification_Export extends BBoss_Export {
 
 		if ( null === $instance ) {
 			$instance = new BBoss_Notification_Export();
-			$instance->setup( 'bp_notification', __( 'Notifications', 'buddyboss-platform' ) );
+			$instance->setup( 'bp_notification', __( 'Notifications', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 		}
 
 		return $instance;
@@ -114,7 +114,7 @@ final class BBoss_Notification_Export extends BBoss_Export {
 		foreach ( $data_items['items'] as $item ) {
 
 			$group_id    = 'bp_notifications';
-			$group_label = __( 'Notifications', 'buddyboss-platform' );
+			$group_label = __( 'Notifications', 'buddyboss-community-social-network-groups-forums-messaging' );
 			$item_id     = "{$this->exporter_name}-{$group_id}-{$item->id}";
 
 			$notification = bboss_notifications_get_notification( $item->id );
@@ -123,22 +123,22 @@ final class BBoss_Notification_Export extends BBoss_Export {
 			$action = wp_strip_all_tags( $action );
 			$action = apply_filters( 'buddyboss_bp_gdpr_bp_notification_item_action', $action, $item, $data_items );
 
-			$mark_as_read = __( 'No', 'buddyboss-platform' );
+			$mark_as_read = __( 'No', 'buddyboss-community-social-network-groups-forums-messaging' );
 			if ( '0' === $item->is_new ) {
-				$mark_as_read = __( 'Yes', 'buddyboss-platform' );
+				$mark_as_read = __( 'Yes', 'buddyboss-community-social-network-groups-forums-messaging' );
 			}
 
 			$data = array(
 				array(
-					'name'  => __( 'Notification Action', 'buddyboss-platform' ),
+					'name'  => __( 'Notification Action', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'value' => $action,
 				),
 				array(
-					'name'  => __( 'Notified Date (GMT)', 'buddyboss-platform' ),
+					'name'  => __( 'Notified Date (GMT)', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'value' => $item->date_notified,
 				),
 				array(
-					'name'  => __( 'Mark as Read', 'buddyboss-platform' ),
+					'name'  => __( 'Mark as Read', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'value' => $mark_as_read,
 				),
 			);

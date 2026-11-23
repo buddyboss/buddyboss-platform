@@ -37,7 +37,7 @@ class BBoss_REST_Forums_Link_Preview_Endpoint extends WP_REST_Controller {
 			array(
 				'args'   => array(
 					'url' => array(
-						'description' => __( 'URL for the generate link preview.', 'buddyboss-platform' ),
+						'description' => __( 'URL for the generate link preview.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 						'type'        => 'string',
 						'required'    => true,
 					),
@@ -81,7 +81,7 @@ class BBoss_REST_Forums_Link_Preview_Endpoint extends WP_REST_Controller {
 		if ( ! wp_http_validate_url( $url ) ) {
 			return new WP_Error(
 				'bp_rest_invalid_url',
-				__( 'Sorry, URL is not valid.', 'buddyboss-platform' ),
+				__( 'Sorry, URL is not valid.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				array(
 					'status' => 400,
 				)
@@ -103,7 +103,7 @@ class BBoss_REST_Forums_Link_Preview_Endpoint extends WP_REST_Controller {
 		if ( empty( $parse_url_data ) ) {
 			return new WP_Error(
 				'bp_rest_unknown_error',
-				__( 'There was a problem generating a link preview.', 'buddyboss-platform' ),
+				__( 'There was a problem generating a link preview.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				array(
 					'status' => 400,
 				)
@@ -139,7 +139,7 @@ class BBoss_REST_Forums_Link_Preview_Endpoint extends WP_REST_Controller {
 	public function get_items_permissions_check( $request ) {
 		$retval = new WP_Error(
 			'bp_rest_component_required',
-			__( 'Sorry, Forums component was not enabled.', 'buddyboss-platform' ),
+			__( 'Sorry, Forums component was not enabled.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			array(
 				'status' => '404',
 			)
@@ -152,7 +152,7 @@ class BBoss_REST_Forums_Link_Preview_Endpoint extends WP_REST_Controller {
 		if ( true === $retval && ! ( is_user_logged_in() || bboss_bbp_allow_anonymous() ) ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
-				__( 'Sorry, you are not allowed to generate link preview in the forums.', 'buddyboss-platform' ),
+				__( 'Sorry, you are not allowed to generate link preview in the forums.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				array(
 					'status' => rest_authorization_required_code(),
 				)
@@ -162,7 +162,7 @@ class BBoss_REST_Forums_Link_Preview_Endpoint extends WP_REST_Controller {
 		if ( true === $retval && function_exists( 'bboss_bbp_use_autoembed' ) && true !== bboss_bbp_use_autoembed() ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
-				__( 'Sorry, Link Previews is disabled.', 'buddyboss-platform' ),
+				__( 'Sorry, Link Previews is disabled.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				array(
 					'status' => rest_authorization_required_code(),
 				)
@@ -195,19 +195,19 @@ class BBoss_REST_Forums_Link_Preview_Endpoint extends WP_REST_Controller {
 			'properties' => array(
 				'title'       => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Title for the link preview.', 'buddyboss-platform' ),
+					'description' => __( 'Title for the link preview.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'type'        => 'string',
 					'readonly'    => true,
 				),
 				'description' => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Description or HTML to generate the link preview.', 'buddyboss-platform' ),
+					'description' => __( 'Description or HTML to generate the link preview.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'type'        => 'string',
 					'readonly'    => true,
 				),
 				'images'      => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Image URLs for the preview.', 'buddyboss-platform' ),
+					'description' => __( 'Image URLs for the preview.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'type'        => 'array',
 					'readonly'    => true,
 					'items'       => array(
@@ -216,13 +216,13 @@ class BBoss_REST_Forums_Link_Preview_Endpoint extends WP_REST_Controller {
 				),
 				'error'       => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'If any errors to retrieving a the preview data.', 'buddyboss-platform' ),
+					'description' => __( 'If any errors to retrieving a the preview data.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'type'        => 'string',
 					'readonly'    => true,
 				),
 				'wp_embed'    => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Whether the URL is wp embed or not.', 'buddyboss-platform' ),
+					'description' => __( 'Whether the URL is wp embed or not.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'type'        => 'boolean',
 					'readonly'    => true,
 				),

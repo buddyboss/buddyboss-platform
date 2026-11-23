@@ -151,17 +151,17 @@ function bboss_friends_header_tabs() {
 	<?php
 	if ( ! bboss_action_variable( 0 ) || bboss_is_action_variable( 'recently-active', 0 ) ) :
 		?>
-		 class="current"<?php endif; ?>><a href="<?php echo esc_url( trailingslashit( bboss_displayed_user_domain() . bboss_get_friends_slug() . '/my-friends/recently-active' ) ); ?>"><?php esc_html_e( 'Recently Active', 'buddyboss-platform' ); ?></a></li>
+		 class="current"<?php endif; ?>><a href="<?php echo esc_url( trailingslashit( bboss_displayed_user_domain() . bboss_get_friends_slug() . '/my-friends/recently-active' ) ); ?>"><?php esc_html_e( 'Recently Active', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></a></li>
 	<li
 	<?php
 	if ( bboss_is_action_variable( 'newest', 0 ) ) :
 		?>
-		 class="current"<?php endif; ?>><a href="<?php echo esc_url( trailingslashit( bboss_displayed_user_domain() . bboss_get_friends_slug() . '/my-friends/newest' ) ); ?>"><?php esc_html_e( 'Newest', 'buddyboss-platform' ); ?></a></li>
+		 class="current"<?php endif; ?>><a href="<?php echo esc_url( trailingslashit( bboss_displayed_user_domain() . bboss_get_friends_slug() . '/my-friends/newest' ) ); ?>"><?php esc_html_e( 'Newest', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></a></li>
 	<li
 	<?php
 	if ( bboss_is_action_variable( 'alphabetically', 0 ) ) :
 		?>
-		 class="current"<?php endif; ?>><a href="<?php echo esc_url( trailingslashit( bboss_displayed_user_domain() . bboss_get_friends_slug() . '/my-friends/alphabetically' ) ); ?>"><?php esc_html_e( 'Alphabetically', 'buddyboss-platform' ); ?></a></li>
+		 class="current"<?php endif; ?>><a href="<?php echo esc_url( trailingslashit( bboss_displayed_user_domain() . bboss_get_friends_slug() . '/my-friends/alphabetically' ) ); ?>"><?php esc_html_e( 'Alphabetically', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></a></li>
 
 	<?php
 	do_action( 'friends_header_tabs' );
@@ -181,13 +181,13 @@ function bboss_friends_filter_title() {
 	switch ( $current_filter ) {
 		case 'recently-active':
 		default:
-			esc_html_e( 'Recently Active', 'buddyboss-platform' );
+			esc_html_e( 'Recently Active', 'buddyboss-community-social-network-groups-forums-messaging' );
 			break;
 		case 'newest':
-			esc_html_e( 'Newest', 'buddyboss-platform' );
+			esc_html_e( 'Newest', 'buddyboss-community-social-network-groups-forums-messaging' );
 			break;
 		case 'alphabetically':
-			esc_html_e( 'Alphabetically', 'buddyboss-platform' );
+			esc_html_e( 'Alphabetically', 'buddyboss-community-social-network-groups-forums-messaging' );
 			break;
 	}
 }

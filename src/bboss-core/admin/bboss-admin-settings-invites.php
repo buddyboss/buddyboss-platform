@@ -28,8 +28,8 @@ function bboss_admin_settings_register_invites_feature() {
 	bboss_register_feature(
 		'invites',
 		array(
-			'label'              => __( 'Email Invites', 'buddyboss-platform' ),
-			'description'        => __( 'Allow members to send email invitations to help encourage others to register and join your community.', 'buddyboss-platform' ),
+			'label'              => __( 'Email Invites', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'description'        => __( 'Allow members to send email invitations to help encourage others to register and join your community.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'icon'               => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-paper-plane-tilt',
@@ -63,7 +63,7 @@ function bboss_admin_settings_register_invites_feature() {
 		'invites',
 		'email_invite_settings',
 		array(
-			'title'      => __( 'Email Invite Settings', 'buddyboss-platform' ),
+			'title'      => __( 'Email Invite Settings', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'icon'       => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-gear',
@@ -87,7 +87,7 @@ function bboss_admin_settings_register_invites_feature() {
 		'invites',
 		'invites_list',
 		array(
-			'title' => __( 'Email Invites', 'buddyboss-platform' ),
+			'title' => __( 'Email Invites', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'icon'  => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-envelope-simple-open',
@@ -109,7 +109,7 @@ function bboss_admin_settings_register_invites_feature() {
 		'email_invite_settings',
 		'email_invite_general',
 		array(
-			'title'    => __( 'Email Invite Settings', 'buddyboss-platform' ),
+			'title'    => __( 'Email Invite Settings', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'order'    => 10,
 			'help_url' => '636156',
 		)
@@ -122,9 +122,9 @@ function bboss_admin_settings_register_invites_feature() {
 		'email_invite_general',
 		array(
 			'name'              => 'bp-disable-invite-member-email-subject',
-			'label'             => __( 'Email Subject', 'buddyboss-platform' ),
+			'label'             => __( 'Email Subject', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'type'              => 'toggle',
-			'description'       => __( 'Allow members to customize the email subject', 'buddyboss-platform' ),
+			'description'       => __( 'Allow members to customize the email subject', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'default'           => absint( bboss_get_option( 'bp-disable-invite-member-email-subject', 0 ) ),
 			'sanitize_callback' => 'absint',
 			'order'             => 10,
@@ -138,9 +138,9 @@ function bboss_admin_settings_register_invites_feature() {
 		'email_invite_general',
 		array(
 			'name'              => 'bp-disable-invite-member-email-content',
-			'label'             => __( 'Email Content', 'buddyboss-platform' ),
+			'label'             => __( 'Email Content', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'type'              => 'toggle',
-			'description'       => __( 'Allow members to customize the email body content', 'buddyboss-platform' ),
+			'description'       => __( 'Allow members to customize the email body content', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'default'           => absint( bboss_get_option( 'bp-disable-invite-member-email-content', 1 ) ),
 			'sanitize_callback' => 'absint',
 			'order'             => 20,
@@ -156,13 +156,13 @@ function bboss_admin_settings_register_invites_feature() {
 			'email_invite_general',
 			array(
 				'name'              => 'bp-disable-invite-member-type',
-				'label'             => __( 'Set Profile Type', 'buddyboss-platform' ),
+				'label'             => __( 'Set Profile Type', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				'type'              => 'toggle',
-				'description'       => __( 'Allow members to select profile type of invitee', 'buddyboss-platform' ),
+				'description'       => __( 'Allow members to select profile type of invitee', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				'help_text'         => sprintf(
 					/* translators: %s: profile type link. */
-					__( 'Customize this setting while editing any of your %s.', 'buddyboss-platform' ),
-					'<a href="' . esc_url( bboss_get_feature_settings_url( 'members', 'profile_types' ) ) . '">' . __( 'profile type', 'buddyboss-platform' ) . '</a>'
+					__( 'Customize this setting while editing any of your %s.', 'buddyboss-community-social-network-groups-forums-messaging' ),
+					'<a href="' . esc_url( bboss_get_feature_settings_url( 'members', 'profile_types' ) ) . '">' . __( 'profile type', 'buddyboss-community-social-network-groups-forums-messaging' ) . '</a>'
 				),
 				'default'           => absint( bboss_get_option( 'bp-disable-invite-member-type', 0 ) ),
 				'sanitize_callback' => 'absint',

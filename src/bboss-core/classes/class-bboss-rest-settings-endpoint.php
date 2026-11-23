@@ -81,7 +81,7 @@ class BBoss_REST_Settings_Endpoint extends WP_REST_Controller {
 
 		$bp_plugin_file                 = 'buddypress/bp-loader.php';
 		$bb_plugin_file                 = 'bbpress/bbpress.php';
-		$buddyboss_platform_plugin_file = 'buddyboss-platform/bp-loader.php';
+		$buddyboss_platform_plugin_file = 'buddyboss-community-social-network-groups-forums-messaging/bp-loader.php';
 
 		$results = array();
 
@@ -160,7 +160,7 @@ class BBoss_REST_Settings_Endpoint extends WP_REST_Controller {
 		if ( ! is_user_logged_in() || ! current_user_can( 'manage_options' ) ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
-				__( 'Sorry, you are not allowed to save settings.', 'buddyboss-platform' ),
+				__( 'Sorry, you are not allowed to save settings.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				array(
 					'status' => rest_authorization_required_code(),
 				)
@@ -222,7 +222,7 @@ class BBoss_REST_Settings_Endpoint extends WP_REST_Controller {
 		if ( ! empty( $errors ) ) {
 			return new WP_Error(
 				'bp_rest_settings_validation_failed',
-				__( 'Some settings failed validation.', 'buddyboss-platform' ),
+				__( 'Some settings failed validation.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				array(
 					'status' => 400,
 					'errors' => $errors,
@@ -233,7 +233,7 @@ class BBoss_REST_Settings_Endpoint extends WP_REST_Controller {
 		if ( empty( $updated ) ) {
 			return new WP_Error(
 				'bp_rest_settings_save_failed',
-				__( 'No valid settings were updated. Settings must match the allowed platform settings.', 'buddyboss-platform' ),
+				__( 'No valid settings were updated. Settings must match the allowed platform settings.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				array(
 					'status' => 400,
 				)
@@ -260,7 +260,7 @@ class BBoss_REST_Settings_Endpoint extends WP_REST_Controller {
 			'properties' => array(
 				'name'        => array(
 					'context'     => array( 'view' ),
-					'description' => __( 'Name of the setting.', 'buddyboss-platform' ),
+					'description' => __( 'Name of the setting.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'type'        => 'string',
 					'arg_options' => array(
 						'sanitize_callback' => 'sanitize_key',
@@ -268,7 +268,7 @@ class BBoss_REST_Settings_Endpoint extends WP_REST_Controller {
 				),
 				'status'      => array(
 					'context'     => array( 'view' ),
-					'description' => __( 'Whether the setting is active or inactive.', 'buddyboss-platform' ),
+					'description' => __( 'Whether the setting is active or inactive.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'type'        => 'string',
 					'enum'        => array( 'active', 'inactive' ),
 					'arg_options' => array(
@@ -277,7 +277,7 @@ class BBoss_REST_Settings_Endpoint extends WP_REST_Controller {
 				),
 				'title'       => array(
 					'context'     => array( 'view' ),
-					'description' => __( 'Title of the setting.', 'buddyboss-platform' ),
+					'description' => __( 'Title of the setting.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'type'        => 'string',
 					'arg_options' => array(
 						'sanitize_callback' => 'sanitize_text_field',
@@ -285,7 +285,7 @@ class BBoss_REST_Settings_Endpoint extends WP_REST_Controller {
 				),
 				'description' => array(
 					'context'     => array( 'view' ),
-					'description' => __( 'Description of the setting.', 'buddyboss-platform' ),
+					'description' => __( 'Description of the setting.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'type'        => 'string',
 					'arg_options' => array(
 						'sanitize_callback' => 'sanitize_text_field',
@@ -334,7 +334,7 @@ class BBoss_REST_Settings_Endpoint extends WP_REST_Controller {
 			return new WP_Error(
 				'bp_rest_setting_null_value',
 				/* translators: 1: Setting key. */
-				sprintf( __( 'Setting "%s" cannot be null.', 'buddyboss-platform' ), $key ),
+				sprintf( __( 'Setting "%s" cannot be null.', 'buddyboss-community-social-network-groups-forums-messaging' ), $key ),
 				array( 'status' => 400 )
 			);
 		}
@@ -357,7 +357,7 @@ class BBoss_REST_Settings_Endpoint extends WP_REST_Controller {
 				return new WP_Error(
 					'bp_rest_setting_type_mismatch',
 					/* translators: 1: Setting key, 2: Expected type, 3: Actual type. */
-					sprintf( __( 'Setting "%1$s" expects type %2$s, got %3$s.', 'buddyboss-platform' ), $key, $expected_type, gettype( $value ) ),
+					sprintf( __( 'Setting "%1$s" expects type %2$s, got %3$s.', 'buddyboss-community-social-network-groups-forums-messaging' ), $key, $expected_type, gettype( $value ) ),
 					array( 'status' => 400 )
 				);
 			}
@@ -387,7 +387,7 @@ class BBoss_REST_Settings_Endpoint extends WP_REST_Controller {
 			return new WP_Error(
 				'bp_rest_setting_array_expected',
 				/* translators: 1: Setting key, 2: Actual type. */
-				sprintf( __( 'Setting "%1$s" expects an array, got %2$s.', 'buddyboss-platform' ), $key, gettype( $value ) ),
+				sprintf( __( 'Setting "%1$s" expects an array, got %2$s.', 'buddyboss-community-social-network-groups-forums-messaging' ), $key, gettype( $value ) ),
 				array( 'status' => 400 )
 			);
 		}
@@ -509,7 +509,7 @@ class BBoss_REST_Settings_Endpoint extends WP_REST_Controller {
 				return new WP_Error(
 					'bp_rest_setting_array_too_large',
 					/* translators: 1: Setting key. */
-					sprintf( __( 'Setting "%s" array is too large. Maximum 100 items allowed.', 'buddyboss-platform' ), $key ),
+					sprintf( __( 'Setting "%s" array is too large. Maximum 100 items allowed.', 'buddyboss-community-social-network-groups-forums-messaging' ), $key ),
 					array( 'status' => 400 )
 				);
 			}
@@ -522,7 +522,7 @@ class BBoss_REST_Settings_Endpoint extends WP_REST_Controller {
 						return new WP_Error(
 							'bp_rest_setting_array_item_type',
 							/* translators: 1: Setting key, 2: Array index. */
-							sprintf( __( 'Setting "%1$s" array item at index %2$d must be boolean.', 'buddyboss-platform' ), $key, $index ),
+							sprintf( __( 'Setting "%1$s" array item at index %2$d must be boolean.', 'buddyboss-community-social-network-groups-forums-messaging' ), $key, $index ),
 							array( 'status' => 400 )
 						);
 					}
@@ -537,7 +537,7 @@ class BBoss_REST_Settings_Endpoint extends WP_REST_Controller {
 						return new WP_Error(
 							'bp_rest_setting_array_item_type',
 							/* translators: 1: Setting key, 2: Array index. */
-							sprintf( __( 'Setting "%1$s" array item at index %2$d must be numeric.', 'buddyboss-platform' ), $key, $index ),
+							sprintf( __( 'Setting "%1$s" array item at index %2$d must be numeric.', 'buddyboss-community-social-network-groups-forums-messaging' ), $key, $index ),
 							array( 'status' => 400 )
 						);
 					}
@@ -550,7 +550,7 @@ class BBoss_REST_Settings_Endpoint extends WP_REST_Controller {
 						return new WP_Error(
 							'bp_rest_setting_array_item_type',
 							/* translators: 1: Setting key, 2: Array index. */
-							sprintf( __( 'Setting "%1$s" array item at index %2$d must be a string.', 'buddyboss-platform' ), $key, $index ),
+							sprintf( __( 'Setting "%1$s" array item at index %2$d must be a string.', 'buddyboss-community-social-network-groups-forums-messaging' ), $key, $index ),
 							array( 'status' => 400 )
 						);
 					}
@@ -560,7 +560,7 @@ class BBoss_REST_Settings_Endpoint extends WP_REST_Controller {
 						return new WP_Error(
 							'bp_rest_setting_array_item_too_long',
 							/* translators: 1: Setting key, 2: Array index. */
-							sprintf( __( 'Setting "%1$s" array item at index %2$d is too long. Maximum 1000 characters.', 'buddyboss-platform' ), $key, $index ),
+							sprintf( __( 'Setting "%1$s" array item at index %2$d is too long. Maximum 1000 characters.', 'buddyboss-community-social-network-groups-forums-messaging' ), $key, $index ),
 							array( 'status' => 400 )
 						);
 					}
@@ -599,7 +599,7 @@ class BBoss_REST_Settings_Endpoint extends WP_REST_Controller {
 				return new WP_Error(
 					'bp_rest_setting_array_key_type',
 					/* translators: 1: Setting key, 2: Actual type. */
-					sprintf( __( 'Setting "%1$s" array key must be a string, got %2$s.', 'buddyboss-platform' ), $key, gettype( $array_key ) ),
+					sprintf( __( 'Setting "%1$s" array key must be a string, got %2$s.', 'buddyboss-community-social-network-groups-forums-messaging' ), $key, gettype( $array_key ) ),
 					array( 'status' => 400 )
 				);
 			}
@@ -610,7 +610,7 @@ class BBoss_REST_Settings_Endpoint extends WP_REST_Controller {
 				return new WP_Error(
 					'bp_rest_setting_array_key_too_long',
 					/* translators: 1: Setting key, 2: Array key. */
-					sprintf( __( 'Setting "%1$s" array key "%2$s" is too long. Maximum 100 characters.', 'buddyboss-platform' ), $key, $array_key ),
+					sprintf( __( 'Setting "%1$s" array key "%2$s" is too long. Maximum 100 characters.', 'buddyboss-community-social-network-groups-forums-messaging' ), $key, $array_key ),
 					array( 'status' => 400 )
 				);
 			}
@@ -622,7 +622,7 @@ class BBoss_REST_Settings_Endpoint extends WP_REST_Controller {
 				return new WP_Error(
 					'bp_rest_setting_array_key_invalid',
 					/* translators: 1: Setting key, 2: Array key. */
-					sprintf( __( 'Setting "%1$s" array key "%2$s" contains invalid characters.', 'buddyboss-platform' ), $key, $array_key ),
+					sprintf( __( 'Setting "%1$s" array key "%2$s" contains invalid characters.', 'buddyboss-community-social-network-groups-forums-messaging' ), $key, $array_key ),
 					array( 'status' => 400 )
 				);
 			}
@@ -633,7 +633,7 @@ class BBoss_REST_Settings_Endpoint extends WP_REST_Controller {
 				return new WP_Error(
 					'bp_rest_setting_array_item_type',
 					/* translators: 1: Setting key, 2: Array key. */
-					sprintf( __( 'Setting "%1$s" array value for key "%2$s" must be a string.', 'buddyboss-platform' ), $key, $array_key ),
+					sprintf( __( 'Setting "%1$s" array value for key "%2$s" must be a string.', 'buddyboss-community-social-network-groups-forums-messaging' ), $key, $array_key ),
 					array( 'status' => 400 )
 				);
 			}
@@ -644,7 +644,7 @@ class BBoss_REST_Settings_Endpoint extends WP_REST_Controller {
 				return new WP_Error(
 					'bp_rest_setting_array_item_too_long',
 					/* translators: 1: Setting key, 2: Array key. */
-					sprintf( __( 'Setting "%1$s" array value for key "%2$s" is too long. Maximum 1000 characters.', 'buddyboss-platform' ), $key, $array_key ),
+					sprintf( __( 'Setting "%1$s" array value for key "%2$s" is too long. Maximum 1000 characters.', 'buddyboss-community-social-network-groups-forums-messaging' ), $key, $array_key ),
 					array( 'status' => 400 )
 				);
 			}
@@ -762,7 +762,7 @@ class BBoss_REST_Settings_Endpoint extends WP_REST_Controller {
 				return new WP_Error(
 					'bp_rest_setting_array_key_type',
 					/* translators: 1: Setting key, 2: Actual type. */
-					sprintf( __( 'Setting "%1$s" array key must be a string, got %2$s.', 'buddyboss-platform' ), $key, gettype( $array_key ) ),
+					sprintf( __( 'Setting "%1$s" array key must be a string, got %2$s.', 'buddyboss-community-social-network-groups-forums-messaging' ), $key, gettype( $array_key ) ),
 					array( 'status' => 400 )
 				);
 			}
@@ -774,7 +774,7 @@ class BBoss_REST_Settings_Endpoint extends WP_REST_Controller {
 				return new WP_Error(
 					'bp_rest_setting_array_key_invalid',
 					/* translators: 1: Setting key, 2: Array key. */
-					sprintf( __( 'Setting "%1$s" array key "%2$s" contains invalid characters.', 'buddyboss-platform' ), $key, $array_key ),
+					sprintf( __( 'Setting "%1$s" array key "%2$s" contains invalid characters.', 'buddyboss-community-social-network-groups-forums-messaging' ), $key, $array_key ),
 					array( 'status' => 400 )
 				);
 			}
@@ -785,7 +785,7 @@ class BBoss_REST_Settings_Endpoint extends WP_REST_Controller {
 				return new WP_Error(
 					'bp_rest_setting_array_item_type',
 					/* translators: 1: Setting key, 2: Array key. */
-					sprintf( __( 'Setting "%1$s" array value for key "%2$s" must be boolean.', 'buddyboss-platform' ), $key, $array_key ),
+					sprintf( __( 'Setting "%1$s" array value for key "%2$s" must be boolean.', 'buddyboss-community-social-network-groups-forums-messaging' ), $key, $array_key ),
 					array( 'status' => 400 )
 				);
 			}
@@ -816,7 +816,7 @@ class BBoss_REST_Settings_Endpoint extends WP_REST_Controller {
 				return new WP_Error(
 					'bp_rest_setting_array_key_type',
 					/* translators: 1: Setting key, 2: Actual type. */
-					sprintf( __( 'Setting "%1$s" array key must be a string, got %2$s.', 'buddyboss-platform' ), $key, gettype( $array_key ) ),
+					sprintf( __( 'Setting "%1$s" array key must be a string, got %2$s.', 'buddyboss-community-social-network-groups-forums-messaging' ), $key, gettype( $array_key ) ),
 					array( 'status' => 400 )
 				);
 			}
@@ -828,7 +828,7 @@ class BBoss_REST_Settings_Endpoint extends WP_REST_Controller {
 				return new WP_Error(
 					'bp_rest_setting_array_key_invalid',
 					/* translators: 1: Setting key, 2: Array key. */
-					sprintf( __( 'Setting "%1$s" array key "%2$s" contains invalid characters.', 'buddyboss-platform' ), $key, $array_key ),
+					sprintf( __( 'Setting "%1$s" array key "%2$s" contains invalid characters.', 'buddyboss-community-social-network-groups-forums-messaging' ), $key, $array_key ),
 					array( 'status' => 400 )
 				);
 			}
@@ -839,7 +839,7 @@ class BBoss_REST_Settings_Endpoint extends WP_REST_Controller {
 				return new WP_Error(
 					'bp_rest_setting_array_item_type',
 					/* translators: 1: Setting key, 2: Array key. */
-					sprintf( __( 'Setting "%1$s" array value for key "%2$s" must be numeric.', 'buddyboss-platform' ), $key, $array_key ),
+					sprintf( __( 'Setting "%1$s" array value for key "%2$s" must be numeric.', 'buddyboss-community-social-network-groups-forums-messaging' ), $key, $array_key ),
 					array( 'status' => 400 )
 				);
 			}
@@ -851,7 +851,7 @@ class BBoss_REST_Settings_Endpoint extends WP_REST_Controller {
 				return new WP_Error(
 					'bp_rest_setting_array_item_range',
 					/* translators: 1: Setting key, 2: Array key. */
-					sprintf( __( 'Setting "%1$s" array value for key "%2$s" must be between 0 and 999999.', 'buddyboss-platform' ), $key, $array_key ),
+					sprintf( __( 'Setting "%1$s" array value for key "%2$s" must be between 0 and 999999.', 'buddyboss-community-social-network-groups-forums-messaging' ), $key, $array_key ),
 					array( 'status' => 400 )
 				);
 			}
@@ -880,7 +880,7 @@ class BBoss_REST_Settings_Endpoint extends WP_REST_Controller {
 				return new WP_Error(
 					'bp_rest_setting_array_key_type',
 					/* translators: 1: Setting key, 2: Actual type. */
-					sprintf( __( 'Setting "%1$s" array key must be a string, got %2$s.', 'buddyboss-platform' ), $key, gettype( $array_key ) ),
+					sprintf( __( 'Setting "%1$s" array key must be a string, got %2$s.', 'buddyboss-community-social-network-groups-forums-messaging' ), $key, gettype( $array_key ) ),
 					array( 'status' => 400 )
 				);
 			}
@@ -892,7 +892,7 @@ class BBoss_REST_Settings_Endpoint extends WP_REST_Controller {
 				return new WP_Error(
 					'bp_rest_setting_array_key_invalid',
 					/* translators: 1: Setting key, 2: Array key. */
-					sprintf( __( 'Setting "%1$s" array key "%2$s" contains invalid characters.', 'buddyboss-platform' ), $key, $array_key ),
+					sprintf( __( 'Setting "%1$s" array key "%2$s" contains invalid characters.', 'buddyboss-community-social-network-groups-forums-messaging' ), $key, $array_key ),
 					array( 'status' => 400 )
 				);
 			}
@@ -906,7 +906,7 @@ class BBoss_REST_Settings_Endpoint extends WP_REST_Controller {
 					return new WP_Error(
 						'bp_rest_setting_array_item_too_long',
 						/* translators: 1: Setting key, 2: Array key. */
-						sprintf( __( 'Setting "%1$s" array value for key "%2$s" is too long. Maximum 1000 characters.', 'buddyboss-platform' ), $key, $array_key ),
+						sprintf( __( 'Setting "%1$s" array value for key "%2$s" is too long. Maximum 1000 characters.', 'buddyboss-community-social-network-groups-forums-messaging' ), $key, $array_key ),
 						array( 'status' => 400 )
 					);
 				}
@@ -920,7 +920,7 @@ class BBoss_REST_Settings_Endpoint extends WP_REST_Controller {
 				return new WP_Error(
 					'bp_rest_setting_array_item_type',
 					/* translators: 1: Setting key, 2: Array key, 3: Actual type. */
-					sprintf( __( 'Setting "%1$s" array value for key "%2$s" has unsupported type %3$s.', 'buddyboss-platform' ), $key, $array_key, gettype( $item ) ),
+					sprintf( __( 'Setting "%1$s" array value for key "%2$s" has unsupported type %3$s.', 'buddyboss-community-social-network-groups-forums-messaging' ), $key, $array_key, gettype( $item ) ),
 					array( 'status' => 400 )
 				);
 			}
@@ -947,7 +947,7 @@ class BBoss_REST_Settings_Endpoint extends WP_REST_Controller {
 				return new WP_Error(
 					'bp_rest_setting_array_key_type',
 					/* translators: 1: Setting key, 2: Actual type. */
-					sprintf( __( 'Setting "%1$s" array key must be string or numeric, got %2$s.', 'buddyboss-platform' ), $key, gettype( $array_key ) ),
+					sprintf( __( 'Setting "%1$s" array key must be string or numeric, got %2$s.', 'buddyboss-community-social-network-groups-forums-messaging' ), $key, gettype( $array_key ) ),
 					array( 'status' => 400 )
 				);
 			}
@@ -1030,7 +1030,7 @@ class BBoss_REST_Settings_Endpoint extends WP_REST_Controller {
 					return new WP_Error(
 						'bp_rest_setting_time_range',
 						/* translators: %s: Setting key. */
-						sprintf( __( 'Setting "%s" must be between 0 and 1440 minutes.', 'buddyboss-platform' ), $key ),
+						sprintf( __( 'Setting "%s" must be between 0 and 1440 minutes.', 'buddyboss-community-social-network-groups-forums-messaging' ), $key ),
 						array( 'status' => 400 )
 					);
 				}
@@ -1046,7 +1046,7 @@ class BBoss_REST_Settings_Endpoint extends WP_REST_Controller {
 					return new WP_Error(
 						'bp_rest_setting_threshold_range',
 						/* translators: %s: Setting key. */
-						sprintf( __( 'Setting "%s" must be between 1 and 100.', 'buddyboss-platform' ), $key ),
+						sprintf( __( 'Setting "%s" must be between 1 and 100.', 'buddyboss-community-social-network-groups-forums-messaging' ), $key ),
 						array( 'status' => 400 )
 					);
 				}
@@ -1060,7 +1060,7 @@ class BBoss_REST_Settings_Endpoint extends WP_REST_Controller {
 				return new WP_Error(
 					'bp_rest_setting_slug_too_long',
 					/* translators: %s: Setting key. */
-					sprintf( __( 'Setting "%s" slug is too long. Maximum 50 characters.', 'buddyboss-platform' ), $key ),
+					sprintf( __( 'Setting "%s" slug is too long. Maximum 50 characters.', 'buddyboss-community-social-network-groups-forums-messaging' ), $key ),
 					array( 'status' => 400 )
 				);
 			}
@@ -1070,7 +1070,7 @@ class BBoss_REST_Settings_Endpoint extends WP_REST_Controller {
 				return new WP_Error(
 					'bp_rest_setting_value_too_long',
 					/* translators: %s: Setting key. */
-					sprintf( __( 'Setting "%s" value is too long. Maximum 1000 characters.', 'buddyboss-platform' ), $key ),
+					sprintf( __( 'Setting "%s" value is too long. Maximum 1000 characters.', 'buddyboss-community-social-network-groups-forums-messaging' ), $key ),
 					array( 'status' => 400 )
 				);
 			}
@@ -1205,29 +1205,29 @@ class BBoss_REST_Settings_Endpoint extends WP_REST_Controller {
 		if ( bboss_is_active( 'moderation' ) ) {
 			$confirmation = array();
 			if ( bboss_is_active( 'activity' ) ) {
-				$confirmation[] = esc_html__( 'See blocked member\'s posts', 'buddyboss-platform' );
+				$confirmation[] = esc_html__( 'See blocked member\'s posts', 'buddyboss-community-social-network-groups-forums-messaging' );
 			}
 
-			$confirmation[] = esc_html__( 'Mention this member in posts', 'buddyboss-platform' );
+			$confirmation[] = esc_html__( 'Mention this member in posts', 'buddyboss-community-social-network-groups-forums-messaging' );
 
 			if ( bboss_is_active( 'groups' ) ) {
-				$confirmation[] = esc_html__( 'Invite this member to groups', 'buddyboss-platform' );
+				$confirmation[] = esc_html__( 'Invite this member to groups', 'buddyboss-community-social-network-groups-forums-messaging' );
 			}
 
 			if ( bboss_is_active( 'messages' ) ) {
-				$confirmation[] = esc_html__( 'Message this member', 'buddyboss-platform' );
+				$confirmation[] = esc_html__( 'Message this member', 'buddyboss-community-social-network-groups-forums-messaging' );
 			}
 
 			if ( bboss_is_active( 'friends' ) ) {
-				$confirmation[] = esc_html__( 'Add this member as a connection', 'buddyboss-platform' );
+				$confirmation[] = esc_html__( 'Add this member as a connection', 'buddyboss-community-social-network-groups-forums-messaging' );
 			}
 
 			$notes = '';
 			if ( bboss_is_active( 'friends' ) ) {
-				$notes .= esc_html__( 'This action will also remove this member from your connections and send a report to the site admin. ', 'buddyboss-platform' );
+				$notes .= esc_html__( 'This action will also remove this member from your connections and send a report to the site admin. ', 'buddyboss-community-social-network-groups-forums-messaging' );
 			}
 
-			$notes .= esc_html__( 'Please allow a few minutes for this process to complete.', 'buddyboss-platform' );
+			$notes .= esc_html__( 'Please allow a few minutes for this process to complete.', 'buddyboss-community-social-network-groups-forums-messaging' );
 
 			// Blocking Settings.
 			$results['bpm_blocking_member_blocking']        = bboss_is_moderation_member_blocking_enable( false );
@@ -1565,7 +1565,7 @@ class BBoss_REST_Settings_Endpoint extends WP_REST_Controller {
 			/* translators: 1: Width in pixels, 2: Height in pixels. */
 			$results['cover_image_warning'] = sprintf(
 				/* translators: 1: Width in pixels, 2: Height in pixels. */
-				esc_html__( 'For best results, upload an image that is %1$spx by %2$spx or larger.', 'buddyboss-platform' ),
+				esc_html__( 'For best results, upload an image that is %1$spx by %2$spx or larger.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				(int) $cover_dimensions['width'],
 				(int) $cover_dimensions['height']
 			);
@@ -1576,7 +1576,7 @@ class BBoss_REST_Settings_Endpoint extends WP_REST_Controller {
 			/* translators: 1: Width in pixels, 2: Height in pixels. */
 			$results['avatar_size_warning'] = sprintf(
 				/* translators: 1: Width in pixels, 2: Height in pixels. */
-				esc_html__( 'For best results, upload an image that is %1$spx by %2$spx or larger.', 'buddyboss-platform' ),
+				esc_html__( 'For best results, upload an image that is %1$spx by %2$spx or larger.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				bboss_core_avatar_full_height(),
 				bboss_core_avatar_full_width()
 			);

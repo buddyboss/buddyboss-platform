@@ -248,11 +248,11 @@ function bboss_moderation_get_report_button( $args, $html = true ) {
 
 	// Check moderation setting enabled or not.
 	if ( BBoss_Moderation_Members::$moderation_type === $item_type ) {
-		$button_text          = __( 'Block', 'buddyboss-platform' );
-		$reported_button_text = __( 'Blocked', 'buddyboss-platform' );
+		$button_text          = __( 'Block', 'buddyboss-community-social-network-groups-forums-messaging' );
+		$reported_button_text = __( 'Blocked', 'buddyboss-community-social-network-groups-forums-messaging' );
 	} elseif ( BBoss_Moderation_Members::$moderation_type_report === $item_type ) {
-		$button_text          = __( 'Report Member', 'buddyboss-platform' );
-		$reported_button_text = __( 'Report Member', 'buddyboss-platform' );
+		$button_text          = __( 'Report Member', 'buddyboss-community-social-network-groups-forums-messaging' );
+		$reported_button_text = __( 'Report Member', 'buddyboss-community-social-network-groups-forums-messaging' );
 	} else {
 		$button_text          = bboss_moderation_get_report_button_text( $item_type, $item_id );
 		$reported_button_text = bboss_moderation_get_reported_button_text( $item_type, $item_id );
@@ -1313,7 +1313,7 @@ function bboss_moderation_get_report_type( $item_type, $item_id ) {
 	 * @param string $content_type Content type.
 	 * @param int    $item_id      Item id.
 	 */
-	return apply_filters( "bp_moderation_{$item_type}_report_content_type", esc_html__( 'Post', 'buddyboss-platform' ), $item_id );
+	return apply_filters( "bp_moderation_{$item_type}_report_content_type", esc_html__( 'Post', 'buddyboss-community-social-network-groups-forums-messaging' ), $item_id );
 }
 
 /**
@@ -1339,7 +1339,7 @@ function bboss_moderation_get_report_button_text( $item_type, $item_id ) {
 	 * @param string $button_text Button text.
 	 * @param int    $item_id     Item id.
 	 */
-	return apply_filters( "bb_moderation_{$item_type}_report_button_text", esc_html__( 'Report', 'buddyboss-platform' ), $item_id );
+	return apply_filters( "bb_moderation_{$item_type}_report_button_text", esc_html__( 'Report', 'buddyboss-community-social-network-groups-forums-messaging' ), $item_id );
 }
 
 /**
@@ -1365,7 +1365,7 @@ function bboss_moderation_get_reported_button_text( $item_type, $item_id ) {
 	 * @param string $button_text Button text.
 	 * @param int    $item_id     Item id.
 	 */
-	return apply_filters( "bb_moderation_{$item_type}_reported_button_text", esc_html__( 'Reported', 'buddyboss-platform' ), $item_id );
+	return apply_filters( "bb_moderation_{$item_type}_reported_button_text", esc_html__( 'Reported', 'buddyboss-community-social-network-groups-forums-messaging' ), $item_id );
 }
 
 /**
@@ -1378,9 +1378,9 @@ function bboss_moderation_get_reported_button_text( $item_type, $item_id ) {
 function bboss_moderation_get_reporting_category_fields_array() {
 
 	$result = array(
-		'content'         => esc_html__( 'Content', 'buddyboss-platform' ),
-		'members'         => esc_html__( 'Members', 'buddyboss-platform' ),
-		'content_members' => esc_html__( 'Content & Members', 'buddyboss-platform' ),
+		'content'         => esc_html__( 'Content', 'buddyboss-community-social-network-groups-forums-messaging' ),
+		'members'         => esc_html__( 'Members', 'buddyboss-community-social-network-groups-forums-messaging' ),
+		'content_members' => esc_html__( 'Content & Members', 'buddyboss-community-social-network-groups-forums-messaging' ),
 	);
 
 	/**
@@ -1647,7 +1647,7 @@ function bboss_moderation_is_suspended_label( $user_id = 0 ) {
 	 * @param string Default suspended label.
 	 * @param int $user_id User id.
 	 */
-	return apply_filters( 'bb_moderation_is_suspended_label', esc_html__( 'Unknown Member', 'buddyboss-platform' ), $user_id );
+	return apply_filters( 'bb_moderation_is_suspended_label', esc_html__( 'Unknown Member', 'buddyboss-community-social-network-groups-forums-messaging' ), $user_id );
 }
 
 /**
@@ -1690,7 +1690,7 @@ function bboss_moderation_is_deleted_label() {
 	 *
 	 * @param string Default delete label.
 	 */
-	return apply_filters( 'bb_moderation_is_deleted_label', esc_html__( 'Unknown Member', 'buddyboss-platform' ) );
+	return apply_filters( 'bb_moderation_is_deleted_label', esc_html__( 'Unknown Member', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 }
 
 /**
@@ -2301,27 +2301,27 @@ function bboss_moderation_moderated_user_ids_sql( $user_id = 0 ) {
 function bboss_moderation_get_default_report_categories() {
 	return array(
 		'offensive'      => array(
-			'name'        => __( 'Offensive', 'buddyboss-platform' ),
-			'description' => __( 'Contains abusive or derogatory content', 'buddyboss-platform' ),
+			'name'        => __( 'Offensive', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'description' => __( 'Contains abusive or derogatory content', 'buddyboss-community-social-network-groups-forums-messaging' ),
 		),
 		'inappropriate'  => array(
-			'name'        => __( 'Inappropriate', 'buddyboss-platform' ),
-			'description' => __( 'Contains mature or sensitive content', 'buddyboss-platform' ),
+			'name'        => __( 'Inappropriate', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'description' => __( 'Contains mature or sensitive content', 'buddyboss-community-social-network-groups-forums-messaging' ),
 		),
 		'misinformation' => array(
-			'name'        => __( 'Misinformation', 'buddyboss-platform' ),
-			'description' => __( 'Contains misleading or false information', 'buddyboss-platform' ),
+			'name'        => __( 'Misinformation', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'description' => __( 'Contains misleading or false information', 'buddyboss-community-social-network-groups-forums-messaging' ),
 		),
 		'harassment'     => array(
-			'name'        => __( 'Harassment', 'buddyboss-platform' ),
-			'description' => __( 'Harassment or bullying behavior', 'buddyboss-platform' ),
+			'name'        => __( 'Harassment', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'description' => __( 'Harassment or bullying behavior', 'buddyboss-community-social-network-groups-forums-messaging' ),
 		),
 		'suspicious'     => array(
-			'name'        => __( 'Suspicious', 'buddyboss-platform' ),
-			'description' => __( 'Contains spam, fake content or potential malware', 'buddyboss-platform' ),
+			'name'        => __( 'Suspicious', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'description' => __( 'Contains spam, fake content or potential malware', 'buddyboss-community-social-network-groups-forums-messaging' ),
 		),
 		'other'          => array(
-			'name'        => __( 'Other', 'buddyboss-platform' ),
+			'name'        => __( 'Other', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'description' => '',
 		),
 	);

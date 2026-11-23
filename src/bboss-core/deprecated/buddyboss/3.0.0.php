@@ -289,7 +289,7 @@ add_action(
 			),
 			'BuddyBoss 3.0.0',
 			'bb_registration_after_general_settings_fields',
-			__( 'Registration fields are now registered via bb_register_feature_field() in Settings 2.0.', 'buddyboss-platform' )
+			__( 'Registration fields are now registered via bb_register_feature_field() in Settings 2.0.', 'buddyboss-community-social-network-groups-forums-messaging' )
 		);
 	}
 );
@@ -812,7 +812,7 @@ function bboss_core_get_groups_admin_tabs( $active_tab = '' ) {
 
 	$tabs[] = array(
 		'href'  => bboss_get_admin_url( add_query_arg( array( 'page' => 'bp-groups' ), 'admin.php' ) ),
-		'name'  => __( 'All Groups', 'buddyboss-platform' ),
+		'name'  => __( 'All Groups', 'buddyboss-community-social-network-groups-forums-messaging' ),
 		'class' => 'bp-all-groups',
 	);
 
@@ -889,10 +889,10 @@ function bboss_groups_admin() {
 	if ( ! empty( $settings_url ) ) {
 		printf(
 			'<div class="wrap"><h1>%s</h1><p>%s <a href="%s">%s</a></p></div>',
-			esc_html__( 'Groups', 'buddyboss-platform' ),
-			esc_html__( 'Groups admin has moved.', 'buddyboss-platform' ),
+			esc_html__( 'Groups', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			esc_html__( 'Groups admin has moved.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			esc_url( $settings_url ),
-			esc_html__( 'Go to Groups Settings', 'buddyboss-platform' )
+			esc_html__( 'Go to Groups Settings', 'buddyboss-community-social-network-groups-forums-messaging' )
 		);
 	}
 }
@@ -1582,19 +1582,19 @@ add_action( 'bb_admin_save_feature_settings_after', 'bboss_members_fire_deprecat
  */
 function bboss_deprecated_xprofile_admin_rendering_hooks() {
 	$deprecated_hooks = array(
-		'xprofile_group_admin_after_description' => __( 'XProfile group admin after description', 'buddyboss-platform' ),
-		'xprofile_group_before_submitbox'        => __( 'XProfile group before submitbox', 'buddyboss-platform' ),
-		'xprofile_group_submitbox_start'         => __( 'XProfile group submitbox start', 'buddyboss-platform' ),
-		'xprofile_group_after_submitbox'         => __( 'XProfile group after submitbox', 'buddyboss-platform' ),
-		'xprofile_field_before_contentbox'       => __( 'XProfile field before contentbox', 'buddyboss-platform' ),
-		'xprofile_field_after_contentbox'        => __( 'XProfile field after contentbox', 'buddyboss-platform' ),
-		'xprofile_field_before_submitbox'        => __( 'XProfile field before submitbox', 'buddyboss-platform' ),
-		'xprofile_field_submitbox_start'         => __( 'XProfile field submitbox start', 'buddyboss-platform' ),
-		'xprofile_field_after_submitbox'         => __( 'XProfile field after submitbox', 'buddyboss-platform' ),
-		'xprofile_field_after_sidebarbox'        => __( 'XProfile field after sidebarbox', 'buddyboss-platform' ),
-		'xprofile_field_additional_options'      => __( 'XProfile field additional options', 'buddyboss-platform' ),
-		'xprofile_admin_field_name_legend'       => __( 'XProfile admin field name legend', 'buddyboss-platform' ),
-		'xprofile_admin_field_action'            => __( 'XProfile admin field action', 'buddyboss-platform' ),
+		'xprofile_group_admin_after_description' => __( 'XProfile group admin after description', 'buddyboss-community-social-network-groups-forums-messaging' ),
+		'xprofile_group_before_submitbox'        => __( 'XProfile group before submitbox', 'buddyboss-community-social-network-groups-forums-messaging' ),
+		'xprofile_group_submitbox_start'         => __( 'XProfile group submitbox start', 'buddyboss-community-social-network-groups-forums-messaging' ),
+		'xprofile_group_after_submitbox'         => __( 'XProfile group after submitbox', 'buddyboss-community-social-network-groups-forums-messaging' ),
+		'xprofile_field_before_contentbox'       => __( 'XProfile field before contentbox', 'buddyboss-community-social-network-groups-forums-messaging' ),
+		'xprofile_field_after_contentbox'        => __( 'XProfile field after contentbox', 'buddyboss-community-social-network-groups-forums-messaging' ),
+		'xprofile_field_before_submitbox'        => __( 'XProfile field before submitbox', 'buddyboss-community-social-network-groups-forums-messaging' ),
+		'xprofile_field_submitbox_start'         => __( 'XProfile field submitbox start', 'buddyboss-community-social-network-groups-forums-messaging' ),
+		'xprofile_field_after_submitbox'         => __( 'XProfile field after submitbox', 'buddyboss-community-social-network-groups-forums-messaging' ),
+		'xprofile_field_after_sidebarbox'        => __( 'XProfile field after sidebarbox', 'buddyboss-community-social-network-groups-forums-messaging' ),
+		'xprofile_field_additional_options'      => __( 'XProfile field additional options', 'buddyboss-community-social-network-groups-forums-messaging' ),
+		'xprofile_admin_field_name_legend'       => __( 'XProfile admin field name legend', 'buddyboss-community-social-network-groups-forums-messaging' ),
+		'xprofile_admin_field_action'            => __( 'XProfile admin field action', 'buddyboss-community-social-network-groups-forums-messaging' ),
 	);
 
 	foreach ( $deprecated_hooks as $hook => $description ) {
@@ -1605,7 +1605,7 @@ function bboss_deprecated_xprofile_admin_rendering_hooks() {
 				'',
 				sprintf(
 					/* translators: %s: hook name */
-					esc_html__( 'The %s hook is no longer fired in the Settings 2.0 React admin interface. Extend the React UI via custom JavaScript instead.', 'buddyboss-platform' ),
+					esc_html__( 'The %s hook is no longer fired in the Settings 2.0 React admin interface. Extend the React UI via custom JavaScript instead.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					esc_html( $hook )
 				)
 			);
@@ -1639,7 +1639,7 @@ function bboss_deprecated_profile_admin_tab_hooks() {
 				'bb_register_side_panel()',
 				sprintf(
 					/* translators: %s: hook name */
-					esc_html__( 'The %s filter is no longer used. Profile admin tabs are now managed via Settings 2.0 side panels.', 'buddyboss-platform' ),
+					esc_html__( 'The %s filter is no longer used. Profile admin tabs are now managed via Settings 2.0 side panels.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					esc_html( $hook )
 				)
 			);
@@ -1910,7 +1910,7 @@ add_action(
 	'wp_ajax_bbp_suggest_topic',
 	static function () {
 		_deprecated_function( 'bbp_suggest_topic AJAX action', 'BuddyBoss 3.0.0', 'bb_admin_discussion_autocomplete' );
-		wp_send_json_error( array( 'message' => __( 'This endpoint has been deprecated. Use bb_admin_discussion_autocomplete instead.', 'buddyboss-platform' ) ) );
+		wp_send_json_error( array( 'message' => __( 'This endpoint has been deprecated. Use bb_admin_discussion_autocomplete instead.', 'buddyboss-community-social-network-groups-forums-messaging' ) ) );
 	}
 );
 
@@ -1924,7 +1924,7 @@ add_action(
 	'wp_ajax_bbp_suggest_reply',
 	static function () {
 		_deprecated_function( 'bbp_suggest_reply AJAX action', 'BuddyBoss 3.0.0', 'bb_admin_reply_autocomplete' );
-		wp_send_json_error( array( 'message' => __( 'This endpoint has been deprecated. Use bb_admin_reply_autocomplete instead.', 'buddyboss-platform' ) ) );
+		wp_send_json_error( array( 'message' => __( 'This endpoint has been deprecated. Use bb_admin_reply_autocomplete instead.', 'buddyboss-community-social-network-groups-forums-messaging' ) ) );
 	}
 );
 
@@ -1938,7 +1938,7 @@ add_action(
 	'wp_ajax_bbp_suggest_user',
 	static function () {
 		_deprecated_function( 'bbp_suggest_user AJAX action', 'BuddyBoss 3.0.0', 'WordPress user search' );
-		wp_send_json_error( array( 'message' => __( 'This endpoint has been deprecated.', 'buddyboss-platform' ) ) );
+		wp_send_json_error( array( 'message' => __( 'This endpoint has been deprecated.', 'buddyboss-community-social-network-groups-forums-messaging' ) ) );
 	}
 );
 

@@ -165,7 +165,7 @@ class BBoss_Media_Theme_Compat {
 		bboss_theme_compat_reset_post(
 			array(
 				'ID'             => ! empty( $media_page_id ) ? $media_page_id : 0,
-				'post_title'     => __( 'Photos', 'buddyboss-platform' ),
+				'post_title'     => __( 'Photos', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				'post_author'    => 0,
 				'post_date'      => 0,
 				'post_content'   => '',

@@ -25,7 +25,7 @@ final class BBoss_Friendship_Export extends BBoss_Export {
 		if ( null === $instance ) {
 
 			$instance = new BBoss_Friendship_Export();
-			$instance->setup( 'bp_friendship', __( 'Friendship', 'buddyboss-platform' ) );
+			$instance->setup( 'bp_friendship', __( 'Friendship', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 		}
 
 		return $instance;
@@ -55,7 +55,7 @@ final class BBoss_Friendship_Export extends BBoss_Export {
 		foreach ( $data_items['items'] as $item ) {
 
 			$group_id    = 'bp_friends';
-			$group_label = __( 'Connections', 'buddyboss-platform' );
+			$group_label = __( 'Connections', 'buddyboss-community-social-network-groups-forums-messaging' );
 			$item_id     = "{$this->exporter_name}-{$group_id}-{$item->id}";
 
 			if ( $item->initiator_user_id == $user->ID ) {
@@ -68,31 +68,31 @@ final class BBoss_Friendship_Export extends BBoss_Export {
 
 			if ( $item->is_confirmed == '0' && $is_initiator ) {
 				$group_id   .= '_pending_sent';
-				$group_label = __( 'Pending Sent Connection Requests', 'buddyboss-platform' );
+				$group_label = __( 'Pending Sent Connection Requests', 'buddyboss-community-social-network-groups-forums-messaging' );
 			}
 
 			if ( $item->is_confirmed == '0' && ! $is_initiator ) {
 				$group_id   .= '_pending_received';
-				$group_label = __( 'Pending Received Connection Requests', 'buddyboss-platform' );
+				$group_label = __( 'Pending Received Connection Requests', 'buddyboss-community-social-network-groups-forums-messaging' );
 			}
 
 			$data = array(
 				array(
-					'name'  => __( 'Connection Name', 'buddyboss-platform' ),
+					'name'  => __( 'Connection Name', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					// Resolve for the data subject ($user) so a last name the connection has
 					// hidden by profile-field visibility is not exported in the raw column.
 					'value' => bboss_core_get_user_displayname( $friend_user_id, $user->ID ),
 				),
 				array(
-					'name'  => __( 'Sent Created (GMT)', 'buddyboss-platform' ),
+					'name'  => __( 'Sent Created (GMT)', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'value' => $item->date_created,
 				),
 			);
 
 			if ( $item->is_confirmed == '1' ) {
-				$is_initiator_value = ( ( $is_initiator ) ? __( 'Yes', 'buddyboss-platform' ) : __( 'No', 'buddyboss-platform' ) );
+				$is_initiator_value = ( ( $is_initiator ) ? __( 'Yes', 'buddyboss-community-social-network-groups-forums-messaging' ) : __( 'No', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 				$data[]             = array(
-					'name'  => __( 'Request Initiator', 'buddyboss-platform' ),
+					'name'  => __( 'Request Initiator', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'value' => $is_initiator_value,
 				);
 			}

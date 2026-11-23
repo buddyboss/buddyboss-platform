@@ -147,7 +147,7 @@ if ( ! class_exists( 'BBoss_Admin_Setting_Fields' ) ) :
 		 */
 		private function field_not_supported() {
 			?>
-			<p><?php esc_html_e( 'This field type does not support.', 'buddyboss-platform' ); ?></p>
+			<p><?php esc_html_e( 'This field type does not support.', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></p>
 			<?php
 		}
 

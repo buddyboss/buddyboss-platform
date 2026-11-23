@@ -1279,7 +1279,7 @@ function bboss_is_bbpress() {
 	if ( ! bboss_bbp_get_wp_query() ) {
 		_doing_it_wrong(
 			__FUNCTION__,
-			esc_html__( 'Conditional query tags do not work before the query is run. Before then, they always return false.', 'buddyboss-platform' ),
+			esc_html__( 'Conditional query tags do not work before the query is run. Before then, they always return false.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'1.4.0'
 		);
 
@@ -1738,17 +1738,17 @@ function bboss_bbp_get_dropdown( $args = '' ) {
 
 				// Topics.
 				case bboss_bbp_get_topic_post_type():
-					$retval .= esc_html__( 'No discussions available', 'buddyboss-platform' );
+					$retval .= esc_html__( 'No discussions available', 'buddyboss-community-social-network-groups-forums-messaging' );
 					break;
 
 				// Forums.
 				case bboss_bbp_get_forum_post_type():
-					$retval .= esc_html__( 'No forums available', 'buddyboss-platform' );
+					$retval .= esc_html__( 'No forums available', 'buddyboss-community-social-network-groups-forums-messaging' );
 					break;
 
 				// Any other.
 				default:
-					$retval .= esc_html__( 'None available', 'buddyboss-platform' );
+					$retval .= esc_html__( 'None available', 'buddyboss-community-social-network-groups-forums-messaging' );
 					break;
 			}
 		}
@@ -2516,7 +2516,7 @@ function bboss_bbp_get_breadcrumb( $args = array() ) {
 
 			// Default to 'Home'.
 		} else {
-			$pre_front_text = __( 'Home', 'buddyboss-platform' );
+			$pre_front_text = __( 'Home', 'buddyboss-community-social-network-groups-forums-messaging' );
 		}
 	}
 
@@ -2586,16 +2586,16 @@ function bboss_bbp_get_breadcrumb( $args = array() ) {
 
 		// If capable, include a link to edit the tag.
 		if ( current_user_can( 'manage_topic_tags' ) ) {
-			$tag_data[] = '<a href="' . esc_url( bboss_bbp_get_topic_tag_edit_link() ) . '" class="bbp-edit-topic-tag-link">' . esc_html__( '(Edit)', 'buddyboss-platform' ) . '</a>';
+			$tag_data[] = '<a href="' . esc_url( bboss_bbp_get_topic_tag_edit_link() ) . '" class="bbp-edit-topic-tag-link">' . esc_html__( '(Edit)', 'buddyboss-community-social-network-groups-forums-messaging' ) . '</a>';
 		}
 
 		// Implode the results of the tag data.
 		/* translators: %s: tag name(s). */
-		$pre_current_text = sprintf( __( 'Discussion Tag: %s', 'buddyboss-platform' ), implode( ' ', $tag_data ) );
+		$pre_current_text = sprintf( __( 'Discussion Tag: %s', 'buddyboss-community-social-network-groups-forums-messaging' ), implode( ' ', $tag_data ) );
 
 		// Edit Topic Tag.
 	} elseif ( bboss_bbp_is_topic_tag_edit() ) {
-		$pre_current_text = __( 'Edit', 'buddyboss-platform' );
+		$pre_current_text = __( 'Edit', 'buddyboss-community-social-network-groups-forums-messaging' );
 
 		// Single.
 	} else {
@@ -2614,7 +2614,7 @@ function bboss_bbp_get_breadcrumb( $args = array() ) {
 			'after'           => '</p></div>',
 
 			// Separator.
-			'sep'             => is_rtl() ? __( '&lsaquo;', 'buddyboss-platform' ) : __( '&rsaquo;', 'buddyboss-platform' ),
+			'sep'             => is_rtl() ? __( '&lsaquo;', 'buddyboss-community-social-network-groups-forums-messaging' ) : __( '&rsaquo;', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'pad_sep'         => 1,
 			'sep_before'      => '<span class="bbp-breadcrumb-sep">',
 			'sep_after'       => '</span>',
@@ -2711,11 +2711,11 @@ function bboss_bbp_get_breadcrumb( $args = array() ) {
 		// Edit topic tag.
 	} elseif ( bboss_bbp_is_topic_tag_edit() ) {
 		/* translators: %s: topic tag name. */
-		$crumbs[] = '<a href="' . esc_url( get_term_link( bboss_bbp_get_topic_tag_id(), bboss_bbp_get_topic_tag_tax_id() ) ) . '" class="bbp-breadcrumb-topic-tag">' . sprintf( __( 'Discussion Tag: %s', 'buddyboss-platform' ), bboss_bbp_get_topic_tag_name() ) . '</a>';
+		$crumbs[] = '<a href="' . esc_url( get_term_link( bboss_bbp_get_topic_tag_id(), bboss_bbp_get_topic_tag_tax_id() ) ) . '" class="bbp-breadcrumb-topic-tag">' . sprintf( __( 'Discussion Tag: %s', 'buddyboss-community-social-network-groups-forums-messaging' ), bboss_bbp_get_topic_tag_name() ) . '</a>';
 
 		// Search.
 	} elseif ( bboss_bbp_is_search() && bboss_bbp_get_search_terms() ) {
-		$crumbs[] = '<a href="' . esc_url( bboss_bbp_get_search_url() ) . '" class="bbp-breadcrumb-search">' . esc_html__( 'Search', 'buddyboss-platform' ) . '</a>';
+		$crumbs[] = '<a href="' . esc_url( bboss_bbp_get_search_url() ) . '" class="bbp-breadcrumb-search">' . esc_html__( 'Search', 'buddyboss-community-social-network-groups-forums-messaging' ) . '</a>';
 	}
 
 	/** Current */
@@ -2896,7 +2896,7 @@ function bboss_bbp_logout_link( $redirect_to = '' ) {
 	 * @return string The logout link
 	 */
 function bboss_bbp_get_logout_link( $redirect_to = '' ) {
-	return apply_filters( 'bbp_get_logout_link', '<a href="' . wp_logout_url( $redirect_to ) . '" class="button logout-link">' . esc_html__( 'Log Out', 'buddyboss-platform' ) . '</a>', $redirect_to );
+	return apply_filters( 'bbp_get_logout_link', '<a href="' . wp_logout_url( $redirect_to ) . '" class="button logout-link">' . esc_html__( 'Log Out', 'buddyboss-community-social-network-groups-forums-messaging' ) . '</a>', $redirect_to );
 }
 
 /** Title *********************************************************************/
@@ -2951,25 +2951,25 @@ function bboss_bbp_title( $title = '', $sep = '&raquo;', $seplocation = '' ) {
 	} elseif ( bboss_bbp_is_forum_edit() ) {
 		$new_title['text']   = bboss_bbp_get_forum_title();
 		/* translators: %s: forum title. */
-		$new_title['format'] = esc_attr__( 'Forum Edit: %s', 'buddyboss-platform' );
+		$new_title['format'] = esc_attr__( 'Forum Edit: %s', 'buddyboss-community-social-network-groups-forums-messaging' );
 
 		// Topic edit page.
 	} elseif ( bboss_bbp_is_topic_edit() ) {
 		$new_title['text']   = bboss_bbp_get_topic_title();
 		/* translators: %s: discussion title. */
-		$new_title['format'] = esc_attr__( 'Discussion Edit: %s', 'buddyboss-platform' );
+		$new_title['format'] = esc_attr__( 'Discussion Edit: %s', 'buddyboss-community-social-network-groups-forums-messaging' );
 
 		// Reply edit page.
 	} elseif ( bboss_bbp_is_reply_edit() ) {
 		$new_title['text']   = bboss_bbp_get_reply_title();
 		/* translators: %s: reply title. */
-		$new_title['format'] = esc_attr__( 'Reply Edit: %s', 'buddyboss-platform' );
+		$new_title['format'] = esc_attr__( 'Reply Edit: %s', 'buddyboss-community-social-network-groups-forums-messaging' );
 
 		// Topic tag edit page.
 	} elseif ( bboss_bbp_is_topic_tag_edit() ) {
 		$new_title['text']   = bboss_bbp_get_topic_tag_name();
 		/* translators: %s: topic tag name. */
-		$new_title['format'] = esc_attr__( 'Discussion Tag Edit: %s', 'buddyboss-platform' );
+		$new_title['format'] = esc_attr__( 'Discussion Tag Edit: %s', 'buddyboss-community-social-network-groups-forums-messaging' );
 
 		/** Singles */
 
@@ -2977,13 +2977,13 @@ function bboss_bbp_title( $title = '', $sep = '&raquo;', $seplocation = '' ) {
 	} elseif ( bboss_bbp_is_single_forum() ) {
 		$new_title['text']   = bboss_bbp_get_forum_title();
 		/* translators: %s: forum title. */
-		$new_title['format'] = esc_attr__( 'Forum: %s', 'buddyboss-platform' );
+		$new_title['format'] = esc_attr__( 'Forum: %s', 'buddyboss-community-social-network-groups-forums-messaging' );
 
 		// Topic page.
 	} elseif ( bboss_bbp_is_single_topic() ) {
 		$new_title['text']   = bboss_bbp_get_topic_title();
 		/* translators: %s: discussion title. */
-		$new_title['format'] = esc_attr__( 'Discussion: %s', 'buddyboss-platform' );
+		$new_title['format'] = esc_attr__( 'Discussion: %s', 'buddyboss-community-social-network-groups-forums-messaging' );
 
 		// Replies.
 	} elseif ( bboss_bbp_is_single_reply() ) {
@@ -2993,7 +2993,7 @@ function bboss_bbp_title( $title = '', $sep = '&raquo;', $seplocation = '' ) {
 	} elseif ( bboss_bbp_is_topic_tag() || get_query_var( 'bbp_topic_tag' ) ) {
 		$new_title['text']   = bboss_bbp_get_topic_tag_name();
 		/* translators: %s: topic tag name. */
-		$new_title['format'] = esc_attr__( 'Discussion Tag: %s', 'buddyboss-platform' );
+		$new_title['format'] = esc_attr__( 'Discussion Tag: %s', 'buddyboss-community-social-network-groups-forums-messaging' );
 
 		/** Users */
 
@@ -3002,38 +3002,38 @@ function bboss_bbp_title( $title = '', $sep = '&raquo;', $seplocation = '' ) {
 
 		// User is viewing their own profile
 		if ( bboss_bbp_is_user_home() ) {
-			$new_title['text'] = esc_attr_x( 'Your', 'User viewing his/her own profile', 'buddyboss-platform' );
+			$new_title['text'] = esc_attr_x( 'Your', 'User viewing his/her own profile', 'buddyboss-community-social-network-groups-forums-messaging' );
 
 			// User is viewing someone else's profile (so use their display name)
 		} else {
 			/* translators: %s: User display name. */
-			$new_title['text'] = sprintf( esc_attr_x( "%s's", 'User viewing another users profile', 'buddyboss-platform' ), bboss_core_get_user_displayname( bboss_bbp_get_user_id() ) );
+			$new_title['text'] = sprintf( esc_attr_x( "%s's", 'User viewing another users profile', 'buddyboss-community-social-network-groups-forums-messaging' ), bboss_core_get_user_displayname( bboss_bbp_get_user_id() ) );
 		}
 
 		// User topics created
 		if ( bboss_bbp_is_single_user_topics() ) {
 			/* translators: %s: user display name. */
-			$new_title['format'] = esc_attr__( '%s Discussions', 'buddyboss-platform' );
+			$new_title['format'] = esc_attr__( '%s Discussions', 'buddyboss-community-social-network-groups-forums-messaging' );
 
 			// User rueplies created
 		} elseif ( bboss_bbp_is_single_user_replies() ) {
 			/* translators: %s: user display name. */
-			$new_title['format'] = esc_attr__( '%s Replies', 'buddyboss-platform' );
+			$new_title['format'] = esc_attr__( '%s Replies', 'buddyboss-community-social-network-groups-forums-messaging' );
 
 			// User favorites
 		} elseif ( bboss_bbp_is_favorites() ) {
 			/* translators: %s: user display name. */
-			$new_title['format'] = esc_attr__( '%s Saved', 'buddyboss-platform' );
+			$new_title['format'] = esc_attr__( '%s Saved', 'buddyboss-community-social-network-groups-forums-messaging' );
 
 			// User subscriptions
 		} elseif ( bboss_bbp_is_subscriptions() ) {
 			/* translators: %s: user display name. */
-			$new_title['format'] = esc_attr__( '%s Subscriptions', 'buddyboss-platform' );
+			$new_title['format'] = esc_attr__( '%s Subscriptions', 'buddyboss-community-social-network-groups-forums-messaging' );
 
 			// User "home"
 		} else {
 			/* translators: %s: user display name. */
-			$new_title['format'] = esc_attr__( '%s Profile', 'buddyboss-platform' );
+			$new_title['format'] = esc_attr__( '%s Profile', 'buddyboss-community-social-network-groups-forums-messaging' );
 		}
 
 		// Profile edit page
@@ -3041,13 +3041,13 @@ function bboss_bbp_title( $title = '', $sep = '&raquo;', $seplocation = '' ) {
 
 		// Current user
 		if ( bboss_bbp_is_user_home_edit() ) {
-			$new_title['text'] = esc_attr__( 'Edit Your Profile', 'buddyboss-platform' );
+			$new_title['text'] = esc_attr__( 'Edit Your Profile', 'buddyboss-community-social-network-groups-forums-messaging' );
 
 			// Other user
 		} else {
 			$new_title['text']   = bboss_core_get_user_displayname( bboss_bbp_get_user_id() );
 			/* translators: %s: User display name. */
-			$new_title['format'] = esc_attr__( "Edit %s's Profile", 'buddyboss-platform' );
+			$new_title['format'] = esc_attr__( "Edit %s's Profile", 'buddyboss-community-social-network-groups-forums-messaging' );
 		}
 
 		/** Views */
@@ -3056,7 +3056,7 @@ function bboss_bbp_title( $title = '', $sep = '&raquo;', $seplocation = '' ) {
 	} elseif ( bboss_bbp_is_single_view() ) {
 		$new_title['text']   = bboss_bbp_get_view_title();
 		/* translators: %s: view title. */
-		$new_title['format'] = esc_attr__( 'View: %s', 'buddyboss-platform' );
+		$new_title['format'] = esc_attr__( 'View: %s', 'buddyboss-community-social-network-groups-forums-messaging' );
 
 		/** Search */
 

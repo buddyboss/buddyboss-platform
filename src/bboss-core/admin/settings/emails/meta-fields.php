@@ -36,7 +36,7 @@ function bboss_emails_register_core_meta_fields( $registry, $component = 'emails
 		$component,
 		'title',
 		array(
-			'label'             => __( 'Title', 'buddyboss-platform' ),
+			'label'             => __( 'Title', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'type'              => 'text',
 			'tab'               => 'details',
 			'order'             => 10,
@@ -56,7 +56,7 @@ function bboss_emails_register_core_meta_fields( $registry, $component = 'emails
 		$component,
 		'slug',
 		array(
-			'label'             => __( 'Slug (Optional)', 'buddyboss-platform' ),
+			'label'             => __( 'Slug (Optional)', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'type'              => 'text',
 			'tab'               => 'details',
 			'order'             => 15,
@@ -76,8 +76,8 @@ function bboss_emails_register_core_meta_fields( $registry, $component = 'emails
 		$component,
 		'content',
 		array(
-			'label'             => __( 'Description', 'buddyboss-platform' ),
-			'description'       => __( 'Phrases wrapped in braces {{ }} are email tokens.', 'buddyboss-platform' ),
+			'label'             => __( 'Description', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'description'       => __( 'Phrases wrapped in braces {{ }} are email tokens.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'type'              => 'richtext',
 			'tab'               => 'details',
 			'order'             => 20,
@@ -85,7 +85,7 @@ function bboss_emails_register_core_meta_fields( $registry, $component = 'emails
 			'get_extra_data'    => function ( $post ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found -- Callback signature required by registry.
 				return array(
 					'description_link' => array(
-						'text' => __( 'Learn about email tokens.', 'buddyboss-platform' ),
+						'text' => __( 'Learn about email tokens.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 						'url'  => admin_url( 'admin.php?page=bp-help&article=62844' ),
 					),
 				);
@@ -105,8 +105,8 @@ function bboss_emails_register_core_meta_fields( $registry, $component = 'emails
 		$component,
 		'excerpt',
 		array(
-			'label'             => __( 'Plain Text Email Content (Optional)', 'buddyboss-platform' ),
-			'description'       => __( 'Most email clients support HTML email. However, some people prefer to receive plain text email. Enter a plain text alternative version of your email here.', 'buddyboss-platform' ),
+			'label'             => __( 'Plain Text Email Content (Optional)', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'description'       => __( 'Most email clients support HTML email. However, some people prefer to receive plain text email. Enter a plain text alternative version of your email here.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'type'              => 'textarea',
 			'tab'               => 'details',
 			'order'             => 30,
@@ -128,8 +128,8 @@ function bboss_emails_register_core_meta_fields( $registry, $component = 'emails
 		$component,
 		'email_type',
 		array(
-			'label'             => __( 'Situation', 'buddyboss-platform' ),
-			'description'       => __( 'Choose when this email will be sent.', 'buddyboss-platform' ),
+			'label'             => __( 'Situation', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'description'       => __( 'Choose when this email will be sent.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'type'              => 'text',
 			'tab'               => 'details',
 			'order'             => 50,
@@ -167,7 +167,7 @@ function bboss_emails_register_core_meta_fields( $registry, $component = 'emails
 		$component,
 		'status',
 		array(
-			'label'             => __( 'Status', 'buddyboss-platform' ),
+			'label'             => __( 'Status', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'type'              => 'select',
 			'tab'               => 'details',
 			'context'           => 'after',
@@ -189,15 +189,15 @@ function bboss_emails_register_core_meta_fields( $registry, $component = 'emails
 			'get_options'       => function ( $post ) {
 				return array(
 					array(
-						'label' => __( 'Draft', 'buddyboss-platform' ),
+						'label' => __( 'Draft', 'buddyboss-community-social-network-groups-forums-messaging' ),
 						'value' => 'draft',
 					),
 					array(
-						'label' => __( 'Pending Review', 'buddyboss-platform' ),
+						'label' => __( 'Pending Review', 'buddyboss-community-social-network-groups-forums-messaging' ),
 						'value' => 'pending',
 					),
 					array(
-						'label' => __( 'Published', 'buddyboss-platform' ),
+						'label' => __( 'Published', 'buddyboss-community-social-network-groups-forums-messaging' ),
 						'value' => 'publish',
 					),
 				);
@@ -216,7 +216,7 @@ function bboss_emails_register_core_meta_fields( $registry, $component = 'emails
 		$component,
 		'visibility',
 		array(
-			'label'             => __( 'Visibility', 'buddyboss-platform' ),
+			'label'             => __( 'Visibility', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'type'              => 'select',
 			'tab'               => 'details',
 			'context'           => 'after',
@@ -234,15 +234,15 @@ function bboss_emails_register_core_meta_fields( $registry, $component = 'emails
 			'get_options'       => function ( $post ) {
 				return array(
 					array(
-						'label' => __( 'Public', 'buddyboss-platform' ),
+						'label' => __( 'Public', 'buddyboss-community-social-network-groups-forums-messaging' ),
 						'value' => 'public',
 					),
 					array(
-						'label' => __( 'Private', 'buddyboss-platform' ),
+						'label' => __( 'Private', 'buddyboss-community-social-network-groups-forums-messaging' ),
 						'value' => 'private',
 					),
 					array(
-						'label' => __( 'Password Protected', 'buddyboss-platform' ),
+						'label' => __( 'Password Protected', 'buddyboss-community-social-network-groups-forums-messaging' ),
 						'value' => 'password',
 					),
 				);
@@ -263,7 +263,7 @@ function bboss_emails_register_core_meta_fields( $registry, $component = 'emails
 		$component,
 		'password',
 		array(
-			'label'             => __( 'Password', 'buddyboss-platform' ),
+			'label'             => __( 'Password', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'type'              => 'text',
 			'tab'               => 'details',
 			'context'           => 'after',
@@ -288,7 +288,7 @@ function bboss_emails_register_core_meta_fields( $registry, $component = 'emails
 		$component,
 		'publish_mode',
 		array(
-			'label'             => __( 'Publish', 'buddyboss-platform' ),
+			'label'             => __( 'Publish', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'type'              => 'select',
 			'tab'               => 'details',
 			'context'           => 'after',
@@ -301,11 +301,11 @@ function bboss_emails_register_core_meta_fields( $registry, $component = 'emails
 				return array(
 					array(
 						'value' => 'immediately',
-						'label' => __( 'Immediately', 'buddyboss-platform' ),
+						'label' => __( 'Immediately', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					),
 					array(
 						'value' => 'schedule',
-						'label' => __( 'Schedule', 'buddyboss-platform' ),
+						'label' => __( 'Schedule', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					),
 				);
 			},
@@ -320,7 +320,7 @@ function bboss_emails_register_core_meta_fields( $registry, $component = 'emails
 		$component,
 		'schedule_date',
 		array(
-			'label'             => __( 'Date', 'buddyboss-platform' ),
+			'label'             => __( 'Date', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'type'              => 'date',
 			'tab'               => 'details',
 			'context'           => 'after',
@@ -348,7 +348,7 @@ function bboss_emails_register_core_meta_fields( $registry, $component = 'emails
 		$component,
 		'schedule_time',
 		array(
-			'label'             => __( 'Time', 'buddyboss-platform' ),
+			'label'             => __( 'Time', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'type'              => 'time',
 			'tab'               => 'details',
 			'context'           => 'after',

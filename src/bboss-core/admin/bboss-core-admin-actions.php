@@ -727,7 +727,7 @@ function bboss_check_user_nickname( &$errors, $update, &$user ) {
 	);
 
 	if ( $check_exists > 0 ) {
-		return $errors->add( 'invalid_nickname', __( 'Invalid Nickname', 'buddyboss-platform' ), array( 'form-field' => 'nickname' ) );
+		return $errors->add( 'invalid_nickname', __( 'Invalid Nickname', 'buddyboss-community-social-network-groups-forums-messaging' ), array( 'form-field' => 'nickname' ) );
 	}
 
 	$un_name = ( ! empty( $user->nickname ) ) ? $user->nickname : $user->user_login;
@@ -755,7 +755,7 @@ function bboss_check_user_nickname( &$errors, $update, &$user ) {
 	}
 
 	if ( $nickname_count > 0 ) {
-		$errors->add( 'nickname_exists', __( '<strong>Error</strong>: Nickname already has been taken. Please try again.', 'buddyboss-platform' ), array( 'form-field' => 'nickname' ) );
+		$errors->add( 'nickname_exists', __( '<strong>Error</strong>: Nickname already has been taken. Please try again.', 'buddyboss-community-social-network-groups-forums-messaging' ), array( 'form-field' => 'nickname' ) );
 	}
 }
 
@@ -788,7 +788,7 @@ function bboss_validate_restricted_email_on_registration( $errors, $update, $use
 				return $errors;
 			}
 		}
-		$errors->add( 'bb_restricted_email', __( 'This email address or domain has been blacklisted. If you think you are seeing this in error, please contact the site administrator.', 'buddyboss-platform' ), array( 'form-field' => 'email' ) );
+		$errors->add( 'bb_restricted_email', __( 'This email address or domain has been blacklisted. If you think you are seeing this in error, please contact the site administrator.', 'buddyboss-community-social-network-groups-forums-messaging' ), array( 'form-field' => 'email' ) );
 	}
 
 	return $errors;
@@ -851,7 +851,7 @@ function bboss_core_settings_saved_notice() {
 
 	// Check if settings were updated.
 	if ( isset( $_GET['updated'] ) || isset( $_GET['edited'] ) || isset( $_GET['added'] ) ) {
-		$setting_message       = __( 'Settings saved successfully.', 'buddyboss-platform' );
+		$setting_message       = __( 'Settings saved successfully.', 'buddyboss-community-social-network-groups-forums-messaging' );
 		$setting_updated       = isset( $_GET['updated'] ) ? sanitize_text_field( wp_unslash( $_GET['updated'] ) ) : '';
 		$updated_transient_key = isset( $_GET['updated'] ) ? sanitize_key( wp_unslash( $_GET['updated'] ) ) : '';
 

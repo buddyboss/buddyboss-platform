@@ -39,7 +39,7 @@ function bboss_media_register_access_controls_panel_fields() {
 		'access_controls',
 		'media_access_controls',
 		array(
-			'title'      => __( 'Media Access', 'buddyboss-platform' ),
+			'title'      => __( 'Media Access', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'order'      => 10,
 			'help_url'   => '121813',
 			'pro_notice' => bboss_admin_settings_get_pro_notice(
@@ -58,9 +58,9 @@ function bboss_media_register_access_controls_panel_fields() {
 		'media_access_controls',
 		array(
 			'name'              => 'bb-access-control-upload-media',
-			'label'             => __( 'Upload Photos', 'buddyboss-platform' ),
+			'label'             => __( 'Upload Photos', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'type'              => 'access_control',
-			'description'       => __( 'Select which members can upload photos based on:', 'buddyboss-platform' ),
+			'description'       => __( 'Select which members can upload photos based on:', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'default'           => '',
 			'pro_only'          => true,
 			'order'             => 10,
@@ -77,9 +77,9 @@ function bboss_media_register_access_controls_panel_fields() {
 			'media_access_controls',
 			array(
 				'name'              => 'bb-access-control-upload-video',
-				'label'             => __( 'Upload Videos', 'buddyboss-platform' ),
+				'label'             => __( 'Upload Videos', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				'type'              => 'access_control',
-				'description'       => __( 'Select which members can upload videos based on:', 'buddyboss-platform' ),
+				'description'       => __( 'Select which members can upload videos based on:', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				'default'           => '',
 				'pro_only'          => true,
 				'order'             => 20,
@@ -97,9 +97,9 @@ function bboss_media_register_access_controls_panel_fields() {
 			'media_access_controls',
 			array(
 				'name'              => 'bb-access-control-upload-document',
-				'label'             => __( 'Upload Documents', 'buddyboss-platform' ),
+				'label'             => __( 'Upload Documents', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				'type'              => 'access_control',
-				'description'       => __( 'Select which members can upload documents based on:', 'buddyboss-platform' ),
+				'description'       => __( 'Select which members can upload documents based on:', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				'default'           => '',
 				'pro_only'          => true,
 				'order'             => 30,
@@ -117,7 +117,7 @@ function bboss_media_register_access_controls_panel_fields() {
 			'name'              => 'bb-media-access-control-notice',
 			'label'             => '',
 			'type'              => 'notice',
-			'description'       => __( 'These settings do not apply to administrators.', 'buddyboss-platform' ),
+			'description'       => __( 'These settings do not apply to administrators.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'notice_type'       => 'info',
 			'sanitize_callback' => '__return_empty_string',
 			'order'             => 100,

@@ -24,8 +24,8 @@ class BBoss_XProfile_Field_Type_Textarea extends BBoss_XProfile_Field_Type {
 	public function __construct() {
 		parent::__construct();
 
-		$this->category          = __( 'Single Fields', 'buddyboss-platform' );
-		$this->name              = __( 'Paragraph Text', 'buddyboss-platform' );
+		$this->category          = __( 'Single Fields', 'buddyboss-community-social-network-groups-forums-messaging' );
+		$this->name              = __( 'Paragraph Text', 'buddyboss-community-social-network-groups-forums-messaging' );
 		$this->supports_richtext = true;
 
 		$this->set_format( '/^.*$/m', 'replace' );

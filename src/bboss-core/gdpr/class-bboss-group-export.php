@@ -24,7 +24,7 @@ final class BBoss_Group_Export extends BBoss_Export {
 
 		if ( null === $instance ) {
 			$instance = new BBoss_Group_Export();
-			$instance->setup( 'bp_groups', __( 'Groups', 'buddyboss-platform' ) );
+			$instance->setup( 'bp_groups', __( 'Groups', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 		}
 
 		return $instance;
@@ -54,7 +54,7 @@ final class BBoss_Group_Export extends BBoss_Export {
 		foreach ( $data_items['items'] as $item ) {
 
 			$group_id    = 'bp_groups';
-			$group_label = __( 'Groups', 'buddyboss-platform' );
+			$group_label = __( 'Groups', 'buddyboss-community-social-network-groups-forums-messaging' );
 			$item_id     = "{$this->exporter_name}-{$group_id}-{$item->id}";
 			$avatar      = false;
 			$cover_photo = false;
@@ -82,52 +82,52 @@ final class BBoss_Group_Export extends BBoss_Export {
 			}
 
 			if ( empty( $avatar ) || ! $avatar ) {
-				$avatar = __( 'N/A', 'buddyboss-platform' );
+				$avatar = __( 'N/A', 'buddyboss-community-social-network-groups-forums-messaging' );
 			}
 			if ( empty( $cover_photo ) || ! $cover_photo ) {
-				$cover_photo = __( 'N/A', 'buddyboss-platform' );
+				$cover_photo = __( 'N/A', 'buddyboss-community-social-network-groups-forums-messaging' );
 			}
 
 			$group_permalink = bboss_get_group_permalink( $item );
 
 			$data = array(
 				array(
-					'name'  => __( 'Group Name', 'buddyboss-platform' ),
+					'name'  => __( 'Group Name', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'value' => $item->name,
 				),
 				array(
-					'name'  => __( 'Group Description', 'buddyboss-platform' ),
+					'name'  => __( 'Group Description', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'value' => $item->description,
 				),
 				array(
-					'name'  => __( 'Group slug', 'buddyboss-platform' ),
+					'name'  => __( 'Group slug', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'value' => $item->slug,
 				),
 				array(
-					'name'  => __( 'Created Date (GMT)', 'buddyboss-platform' ),
+					'name'  => __( 'Created Date (GMT)', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'value' => $item->date_created,
 				),
 				array(
-					'name'  => __( 'Group Status', 'buddyboss-platform' ),
+					'name'  => __( 'Group Status', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'value' => ucfirst( $item->status ),
 				),
 				array(
-					'name'  => __( 'Group Avatar', 'buddyboss-platform' ),
+					'name'  => __( 'Group Avatar', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'value' => $avatar,
 				),
 				array(
-					'name'  => __( 'Group Cover Photo', 'buddyboss-platform' ),
+					'name'  => __( 'Group Cover Photo', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'value' => $cover_photo,
 				),
 				array(
-					'name'  => __( 'Group URL', 'buddyboss-platform' ),
+					'name'  => __( 'Group URL', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'value' => $group_permalink,
 				),
 			);
 
 			$metas2export                       = array();
-			$metas2export['total_member_count'] = __( 'Total Members', 'buddyboss-platform' );
-			$metas2export['last_activity']      = __( 'Last Activity', 'buddyboss-platform' );
+			$metas2export['total_member_count'] = __( 'Total Members', 'buddyboss-community-social-network-groups-forums-messaging' );
+			$metas2export['last_activity']      = __( 'Last Activity', 'buddyboss-community-social-network-groups-forums-messaging' );
 
 			/**
 			 * Filter allow to add additional metas without issues.

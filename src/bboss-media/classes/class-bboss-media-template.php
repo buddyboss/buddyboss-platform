@@ -242,8 +242,8 @@ class BBoss_Media_Template {
 					'format'    => '',
 					'total'     => ceil( (int) $this->total_media_count / (int) $this->pag_num ),
 					'current'   => (int) $this->pag_page,
-					'prev_text' => __( '&larr;', 'buddyboss-platform' ),
-					'next_text' => __( '&rarr;', 'buddyboss-platform' ),
+					'prev_text' => __( '&larr;', 'buddyboss-community-social-network-groups-forums-messaging' ),
+					'next_text' => __( '&rarr;', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'mid_size'  => 1,
 					'add_args'  => array(),
 				)

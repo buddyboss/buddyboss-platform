@@ -80,9 +80,9 @@ class BBoss_Messages_Notices_List_Table extends WP_List_Table {
 		return apply_filters(
 			'bp_notices_list_table_get_columns',
 			array(
-				'subject'   => __( 'Subject', 'buddyboss-platform' ),
-				'message'   => __( 'Content', 'buddyboss-platform' ),
-				'date_sent' => __( 'Created', 'buddyboss-platform' ),
+				'subject'   => __( 'Subject', 'buddyboss-community-social-network-groups-forums-messaging' ),
+				'message'   => __( 'Content', 'buddyboss-community-social-network-groups-forums-messaging' ),
+				'date_sent' => __( 'Created', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			)
 		);
 	}
@@ -131,7 +131,7 @@ class BBoss_Messages_Notices_List_Table extends WP_List_Table {
 					)
 				),
 				(int) $item->id,
-				esc_html__( 'Activate Notice', 'buddyboss-platform' )
+				esc_html__( 'Activate Notice', 'buddyboss-community-social-network-groups-forums-messaging' )
 			),
 			'delete'              => sprintf(
 				'<a href="%s" data-bp-notice-id="%d" data-bp-action="delete">%s</a>',
@@ -149,13 +149,13 @@ class BBoss_Messages_Notices_List_Table extends WP_List_Table {
 					)
 				),
 				(int) $item->id,
-				esc_html__( 'Delete Notice', 'buddyboss-platform' )
+				esc_html__( 'Delete Notice', 'buddyboss-community-social-network-groups-forums-messaging' )
 			),
 		);
 
 		if ( ! empty( $item->is_active ) ) {
 			/* translators: %s: notice subject/title. */
-			$item->subject                  = sprintf( _x( 'Active: %s', 'Tag prepended to active site-wide notice titles on WP Admin notices list table', 'buddyboss-platform' ), $item->subject );
+			$item->subject                  = sprintf( _x( 'Active: %s', 'Tag prepended to active site-wide notice titles on WP Admin notices list table', 'buddyboss-community-social-network-groups-forums-messaging' ), $item->subject );
 			$actions['activate_deactivate'] = sprintf(
 				'<a href="%s" data-bp-notice-id="%d" data-bp-action="deactivate">%s</a>',
 				esc_url(
@@ -172,7 +172,7 @@ class BBoss_Messages_Notices_List_Table extends WP_List_Table {
 					)
 				),
 				(int) $item->id,
-				esc_html__( 'Deactivate Notice', 'buddyboss-platform' )
+				esc_html__( 'Deactivate Notice', 'buddyboss-community-social-network-groups-forums-messaging' )
 			);
 		}
 

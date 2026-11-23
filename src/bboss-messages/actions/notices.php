@@ -54,24 +54,24 @@ function bboss_messages_action_edit_notice() {
 		case 'deactivate':
 			$success  = $notice->deactivate();
 			$feedback = true === $success
-				? __( 'Notice deactivated successfully.', 'buddyboss-platform' )
-				: __( 'There was a problem deactivating that notice.', 'buddyboss-platform' );
+				? __( 'Notice deactivated successfully.', 'buddyboss-community-social-network-groups-forums-messaging' )
+				: __( 'There was a problem deactivating that notice.', 'buddyboss-community-social-network-groups-forums-messaging' );
 			break;
 
 		// Activate.
 		case 'activate':
 			$success  = $notice->activate();
 			$feedback = true === $success
-				? __( 'Notice activated successfully.', 'buddyboss-platform' )
-				: __( 'There was a problem activating that notice.', 'buddyboss-platform' );
+				? __( 'Notice activated successfully.', 'buddyboss-community-social-network-groups-forums-messaging' )
+				: __( 'There was a problem activating that notice.', 'buddyboss-community-social-network-groups-forums-messaging' );
 			break;
 
 		// Delete.
 		case 'delete':
 			$success  = $notice->delete();
 			$feedback = true === $success
-				? __( 'Notice deleted successfully.', 'buddyboss-platform' )
-				: __( 'There was a problem deleting that notice.', 'buddyboss-platform' );
+				? __( 'Notice deleted successfully.', 'buddyboss-community-social-network-groups-forums-messaging' )
+				: __( 'There was a problem deleting that notice.', 'buddyboss-community-social-network-groups-forums-messaging' );
 			break;
 	}
 

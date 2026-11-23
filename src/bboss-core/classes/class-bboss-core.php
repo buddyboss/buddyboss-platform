@@ -606,7 +606,7 @@ class BBoss_Core extends BBoss_Component {
 				apply_filters(
 					'bp_register_email_post_type',
 					array(
-						'description'        => __( 'BuddyBoss emails', 'buddyboss-platform' ),
+						'description'        => __( 'BuddyBoss emails', 'buddyboss-community-social-network-groups-forums-messaging' ),
 						'labels'             => bboss_get_email_post_type_labels(),
 						'menu_icon'          => 'dashicons-email-alt',
 						'public'             => false,
@@ -629,7 +629,7 @@ class BBoss_Core extends BBoss_Component {
 				apply_filters(
 					'bp_register_group_type_post_type',
 					array(
-						'description'        => __( 'BuddyBoss group type', 'buddyboss-platform' ),
+						'description'        => __( 'BuddyBoss group type', 'buddyboss-community-social-network-groups-forums-messaging' ),
 						'labels'             => bboss_groups_get_group_type_post_type_labels(),
 						'public'             => false,
 						'publicly_queryable' => false,

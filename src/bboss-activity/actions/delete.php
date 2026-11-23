@@ -60,9 +60,9 @@ function bboss_activity_action_delete_activity( $activity_id = 0 ) {
 			'user_id' => $activity->user_id,
 		)
 	) ) {
-		bboss_core_add_message( __( 'Activity deleted successfully', 'buddyboss-platform' ) );
+		bboss_core_add_message( __( 'Activity deleted successfully', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 	} else {
-		bboss_core_add_message( __( 'There was an error when deleting that activity', 'buddyboss-platform' ), 'error' );
+		bboss_core_add_message( __( 'There was an error when deleting that activity', 'buddyboss-community-social-network-groups-forums-messaging' ), 'error' );
 	}
 
 	/**

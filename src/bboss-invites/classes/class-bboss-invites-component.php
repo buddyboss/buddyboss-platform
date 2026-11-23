@@ -208,7 +208,7 @@ class BBoss_Invites_Component extends BBoss_Component {
 				return;
 			}
 
-			$nav_name     = __( 'Email Invites', 'buddyboss-platform' );
+			$nav_name     = __( 'Email Invites', 'buddyboss-community-social-network-groups-forums-messaging' );
 			$slug         = bboss_get_invites_slug();
 			$access       = bboss_core_can_edit_settings();
 			$invites_link = trailingslashit( $user_domain . $slug );
@@ -228,7 +228,7 @@ class BBoss_Invites_Component extends BBoss_Component {
 
 				// Add the Invite by Email nav item.
 				$sub_nav[] = array(
-					'name'            => __( 'Send Invites', 'buddyboss-platform' ),
+					'name'            => __( 'Send Invites', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'slug'            => 'send-invites',
 					'parent_url'      => $invites_link,
 					'parent_slug'     => $slug,
@@ -240,7 +240,7 @@ class BBoss_Invites_Component extends BBoss_Component {
 
 				// Add the Sent Invites nav item.
 				$sub_nav[] = array(
-					'name'            => __( 'Sent Invites', 'buddyboss-platform' ),
+					'name'            => __( 'Sent Invites', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'slug'            => 'sent-invites',
 					'parent_url'      => $invites_link,
 					'parent_slug'     => $slug,
@@ -275,7 +275,7 @@ class BBoss_Invites_Component extends BBoss_Component {
 				// Setup the logged in user variables.
 				$invites_link = trailingslashit( bboss_loggedin_user_domain() . bboss_get_invites_slug() );
 
-				$title = __( 'Email Invites', 'buddyboss-platform' );
+				$title = __( 'Email Invites', 'buddyboss-community-social-network-groups-forums-messaging' );
 
 				// Add the "My Account" sub menus.
 				$wp_admin_nav[] = array(
@@ -289,7 +289,7 @@ class BBoss_Invites_Component extends BBoss_Component {
 				$wp_admin_nav[] = array(
 					'parent'   => 'my-account-' . $this->id,
 					'id'       => 'my-account-' . $this->id . '-invites',
-					'title'    => __( 'Send Invites', 'buddyboss-platform' ),
+					'title'    => __( 'Send Invites', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'href'     => $invites_link,
 					'position' => 10,
 				);
@@ -298,7 +298,7 @@ class BBoss_Invites_Component extends BBoss_Component {
 				$wp_admin_nav[] = array(
 					'parent'   => 'my-account-' . $this->id,
 					'id'       => 'my-account-' . $this->id . '-sent',
-					'title'    => __( 'Sent Invites', 'buddyboss-platform' ),
+					'title'    => __( 'Sent Invites', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'href'     => $invites_link . 'sent-invites',
 					'position' => 20,
 				);
@@ -331,7 +331,7 @@ class BBoss_Invites_Component extends BBoss_Component {
 			apply_filters(
 				'bp_invite_post_type',
 				array(
-					'description'        => __( 'BuddyBoss Invites', 'buddyboss-platform' ),
+					'description'        => __( 'BuddyBoss Invites', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'labels'             => bboss_get_invite_post_type_labels(),
 					'public'             => false,
 					'publicly_queryable' => bboss_current_user_can( 'bp_moderate' ),

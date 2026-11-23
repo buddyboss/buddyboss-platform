@@ -200,22 +200,22 @@ function bboss_recaptcha_score_threshold( $default = 0.5 ) {
 function bboss_recaptcha_actions() {
 	$actions = array(
 		'bb_login'         => array(
-			'label'    => __( 'Login', 'buddyboss-platform' ),
+			'label'    => __( 'Login', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'disabled' => false,
 			'enabled'  => bboss_recaptcha_is_enabled( 'bb_login' ),
 		),
 		'bb_register'      => array(
-			'label'    => __( 'Registration', 'buddyboss-platform' ),
+			'label'    => __( 'Registration', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'disabled' => ! bboss_enable_site_registration(),
 			'enabled'  => bboss_recaptcha_is_enabled( 'bb_register' ),
 		),
 		'bb_lost_password' => array(
-			'label'    => __( 'Reset Password', 'buddyboss-platform' ),
+			'label'    => __( 'Reset Password', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'disabled' => false,
 			'enabled'  => bboss_recaptcha_is_enabled( 'bb_lost_password' ),
 		),
 		'bb_activate'      => array(
-			'label'    => __( 'Account Activation', 'buddyboss-platform' ),
+			'label'    => __( 'Account Activation', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'disabled' => ! bboss_enable_site_registration(),
 			'enabled'  => bboss_recaptcha_is_enabled( 'bb_activate' ),
 		),
@@ -288,76 +288,76 @@ function bboss_recaptcha_allow_bypass_enable() {
  */
 function bboss_recaptcha_languages() {
 	$languages = array(
-		'ar'     => esc_html__( 'Arabic', 'buddyboss-platform' ),
-		'af'     => esc_html__( 'Afrikaans', 'buddyboss-platform' ),
-		'am'     => esc_html__( 'Amharic', 'buddyboss-platform' ),
-		'hy'     => esc_html__( 'Armenian', 'buddyboss-platform' ),
-		'az'     => esc_html__( 'Azerbaijani', 'buddyboss-platform' ),
-		'eu'     => esc_html__( 'Basque', 'buddyboss-platform' ),
-		'bn'     => esc_html__( 'Bengali', 'buddyboss-platform' ),
-		'bg'     => esc_html__( 'Bulgarian', 'buddyboss-platform' ),
-		'ca'     => esc_html__( 'Catalan', 'buddyboss-platform' ),
-		'zh-HK'  => esc_html__( 'Chinese (Hong Kong)', 'buddyboss-platform' ),
-		'zh-CN'  => esc_html__( 'Chinese (Simplified)', 'buddyboss-platform' ),
-		'zh-TW'  => esc_html__( 'Chinese (Traditional)', 'buddyboss-platform' ),
-		'hr'     => esc_html__( 'Croatian', 'buddyboss-platform' ),
-		'cs'     => esc_html__( 'Czech', 'buddyboss-platform' ),
-		'da'     => esc_html__( 'Danish', 'buddyboss-platform' ),
-		'nl'     => esc_html__( 'Dutch', 'buddyboss-platform' ),
-		'en-GB'  => esc_html__( 'English (UK)', 'buddyboss-platform' ),
-		'en'     => esc_html__( 'English (US)', 'buddyboss-platform' ),
-		'et'     => esc_html__( 'Estonian', 'buddyboss-platform' ),
-		'fil'    => esc_html__( 'Filipino', 'buddyboss-platform' ),
-		'fi'     => esc_html__( 'Finnish', 'buddyboss-platform' ),
-		'fr'     => esc_html__( 'French', 'buddyboss-platform' ),
-		'fr-CA'  => esc_html__( 'French (Canadian)', 'buddyboss-platform' ),
-		'gl'     => esc_html__( 'Galician', 'buddyboss-platform' ),
-		'ka'     => esc_html__( 'Georgian', 'buddyboss-platform' ),
-		'de'     => esc_html__( 'German', 'buddyboss-platform' ),
-		'de-AT'  => esc_html__( 'German (Austria)', 'buddyboss-platform' ),
-		'de-CH'  => esc_html__( 'German (Switzerland)', 'buddyboss-platform' ),
-		'el'     => esc_html__( 'Greek', 'buddyboss-platform' ),
-		'gu'     => esc_html__( 'Gujarati', 'buddyboss-platform' ),
-		'iw'     => esc_html__( 'Hebrew', 'buddyboss-platform' ),
-		'hi'     => esc_html__( 'Hindi', 'buddyboss-platform' ),
-		'hu'     => esc_html__( 'Hungarain', 'buddyboss-platform' ),
-		'is'     => esc_html__( 'Icelandic', 'buddyboss-platform' ),
-		'id'     => esc_html__( 'Indonesian', 'buddyboss-platform' ),
-		'it'     => esc_html__( 'Italian', 'buddyboss-platform' ),
-		'ja'     => esc_html__( 'Japanese', 'buddyboss-platform' ),
-		'kn'     => esc_html__( 'Kannada', 'buddyboss-platform' ),
-		'ko'     => esc_html__( 'Korean', 'buddyboss-platform' ),
-		'lo'     => esc_html__( 'Laothian', 'buddyboss-platform' ),
-		'lv'     => esc_html__( 'Latvian', 'buddyboss-platform' ),
-		'lt'     => esc_html__( 'Lithuanian', 'buddyboss-platform' ),
-		'ms'     => esc_html__( 'Malay', 'buddyboss-platform' ),
-		'ml'     => esc_html__( 'Malayalam', 'buddyboss-platform' ),
-		'mr'     => esc_html__( 'Marathi', 'buddyboss-platform' ),
-		'mn'     => esc_html__( 'Mongolian', 'buddyboss-platform' ),
-		'no'     => esc_html__( 'Norwegian', 'buddyboss-platform' ),
-		'fa'     => esc_html__( 'Persian', 'buddyboss-platform' ),
-		'pl'     => esc_html__( 'Polish', 'buddyboss-platform' ),
-		'pt'     => esc_html__( 'Portuguese', 'buddyboss-platform' ),
-		'pt-BR'  => esc_html__( 'Portuguese (Brazil)', 'buddyboss-platform' ),
-		'pt-PT'  => esc_html__( 'Portuguese (Portugal)', 'buddyboss-platform' ),
-		'ro'     => esc_html__( 'Romanian', 'buddyboss-platform' ),
-		'ru'     => esc_html__( 'Russian', 'buddyboss-platform' ),
-		'sr'     => esc_html__( 'Serbian', 'buddyboss-platform' ),
-		'si'     => esc_html__( 'Sinhalese', 'buddyboss-platform' ),
-		'sk'     => esc_html__( 'Slovak', 'buddyboss-platform' ),
-		'sl'     => esc_html__( 'Slovenian', 'buddyboss-platform' ),
-		'es'     => esc_html__( 'Spanish', 'buddyboss-platform' ),
-		'es-419' => esc_html__( 'Spanish (Latin America)', 'buddyboss-platform' ),
-		'sw'     => esc_html__( 'Swahili', 'buddyboss-platform' ),
-		'sv'     => esc_html__( 'Swedish', 'buddyboss-platform' ),
-		'ta'     => esc_html__( 'Tamil', 'buddyboss-platform' ),
-		'te'     => esc_html__( 'Telugu', 'buddyboss-platform' ),
-		'th'     => esc_html__( 'Thai', 'buddyboss-platform' ),
-		'tr'     => esc_html__( 'Turkish', 'buddyboss-platform' ),
-		'uk'     => esc_html__( 'Ukrainian', 'buddyboss-platform' ),
-		'ur'     => esc_html__( 'Urdu', 'buddyboss-platform' ),
-		'vi'     => esc_html__( 'Vietnamese', 'buddyboss-platform' ),
-		'zu'     => esc_html__( 'Zulu', 'buddyboss-platform' ),
+		'ar'     => esc_html__( 'Arabic', 'buddyboss-community-social-network-groups-forums-messaging' ),
+		'af'     => esc_html__( 'Afrikaans', 'buddyboss-community-social-network-groups-forums-messaging' ),
+		'am'     => esc_html__( 'Amharic', 'buddyboss-community-social-network-groups-forums-messaging' ),
+		'hy'     => esc_html__( 'Armenian', 'buddyboss-community-social-network-groups-forums-messaging' ),
+		'az'     => esc_html__( 'Azerbaijani', 'buddyboss-community-social-network-groups-forums-messaging' ),
+		'eu'     => esc_html__( 'Basque', 'buddyboss-community-social-network-groups-forums-messaging' ),
+		'bn'     => esc_html__( 'Bengali', 'buddyboss-community-social-network-groups-forums-messaging' ),
+		'bg'     => esc_html__( 'Bulgarian', 'buddyboss-community-social-network-groups-forums-messaging' ),
+		'ca'     => esc_html__( 'Catalan', 'buddyboss-community-social-network-groups-forums-messaging' ),
+		'zh-HK'  => esc_html__( 'Chinese (Hong Kong)', 'buddyboss-community-social-network-groups-forums-messaging' ),
+		'zh-CN'  => esc_html__( 'Chinese (Simplified)', 'buddyboss-community-social-network-groups-forums-messaging' ),
+		'zh-TW'  => esc_html__( 'Chinese (Traditional)', 'buddyboss-community-social-network-groups-forums-messaging' ),
+		'hr'     => esc_html__( 'Croatian', 'buddyboss-community-social-network-groups-forums-messaging' ),
+		'cs'     => esc_html__( 'Czech', 'buddyboss-community-social-network-groups-forums-messaging' ),
+		'da'     => esc_html__( 'Danish', 'buddyboss-community-social-network-groups-forums-messaging' ),
+		'nl'     => esc_html__( 'Dutch', 'buddyboss-community-social-network-groups-forums-messaging' ),
+		'en-GB'  => esc_html__( 'English (UK)', 'buddyboss-community-social-network-groups-forums-messaging' ),
+		'en'     => esc_html__( 'English (US)', 'buddyboss-community-social-network-groups-forums-messaging' ),
+		'et'     => esc_html__( 'Estonian', 'buddyboss-community-social-network-groups-forums-messaging' ),
+		'fil'    => esc_html__( 'Filipino', 'buddyboss-community-social-network-groups-forums-messaging' ),
+		'fi'     => esc_html__( 'Finnish', 'buddyboss-community-social-network-groups-forums-messaging' ),
+		'fr'     => esc_html__( 'French', 'buddyboss-community-social-network-groups-forums-messaging' ),
+		'fr-CA'  => esc_html__( 'French (Canadian)', 'buddyboss-community-social-network-groups-forums-messaging' ),
+		'gl'     => esc_html__( 'Galician', 'buddyboss-community-social-network-groups-forums-messaging' ),
+		'ka'     => esc_html__( 'Georgian', 'buddyboss-community-social-network-groups-forums-messaging' ),
+		'de'     => esc_html__( 'German', 'buddyboss-community-social-network-groups-forums-messaging' ),
+		'de-AT'  => esc_html__( 'German (Austria)', 'buddyboss-community-social-network-groups-forums-messaging' ),
+		'de-CH'  => esc_html__( 'German (Switzerland)', 'buddyboss-community-social-network-groups-forums-messaging' ),
+		'el'     => esc_html__( 'Greek', 'buddyboss-community-social-network-groups-forums-messaging' ),
+		'gu'     => esc_html__( 'Gujarati', 'buddyboss-community-social-network-groups-forums-messaging' ),
+		'iw'     => esc_html__( 'Hebrew', 'buddyboss-community-social-network-groups-forums-messaging' ),
+		'hi'     => esc_html__( 'Hindi', 'buddyboss-community-social-network-groups-forums-messaging' ),
+		'hu'     => esc_html__( 'Hungarain', 'buddyboss-community-social-network-groups-forums-messaging' ),
+		'is'     => esc_html__( 'Icelandic', 'buddyboss-community-social-network-groups-forums-messaging' ),
+		'id'     => esc_html__( 'Indonesian', 'buddyboss-community-social-network-groups-forums-messaging' ),
+		'it'     => esc_html__( 'Italian', 'buddyboss-community-social-network-groups-forums-messaging' ),
+		'ja'     => esc_html__( 'Japanese', 'buddyboss-community-social-network-groups-forums-messaging' ),
+		'kn'     => esc_html__( 'Kannada', 'buddyboss-community-social-network-groups-forums-messaging' ),
+		'ko'     => esc_html__( 'Korean', 'buddyboss-community-social-network-groups-forums-messaging' ),
+		'lo'     => esc_html__( 'Laothian', 'buddyboss-community-social-network-groups-forums-messaging' ),
+		'lv'     => esc_html__( 'Latvian', 'buddyboss-community-social-network-groups-forums-messaging' ),
+		'lt'     => esc_html__( 'Lithuanian', 'buddyboss-community-social-network-groups-forums-messaging' ),
+		'ms'     => esc_html__( 'Malay', 'buddyboss-community-social-network-groups-forums-messaging' ),
+		'ml'     => esc_html__( 'Malayalam', 'buddyboss-community-social-network-groups-forums-messaging' ),
+		'mr'     => esc_html__( 'Marathi', 'buddyboss-community-social-network-groups-forums-messaging' ),
+		'mn'     => esc_html__( 'Mongolian', 'buddyboss-community-social-network-groups-forums-messaging' ),
+		'no'     => esc_html__( 'Norwegian', 'buddyboss-community-social-network-groups-forums-messaging' ),
+		'fa'     => esc_html__( 'Persian', 'buddyboss-community-social-network-groups-forums-messaging' ),
+		'pl'     => esc_html__( 'Polish', 'buddyboss-community-social-network-groups-forums-messaging' ),
+		'pt'     => esc_html__( 'Portuguese', 'buddyboss-community-social-network-groups-forums-messaging' ),
+		'pt-BR'  => esc_html__( 'Portuguese (Brazil)', 'buddyboss-community-social-network-groups-forums-messaging' ),
+		'pt-PT'  => esc_html__( 'Portuguese (Portugal)', 'buddyboss-community-social-network-groups-forums-messaging' ),
+		'ro'     => esc_html__( 'Romanian', 'buddyboss-community-social-network-groups-forums-messaging' ),
+		'ru'     => esc_html__( 'Russian', 'buddyboss-community-social-network-groups-forums-messaging' ),
+		'sr'     => esc_html__( 'Serbian', 'buddyboss-community-social-network-groups-forums-messaging' ),
+		'si'     => esc_html__( 'Sinhalese', 'buddyboss-community-social-network-groups-forums-messaging' ),
+		'sk'     => esc_html__( 'Slovak', 'buddyboss-community-social-network-groups-forums-messaging' ),
+		'sl'     => esc_html__( 'Slovenian', 'buddyboss-community-social-network-groups-forums-messaging' ),
+		'es'     => esc_html__( 'Spanish', 'buddyboss-community-social-network-groups-forums-messaging' ),
+		'es-419' => esc_html__( 'Spanish (Latin America)', 'buddyboss-community-social-network-groups-forums-messaging' ),
+		'sw'     => esc_html__( 'Swahili', 'buddyboss-community-social-network-groups-forums-messaging' ),
+		'sv'     => esc_html__( 'Swedish', 'buddyboss-community-social-network-groups-forums-messaging' ),
+		'ta'     => esc_html__( 'Tamil', 'buddyboss-community-social-network-groups-forums-messaging' ),
+		'te'     => esc_html__( 'Telugu', 'buddyboss-community-social-network-groups-forums-messaging' ),
+		'th'     => esc_html__( 'Thai', 'buddyboss-community-social-network-groups-forums-messaging' ),
+		'tr'     => esc_html__( 'Turkish', 'buddyboss-community-social-network-groups-forums-messaging' ),
+		'uk'     => esc_html__( 'Ukrainian', 'buddyboss-community-social-network-groups-forums-messaging' ),
+		'ur'     => esc_html__( 'Urdu', 'buddyboss-community-social-network-groups-forums-messaging' ),
+		'vi'     => esc_html__( 'Vietnamese', 'buddyboss-community-social-network-groups-forums-messaging' ),
+		'zu'     => esc_html__( 'Zulu', 'buddyboss-community-social-network-groups-forums-messaging' ),
 	);
 
 	/**
@@ -656,8 +656,8 @@ function bboss_recaptcha_display( $action = '' ) {
 			'action'           => $action,
 			// Front-end notices shown when a v3 token cannot be obtained at submit time.
 			'i18n'             => array(
-				'script_failed' => __( 'The security check could not be loaded. Please reload the page and try again.', 'buddyboss-platform' ),
-				'token_failed'  => __( 'The security check could not be completed. Please try again.', 'buddyboss-platform' ),
+				'script_failed' => __( 'The security check could not be loaded. Please reload the page and try again.', 'buddyboss-community-social-network-groups-forums-messaging' ),
+				'token_failed'  => __( 'The security check could not be completed. Please try again.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			),
 		);
 		if ( 'recaptcha_v2' === $enabled_for ) {
@@ -700,7 +700,7 @@ function bboss_recaptcha_verification_front( $action = '' ) {
 	$retval = array();
 	if ( ! empty( $selected_version ) ) {
 		if ( empty( $token_response ) ) {
-			$error_message = apply_filters( 'bb_recaptcha_token_missing', __( 'Google reCAPTCHA token is missing.', 'buddyboss-platform' ) );
+			$error_message = apply_filters( 'bb_recaptcha_token_missing', __( 'Google reCAPTCHA token is missing.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 
 			$retval['error']['bb_recaptcha_token_missing'] = $error_message;
 		} else {
@@ -729,12 +729,12 @@ function bboss_recaptcha_verification_front( $action = '' ) {
 						)
 					)
 				) {
-					$error_message = apply_filters( 'bb_recaptcha_verification_failed', __( 'Verification failed please try again.', 'buddyboss-platform' ) );
+					$error_message = apply_filters( 'bb_recaptcha_verification_failed', __( 'Verification failed please try again.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 
 					$retval['error']['bb_recaptcha_verification_failed'] = $error_message;
 				}
 			} else {
-				$error_message = apply_filters( 'bb_recaptcha_empty_response', __( 'Could not get a response from the reCAPTCHA server.', 'buddyboss-platform' ) );
+				$error_message = apply_filters( 'bb_recaptcha_empty_response', __( 'Could not get a response from the reCAPTCHA server.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 
 				$retval['error']['bb_recaptcha_empty_response'] = $error_message;
 			}

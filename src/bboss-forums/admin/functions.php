@@ -211,12 +211,12 @@ function bboss_bbp_get_tools_admin_tabs( $active_tab = '' ) {
 		array(
 			'0' => array(
 				'href' => get_admin_url( '', add_query_arg( array( 'page' => 'bbp-repair' ), 'admin.php' ) ),
-				'name' => __( 'Repair Forums', 'buddyboss-platform' ),
+				'name' => __( 'Repair Forums', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			),
 			// '1' Import Forums tab retired in BuddyBoss 3.1.0 — moved to buddyboss-tools.
 			'2' => array(
 				'href' => get_admin_url( '', add_query_arg( array( 'page' => 'bbp-reset' ), 'admin.php' ) ),
-				'name' => __( 'Reset Forums', 'buddyboss-platform' ),
+				'name' => __( 'Reset Forums', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			),
 		)
 	);

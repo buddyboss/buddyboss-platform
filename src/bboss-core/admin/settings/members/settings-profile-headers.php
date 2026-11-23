@@ -32,7 +32,7 @@ function bboss_members_register_profile_headers_panel_fields() {
 		'profile_headers',
 		'profile_headers',
 		array(
-			'title'       => __( 'Profile Headers', 'buddyboss-platform' ),
+			'title'       => __( 'Profile Headers', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'description' => '',
 			'order'       => 10,
 			'pro_notice'  => bboss_admin_settings_get_pro_notice(
@@ -51,19 +51,19 @@ function bboss_members_register_profile_headers_panel_fields() {
 		'profile_headers',
 		array(
 			'name'              => 'bb-profile-headers-layout-style',
-			'label'             => __( 'Header Style', 'buddyboss-platform' ),
+			'label'             => __( 'Header Style', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'type'              => 'image_radio',
-			'description'       => __( 'Select the style of your profile headers. Profile cover images will only be displayed if they are enabled.', 'buddyboss-platform' ),
+			'description'       => __( 'Select the style of your profile headers. Profile cover images will only be displayed if they are enabled.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'default'           => function_exists( 'bb_get_profile_header_style' ) ? bb_get_profile_header_style() : 'left',
 			'sanitize_callback' => 'bboss_members_sanitize_header_style',
 			'options'           => array(
 				array(
-					'label' => is_rtl() ? __( 'Right', 'buddyboss-platform' ) : __( 'Left', 'buddyboss-platform' ),
+					'label' => is_rtl() ? __( 'Right', 'buddyboss-community-social-network-groups-forums-messaging' ) : __( 'Left', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'value' => 'left',
 					'image' => 'header-left-profile',
 				),
 				array(
-					'label' => __( 'Centered', 'buddyboss-platform' ),
+					'label' => __( 'Centered', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'value' => 'centered',
 					'image' => 'header-centered-profile',
 				),
@@ -82,42 +82,42 @@ function bboss_members_register_profile_headers_panel_fields() {
 		'profile_headers',
 		array(
 			'name'              => 'bb-profile-headers-layout-elements',
-			'label'             => __( 'Elements', 'buddyboss-platform' ),
+			'label'             => __( 'Elements', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'type'              => 'toggle_list',
-			'description'       => __( 'Select which elements to show in your profile headers.', 'buddyboss-platform' ),
+			'description'       => __( 'Select which elements to show in your profile headers.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'default'           => array(),
 			'sanitize_callback' => 'bboss_members_sanitize_toggle_list',
 			'options'           => array(
 				array(
-					'label' => __( 'Online Status', 'buddyboss-platform' ),
+					'label' => __( 'Online Status', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'value' => 'online-status',
 				),
 				array(
-					'label' => __( 'Profile Type', 'buddyboss-platform' ),
+					'label' => __( 'Profile Type', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'value' => 'profile-type',
 				),
 				array(
-					'label' => __( 'Member Handle', 'buddyboss-platform' ),
+					'label' => __( 'Member Handle', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'value' => 'member-handle',
 				),
 				array(
-					'label' => __( 'Joined Date', 'buddyboss-platform' ),
+					'label' => __( 'Joined Date', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'value' => 'joined-date',
 				),
 				array(
-					'label' => __( 'Last Active', 'buddyboss-platform' ),
+					'label' => __( 'Last Active', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'value' => 'last-active',
 				),
 				array(
-					'label' => __( 'Followers', 'buddyboss-platform' ),
+					'label' => __( 'Followers', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'value' => 'followers',
 				),
 				array(
-					'label' => __( 'Following', 'buddyboss-platform' ),
+					'label' => __( 'Following', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'value' => 'following',
 				),
 				array(
-					'label' => __( 'Social Networks', 'buddyboss-platform' ),
+					'label' => __( 'Social Networks', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'value' => 'social-networks',
 				),
 			),

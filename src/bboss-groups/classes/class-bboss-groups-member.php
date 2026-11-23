@@ -358,13 +358,13 @@ class BBoss_Groups_Member {
 		if ( 'mod' == $status ) {
 			$this->is_admin   = 0;
 			$this->is_mod     = 1;
-			$this->user_title = __( 'Group Moderator', 'buddyboss-platform' );
+			$this->user_title = __( 'Group Moderator', 'buddyboss-community-social-network-groups-forums-messaging' );
 		}
 
 		if ( 'admin' == $status ) {
 			$this->is_admin   = 1;
 			$this->is_mod     = 0;
-			$this->user_title = __( 'Group Organizer', 'buddyboss-platform' );
+			$this->user_title = __( 'Group Organizer', 'buddyboss-community-social-network-groups-forums-messaging' );
 		}
 
 		return $this->save();

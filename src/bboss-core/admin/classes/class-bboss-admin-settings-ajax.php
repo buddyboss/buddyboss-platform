@@ -88,7 +88,7 @@ class BBoss_Admin_Settings_Ajax {
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
 		if ( empty( $options ) ) {
-			wp_send_json_error( array( 'message' => __( 'Options parameter is required.', 'buddyboss-platform' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Options parameter is required.', 'buddyboss-community-social-network-groups-forums-messaging' ) ) );
 		}
 
 		$requested = array_map( 'sanitize_text_field', explode( ',', $options ) );
@@ -120,13 +120,13 @@ class BBoss_Admin_Settings_Ajax {
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
 		if ( empty( $option_name ) ) {
-			wp_send_json_error( array( 'message' => __( 'Option name is required.', 'buddyboss-platform' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Option name is required.', 'buddyboss-community-social-network-groups-forums-messaging' ) ) );
 		}
 
 		$allowed = $this->bb_admin_get_allowed_platform_options();
 
 		if ( ! array_key_exists( $option_name, $allowed ) ) {
-			wp_send_json_error( array( 'message' => __( 'Option not allowed.', 'buddyboss-platform' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Option not allowed.', 'buddyboss-community-social-network-groups-forums-messaging' ) ) );
 		}
 
 		// Apply per-option sanitize callback (defined in bb_admin_get_allowed_platform_options).
@@ -179,7 +179,7 @@ class BBoss_Admin_Settings_Ajax {
 		}
 
 		wp_send_json_success(
-			array( 'message' => __( 'Setting saved successfully.', 'buddyboss-platform' ) )
+			array( 'message' => __( 'Setting saved successfully.', 'buddyboss-community-social-network-groups-forums-messaging' ) )
 		);
 	}
 
@@ -347,15 +347,15 @@ class BBoss_Admin_Settings_Ajax {
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
 		if ( empty( $feature_id ) ) {
-			wp_send_json_error( array( 'message' => __( 'Feature ID is required.', 'buddyboss-platform' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Feature ID is required.', 'buddyboss-community-social-network-groups-forums-messaging' ) ) );
 		}
 
 		if ( ! in_array( $status, array( 'active', 'inactive' ), true ) ) {
-			wp_send_json_error( array( 'message' => __( 'Invalid status. Must be "active" or "inactive".', 'buddyboss-platform' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Invalid status. Must be "active" or "inactive".', 'buddyboss-community-social-network-groups-forums-messaging' ) ) );
 		}
 
 		if ( ! function_exists( 'bboss_feature_registry' ) || ! function_exists( 'bboss_icon_registry' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Feature registry not available.', 'buddyboss-platform' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Feature registry not available.', 'buddyboss-community-social-network-groups-forums-messaging' ) ) );
 		}
 
 		$registry      = bboss_feature_registry();
@@ -385,9 +385,9 @@ class BBoss_Admin_Settings_Ajax {
 			'data'    => $formatted,
 			'message' => sprintf(
 				/* translators: 1: feature label, 2: activated/deactivated */
-				__( 'Feature "%1$s" %2$s successfully.', 'buddyboss-platform' ),
+				__( 'Feature "%1$s" %2$s successfully.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				$feature['label'],
-				$activate ? __( 'activated', 'buddyboss-platform' ) : __( 'deactivated', 'buddyboss-platform' )
+				$activate ? __( 'activated', 'buddyboss-community-social-network-groups-forums-messaging' ) : __( 'deactivated', 'buddyboss-community-social-network-groups-forums-messaging' )
 			),
 		);
 
@@ -432,11 +432,11 @@ class BBoss_Admin_Settings_Ajax {
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
 		if ( empty( $feature_id ) ) {
-			wp_send_json_error( array( 'message' => __( 'Feature ID is required.', 'buddyboss-platform' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Feature ID is required.', 'buddyboss-community-social-network-groups-forums-messaging' ) ) );
 		}
 
 		if ( ! function_exists( 'bboss_feature_registry' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Feature registry not available.', 'buddyboss-platform' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Feature registry not available.', 'buddyboss-community-social-network-groups-forums-messaging' ) ) );
 		}
 
 		$registry = bboss_feature_registry();
@@ -444,7 +444,7 @@ class BBoss_Admin_Settings_Ajax {
 		// Get feature.
 		$feature = $registry->bb_get_feature( $feature_id );
 		if ( ! $feature ) {
-			wp_send_json_error( array( 'message' => __( 'Feature not found.', 'buddyboss-platform' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Feature not found.', 'buddyboss-community-social-network-groups-forums-messaging' ) ) );
 		}
 
 		/**
@@ -563,7 +563,7 @@ class BBoss_Admin_Settings_Ajax {
 				if ( ! empty( $section['pro_notice'] ) && is_array( $section['pro_notice'] ) ) {
 					$formatted_section['pro_notice'] = array(
 						'show'       => ! empty( $section['pro_notice']['show'] ),
-						'badge_text' => sanitize_text_field( $section['pro_notice']['badge_text'] ?? __( 'UPGRADE LAUNCH', 'buddyboss-platform' ) ),
+						'badge_text' => sanitize_text_field( $section['pro_notice']['badge_text'] ?? __( 'UPGRADE LAUNCH', 'buddyboss-community-social-network-groups-forums-messaging' ) ),
 						'badge_icon' => sanitize_text_field( $section['pro_notice']['badge_icon'] ?? 'bb-icons-rl-crown-simple' ),
 						'link_url'   => esc_url_raw( $section['pro_notice']['link_url'] ?? '' ),
 						// Optional plan tier (e.g. 'start') for the badge style variant.
@@ -1401,7 +1401,7 @@ class BBoss_Admin_Settings_Ajax {
 				)
 			) {
 				$field_data['pro_notice']['tier']       = 'start';
-				$field_data['pro_notice']['badge_text'] = __( 'START', 'buddyboss-platform' );
+				$field_data['pro_notice']['badge_text'] = __( 'START', 'buddyboss-community-social-network-groups-forums-messaging' );
 			}
 
 			/*
@@ -1622,15 +1622,15 @@ class BBoss_Admin_Settings_Ajax {
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
 		if ( ! is_string( $raw_json ) ) {
-			wp_send_json_error( array( 'message' => __( 'Invalid settings format.', 'buddyboss-platform' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Invalid settings format.', 'buddyboss-community-social-network-groups-forums-messaging' ) ) );
 		}
 
 		if ( empty( $feature_id ) ) {
-			wp_send_json_error( array( 'message' => __( 'Feature ID is required.', 'buddyboss-platform' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Feature ID is required.', 'buddyboss-community-social-network-groups-forums-messaging' ) ) );
 		}
 
 		if ( ! function_exists( 'bboss_feature_registry' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Feature registry not available.', 'buddyboss-platform' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Feature registry not available.', 'buddyboss-community-social-network-groups-forums-messaging' ) ) );
 		}
 
 		// Cap nesting depth at 8 — Settings 2.0 payloads never exceed
@@ -1639,10 +1639,10 @@ class BBoss_Admin_Settings_Ajax {
 		try {
 			$settings = json_decode( $raw_json, true, 8, JSON_THROW_ON_ERROR );
 		} catch ( \JsonException $e ) {
-			wp_send_json_error( array( 'message' => __( 'Invalid settings data.', 'buddyboss-platform' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Invalid settings data.', 'buddyboss-community-social-network-groups-forums-messaging' ) ) );
 		}
 		if ( ! is_array( $settings ) ) {
-			wp_send_json_error( array( 'message' => __( 'Invalid settings data.', 'buddyboss-platform' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Invalid settings data.', 'buddyboss-community-social-network-groups-forums-messaging' ) ) );
 		}
 
 		$registry = bboss_feature_registry();
@@ -1679,7 +1679,7 @@ class BBoss_Admin_Settings_Ajax {
 		$all_fields = $registry->bb_get_all_fields( $feature_id );
 
 		if ( empty( $all_fields ) ) {
-			wp_send_json_error( array( 'message' => __( 'No fields registered for this feature.', 'buddyboss-platform' ) ) );
+			wp_send_json_error( array( 'message' => __( 'No fields registered for this feature.', 'buddyboss-community-social-network-groups-forums-messaging' ) ) );
 		}
 
 		$saved = array();
@@ -1916,7 +1916,7 @@ class BBoss_Admin_Settings_Ajax {
 		}
 
 		$response_data = array(
-			'message'        => __( 'Settings saved successfully.', 'buddyboss-platform' ),
+			'message'        => __( 'Settings saved successfully.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'saved'          => $saved,
 			'refresh_panels' => $refresh_panels,
 		);
@@ -2691,11 +2691,11 @@ class BBoss_Admin_Settings_Ajax {
 		$all_options = array(
 			array(
 				'value' => '',
-				'label' => __( 'Default', 'buddyboss-platform' ),
+				'label' => __( 'Default', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			),
 			array(
 				'value' => '0',
-				'label' => __( 'Custom URL', 'buddyboss-platform' ),
+				'label' => __( 'Custom URL', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			),
 		);
 
@@ -2800,12 +2800,12 @@ class BBoss_Admin_Settings_Ajax {
 			if ( $switched ) {
 				restore_current_blog();
 			}
-			wp_send_json_error( array( 'message' => __( 'Insufficient permissions on the target site.', 'buddyboss-platform' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Insufficient permissions on the target site.', 'buddyboss-community-social-network-groups-forums-messaging' ) ) );
 		}
 
 		$empty_option = array(
 			'value' => '',
-			'label' => __( '— Select a page —', 'buddyboss-platform' ),
+			'label' => __( '— Select a page —', 'buddyboss-community-social-network-groups-forums-messaging' ),
 		);
 
 		// Selected-ID resolve path: bypass pagination + search so the dropdown
@@ -2818,7 +2818,7 @@ class BBoss_Admin_Settings_Ajax {
 				$result = array(
 					'value' => (string) $post->ID,
 					/* translators: %d: WordPress page ID, used as a fallback when a page has no title. */
-					'label' => $post->post_title ? $post->post_title : sprintf( __( '(no title) #%d', 'buddyboss-platform' ), $post->ID ),
+					'label' => $post->post_title ? $post->post_title : sprintf( __( '(no title) #%d', 'buddyboss-community-social-network-groups-forums-messaging' ), $post->ID ),
 				);
 			}
 			if ( $switched ) {
@@ -2879,7 +2879,7 @@ class BBoss_Admin_Settings_Ajax {
 				$results[] = array(
 					'value' => (string) $page_id,
 					/* translators: %d: WordPress page ID, used as a fallback when a page has no title. */
-					'label' => $title ? $title : sprintf( __( '(no title) #%d', 'buddyboss-platform' ), $page_id ),
+					'label' => $title ? $title : sprintf( __( '(no title) #%d', 'buddyboss-community-social-network-groups-forums-messaging' ), $page_id ),
 				);
 			}
 		}
@@ -2923,7 +2923,7 @@ class BBoss_Admin_Settings_Ajax {
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
 		if ( '' === $slug ) {
-			wp_send_json_error( array( 'message' => __( 'Missing page slug.', 'buddyboss-platform' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Missing page slug.', 'buddyboss-community-social-network-groups-forums-messaging' ) ) );
 		}
 
 		// Allow-list the slug against the set of directory keys that the
@@ -2941,7 +2941,7 @@ class BBoss_Admin_Settings_Ajax {
 			$allowed_slugs = array_merge( $allowed_slugs, array_keys( (array) bboss_core_admin_get_static_pages() ) );
 		}
 		if ( ! in_array( $slug, $allowed_slugs, true ) ) {
-			wp_send_json_error( array( 'message' => __( 'Unknown directory slug.', 'buddyboss-platform' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Unknown directory slug.', 'buddyboss-community-social-network-groups-forums-messaging' ) ) );
 		}
 
 		$switched = false;
@@ -2964,7 +2964,7 @@ class BBoss_Admin_Settings_Ajax {
 			if ( $switched ) {
 				restore_current_blog();
 			}
-			wp_send_json_error( array( 'message' => __( 'Insufficient permissions on the target site.', 'buddyboss-platform' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Insufficient permissions on the target site.', 'buddyboss-community-social-network-groups-forums-messaging' ) ) );
 		}
 
 		$title = '' !== $label ? $label : ucfirst( str_replace( array( '-', '_' ), ' ', $slug ) );

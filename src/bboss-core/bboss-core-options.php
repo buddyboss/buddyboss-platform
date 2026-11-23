@@ -1078,23 +1078,23 @@ function bboss_activity_edit_times( $time = null ) {
 		array(
 			'thirty_days' => array(
 				'value' => ( 60 * 60 * 24 * 30 ),
-				'label' => __( '30 Days', 'buddyboss-platform' ),
+				'label' => __( '30 Days', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			),
 			'seven_days'  => array(
 				'value' => ( 60 * 60 * 24 * 7 ),
-				'label' => __( '7 Days', 'buddyboss-platform' ),
+				'label' => __( '7 Days', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			),
 			'one_day'     => array(
 				'value' => ( 60 * 60 * 24 ),
-				'label' => __( '1 Day', 'buddyboss-platform' ),
+				'label' => __( '1 Day', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			),
 			'one_hour'    => array(
 				'value' => ( 60 * 60 ),
-				'label' => __( '1 Hour', 'buddyboss-platform' ),
+				'label' => __( '1 Hour', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			),
 			'ten_minutes' => array(
 				'value' => ( 60 * 10 ),
-				'label' => __( '10 Minutes', 'buddyboss-platform' ),
+				'label' => __( '10 Minutes', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			),
 		)
 	);
@@ -2721,12 +2721,12 @@ function bboss_custom_logout_redirection( $default = '' ) {
 function bboss_get_all_reactions() {
 	return array(
 		'activity'         => array(
-			'label'     => esc_html__( 'Activity posts', 'buddyboss-platform' ),
+			'label'     => esc_html__( 'Activity posts', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'disabled'  => ! bboss_is_active( 'activity' ),
 			'component' => 'activity',
 		),
 		'activity_comment' => array(
-			'label'     => esc_html__( 'Activity comments', 'buddyboss-platform' ),
+			'label'     => esc_html__( 'Activity comments', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'disabled'  => ! bboss_is_active( 'activity' ),
 			'component' => 'activity',
 		),
@@ -2977,51 +2977,51 @@ function bboss_get_activity_filter_options_labels( $context = 'default' ) {
 	$filters = array(
 		'all'        => array(
 			/* translators: Activity filter label shown in dropdown menus */
-			'default'      => __( 'All Updates', 'buddyboss-platform' ),
+			'default'      => __( 'All Updates', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			/* translators: Activity filter label shown after "Show:" text - use lowercase */
-			'show_context' => __( 'all updates', 'buddyboss-platform' ),
+			'show_context' => __( 'all updates', 'buddyboss-community-social-network-groups-forums-messaging' ),
 		),
 		'just-me'    => array(
 			/* translators: Activity filter label shown in dropdown menus */
-			'default'      => __( 'Created by Me', 'buddyboss-platform' ),
+			'default'      => __( 'Created by Me', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			/* translators: Activity filter label shown after "Show:" text - use lowercase */
-			'show_context' => __( 'created by me', 'buddyboss-platform' ),
+			'show_context' => __( 'created by me', 'buddyboss-community-social-network-groups-forums-messaging' ),
 		),
 		'favorites'  => array(
 			/* translators: Activity filter label shown in dropdown menus */
-			'default'      => __( "I've Reacted To", 'buddyboss-platform' ),
+			'default'      => __( "I've Reacted To", 'buddyboss-community-social-network-groups-forums-messaging' ),
 			/* translators: Activity filter label shown after "Show:" text - use lowercase */
-			'show_context' => __( "I've reacted to", 'buddyboss-platform' ),
+			'show_context' => __( "I've reacted to", 'buddyboss-community-social-network-groups-forums-messaging' ),
 		),
 		'groups'     => array(
 			/* translators: Activity filter label shown in dropdown menus */
-			'default'      => __( 'From My Groups', 'buddyboss-platform' ),
+			'default'      => __( 'From My Groups', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			/* translators: Activity filter label shown after "Show:" text - use lowercase */
-			'show_context' => __( 'from my groups', 'buddyboss-platform' ),
+			'show_context' => __( 'from my groups', 'buddyboss-community-social-network-groups-forums-messaging' ),
 		),
 		'friends'    => array(
 			/* translators: Activity filter label shown in dropdown menus */
-			'default'      => __( 'From My Connections', 'buddyboss-platform' ),
+			'default'      => __( 'From My Connections', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			/* translators: Activity filter label shown after "Show:" text - use lowercase */
-			'show_context' => __( 'from my connections', 'buddyboss-platform' ),
+			'show_context' => __( 'from my connections', 'buddyboss-community-social-network-groups-forums-messaging' ),
 		),
 		'mentions'   => array(
 			/* translators: Activity filter label shown in dropdown menus */
-			'default'      => __( "I'm Mentioned In", 'buddyboss-platform' ),
+			'default'      => __( "I'm Mentioned In", 'buddyboss-community-social-network-groups-forums-messaging' ),
 			/* translators: Activity filter label shown after "Show:" text - use lowercase */
-			'show_context' => __( "I'm mentioned in", 'buddyboss-platform' ),
+			'show_context' => __( "I'm mentioned in", 'buddyboss-community-social-network-groups-forums-messaging' ),
 		),
 		'following'  => array(
 			/* translators: Activity filter label shown in dropdown menus */
-			'default'      => __( "I'm Following", 'buddyboss-platform' ),
+			'default'      => __( "I'm Following", 'buddyboss-community-social-network-groups-forums-messaging' ),
 			/* translators: Activity filter label shown after "Show:" text - use lowercase */
-			'show_context' => __( "I'm following", 'buddyboss-platform' ),
+			'show_context' => __( "I'm following", 'buddyboss-community-social-network-groups-forums-messaging' ),
 		),
 		'unanswered' => array(
 			/* translators: Activity filter label shown in dropdown menus */
-			'default'      => __( 'Unanswered', 'buddyboss-platform' ),
+			'default'      => __( 'Unanswered', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			/* translators: Activity filter label shown after "Show:" text - use lowercase */
-			'show_context' => __( 'unanswered', 'buddyboss-platform' ),
+			'show_context' => __( 'unanswered', 'buddyboss-community-social-network-groups-forums-messaging' ),
 		),
 	);
 
@@ -3104,39 +3104,39 @@ function bboss_get_activity_timeline_filter_options_labels( $context = 'default'
 	$filters = array(
 		'just-me'   => array(
 			/* translators: Timeline filter label shown in dropdown menus */
-			'default'      => __( 'Personal Posts', 'buddyboss-platform' ),
+			'default'      => __( 'Personal Posts', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			/* translators: Timeline filter label shown after "Show:" text - use lowercase if grammatically appropriate in your language */
-			'show_context' => __( 'personal posts', 'buddyboss-platform' ),
+			'show_context' => __( 'personal posts', 'buddyboss-community-social-network-groups-forums-messaging' ),
 		),
 		'favorites' => array(
 			/* translators: Timeline filter label shown in dropdown menus */
-			'default'      => __( 'Reacted To', 'buddyboss-platform' ),
+			'default'      => __( 'Reacted To', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			/* translators: Timeline filter label shown after "Show:" text - use lowercase if grammatically appropriate in your language */
-			'show_context' => __( 'reacted to', 'buddyboss-platform' ),
+			'show_context' => __( 'reacted to', 'buddyboss-community-social-network-groups-forums-messaging' ),
 		),
 		'groups'    => array(
 			/* translators: Timeline filter label shown in dropdown menus */
-			'default'      => __( 'From Groups', 'buddyboss-platform' ),
+			'default'      => __( 'From Groups', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			/* translators: Timeline filter label shown after "Show:" text - use lowercase if grammatically appropriate in your language */
-			'show_context' => __( 'from groups', 'buddyboss-platform' ),
+			'show_context' => __( 'from groups', 'buddyboss-community-social-network-groups-forums-messaging' ),
 		),
 		'friends'   => array(
 			/* translators: Timeline filter label shown in dropdown menus */
-			'default'      => __( 'From Connections', 'buddyboss-platform' ),
+			'default'      => __( 'From Connections', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			/* translators: Timeline filter label shown after "Show:" text - use lowercase if grammatically appropriate in your language */
-			'show_context' => __( 'from connections', 'buddyboss-platform' ),
+			'show_context' => __( 'from connections', 'buddyboss-community-social-network-groups-forums-messaging' ),
 		),
 		'mentions'  => array(
 			/* translators: Timeline filter label shown in dropdown menus */
-			'default'      => __( 'Mentioned In', 'buddyboss-platform' ),
+			'default'      => __( 'Mentioned In', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			/* translators: Timeline filter label shown after "Show:" text - use lowercase if grammatically appropriate in your language */
-			'show_context' => __( 'mentioned in', 'buddyboss-platform' ),
+			'show_context' => __( 'mentioned in', 'buddyboss-community-social-network-groups-forums-messaging' ),
 		),
 		'following' => array(
 			/* translators: Timeline filter label shown in dropdown menus */
-			'default'      => __( 'Following', 'buddyboss-platform' ),
+			'default'      => __( 'Following', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			/* translators: Timeline filter label shown after "Show:" text - use lowercase if grammatically appropriate in your language */
-			'show_context' => __( 'following', 'buddyboss-platform' ),
+			'show_context' => __( 'following', 'buddyboss-community-social-network-groups-forums-messaging' ),
 		),
 	);
 
@@ -3217,15 +3217,15 @@ function bboss_get_activity_sorting_options_labels( $context = 'default' ) {
 	$sorting_options = array(
 		'date_recorded' => array(
 			/* translators: Sorting option label shown in dropdown menus */
-			'default'    => __( 'New Posts', 'buddyboss-platform' ),
+			'default'    => __( 'New Posts', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			/* translators: Sorting option label shown after "by" text - use lowercase if grammatically appropriate in your language */
-			'by_context' => __( 'new posts', 'buddyboss-platform' ),
+			'by_context' => __( 'new posts', 'buddyboss-community-social-network-groups-forums-messaging' ),
 		),
 		'date_updated'  => array(
 			/* translators: Sorting option label shown in dropdown menus */
-			'default'    => __( 'Recent Activity', 'buddyboss-platform' ),
+			'default'    => __( 'Recent Activity', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			/* translators: Sorting option label shown after "by" text - use lowercase if grammatically appropriate in your language */
-			'by_context' => __( 'recent activity', 'buddyboss-platform' ),
+			'by_context' => __( 'recent activity', 'buddyboss-community-social-network-groups-forums-messaging' ),
 		),
 	);
 

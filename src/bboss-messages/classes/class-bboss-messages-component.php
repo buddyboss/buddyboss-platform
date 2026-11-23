@@ -187,7 +187,7 @@ class BBoss_Messages_Component extends BBoss_Component {
 				'slug'                  => BBOSS_MESSAGES_SLUG,
 				'has_directory'         => false,
 				'notification_callback' => 'bboss_messages_format_notifications',
-				'search_string'         => __( 'Search Messages&hellip;', 'buddyboss-platform' ),
+				'search_string'         => __( 'Search Messages&hellip;', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				'global_tables'         => $global_tables,
 				'meta_tables'           => $meta_tables,
 			)
@@ -219,14 +219,14 @@ class BBoss_Messages_Component extends BBoss_Component {
 		if ( bboss_is_user() && bboss_user_has_access() ) {
 			$count     = bboss_get_total_unread_messages_count( bboss_displayed_user_id() );
 			$class     = ( 0 === $count ) ? 'no-count' : 'count';
-			$nav_name  = __( 'Messages', 'buddyboss-platform' );
+			$nav_name  = __( 'Messages', 'buddyboss-community-social-network-groups-forums-messaging' );
 			$nav_name .= sprintf(
 				' <span class="%s">%s</span>',
 				esc_attr( $class ),
 				bboss_core_number_format( $count )
 			);
 		} else {
-			$nav_name = __( 'Messages', 'buddyboss-platform' );
+			$nav_name = __( 'Messages', 'buddyboss-community-social-network-groups-forums-messaging' );
 		}
 
 		// Add 'Messages' to the main navigation.
@@ -242,7 +242,7 @@ class BBoss_Messages_Component extends BBoss_Component {
 
 		// Add the subnav items to the profile.
 		$sub_nav[] = array(
-			'name'            => __( 'Messages', 'buddyboss-platform' ),
+			'name'            => __( 'Messages', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'slug'            => 'inbox',
 			'parent_url'      => $messages_link,
 			'parent_slug'     => $slug,
@@ -257,7 +257,7 @@ class BBoss_Messages_Component extends BBoss_Component {
 			if ( bboss_is_user_messages() && bboss_is_active( 'notifications' ) ) {
 				// Show "Actions" on the logged-in user's profile only.
 				$sub_nav[] = array(
-					'name'            => __( 'Actions', 'buddyboss-platform' ),
+					'name'            => __( 'Actions', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'slug'            => 'compose-action',
 					'parent_url'      => 'javascript:void(0);',
 					'parent_slug'     => $slug,
@@ -269,7 +269,7 @@ class BBoss_Messages_Component extends BBoss_Component {
 
 			// Show "Compose" on the logged-in user's profile only.
 			$sub_nav[] = array(
-				'name'            => __( 'New Message', 'buddyboss-platform' ),
+				'name'            => __( 'New Message', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				'slug'            => 'compose',
 				'parent_url'      => $messages_link,
 				'parent_slug'     => $slug,
@@ -280,7 +280,7 @@ class BBoss_Messages_Component extends BBoss_Component {
 
 			// Show "Archived" on the logged-in user's profile only.
 			$sub_nav[] = array(
-				'name'            => __( 'Archived', 'buddyboss-platform' ),
+				'name'            => __( 'Archived', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				'slug'            => 'archived',
 				'parent_url'      => $messages_link,
 				'parent_slug'     => $slug,
@@ -295,7 +295,7 @@ class BBoss_Messages_Component extends BBoss_Component {
 			 */
 			if ( bboss_current_user_can( 'bp_moderate' ) ) {
 				$sub_nav[] = array(
-					'name'            => __( 'Notices', 'buddyboss-platform' ),
+					'name'            => __( 'Notices', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'slug'            => 'notices',
 					'parent_url'      => $messages_link,
 					'parent_slug'     => $slug,
@@ -327,17 +327,17 @@ class BBoss_Messages_Component extends BBoss_Component {
 			if ( ! empty( $count ) ) {
 				$title = sprintf(
 					/* translators: %s: Unread message count for the current user */
-					__( 'Messages %s', 'buddyboss-platform' ),
+					__( 'Messages %s', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'<span class="count">' . bboss_core_number_format( $count ) . '</span>'
 				);
 				$inbox = sprintf(
 					/* translators: %s: Unread message count for the current user */
-					__( 'Messages %s', 'buddyboss-platform' ),
+					__( 'Messages %s', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'<span class="count">' . bboss_core_number_format( $count ) . '</span>'
 				);
 			} else {
-				$title = __( 'Messages', 'buddyboss-platform' );
-				$inbox = __( 'Messages', 'buddyboss-platform' );
+				$title = __( 'Messages', 'buddyboss-community-social-network-groups-forums-messaging' );
+				$inbox = __( 'Messages', 'buddyboss-community-social-network-groups-forums-messaging' );
 			}
 
 			// Add main Messages menu.
@@ -361,7 +361,7 @@ class BBoss_Messages_Component extends BBoss_Component {
 			$wp_admin_nav[] = array(
 				'parent'   => 'my-account-' . $this->id,
 				'id'       => 'my-account-' . $this->id . '-compose',
-				'title'    => __( 'New Message', 'buddyboss-platform' ),
+				'title'    => __( 'New Message', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				'href'     => trailingslashit( $messages_link . 'compose' ),
 				'position' => 30,
 			);
@@ -371,7 +371,7 @@ class BBoss_Messages_Component extends BBoss_Component {
 				$wp_admin_nav[] = array(
 					'parent'   => 'my-account-' . $this->id,
 					'id'       => 'my-account-' . $this->id . '-notices',
-					'title'    => __( 'Site Notices', 'buddyboss-platform' ),
+					'title'    => __( 'Site Notices', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'href'     => trailingslashit( $messages_link . 'notices' ),
 					'position' => 90,
 				);
@@ -390,14 +390,14 @@ class BBoss_Messages_Component extends BBoss_Component {
 			$bp = bboss();
 
 			if ( bboss_is_my_profile() ) {
-				$bp->bp_options_title = __( 'My Messages', 'buddyboss-platform' );
+				$bp->bp_options_title = __( 'My Messages', 'buddyboss-community-social-network-groups-forums-messaging' );
 			} else {
 				$bp->bp_options_avatar = bboss_core_fetch_avatar(
 					array(
 						'item_id' => bboss_displayed_user_id(),
 						'type'    => 'thumb',
 						/* translators: %s: member display name. */
-						'alt'     => sprintf( __( 'Profile photo of %s', 'buddyboss-platform' ), bboss_get_displayed_user_fullname() ),
+						'alt'     => sprintf( __( 'Profile photo of %s', 'buddyboss-community-social-network-groups-forums-messaging' ), bboss_get_displayed_user_fullname() ),
 					)
 				);
 				$bp->bp_options_title  = bboss_get_displayed_user_fullname();

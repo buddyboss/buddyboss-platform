@@ -26,7 +26,7 @@ function bboss_members_register_profile_search_panel_fields() {
 		'profile_search',
 		'profile_search',
 		array(
-			'title'       => __( 'Profile Search', 'buddyboss-platform' ),
+			'title'       => __( 'Profile Search', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'description' => '',
 			'order'       => 10,
 		)
@@ -41,10 +41,10 @@ function bboss_members_register_profile_search_panel_fields() {
 		'profile_search',
 		array(
 			'name'              => 'bp-enable-profile-search',
-			'label'             => __( 'Profile Search', 'buddyboss-platform' ),
+			'label'             => __( 'Profile Search', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'type'              => 'toggle',
-			'description'       => __( 'Enable profile search', 'buddyboss-platform' ),
-			'help_text'         => __( 'When enabled, advanced profile search will be available in the members directory.', 'buddyboss-platform' ),
+			'description'       => __( 'Enable profile search', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'help_text'         => __( 'When enabled, advanced profile search will be available in the members directory.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'default'           => ! bboss_disable_advanced_profile_search(),
 			'sanitize_callback' => 'absint',
 			'order'             => 10,

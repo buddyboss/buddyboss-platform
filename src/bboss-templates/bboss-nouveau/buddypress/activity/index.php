@@ -29,7 +29,7 @@ if ( bboss_is_enabled_activity_topics() ) {
 		<div class="activity-topic-selector">
 			<ul>
 				<li>
-					<a href="<?php echo esc_url( bboss_get_activity_directory_permalink() ); ?>"><?php esc_html_e( 'All', 'buddyboss-platform' ); ?></a>
+					<a href="<?php echo esc_url( bboss_get_activity_directory_permalink() ); ?>"><?php esc_html_e( 'All', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></a>
 				</li>
 				<?php
 				foreach ( $topics as $topic ) {

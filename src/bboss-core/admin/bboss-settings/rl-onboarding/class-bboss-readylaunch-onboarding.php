@@ -80,8 +80,8 @@ class BBoss_ReadyLaunch_Onboarding extends BBoss_Setup_Wizard_Manager {
 			'admin_page'            => 'bb-settings',
 			'option_prefix'         => 'bb_rl',
 			'completion_option'     => 'bb_rl_onboarding_completed',
-			'wizard_title'          => __( 'BuddyBoss ReadyLaunch Setup', 'buddyboss-platform' ),
-			'wizard_description'    => __( 'Get started with BuddyBoss in minutes', 'buddyboss-platform' ),
+			'wizard_title'          => __( 'BuddyBoss ReadyLaunch Setup', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'wizard_description'    => __( 'Get started with BuddyBoss in minutes', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'skip_on_multisite'     => false,
 			'enable_react_frontend' => true,
 			'react_directory'       => __DIR__,
@@ -93,58 +93,58 @@ class BBoss_ReadyLaunch_Onboarding extends BBoss_Setup_Wizard_Manager {
 			'steps'                 => array(
 				0 => array(
 					'key'           => 'splash',
-					'title'         => __( 'Welcome to BuddyBoss', 'buddyboss-platform' ),
-					'description'   => __( 'Let\'s bring your community to life by choose the look and feel that matches your vision.', 'buddyboss-platform' ),
+					'title'         => __( 'Welcome to BuddyBoss', 'buddyboss-community-social-network-groups-forums-messaging' ),
+					'description'   => __( 'Let\'s bring your community to life by choose the look and feel that matches your vision.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'component'     => 'SplashScreen',
 					'image'         => 'onboardingModal-splash.png',
 					'skip_progress' => true,
 				),
 				1 => array(
 					'key'         => 'community_setup',
-					'title'       => __( 'Site Name', 'buddyboss-platform' ),
-					'description' => __( 'This matches the WordPress Site Title. Updating it here will update it site-wide.', 'buddyboss-platform' ),
+					'title'       => __( 'Site Name', 'buddyboss-community-social-network-groups-forums-messaging' ),
+					'description' => __( 'This matches the WordPress Site Title. Updating it here will update it site-wide.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'component'   => 'CommunitySetupStep',
 					'image'       => 'onboardingModal-step-1.png',
 				),
 				2 => array(
 					'key'         => 'site_appearance',
-					'title'       => __( 'Site Appearance', 'buddyboss-platform' ),
-					'description' => __( 'Set your community appearance to light, dark, or both.', 'buddyboss-platform' ),
+					'title'       => __( 'Site Appearance', 'buddyboss-community-social-network-groups-forums-messaging' ),
+					'description' => __( 'Set your community appearance to light, dark, or both.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'component'   => 'SiteAppearanceStep',
 					'image'       => 'onboardingModal-step-2.png',
 				),
 				3 => array(
 					'key'         => 'brandings',
-					'title'       => __( 'Branding', 'buddyboss-platform' ),
-					'description' => __( 'Personalize your community with logos and theme colors.', 'buddyboss-platform' ),
+					'title'       => __( 'Branding', 'buddyboss-community-social-network-groups-forums-messaging' ),
+					'description' => __( 'Personalize your community with logos and theme colors.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'component'   => 'BrandingsStep',
 					'image'       => 'onboardingModal-step-3.png',
 				),
 				4 => array(
 					'key'         => 'pages',
-					'title'       => __( 'Pages', 'buddyboss-platform' ),
-					'description' => __( 'Select pages that should have styles from ReadyLaunch.', 'buddyboss-platform' ),
+					'title'       => __( 'Pages', 'buddyboss-community-social-network-groups-forums-messaging' ),
+					'description' => __( 'Select pages that should have styles from ReadyLaunch.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'component'   => 'PagesStep',
 					'image'       => 'onboardingModal-step-4.png',
 				),
 				5 => array(
 					'key'         => 'side_menus',
-					'title'       => __( 'Side Menus', 'buddyboss-platform' ),
-					'description' => __( 'Enable the options to appear in the left-side menu.', 'buddyboss-platform' ),
+					'title'       => __( 'Side Menus', 'buddyboss-community-social-network-groups-forums-messaging' ),
+					'description' => __( 'Enable the options to appear in the left-side menu.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'component'   => 'SideMenusStep',
 					'image'       => 'onboardingModal-step-5.png',
 				),
 				6 => array(
 					'key'         => 'widgets',
-					'title'       => __( 'Sidebar Widgets', 'buddyboss-platform' ),
-					'description' => __( 'Enable or disable sidebar widgets on different community pages.', 'buddyboss-platform' ),
+					'title'       => __( 'Sidebar Widgets', 'buddyboss-community-social-network-groups-forums-messaging' ),
+					'description' => __( 'Enable or disable sidebar widgets on different community pages.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'component'   => 'WidgetsStep',
 					'image'       => 'onboardingModal-step-6.png',
 				),
 				7 => array(
 					'key'         => 'finish',
-					'title'       => __( 'You\'re All Set!', 'buddyboss-platform' ),
-					'description' => __( 'Your community is ready to connect, share, and grow together.', 'buddyboss-platform' ),
+					'title'       => __( 'You\'re All Set!', 'buddyboss-community-social-network-groups-forums-messaging' ),
+					'description' => __( 'Your community is ready to connect, share, and grow together.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'component'   => 'FinishScreen',
 					'image'       => 'onboardingModal-finish.png',
 				),
@@ -153,7 +153,7 @@ class BBoss_ReadyLaunch_Onboarding extends BBoss_Setup_Wizard_Manager {
 				'community_setup' => array(
 					'blogname' => array(
 						'type'        => 'text',
-						'description' => __( 'This matches the WordPress Site Title. Updating it here will update it site-wide.', 'buddyboss-platform' ),
+						'description' => __( 'This matches the WordPress Site Title. Updating it here will update it site-wide.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 						'required'    => true,
 						'value'       => get_bloginfo( 'name' ),
 					),
@@ -163,18 +163,18 @@ class BBoss_ReadyLaunch_Onboarding extends BBoss_Setup_Wizard_Manager {
 						'type'    => 'visual_radio_options',
 						'options' => array(
 							'light'  => array(
-								'label'       => __( 'Light Mode', 'buddyboss-platform' ),
-								'description' => __( 'The site will be shown in light mode.', 'buddyboss-platform' ),
+								'label'       => __( 'Light Mode', 'buddyboss-community-social-network-groups-forums-messaging' ),
+								'description' => __( 'The site will be shown in light mode.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 								'icon_class'  => 'bb-icons-rl-sun',
 							),
 							'dark'   => array(
-								'label'       => __( 'Dark Mode', 'buddyboss-platform' ),
-								'description' => __( 'The site will be shown in dark mode.', 'buddyboss-platform' ),
+								'label'       => __( 'Dark Mode', 'buddyboss-community-social-network-groups-forums-messaging' ),
+								'description' => __( 'The site will be shown in dark mode.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 								'icon_class'  => 'bb-icons-rl-moon',
 							),
 							'choice' => array(
-								'label'       => __( 'Both', 'buddyboss-platform' ),
-								'description' => __( 'Users can switch between modes.', 'buddyboss-platform' ),
+								'label'       => __( 'Both', 'buddyboss-community-social-network-groups-forums-messaging' ),
+								'description' => __( 'Users can switch between modes.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 								'icon_class'  => 'bb-icons-rl-circle-half',
 							),
 						),
@@ -184,7 +184,7 @@ class BBoss_ReadyLaunch_Onboarding extends BBoss_Setup_Wizard_Manager {
 				'brandings'       => array(
 					'bb_rl_light_logo'        => array(
 						'type'        => 'media',
-						'label'       => __( 'Logo (Light mode)', 'buddyboss-platform' ),
+						'label'       => __( 'Logo (Light mode)', 'buddyboss-community-social-network-groups-forums-messaging' ),
 						'customClass' => 'bb-rl-light-logo',
 						'conditional' => array(
 							'dependsOn' => 'bb_rl_theme_mode',
@@ -194,7 +194,7 @@ class BBoss_ReadyLaunch_Onboarding extends BBoss_Setup_Wizard_Manager {
 					),
 					'bb_rl_dark_logo'         => array(
 						'type'        => 'media',
-						'label'       => __( 'Logo (Dark mode)', 'buddyboss-platform' ),
+						'label'       => __( 'Logo (Dark mode)', 'buddyboss-community-social-network-groups-forums-messaging' ),
 						'customClass' => 'bb-rl-dark-logo',
 						'conditional' => array(
 							'dependsOn' => 'bb_rl_theme_mode',
@@ -204,7 +204,7 @@ class BBoss_ReadyLaunch_Onboarding extends BBoss_Setup_Wizard_Manager {
 					),
 					'logo_description_light'  => array(
 						'type'        => 'description',
-						'description' => __( 'Recommended to upload a dark-colored logo for light mode, 280x80 px, in JPG or PNG format.', 'buddyboss-platform' ),
+						'description' => __( 'Recommended to upload a dark-colored logo for light mode, 280x80 px, in JPG or PNG format.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 						'conditional' => array(
 							'dependsOn' => 'bb_rl_theme_mode',
 							'value'     => 'light',
@@ -213,7 +213,7 @@ class BBoss_ReadyLaunch_Onboarding extends BBoss_Setup_Wizard_Manager {
 					),
 					'logo_description_dark'   => array(
 						'type'        => 'description',
-						'description' => __( 'Recommended to upload a light-colored logo for dark mode, 280x80 px, in JPG or PNG format.', 'buddyboss-platform' ),
+						'description' => __( 'Recommended to upload a light-colored logo for dark mode, 280x80 px, in JPG or PNG format.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 						'conditional' => array(
 							'dependsOn' => 'bb_rl_theme_mode',
 							'value'     => 'dark',
@@ -222,7 +222,7 @@ class BBoss_ReadyLaunch_Onboarding extends BBoss_Setup_Wizard_Manager {
 					),
 					'logo_description_choice' => array(
 						'type'        => 'description',
-						'description' => __( 'Recommended to upload a light-colored logo for dark mode and a dark-colored logo for light mode, 280x80 px, in JPG or PNG format.', 'buddyboss-platform' ),
+						'description' => __( 'Recommended to upload a light-colored logo for dark mode and a dark-colored logo for light mode, 280x80 px, in JPG or PNG format.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 						'conditional' => array(
 							'dependsOn' => 'bb_rl_theme_mode',
 							'value'     => 'choice',
@@ -234,7 +234,7 @@ class BBoss_ReadyLaunch_Onboarding extends BBoss_Setup_Wizard_Manager {
 					),
 					'bb_rl_color_light'       => array(
 						'type'        => 'color',
-						'label'       => __( 'Primary Color (Light mode)', 'buddyboss-platform' ),
+						'label'       => __( 'Primary Color (Light mode)', 'buddyboss-community-social-network-groups-forums-messaging' ),
 						'default'     => '#3E34FF',
 						'conditional' => array(
 							'dependsOn' => 'bb_rl_theme_mode',
@@ -244,7 +244,7 @@ class BBoss_ReadyLaunch_Onboarding extends BBoss_Setup_Wizard_Manager {
 					),
 					'bb_rl_color_dark'        => array(
 						'type'        => 'color',
-						'label'       => __( 'Primary Color (Dark mode)', 'buddyboss-platform' ),
+						'label'       => __( 'Primary Color (Dark mode)', 'buddyboss-community-social-network-groups-forums-messaging' ),
 						'default'     => '#A347FF',
 						'conditional' => array(
 							'dependsOn' => 'bb_rl_theme_mode',
@@ -254,7 +254,7 @@ class BBoss_ReadyLaunch_Onboarding extends BBoss_Setup_Wizard_Manager {
 					),
 					'color_description'       => array(
 						'type'        => 'description',
-						'description' => __( 'Primary color used for buttons, links, and interactive elements.', 'buddyboss-platform' ),
+						'description' => __( 'Primary color used for buttons, links, and interactive elements.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					),
 				),
 				'pages'           => array(
@@ -266,34 +266,34 @@ class BBoss_ReadyLaunch_Onboarding extends BBoss_Setup_Wizard_Manager {
 				'side_menus'      => array(
 					'bb_rl_side_menu'    => array(
 						'type'    => 'draggable',
-						'label'   => __( 'Navigation', 'buddyboss-platform' ),
+						'label'   => __( 'Navigation', 'buddyboss-community-social-network-groups-forums-messaging' ),
 						'options' => $this->getComponentMenuItems(),
 					),
 					'bb_rl_custom_links' => array(
 						'type'    => 'draggable_links',
-						'label'   => __( 'Link', 'buddyboss-platform' ),
+						'label'   => __( 'Link', 'buddyboss-community-social-network-groups-forums-messaging' ),
 						'options' => array(),
 					),
 				),
 				'widgets'         => array(
 					'bb_rl_activity_sidebars'       => array(
 						'type'    => 'checkbox_group',
-						'label'   => __( 'Activity Feed', 'buddyboss-platform' ),
+						'label'   => __( 'Activity Feed', 'buddyboss-community-social-network-groups-forums-messaging' ),
 						'options' => array(
 							'complete_profile'  => array(
-								'label'   => __( 'Complete Profile', 'buddyboss-platform' ),
+								'label'   => __( 'Complete Profile', 'buddyboss-community-social-network-groups-forums-messaging' ),
 								'default' => true,
 							),
 							'latest_updates'    => array(
-								'label'   => __( 'Latest Updates', 'buddyboss-platform' ),
+								'label'   => __( 'Latest Updates', 'buddyboss-community-social-network-groups-forums-messaging' ),
 								'default' => true,
 							),
 							'recent_blog_posts' => array(
-								'label'   => __( 'Recent Blog Posts', 'buddyboss-platform' ),
+								'label'   => __( 'Recent Blog Posts', 'buddyboss-community-social-network-groups-forums-messaging' ),
 								'default' => true,
 							),
 							'active_members'    => array(
-								'label'   => __( 'Active Members', 'buddyboss-platform' ),
+								'label'   => __( 'Active Members', 'buddyboss-community-social-network-groups-forums-messaging' ),
 								'default' => true,
 							),
 
@@ -301,18 +301,18 @@ class BBoss_ReadyLaunch_Onboarding extends BBoss_Setup_Wizard_Manager {
 					),
 					'bb_rl_member_profile_sidebars' => array(
 						'type'    => 'checkbox_group',
-						'label'   => __( 'Member Profile', 'buddyboss-platform' ),
+						'label'   => __( 'Member Profile', 'buddyboss-community-social-network-groups-forums-messaging' ),
 						'options' => array(
 							'complete_profile' => array(
-								'label'   => __( 'Complete Profile', 'buddyboss-platform' ),
+								'label'   => __( 'Complete Profile', 'buddyboss-community-social-network-groups-forums-messaging' ),
 								'default' => true,
 							),
 							'connections'      => array(
-								'label'   => __( 'Connections', 'buddyboss-platform' ),
+								'label'   => __( 'Connections', 'buddyboss-community-social-network-groups-forums-messaging' ),
 								'default' => true,
 							),
 							'my_network'       => array(
-								'label'   => __( 'Network (Follow, Followers)', 'buddyboss-platform' ),
+								'label'   => __( 'Network (Follow, Followers)', 'buddyboss-community-social-network-groups-forums-messaging' ),
 								'default' => true,
 							),
 
@@ -320,14 +320,14 @@ class BBoss_ReadyLaunch_Onboarding extends BBoss_Setup_Wizard_Manager {
 					),
 					'bb_rl_groups_sidebars'         => array(
 						'type'    => 'checkbox_group',
-						'label'   => __( 'Group', 'buddyboss-platform' ),
+						'label'   => __( 'Group', 'buddyboss-community-social-network-groups-forums-messaging' ),
 						'options' => array(
 							'about_group'   => array(
-								'label'   => __( 'About Group', 'buddyboss-platform' ),
+								'label'   => __( 'About Group', 'buddyboss-community-social-network-groups-forums-messaging' ),
 								'default' => true,
 							),
 							'group_members' => array(
-								'label'   => __( 'Group Members', 'buddyboss-platform' ),
+								'label'   => __( 'Group Members', 'buddyboss-community-social-network-groups-forums-messaging' ),
 								'default' => true,
 							),
 						),
@@ -449,7 +449,7 @@ class BBoss_ReadyLaunch_Onboarding extends BBoss_Setup_Wizard_Manager {
 	 */
 	protected function init() {
 		$this->wizard_id      = 'rl_onboarding';
-		$this->wizard_name    = __( 'ReadyLaunch Onboarding', 'buddyboss-platform' );
+		$this->wizard_name    = __( 'ReadyLaunch Onboarding', 'buddyboss-community-social-network-groups-forums-messaging' );
 		$this->wizard_version = '1.0.0';
 		$this->assets_dir     = __DIR__ . '/assets/';
 		$this->assets_url     = bboss()->plugin_url . 'bboss-core/admin/bboss-settings/rl-onboarding/assets/';
@@ -669,7 +669,7 @@ class BBoss_ReadyLaunch_Onboarding extends BBoss_Setup_Wizard_Manager {
 		if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), $this->wizard_id . '_wizard_nonce' ) ) {
 			wp_send_json_error(
 				array(
-					'message' => __( 'Invalid security token.', 'buddyboss-platform' ),
+					'message' => __( 'Invalid security token.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				)
 			);
 		}
@@ -678,7 +678,7 @@ class BBoss_ReadyLaunch_Onboarding extends BBoss_Setup_Wizard_Manager {
 		if ( ! current_user_can( $this->get_config( 'capability_required' ) ) ) {
 			wp_send_json_error(
 				array(
-					'message' => __( 'You do not have sufficient permissions to perform this action.', 'buddyboss-platform' ),
+					'message' => __( 'You do not have sufficient permissions to perform this action.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				)
 			);
 		}
@@ -717,14 +717,14 @@ class BBoss_ReadyLaunch_Onboarding extends BBoss_Setup_Wizard_Manager {
 
 			wp_send_json_success(
 				array(
-					'message' => __( 'ReadyLaunch setup completed successfully!', 'buddyboss-platform' ),
+					'message' => __( 'ReadyLaunch setup completed successfully!', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'data'    => $completion_data,
 				)
 			);
 		} else {
 			wp_send_json_error(
 				array(
-					'message' => __( 'Failed to complete setup. Please try again.', 'buddyboss-platform' ),
+					'message' => __( 'Failed to complete setup. Please try again.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				)
 			);
 		}
@@ -1014,16 +1014,16 @@ class BBoss_ReadyLaunch_Onboarding extends BBoss_Setup_Wizard_Manager {
 	private function create_essential_pages() {
 		$pages_to_create = array(
 			'privacy_policy'   => array(
-				'title'   => __( 'Privacy Policy', 'buddyboss-platform' ),
-				'content' => __( 'Your privacy policy content goes here.', 'buddyboss-platform' ),
+				'title'   => __( 'Privacy Policy', 'buddyboss-community-social-network-groups-forums-messaging' ),
+				'content' => __( 'Your privacy policy content goes here.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			),
 			'terms_of_service' => array(
-				'title'   => __( 'Terms of Service', 'buddyboss-platform' ),
-				'content' => __( 'Your terms of service content goes here.', 'buddyboss-platform' ),
+				'title'   => __( 'Terms of Service', 'buddyboss-community-social-network-groups-forums-messaging' ),
+				'content' => __( 'Your terms of service content goes here.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			),
 			'about'            => array(
-				'title'   => __( 'About Us', 'buddyboss-platform' ),
-				'content' => __( 'Information about your community goes here.', 'buddyboss-platform' ),
+				'title'   => __( 'About Us', 'buddyboss-community-social-network-groups-forums-messaging' ),
+				'content' => __( 'Information about your community goes here.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			),
 		);
 
@@ -1124,12 +1124,12 @@ class BBoss_ReadyLaunch_Onboarding extends BBoss_Setup_Wizard_Manager {
 	private function get_enabled_pages_options() {
 		$retval = array(
 			'registration' => array(
-				'label'   => __( 'Login & Registration', 'buddyboss-platform' ),
+				'label'   => __( 'Login & Registration', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				'icon'    => 'bb-icons-rl-file-text',
 				'default' => true,
 			),
 			'blog'         => array(
-				'label'   => __( 'Blog', 'buddyboss-platform' ),
+				'label'   => __( 'Blog', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				'icon'    => 'bb-icons-rl-book-open',
 				'default' => true,
 			),
@@ -1137,17 +1137,17 @@ class BBoss_ReadyLaunch_Onboarding extends BBoss_Setup_Wizard_Manager {
 
 		if ( bboss_load_readylaunch()->bb_is_sidebar_enabled_for_courses() ) {
 			$retval['courses'] = array(
-				'label'   => __( 'Courses', 'buddyboss-platform' ),
+				'label'   => __( 'Courses', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				'icon'    => 'bb-icons-rl-file-text',
 				'default' => true,
 			);
 		} else {
 			$retval['courses'] = array(
-				'label'         => __( 'Courses', 'buddyboss-platform' ),
+				'label'         => __( 'Courses', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				'icon'          => 'bb-icons-rl-file-text',
 				'default'       => false,
 				'not_available' => true,
-				'notice'        => __( 'Requires LearnDash or MemberPress courses to activate.', 'buddyboss-platform' ),
+				'notice'        => __( 'Requires LearnDash or MemberPress courses to activate.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			);
 		}
 
@@ -1164,21 +1164,21 @@ class BBoss_ReadyLaunch_Onboarding extends BBoss_Setup_Wizard_Manager {
 		$items = array(
 			array(
 				'id'      => 'activity_feed',
-				'label'   => __( 'Activity Feed', 'buddyboss-platform' ),
+				'label'   => __( 'Activity Feed', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				'icon'    => 'pulse',
 				'enabled' => true,
 				'order'   => 0,
 			),
 			array(
 				'id'      => 'members',
-				'label'   => __( 'Members', 'buddyboss-platform' ),
+				'label'   => __( 'Members', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				'icon'    => 'users',
 				'enabled' => true,
 				'order'   => 1,
 			),
 			array(
 				'id'      => 'groups',
-				'label'   => __( 'Groups', 'buddyboss-platform' ),
+				'label'   => __( 'Groups', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				'icon'    => 'users-three',
 				'enabled' => true,
 				'order'   => 2,
@@ -1190,7 +1190,7 @@ class BBoss_ReadyLaunch_Onboarding extends BBoss_Setup_Wizard_Manager {
 		if ( bboss_load_readylaunch()->bb_is_sidebar_enabled_for_courses() ) {
 			$items[] = array(
 				'id'      => 'courses',
-				'label'   => __( 'Courses', 'buddyboss-platform' ),
+				'label'   => __( 'Courses', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				'icon'    => 'graduation-cap',
 				'enabled' => true,
 				'order'   => $current_order++,
@@ -1199,7 +1199,7 @@ class BBoss_ReadyLaunch_Onboarding extends BBoss_Setup_Wizard_Manager {
 
 		$items[] = array(
 			'id'      => 'forums',
-			'label'   => __( 'Forums', 'buddyboss-platform' ),
+			'label'   => __( 'Forums', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'icon'    => 'chat-text',
 			'enabled' => true,
 			'order'   => $current_order++,
@@ -1207,7 +1207,7 @@ class BBoss_ReadyLaunch_Onboarding extends BBoss_Setup_Wizard_Manager {
 
 		$items[] = array(
 			'id'      => 'messages',
-			'label'   => __( 'Messages', 'buddyboss-platform' ),
+			'label'   => __( 'Messages', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'icon'    => 'chat-teardrop-text',
 			'enabled' => true,
 			'order'   => $current_order++,
@@ -1215,7 +1215,7 @@ class BBoss_ReadyLaunch_Onboarding extends BBoss_Setup_Wizard_Manager {
 
 		$items[] = array(
 			'id'      => 'notifications',
-			'label'   => __( 'Notifications', 'buddyboss-platform' ),
+			'label'   => __( 'Notifications', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'icon'    => 'bell',
 			'enabled' => true,
 			'order'   => $current_order,

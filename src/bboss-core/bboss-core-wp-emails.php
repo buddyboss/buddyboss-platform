@@ -120,31 +120,31 @@ if ( ! function_exists( 'wp_notify_postauthor' ) ) :
 
 		switch ( $comment->comment_type ) {
 			case 'trackback':
-				$title          = __( 'added trackback on your post', 'buddyboss-platform' );
+				$title          = __( 'added trackback on your post', 'buddyboss-community-social-network-groups-forums-messaging' );
 				/* translators: %s: URL of the post's trackbacks. */
-				$footer_message = sprintf( __( '<a href="%s">Click here</a> to see all trackbacks on this post.', 'buddyboss-platform' ), get_permalink( $comment->comment_post_ID ) . '#comments' );
-				$moderate_text  = __( 'Moderate this trackback: ', 'buddyboss-platform' );
+				$footer_message = sprintf( __( '<a href="%s">Click here</a> to see all trackbacks on this post.', 'buddyboss-community-social-network-groups-forums-messaging' ), get_permalink( $comment->comment_post_ID ) . '#comments' );
+				$moderate_text  = __( 'Moderate this trackback: ', 'buddyboss-community-social-network-groups-forums-messaging' );
 
 				/* translators: 1: blog name, 2: post title */
-				$subject = sprintf( __( '[%1$s] Trackback: "%2$s"', 'buddyboss-platform' ), $blogname, $post->post_title );
+				$subject = sprintf( __( '[%1$s] Trackback: "%2$s"', 'buddyboss-community-social-network-groups-forums-messaging' ), $blogname, $post->post_title );
 				break;
 			case 'pingback':
-				$title          = __( 'added pingback on your post', 'buddyboss-platform' );
+				$title          = __( 'added pingback on your post', 'buddyboss-community-social-network-groups-forums-messaging' );
 				/* translators: %s: URL of the post's pingbacks. */
-				$footer_message = sprintf( __( '<a href="%s">Click here</a> to see all pingbacks on this post.', 'buddyboss-platform' ), get_permalink( $comment->comment_post_ID ) . '#comments' );
-				$moderate_text  = __( 'Moderate this pingback: ', 'buddyboss-platform' );
+				$footer_message = sprintf( __( '<a href="%s">Click here</a> to see all pingbacks on this post.', 'buddyboss-community-social-network-groups-forums-messaging' ), get_permalink( $comment->comment_post_ID ) . '#comments' );
+				$moderate_text  = __( 'Moderate this pingback: ', 'buddyboss-community-social-network-groups-forums-messaging' );
 
 				/* translators: 1: blog name, 2: post title */
-				$subject = sprintf( __( '[%1$s] Pingback: "%2$s"', 'buddyboss-platform' ), $blogname, $post->post_title );
+				$subject = sprintf( __( '[%1$s] Pingback: "%2$s"', 'buddyboss-community-social-network-groups-forums-messaging' ), $blogname, $post->post_title );
 				break;
 			default: // Comments
-				$title          = __( 'added comment on your post', 'buddyboss-platform' );
+				$title          = __( 'added comment on your post', 'buddyboss-community-social-network-groups-forums-messaging' );
 				/* translators: %s: URL of the post's comments. */
-				$footer_message = sprintf( __( '<a href="%s">Click here</a> to see all comments on this post.', 'buddyboss-platform' ), get_permalink( $comment->comment_post_ID ) . '#comments' );
-				$moderate_text  = __( 'Moderate this comment: ', 'buddyboss-platform' );
+				$footer_message = sprintf( __( '<a href="%s">Click here</a> to see all comments on this post.', 'buddyboss-community-social-network-groups-forums-messaging' ), get_permalink( $comment->comment_post_ID ) . '#comments' );
+				$moderate_text  = __( 'Moderate this comment: ', 'buddyboss-community-social-network-groups-forums-messaging' );
 
 				/* translators: 1: blog name, 2: post title */
-				$subject = sprintf( __( '[%1$s] Comment: "%2$s"', 'buddyboss-platform' ), $blogname, $post->post_title );
+				$subject = sprintf( __( '[%1$s] Comment: "%2$s"', 'buddyboss-community-social-network-groups-forums-messaging' ), $blogname, $post->post_title );
 				break;
 		}
 
@@ -243,7 +243,7 @@ if ( ! function_exists( 'wp_notify_postauthor' ) ) :
 			<tr>
 				<td>
 					<a href="<?php echo esc_url( get_comment_link( $comment ) ); ?>" target="_blank" rel="nofollow"
-					   style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; color: <?php echo esc_attr( $settings['highlight_color'] ); ?>; text-decoration: none; display: block; border: 1px solid <?php echo esc_attr( $settings['highlight_color'] ); ?>; border-radius: 100px;  min-width: 64px; text-align: center; height: 16px; line-height: 16px; padding:8px; "><?php esc_html_e( 'Reply', 'buddyboss-platform' ); ?></a>
+					   style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; color: <?php echo esc_attr( $settings['highlight_color'] ); ?>; text-decoration: none; display: block; border: 1px solid <?php echo esc_attr( $settings['highlight_color'] ); ?>; border-radius: 100px;  min-width: 64px; text-align: center; height: 16px; line-height: 16px; padding:8px; "><?php esc_html_e( 'Reply', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></a>
 				</td>
 			</tr>
 
@@ -253,7 +253,7 @@ if ( ! function_exists( 'wp_notify_postauthor' ) ) :
 						<p><?php echo wp_kses_post( $footer_message ); ?></p>
 						<?php
 						/* translators: %s: comment approval URL. */
-						$approve_comment = sprintf( __( '<a href="%s">Approve</a>', 'buddyboss-platform' ), admin_url( "comment.php?action=approve&c={$comment_id}#wpbody-content" ) );
+						$approve_comment = sprintf( __( '<a href="%s">Approve</a>', 'buddyboss-community-social-network-groups-forums-messaging' ), admin_url( "comment.php?action=approve&c={$comment_id}#wpbody-content" ) );
 						$trash_comment   = '';
 						$delete_comment  = '';
 						$spam_comment    = '';
@@ -261,14 +261,14 @@ if ( ! function_exists( 'wp_notify_postauthor' ) ) :
 						if ( user_can( $post->post_author, 'edit_comment', $comment->comment_ID ) ) {
 							if ( EMPTY_TRASH_DAYS ) {
 								/* translators: Comment moderation. 1: Comment action URL */
-								$trash_comment = sprintf( __( '<a href="%s">Trash</a>', 'buddyboss-platform' ), admin_url( "comment.php?action=trash&c={$comment_id}#wpbody-content" ) );
+								$trash_comment = sprintf( __( '<a href="%s">Trash</a>', 'buddyboss-community-social-network-groups-forums-messaging' ), admin_url( "comment.php?action=trash&c={$comment_id}#wpbody-content" ) );
 							} else {
 								/* translators: Comment moderation. 1: Comment action URL */
-								$delete_comment = sprintf( __( '<a href="%s">Delete</a>', 'buddyboss-platform' ), admin_url( "comment.php?action=delete&c={$comment_id}#wpbody-content" ) );
+								$delete_comment = sprintf( __( '<a href="%s">Delete</a>', 'buddyboss-community-social-network-groups-forums-messaging' ), admin_url( "comment.php?action=delete&c={$comment_id}#wpbody-content" ) );
 							}
 
 							/* translators: Comment moderation. 1: Comment action URL */
-							$spam_comment = sprintf( __( '<a href="%s">Spam</a>', 'buddyboss-platform' ), admin_url( "comment.php?action=spam&c={$comment_id}#wpbody-content" ) );
+							$spam_comment = sprintf( __( '<a href="%s">Spam</a>', 'buddyboss-community-social-network-groups-forums-messaging' ), admin_url( "comment.php?action=spam&c={$comment_id}#wpbody-content" ) );
 						}
 						?>
 						<p>
@@ -440,26 +440,26 @@ if ( ! function_exists( 'wp_notify_moderator' ) ) :
 		switch ( $comment->comment_type ) {
 			case 'trackback':
 				/* translators: 1: post URL, 2: post title. */
-				$title          = sprintf( __( 'added new trackback on the post <a href="%1$s">"%2$s"</a> is waiting for your approval.', 'buddyboss-platform' ), get_permalink( $comment->comment_post_ID ), $post->post_title );
+				$title          = sprintf( __( 'added new trackback on the post <a href="%1$s">"%2$s"</a> is waiting for your approval.', 'buddyboss-community-social-network-groups-forums-messaging' ), get_permalink( $comment->comment_post_ID ), $post->post_title );
 				/* translators: %s: URL of the post's trackbacks. */
-				$footer_message = sprintf( __( '<a href="%s">Click here</a> to see all trackbacks on this post.', 'buddyboss-platform' ), get_permalink( $comment->comment_post_ID ) . '#comments' );
-				$moderate_text  = __( 'Moderate this trackback: ', 'buddyboss-platform' );
+				$footer_message = sprintf( __( '<a href="%s">Click here</a> to see all trackbacks on this post.', 'buddyboss-community-social-network-groups-forums-messaging' ), get_permalink( $comment->comment_post_ID ) . '#comments' );
+				$moderate_text  = __( 'Moderate this trackback: ', 'buddyboss-community-social-network-groups-forums-messaging' );
 
 				break;
 			case 'pingback':
 				/* translators: 1: post URL, 2: post title. */
-				$title          = sprintf( __( 'added new pingback on the post <a href="%1$s">"%2$s"</a> is waiting for your approval.', 'buddyboss-platform' ), get_permalink( $comment->comment_post_ID ), $post->post_title );
+				$title          = sprintf( __( 'added new pingback on the post <a href="%1$s">"%2$s"</a> is waiting for your approval.', 'buddyboss-community-social-network-groups-forums-messaging' ), get_permalink( $comment->comment_post_ID ), $post->post_title );
 				/* translators: %s: URL of the post's pingbacks. */
-				$footer_message = sprintf( __( '<a href="%s">Click here</a> to see all pingbacks on this post.', 'buddyboss-platform' ), get_permalink( $comment->comment_post_ID ) . '#comments' );
-				$moderate_text  = __( 'Moderate this pingback: ', 'buddyboss-platform' );
+				$footer_message = sprintf( __( '<a href="%s">Click here</a> to see all pingbacks on this post.', 'buddyboss-community-social-network-groups-forums-messaging' ), get_permalink( $comment->comment_post_ID ) . '#comments' );
+				$moderate_text  = __( 'Moderate this pingback: ', 'buddyboss-community-social-network-groups-forums-messaging' );
 
 				break;
 			default: // Comments
 				/* translators: 1: post URL, 2: post title. */
-				$title          = sprintf( __( 'added new comment on the post <a href="%1$s">"%2$s"</a> is waiting for your approval.', 'buddyboss-platform' ), get_permalink( $comment->comment_post_ID ), $post->post_title );
+				$title          = sprintf( __( 'added new comment on the post <a href="%1$s">"%2$s"</a> is waiting for your approval.', 'buddyboss-community-social-network-groups-forums-messaging' ), get_permalink( $comment->comment_post_ID ), $post->post_title );
 				/* translators: %s: URL of the post's comments. */
-				$footer_message = sprintf( __( '<a href="%s">Click here</a> to see all comments on this post.', 'buddyboss-platform' ), get_permalink( $comment->comment_post_ID ) . '#comments' );
-				$moderate_text  = __( 'Moderate this comment: ', 'buddyboss-platform' );
+				$footer_message = sprintf( __( '<a href="%s">Click here</a> to see all comments on this post.', 'buddyboss-community-social-network-groups-forums-messaging' ), get_permalink( $comment->comment_post_ID ) . '#comments' );
+				$moderate_text  = __( 'Moderate this comment: ', 'buddyboss-community-social-network-groups-forums-messaging' );
 
 				break;
 		}
@@ -558,7 +558,7 @@ if ( ! function_exists( 'wp_notify_moderator' ) ) :
 			<tr>
 				<td>
 					<a href="<?php echo esc_url( get_comment_link( $comment ) ); ?>" target="_blank" rel="nofollow"
-					   style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; color: <?php echo esc_attr( $settings['highlight_color'] ); ?>; text-decoration: none; display: inline-block; border: 1px solid <?php echo esc_attr( $settings['highlight_color'] ); ?>; border-radius: 100px; min-width: 64px; text-align: center; height: 16px; line-height: 16px; padding: 8px;"><?php esc_html_e( 'Reply', 'buddyboss-platform' ); ?></a>
+					   style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; color: <?php echo esc_attr( $settings['highlight_color'] ); ?>; text-decoration: none; display: inline-block; border: 1px solid <?php echo esc_attr( $settings['highlight_color'] ); ?>; border-radius: 100px; min-width: 64px; text-align: center; height: 16px; line-height: 16px; padding: 8px;"><?php esc_html_e( 'Reply', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></a>
 				</td>
 			</tr>
 
@@ -568,20 +568,20 @@ if ( ! function_exists( 'wp_notify_moderator' ) ) :
 						<p><?php echo wp_kses_post( $footer_message ); ?></p>
 						<?php
 						/* translators: %s: comment approval URL. */
-						$approve_comment = sprintf( __( '<a href="%s">Approve</a>', 'buddyboss-platform' ), admin_url( "comment.php?action=approve&c={$comment_id}#wpbody-content" ) );
+						$approve_comment = sprintf( __( '<a href="%s">Approve</a>', 'buddyboss-community-social-network-groups-forums-messaging' ), admin_url( "comment.php?action=approve&c={$comment_id}#wpbody-content" ) );
 						$trash_comment   = '';
 						$delete_comment  = '';
 
 						if ( EMPTY_TRASH_DAYS ) {
 							/* translators: Comment moderation. 1: Comment action URL */
-							$trash_comment = sprintf( __( '<a href="%s">Trash</a>', 'buddyboss-platform' ), admin_url( "comment.php?action=trash&c={$comment_id}#wpbody-content" ) );
+							$trash_comment = sprintf( __( '<a href="%s">Trash</a>', 'buddyboss-community-social-network-groups-forums-messaging' ), admin_url( "comment.php?action=trash&c={$comment_id}#wpbody-content" ) );
 						} else {
 							/* translators: Comment moderation. 1: Comment action URL */
-							$delete_comment = sprintf( __( '<a href="%s">Delete</a>', 'buddyboss-platform' ), admin_url( "comment.php?action=delete&c={$comment_id}#wpbody-content" ) );
+							$delete_comment = sprintf( __( '<a href="%s">Delete</a>', 'buddyboss-community-social-network-groups-forums-messaging' ), admin_url( "comment.php?action=delete&c={$comment_id}#wpbody-content" ) );
 						}
 
 						/* translators: Comment moderation. 1: Comment action URL */
-						$spam_comment = sprintf( __( '<a href="%s">Spam</a>', 'buddyboss-platform' ), admin_url( "comment.php?action=spam&c={$comment_id}#wpbody-content" ) );
+						$spam_comment = sprintf( __( '<a href="%s">Spam</a>', 'buddyboss-community-social-network-groups-forums-messaging' ), admin_url( "comment.php?action=spam&c={$comment_id}#wpbody-content" ) );
 						?>
 						<p>
 							<?php
@@ -607,7 +607,7 @@ if ( ! function_exists( 'wp_notify_moderator' ) ) :
 		$notify_message = ob_get_clean();
 
 		/* translators: Comment moderation notification email subject. 1: Site name, 2: Post title */
-		$subject         = sprintf( __( '[%1$s] Please moderate: "%2$s"', 'buddyboss-platform' ), $blogname, $post->post_title );
+		$subject         = sprintf( __( '[%1$s] Please moderate: "%2$s"', 'buddyboss-community-social-network-groups-forums-messaging' ), $blogname, $post->post_title );
 		$message_headers = '';
 
 		/**
@@ -680,7 +680,7 @@ if ( ! function_exists( 'wp_password_change_notification' ) ) :
 		// but check to see if it's the admin whose password we're changing, and skip this
 		if ( 0 !== strcasecmp( $user->user_email, get_option( 'admin_email' ) ) ) {
 			/* translators: %s: user name */
-			$message = '<p>' . sprintf( __( 'Password changed for user: %s', 'buddyboss-platform' ), $user->user_login ) . '</p>';
+			$message = '<p>' . sprintf( __( 'Password changed for user: %s', 'buddyboss-community-social-network-groups-forums-messaging' ), $user->user_login ) . '</p>';
 			// The blogname option is escaped with esc_html on the way into the database in sanitize_option
 			// we want to reverse this for the plain text arena of emails.
 			$blogname = wp_specialchars_decode( get_option( 'blogname' ), ENT_QUOTES );
@@ -688,7 +688,7 @@ if ( ! function_exists( 'wp_password_change_notification' ) ) :
 			$wp_password_change_notification_email = array(
 				'to'      => get_option( 'admin_email' ),
 				/* translators: Password change notification email subject. %s: Site title */
-				'subject' => __( '[%s] Password Changed', 'buddyboss-platform' ),
+				'subject' => __( '[%s] Password Changed', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				'message' => $message,
 				'headers' => '',
 			);
@@ -762,16 +762,16 @@ if ( ! function_exists( 'wp_new_user_notification' ) ) {
 			$switched_locale = switch_to_locale( get_locale() );
 
 			/* translators: %s: site title */
-			$message = '<p>' . sprintf( __( 'New user registration on your site %s:', 'buddyboss-platform' ), $blogname ) . '</p>';
+			$message = '<p>' . sprintf( __( 'New user registration on your site %s:', 'buddyboss-community-social-network-groups-forums-messaging' ), $blogname ) . '</p>';
 			/* translators: %s: user login */
-			$message .= '<p>' . sprintf( __( 'Username: <b>%s</b>', 'buddyboss-platform' ), $user->user_login ) . '</p>';
+			$message .= '<p>' . sprintf( __( 'Username: <b>%s</b>', 'buddyboss-community-social-network-groups-forums-messaging' ), $user->user_login ) . '</p>';
 			/* translators: %s: user email address */
-			$message .= '<p>' . sprintf( __( 'Email: <b>%s</b>', 'buddyboss-platform' ), $user->user_email ) . '</p>';
+			$message .= '<p>' . sprintf( __( 'Email: <b>%s</b>', 'buddyboss-community-social-network-groups-forums-messaging' ), $user->user_email ) . '</p>';
 
 			$wp_new_user_notification_email_admin = array(
 				'to'      => get_option( 'admin_email' ),
 				/* translators: Password change notification email subject. %s: Site title */
-				'subject' => __( '[%s] New User Registration', 'buddyboss-platform' ),
+				'subject' => __( '[%s] New User Registration', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				'message' => $message,
 				'headers' => '',
 			);
@@ -840,15 +840,15 @@ if ( ! function_exists( 'wp_new_user_notification' ) ) {
 		$switched_locale = switch_to_locale( get_user_locale( $user ) );
 
 		/* translators: %s: user login */
-		$message  = '<p>' . sprintf( __( 'Username: %s', 'buddyboss-platform' ), $user->user_login ) . '</p>';
+		$message  = '<p>' . sprintf( __( 'Username: %s', 'buddyboss-community-social-network-groups-forums-messaging' ), $user->user_login ) . '</p>';
 		/* translators: %s: password setup URL. */
-		$message .= '<p>' . sprintf( __( 'To set your password <a href="%s">Click here</a>.', 'buddyboss-platform' ), network_site_url( "wp-login.php?action=rp&key=$key&login=" . rawurlencode( $user->user_login ), 'login' ) ) . '</p>';
+		$message .= '<p>' . sprintf( __( 'To set your password <a href="%s">Click here</a>.', 'buddyboss-community-social-network-groups-forums-messaging' ), network_site_url( "wp-login.php?action=rp&key=$key&login=" . rawurlencode( $user->user_login ), 'login' ) ) . '</p>';
 		$message .= wp_login_url();
 
 		$wp_new_user_notification_email = array(
 			'to'      => $user->user_email,
 			/* translators: Password change notification email subject. %s: Site title */
-			'subject' => __( '[%s] Your username and password info', 'buddyboss-platform' ),
+			'subject' => __( '[%s] Your username and password info', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'message' => $message,
 			'headers' => '',
 		);
@@ -915,14 +915,14 @@ if ( ! function_exists( 'bboss_email_retrieve_password_message' ) ) {
 			$site_name = wp_specialchars_decode( get_option( 'blogname' ), ENT_QUOTES );
 		}
 
-		$message = '<p>' . __( 'Someone has requested a password reset for the following account:', 'buddyboss-platform' ) . '</p>';
+		$message = '<p>' . __( 'Someone has requested a password reset for the following account:', 'buddyboss-community-social-network-groups-forums-messaging' ) . '</p>';
 		/* translators: %s: site name */
-		$message .= '<p>' . sprintf( __( 'Site Name: <b>%s</b>', 'buddyboss-platform' ), $site_name ) . '</p>';
+		$message .= '<p>' . sprintf( __( 'Site Name: <b>%s</b>', 'buddyboss-community-social-network-groups-forums-messaging' ), $site_name ) . '</p>';
 		/* translators: %s: user login */
-		$message .= '<p>' . sprintf( __( 'Username: <b>%s</b>', 'buddyboss-platform' ), $user_login ) . '</p>';
-		$message .= '<p>' . __( 'If this was a mistake, just ignore this email and nothing will happen.', 'buddyboss-platform' ) . '</p>';
+		$message .= '<p>' . sprintf( __( 'Username: <b>%s</b>', 'buddyboss-community-social-network-groups-forums-messaging' ), $user_login ) . '</p>';
+		$message .= '<p>' . __( 'If this was a mistake, just ignore this email and nothing will happen.', 'buddyboss-community-social-network-groups-forums-messaging' ) . '</p>';
 		/* translators: %s: password reset URL. */
-		$message .= '<p>' . sprintf( __( 'To reset your password <a href="%s">Click here</a>.', 'buddyboss-platform' ), network_site_url( "wp-login.php?action=rp&key=$key&login=" . rawurlencode( $user_login ), 'login' ) ) . '</p>';
+		$message .= '<p>' . sprintf( __( 'To reset your password <a href="%s">Click here</a>.', 'buddyboss-community-social-network-groups-forums-messaging' ), network_site_url( "wp-login.php?action=rp&key=$key&login=" . rawurlencode( $user_login ), 'login' ) ) . '</p>';
 
 		$message = bboss_email_core_wp_get_template( $message, $user_data );
 
@@ -967,16 +967,16 @@ if ( ! function_exists( 'bboss_email_wp_password_change_email' ) ) {
 		if ( bboss_enabled_legacy_email_preference() || is_admin() ) {
 
 			/* translators: Do not translate USERNAME, ADMIN_EMAIL, EMAIL, SITENAME, SITEURL: those are placeholders. */
-			$pass_change_text  = '<p>' . __( 'Hi ###USERNAME###,', 'buddyboss-platform' ) . '</p>';
-			$pass_change_text .= '<p>' . __( 'This notice confirms that your password was changed on ###SITENAME###.', 'buddyboss-platform' ) . '</p>';
-			$pass_change_text .= '<p>' . __( 'If you did not change your password, please contact the Site Administrator at <br />###ADMIN_EMAIL###', 'buddyboss-platform' ) . '</p>';
-			$pass_change_text .= '<p>' . __( 'This email has been sent to ###EMAIL###', 'buddyboss-platform' ) . '</p>';
-			$pass_change_text .= '<p>' . __( 'Regards, <br />All at ###SITENAME### <br />###SITEURL###', 'buddyboss-platform' ) . '</p>';
+			$pass_change_text  = '<p>' . __( 'Hi ###USERNAME###,', 'buddyboss-community-social-network-groups-forums-messaging' ) . '</p>';
+			$pass_change_text .= '<p>' . __( 'This notice confirms that your password was changed on ###SITENAME###.', 'buddyboss-community-social-network-groups-forums-messaging' ) . '</p>';
+			$pass_change_text .= '<p>' . __( 'If you did not change your password, please contact the Site Administrator at <br />###ADMIN_EMAIL###', 'buddyboss-community-social-network-groups-forums-messaging' ) . '</p>';
+			$pass_change_text .= '<p>' . __( 'This email has been sent to ###EMAIL###', 'buddyboss-community-social-network-groups-forums-messaging' ) . '</p>';
+			$pass_change_text .= '<p>' . __( 'Regards, <br />All at ###SITENAME### <br />###SITEURL###', 'buddyboss-community-social-network-groups-forums-messaging' ) . '</p>';
 
 			$pass_change_email = array(
 				'to'      => $user['user_email'],
 				/* translators: User password change notification email subject. 1: Site name */
-				'subject' => __( '[%s] Notice of Password Change', 'buddyboss-platform' ),
+				'subject' => __( '[%s] Notice of Password Change', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				'message' => $pass_change_text,
 				'headers' => '',
 			);
@@ -1035,16 +1035,16 @@ if ( ! function_exists( 'bboss_email_wp_email_change_email' ) ) {
 	function bboss_email_wp_email_change_email( $email_change_email, $user, $userdata ) {
 
 		/* translators: Do not translate USERNAME, ADMIN_EMAIL, EMAIL, SITENAME, SITEURL: those are placeholders. */
-		$email_change_text  = '<p>' . __( 'Hi ###USERNAME###,', 'buddyboss-platform' ) . '</p>';
-		$email_change_text .= '<p>' . __( 'This notice confirms that your email address on ###SITENAME### was changed to ###NEW_EMAIL###.', 'buddyboss-platform' ) . '</p>';
-		$email_change_text .= '<p>' . __( 'If you did not change your email, please contact the Site Administrator at <br/>###ADMIN_EMAIL###', 'buddyboss-platform' ) . '</p>';
-		$email_change_text .= '<p>' . __( 'This email has been sent to ###EMAIL###', 'buddyboss-platform' ) . '</p>';
-		$email_change_text .= '<p>' . __( 'Regards, <br />All at ###SITENAME### <br />###SITEURL###', 'buddyboss-platform' ) . '</p>';
+		$email_change_text  = '<p>' . __( 'Hi ###USERNAME###,', 'buddyboss-community-social-network-groups-forums-messaging' ) . '</p>';
+		$email_change_text .= '<p>' . __( 'This notice confirms that your email address on ###SITENAME### was changed to ###NEW_EMAIL###.', 'buddyboss-community-social-network-groups-forums-messaging' ) . '</p>';
+		$email_change_text .= '<p>' . __( 'If you did not change your email, please contact the Site Administrator at <br/>###ADMIN_EMAIL###', 'buddyboss-community-social-network-groups-forums-messaging' ) . '</p>';
+		$email_change_text .= '<p>' . __( 'This email has been sent to ###EMAIL###', 'buddyboss-community-social-network-groups-forums-messaging' ) . '</p>';
+		$email_change_text .= '<p>' . __( 'Regards, <br />All at ###SITENAME### <br />###SITEURL###', 'buddyboss-community-social-network-groups-forums-messaging' ) . '</p>';
 
 		$email_change_email = array(
 			'to'      => $user['user_email'],
 			/* translators: User email change notification email subject. 1: Site name */
-			'subject' => __( '[%s] Notice of Email Change', 'buddyboss-platform' ),
+			'subject' => __( '[%s] Notice of Email Change', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'message' => $email_change_text,
 			'headers' => '',
 		);
@@ -1089,12 +1089,12 @@ if ( ! function_exists( 'bboss_email_wp_new_user_email_content' ) ) {
 		}
 
 		/* translators: Do not translate USERNAME, ADMIN_EMAIL, EMAIL, SITENAME, SITEURL: those are placeholders. */
-		$email_text  = '<p>' . __( 'Howdy ###USERNAME###,', 'buddyboss-platform' ) . '</p>';
-		$email_text .= '<p>' . __( 'You recently requested to have the email address on your account changed.', 'buddyboss-platform' ) . '</p>';
-		$email_text .= '<p>' . __( 'If this is correct, please <a href="###ADMIN_URL###">click here</a> to change it.', 'buddyboss-platform' ) . '</p>';
-		$email_text .= '<p>' . __( 'You can safely ignore and delete this email if you do not want to take this action.', 'buddyboss-platform' ) . '</p>';
-		$email_text .= '<p>' . __( 'This email has been sent to ###EMAIL###', 'buddyboss-platform' ) . '</p>';
-		$email_text .= '<p>' . __( 'Regards, <br />All at ###SITENAME### <br />###SITEURL###', 'buddyboss-platform' ) . '</p>';
+		$email_text  = '<p>' . __( 'Howdy ###USERNAME###,', 'buddyboss-community-social-network-groups-forums-messaging' ) . '</p>';
+		$email_text .= '<p>' . __( 'You recently requested to have the email address on your account changed.', 'buddyboss-community-social-network-groups-forums-messaging' ) . '</p>';
+		$email_text .= '<p>' . __( 'If this is correct, please <a href="###ADMIN_URL###">click here</a> to change it.', 'buddyboss-community-social-network-groups-forums-messaging' ) . '</p>';
+		$email_text .= '<p>' . __( 'You can safely ignore and delete this email if you do not want to take this action.', 'buddyboss-community-social-network-groups-forums-messaging' ) . '</p>';
+		$email_text .= '<p>' . __( 'This email has been sent to ###EMAIL###', 'buddyboss-community-social-network-groups-forums-messaging' ) . '</p>';
+		$email_text .= '<p>' . __( 'Regards, <br />All at ###SITENAME### <br />###SITEURL###', 'buddyboss-community-social-network-groups-forums-messaging' ) . '</p>';
 
 		add_filter( 'wp_mail_content_type', 'bboss_email_set_content_type' ); // add this to support html in email
 
@@ -1141,28 +1141,28 @@ if ( ! function_exists( 'bboss_email_wp_user_confirmed_action_email_content' ) )
 			$email = $email_data['admin_email'];
 
 			/* translators: Do not translate SITENAME, SITEURL; those are placeholders. */
-			$email_text  = '<p>' . __( 'Howdy,', 'buddyboss-platform' ) . '</p>';
-			$email_text .= '<p>' . __( 'A user data privacy request has been confirmed on ###SITENAME###:', 'buddyboss-platform' ) . '</p>';
-			$email_text .= '<p>' . __( 'User: ###USER_EMAIL###', 'buddyboss-platform' ) . '</p>';
-			$email_text .= '<p>' . __( 'Request: ###DESCRIPTION###', 'buddyboss-platform' ) . '</p>';
-			$email_text .= '<p>' . __( 'You can view and manage these data privacy requests here:', 'buddyboss-platform' ) . '</p>';
-			$email_text .= '<p><a href="###MANAGE_URL###">' . __( '###MANAGE_URL###', 'buddyboss-platform' ) . '</a></p>';
-			$email_text .= '<p>' . __( 'Regards, <br />All at <a href="###SITEURL###">###SITENAME###</a> <br /><a href="###SITEURL###">###SITEURL###</a>', 'buddyboss-platform' ) . '</p>';
+			$email_text  = '<p>' . __( 'Howdy,', 'buddyboss-community-social-network-groups-forums-messaging' ) . '</p>';
+			$email_text .= '<p>' . __( 'A user data privacy request has been confirmed on ###SITENAME###:', 'buddyboss-community-social-network-groups-forums-messaging' ) . '</p>';
+			$email_text .= '<p>' . __( 'User: ###USER_EMAIL###', 'buddyboss-community-social-network-groups-forums-messaging' ) . '</p>';
+			$email_text .= '<p>' . __( 'Request: ###DESCRIPTION###', 'buddyboss-community-social-network-groups-forums-messaging' ) . '</p>';
+			$email_text .= '<p>' . __( 'You can view and manage these data privacy requests here:', 'buddyboss-community-social-network-groups-forums-messaging' ) . '</p>';
+			$email_text .= '<p><a href="###MANAGE_URL###">' . __( '###MANAGE_URL###', 'buddyboss-community-social-network-groups-forums-messaging' ) . '</a></p>';
+			$email_text .= '<p>' . __( 'Regards, <br />All at <a href="###SITEURL###">###SITENAME###</a> <br /><a href="###SITEURL###">###SITEURL###</a>', 'buddyboss-community-social-network-groups-forums-messaging' ) . '</p>';
 
 		} else {
 			if ( empty( $email_data['privacy_policy_url'] ) ) {
 				/* translators: Do not translate SITENAME, SITEURL; those are placeholders. */
-				$email_text  = '<p>' . __( 'Howdy,', 'buddyboss-platform' ) . '</p>';
-				$email_text .= '<p>' . __( 'Your request to erase your personal data on ###SITENAME### has been completed.', 'buddyboss-platform' ) . '</p>';
-				$email_text .= '<p>' . __( 'If you have any follow-up questions or concerns, please contact the site administrator.', 'buddyboss-platform' ) . '</p>';
-				$email_text .= '<p>' . __( 'Regards, <br />All at <a href="###SITEURL###">###SITENAME###</a> <br /><a href="###SITEURL###">###SITEURL###</a>', 'buddyboss-platform' ) . '</p>';
+				$email_text  = '<p>' . __( 'Howdy,', 'buddyboss-community-social-network-groups-forums-messaging' ) . '</p>';
+				$email_text .= '<p>' . __( 'Your request to erase your personal data on ###SITENAME### has been completed.', 'buddyboss-community-social-network-groups-forums-messaging' ) . '</p>';
+				$email_text .= '<p>' . __( 'If you have any follow-up questions or concerns, please contact the site administrator.', 'buddyboss-community-social-network-groups-forums-messaging' ) . '</p>';
+				$email_text .= '<p>' . __( 'Regards, <br />All at <a href="###SITEURL###">###SITENAME###</a> <br /><a href="###SITEURL###">###SITEURL###</a>', 'buddyboss-community-social-network-groups-forums-messaging' ) . '</p>';
 			} else {
 				/* translators: Do not translate SITENAME, SITEURL, PRIVACY_POLICY_URL; those are placeholders. */
-				$email_text  = '<p>' . __( 'Howdy,', 'buddyboss-platform' ) . '</p>';
-				$email_text .= '<p>' . __( 'Your request to erase your personal data on ###SITENAME### has been completed.', 'buddyboss-platform' ) . '</p>';
-				$email_text .= '<p>' . __( 'If you have any follow-up questions or concerns, please contact the site administrator.', 'buddyboss-platform' ) . '</p>';
-				$email_text .= '<p>' . __( 'For more information, you can also read our privacy policy: ###PRIVACY_POLICY_URL###', 'buddyboss-platform' ) . '</p>';
-				$email_text .= '<p>' . __( 'Regards, <br />All at <a href="###SITEURL###">###SITENAME###</a> <br /><a href="###SITEURL###">###SITEURL###</a>', 'buddyboss-platform' ) . '</p>';
+				$email_text  = '<p>' . __( 'Howdy,', 'buddyboss-community-social-network-groups-forums-messaging' ) . '</p>';
+				$email_text .= '<p>' . __( 'Your request to erase your personal data on ###SITENAME### has been completed.', 'buddyboss-community-social-network-groups-forums-messaging' ) . '</p>';
+				$email_text .= '<p>' . __( 'If you have any follow-up questions or concerns, please contact the site administrator.', 'buddyboss-community-social-network-groups-forums-messaging' ) . '</p>';
+				$email_text .= '<p>' . __( 'For more information, you can also read our privacy policy: ###PRIVACY_POLICY_URL###', 'buddyboss-community-social-network-groups-forums-messaging' ) . '</p>';
+				$email_text .= '<p>' . __( 'Regards, <br />All at <a href="###SITEURL###">###SITENAME###</a> <br /><a href="###SITEURL###">###SITEURL###</a>', 'buddyboss-community-social-network-groups-forums-messaging' ) . '</p>';
 			}
 
 			// The erasure-fulfillment email passes the recipient as `message_recipient`, not `user_email`.
@@ -1220,11 +1220,11 @@ if ( ! function_exists( 'bboss_email_wp_user_request_action_email_content' ) ) {
 	function bboss_email_wp_user_request_action_email_content( $email_text, $email_data ) {
 
 		/* translators: Do not translate DESCRIPTION, CONFIRM_URL, SITENAME, SITEURL: those are placeholders. */
-		$email_text  = '<p>' . __( 'Howdy,', 'buddyboss-platform' ) . '</p>';
-		$email_text .= '<p>' . __( 'A request has been made to perform the following action on your account: <br />###DESCRIPTION###', 'buddyboss-platform' ) . '</p>';
-		$email_text .= '<p>' . __( 'To confirm this, please click on the following link: <br /><a href="###CONFIRM_URL###">###CONFIRM_URL###</a>', 'buddyboss-platform' ) . '</p>';
-		$email_text .= '<p>' . __( 'You can safely ignore and delete this email if you do not want to take this action.', 'buddyboss-platform' ) . '</p>';
-		$email_text .= '<p>' . __( 'Regards, <br />All at <a href="###SITEURL###">###SITENAME###</a> <br /><a href="###SITEURL###">###SITEURL###</a>', 'buddyboss-platform' ) . '</p>';
+		$email_text  = '<p>' . __( 'Howdy,', 'buddyboss-community-social-network-groups-forums-messaging' ) . '</p>';
+		$email_text .= '<p>' . __( 'A request has been made to perform the following action on your account: <br />###DESCRIPTION###', 'buddyboss-community-social-network-groups-forums-messaging' ) . '</p>';
+		$email_text .= '<p>' . __( 'To confirm this, please click on the following link: <br /><a href="###CONFIRM_URL###">###CONFIRM_URL###</a>', 'buddyboss-community-social-network-groups-forums-messaging' ) . '</p>';
+		$email_text .= '<p>' . __( 'You can safely ignore and delete this email if you do not want to take this action.', 'buddyboss-community-social-network-groups-forums-messaging' ) . '</p>';
+		$email_text .= '<p>' . __( 'Regards, <br />All at <a href="###SITEURL###">###SITENAME###</a> <br /><a href="###SITEURL###">###SITEURL###</a>', 'buddyboss-community-social-network-groups-forums-messaging' ) . '</p>';
 
 		add_filter( 'wp_mail_content_type', 'bboss_email_set_content_type' ); // add this to support html in email
 
@@ -1266,12 +1266,12 @@ if ( ! function_exists( 'bboss_email_wp_new_admin_email_content' ) ) {
 		}
 
 		/* translators: Do not translate USERNAME, ADMIN_URL, EMAIL, SITENAME, SITEURL: those are placeholders. */
-		$email_text  = '<p>' . __( 'Howdy ###USERNAME###,', 'buddyboss-platform' ) . '</p>';
-		$email_text .= '<p>' . __( 'You recently requested to have the administration email address on your site changed.', 'buddyboss-platform' ) . '</p>';
-		$email_text .= '<p>' . __( 'If this is correct, please <a href="###ADMIN_URL###">click here</a> to change it.', 'buddyboss-platform' ) . '</p>';
-		$email_text .= '<p>' . __( 'You can safely ignore and delete this email if you do not want to take this action.', 'buddyboss-platform' ) . '</p>';
-		$email_text .= '<p>' . __( 'This email has been sent to ###EMAIL###', 'buddyboss-platform' ) . '</p>';
-		$email_text .= '<p>' . __( 'Regards, <br />All at ###SITENAME### <br />###SITEURL###', 'buddyboss-platform' ) . '</p>';
+		$email_text  = '<p>' . __( 'Howdy ###USERNAME###,', 'buddyboss-community-social-network-groups-forums-messaging' ) . '</p>';
+		$email_text .= '<p>' . __( 'You recently requested to have the administration email address on your site changed.', 'buddyboss-community-social-network-groups-forums-messaging' ) . '</p>';
+		$email_text .= '<p>' . __( 'If this is correct, please <a href="###ADMIN_URL###">click here</a> to change it.', 'buddyboss-community-social-network-groups-forums-messaging' ) . '</p>';
+		$email_text .= '<p>' . __( 'You can safely ignore and delete this email if you do not want to take this action.', 'buddyboss-community-social-network-groups-forums-messaging' ) . '</p>';
+		$email_text .= '<p>' . __( 'This email has been sent to ###EMAIL###', 'buddyboss-community-social-network-groups-forums-messaging' ) . '</p>';
+		$email_text .= '<p>' . __( 'Regards, <br />All at ###SITENAME### <br />###SITEURL###', 'buddyboss-community-social-network-groups-forums-messaging' ) . '</p>';
 
 		add_filter( 'wp_mail_content_type', 'bboss_email_set_content_type' ); // add this to support html in email
 
@@ -1374,13 +1374,13 @@ if ( ! function_exists( 'bboss_email_newblog_notify_siteadmin' ) ) {
 		restore_current_blog();
 
 		/* translators: New site notification email. */
-		$msg  = '<p>' . sprintf( __( 'New Site: %s', 'buddyboss-platform' ), $blogname ) . '</p>';
+		$msg  = '<p>' . sprintf( __( 'New Site: %s', 'buddyboss-community-social-network-groups-forums-messaging' ), $blogname ) . '</p>';
 		/* translators: %s: site URL. */
-		$msg .= '<p>' . sprintf( __( 'URL: %s', 'buddyboss-platform' ), $siteurl ) . '</p>';
+		$msg .= '<p>' . sprintf( __( 'URL: %s', 'buddyboss-community-social-network-groups-forums-messaging' ), $siteurl ) . '</p>';
 		/* translators: %s: remote IP address. */
-		$msg .= '<p>' . sprintf( __( 'Remote IP address: %s', 'buddyboss-platform' ), wp_unslash( $_SERVER['REMOTE_ADDR'] ) ) . '</p>';
+		$msg .= '<p>' . sprintf( __( 'Remote IP address: %s', 'buddyboss-community-social-network-groups-forums-messaging' ), wp_unslash( $_SERVER['REMOTE_ADDR'] ) ) . '</p>';
 		/* translators: %s: notification settings URL. */
-		$msg .= '<p>' . sprintf( __( 'Disable these notifications:%s', 'buddyboss-platform' ), $options_site_url ) . '</p>';
+		$msg .= '<p>' . sprintf( __( 'Disable these notifications:%s', 'buddyboss-community-social-network-groups-forums-messaging' ), $options_site_url ) . '</p>';
 
 		add_filter( 'wp_mail_content_type', 'bboss_email_set_content_type' ); // add this to support html in email
 
@@ -1433,13 +1433,13 @@ if ( ! function_exists( 'bboss_email_update_welcome_email' ) ) {
 
 		if ( $welcome_email == false ) {
 			/* translators: Do not translate USERNAME, SITE_NAME, BLOG_URL, PASSWORD: those are placeholders. */
-			$welcome_email  = '<p>' . __( 'Howdy USERNAME,', 'buddyboss-platform' ) . '</p>';
-			$welcome_email .= '<p>' . __( 'Your new SITE_NAME site has been successfully set up at: <br />BLOG_URL', 'buddyboss-platform' ) . '</p>';
-			$welcome_email .= '<p>' . __( 'You can log in to the administrator account with the following information:', 'buddyboss-platform' ) . '</p>';
-			$welcome_email .= '<p>' . __( 'Username: USERNAME', 'buddyboss-platform' ) . '</p>';
-			$welcome_email .= '<p>' . __( 'Password: PASSWORD', 'buddyboss-platform' ) . '</p>';
-			$welcome_email .= '<p>' . __( 'Log in here: BLOG_URLwp-login.php', 'buddyboss-platform' ) . '</p>';
-			$welcome_email .= '<p>' . __( 'We hope you enjoy your new site. Thanks! <br />--The Team @ SITE_NAME', 'buddyboss-platform' ) . '</p>';
+			$welcome_email  = '<p>' . __( 'Howdy USERNAME,', 'buddyboss-community-social-network-groups-forums-messaging' ) . '</p>';
+			$welcome_email .= '<p>' . __( 'Your new SITE_NAME site has been successfully set up at: <br />BLOG_URL', 'buddyboss-community-social-network-groups-forums-messaging' ) . '</p>';
+			$welcome_email .= '<p>' . __( 'You can log in to the administrator account with the following information:', 'buddyboss-community-social-network-groups-forums-messaging' ) . '</p>';
+			$welcome_email .= '<p>' . __( 'Username: USERNAME', 'buddyboss-community-social-network-groups-forums-messaging' ) . '</p>';
+			$welcome_email .= '<p>' . __( 'Password: PASSWORD', 'buddyboss-community-social-network-groups-forums-messaging' ) . '</p>';
+			$welcome_email .= '<p>' . __( 'Log in here: BLOG_URLwp-login.php', 'buddyboss-community-social-network-groups-forums-messaging' ) . '</p>';
+			$welcome_email .= '<p>' . __( 'We hope you enjoy your new site. Thanks! <br />--The Team @ SITE_NAME', 'buddyboss-community-social-network-groups-forums-messaging' ) . '</p>';
 		}
 
 		add_filter( 'wp_mail_content_type', 'bboss_email_set_content_type' ); // add this to support html in email
@@ -1506,12 +1506,12 @@ if ( ! function_exists( 'bboss_email_new_network_admin_email_content' ) ) {
 		}
 
 		/* translators: Do not translate USERNAME, ADMIN_URL, EMAIL, SITENAME, SITEURL: those are placeholders. */
-		$email_text  = '<p>' . __( 'Howdy ###USERNAME###,', 'buddyboss-platform' ) . '</p>';
-		$email_text .= '<p>' . __( 'You recently requested to have the network admin email address on your network changed.', 'buddyboss-platform' ) . '</p>';
-		$email_text .= '<p>' . __( 'If this is correct, please click on the following link to change it: <br />###ADMIN_URL###', 'buddyboss-platform' ) . '</p>';
-		$email_text .= '<p>' . __( 'You can safely ignore and delete this email if you do not want to take this action.', 'buddyboss-platform' ) . '</p>';
-		$email_text .= '<p>' . __( 'This email has been sent to ###EMAIL###', 'buddyboss-platform' ) . '</p>';
-		$email_text .= '<p>' . __( 'Regards, <br /> All at ###SITENAME### <br /> ###SITEURL###', 'buddyboss-platform' ) . '</p>';
+		$email_text  = '<p>' . __( 'Howdy ###USERNAME###,', 'buddyboss-community-social-network-groups-forums-messaging' ) . '</p>';
+		$email_text .= '<p>' . __( 'You recently requested to have the network admin email address on your network changed.', 'buddyboss-community-social-network-groups-forums-messaging' ) . '</p>';
+		$email_text .= '<p>' . __( 'If this is correct, please click on the following link to change it: <br />###ADMIN_URL###', 'buddyboss-community-social-network-groups-forums-messaging' ) . '</p>';
+		$email_text .= '<p>' . __( 'You can safely ignore and delete this email if you do not want to take this action.', 'buddyboss-community-social-network-groups-forums-messaging' ) . '</p>';
+		$email_text .= '<p>' . __( 'This email has been sent to ###EMAIL###', 'buddyboss-community-social-network-groups-forums-messaging' ) . '</p>';
+		$email_text .= '<p>' . __( 'Regards, <br /> All at ###SITENAME### <br /> ###SITEURL###', 'buddyboss-community-social-network-groups-forums-messaging' ) . '</p>';
 
 		add_filter( 'wp_mail_content_type', 'bboss_email_set_content_type' ); // add this to support html in email
 
@@ -1549,16 +1549,16 @@ if ( ! function_exists( 'bboss_email_network_admin_email_change_email' ) ) {
 	function bboss_email_network_admin_email_change_email( $email_change_email, $old_email, $new_email, $network_id ) {
 
 		/* translators: Do not translate OLD_EMAIL, NEW_EMAIL, SITENAME, SITEURL: those are placeholders. */
-		$email_change_text  = '<p>' . __( 'Hi,', 'buddyboss-platform' ) . '</p>';
-		$email_change_text .= '<p>' . __( 'This notice confirms that the network admin email address was changed on ###SITENAME###.', 'buddyboss-platform' ) . '</p>';
-		$email_change_text .= '<p>' . __( 'The new network admin email address is ###NEW_EMAIL###.', 'buddyboss-platform' ) . '</p>';
-		$email_change_text .= '<p>' . __( 'This email has been sent to ###OLD_EMAIL###', 'buddyboss-platform' ) . '</p>';
-		$email_change_text .= '<p>' . __( 'Regards, <br /> All at ###SITENAME### <br /> ###SITEURL###', 'buddyboss-platform' ) . '</p>';
+		$email_change_text  = '<p>' . __( 'Hi,', 'buddyboss-community-social-network-groups-forums-messaging' ) . '</p>';
+		$email_change_text .= '<p>' . __( 'This notice confirms that the network admin email address was changed on ###SITENAME###.', 'buddyboss-community-social-network-groups-forums-messaging' ) . '</p>';
+		$email_change_text .= '<p>' . __( 'The new network admin email address is ###NEW_EMAIL###.', 'buddyboss-community-social-network-groups-forums-messaging' ) . '</p>';
+		$email_change_text .= '<p>' . __( 'This email has been sent to ###OLD_EMAIL###', 'buddyboss-community-social-network-groups-forums-messaging' ) . '</p>';
+		$email_change_text .= '<p>' . __( 'Regards, <br /> All at ###SITENAME### <br /> ###SITEURL###', 'buddyboss-community-social-network-groups-forums-messaging' ) . '</p>';
 
 		$email_change_email = array(
 			'to'      => $old_email,
 			/* translators: Network admin email change notification email subject. %s: Network title */
-			'subject' => __( '[%s] Notice of Network Admin Email Change', 'buddyboss-platform' ),
+			'subject' => __( '[%s] Notice of Network Admin Email Change', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'message' => $email_change_text,
 			'headers' => '',
 		);
@@ -1598,16 +1598,16 @@ if ( ! function_exists( 'bboss_email_site_admin_email_change_email' ) ) {
 	function bboss_email_site_admin_email_change_email( $email_change_email, $old_email, $new_email ) {
 
 		/* translators: Do not translate OLD_EMAIL, NEW_EMAIL, SITENAME, SITEURL: those are placeholders. */
-		$email_change_text  = '<p>' . __( 'Hi,', 'buddyboss-platform' ) . '</p>';
-		$email_change_text .= '<p>' . __( 'This notice confirms that the admin email address was changed on ###SITENAME###.', 'buddyboss-platform' ) . '</p>';
-		$email_change_text .= '<p>' . __( 'The new admin email address is ###NEW_EMAIL###.', 'buddyboss-platform' ) . '</p>';
-		$email_change_text .= '<p>' . __( 'This email has been sent to ###OLD_EMAIL###', 'buddyboss-platform' ) . '</p>';
-		$email_change_text .= '<p>' . __( 'Regards, <br /> All at ###SITENAME### <br /> ###SITEURL###', 'buddyboss-platform' ) . '</p>';
+		$email_change_text  = '<p>' . __( 'Hi,', 'buddyboss-community-social-network-groups-forums-messaging' ) . '</p>';
+		$email_change_text .= '<p>' . __( 'This notice confirms that the admin email address was changed on ###SITENAME###.', 'buddyboss-community-social-network-groups-forums-messaging' ) . '</p>';
+		$email_change_text .= '<p>' . __( 'The new admin email address is ###NEW_EMAIL###.', 'buddyboss-community-social-network-groups-forums-messaging' ) . '</p>';
+		$email_change_text .= '<p>' . __( 'This email has been sent to ###OLD_EMAIL###', 'buddyboss-community-social-network-groups-forums-messaging' ) . '</p>';
+		$email_change_text .= '<p>' . __( 'Regards, <br /> All at ###SITENAME### <br /> ###SITEURL###', 'buddyboss-community-social-network-groups-forums-messaging' ) . '</p>';
 
 		$email_change_email = array(
 			'to'      => $old_email,
 			/* translators: Site admin email change notification email subject. %s: Site title */
-			'subject' => __( '[%s] Notice of Admin Email Change', 'buddyboss-platform' ),
+			'subject' => __( '[%s] Notice of Admin Email Change', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'message' => bboss_email_core_wp_get_template( $email_change_text, get_user_by( 'email', $new_email ) ),
 			'headers' => '',
 		);
@@ -1640,10 +1640,10 @@ if ( ! function_exists( 'bboss_email_wp_privacy_personal_data_email_content' ) )
 		// Get the request data.
 		$request = wp_get_user_request( $request_id );
 
-		$email_text  = '<p>' . __( 'Howdy,', 'buddyboss-platform' ) . '</p>';
-		$email_text .= '<p>' . __( 'Your request for an export of personal data has been completed. You may download your personal data by clicking on the link below. For privacy and security, we will automatically delete the file on ###EXPIRATION###, so please download it before then.', 'buddyboss-platform' ) . '</p>';
-		$email_text .= '<p><a href="###LINK###">' . __( '###LINK###', 'buddyboss-platform' ) . '</a></p>';
-		$email_text .= '<p>' . __( 'Regards, <br /> All at <a href="###SITEURL###">###SITENAME###</a> <br /> <a href="###SITEURL###">###SITEURL###</a>', 'buddyboss-platform' ) . '</p>';
+		$email_text  = '<p>' . __( 'Howdy,', 'buddyboss-community-social-network-groups-forums-messaging' ) . '</p>';
+		$email_text .= '<p>' . __( 'Your request for an export of personal data has been completed. You may download your personal data by clicking on the link below. For privacy and security, we will automatically delete the file on ###EXPIRATION###, so please download it before then.', 'buddyboss-community-social-network-groups-forums-messaging' ) . '</p>';
+		$email_text .= '<p><a href="###LINK###">' . __( '###LINK###', 'buddyboss-community-social-network-groups-forums-messaging' ) . '</a></p>';
+		$email_text .= '<p>' . __( 'Regards, <br /> All at <a href="###SITEURL###">###SITENAME###</a> <br /> <a href="###SITEURL###">###SITEURL###</a>', 'buddyboss-community-social-network-groups-forums-messaging' ) . '</p>';
 
 		add_filter( 'wp_mail_content_type', 'bboss_email_set_content_type' ); // add this to support html in email
 

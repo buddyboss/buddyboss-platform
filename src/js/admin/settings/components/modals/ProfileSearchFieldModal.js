@@ -64,7 +64,7 @@ export function ProfileSearchFieldModal( { field, availableFields, existingField
 	 * @since BuddyBoss [BBVERSION]
 	 */
 	var fieldOptions = useMemo( function () {
-		var options = [ { label: __( '— Select a field —', 'buddyboss-platform' ), value: '', disabled: true } ];
+		var options = [ { label: __( '— Select a field —', 'buddyboss-community-social-network-groups-forums-messaging' ), value: '', disabled: true } ];
 
 		if ( ! availableFields || ! availableFields.length ) {
 			return options;
@@ -160,7 +160,7 @@ export function ProfileSearchFieldModal( { field, availableFields, existingField
 	 */
 	function handleSave() {
 		if ( ! fieldCode ) {
-			setToast( { status: 'error', message: __( 'Please select a field.', 'buddyboss-platform' ) } );
+			setToast( { status: 'error', message: __( 'Please select a field.', 'buddyboss-community-social-network-groups-forums-messaging' ) } );
 			return;
 		}
 
@@ -182,21 +182,21 @@ export function ProfileSearchFieldModal( { field, availableFields, existingField
 			.then( function ( response ) {
 				setIsSaving( false );
 				if ( response.success ) {
-					setToast( { status: 'success', message: response.data.message || __( 'Field saved.', 'buddyboss-platform' ) } );
+					setToast( { status: 'success', message: response.data.message || __( 'Field saved.', 'buddyboss-community-social-network-groups-forums-messaging' ) } );
 					onSave();
 				} else {
-					setToast( { status: 'error', message: ( response.data && response.data.message ) || __( 'Failed to save field.', 'buddyboss-platform' ) } );
+					setToast( { status: 'error', message: ( response.data && response.data.message ) || __( 'Failed to save field.', 'buddyboss-community-social-network-groups-forums-messaging' ) } );
 				}
 			} )
 			.catch( function ( error ) {
 				setIsSaving( false );
-				setToast( { status: 'error', message: error.message || __( 'Failed to save field.', 'buddyboss-platform' ) } );
+				setToast( { status: 'error', message: error.message || __( 'Failed to save field.', 'buddyboss-community-social-network-groups-forums-messaging' ) } );
 			} );
 	}
 
 	// Get placeholder text for label.
 	var selectedField = getFieldByCode( fieldCode );
-	var labelPlaceholder = selectedField ? decodeEntities( selectedField.name ) : __( 'Field label', 'buddyboss-platform' );
+	var labelPlaceholder = selectedField ? decodeEntities( selectedField.name ) : __( 'Field label', 'buddyboss-community-social-network-groups-forums-messaging' );
 
 	// Build search mode options.
 	var modeOptions = availableModes.map( function ( mode ) {
@@ -208,7 +208,7 @@ export function ProfileSearchFieldModal( { field, availableFields, existingField
 
 	return (
 		<Modal
-			title={ isEditing ? __( 'Edit Search Field', 'buddyboss-platform' ) : __( 'Add Search Field', 'buddyboss-platform' ) }
+			title={ isEditing ? __( 'Edit Search Field', 'buddyboss-community-social-network-groups-forums-messaging' ) : __( 'Add Search Field', 'buddyboss-community-social-network-groups-forums-messaging' ) }
 			onRequestClose={ onClose }
 			shouldCloseOnClickOutside={ false }
 			className="bb-ps-field-modal bb-admin-settings-modal"
@@ -218,7 +218,7 @@ export function ProfileSearchFieldModal( { field, availableFields, existingField
 
 				{/* Field Select. */}
 					<SelectControl
-						label={ __( 'Select Field', 'buddyboss-platform' ) }
+						label={ __( 'Select Field', 'buddyboss-community-social-network-groups-forums-messaging' ) }
 						value={ fieldCode }
 						options={ fieldOptions }
 						onChange={ function ( val ) {
@@ -232,7 +232,7 @@ export function ProfileSearchFieldModal( { field, availableFields, existingField
 
 					{/* Label. */}
 					<TextControl
-						label={ __( 'Label', 'buddyboss-platform' ) }
+						label={ __( 'Label', 'buddyboss-community-social-network-groups-forums-messaging' ) }
 						value={ fieldLabel }
 						placeholder={ labelPlaceholder }
 						onChange={ setFieldLabel }
@@ -240,7 +240,7 @@ export function ProfileSearchFieldModal( { field, availableFields, existingField
 
 					{/* Description. */}
 					<TextControl
-						label={ __( 'Description', 'buddyboss-platform' ) }
+						label={ __( 'Description', 'buddyboss-community-social-network-groups-forums-messaging' ) }
 						value={ fieldDesc }
 						onChange={ setFieldDesc }
 					/>
@@ -248,7 +248,7 @@ export function ProfileSearchFieldModal( { field, availableFields, existingField
 					{/* Search Mode (only if modes are available and not heading). */}
 					{ 'heading' !== fieldCode && modeOptions.length > 0 && (
 						<SelectControl
-							label={ __( 'Search Mode', 'buddyboss-platform' ) }
+							label={ __( 'Search Mode', 'buddyboss-community-social-network-groups-forums-messaging' ) }
 							value={ fieldMode }
 							options={ modeOptions }
 							onChange={ setFieldMode }
@@ -261,7 +261,7 @@ export function ProfileSearchFieldModal( { field, availableFields, existingField
 						( selectedField && selectedField.is_repeater_group )
 					) && (
 						<Notice status="warning" isDismissible={ false }>
-							{ __( 'You are adding a date field which is inside a repeater set. This will not work correctly in search.', 'buddyboss-platform' ) }
+							{ __( 'You are adding a date field which is inside a repeater set. This will not work correctly in search.', 'buddyboss-community-social-network-groups-forums-messaging' ) }
 						</Notice>
 					) }
 				</div>
@@ -272,7 +272,7 @@ export function ProfileSearchFieldModal( { field, availableFields, existingField
 					variant="secondary"
 					onClick={ onClose }
 				>
-					{ __( 'Cancel', 'buddyboss-platform' ) }
+					{ __( 'Cancel', 'buddyboss-community-social-network-groups-forums-messaging' ) }
 				</Button>
 				<Button
 					variant="primary"
@@ -280,7 +280,7 @@ export function ProfileSearchFieldModal( { field, availableFields, existingField
 					disabled={ ! fieldCode || isSaving }
 					onClick={ handleSave }
 				>
-					{ isEditing ? __( 'Save', 'buddyboss-platform' ) : __( 'Add Field', 'buddyboss-platform' ) }
+					{ isEditing ? __( 'Save', 'buddyboss-community-social-network-groups-forums-messaging' ) : __( 'Add Field', 'buddyboss-community-social-network-groups-forums-messaging' ) }
 				</Button>
 			</div>
 

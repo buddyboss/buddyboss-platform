@@ -24,7 +24,7 @@ final class BBoss_Group_Membership_Export extends BBoss_Export {
 
 		if ( null === $instance ) {
 			$instance = new BBoss_Group_Membership_Export();
-			$instance->setup( 'bp_group_memberships', __( 'Group Memberships', 'buddyboss-platform' ) );
+			$instance->setup( 'bp_group_memberships', __( 'Group Memberships', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 		}
 
 		return $instance;
@@ -56,7 +56,7 @@ final class BBoss_Group_Membership_Export extends BBoss_Export {
 			$group = bboss_groups_get_group( $item->group_id );
 
 			$group_id    = 'bp_group_membership';
-			$group_label = __( 'Group Membership', 'buddyboss-platform' );
+			$group_label = __( 'Group Membership', 'buddyboss-community-social-network-groups-forums-messaging' );
 			$item_id     = "{$this->exporter_name}-{$group_id}-{$item->id}";
 
 			$group_permalink = bboss_get_group_permalink( $group );
@@ -64,16 +64,16 @@ final class BBoss_Group_Membership_Export extends BBoss_Export {
 			$membership_type = false;
 
 			if ( $item->user_id === $user->ID && '0' === $item->is_confirmed && '0' === $item->inviter_id ) {
-				$group_label     = __( 'Group Pending Requests', 'buddyboss-platform' );
+				$group_label     = __( 'Group Pending Requests', 'buddyboss-community-social-network-groups-forums-messaging' );
 				$membership_type = 'pending_request';
 			} elseif ( $item->user_id === $user->ID && '0' === $item->is_confirmed && '0' === $item->inviter_id ) {
-				$group_label     = __( 'Group Pending Received Invitation Requests', 'buddyboss-platform' );
+				$group_label     = __( 'Group Pending Received Invitation Requests', 'buddyboss-community-social-network-groups-forums-messaging' );
 				$membership_type = 'pending_received_invitation';
 			} elseif ( $item->inviter_id === $user->ID && '0' === $item->is_confirmed ) {
-				$group_label     = __( 'Group Pending Sent Invitation Requests', 'buddyboss-platform' );
+				$group_label     = __( 'Group Pending Sent Invitation Requests', 'buddyboss-community-social-network-groups-forums-messaging' );
 				$membership_type = 'pending_sent_invitation';
 			} elseif ( $item->user_id === $user->ID && '1' === $item->is_confirmed ) {
-				$group_label     = __( 'Group Membership', 'buddyboss-platform' );
+				$group_label     = __( 'Group Membership', 'buddyboss-community-social-network-groups-forums-messaging' );
 				$membership_type = 'membership';
 			}
 
@@ -81,22 +81,22 @@ final class BBoss_Group_Membership_Export extends BBoss_Export {
 
 			$data = array(
 				array(
-					'name'  => __( 'Group Name', 'buddyboss-platform' ),
+					'name'  => __( 'Group Name', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'value' => bboss_get_group_name( $group ),
 				),
 				array(
-					'name'  => __( 'Sent Date (GMT)', 'buddyboss-platform' ),
+					'name'  => __( 'Sent Date (GMT)', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'value' => $item->date_modified,
 				),
 				array(
-					'name'  => __( 'Group URL', 'buddyboss-platform' ),
+					'name'  => __( 'Group URL', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'value' => $group_permalink,
 				),
 			);
 
 			if ( 'pending_received_invitation' === $membership_type ) {
 				$data[] = array(
-					'name'  => __( 'Sent by', 'buddyboss-platform' ),
+					'name'  => __( 'Sent by', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					// Resolve for the data subject ($user) so a hidden last name is not exported raw.
 					'value' => bboss_core_get_user_displayname( $item->inviter_id, $user->ID ),
 				);
@@ -104,7 +104,7 @@ final class BBoss_Group_Membership_Export extends BBoss_Export {
 
 			if ( 'pending_sent_invitation' === $membership_type ) {
 				$data[] = array(
-					'name'  => __( 'Sent to', 'buddyboss-platform' ),
+					'name'  => __( 'Sent to', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					// Resolve for the data subject ($user) so a hidden last name is not exported raw.
 					'value' => bboss_core_get_user_displayname( $item->user_id, $user->ID ),
 				);
@@ -112,7 +112,7 @@ final class BBoss_Group_Membership_Export extends BBoss_Export {
 
 			if ( ! empty( $item->comments ) ) {
 				$data[] = array(
-					'name'  => __( 'Group Comments', 'buddyboss-platform' ),
+					'name'  => __( 'Group Comments', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'value' => $item->comments,
 				);
 			}

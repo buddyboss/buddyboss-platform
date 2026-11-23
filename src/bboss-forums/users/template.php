@@ -197,7 +197,7 @@ function bboss_bbp_current_user_name() {
 function bboss_bbp_get_current_user_name() {
 	global $user_identity;
 
-	$current_user_name = is_user_logged_in() ? $user_identity : __( 'Anonymous', 'buddyboss-platform' );
+	$current_user_name = is_user_logged_in() ? $user_identity : __( 'Anonymous', 'buddyboss-community-social-network-groups-forums-messaging' );
 
 	return apply_filters( 'bbp_get_current_user_name', $current_user_name );
 }
@@ -515,11 +515,11 @@ function bboss_bbp_get_user_display_role( $user_id = 0 ) {
 
 	// User is not registered
 	if ( empty( $user_id ) ) {
-		$role = __( 'Guest', 'buddyboss-platform' );
+		$role = __( 'Guest', 'buddyboss-community-social-network-groups-forums-messaging' );
 
 		// User is not active
 	} elseif ( bboss_bbp_is_user_inactive( $user_id ) ) {
-		$role = __( 'Inactive', 'buddyboss-platform' );
+		$role = __( 'Inactive', 'buddyboss-community-social-network-groups-forums-messaging' );
 
 		// User have a role
 	} else {
@@ -529,7 +529,7 @@ function bboss_bbp_get_user_display_role( $user_id = 0 ) {
 
 	// No role found so default to generic "Member"
 	if ( empty( $role ) ) {
-		$role = __( 'Member', 'buddyboss-platform' );
+		$role = __( 'Member', 'buddyboss-community-social-network-groups-forums-messaging' );
 	}
 
 	return apply_filters( 'bbp_get_user_display_role', $role, $user_id );
@@ -573,7 +573,7 @@ function bboss_bbp_get_admin_link( $args = '' ) {
 	$r = bboss_bbp_parse_args(
 		$args,
 		array(
-			'text'   => __( 'Admin', 'buddyboss-platform' ),
+			'text'   => __( 'Admin', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'before' => '',
 			'after'  => '',
 		),
@@ -922,8 +922,8 @@ function bboss_bbp_get_user_favorites_link( $args = '', $user_id = 0, $wrap = tr
 	$r = bboss_bbp_parse_args(
 		$args,
 		array(
-			'favorite'  => __( 'Favorite', 'buddyboss-platform' ),
-			'favorited' => __( 'Unfavorite', 'buddyboss-platform' ),
+			'favorite'  => __( 'Favorite', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'favorited' => __( 'Unfavorite', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'user_id'   => 0,
 			'topic_id'  => 0,
 			'before'    => '',
@@ -1075,8 +1075,8 @@ function bboss_bbp_get_user_subscribe_link( $args = '', $user_id = 0, $wrap = tr
 	$r = bboss_bbp_parse_args(
 		$args,
 		array(
-			'subscribe'   => __( 'Subscribe', 'buddyboss-platform' ),
-			'unsubscribe' => __( 'Unsubscribe', 'buddyboss-platform' ),
+			'subscribe'   => __( 'Subscribe', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'unsubscribe' => __( 'Unsubscribe', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'user_id'     => 0,
 			'topic_id'    => 0,
 			'forum_id'    => 0,
@@ -1207,7 +1207,7 @@ function bboss_bbp_notice_edit_user_success() {
 
 	<div class="bp-feedback updated">
 		<span class="bp-icon" aria-hidden="true"></span>
-		<p><?php esc_html_e( 'User updated.', 'buddyboss-platform' ); ?></p>
+		<p><?php esc_html_e( 'User updated.', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></p>
 	</div>
 
 		<?php
@@ -1235,7 +1235,7 @@ function bboss_bbp_notice_edit_user_is_super_admin() {
 
 	<div class="bp-feedback warning">
 		<span class="bp-icon" aria-hidden="true"></span>
-		<p><?php bboss_bbp_is_user_home() || bboss_bbp_is_user_home_edit() ? esc_html_e( 'You have super admin privileges.', 'buddyboss-platform' ) : esc_html_e( 'This user has super admin privileges.', 'buddyboss-platform' ); ?></p>
+		<p><?php bboss_bbp_is_user_home() || bboss_bbp_is_user_home_edit() ? esc_html_e( 'You have super admin privileges.', 'buddyboss-community-social-network-groups-forums-messaging' ) : esc_html_e( 'This user has super admin privileges.', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></p>
 	</div>
 
 		<?php
@@ -1310,7 +1310,7 @@ function bboss_bbp_edit_user_blog_role() {
 	?>
 
 	<select name="role" id="role">
-		<option value=""><?php esc_html_e( '- No role for this site -', 'buddyboss-platform' ); ?></option>
+		<option value=""><?php esc_html_e( '- No role for this site -', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></option>
 
 		<?php foreach ( $blog_roles as $role => $details ) : ?>
 
@@ -1348,7 +1348,7 @@ function bboss_bbp_edit_user_forums_role() {
 	?>
 
 	<select name="bbp-forums-role" id="bbp-forums-role">
-		<option value=""><?php esc_html_e( '- No role for these forums -', 'buddyboss-platform' ); ?></option>
+		<option value=""><?php esc_html_e( '- No role for these forums -', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></option>
 
 		<?php foreach ( $dynamic_roles as $role => $details ) : ?>
 
@@ -1506,11 +1506,11 @@ function bboss_bbp_login_notices() {
 
 	// loggedout was passed
 	if ( ! empty( $_GET['loggedout'] ) && ( true === $_GET['loggedout'] ) ) {
-		bboss_bbp_add_error( 'loggedout', __( 'You are now logged out.', 'buddyboss-platform' ), 'message' );
+		bboss_bbp_add_error( 'loggedout', __( 'You are now logged out.', 'buddyboss-community-social-network-groups-forums-messaging' ), 'message' );
 
 		// registration is disabled
 	} elseif ( ! empty( $_GET['registration'] ) && ( 'disabled' === $_GET['registration'] ) ) {
-		bboss_bbp_add_error( 'registerdisabled', __( 'New user registration is currently not allowed.', 'buddyboss-platform' ) );
+		bboss_bbp_add_error( 'registerdisabled', __( 'New user registration is currently not allowed.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 
 		// Prompt user to check their email
 	} elseif ( ! empty( $_GET['checkemail'] ) && in_array( $_GET['checkemail'], array( 'confirm', 'newpass', 'registered' ) ) ) {
@@ -1519,17 +1519,17 @@ function bboss_bbp_login_notices() {
 
 			// Email needs confirmation
 			case 'confirm':
-				bboss_bbp_add_error( 'confirm', __( 'Check your e-mail for the confirmation link.', 'buddyboss-platform' ), 'message' );
+				bboss_bbp_add_error( 'confirm', __( 'Check your e-mail for the confirmation link.', 'buddyboss-community-social-network-groups-forums-messaging' ), 'message' );
 				break;
 
 			// User requested a new password
 			case 'newpass':
-				bboss_bbp_add_error( 'newpass', __( 'Check your e-mail for your new password.', 'buddyboss-platform' ), 'message' );
+				bboss_bbp_add_error( 'newpass', __( 'Check your e-mail for your new password.', 'buddyboss-community-social-network-groups-forums-messaging' ), 'message' );
 				break;
 
 			// User is newly registered
 			case 'registered':
-				bboss_bbp_add_error( 'registered', __( 'Registration complete. Please check your e-mail.', 'buddyboss-platform' ), 'message' );
+				bboss_bbp_add_error( 'registered', __( 'Registration complete. Please check your e-mail.', 'buddyboss-community-social-network-groups-forums-messaging' ), 'message' );
 				break;
 		}
 	}
@@ -1720,7 +1720,7 @@ function bboss_bbp_get_author_link( $args = '' ) {
 		// Generate title with the display name of the author
 		if ( empty( $r['link_title'] ) ) {
 			/* translators: %s: User display name. */
-			$r['link_title'] = sprintf( ! bboss_bbp_is_reply_anonymous( $r['post_id'] ) ? __( 'View %s\'s profile', 'buddyboss-platform' ) : __( 'Visit %s\'s website', 'buddyboss-platform' ), $author_display_name );
+			$r['link_title'] = sprintf( ! bboss_bbp_is_reply_anonymous( $r['post_id'] ) ? __( 'View %s\'s profile', 'buddyboss-community-social-network-groups-forums-messaging' ) : __( 'Visit %s\'s website', 'buddyboss-community-social-network-groups-forums-messaging' ), $author_display_name );
 		}
 
 		// Assemble some link bits

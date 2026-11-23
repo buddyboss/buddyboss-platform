@@ -31,11 +31,11 @@ import { GroupTopicsTab } from './GroupTopicsTab';
  * @type {Object}
  */
 var tabLabels = {
-	details: __( 'Details', 'buddyboss-platform' ),
-	members: __( 'Members', 'buddyboss-platform' ),
-	permissions: __( 'Permissions', 'buddyboss-platform' ),
-	integrations: __( 'Integrations', 'buddyboss-platform' ),
-	topics: __( 'Topics', 'buddyboss-platform' ),
+	details: __( 'Details', 'buddyboss-community-social-network-groups-forums-messaging' ),
+	members: __( 'Members', 'buddyboss-community-social-network-groups-forums-messaging' ),
+	permissions: __( 'Permissions', 'buddyboss-community-social-network-groups-forums-messaging' ),
+	integrations: __( 'Integrations', 'buddyboss-community-social-network-groups-forums-messaging' ),
+	topics: __( 'Topics', 'buddyboss-community-social-network-groups-forums-messaging' ),
 };
 
 /**
@@ -229,7 +229,7 @@ export function GroupEditModal( { isOpen, group, onClose, onSave, isSaving } ) {
 		if ( 0 === tabFields.length ) {
 			return (
 				<p className="bb-group-edit-modal__empty-tab">
-					{ __( 'No settings available for this tab.', 'buddyboss-platform' ) }
+					{ __( 'No settings available for this tab.', 'buddyboss-community-social-network-groups-forums-messaging' ) }
 				</p>
 			);
 		}
@@ -375,7 +375,7 @@ export function GroupEditModal( { isOpen, group, onClose, onSave, isSaving } ) {
 
 	return (
 		<Modal
-			title={ __( 'Edit Group', 'buddyboss-platform' ) }
+			title={ __( 'Edit Group', 'buddyboss-community-social-network-groups-forums-messaging' ) }
 			onRequestClose={ function () {
 				if ( ! isSaving ) {
 					onClose();
@@ -419,7 +419,7 @@ export function GroupEditModal( { isOpen, group, onClose, onSave, isSaving } ) {
 					onClick={ onClose }
 					disabled={ isSaving }
 				>
-					{ __( 'Cancel', 'buddyboss-platform' ) }
+					{ __( 'Cancel', 'buddyboss-community-social-network-groups-forums-messaging' ) }
 				</Button>
 				<Button
 					variant="primary"
@@ -427,7 +427,7 @@ export function GroupEditModal( { isOpen, group, onClose, onSave, isSaving } ) {
 					isBusy={ isSaving }
 					disabled={ isSaving }
 				>
-					{ __( 'Save', 'buddyboss-platform' ) }
+					{ __( 'Save', 'buddyboss-community-social-network-groups-forums-messaging' ) }
 				</Button>
 			</div>
 		</Modal>

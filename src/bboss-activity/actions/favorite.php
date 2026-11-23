@@ -42,11 +42,11 @@ function bboss_activity_action_mark_favorite() {
 
 	if ( 'activity_comment' === $activity->type ) {
 		$type     = 'activity_comment';
-		$message  = __( 'Activity comment post saved.', 'buddyboss-platform' );
+		$message  = __( 'Activity comment post saved.', 'buddyboss-community-social-network-groups-forums-messaging' );
 		$redirect = wp_get_referer() . '#acomment-display-' . $activity_id;
 	} else {
 		$type     = 'activity';
-		$message  = __( 'Activity post saved.', 'buddyboss-platform' );
+		$message  = __( 'Activity post saved.', 'buddyboss-community-social-network-groups-forums-messaging' );
 		$redirect = wp_get_referer() . '#activity-' . $activity_id;
 	}
 

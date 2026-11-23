@@ -71,7 +71,7 @@ export const BaseStepLayout = ({
                     <div className="bb-rl-step-header">
                         <a href={window.bbRlOnboarding?.dashboardUrl} className="bb-rl-step-back-button">
                             <span className="bb-icons-rl-caret-left"></span>
-                            {__('WP Admin', 'buddyboss-platform')}
+                            {__('WP Admin', 'buddyboss-community-social-network-groups-forums-messaging')}
                         </a>
                         <div className="bb-rl-logo">
                             <img src={window.bbRlOnboarding?.assets?.logo || ''} alt="BuddyBoss" />
@@ -104,12 +104,12 @@ export const BaseStepLayout = ({
                                     {loadingAction === 'previous' ? (
                                         <>
                                             <span className="bb-rl-spinner" aria-hidden="true"></span>
-                                            <span className="screen-reader-text">{__('Loading...', 'buddyboss-platform')}</span>
+                                            <span className="screen-reader-text">{__('Loading...', 'buddyboss-community-social-network-groups-forums-messaging')}</span>
                                         </>
                                     ) : (
                                         <span className="bb-icons-rl-arrow-left"></span>
                                     )}
-                                    {__('Back', 'buddyboss-platform')}
+                                    {__('Back', 'buddyboss-community-social-network-groups-forums-messaging')}
                                 </Button>
                             )}
 
@@ -119,11 +119,11 @@ export const BaseStepLayout = ({
                                 variant="primary"
                                 disabled={loadingAction !== null}
                             >
-                                {isLastStep ? __('Finish', 'buddyboss-platform') : __('Next', 'buddyboss-platform')}
+                                {isLastStep ? __('Finish', 'buddyboss-community-social-network-groups-forums-messaging') : __('Next', 'buddyboss-community-social-network-groups-forums-messaging')}
                                 {loadingAction === 'next' ? (
                                     <>
                                         <span className="bb-rl-spinner" aria-hidden="true"></span>
-                                        <span className="screen-reader-text">{__('Loading...', 'buddyboss-platform')}</span>
+                                        <span className="screen-reader-text">{__('Loading...', 'buddyboss-community-social-network-groups-forums-messaging')}</span>
                                     </>
                                 ) : (
                                     !isLastStep && <span className="bb-icons-rl-arrow-right"></span>

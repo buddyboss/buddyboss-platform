@@ -28,7 +28,7 @@ function bboss_activity_register_comments_panel_fields( $edit_time_options ) {
 		'activity_comments',
 		'activity_comments',
 		array(
-			'title'       => __( 'Activity Comments', 'buddyboss-platform' ),
+			'title'       => __( 'Activity Comments', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'description' => '',
 			'order'       => 10,
 			'help_url'    => '636115',
@@ -42,10 +42,10 @@ function bboss_activity_register_comments_panel_fields( $edit_time_options ) {
 		'activity_comments',
 		array(
 			'name'              => '_bb_enable_activity_comments',
-			'label'             => __( 'Enable Comments', 'buddyboss-platform' ),
+			'label'             => __( 'Enable Comments', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'type'              => 'toggle',
-			'description'       => __( 'Allow members to comment on activity posts', 'buddyboss-platform' ),
-			'help_text'         => __( 'Comments on an individual activity post can be closed or disabled all together by site admins.', 'buddyboss-platform' ),
+			'description'       => __( 'Allow members to comment on activity posts', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'help_text'         => __( 'Comments on an individual activity post can be closed or disabled all together by site admins.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'default'           => bboss_is_activity_comments_enabled(),
 			'sanitize_callback' => 'absint',
 			'order'             => 10,
@@ -59,10 +59,10 @@ function bboss_activity_register_comments_panel_fields( $edit_time_options ) {
 		'activity_comments',
 		array(
 			'name'                 => '_bb_enable_activity_comment_edit',
-			'label'                => __( 'Edit Activity Comments', 'buddyboss-platform' ),
+			'label'                => __( 'Edit Activity Comments', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'type'                 => 'toggle',
 			/* translators: %s: edit time duration select control. */
-			'description'          => __( 'Allow members to edit their comment for a duration of %s', 'buddyboss-platform' ),
+			'description'          => __( 'Allow members to edit their comment for a duration of %s', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'default'              => bboss_is_activity_comment_edit_enabled(),
 			'sanitize_callback'    => 'absint',
 			'description_controls' => array(
@@ -88,15 +88,15 @@ function bboss_activity_register_comments_panel_fields( $edit_time_options ) {
 		'activity_comments',
 		array(
 			'name'                 => '_bb_activity_comment_visibility',
-			'label'                => __( 'Comment Visibility', 'buddyboss-platform' ),
+			'label'                => __( 'Comment Visibility', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'type'                 => 'hidden',
 			/* translators: %s: comment count select control. */
-			'description'          => __( 'Display a maximum %s comments per post in activity feeds', 'buddyboss-platform' ),
-			'help_text'            => __( 'Load more via "View more comments." High comment counts may slow scrolling. Applies to platform only, not app.', 'buddyboss-platform' ),
+			'description'          => __( 'Display a maximum %s comments per post in activity feeds', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'help_text'            => __( 'Load more via "View more comments." High comment counts may slow scrolling. Applies to platform only, not app.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'default'              => bboss_get_activity_comment_visibility(),
 			'options'              => array(
 				array(
-					'label' => __( 'None', 'buddyboss-platform' ),
+					'label' => __( 'None', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'value' => 0,
 				),
 				array(
@@ -137,11 +137,11 @@ function bboss_activity_register_comments_panel_fields( $edit_time_options ) {
 		'activity_comments',
 		array(
 			'name'                 => '_bb_enable_activity_comment_threading',
-			'label'                => __( 'Comment Threading', 'buddyboss-platform' ),
+			'label'                => __( 'Comment Threading', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'type'                 => 'toggle',
 			/* translators: %s: thread depth select control. */
-			'description'          => __( 'Organize replies into threads %s levels deep', 'buddyboss-platform' ),
-			'help_text'            => __( 'Replies to activity comments appear in threads, except for replies at the deepest level. Applies to platform only, not app.', 'buddyboss-platform' ),
+			'description'          => __( 'Organize replies into threads %s levels deep', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'help_text'            => __( 'Replies to activity comments appear in threads, except for replies at the deepest level. Applies to platform only, not app.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'default'              => bboss_is_activity_comment_threading_enabled(),
 			'sanitize_callback'    => 'absint',
 			'description_controls' => array(
@@ -184,11 +184,11 @@ function bboss_activity_register_comments_panel_fields( $edit_time_options ) {
 		'activity_comments',
 		array(
 			'name'                 => '_bb_activity_comment_loading',
-			'label'                => __( 'Comments Loading', 'buddyboss-platform' ),
+			'label'                => __( 'Comments Loading', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'type'                 => 'hidden',
 			/* translators: %s: additional comments count select control. */
-			'description'          => __( 'Load %s Additional comments on each request', 'buddyboss-platform' ),
-			'help_text'            => __( 'Increasing the number of comments retrieved in each request may negatively impact site performance.', 'buddyboss-platform' ),
+			'description'          => __( 'Load %s Additional comments on each request', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'help_text'            => __( 'Increasing the number of comments retrieved in each request may negatively impact site performance.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'default'              => bboss_get_activity_comment_loading(),
 			'options'              => array_map(
 				function ( $n ) {
@@ -224,10 +224,10 @@ function bboss_activity_register_comments_panel_fields( $edit_time_options ) {
 		'activity_comments',
 		array(
 			'name'        => 'bb_activity_comments_info',
-			'label'       => __( 'Notice', 'buddyboss-platform' ),
+			'label'       => __( 'Notice', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'type'        => 'notice',
 			'notice_type' => 'info',
-			'description' => __( 'Comments on WordPress Posts and Custom Post Types will inherit from your WordPress Discussion settings.', 'buddyboss-platform' ),
+			'description' => __( 'Comments on WordPress Posts and Custom Post Types will inherit from your WordPress Discussion settings.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'order'       => 60,
 		)
 	);

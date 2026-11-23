@@ -56,10 +56,10 @@ class BBoss_REST_Components_Endpoint extends WP_REST_Controller {
 						'name'   => array(
 							'type'        => 'string',
 							'required'    => true,
-							'description' => __( 'Name of the component.', 'buddyboss-platform' ),
+							'description' => __( 'Name of the component.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 						),
 						'action' => array(
-							'description' => __( 'Whether to activate or deactivate the component.', 'buddyboss-platform' ),
+							'description' => __( 'Whether to activate or deactivate the component.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 							'type'        => 'string',
 							'enum'        => array( 'activate', 'deactivate' ),
 							'required'    => true,
@@ -180,7 +180,7 @@ class BBoss_REST_Components_Endpoint extends WP_REST_Controller {
 	public function get_items_permissions_check( $request ) {
 		$retval = new WP_Error(
 			'bp_rest_authorization_required',
-			__( 'Sorry, you do not have access to list components.', 'buddyboss-platform' ),
+			__( 'Sorry, you do not have access to list components.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			array(
 				'status' => rest_authorization_required_code(),
 			)
@@ -224,7 +224,7 @@ class BBoss_REST_Components_Endpoint extends WP_REST_Controller {
 		if ( ! $this->component_exists( $component ) ) {
 			return new WP_Error(
 				'bp_rest_component_nonexistent',
-				__( 'Sorry, this component does not exist.', 'buddyboss-platform' ),
+				__( 'Sorry, this component does not exist.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				array(
 					'status' => 404,
 				)
@@ -235,7 +235,7 @@ class BBoss_REST_Components_Endpoint extends WP_REST_Controller {
 		if ( empty( $action ) || ! in_array( $action, array( 'activate', 'deactivate' ), true ) ) {
 			return new WP_Error(
 				'bp_rest_component_invalid_action',
-				__( 'Sorry, this is not a valid action.', 'buddyboss-platform' ),
+				__( 'Sorry, this is not a valid action.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				array(
 					'status' => 500,
 				)
@@ -246,7 +246,7 @@ class BBoss_REST_Components_Endpoint extends WP_REST_Controller {
 			if ( bboss_is_active( $component ) ) {
 				return new WP_Error(
 					'bp_rest_component_already_active',
-					__( 'Sorry, this component is already active.', 'buddyboss-platform' ),
+					__( 'Sorry, this component is already active.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					array(
 						'status' => 400,
 					)
@@ -258,7 +258,7 @@ class BBoss_REST_Components_Endpoint extends WP_REST_Controller {
 			if ( ! bboss_is_active( $component ) ) {
 				return new WP_Error(
 					'bp_rest_component_inactive',
-					__( 'Sorry, this component is not active.', 'buddyboss-platform' ),
+					__( 'Sorry, this component is not active.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					array(
 						'status' => 400,
 					)
@@ -268,7 +268,7 @@ class BBoss_REST_Components_Endpoint extends WP_REST_Controller {
 			if ( array_key_exists( $component, bboss_core_get_components( 'required' ) ) ) {
 				return new WP_Error(
 					'bp_rest_required_component',
-					__( 'Sorry, you cannot deactivate a required component.', 'buddyboss-platform' ),
+					__( 'Sorry, you cannot deactivate a required component.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					array(
 						'status' => 400,
 					)
@@ -363,10 +363,10 @@ class BBoss_REST_Components_Endpoint extends WP_REST_Controller {
 	 */
 	protected function verify_component_status( $name ) {
 		if ( 'core' === $name || bboss_is_active( $name ) ) {
-			return __( 'active', 'buddyboss-platform' );
+			return __( 'active', 'buddyboss-community-social-network-groups-forums-messaging' );
 		}
 
-		return __( 'inactive', 'buddyboss-platform' );
+		return __( 'inactive', 'buddyboss-community-social-network-groups-forums-messaging' );
 	}
 
 	/**
@@ -477,23 +477,23 @@ class BBoss_REST_Components_Endpoint extends WP_REST_Controller {
 			'properties' => array(
 				'name'        => array(
 					'context'     => array( 'view', 'edit' ),
-					'description' => __( 'Name of the object.', 'buddyboss-platform' ),
+					'description' => __( 'Name of the object.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'type'        => 'string',
 				),
 				'status'      => array(
 					'context'     => array( 'view', 'edit' ),
-					'description' => __( 'Whether the object is active or inactive.', 'buddyboss-platform' ),
+					'description' => __( 'Whether the object is active or inactive.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'type'        => 'string',
 					'enum'        => array( 'active', 'inactive' ),
 				),
 				'title'       => array(
 					'context'     => array( 'view', 'edit' ),
-					'description' => __( 'HTML title of the object.', 'buddyboss-platform' ),
+					'description' => __( 'HTML title of the object.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'type'        => 'string',
 				),
 				'description' => array(
 					'context'     => array( 'view', 'edit' ),
-					'description' => __( 'HTML description of the object.', 'buddyboss-platform' ),
+					'description' => __( 'HTML description of the object.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'type'        => 'string',
 				),
 			),
@@ -518,7 +518,7 @@ class BBoss_REST_Components_Endpoint extends WP_REST_Controller {
 		$params['context']['default'] = 'view';
 
 		$params['status'] = array(
-			'description'       => __( 'Limit result set to items with a specific status.', 'buddyboss-platform' ),
+			'description'       => __( 'Limit result set to items with a specific status.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'default'           => 'all',
 			'type'              => 'string',
 			'enum'              => array( 'all', 'active', 'inactive' ),
@@ -527,7 +527,7 @@ class BBoss_REST_Components_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['type'] = array(
-			'description'       => __( 'Limit result set to items with a specific type.', 'buddyboss-platform' ),
+			'description'       => __( 'Limit result set to items with a specific type.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'default'           => 'all',
 			'type'              => 'string',
 			'enum'              => array( 'all', 'optional', 'retired', 'required' ),

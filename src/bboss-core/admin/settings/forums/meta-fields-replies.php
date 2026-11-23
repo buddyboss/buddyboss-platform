@@ -30,7 +30,7 @@ function bboss_replies_register_core_meta_fields( $registry, $component ) {
 		$component,
 		'content',
 		array(
-			'label'             => __( 'Description', 'buddyboss-platform' ),
+			'label'             => __( 'Description', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'type'              => 'richtext',
 			'tab'               => 'details',
 			'order'             => 10,
@@ -71,10 +71,10 @@ function bboss_replies_register_core_meta_fields( $registry, $component ) {
 		$component,
 		'forum_id',
 		array(
-			'label'             => __( 'Forum', 'buddyboss-platform' ),
+			'label'             => __( 'Forum', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'type'              => 'async_select',
 			'async_action'      => 'bb_admin_forum_autocomplete',
-			'placeholder'       => __( 'Select Forum', 'buddyboss-platform' ),
+			'placeholder'       => __( 'Select Forum', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'tab'               => 'details',
 			'order'             => 20,
 			'save_phase'        => 'after',
@@ -95,10 +95,10 @@ function bboss_replies_register_core_meta_fields( $registry, $component ) {
 		$component,
 		'topic_id',
 		array(
-			'label'             => __( 'Discussion', 'buddyboss-platform' ),
+			'label'             => __( 'Discussion', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'type'              => 'async_select',
 			'async_action'      => 'bb_admin_discussion_autocomplete',
-			'placeholder'       => __( 'Select Discussion', 'buddyboss-platform' ),
+			'placeholder'       => __( 'Select Discussion', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'tab'               => 'details',
 			'order'             => 30,
 			'save_phase'        => 'after',
@@ -120,10 +120,10 @@ function bboss_replies_register_core_meta_fields( $registry, $component ) {
 		$component,
 		'reply_to',
 		array(
-			'label'             => __( 'Reply to', 'buddyboss-platform' ),
+			'label'             => __( 'Reply to', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'type'              => 'async_select',
 			'async_action'      => 'bb_admin_reply_autocomplete',
-			'placeholder'       => __( 'Select Reply', 'buddyboss-platform' ),
+			'placeholder'       => __( 'Select Reply', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'tab'               => 'details',
 			'order'             => 40,
 			'save_phase'        => 'after',
@@ -145,7 +145,7 @@ function bboss_replies_register_core_meta_fields( $registry, $component ) {
 		$component,
 		'visibility',
 		array(
-			'label'             => __( 'Visibility', 'buddyboss-platform' ),
+			'label'             => __( 'Visibility', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'type'              => 'select',
 			'tab'               => 'details',
 			'order'             => 45,
@@ -166,15 +166,15 @@ function bboss_replies_register_core_meta_fields( $registry, $component ) {
 				return array(
 					array(
 						'value' => 'publish',
-						'label' => __( 'Public', 'buddyboss-platform' ),
+						'label' => __( 'Public', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					),
 					array(
 						'value' => 'private',
-						'label' => __( 'Private', 'buddyboss-platform' ),
+						'label' => __( 'Private', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					),
 					array(
 						'value' => 'password',
-						'label' => __( 'Password Protected', 'buddyboss-platform' ),
+						'label' => __( 'Password Protected', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					),
 				);
 			},
@@ -197,7 +197,7 @@ function bboss_replies_register_core_meta_fields( $registry, $component ) {
 		$component,
 		'post_password',
 		array(
-			'label'             => __( 'Password', 'buddyboss-platform' ),
+			'label'             => __( 'Password', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'type'              => 'text',
 			'tab'               => 'details',
 			'order'             => 46,
@@ -224,7 +224,7 @@ function bboss_replies_register_core_meta_fields( $registry, $component ) {
 		$component,
 		'reply_status',
 		array(
-			'label'             => __( 'Status', 'buddyboss-platform' ),
+			'label'             => __( 'Status', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'type'              => 'select',
 			'tab'               => 'details',
 			'order'             => 47,
@@ -239,15 +239,15 @@ function bboss_replies_register_core_meta_fields( $registry, $component ) {
 				return array(
 					array(
 						'value' => 'publish',
-						'label' => __( 'Published', 'buddyboss-platform' ),
+						'label' => __( 'Published', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					),
 					array(
 						'value' => 'pending',
-						'label' => __( 'Pending Review', 'buddyboss-platform' ),
+						'label' => __( 'Pending Review', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					),
 					array(
 						'value' => 'draft',
-						'label' => __( 'Draft', 'buddyboss-platform' ),
+						'label' => __( 'Draft', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					),
 				);
 			},
@@ -262,7 +262,7 @@ function bboss_replies_register_core_meta_fields( $registry, $component ) {
 		$component,
 		'publish_mode',
 		array(
-			'label'             => __( 'Publish', 'buddyboss-platform' ),
+			'label'             => __( 'Publish', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'type'              => 'select',
 			'tab'               => 'details',
 			'order'             => 50,
@@ -279,11 +279,11 @@ function bboss_replies_register_core_meta_fields( $registry, $component ) {
 				return array(
 					array(
 						'value' => 'immediately',
-						'label' => __( 'Immediately', 'buddyboss-platform' ),
+						'label' => __( 'Immediately', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					),
 					array(
 						'value' => 'schedule',
-						'label' => __( 'Schedule', 'buddyboss-platform' ),
+						'label' => __( 'Schedule', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					),
 				);
 			},
@@ -298,7 +298,7 @@ function bboss_replies_register_core_meta_fields( $registry, $component ) {
 		$component,
 		'schedule_date',
 		array(
-			'label'             => __( 'Date', 'buddyboss-platform' ),
+			'label'             => __( 'Date', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'type'              => 'date',
 			'tab'               => 'details',
 			'order'             => 51,
@@ -325,7 +325,7 @@ function bboss_replies_register_core_meta_fields( $registry, $component ) {
 		$component,
 		'schedule_time',
 		array(
-			'label'             => __( 'Time', 'buddyboss-platform' ),
+			'label'             => __( 'Time', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'type'              => 'time',
 			'tab'               => 'details',
 			'order'             => 52,
@@ -352,7 +352,7 @@ function bboss_replies_register_core_meta_fields( $registry, $component ) {
 		$component,
 		'author_id',
 		array(
-			'label'             => __( 'Author ID', 'buddyboss-platform' ),
+			'label'             => __( 'Author ID', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'type'              => 'number',
 			'tab'               => 'details',
 			'order'             => 60,
@@ -407,7 +407,7 @@ function bboss_replies_register_core_meta_fields( $registry, $component ) {
 		$component,
 		'author_ip',
 		array(
-			'label'      => __( 'Author IP', 'buddyboss-platform' ),
+			'label'      => __( 'Author IP', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'type'       => 'text',
 			'tab'        => 'details',
 			'order'      => 65,

@@ -35,8 +35,8 @@ function bboss_admin_settings_register_registration_feature() {
 	bboss_register_feature(
 		'registration',
 		array(
-			'label'              => __( 'Login & Registration', 'buddyboss-platform' ),
-			'description'        => __( 'Manage member registration, login redirects, account settings, and registration restrictions.', 'buddyboss-platform' ),
+			'label'              => __( 'Login & Registration', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'description'        => __( 'Manage member registration, login redirects, account settings, and registration restrictions.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'icon'               => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-user-square',
@@ -67,7 +67,7 @@ function bboss_admin_settings_register_registration_feature() {
 		'registration',
 		'registration',
 		array(
-			'title'      => __( 'Registration', 'buddyboss-platform' ),
+			'title'      => __( 'Registration', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'icon'       => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-identification-badge',
@@ -91,7 +91,7 @@ function bboss_admin_settings_register_registration_feature() {
 		'registration',
 		'login_redirects',
 		array(
-			'title'    => __( 'Login Redirects', 'buddyboss-platform' ),
+			'title'    => __( 'Login Redirects', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'icon'     => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-arrow-elbow-right',

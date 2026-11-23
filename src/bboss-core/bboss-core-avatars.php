@@ -352,7 +352,7 @@ function bboss_core_fetch_avatar( $args = '' ) {
 
 	// Get a fallback for the 'alt' parameter, create html output.
 	if ( empty( $params['alt'] ) ) {
-		$params['alt'] = __( 'Profile Photo', 'buddyboss-platform' );
+		$params['alt'] = __( 'Profile Photo', 'buddyboss-community-social-network-groups-forums-messaging' );
 	}
 	$html_alt = ' alt="' . esc_attr( $params['alt'] ) . '"';
 
@@ -1072,7 +1072,7 @@ function bboss_core_avatar_handle_upload( $file, $upload_dir_filter ) {
 	// In case of an error, stop the process and display a feedback to the user.
 	if ( ! empty( $bp->avatar_admin->original['error'] ) ) {
 		/* translators: %s: the upload error message. */
-		bboss_core_add_message( sprintf( __( 'Upload Failed! Error was: %s', 'buddyboss-platform' ), $bp->avatar_admin->original['error'] ), 'error' );
+		bboss_core_add_message( sprintf( __( 'Upload Failed! Error was: %s', 'buddyboss-community-social-network-groups-forums-messaging' ), $bp->avatar_admin->original['error'] ), 'error' );
 		return false;
 	}
 
@@ -1090,7 +1090,7 @@ function bboss_core_avatar_handle_upload( $file, $upload_dir_filter ) {
 
 	if ( is_wp_error( $bp->avatar_admin->resized ) ) {
 		/* translators: %s: the upload error message. */
-		bboss_core_add_message( sprintf( __( 'Upload Error: %s', 'buddyboss-platform' ), $bp->avatar_admin->resized->get_error_message() ), 'error' );
+		bboss_core_add_message( sprintf( __( 'Upload Error: %s', 'buddyboss-community-social-network-groups-forums-messaging' ), $bp->avatar_admin->resized->get_error_message() ), 'error' );
 		return false;
 	}
 
@@ -1109,14 +1109,14 @@ function bboss_core_avatar_handle_upload( $file, $upload_dir_filter ) {
 	// Check for WP_Error on what should be an image.
 	if ( is_wp_error( $bp->avatar_admin->image->dir ) ) {
 		/* translators: %s: the upload error message. */
-		bboss_core_add_message( sprintf( __( 'Upload Error: %s', 'buddyboss-platform' ), $bp->avatar_admin->image->dir->get_error_message() ), 'error' );
+		bboss_core_add_message( sprintf( __( 'Upload Error: %s', 'buddyboss-community-social-network-groups-forums-messaging' ), $bp->avatar_admin->image->dir->get_error_message() ), 'error' );
 		return false;
 	}
 
 	// If the uploaded image is smaller than the "full" dimensions, throw a warning.
 	if ( $avatar_attachment->is_too_small( $bp->avatar_admin->image->file ) ) {
 		/* translators: 1: recommended width in pixels, 2: recommended height in pixels. */
-		bboss_core_add_message( sprintf( __( 'For best results, upload an image that is %1$spx by %2$spx or larger.', 'buddyboss-platform' ), bboss_core_avatar_full_width(), bboss_core_avatar_full_height() ), 'error' );
+		bboss_core_add_message( sprintf( __( 'For best results, upload an image that is %1$spx by %2$spx or larger.', 'buddyboss-community-social-network-groups-forums-messaging' ), bboss_core_avatar_full_width(), bboss_core_avatar_full_height() ), 'error' );
 	}
 
 	// Set the url value for the image.
@@ -1246,7 +1246,7 @@ function bboss_avatar_ajax_upload() {
 
 	if ( empty( $avatar ) ) {
 		// Default upload error.
-		$message = __( 'Upload failed.', 'buddyboss-platform' );
+		$message = __( 'Upload failed.', 'buddyboss-community-social-network-groups-forums-messaging' );
 
 		// Use the template message if set.
 		if ( ! empty( $feedback_message ) ) {

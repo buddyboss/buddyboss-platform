@@ -26,7 +26,7 @@ function bboss_groups_register_settings_panel_fields() {
 		'group_settings',
 		'group_settings',
 		array(
-			'title'       => __( 'Group Settings', 'buddyboss-platform' ),
+			'title'       => __( 'Group Settings', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'description' => '',
 			'order'       => 10,
 			'help_url'    => '636124',
@@ -43,13 +43,13 @@ function bboss_groups_register_settings_panel_fields() {
 		'group_settings',
 		array(
 			'name'              => 'bp_restrict_group_creation',
-			'label'             => __( 'Group Creation', 'buddyboss-platform' ),
+			'label'             => __( 'Group Creation', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'type'              => 'toggle',
-			'description'       => __( 'Enable social group creation by all members', 'buddyboss-platform' ),
+			'description'       => __( 'Enable social group creation by all members', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'help_text'         => sprintf(
 				/* translators: %s: Access Controls link. */
-				__( 'Administrators can always create groups, regardless of this setting. You can configure who can create groups in %s.', 'buddyboss-platform' ),
-				'<a href="' . esc_url( bboss_get_feature_settings_url( 'groups', 'access_controls' ) ) . '">' . __( 'Access Controls', 'buddyboss-platform' ) . '</a>'
+				__( 'Administrators can always create groups, regardless of this setting. You can configure who can create groups in %s.', 'buddyboss-community-social-network-groups-forums-messaging' ),
+				'<a href="' . esc_url( bboss_get_feature_settings_url( 'groups', 'access_controls' ) ) . '">' . __( 'Access Controls', 'buddyboss-community-social-network-groups-forums-messaging' ) . '</a>'
 			),
 			'default'           => bboss_restrict_group_creation(),
 			'sanitize_callback' => 'absint',
@@ -67,10 +67,10 @@ function bboss_groups_register_settings_panel_fields() {
 			'group_settings',
 			array(
 				'name'              => 'bb_enable_group_subscriptions',
-				'label'             => __( 'Subscriptions', 'buddyboss-platform' ),
+				'label'             => __( 'Subscriptions', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				'type'              => 'toggle',
-				'description'       => __( 'Allow members to subscribe to groups', 'buddyboss-platform' ),
-				'help_text'         => __( 'When a member is subscribed to a group, they can receive notifications of new activity posts and discussions created in the group.', 'buddyboss-platform' ),
+				'description'       => __( 'Allow members to subscribe to groups', 'buddyboss-community-social-network-groups-forums-messaging' ),
+				'help_text'         => __( 'When a member is subscribed to a group, they can receive notifications of new activity posts and discussions created in the group.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				'default'           => (int) bboss_get_option( 'bb_enable_group_subscriptions', 1 ),
 				'sanitize_callback' => 'absint',
 				'order'             => 20,
@@ -91,9 +91,9 @@ function bboss_groups_register_settings_panel_fields() {
 			'group_settings',
 			array(
 				'name'              => 'bp-disable-group-messages',
-				'label'             => __( 'Group Messages', 'buddyboss-platform' ),
+				'label'             => __( 'Group Messages', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				'type'              => 'toggle',
-				'description'       => __( 'Allow for sending group messages to group members', 'buddyboss-platform' ),
+				'description'       => __( 'Allow for sending group messages to group members', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				'default'           => bboss_disable_group_messages(),
 				'sanitize_callback' => 'absint',
 				'order'             => 30,
@@ -117,7 +117,7 @@ function bboss_groups_register_settings_panel_fields() {
 		'group_settings',
 		'subgroups',
 		array(
-			'title'       => __( 'Subgroups', 'buddyboss-platform' ),
+			'title'       => __( 'Subgroups', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'description' => '',
 			'order'       => 20,
 			'help_url'    => '636126',
@@ -131,9 +131,9 @@ function bboss_groups_register_settings_panel_fields() {
 		'subgroups',
 		array(
 			'name'              => 'bp-enable-group-hierarchies',
-			'label'             => __( 'Hierarchies', 'buddyboss-platform' ),
+			'label'             => __( 'Hierarchies', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'type'              => 'toggle',
-			'description'       => __( 'Allow groups to have subgroups', 'buddyboss-platform' ),
+			'description'       => __( 'Allow groups to have subgroups', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'default'           => bboss_enable_group_hierarchies(),
 			'sanitize_callback' => 'absint',
 			'order'             => 10,
@@ -147,9 +147,9 @@ function bboss_groups_register_settings_panel_fields() {
 		'subgroups',
 		array(
 			'name'              => 'bp-enable-group-hide-subgroups',
-			'label'             => __( 'Hide Subgroups', 'buddyboss-platform' ),
+			'label'             => __( 'Hide Subgroups', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'type'              => 'toggle',
-			'description'       => __( 'Hide subgroups from Groups Directory & Group Type Shortcode', 'buddyboss-platform' ),
+			'description'       => __( 'Hide subgroups from Groups Directory & Group Type Shortcode', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'default'           => bboss_enable_group_hide_subgroups(),
 			'sanitize_callback' => 'absint',
 			'conditional'       => array(
@@ -167,13 +167,13 @@ function bboss_groups_register_settings_panel_fields() {
 		'subgroups',
 		array(
 			'name'              => 'bp-enable-group-restrict-invites',
-			'label'             => __( 'Restrict Invitations', 'buddyboss-platform' ),
+			'label'             => __( 'Restrict Invitations', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'type'              => 'toggle',
-			'description'       => __( 'Restrict subgroup invites to members of the parent group', 'buddyboss-platform' ),
-			'help_text'         => __( 'Members must first be a member of the parent group prior to being invited to a subgroup', 'buddyboss-platform' ),
+			'description'       => __( 'Restrict subgroup invites to members of the parent group', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'help_text'         => __( 'Members must first be a member of the parent group prior to being invited to a subgroup', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'default'           => bboss_enable_group_restrict_invites(),
 			'sanitize_callback' => 'absint',
-			'confirm_message'   => __( 'By enabling this option members that are already part of sub-groups and not the parent groups will automatically be removed from all sub-groups.', 'buddyboss-platform' ),
+			'confirm_message'   => __( 'By enabling this option members that are already part of sub-groups and not the parent groups will automatically be removed from all sub-groups.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'conditional'       => array(
 				'field' => 'bp-enable-group-hierarchies',
 				'value' => true,

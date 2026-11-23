@@ -28,8 +28,8 @@ function bboss_forums_register_permalinks_panel_fields() {
 		'forum_permalinks',
 		'forum_permalinks_section',
 		array(
-			'title'       => __( 'Forum Permalinks', 'buddyboss-platform' ),
-			'description' => __( 'Custom URL slugs for Forum content. Slugs should be all lowercase and contain only letters, numbers, and hyphens.', 'buddyboss-platform' ),
+			'title'       => __( 'Forum Permalinks', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'description' => __( 'Custom URL slugs for Forum content. Slugs should be all lowercase and contain only letters, numbers, and hyphens.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'order'       => 10,
 			'help_url'    => '636172',
 		)
@@ -42,7 +42,7 @@ function bboss_forums_register_permalinks_panel_fields() {
 		'forum_permalinks_section',
 		array(
 			'name'              => '_bbp_forum_slug',
-			'label'             => __( 'Forum', 'buddyboss-platform' ),
+			'label'             => __( 'Forum', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'type'              => 'text',
 			'default'           => get_option( '_bbp_forum_slug', 'forum' ),
 			'sanitize_callback' => 'bboss_bbp_sanitize_slug',
@@ -57,7 +57,7 @@ function bboss_forums_register_permalinks_panel_fields() {
 		'forum_permalinks_section',
 		array(
 			'name'              => '_bbp_topic_slug',
-			'label'             => __( 'Discussion', 'buddyboss-platform' ),
+			'label'             => __( 'Discussion', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'type'              => 'text',
 			'default'           => get_option( '_bbp_topic_slug', 'discussion' ),
 			'sanitize_callback' => 'bboss_bbp_sanitize_slug',
@@ -72,7 +72,7 @@ function bboss_forums_register_permalinks_panel_fields() {
 		'forum_permalinks_section',
 		array(
 			'name'              => '_bbp_topic_tag_slug',
-			'label'             => __( 'Discussion Tag', 'buddyboss-platform' ),
+			'label'             => __( 'Discussion Tag', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'type'              => 'text',
 			'default'           => get_option( '_bbp_topic_tag_slug', 'discussion-tag' ),
 			'sanitize_callback' => 'bboss_bbp_sanitize_slug',
@@ -87,7 +87,7 @@ function bboss_forums_register_permalinks_panel_fields() {
 		'forum_permalinks_section',
 		array(
 			'name'              => '_bbp_view_slug',
-			'label'             => __( 'Discussion View', 'buddyboss-platform' ),
+			'label'             => __( 'Discussion View', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'type'              => 'text',
 			'default'           => get_option( '_bbp_view_slug', 'view' ),
 			'sanitize_callback' => 'bboss_bbp_sanitize_slug',
@@ -102,7 +102,7 @@ function bboss_forums_register_permalinks_panel_fields() {
 		'forum_permalinks_section',
 		array(
 			'name'              => '_bbp_reply_slug',
-			'label'             => __( 'Reply', 'buddyboss-platform' ),
+			'label'             => __( 'Reply', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'type'              => 'text',
 			'default'           => get_option( '_bbp_reply_slug', 'reply' ),
 			'sanitize_callback' => 'bboss_bbp_sanitize_slug',
@@ -117,7 +117,7 @@ function bboss_forums_register_permalinks_panel_fields() {
 		'forum_permalinks_section',
 		array(
 			'name'              => '_bbp_search_slug',
-			'label'             => __( 'Search', 'buddyboss-platform' ),
+			'label'             => __( 'Search', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'type'              => 'text',
 			'default'           => get_option( '_bbp_search_slug', 'search' ),
 			'sanitize_callback' => 'bboss_bbp_sanitize_slug',
@@ -133,8 +133,8 @@ function bboss_forums_register_permalinks_panel_fields() {
 		'forum_permalinks',
 		'forum_profile_permalinks_section',
 		array(
-			'title'       => __( 'Forum Profile Permalinks', 'buddyboss-platform' ),
-			'description' => __( 'Custom URL slugs for the Forums tab in member profiles. Slugs should be all lowercase and contain only letters, numbers, and hyphens.', 'buddyboss-platform' ),
+			'title'       => __( 'Forum Profile Permalinks', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'description' => __( 'Custom URL slugs for the Forums tab in member profiles. Slugs should be all lowercase and contain only letters, numbers, and hyphens.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'order'       => 20,
 			'help_url'    => '636174',
 		)
@@ -147,7 +147,7 @@ function bboss_forums_register_permalinks_panel_fields() {
 		'forum_profile_permalinks_section',
 		array(
 			'name'              => '_bbp_reply_archive_slug',
-			'label'             => __( 'Replies Created', 'buddyboss-platform' ),
+			'label'             => __( 'Replies Created', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'type'              => 'text',
 			'default'           => bboss_bbp_get_reply_archive_slug(),
 			'sanitize_callback' => 'bboss_bbp_sanitize_slug',
@@ -162,7 +162,7 @@ function bboss_forums_register_permalinks_panel_fields() {
 		'forum_profile_permalinks_section',
 		array(
 			'name'              => '_bbp_user_favs_slug',
-			'label'             => __( 'Favorite Discussions', 'buddyboss-platform' ),
+			'label'             => __( 'Favorite Discussions', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'type'              => 'text',
 			'default'           => bboss_bbp_get_user_favorites_slug(),
 			'sanitize_callback' => 'bboss_bbp_sanitize_slug',
@@ -177,7 +177,7 @@ function bboss_forums_register_permalinks_panel_fields() {
 		'forum_profile_permalinks_section',
 		array(
 			'name'              => '_bbp_user_subs_slug',
-			'label'             => __( 'Subscriptions', 'buddyboss-platform' ),
+			'label'             => __( 'Subscriptions', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'type'              => 'text',
 			'default'           => bboss_bbp_get_user_subscriptions_slug(),
 			'sanitize_callback' => 'bboss_bbp_sanitize_slug',

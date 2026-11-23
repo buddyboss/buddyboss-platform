@@ -59,9 +59,9 @@ function bboss_notifications_action_mark_read() {
 
 	// Check the nonce and mark the notification.
 	if ( bboss_verify_nonce_request( 'bp_notification_mark_read_' . $id ) && bboss_notifications_mark_notification( $id, false ) ) {
-		bboss_core_add_message( __( 'Notification successfully marked read.', 'buddyboss-platform' ) );
+		bboss_core_add_message( __( 'Notification successfully marked read.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 	} else {
-		bboss_core_add_message( __( 'There was a problem marking that notification.', 'buddyboss-platform' ), 'error' );
+		bboss_core_add_message( __( 'There was a problem marking that notification.', 'buddyboss-community-social-network-groups-forums-messaging' ), 'error' );
 	}
 
 	// Redirect.

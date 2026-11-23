@@ -58,7 +58,7 @@ function bboss_adminbar_blogs_menu() {
 
 		echo '<li id="bp-adminbar-blogs-menu"><a href="' . esc_url( trailingslashit( bboss_loggedin_user_domain() . bboss_get_blogs_slug() ) ) . '">';
 
-		esc_html_e( 'My Sites', 'buddyboss-platform' );
+		esc_html_e( 'My Sites', 'buddyboss-community-social-network-groups-forums-messaging' );
 
 		echo '</a>';
 		echo '<ul>';
@@ -70,10 +70,10 @@ function bboss_adminbar_blogs_menu() {
 			echo '<li' . $alt . '>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $alt is the static literal ' class="alt"' or ''.
 			echo '<a href="' . esc_url( $site_url ) . '">' . esc_html( $blog->name ) . '</a>';
 			echo '<ul>';
-			echo '<li class="alt"><a href="' . $site_url . 'wp-admin/">' . esc_html__( 'Dashboard', 'buddyboss-platform' ) . '</a></li>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $site_url escaped at assignment.
-			echo '<li><a href="' . $site_url . 'wp-admin/post-new.php">' . esc_html__( 'New Post', 'buddyboss-platform' ) . '</a></li>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $site_url escaped at assignment.
-			echo '<li class="alt"><a href="' . $site_url . 'wp-admin/edit.php">' . esc_html__( 'Manage Posts', 'buddyboss-platform' ) . '</a></li>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $site_url escaped at assignment.
-			echo '<li><a href="' . $site_url . 'wp-admin/edit-comments.php">' . esc_html__( 'Manage Comments', 'buddyboss-platform' ) . '</a></li>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $site_url escaped at assignment.
+			echo '<li class="alt"><a href="' . $site_url . 'wp-admin/">' . esc_html__( 'Dashboard', 'buddyboss-community-social-network-groups-forums-messaging' ) . '</a></li>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $site_url escaped at assignment.
+			echo '<li><a href="' . $site_url . 'wp-admin/post-new.php">' . esc_html__( 'New Post', 'buddyboss-community-social-network-groups-forums-messaging' ) . '</a></li>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $site_url escaped at assignment.
+			echo '<li class="alt"><a href="' . $site_url . 'wp-admin/edit.php">' . esc_html__( 'Manage Posts', 'buddyboss-community-social-network-groups-forums-messaging' ) . '</a></li>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $site_url escaped at assignment.
+			echo '<li><a href="' . $site_url . 'wp-admin/edit-comments.php">' . esc_html__( 'Manage Comments', 'buddyboss-community-social-network-groups-forums-messaging' ) . '</a></li>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $site_url escaped at assignment.
 			echo '</ul>';
 
 			do_action( 'bp_adminbar_blog_items', $blog );
@@ -86,7 +86,7 @@ function bboss_adminbar_blogs_menu() {
 
 		if ( bboss_blog_signup_enabled() ) {
 			echo '<li' . $alt . '>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $alt is a static class attribute literal.
-			echo '<a href="' . esc_url( trailingslashit( bboss_get_blogs_directory_permalink() . 'create' ) ) . '">' . esc_html__( 'Create a Site!', 'buddyboss-platform' ) . '</a>';
+			echo '<a href="' . esc_url( trailingslashit( bboss_get_blogs_directory_permalink() . 'create' ) ) . '">' . esc_html__( 'Create a Site!', 'buddyboss-community-social-network-groups-forums-messaging' ) . '</a>';
 			echo '</li>';
 		}
 
@@ -106,7 +106,7 @@ function bboss_admin_setting_callback_force_buddybar() {
 	?>
 
 	<input id="_bp_force_buddybar" name="_bp_force_buddybar" type="checkbox" value="1" <?php checked( ! bboss_force_buddybar( true ) ); ?> />
-	<label for="_bp_force_buddybar"><?php esc_html_e( 'Switch to WordPress Toolbar', 'buddyboss-platform' ); ?></label>
+	<label for="_bp_force_buddybar"><?php esc_html_e( 'Switch to WordPress Toolbar', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></label>
 
 	<?php
 }
@@ -186,11 +186,11 @@ function bboss_adminbar_login_menu() {
 		return false;
 	}
 
-	echo '<li class="bp-login no-arrow"><a href="' . esc_url( wp_login_url() ) . '">' . esc_html__( 'Log In', 'buddyboss-platform' ) . '</a></li>';
+	echo '<li class="bp-login no-arrow"><a href="' . esc_url( wp_login_url() ) . '">' . esc_html__( 'Log In', 'buddyboss-community-social-network-groups-forums-messaging' ) . '</a></li>';
 
 	// Show "Sign Up" link if user registrations are allowed
 	if ( bboss_get_signup_allowed() ) {
-		echo '<li class="bp-signup no-arrow"><a href="' . esc_url( bboss_get_signup_page() ) . '">' . esc_html__( 'Sign Up', 'buddyboss-platform' ) . '</a></li>';
+		echo '<li class="bp-signup no-arrow"><a href="' . esc_url( bboss_get_signup_page() ) . '">' . esc_html__( 'Sign Up', 'buddyboss-community-social-network-groups-forums-messaging' ) . '</a></li>';
 	}
 }
 
@@ -209,7 +209,7 @@ function bboss_adminbar_account_menu() {
 	}
 
 	echo '<li id="bp-adminbar-account-menu"><a href="' . esc_url( bboss_loggedin_user_domain() ) . '">';
-	esc_html_e( 'My Account', 'buddyboss-platform' );
+	esc_html_e( 'My Account', 'buddyboss-community-social-network-groups-forums-messaging' );
 	echo '</a>';
 	echo '<ul>';
 
@@ -255,7 +255,7 @@ function bboss_adminbar_account_menu() {
 
 	$alt = ( 0 == $counter % 2 ) ? ' class="alt"' : '';
 
-	echo '<li' . $alt . '><a id="bp-admin-logout" class="logout" href="' . esc_url( wp_logout_url( home_url() ) ) . '">' . esc_html__( 'Log Out', 'buddyboss-platform' ) . '</a></li>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $alt is a static class attribute literal.
+	echo '<li' . $alt . '><a id="bp-admin-logout" class="logout" href="' . esc_url( wp_logout_url( home_url() ) ) . '">' . esc_html__( 'Log Out', 'buddyboss-community-social-network-groups-forums-messaging' ) . '</a></li>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $alt is a static class attribute literal.
 	echo '</ul>';
 	echo '</li>';
 }
@@ -268,13 +268,13 @@ function bboss_adminbar_account_menu() {
 function bboss_adminbar_thisblog_menu() {
 	if ( current_user_can( 'edit_posts' ) ) {
 		echo '<li id="bp-adminbar-thisblog-menu"><a href="' . esc_url( admin_url() ) . '">';
-		esc_html_e( 'Dashboard', 'buddyboss-platform' );
+		esc_html_e( 'Dashboard', 'buddyboss-community-social-network-groups-forums-messaging' );
 		echo '</a>';
 		echo '<ul>';
 
-		echo '<li class="alt"><a href="' . esc_url( admin_url( 'post-new.php' ) ) . '">' . esc_html__( 'New Post', 'buddyboss-platform' ) . '</a></li>';
-		echo '<li><a href="' . esc_url( admin_url( 'edit.php' ) ) . '">' . esc_html__( 'Manage Posts', 'buddyboss-platform' ) . '</a></li>';
-		echo '<li class="alt"><a href="' . esc_url( admin_url( 'edit-comments.php' ) ) . '">' . esc_html__( 'Manage Comments', 'buddyboss-platform' ) . '</a></li>';
+		echo '<li class="alt"><a href="' . esc_url( admin_url( 'post-new.php' ) ) . '">' . esc_html__( 'New Post', 'buddyboss-community-social-network-groups-forums-messaging' ) . '</a></li>';
+		echo '<li><a href="' . esc_url( admin_url( 'edit.php' ) ) . '">' . esc_html__( 'Manage Posts', 'buddyboss-community-social-network-groups-forums-messaging' ) . '</a></li>';
+		echo '<li class="alt"><a href="' . esc_url( admin_url( 'edit-comments.php' ) ) . '">' . esc_html__( 'Manage Comments', 'buddyboss-community-social-network-groups-forums-messaging' ) . '</a></li>';
 
 		do_action( 'bp_adminbar_thisblog_items' );
 
@@ -294,19 +294,19 @@ function bboss_adminbar_random_menu() {
 	?>
 
 	<li class="align-right" id="bp-adminbar-visitrandom-menu">
-		<a href="#"><?php esc_html_e( 'Visit', 'buddyboss-platform' ); ?></a>
+		<a href="#"><?php esc_html_e( 'Visit', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></a>
 		<ul class="random-list">
-			<li><a href="<?php bboss_members_directory_permalink(); ?>?random-member" rel="nofollow"><?php esc_html_e( 'Random Member', 'buddyboss-platform' ); ?></a></li>
+			<li><a href="<?php bboss_members_directory_permalink(); ?>?random-member" rel="nofollow"><?php esc_html_e( 'Random Member', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></a></li>
 
 			<?php if ( bboss_is_active( 'groups' ) ) : ?>
 
-				<li class="alt"><a href="<?php bboss_groups_directory_permalink(); ?>?random-group"  rel="nofollow"><?php esc_html_e( 'Random Group', 'buddyboss-platform' ); ?></a></li>
+				<li class="alt"><a href="<?php bboss_groups_directory_permalink(); ?>?random-group"  rel="nofollow"><?php esc_html_e( 'Random Group', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></a></li>
 
 			<?php endif; ?>
 
 			<?php if ( is_multisite() && bboss_is_active( 'blogs' ) ) : ?>
 
-				<li><a href="<?php bboss_blogs_directory_permalink(); ?>?random-blog"  rel="nofollow"><?php esc_html_e( 'Random Site', 'buddyboss-platform' ); ?></a></li>
+				<li><a href="<?php bboss_blogs_directory_permalink(); ?>?random-blog"  rel="nofollow"><?php esc_html_e( 'Random Site', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></a></li>
 
 			<?php endif; ?>
 
@@ -367,34 +367,34 @@ function bboss_groups_adminbar_admin_menu() {
 	?>
 
 	<li id="bp-adminbar-adminoptions-menu">
-		<a href="<?php bboss_groups_action_link( 'admin' ); ?>"><?php esc_html_e( 'Admin Options', 'buddyboss-platform' ); ?></a>
+		<a href="<?php bboss_groups_action_link( 'admin' ); ?>"><?php esc_html_e( 'Admin Options', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></a>
 
 		<ul>
-			<li><a href="<?php bboss_groups_action_link( 'admin/edit-details' ); ?>"><?php esc_html_e( 'Edit Details', 'buddyboss-platform' ); ?></a></li>
+			<li><a href="<?php bboss_groups_action_link( 'admin/edit-details' ); ?>"><?php esc_html_e( 'Edit Details', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></a></li>
 
-			<li><a href="<?php bboss_groups_action_link( 'admin/group-settings' ); ?>"><?php esc_html_e( 'Group Settings', 'buddyboss-platform' ); ?></a></li>
+			<li><a href="<?php bboss_groups_action_link( 'admin/group-settings' ); ?>"><?php esc_html_e( 'Group Settings', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></a></li>
 
 			<?php if ( ! (int) bboss_get_option( 'bp-disable-avatar-uploads' ) && $bp->avatar->show_avatars ) : ?>
 
-				<li><a href="<?php bboss_groups_action_link( 'admin/group-avatar' ); ?>"><?php esc_html_e( 'Group Profile Photo', 'buddyboss-platform' ); ?></a></li>
+				<li><a href="<?php bboss_groups_action_link( 'admin/group-avatar' ); ?>"><?php esc_html_e( 'Group Profile Photo', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></a></li>
 
 			<?php endif; ?>
 
 			<?php if ( bboss_is_active( 'friends' ) ) : ?>
 
-				<li><a href="<?php bboss_groups_action_link( 'send-invites' ); ?>"><?php esc_html_e( 'Manage Invitations', 'buddyboss-platform' ); ?></a></li>
+				<li><a href="<?php bboss_groups_action_link( 'send-invites' ); ?>"><?php esc_html_e( 'Manage Invitations', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></a></li>
 
 			<?php endif; ?>
 
-			<li><a href="<?php bboss_groups_action_link( 'admin/manage-members' ); ?>"><?php esc_html_e( 'Manage Members', 'buddyboss-platform' ); ?></a></li>
+			<li><a href="<?php bboss_groups_action_link( 'admin/manage-members' ); ?>"><?php esc_html_e( 'Manage Members', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></a></li>
 
 			<?php if ( $bp->groups->current_group->status == 'private' ) : ?>
 
-				<li><a href="<?php bboss_groups_action_link( 'admin/membership-requests' ); ?>"><?php esc_html_e( 'Membership Requests', 'buddyboss-platform' ); ?></a></li>
+				<li><a href="<?php bboss_groups_action_link( 'admin/membership-requests' ); ?>"><?php esc_html_e( 'Membership Requests', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></a></li>
 
 			<?php endif; ?>
 
-			<li><a class="confirm" href="<?php echo esc_url( wp_nonce_url( bboss_get_group_permalink( $bp->groups->current_group ) . 'admin/delete-group/', 'groups_delete_group' ) ); ?>&amp;delete-group-button=1&amp;delete-group-understand=1"><?php esc_html_e( 'Delete Group', 'buddyboss-platform' ); ?></a></li>
+			<li><a class="confirm" href="<?php echo esc_url( wp_nonce_url( bboss_get_group_permalink( $bp->groups->current_group ) . 'admin/delete-group/', 'groups_delete_group' ) ); ?>&amp;delete-group-button=1&amp;delete-group-understand=1"><?php esc_html_e( 'Delete Group', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></a></li>
 
 			<?php do_action( 'bp_groups_adminbar_admin_menu' ); ?>
 
@@ -445,7 +445,7 @@ function bboss_adminbar_authors_menu() {
 	if ( ! empty( $authors ) ) {
 		// This is a blog, render a menu with links to all authors
 		echo '<li id="bp-adminbar-authors-menu"><a href="/">';
-		esc_html_e( 'Blog Authors', 'buddyboss-platform' );
+		esc_html_e( 'Blog Authors', 'buddyboss-community-social-network-groups-forums-messaging' );
 		echo '</a>';
 
 		echo '<ul class="author-list">';
@@ -465,7 +465,7 @@ function bboss_adminbar_authors_menu() {
 						'width'   => 15,
 						'height'  => 15,
 						/* translators: %s: Author display name. */
-						'alt'     => sprintf( __( 'Profile photo of %s', 'buddyboss-platform' ), $author->display_name ),
+						'alt'     => sprintf( __( 'Profile photo of %s', 'buddyboss-community-social-network-groups-forums-messaging' ), $author->display_name ),
 					)
 				)
 			);
@@ -502,23 +502,23 @@ function bboss_members_adminbar_admin_menu() {
 
 	<li id="bp-adminbar-adminoptions-menu">
 
-		<a href=""><?php esc_html_e( 'Admin Options', 'buddyboss-platform' ); ?></a>
+		<a href=""><?php esc_html_e( 'Admin Options', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></a>
 
 		<ul>
 			<?php if ( bboss_is_active( 'xprofile' ) ) : ?>
 
 				<?php /* translators: %s: Displayed user full name. */ ?>
-				<li><a href="<?php bboss_members_component_link( 'profile', 'edit' ); ?>"><?php echo esc_html( sprintf( __( "Edit %s's Profile", 'buddyboss-platform' ), bboss_get_displayed_user_fullname() ) ); ?></a></li>
+				<li><a href="<?php bboss_members_component_link( 'profile', 'edit' ); ?>"><?php echo esc_html( sprintf( __( "Edit %s's Profile", 'buddyboss-community-social-network-groups-forums-messaging' ), bboss_get_displayed_user_fullname() ) ); ?></a></li>
 
 			<?php endif ?>
 
 			<?php /* translators: %s: Displayed user full name. */ ?>
-			<li><a href="<?php bboss_members_component_link( 'profile', 'change-avatar' ); ?>"><?php echo esc_html( sprintf( __( "Edit %s's Profile Photo", 'buddyboss-platform' ), bboss_get_displayed_user_fullname() ) ); ?></a></li>
+			<li><a href="<?php bboss_members_component_link( 'profile', 'change-avatar' ); ?>"><?php echo esc_html( sprintf( __( "Edit %s's Profile Photo", 'buddyboss-community-social-network-groups-forums-messaging' ), bboss_get_displayed_user_fullname() ) ); ?></a></li>
 
-			<li><a href="<?php bboss_members_component_link( 'settings', 'capabilities' ); ?>"><?php esc_html_e( 'User Capabilities', 'buddyboss-platform' ); ?></a></li>
+			<li><a href="<?php bboss_members_component_link( 'settings', 'capabilities' ); ?>"><?php esc_html_e( 'User Capabilities', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></a></li>
 
 			<?php /* translators: %s: Displayed user full name. */ ?>
-			<li><a href="<?php bboss_members_component_link( 'settings', 'delete-account' ); ?>"><?php echo esc_html( sprintf( __( "Delete %s's Account", 'buddyboss-platform' ), bboss_get_displayed_user_fullname() ) ); ?></a></li>
+			<li><a href="<?php bboss_members_component_link( 'settings', 'delete-account' ); ?>"><?php echo esc_html( sprintf( __( "Delete %s's Account", 'buddyboss-community-social-network-groups-forums-messaging' ), bboss_get_displayed_user_fullname() ) ); ?></a></li>
 
 			<?php do_action( 'bp_members_adminbar_admin_menu' ); ?>
 
@@ -542,7 +542,7 @@ function bboss_notifications_buddybar_menu() {
 	}
 
 	echo '<li id="bp-adminbar-notifications-menu"><a href="' . esc_url( bboss_loggedin_user_domain() ) . '">';
-	esc_html_e( 'Notifications', 'buddyboss-platform' );
+	esc_html_e( 'Notifications', 'buddyboss-community-social-network-groups-forums-messaging' );
 
 	$notification_count = bboss_notifications_get_unread_notification_count( bboss_loggedin_user_id() );
 	$notifications      = bboss_notifications_get_notifications_for_user( bboss_loggedin_user_id() );
@@ -570,7 +570,7 @@ function bboss_notifications_buddybar_menu() {
 	} else {
 		?>
 
-		<li><a href="<?php echo esc_url( bboss_loggedin_user_domain() ); ?>"><?php esc_html_e( 'No new notifications.', 'buddyboss-platform' ); ?></a></li>
+		<li><a href="<?php echo esc_url( bboss_loggedin_user_domain() ); ?>"><?php esc_html_e( 'No new notifications.', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></a></li>
 
 		<?php
 	}

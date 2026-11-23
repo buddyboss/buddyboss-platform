@@ -31,8 +31,8 @@ function bboss_admin_settings_register_notifications_feature() {
 	bboss_register_feature(
 		'notifications',
 		array(
-			'label'              => __( 'Notifications', 'buddyboss-platform' ),
-			'description'        => __( 'Notify members of relevant activity with a toolbar bubble or email, and let them customize their notification settings.', 'buddyboss-platform' ),
+			'label'              => __( 'Notifications', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'description'        => __( 'Notify members of relevant activity with a toolbar bubble or email, and let them customize their notification settings.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'icon'               => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-bell-simple',
@@ -70,7 +70,7 @@ function bboss_admin_settings_register_notifications_feature() {
 		'notifications',
 		'notification_types',
 		array(
-			'title'      => __( 'Notification Types', 'buddyboss-platform' ),
+			'title'      => __( 'Notification Types', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'icon'       => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-bell-simple',
@@ -94,7 +94,7 @@ function bboss_admin_settings_register_notifications_feature() {
 		'notifications',
 		'on_screen_notifications',
 		array(
-			'title'    => __( 'On-screen Notifications', 'buddyboss-platform' ),
+			'title'    => __( 'On-screen Notifications', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'icon'     => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-desktop',
@@ -117,7 +117,7 @@ function bboss_admin_settings_register_notifications_feature() {
 		'notifications',
 		'onesignal',
 		array(
-			'title'    => __( 'Web Push Notifications', 'buddyboss-platform' ),
+			'title'    => __( 'Web Push Notifications', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'icon'     => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-browser',

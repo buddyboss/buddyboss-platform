@@ -125,7 +125,7 @@ function bboss_moderation_content_report() {
 	if ( empty( $item_id ) || empty( $item_type ) || empty( $category ) ) {
 		$response['message'] = new WP_Error(
 			'bp_moderation_missing_data',
-			esc_html__( 'Required field missing.', 'buddyboss-platform' )
+			esc_html__( 'Required field missing.', 'buddyboss-community-social-network-groups-forums-messaging' )
 		);
 		wp_send_json_error( $response );
 	}
@@ -144,7 +144,7 @@ function bboss_moderation_content_report() {
 	) {
 		$response['message'] = new WP_Error(
 			'bp_moderation_missing_data',
-			esc_html__( 'Please specify reason to report this content.', 'buddyboss-platform' )
+			esc_html__( 'Please specify reason to report this content.', 'buddyboss-community-social-network-groups-forums-messaging' )
 		);
 		wp_send_json_error( $response );
 	}
@@ -154,7 +154,7 @@ function bboss_moderation_content_report() {
 	if ( false === (bool) $user_can ) {
 		$response['message'] = new WP_Error(
 			'bp_moderation_invalid_access',
-			esc_html__( 'Sorry, you are not allowed to report this content.', 'buddyboss-platform' )
+			esc_html__( 'Sorry, you are not allowed to report this content.', 'buddyboss-community-social-network-groups-forums-messaging' )
 		);
 		wp_send_json_error( $response );
 	}
@@ -172,7 +172,7 @@ function bboss_moderation_content_report() {
 			'bp_moderation_already_reported',
 			sprintf(
 				/* translators: %s: reported content type (e.g. Post, Comment, Member). */
-				esc_html__( 'You have already reported this %s.', 'buddyboss-platform' ),
+				esc_html__( 'You have already reported this %s.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				esc_html( bboss_moderation_get_report_type( $item_sub_type, $item_sub_id ) )
 			)
 		);
@@ -209,13 +209,13 @@ function bboss_moderation_content_report() {
 		$response['message']       = $moderation->errors;
 		$response['toast_message'] = sprintf(
 			/* translators: Item type reported. */
-			esc_html__( 'This %s has been reported.', 'buddyboss-platform' ),
+			esc_html__( 'This %s has been reported.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			strtolower( bboss_moderation_get_report_type( $item_type, $item_id ) )
 		);
 	}
 
 	if ( empty( $response['message'] ) ) {
-		$response['message'] = new WP_Error( 'bp_moderation_missing_error', esc_html__( 'Something went wrong. Please try again.', 'buddyboss-platform' ) );
+		$response['message'] = new WP_Error( 'bp_moderation_missing_error', esc_html__( 'Something went wrong. Please try again.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 		wp_send_json_error( $response );
 	}
 
@@ -242,17 +242,17 @@ function bboss_moderation_block_member() {
 	$item_id = filter_input( INPUT_POST, 'content_id', FILTER_SANITIZE_NUMBER_INT );
 
 	if ( empty( $item_id ) ) {
-		$response['message'] = new WP_Error( 'bp_moderation_missing_data', esc_html__( 'Required field missing.', 'buddyboss-platform' ) );
+		$response['message'] = new WP_Error( 'bp_moderation_missing_data', esc_html__( 'Required field missing.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 		wp_send_json_error( $response );
 	}
 
 	if ( bboss_moderation_report_exist( $item_id, BBoss_Moderation_Members::$moderation_type ) ) {
-		$response['message'] = new WP_Error( 'bp_moderation_already_reported', esc_html__( 'You have already reported this Member', 'buddyboss-platform' ) );
+		$response['message'] = new WP_Error( 'bp_moderation_already_reported', esc_html__( 'You have already reported this Member', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 		wp_send_json_error( $response );
 	}
 
 	if ( (int) bboss_loggedin_user_id() === (int) $item_id ) {
-		$response['message'] = new WP_Error( 'bp_moderation_invalid_item_id', esc_html__( 'Sorry, you can not allowed to block yourself.', 'buddyboss-platform' ) );
+		$response['message'] = new WP_Error( 'bp_moderation_invalid_item_id', esc_html__( 'Sorry, you can not allowed to block yourself.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 		wp_send_json_error( $response );
 	}
 
@@ -261,7 +261,7 @@ function bboss_moderation_block_member() {
 	if ( false === (bool) $user_can ) {
 		$response['message'] = new WP_Error(
 			'bp_moderation_invalid_access',
-			esc_html__( 'Sorry, you are not allowed to block this member.', 'buddyboss-platform' )
+			esc_html__( 'Sorry, you are not allowed to block this member.', 'buddyboss-community-social-network-groups-forums-messaging' )
 		);
 		wp_send_json_error( $response );
 	}
@@ -271,7 +271,7 @@ function bboss_moderation_block_member() {
 			array(
 				'content_id'   => $item_id,
 				'content_type' => BBoss_Moderation_Members::$moderation_type,
-				'note'         => esc_html__( 'Member block', 'buddyboss-platform' ),
+				'note'         => esc_html__( 'Member block', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			)
 		);
 
@@ -295,7 +295,7 @@ function bboss_moderation_block_member() {
 	}
 
 	if ( empty( $response['message'] ) ) {
-		$response['message'] = new WP_Error( 'bp_moderation_missing_error', esc_html__( 'Something went wrong. Please try again.', 'buddyboss-platform' ) );
+		$response['message'] = new WP_Error( 'bp_moderation_missing_error', esc_html__( 'Something went wrong. Please try again.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 		wp_send_json_error( $response );
 	}
 
@@ -322,19 +322,19 @@ function bboss_moderation_unblock_user() {
 	$item_id = filter_input( INPUT_POST, 'id', FILTER_SANITIZE_NUMBER_INT );
 
 	if ( empty( $item_id ) ) {
-		$response['message'] = new WP_Error( 'bp_moderation_missing_data', esc_html__( 'Required field missing.', 'buddyboss-platform' ) );
+		$response['message'] = new WP_Error( 'bp_moderation_missing_data', esc_html__( 'Required field missing.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 		wp_send_json_error( $response );
 	}
 
 	if ( ! bboss_moderation_report_exist( $item_id, BBoss_Moderation_Members::$moderation_type ) ) {
-		$response['message'] = new WP_Error( 'bp_moderation_not_exit', esc_html__( 'Reported content was not found.', 'buddyboss-platform' ) );
+		$response['message'] = new WP_Error( 'bp_moderation_not_exit', esc_html__( 'Reported content was not found.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 		wp_send_json_error( $response );
 	}
 
 	$moderation = new BBoss_Moderation( $item_id, BBoss_Moderation_Members::$moderation_type );
 
 	if ( empty( $moderation ) || is_wp_error( $moderation ) || true === $moderation->hide_sitewide ) {
-		$response['message'] = new WP_Error( 'bp_rest_invalid_id', esc_html__( 'Sorry, you cannot unblock suspended member.', 'buddyboss-platform' ) );
+		$response['message'] = new WP_Error( 'bp_rest_invalid_id', esc_html__( 'Sorry, you cannot unblock suspended member.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 		wp_send_json_error( $response );
 	}
 
@@ -348,12 +348,12 @@ function bboss_moderation_unblock_user() {
 
 		if ( empty( $moderation->report_id ) ) {
 			$response['success'] = true;
-			$response['message'] = esc_html__( 'User unblocked successfully', 'buddyboss-platform' );
+			$response['message'] = esc_html__( 'User unblocked successfully', 'buddyboss-community-social-network-groups-forums-messaging' );
 		}
 	}
 
 	if ( empty( $response['success'] ) && empty( $response['message'] ) ) {
-		$response['message'] = new WP_Error( 'bp_moderation_block_error', esc_html__( 'Something went wrong. Please try again.', 'buddyboss-platform' ) );
+		$response['message'] = new WP_Error( 'bp_moderation_block_error', esc_html__( 'Something went wrong. Please try again.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 		wp_send_json_error( $response );
 	}
 
@@ -381,14 +381,14 @@ function bboss_moderation_content_actions_request() {
 	$item_id    = filter_input( INPUT_POST, 'id', FILTER_SANITIZE_NUMBER_INT );
 
 	if ( empty( $item_id ) || empty( $item_type ) ) {
-		$response['message'] = new WP_Error( 'bp_moderation_missing_data', esc_html__( 'Required field missing.', 'buddyboss-platform' ) );
+		$response['message'] = new WP_Error( 'bp_moderation_missing_data', esc_html__( 'Required field missing.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 		wp_send_json_error( $response );
 	}
 
 	// Check the current has access to report the item ot not.
 	$user_can = bboss_moderation_can_report( $item_id, $item_type, ( 'hide' === $sub_action ) ) || current_user_can( 'administrator' );
 	if ( ! current_user_can( 'manage_options' ) || false === (bool) $user_can ) {
-		$response['message'] = new WP_Error( 'bp_moderation_invalid_access', esc_html__( 'Sorry, you are not allowed to report this content.', 'buddyboss-platform' ) );
+		$response['message'] = new WP_Error( 'bp_moderation_invalid_access', esc_html__( 'Sorry, you are not allowed to report this content.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 		wp_send_json_error( $response );
 	}
 
@@ -402,7 +402,7 @@ function bboss_moderation_content_actions_request() {
 			);
 			if ( 1 === $moderation->hide_sitewide ) {
 				$response['success'] = true;
-				$response['message'] = esc_html__( 'Content has been successfully hidden.', 'buddyboss-platform' );
+				$response['message'] = esc_html__( 'Content has been successfully hidden.', 'buddyboss-community-social-network-groups-forums-messaging' );
 			}
 		} else {
 			$moderation = bboss_moderation_unhide(
@@ -413,13 +413,13 @@ function bboss_moderation_content_actions_request() {
 			);
 			if ( 0 === $moderation->hide_sitewide ) {
 				$response['success'] = true;
-				$response['message'] = esc_html__( 'Content has been successfully unhidden.', 'buddyboss-platform' );
+				$response['message'] = esc_html__( 'Content has been successfully unhidden.', 'buddyboss-community-social-network-groups-forums-messaging' );
 			}
 		}
 	}
 
 	if ( empty( $response['success'] ) && empty( $response['message'] ) ) {
-		$response['message'] = new WP_Error( 'bp_moderation_content_actions_request', esc_html__( 'Something went wrong. Please try again.', 'buddyboss-platform' ) );
+		$response['message'] = new WP_Error( 'bp_moderation_content_actions_request', esc_html__( 'Something went wrong. Please try again.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 		wp_send_json_error( $response );
 	}
 
@@ -447,14 +447,14 @@ function bboss_moderation_user_actions_request() {
 	$item_id    = filter_input( INPUT_POST, 'id', FILTER_SANITIZE_NUMBER_INT );
 
 	if ( empty( $item_id ) || empty( $item_type ) ) {
-		$response['message'] = new WP_Error( 'bp_moderation_user_missing_data', esc_html__( 'Required field missing.', 'buddyboss-platform' ) );
+		$response['message'] = new WP_Error( 'bp_moderation_user_missing_data', esc_html__( 'Required field missing.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 		wp_send_json_error( $response );
 	}
 
 	// Check the current has access to report the item ot not.
 	$user_can = bboss_moderation_can_report( $item_id, $item_type );
 	if ( ! current_user_can( 'manage_options' ) || false === (bool) $user_can ) {
-		$response['message'] = new WP_Error( 'bp_moderation_invalid_access', esc_html__( 'Sorry, you are not allowed to report this content.', 'buddyboss-platform' ) );
+		$response['message'] = new WP_Error( 'bp_moderation_invalid_access', esc_html__( 'Sorry, you are not allowed to report this content.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 		wp_send_json_error( $response );
 	}
 
@@ -463,16 +463,16 @@ function bboss_moderation_user_actions_request() {
 		if ( 'suspend' === $sub_action ) {
 			BBoss_Suspend_Member::suspend_user( $item_id );
 			$response['success'] = true;
-			$response['message'] = esc_html__( 'Member has been successfully suspended.', 'buddyboss-platform' );
+			$response['message'] = esc_html__( 'Member has been successfully suspended.', 'buddyboss-community-social-network-groups-forums-messaging' );
 		} elseif ( 'unsuspend' === $sub_action ) {
 			BBoss_Suspend_Member::unsuspend_user( $item_id );
 			$response['success'] = true;
-			$response['message'] = esc_html__( 'Member has been successfully unsuspended.', 'buddyboss-platform' );
+			$response['message'] = esc_html__( 'Member has been successfully unsuspended.', 'buddyboss-community-social-network-groups-forums-messaging' );
 		}
 	}
 
 	if ( empty( $response['success'] ) && empty( $response['message'] ) ) {
-		$response['message'] = new WP_Error( 'bp_moderation_user_missing_data', esc_html__( 'Something went wrong. Please try again.', 'buddyboss-platform' ) );
+		$response['message'] = new WP_Error( 'bp_moderation_user_missing_data', esc_html__( 'Something went wrong. Please try again.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 		wp_send_json_error( $response );
 	}
 
@@ -515,11 +515,11 @@ add_action( 'wp_footer', 'bboss_moderation_content_report_popup' );
 function bboss_moderation_block_user_profile_button( $buttons ) {
 
 	if ( bboss_is_active( 'moderation' ) && bboss_is_moderation_member_blocking_enable() ) {
-		$buttons['member_block'] = __( 'Block', 'buddyboss-platform' );
+		$buttons['member_block'] = __( 'Block', 'buddyboss-community-social-network-groups-forums-messaging' );
 	}
 
 	if ( bboss_is_active( 'moderation' ) && bboss_is_moderation_member_reporting_enable() ) {
-		$buttons['member_report'] = __( 'Report Member', 'buddyboss-platform' );
+		$buttons['member_report'] = __( 'Report Member', 'buddyboss-community-social-network-groups-forums-messaging' );
 	}
 
 	return $buttons;
@@ -659,7 +659,7 @@ add_action( 'bb_suspend_unhide_before', 'bboss_core_clear_cache' );
 function bboss_moderation_migrate_old_data( $repair_list ) {
 	$repair_list[] = array(
 		'bp-repair-moderation-data',
-		esc_html__( 'Repair moderation data', 'buddyboss-platform' ),
+		esc_html__( 'Repair moderation data', 'buddyboss-community-social-network-groups-forums-messaging' ),
 		'bboss_moderation_admin_repair_old_moderation_data',
 	);
 
@@ -688,7 +688,7 @@ function bboss_moderation_admin_repair_old_moderation_data() {
 	if ( ! empty( $moderated_activities ) ) {
 		$offset          = bboss_moderation_update_suspend_data( $moderated_activities, $offset );
 		/* translators: %s: number. */
-		$records_updated = sprintf( __( '%s moderation item updated successfully.', 'buddyboss-platform' ), bboss_core_number_format( $offset ) );
+		$records_updated = sprintf( __( '%s moderation item updated successfully.', 'buddyboss-community-social-network-groups-forums-messaging' ), bboss_core_number_format( $offset ) );
 
 		return array(
 			'status'  => 'running',
@@ -698,7 +698,7 @@ function bboss_moderation_admin_repair_old_moderation_data() {
 	} else {
 		return array(
 			'status'  => 1,
-			'message' => __( 'Repairing moderation data &hellip; Complete!', 'buddyboss-platform' ),
+			'message' => __( 'Repairing moderation data &hellip; Complete!', 'buddyboss-community-social-network-groups-forums-messaging' ),
 		);
 	}
 }
@@ -754,7 +754,7 @@ add_filter( 'bb_is_recipient_moderated', 'bboss_moderation_is_recipient_moderate
 function bboss_category_add_term_fields_show_when_reporting() {
 	?>
 	<div class="form-field">
-		<label for="bb_category_show_when_reporting"><?php esc_html_e( 'Show When Reporting', 'buddyboss-platform' ); ?></label>
+		<label for="bb_category_show_when_reporting"><?php esc_html_e( 'Show When Reporting', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></label>
 		<select name="bb_category_show_when_reporting" id="bb_category_show_when_reporting">
 			<?php
 			$show_when_options = bboss_moderation_get_reporting_category_fields_array();
@@ -782,7 +782,7 @@ function bboss_category_edit_term_fields_show_when_reporting( $term ) {
 	?>
 	<tr class="form-field">
 		<th>
-			<label for="bb_category_show_when_reporting"><?php esc_html_e( 'Show When Reporting', 'buddyboss-platform' ); ?></label>
+			<label for="bb_category_show_when_reporting"><?php esc_html_e( 'Show When Reporting', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></label>
 		</th>
 		<td>
 			<select name="bb_category_show_when_reporting" id="bb_category_show_when_reporting">
@@ -831,7 +831,7 @@ add_action( 'edited_bpm_category', 'bboss_category_save_term_fields_show_when_re
 function bboss_category_show_when_reporting_columns( $columns ) {
 	unset( $columns['slug'] );
 	unset( $columns['posts'] );
-	$columns['bb_category_show_when_reporting'] = __( 'Show When Reporting', 'buddyboss-platform' );
+	$columns['bb_category_show_when_reporting'] = __( 'Show When Reporting', 'buddyboss-community-social-network-groups-forums-messaging' );
 	return $columns;
 }
 add_filter( 'manage_edit-bpm_category_columns', 'bboss_category_show_when_reporting_columns' );
@@ -850,7 +850,7 @@ add_filter( 'manage_edit-bpm_category_columns', 'bboss_category_show_when_report
 function bboss_category_show_when_reporting_column_display( $string = '', $column_name = '', $term_id = 0 ) {
 	$value             = get_term_meta( $term_id, $column_name, true );
 	$show_when_options = bboss_moderation_get_reporting_category_fields_array();
-	return ( isset( $show_when_options[ $value ] ) ? esc_attr( $show_when_options[ $value ] ) : esc_attr__( 'Content', 'buddyboss-platform' ) );
+	return ( isset( $show_when_options[ $value ] ) ? esc_attr( $show_when_options[ $value ] ) : esc_attr__( 'Content', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 }
 add_filter( 'manage_bpm_category_custom_column', 'bboss_category_show_when_reporting_column_display', 10, 3 );
 
@@ -873,7 +873,7 @@ function bboss_quick_edit_bb_category_show_when_reporting_field( $column_name, $
 	<fieldset>
 		<div id="bb_category_show_when_reporting" class="inline-edit-col">
 			<label>
-				<span class="title"><?php esc_html_e( 'Show When Reporting', 'buddyboss-platform' ); ?></span>
+				<span class="title"><?php esc_html_e( 'Show When Reporting', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></span>
 				<span class="input-text-wrap">
 					<select name="bb_category_show_when_reporting" id="bb_category_show_when_reporting">
 						<?php
@@ -902,7 +902,7 @@ add_action( 'quick_edit_custom_box', 'bboss_quick_edit_bb_category_show_when_rep
  * @return string user report content type text.
  */
 function bboss_moderation_user_report_content_type( $content_type, $item_id ) {
-	return esc_html__( 'Member', 'buddyboss-platform' );
+	return esc_html__( 'Member', 'buddyboss-community-social-network-groups-forums-messaging' );
 }
 add_action( 'bp_moderation_user_report_report_content_type', 'bboss_moderation_user_report_content_type', 10, 2 );
 
@@ -916,8 +916,8 @@ add_action( 'bp_moderation_user_report_report_content_type', 'bboss_moderation_u
  * @return object Object of labels for taxonomy `bpm_category`.
  */
 function bboss_get_bpm_category_labels( $labels ) {
-	$labels->name_field_description = esc_html__( 'The name of this reporting category.', 'buddyboss-platform' );
-	$labels->desc_field_description = esc_html__( 'A short description of this reporting category.', 'buddyboss-platform' );
+	$labels->name_field_description = esc_html__( 'The name of this reporting category.', 'buddyboss-community-social-network-groups-forums-messaging' );
+	$labels->desc_field_description = esc_html__( 'A short description of this reporting category.', 'buddyboss-community-social-network-groups-forums-messaging' );
 	return $labels;
 }
 add_action( 'taxonomy_labels_bpm_category', 'bboss_get_bpm_category_labels' );

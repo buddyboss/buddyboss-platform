@@ -18,9 +18,9 @@ defined( 'ABSPATH' ) || exit;
 	<li class="bbp-header">
 
 		<ul class="forum-titles">
-			<li class="bbp-topic-title"><?php esc_html_e( 'Discussions', 'buddyboss-platform' ); ?></li>
-			<li class="bbp-topic-reply-count"><?php bboss_bbp_show_lead_topic() ? esc_html_e( 'Replies', 'buddyboss-platform' ) : esc_html_e( 'Posts', 'buddyboss-platform' ); ?></li>
-			<li class="bbp-topic-freshness"><?php esc_html_e( 'Last Post', 'buddyboss-platform' ); ?></li>
+			<li class="bbp-topic-title"><?php esc_html_e( 'Discussions', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></li>
+			<li class="bbp-topic-reply-count"><?php bboss_bbp_show_lead_topic() ? esc_html_e( 'Replies', 'buddyboss-community-social-network-groups-forums-messaging' ) : esc_html_e( 'Posts', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></li>
+			<li class="bbp-topic-freshness"><?php esc_html_e( 'Last Post', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></li>
 		</ul>
 
 	</li>

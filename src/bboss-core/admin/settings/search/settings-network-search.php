@@ -35,8 +35,8 @@ function bboss_search_register_network_search_fields() {
 		'network_search',
 		'network_search_components',
 		array(
-			'title'       => __( 'Network Search', 'buddyboss-platform' ),
-			'description' => __( 'All listed BuddyBoss components are searchable. The switches indicate which ones are included in searches.', 'buddyboss-platform' ),
+			'title'       => __( 'Network Search', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'description' => __( 'All listed BuddyBoss components are searchable. The switches indicate which ones are included in searches.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'order'       => 10,
 		)
 	);
@@ -50,8 +50,8 @@ function bboss_search_register_network_search_fields() {
 		'network_search_components',
 		array(
 			'name'              => 'bp_search_members',
-			'label'             => __( 'Members', 'buddyboss-platform' ),
-			'description'       => __( 'Allow member searching', 'buddyboss-platform' ),
+			'label'             => __( 'Members', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'description'       => __( 'Allow member searching', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'type'              => 'toggle',
 			'default'           => absint( bboss_get_option( 'bp_search_members', 1 ) ),
 			'sanitize_callback' => 'absint',
@@ -65,10 +65,10 @@ function bboss_search_register_network_search_fields() {
 	$user_fields = function_exists( 'bboss_get_search_user_fields' )
 		? bboss_get_search_user_fields()
 		: array(
-			'user_meta'    => __( 'User Meta', 'buddyboss-platform' ),
-			'display_name' => __( 'Display Name', 'buddyboss-platform' ),
-			'user_email'   => __( 'User Email', 'buddyboss-platform' ),
-			'user_login'   => __( 'Username', 'buddyboss-platform' ),
+			'user_meta'    => __( 'User Meta', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'display_name' => __( 'Display Name', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'user_email'   => __( 'User Email', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'user_login'   => __( 'Username', 'buddyboss-community-social-network-groups-forums-messaging' ),
 		);
 
 	$child_order = 20;
@@ -85,7 +85,7 @@ function bboss_search_register_network_search_fields() {
 				'default'           => absint( bboss_get_option( $option_name, 0 ) ),
 				'sanitize_callback' => 'absint',
 				'parent_field'      => 'bp_search_members',
-				'child_group_label' => __( 'Account', 'buddyboss-platform' ),
+				'child_group_label' => __( 'Account', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				'order'             => $child_order,
 			)
 		);
@@ -104,8 +104,8 @@ function bboss_search_register_network_search_fields() {
 			'network_search_components',
 			array(
 				'name'              => 'bp_search_post_type_forum',
-				'label'             => __( 'Forums', 'buddyboss-platform' ),
-				'description'       => __( 'Allow forum searching', 'buddyboss-platform' ),
+				'label'             => __( 'Forums', 'buddyboss-community-social-network-groups-forums-messaging' ),
+				'description'       => __( 'Allow forum searching', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				'type'              => 'toggle',
 				'default'           => absint( bboss_get_option( 'bp_search_post_type_forum', 1 ) ),
 				'sanitize_callback' => 'absint',
@@ -120,7 +120,7 @@ function bboss_search_register_network_search_fields() {
 			'network_search_components',
 			array(
 				'name'              => 'bp_search_post_type_topic',
-				'label'             => __( 'Discussion', 'buddyboss-platform' ),
+				'label'             => __( 'Discussion', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				'type'              => 'checkbox',
 				'default'           => absint( bboss_get_option( 'bp_search_post_type_topic', 1 ) ),
 				'sanitize_callback' => 'absint',
@@ -136,7 +136,7 @@ function bboss_search_register_network_search_fields() {
 			'network_search_components',
 			array(
 				'name'              => 'bp_search_topic_tax_topic-tag',
-				'label'             => __( 'Discussion Tags', 'buddyboss-platform' ),
+				'label'             => __( 'Discussion Tags', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				'type'              => 'checkbox',
 				'default'           => absint( bboss_get_option( 'bp_search_topic_tax_topic-tag', 0 ) ),
 				'sanitize_callback' => 'absint',
@@ -152,7 +152,7 @@ function bboss_search_register_network_search_fields() {
 			'network_search_components',
 			array(
 				'name'              => 'bp_search_post_type_reply',
-				'label'             => __( 'Replies', 'buddyboss-platform' ),
+				'label'             => __( 'Replies', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				'type'              => 'checkbox',
 				'default'           => absint( bboss_get_option( 'bp_search_post_type_reply', 1 ) ),
 				'sanitize_callback' => 'absint',
@@ -172,8 +172,8 @@ function bboss_search_register_network_search_fields() {
 			'network_search_components',
 			array(
 				'name'              => 'bp_search_groups',
-				'label'             => __( 'Groups', 'buddyboss-platform' ),
-				'description'       => __( 'Allow group searching', 'buddyboss-platform' ),
+				'label'             => __( 'Groups', 'buddyboss-community-social-network-groups-forums-messaging' ),
+				'description'       => __( 'Allow group searching', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				'type'              => 'toggle',
 				'default'           => absint( bboss_get_option( 'bp_search_groups', 1 ) ),
 				'sanitize_callback' => 'absint',
@@ -192,8 +192,8 @@ function bboss_search_register_network_search_fields() {
 			'network_search_components',
 			array(
 				'name'              => 'bp_search_photos',
-				'label'             => __( 'Photos', 'buddyboss-platform' ),
-				'description'       => __( 'Allow photo searching', 'buddyboss-platform' ),
+				'label'             => __( 'Photos', 'buddyboss-community-social-network-groups-forums-messaging' ),
+				'description'       => __( 'Allow photo searching', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				'type'              => 'toggle',
 				'default'           => absint( bboss_get_option( 'bp_search_photos', 0 ) ),
 				'sanitize_callback' => 'absint',
@@ -208,7 +208,7 @@ function bboss_search_register_network_search_fields() {
 			'network_search_components',
 			array(
 				'name'              => 'bp_search_albums',
-				'label'             => __( 'Albums', 'buddyboss-platform' ),
+				'label'             => __( 'Albums', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				'type'              => 'checkbox',
 				'default'           => absint( bboss_get_option( 'bp_search_albums', 0 ) ),
 				'sanitize_callback' => 'absint',
@@ -228,8 +228,8 @@ function bboss_search_register_network_search_fields() {
 				'network_search_components',
 				array(
 					'name'              => 'bp_search_videos',
-					'label'             => __( 'Videos', 'buddyboss-platform' ),
-					'description'       => __( 'Allow video searching', 'buddyboss-platform' ),
+					'label'             => __( 'Videos', 'buddyboss-community-social-network-groups-forums-messaging' ),
+					'description'       => __( 'Allow video searching', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'type'              => 'toggle',
 					'default'           => absint( bboss_get_option( 'bp_search_videos', 0 ) ),
 					'sanitize_callback' => 'absint',
@@ -249,8 +249,8 @@ function bboss_search_register_network_search_fields() {
 			'network_search_components',
 			array(
 				'name'              => 'bp_search_documents',
-				'label'             => __( 'Documents', 'buddyboss-platform' ),
-				'description'       => __( 'Allow document searching', 'buddyboss-platform' ),
+				'label'             => __( 'Documents', 'buddyboss-community-social-network-groups-forums-messaging' ),
+				'description'       => __( 'Allow document searching', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				'type'              => 'toggle',
 				'default'           => absint( bboss_get_option( 'bp_search_documents', 0 ) ),
 				'sanitize_callback' => 'absint',
@@ -265,7 +265,7 @@ function bboss_search_register_network_search_fields() {
 			'network_search_components',
 			array(
 				'name'              => 'bp_search_folders',
-				'label'             => __( 'Folders', 'buddyboss-platform' ),
+				'label'             => __( 'Folders', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				'type'              => 'checkbox',
 				'default'           => absint( bboss_get_option( 'bp_search_folders', 0 ) ),
 				'sanitize_callback' => 'absint',
@@ -285,8 +285,8 @@ function bboss_search_register_network_search_fields() {
 			'network_search_components',
 			array(
 				'name'              => 'bp_search_activity',
-				'label'             => __( 'Activity', 'buddyboss-platform' ),
-				'description'       => __( 'Allow activity searching', 'buddyboss-platform' ),
+				'label'             => __( 'Activity', 'buddyboss-community-social-network-groups-forums-messaging' ),
+				'description'       => __( 'Allow activity searching', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				'type'              => 'toggle',
 				'default'           => absint( bboss_get_option( 'bp_search_activity', 1 ) ),
 				'sanitize_callback' => 'absint',
@@ -301,7 +301,7 @@ function bboss_search_register_network_search_fields() {
 			'network_search_components',
 			array(
 				'name'              => 'bp_search_activity_comments',
-				'label'             => __( 'Activity comments', 'buddyboss-platform' ),
+				'label'             => __( 'Activity comments', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				'type'              => 'checkbox',
 				'default'           => absint( bboss_get_option( 'bp_search_activity_comments', 1 ) ),
 				'sanitize_callback' => 'absint',

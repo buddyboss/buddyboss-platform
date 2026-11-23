@@ -35,7 +35,7 @@ function bboss_messages_register_access_control_fields() {
 		'access_controls',
 		'message_access',
 		array(
-			'title'      => __( 'Message Access', 'buddyboss-platform' ),
+			'title'      => __( 'Message Access', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'order'      => 10,
 			'help_url'   => '636154',
 			'pro_notice' => bboss_admin_settings_get_pro_notice(
@@ -54,9 +54,9 @@ function bboss_messages_register_access_control_fields() {
 		'message_access',
 		array(
 			'name'               => 'bb-access-control-send-message',
-			'label'              => __( 'Send Messages', 'buddyboss-platform' ),
+			'label'              => __( 'Send Messages', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'type'               => 'access_control',
-			'description'        => __( 'Select which members should have access to send messages to other members, based on:', 'buddyboss-platform' ),
+			'description'        => __( 'Select which members should have access to send messages to other members, based on:', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'default'            => '',
 			'pro_only'           => true,
 			'threaded'           => true,
@@ -65,7 +65,7 @@ function bboss_messages_register_access_control_fields() {
 			// layout, the All/Specific radios carry the rest of the meaning,
 			// so the long "Members with the … can send messages to members
 			// with - Any Member / With Specific …" sentence is no longer needed.
-			'threaded_sub_label' => __( 'can send message to', 'buddyboss-platform' ),
+			'threaded_sub_label' => __( 'can send message to', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'order'              => 10,
 			'sanitize_callback'  => function_exists( 'bb_sanitize_access_control_field' ) ? 'bb_sanitize_access_control_field' : 'bboss_sanitize_access_control_fallback',
 		)
@@ -80,7 +80,7 @@ function bboss_messages_register_access_control_fields() {
 			'name'        => 'bb-messages-access-control-notice',
 			'label'       => '',
 			'type'        => 'notice',
-			'description' => __( 'These settings do not apply to administrators or group messages.', 'buddyboss-platform' ),
+			'description' => __( 'These settings do not apply to administrators or group messages.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'notice_type' => 'info',
 			'order'       => 100,
 		)

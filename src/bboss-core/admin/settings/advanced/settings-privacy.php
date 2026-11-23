@@ -36,7 +36,7 @@ function bboss_advanced_register_privacy_fields() {
 		$panel_id,
 		'advanced_privacy',
 		array(
-			'title'    => __( 'Privacy', 'buddyboss-platform' ),
+			'title'    => __( 'Privacy', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'order'    => 10,
 			'help_url' => '636201',
 		)
@@ -49,11 +49,11 @@ function bboss_advanced_register_privacy_fields() {
 		'advanced_privacy',
 		array(
 			'name'              => 'bp-enable-private-network',
-			'label'             => __( 'Private Website', 'buddyboss-platform' ),
-			'description'       => __( 'Restrict site access to only logged-in members', 'buddyboss-platform' ),
+			'label'             => __( 'Private Website', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'description'       => __( 'Restrict site access to only logged-in members', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'help_text'         => sprintf(
 				/* translators: %s: Registration settings link. */
-				__( 'Login and <a href="%s">Registration</a> content will remain publicly visible.', 'buddyboss-platform' ),
+				__( 'Login and <a href="%s">Registration</a> content will remain publicly visible.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				$registration_url
 			),
 			'type'              => 'toggle',
@@ -71,12 +71,12 @@ function bboss_advanced_register_privacy_fields() {
 		'advanced_privacy',
 		array(
 			'name'              => 'bp-enable-private-network-public-content',
-			'label'             => __( 'Public Website Content', 'buddyboss-platform' ),
+			'label'             => __( 'Public Website Content', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'type'              => 'textarea',
 			'default'           => bboss_enable_private_network_public_content(),
 			'sanitize_callback' => 'bboss_advanced_sanitize_public_content',
-			'placeholder'       => __( 'Enter URLs or URI fragments', 'buddyboss-platform' ),
-			'help_text'         => __( 'Enter URLs or URI fragments (e.g. /groups/) to remain publicly visible always. Enter one URL or URI per line.', 'buddyboss-platform' ),
+			'placeholder'       => __( 'Enter URLs or URI fragments', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'help_text'         => __( 'Enter URLs or URI fragments (e.g. /groups/) to remain publicly visible always. Enter one URL or URI per line.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'conditional'       => array(
 				'field' => 'bp-enable-private-network',
 				'value' => false,
@@ -90,18 +90,18 @@ function bboss_advanced_register_privacy_fields() {
 	// forced OFF + disabled, and a notice explains why (matching legacy behavior).
 	$rest_api_help_text = sprintf(
 		/* translators: %s: Registration settings link. */
-		__( 'Login and <a href="%s">Registration</a> APIs will remain publicly visible.', 'buddyboss-platform' ),
+		__( 'Login and <a href="%s">Registration</a> APIs will remain publicly visible.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 		$registration_url
 	);
 
 	if ( $is_app_public ) {
 		$rest_api_help_text .= '<br><br>' . sprintf(
 			/* translators: %s: BuddyBoss App settings link. */
-			__( 'Your BuddyBoss App is currently public. To restrict access to REST APIs for logged-out members, please enable "Private App" in the %s.', 'buddyboss-platform' ),
+			__( 'Your BuddyBoss App is currently public. To restrict access to REST APIs for logged-out members, please enable "Private App" in the %s.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			sprintf(
 				'<a href="%s">%s</a>',
 				esc_url( admin_url( 'admin.php?page=bbapp-settings' ) ),
-				esc_html__( "BuddyBoss App's settings", 'buddyboss-platform' )
+				esc_html__( "BuddyBoss App's settings", 'buddyboss-community-social-network-groups-forums-messaging' )
 			)
 		);
 	}
@@ -118,8 +118,8 @@ function bboss_advanced_register_privacy_fields() {
 		'advanced_privacy',
 		array(
 			'name'              => 'bb-enable-private-rest-apis',
-			'label'             => __( 'Private Rest APIs', 'buddyboss-platform' ),
-			'description'       => __( 'Restrict REST API access to only logged-in members', 'buddyboss-platform' ),
+			'label'             => __( 'Private Rest APIs', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'description'       => __( 'Restrict REST API access to only logged-in members', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'help_text'         => $rest_api_help_text,
 			'type'              => 'toggle',
 			'default'           => $rest_api_default,
@@ -136,12 +136,12 @@ function bboss_advanced_register_privacy_fields() {
 		'advanced_privacy',
 		array(
 			'name'              => 'bb-enable-private-rest-apis-public-content',
-			'label'             => __( 'Public Rest APIs', 'buddyboss-platform' ),
+			'label'             => __( 'Public Rest APIs', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'type'              => 'textarea',
 			'default'           => bboss_enable_private_rest_apis_public_content(),
 			'sanitize_callback' => 'bboss_advanced_sanitize_public_content',
-			'placeholder'       => __( 'Enter REST API endpoint URLs', 'buddyboss-platform' ),
-			'help_text'         => __( 'Enter REST API endpoint URLs or URI fragments (e.g. wp-json/wp/v2/pages/&lt;id&gt;) to remain publicly visible always. Enter one URL or URI per line.', 'buddyboss-platform' ),
+			'placeholder'       => __( 'Enter REST API endpoint URLs', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'help_text'         => __( 'Enter REST API endpoint URLs or URI fragments (e.g. wp-json/wp/v2/pages/&lt;id&gt;) to remain publicly visible always. Enter one URL or URI per line.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'disabled'          => $is_app_public,
 			'conditional'       => array(
 				'field' => 'bb-enable-private-rest-apis',
@@ -158,11 +158,11 @@ function bboss_advanced_register_privacy_fields() {
 		'advanced_privacy',
 		array(
 			'name'              => 'bb-enable-private-rss-feeds',
-			'label'             => __( 'Private RSS Feeds', 'buddyboss-platform' ),
-			'description'       => __( 'Restrict RSS feed access to only logged-in members', 'buddyboss-platform' ),
+			'label'             => __( 'Private RSS Feeds', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'description'       => __( 'Restrict RSS feed access to only logged-in members', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'help_text'         => sprintf(
 				/* translators: %s: Registration settings link. */
-				__( 'Login and <a href="%s">Registration</a> content will remain publicly visible.', 'buddyboss-platform' ),
+				__( 'Login and <a href="%s">Registration</a> content will remain publicly visible.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				$registration_url
 			),
 			'type'              => 'toggle',
@@ -179,12 +179,12 @@ function bboss_advanced_register_privacy_fields() {
 		'advanced_privacy',
 		array(
 			'name'              => 'bb-enable-private-rss-feeds-public-content',
-			'label'             => __( 'Public RSS Feeds', 'buddyboss-platform' ),
+			'label'             => __( 'Public RSS Feeds', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'type'              => 'textarea',
 			'default'           => bboss_enable_private_rss_feeds_public_content(),
 			'sanitize_callback' => 'bboss_advanced_sanitize_public_content',
-			'placeholder'       => __( 'Enter public RSS feed URLs', 'buddyboss-platform' ),
-			'help_text'         => __( 'Enter RSS feed URLs or URI fragments (e.g. /post-name/feed/) to remain publicly visible always. Enter one URL or URI per line.', 'buddyboss-platform' ),
+			'placeholder'       => __( 'Enter public RSS feed URLs', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'help_text'         => __( 'Enter RSS feed URLs or URI fragments (e.g. /post-name/feed/) to remain publicly visible always. Enter one URL or URI per line.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'conditional'       => array(
 				'field' => 'bb-enable-private-rss-feeds',
 				'value' => true,

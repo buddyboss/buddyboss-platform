@@ -34,7 +34,7 @@ function bboss_groups_register_core_meta_fields( $registry, $component ) {
 		$component,
 		'name',
 		array(
-			'label'             => __( 'Name', 'buddyboss-platform' ),
+			'label'             => __( 'Name', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'type'              => 'text',
 			'tab'               => 'details',
 			'order'             => 10,
@@ -54,7 +54,7 @@ function bboss_groups_register_core_meta_fields( $registry, $component ) {
 		$component,
 		'slug',
 		array(
-			'label'             => __( 'Permalink', 'buddyboss-platform' ),
+			'label'             => __( 'Permalink', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'type'              => 'permalink',
 			'tab'               => 'details',
 			'order'             => 20,
@@ -85,7 +85,7 @@ function bboss_groups_register_core_meta_fields( $registry, $component ) {
 		$component,
 		'description',
 		array(
-			'label'             => __( 'Description (Optional)', 'buddyboss-platform' ),
+			'label'             => __( 'Description (Optional)', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'type'              => 'richtext',
 			'tab'               => 'details',
 			'order'             => 30,
@@ -105,7 +105,7 @@ function bboss_groups_register_core_meta_fields( $registry, $component ) {
 		$component,
 		'status',
 		array(
-			'label'             => __( 'Group Privacy', 'buddyboss-platform' ),
+			'label'             => __( 'Group Privacy', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'type'              => 'select',
 			'tab'               => 'details',
 			'order'             => 40,
@@ -117,15 +117,15 @@ function bboss_groups_register_core_meta_fields( $registry, $component ) {
 				$options = array(
 					array(
 						'value' => 'public',
-						'label' => __( 'Public', 'buddyboss-platform' ),
+						'label' => __( 'Public', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					),
 					array(
 						'value' => 'private',
-						'label' => __( 'Private', 'buddyboss-platform' ),
+						'label' => __( 'Private', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					),
 					array(
 						'value' => 'hidden',
-						'label' => __( 'Hidden', 'buddyboss-platform' ),
+						'label' => __( 'Hidden', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					),
 				);
 
@@ -152,7 +152,7 @@ function bboss_groups_register_core_meta_fields( $registry, $component ) {
 		$component,
 		'group_type',
 		array(
-			'label'             => __( 'Group Type (Optional)', 'buddyboss-platform' ),
+			'label'             => __( 'Group Type (Optional)', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'type'              => 'select',
 			'tab'               => 'details',
 			'order'             => 50,
@@ -168,7 +168,7 @@ function bboss_groups_register_core_meta_fields( $registry, $component ) {
 				$options     = array(
 					array(
 						'value' => '',
-						'label' => __( 'Select Group Type', 'buddyboss-platform' ),
+						'label' => __( 'Select Group Type', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					),
 				);
 				$type_objects = bboss_groups_get_group_types( array(), 'objects' );
@@ -199,7 +199,7 @@ function bboss_groups_register_core_meta_fields( $registry, $component ) {
 	$permission_fields = array(
 		array(
 			'id'        => 'perm_invite',
-			'label'     => __( 'Who can invite others to join this group?', 'buddyboss-platform' ),
+			'label'     => __( 'Who can invite others to join this group?', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'meta_key'  => 'invite_status',
 			'type_slug' => 'invite',
 			'order'     => 310,
@@ -207,7 +207,7 @@ function bboss_groups_register_core_meta_fields( $registry, $component ) {
 		),
 		array(
 			'id'         => 'perm_activity_feed',
-			'label'      => __( 'Who can post into this group?', 'buddyboss-platform' ),
+			'label'      => __( 'Who can post into this group?', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'meta_key'   => 'activity_feed_status',
 			'type_slug'  => 'activity_feed',
 			'order'      => 320,
@@ -218,7 +218,7 @@ function bboss_groups_register_core_meta_fields( $registry, $component ) {
 		),
 		array(
 			'id'         => 'perm_media',
-			'label'      => __( 'Who can upload photos in this group?', 'buddyboss-platform' ),
+			'label'      => __( 'Who can upload photos in this group?', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'meta_key'   => 'media_status',
 			'type_slug'  => 'media',
 			'order'      => 330,
@@ -229,7 +229,7 @@ function bboss_groups_register_core_meta_fields( $registry, $component ) {
 		),
 		array(
 			'id'         => 'perm_album',
-			'label'      => __( 'Who can create albums in this group?', 'buddyboss-platform' ),
+			'label'      => __( 'Who can create albums in this group?', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'meta_key'   => 'album_status',
 			'type_slug'  => 'album',
 			'order'      => 340,
@@ -240,7 +240,7 @@ function bboss_groups_register_core_meta_fields( $registry, $component ) {
 		),
 		array(
 			'id'         => 'perm_document',
-			'label'      => __( 'Who can upload documents in this group?', 'buddyboss-platform' ),
+			'label'      => __( 'Who can upload documents in this group?', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'meta_key'   => 'document_status',
 			'type_slug'  => 'document',
 			'order'      => 350,
@@ -251,7 +251,7 @@ function bboss_groups_register_core_meta_fields( $registry, $component ) {
 		),
 		array(
 			'id'         => 'perm_video',
-			'label'      => __( 'Who can upload videos in this group?', 'buddyboss-platform' ),
+			'label'      => __( 'Who can upload videos in this group?', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'meta_key'   => 'video_status',
 			'type_slug'  => 'video',
 			'order'      => 355,
@@ -262,7 +262,7 @@ function bboss_groups_register_core_meta_fields( $registry, $component ) {
 		),
 		array(
 			'id'         => 'perm_message',
-			'label'      => __( 'Who can manage group messages in this group?', 'buddyboss-platform' ),
+			'label'      => __( 'Who can manage group messages in this group?', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'meta_key'   => 'message_status',
 			'type_slug'  => 'message',
 			'order'      => 360,
@@ -289,9 +289,9 @@ function bboss_groups_register_core_meta_fields( $registry, $component ) {
 			'get_options'       => function ( $group ) use ( $perm ) {
 				$statuses = bboss_groups_get_settings_status( $perm['type_slug'] );
 				$labels   = array(
-					'members' => __( 'All Members', 'buddyboss-platform' ),
-					'mods'    => __( 'Organizers and Moderators', 'buddyboss-platform' ),
-					'admins'  => __( 'Organizers', 'buddyboss-platform' ),
+					'members' => __( 'All Members', 'buddyboss-community-social-network-groups-forums-messaging' ),
+					'mods'    => __( 'Organizers and Moderators', 'buddyboss-community-social-network-groups-forums-messaging' ),
+					'admins'  => __( 'Organizers', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				);
 
 				$options = array();
@@ -332,10 +332,10 @@ function bboss_groups_register_core_meta_fields( $registry, $component ) {
 		$component,
 		'parent_id',
 		array(
-			'label'             => __( 'Group Parent (Optional)', 'buddyboss-platform' ),
+			'label'             => __( 'Group Parent (Optional)', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'type'              => 'async_select',
 			'async_action'      => 'bb_admin_group_parent_autocomplete',
-			'placeholder'       => __( 'Select Parent', 'buddyboss-platform' ),
+			'placeholder'       => __( 'Select Parent', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'tab'               => 'integrations',
 			'order'             => 450,
 			'save_phase'        => 'before',
@@ -357,8 +357,8 @@ function bboss_groups_register_core_meta_fields( $registry, $component ) {
 		$component,
 		'enable_forum',
 		array(
-			'label'             => __( 'Allow this group to have a discussion forum', 'buddyboss-platform' ),
-			'description'       => __( 'Connect a discussion forum to allow members of this group to communicate in a structured, bulletin-board style fashion. Unchecking this option will not delete existing forum content.', 'buddyboss-platform' ),
+			'label'             => __( 'Allow this group to have a discussion forum', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'description'       => __( 'Connect a discussion forum to allow members of this group to communicate in a structured, bulletin-board style fashion. Unchecking this option will not delete existing forum content.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'type'              => 'checkbox',
 			'tab'               => 'integrations',
 			'order'             => 460,
@@ -382,10 +382,10 @@ function bboss_groups_register_core_meta_fields( $registry, $component ) {
 		$component,
 		'forum_id',
 		array(
-			'label'             => __( 'Forum', 'buddyboss-platform' ),
+			'label'             => __( 'Forum', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'type'              => 'async_select',
 			'async_action'      => 'bb_admin_forum_autocomplete',
-			'placeholder'       => __( 'Search forums…', 'buddyboss-platform' ),
+			'placeholder'       => __( 'Search forums…', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'tab'               => 'integrations',
 			'order'             => 470,
 			'save_phase'        => 'after',

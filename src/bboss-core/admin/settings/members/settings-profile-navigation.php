@@ -30,7 +30,7 @@ function bboss_members_register_profile_navigation_panel_fields() {
 		'profile_navigation',
 		'profile_navigation_settings',
 		array(
-			'title' => __( 'Profile Navigation', 'buddyboss-platform' ),
+			'title' => __( 'Profile Navigation', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'order' => 10,
 		)
 	);
@@ -42,9 +42,9 @@ function bboss_members_register_profile_navigation_panel_fields() {
 		'profile_navigation_settings',
 		array(
 			'name'              => 'bb_user_nav_display',
-			'label'             => __( 'Layout', 'buddyboss-platform' ),
+			'label'             => __( 'Layout', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'type'              => 'toggle',
-			'description'       => __( 'Display the profile navigation vertically', 'buddyboss-platform' ),
+			'description'       => __( 'Display the profile navigation vertically', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'default'           => 0,
 			'order'             => 10,
 			'sanitize_callback' => 'absint',
@@ -58,8 +58,8 @@ function bboss_members_register_profile_navigation_panel_fields() {
 		'profile_navigation_settings',
 		array(
 			'name'              => 'bb_user_default_tab',
-			'label'             => __( 'Default Tab', 'buddyboss-platform' ),
-			'description'       => __( 'Set the default navigation tab when viewing a member profile. The dropdown only shows tabs that are available to all members.', 'buddyboss-platform' ),
+			'label'             => __( 'Default Tab', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'description'       => __( 'Set the default navigation tab when viewing a member profile. The dropdown only shows tabs that are available to all members.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'type'              => 'select',
 			'default'           => 'profile',
 			'options'           => array(), // Populated at AJAX time via bb_member_navigation_enrich_field_data().
@@ -76,7 +76,7 @@ function bboss_members_register_profile_navigation_panel_fields() {
 		'profile_navigation',
 		'profile_navigation_order',
 		array(
-			'title'    => __( 'Navigation Order', 'buddyboss-platform' ),
+			'title'    => __( 'Navigation Order', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'order'    => 20,
 			'help_url' => '638247',
 		)
@@ -128,35 +128,35 @@ function bboss_get_member_default_tab_options() {
 	$options = array();
 
 	if ( bboss_is_active( 'xprofile' ) ) {
-		$options['profile'] = __( 'Profile', 'buddyboss-platform' );
+		$options['profile'] = __( 'Profile', 'buddyboss-community-social-network-groups-forums-messaging' );
 	}
 
 	if ( bboss_is_active( 'activity' ) ) {
-		$options['activity'] = __( 'Timeline', 'buddyboss-platform' );
+		$options['activity'] = __( 'Timeline', 'buddyboss-community-social-network-groups-forums-messaging' );
 	}
 
 	if ( bboss_is_active( 'friends' ) ) {
-		$options['friends'] = __( 'Connections', 'buddyboss-platform' );
+		$options['friends'] = __( 'Connections', 'buddyboss-community-social-network-groups-forums-messaging' );
 	}
 
 	if ( bboss_is_active( 'groups' ) ) {
-		$options['groups'] = __( 'Groups', 'buddyboss-platform' );
+		$options['groups'] = __( 'Groups', 'buddyboss-community-social-network-groups-forums-messaging' );
 	}
 
 	if ( bboss_is_active( 'forums' ) ) {
-		$options['forums'] = __( 'Forums', 'buddyboss-platform' );
+		$options['forums'] = __( 'Forums', 'buddyboss-community-social-network-groups-forums-messaging' );
 	}
 
 	if ( bboss_is_active( 'media' ) ) {
-		$options['media'] = __( 'Photos', 'buddyboss-platform' );
+		$options['media'] = __( 'Photos', 'buddyboss-community-social-network-groups-forums-messaging' );
 	}
 
 	if ( bboss_is_active( 'media' ) && function_exists( 'bboss_is_profile_document_support_enabled' ) && bboss_is_profile_document_support_enabled() ) {
-		$options['document'] = __( 'Documents', 'buddyboss-platform' );
+		$options['document'] = __( 'Documents', 'buddyboss-community-social-network-groups-forums-messaging' );
 	}
 
 	if ( bboss_is_active( 'media' ) && function_exists( 'bboss_is_profile_video_support_enabled' ) && bboss_is_profile_video_support_enabled() ) {
-		$options['video'] = __( 'Videos', 'buddyboss-platform' );
+		$options['video'] = __( 'Videos', 'buddyboss-community-social-network-groups-forums-messaging' );
 	}
 
 	/**
@@ -211,35 +211,35 @@ function bboss_get_member_profile_nav_items_for_settings() {
 	// Other components (invites, etc.) add their items via the filter below.
 	$all_items = array(
 		'profile'   => array(
-			'label'     => __( 'Profile', 'buddyboss-platform' ),
+			'label'     => __( 'Profile', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'component' => 'xprofile',
 		),
 		'activity'  => array(
-			'label'     => __( 'Timeline', 'buddyboss-platform' ),
+			'label'     => __( 'Timeline', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'component' => 'activity',
 		),
 		'friends'   => array(
-			'label'     => __( 'Connections', 'buddyboss-platform' ),
+			'label'     => __( 'Connections', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'component' => 'friends',
 		),
 		'groups'    => array(
-			'label'     => __( 'Groups', 'buddyboss-platform' ),
+			'label'     => __( 'Groups', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'component' => 'groups',
 		),
 		'forums'    => array(
-			'label'     => __( 'Forums', 'buddyboss-platform' ),
+			'label'     => __( 'Forums', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'component' => 'forums',
 		),
 		'photos'    => array(
-			'label'     => __( 'Photos', 'buddyboss-platform' ),
+			'label'     => __( 'Photos', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'component' => 'media',
 		),
 		'documents' => array(
-			'label'     => __( 'Documents', 'buddyboss-platform' ),
+			'label'     => __( 'Documents', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'component' => 'media',
 		),
 		'videos'    => array(
-			'label'     => __( 'Videos', 'buddyboss-platform' ),
+			'label'     => __( 'Videos', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'component' => 'video',
 		),
 	);

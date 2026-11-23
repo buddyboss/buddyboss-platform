@@ -27,7 +27,7 @@ function bboss_moderation_register_member_moderation_fields() {
 		'member_moderation',
 		'member_moderation_settings',
 		array(
-			'title'    => __( 'Member Moderation', 'buddyboss-platform' ),
+			'title'    => __( 'Member Moderation', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'order'    => 10,
 			'help_url' => '636191',
 		)
@@ -40,10 +40,10 @@ function bboss_moderation_register_member_moderation_fields() {
 		'member_moderation_settings',
 		array(
 			'name'              => 'bpm_blocking_member_blocking',
-			'label'             => __( 'Member Blocking', 'buddyboss-platform' ),
+			'label'             => __( 'Member Blocking', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'type'              => 'toggle',
-			'description'       => __( 'Allow members to block other members', 'buddyboss-platform' ),
-			'help_text'         => __( 'When a member is blocked, their profile and all of their content are hidden from the member who blocked them.', 'buddyboss-platform' ),
+			'description'       => __( 'Allow members to block other members', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'help_text'         => __( 'When a member is blocked, their profile and all of their content are hidden from the member who blocked them.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'default'           => bboss_is_moderation_member_blocking_enable( false ),
 			'sanitize_callback' => 'absint',
 			'order'             => 10,
@@ -57,16 +57,16 @@ function bboss_moderation_register_member_moderation_fields() {
 		'member_moderation_settings',
 		array(
 			'name'              => 'bb_blocking_member_reporting',
-			'label'             => __( 'Member Reporting', 'buddyboss-platform' ),
+			'label'             => __( 'Member Reporting', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'type'              => 'toggle',
-			'description'       => __( 'Allow members to report other members', 'buddyboss-platform' ),
+			'description'       => __( 'Allow members to report other members', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'help_text'         => sprintf(
 				/* translators: %s: reporting categories link. */
-				__( 'If a member believes another member has violated one of your %s, they can report it to the site administrators.', 'buddyboss-platform' ),
+				__( 'If a member believes another member has violated one of your %s, they can report it to the site administrators.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				sprintf(
 					'<a href="%s">%s</a>',
 					esc_url( bboss_get_feature_settings_url( 'moderation', 'reporting_categories' ) ),
-					__( 'reporting categories', 'buddyboss-platform' )
+					__( 'reporting categories', 'buddyboss-community-social-network-groups-forums-messaging' )
 				)
 			),
 			'default'           => bboss_is_moderation_member_reporting_enable( false ),
@@ -90,10 +90,10 @@ function bboss_moderation_register_member_moderation_fields() {
 		'member_moderation_settings',
 		array(
 			'name'                 => 'bpm_blocking_auto_suspend',
-			'label'                => __( 'Auto Suspend', 'buddyboss-platform' ),
+			'label'                => __( 'Auto Suspend', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'type'                 => 'toggle',
 			/* translators: %s: threshold number input placeholder. */
-			'description'          => __( 'Auto suspend members after %s blocks', 'buddyboss-platform' ),
+			'description'          => __( 'Auto suspend members after %s blocks', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'default'              => bboss_is_moderation_auto_suspend_enable( false ),
 			'sanitize_callback'    => 'absint',
 			'description_controls' => array(
@@ -129,7 +129,7 @@ function bboss_moderation_register_member_moderation_fields() {
 			'label'                => '',
 			'type'                 => 'toggle',
 			/* translators: %s: threshold number input placeholder. */
-			'description'          => __( 'Auto suspend members after %s reports', 'buddyboss-platform' ),
+			'description'          => __( 'Auto suspend members after %s reports', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'default'              => bboss_is_moderation_auto_suspend_report_enable( false ),
 			'sanitize_callback'    => 'absint',
 			'description_controls' => array(
@@ -162,9 +162,9 @@ function bboss_moderation_register_member_moderation_fields() {
 		'member_moderation_settings',
 		array(
 			'name'              => 'bpm_blocking_email_notification',
-			'label'             => __( 'Email Notification', 'buddyboss-platform' ),
+			'label'             => __( 'Email Notification', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'type'              => 'toggle',
-			'description'       => __( 'Notify administrators when members have been automatically suspended', 'buddyboss-platform' ),
+			'description'       => __( 'Notify administrators when members have been automatically suspended', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'default'           => bboss_is_moderation_blocking_email_notification_enable( false ),
 			'sanitize_callback' => 'absint',
 			'conditional'       => array(

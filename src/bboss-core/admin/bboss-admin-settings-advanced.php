@@ -28,8 +28,8 @@ function bboss_admin_settings_register_advanced_feature() {
 	bboss_register_feature(
 		'advanced',
 		array(
-			'label'              => __( 'Advanced', 'buddyboss-platform' ),
-			'description'        => __( 'Find your site extended performance and privacy settings.', 'buddyboss-platform' ),
+			'label'              => __( 'Advanced', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'description'        => __( 'Find your site extended performance and privacy settings.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'icon'               => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-gear-six',
@@ -59,7 +59,7 @@ function bboss_admin_settings_register_advanced_feature() {
 		'advanced',
 		'general',
 		array(
-			'title'      => __( 'General', 'buddyboss-platform' ),
+			'title'      => __( 'General', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'icon'       => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-gear',
@@ -83,7 +83,7 @@ function bboss_admin_settings_register_advanced_feature() {
 		'advanced',
 		'privacy',
 		array(
-			'title'    => __( 'Privacy', 'buddyboss-platform' ),
+			'title'    => __( 'Privacy', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'icon'     => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-lock-simple',
@@ -113,7 +113,7 @@ function bboss_admin_settings_register_advanced_feature() {
 			'advanced',
 			'telemetry',
 			array(
-				'title'    => __( 'Telemetry', 'buddyboss-platform' ),
+				'title'    => __( 'Telemetry', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				'icon'     => array(
 					'type'  => 'font',
 					'class' => 'bb-icons-rl bb-icons-rl-cylinder',

@@ -158,7 +158,7 @@ class BBoss_REST_Mention_Endpoint extends WP_REST_Controller {
 	public function get_items_permissions_check( $request ) {
 		$retval = new WP_Error(
 			'bp_rest_authorization_required',
-			__( 'Sorry, you do not have access to list mentions.', 'buddyboss-platform' ),
+			__( 'Sorry, you do not have access to list mentions.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			array(
 				'status' => rest_authorization_required_code(),
 			)
@@ -246,31 +246,31 @@ class BBoss_REST_Mention_Endpoint extends WP_REST_Controller {
 			'properties' => array(
 				'id'            => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'A unique numeric ID for the Member.', 'buddyboss-platform' ),
+					'description' => __( 'A unique numeric ID for the Member.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'readonly'    => true,
 					'type'        => 'integer',
 				),
 				'display_id'    => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Member\'s mention name.', 'buddyboss-platform' ),
+					'description' => __( 'Member\'s mention name.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'readonly'    => true,
 					'type'        => 'string',
 				),
 				'user_nicename' => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Member\'s nicename.', 'buddyboss-platform' ),
+					'description' => __( 'Member\'s nicename.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'readonly'    => true,
 					'type'        => 'string',
 				),
 				'name'          => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Member\'s display name.', 'buddyboss-platform' ),
+					'description' => __( 'Member\'s display name.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'readonly'    => true,
 					'type'        => 'string',
 				),
 				'image'         => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Member\'s avatar image.', 'buddyboss-platform' ),
+					'description' => __( 'Member\'s avatar image.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'readonly'    => true,
 					'type'        => 'string',
 				),
@@ -294,20 +294,20 @@ class BBoss_REST_Mention_Endpoint extends WP_REST_Controller {
 	public function get_collection_params() {
 		$params = array(
 			'term'         => array(
-				'description'       => __( 'Members @name suggestions.', 'buddyboss-platform' ),
+				'description'       => __( 'Members @name suggestions.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				'required'          => true,
 				'type'              => 'string',
 				'sanitize_callback' => 'sanitize_text_field',
 				'validate_callback' => 'rest_validate_request_arg',
 			),
 			'only_friends' => array(
-				'description'       => __( 'Limit result set to Friends only.', 'buddyboss-platform' ),
+				'description'       => __( 'Limit result set to Friends only.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				'type'              => 'boolean',
 				'sanitize_callback' => 'rest_sanitize_boolean',
 				'validate_callback' => 'rest_validate_request_arg',
 			),
 			'group_id'     => array(
-				'description'       => __( 'A unique numeric ID for the Group. Limit result set to the group.', 'buddyboss-platform' ),
+				'description'       => __( 'A unique numeric ID for the Group. Limit result set to the group.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				'type'              => 'integer',
 				'sanitize_callback' => 'sanitize_text_field',
 				'validate_callback' => 'rest_validate_request_arg',

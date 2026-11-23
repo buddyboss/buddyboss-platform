@@ -218,7 +218,7 @@ class BBoss_Feature_Registry {
 				'invalid_feature_id',
 				sprintf(
 					/* translators: %s: feature ID */
-					__( 'Invalid feature ID "%s". Feature IDs must contain only alphanumeric characters, underscores, and hyphens.', 'buddyboss-platform' ),
+					__( 'Invalid feature ID "%s". Feature IDs must contain only alphanumeric characters, underscores, and hyphens.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					$feature_id
 				)
 			);
@@ -237,7 +237,7 @@ class BBoss_Feature_Registry {
 				__FUNCTION__,
 				sprintf(
 					/* translators: 1: original feature ID, 2: new feature ID */
-					esc_html__( 'Feature ID "%1$s" already registered. Using "%2$s" instead.', 'buddyboss-platform' ),
+					esc_html__( 'Feature ID "%1$s" already registered. Using "%2$s" instead.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					esc_html( $original_id ),
 					esc_html( $feature_id )
 				),
@@ -251,7 +251,7 @@ class BBoss_Feature_Registry {
 				'missing_feature_label',
 				sprintf(
 					/* translators: %s: feature ID */
-					__( 'Feature "%s" must have a label.', 'buddyboss-platform' ),
+					__( 'Feature "%s" must have a label.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					$feature_id
 				)
 			);
@@ -293,7 +293,7 @@ class BBoss_Feature_Registry {
 					'circular_dependency',
 					sprintf(
 						/* translators: %s: feature ID */
-						__( 'Feature "%s" has circular dependencies.', 'buddyboss-platform' ),
+						__( 'Feature "%s" has circular dependencies.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 						$feature_id
 					)
 				);
@@ -388,7 +388,7 @@ class BBoss_Feature_Registry {
 				'feature_not_found',
 				sprintf(
 					/* translators: %s: feature ID */
-					__( 'Feature "%s" not found. Register the feature first.', 'buddyboss-platform' ),
+					__( 'Feature "%s" not found. Register the feature first.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					$feature_id
 				)
 			);
@@ -400,7 +400,7 @@ class BBoss_Feature_Registry {
 				'invalid_side_panel_id',
 				sprintf(
 					/* translators: %s: side panel ID */
-					__( 'Invalid side panel ID "%s". IDs must contain only alphanumeric characters, underscores, and hyphens.', 'buddyboss-platform' ),
+					__( 'Invalid side panel ID "%s". IDs must contain only alphanumeric characters, underscores, and hyphens.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					$side_panel_id
 				)
 			);
@@ -419,7 +419,7 @@ class BBoss_Feature_Registry {
 				__FUNCTION__,
 				sprintf(
 					/* translators: 1: original ID, 2: new ID */
-					esc_html__( 'Side panel ID "%1$s" already registered for feature. Using "%2$s" instead.', 'buddyboss-platform' ),
+					esc_html__( 'Side panel ID "%1$s" already registered for feature. Using "%2$s" instead.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					esc_html( $original_id ),
 					esc_html( $side_panel_id )
 				),
@@ -433,7 +433,7 @@ class BBoss_Feature_Registry {
 				'missing_side_panel_title',
 				sprintf(
 					/* translators: %s: side panel ID */
-					__( 'Side panel "%s" must have a title.', 'buddyboss-platform' ),
+					__( 'Side panel "%s" must have a title.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					$side_panel_id
 				)
 			);
@@ -518,7 +518,7 @@ class BBoss_Feature_Registry {
 				'feature_not_found',
 				sprintf(
 					/* translators: %s: feature ID */
-					__( 'Feature "%s" not found. Register the feature first.', 'buddyboss-platform' ),
+					__( 'Feature "%s" not found. Register the feature first.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					$feature_id
 				)
 			);
@@ -530,7 +530,7 @@ class BBoss_Feature_Registry {
 				'side_panel_not_found',
 				sprintf(
 					/* translators: 1: side panel ID, 2: feature ID */
-					__( 'Side panel "%1$s" not found for feature "%2$s". Register the side panel first.', 'buddyboss-platform' ),
+					__( 'Side panel "%1$s" not found for feature "%2$s". Register the side panel first.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					$side_panel_id,
 					$feature_id
 				)
@@ -543,7 +543,7 @@ class BBoss_Feature_Registry {
 				'invalid_section_id',
 				sprintf(
 					/* translators: %s: section ID */
-					__( 'Invalid section ID "%s". Section IDs must contain only alphanumeric characters, underscores, and hyphens.', 'buddyboss-platform' ),
+					__( 'Invalid section ID "%s". Section IDs must contain only alphanumeric characters, underscores, and hyphens.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					$section_id
 				)
 			);
@@ -571,7 +571,7 @@ class BBoss_Feature_Registry {
 				__FUNCTION__,
 				sprintf(
 					/* translators: 1: original section ID, 2: new section ID */
-					esc_html__( 'Section ID "%1$s" already registered for side panel. Using "%2$s" instead.', 'buddyboss-platform' ),
+					esc_html__( 'Section ID "%1$s" already registered for side panel. Using "%2$s" instead.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					esc_html( $original_id ),
 					esc_html( $section_id )
 				),
@@ -585,7 +585,7 @@ class BBoss_Feature_Registry {
 				'missing_section_title',
 				sprintf(
 					/* translators: %s: section ID */
-					__( 'Section "%s" must have a title.', 'buddyboss-platform' ),
+					__( 'Section "%s" must have a title.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					$section_id
 				)
 			);
@@ -674,7 +674,7 @@ class BBoss_Feature_Registry {
 				'feature_not_found',
 				sprintf(
 					/* translators: %s: feature ID */
-					__( 'Feature "%s" not found. Register the feature first.', 'buddyboss-platform' ),
+					__( 'Feature "%s" not found. Register the feature first.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					$feature_id
 				)
 			);
@@ -686,7 +686,7 @@ class BBoss_Feature_Registry {
 				'side_panel_not_found',
 				sprintf(
 					/* translators: 1: side panel ID, 2: feature ID */
-					__( 'Side panel "%1$s" not found for feature "%2$s". Register the side panel first.', 'buddyboss-platform' ),
+					__( 'Side panel "%1$s" not found for feature "%2$s". Register the side panel first.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					$side_panel_id,
 					$feature_id
 				)
@@ -699,7 +699,7 @@ class BBoss_Feature_Registry {
 				'section_not_found',
 				sprintf(
 					/* translators: 1: section ID, 2: side panel ID */
-					__( 'Section "%1$s" not found for side panel "%2$s". Register the section first.', 'buddyboss-platform' ),
+					__( 'Section "%1$s" not found for side panel "%2$s". Register the section first.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					$section_id,
 					$side_panel_id
 				)
@@ -710,7 +710,7 @@ class BBoss_Feature_Registry {
 		if ( empty( $args['name'] ) ) {
 			return new WP_Error(
 				'missing_field_name',
-				__( 'Field must have a name (option key).', 'buddyboss-platform' )
+				__( 'Field must have a name (option key).', 'buddyboss-community-social-network-groups-forums-messaging' )
 			);
 		}
 
@@ -719,7 +719,7 @@ class BBoss_Feature_Registry {
 				'missing_field_label',
 				sprintf(
 					/* translators: %s: field name */
-					__( 'Field "%s" must have a label.', 'buddyboss-platform' ),
+					__( 'Field "%s" must have a label.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					$args['name']
 				)
 			);
@@ -735,7 +735,7 @@ class BBoss_Feature_Registry {
 					'field_name_conflict',
 					sprintf(
 						/* translators: %s: field name */
-						__( 'Field name "%s" is already registered. Field names must be unique as they are used as option keys.', 'buddyboss-platform' ),
+						__( 'Field name "%s" is already registered. Field names must be unique as they are used as option keys.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 						$field_name
 					)
 				);
@@ -816,7 +816,7 @@ class BBoss_Feature_Registry {
 				'feature_not_found',
 				sprintf(
 					/* translators: 1: feature ID */
-					__( 'Feature "%s" not found. Register the feature first.', 'buddyboss-platform' ),
+					__( 'Feature "%s" not found. Register the feature first.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					$feature_id
 				)
 			);
@@ -824,15 +824,15 @@ class BBoss_Feature_Registry {
 
 		// Validate required args.
 		if ( empty( $args['id'] ) ) {
-			return new WP_Error( 'missing_nav_id', __( 'Navigation item must have an ID.', 'buddyboss-platform' ) );
+			return new WP_Error( 'missing_nav_id', __( 'Navigation item must have an ID.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 		}
 
 		if ( empty( $args['label'] ) ) {
-			return new WP_Error( 'missing_nav_label', __( 'Navigation item must have a label.', 'buddyboss-platform' ) );
+			return new WP_Error( 'missing_nav_label', __( 'Navigation item must have a label.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 		}
 
 		if ( empty( $args['route'] ) ) {
-			return new WP_Error( 'missing_nav_route', __( 'Navigation item must have a route.', 'buddyboss-platform' ) );
+			return new WP_Error( 'missing_nav_route', __( 'Navigation item must have a route.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 		}
 
 		$nav_id = $args['id'];
@@ -843,7 +843,7 @@ class BBoss_Feature_Registry {
 				__FUNCTION__,
 				sprintf(
 					/* translators: 1: navigation item ID */
-					esc_html__( 'Navigation item ID "%s" already registered for feature.', 'buddyboss-platform' ),
+					esc_html__( 'Navigation item ID "%s" already registered for feature.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					esc_html( $nav_id )
 				),
 				'3.0.0'
@@ -1252,7 +1252,7 @@ class BBoss_Feature_Registry {
 				'feature_not_found',
 				sprintf(
 					/* translators: %s: feature ID */
-					__( 'Feature "%s" not found.', 'buddyboss-platform' ),
+					__( 'Feature "%s" not found.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					$feature_id
 				)
 			);
@@ -1267,7 +1267,7 @@ class BBoss_Feature_Registry {
 						'missing_dependencies',
 						sprintf(
 							/* translators: 1: feature ID, 2: dependency feature ID */
-							__( 'Cannot activate feature "%1$s". Required dependency "%2$s" is not active.', 'buddyboss-platform' ),
+							__( 'Cannot activate feature "%1$s". Required dependency "%2$s" is not active.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 							$feature_id,
 							$dep_feature_id
 						)
@@ -1340,7 +1340,7 @@ class BBoss_Feature_Registry {
 				'feature_not_found',
 				sprintf(
 					/* translators: %s: feature ID */
-					__( 'Feature "%s" not found.', 'buddyboss-platform' ),
+					__( 'Feature "%s" not found.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					$feature_id
 				)
 			);
@@ -1354,7 +1354,7 @@ class BBoss_Feature_Registry {
 				'feature_required',
 				sprintf(
 					/* translators: %s: feature label */
-					__( '"%s" is a required feature and cannot be deactivated.', 'buddyboss-platform' ),
+					__( '"%s" is a required feature and cannot be deactivated.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					$feature['label']
 				)
 			);

@@ -72,10 +72,10 @@ function bboss_invites_register_profile_type_fields( $feature_id ) {
 
 		$field_args = array(
 			'name'              => 'bp-enable-send-invite-member-type-' . $type_name,
-			'label'             => $is_first ? __( 'Allowed Profile Types', 'buddyboss-platform' ) : '',
+			'label'             => $is_first ? __( 'Allowed Profile Types', 'buddyboss-community-social-network-groups-forums-messaging' ) : '',
 			'type'              => 'toggle',
 			'description'       => $member_type_label,
-			'help_text'         => $is_last ? __( 'Only allow the selected profile types to send invites.', 'buddyboss-platform' ) : '',
+			'help_text'         => $is_last ? __( 'Only allow the selected profile types to send invites.', 'buddyboss-community-social-network-groups-forums-messaging' ) : '',
 			'default'           => absint( bboss_get_option( 'bp-enable-send-invite-member-type-' . $type_name, 0 ) ),
 			'sanitize_callback' => 'absint',
 			'conditional'       => array(

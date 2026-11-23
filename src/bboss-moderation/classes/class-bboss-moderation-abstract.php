@@ -132,7 +132,7 @@ abstract class BBoss_Moderation_Abstract {
 
 		// Return error is moderation setting not enabled.
 		if ( empty( $is_allow ) ) {
-			return new WP_Error( 'moderation_not_enable', __( 'Moderation not enabled.', 'buddyboss-platform' ) );
+			return new WP_Error( 'moderation_not_enable', __( 'Moderation not enabled.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 		}
 
 		if ( empty( $moderation->id ) ) {

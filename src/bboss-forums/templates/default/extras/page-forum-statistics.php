@@ -24,7 +24,7 @@ get_header(); ?>
 			<h1 class="entry-title"><?php the_title(); ?></h1>
 			<div class="entry-content">
 
-				<?php get_the_content() ? the_content() : print( wp_kses_post( __( '<p>Here are the statistics and popular discussions of our forums.</p>', 'buddyboss-platform' ) ) ); // phpcs:ignore WordPress.WP.I18n.NoHtmlWrappedStrings -- HTML wrapper kept to preserve existing translations (msgid unchanged). ?>
+				<?php get_the_content() ? the_content() : print( wp_kses_post( __( '<p>Here are the statistics and popular discussions of our forums.</p>', 'buddyboss-community-social-network-groups-forums-messaging' ) ) ); // phpcs:ignore WordPress.WP.I18n.NoHtmlWrappedStrings -- HTML wrapper kept to preserve existing translations (msgid unchanged). ?>
 
 				<div id="bbpress-forums">
 
@@ -36,7 +36,7 @@ get_header(); ?>
 
 					<?php if ( bboss_bbp_view_query( 'popular' ) ) : ?>
 
-						<h2 class="entry-title"><?php esc_html_e( 'Popular Discussions', 'buddyboss-platform' ); ?></h2>
+						<h2 class="entry-title"><?php esc_html_e( 'Popular Discussions', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></h2>
 
 						<?php bboss_bbp_get_template_part( 'pagination', 'topics' ); ?>
 

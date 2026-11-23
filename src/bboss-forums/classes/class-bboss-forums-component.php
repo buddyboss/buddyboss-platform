@@ -105,7 +105,7 @@ if ( ! class_exists( 'BBP_Forums_Component' ) ) :
 				'slug'          => BBOSS_FORUMS_SLUG,
 				'root_slug'     => isset( $bp->pages->forums->slug ) ? $bp->pages->forums->slug : BBOSS_FORUMS_SLUG,
 				'has_directory' => false,
-				'search_string' => __( 'Search Forums&hellip;', 'buddyboss-platform' ),
+				'search_string' => __( 'Search Forums&hellip;', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			);
 
 			parent::setup_globals( $args );
@@ -193,7 +193,7 @@ if ( ! class_exists( 'BBP_Forums_Component' ) ) :
 
 			// Add 'Forums' to the main navigation
 			$main_nav = array(
-				'name'                => __( 'Forums', 'buddyboss-platform' ),
+				'name'                => __( 'Forums', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				'slug'                => $this->slug,
 				'position'            => 80,
 				'screen_function'     => 'bboss_bbp_member_forums_screen_topics',
@@ -215,7 +215,7 @@ if ( ! class_exists( 'BBP_Forums_Component' ) ) :
 
 			// Topics started
 			$sub_nav[] = array(
-				'name'            => ( bboss_loggedin_user_id() === bboss_displayed_user_id() ? __( 'My Discussions', 'buddyboss-platform' ) : __( 'Discussions', 'buddyboss-platform' ) ),
+				'name'            => ( bboss_loggedin_user_id() === bboss_displayed_user_id() ? __( 'My Discussions', 'buddyboss-community-social-network-groups-forums-messaging' ) : __( 'Discussions', 'buddyboss-community-social-network-groups-forums-messaging' ) ),
 				'slug'            => bboss_bbp_get_topic_archive_slug(),
 				'parent_url'      => $forums_link,
 				'parent_slug'     => $this->slug,
@@ -226,7 +226,7 @@ if ( ! class_exists( 'BBP_Forums_Component' ) ) :
 
 			// Replies to topics
 			$sub_nav[] = array(
-				'name'            => ( bboss_loggedin_user_id() === bboss_displayed_user_id() ? __( 'My Replies', 'buddyboss-platform' ) : __( 'Replies', 'buddyboss-platform' ) ),
+				'name'            => ( bboss_loggedin_user_id() === bboss_displayed_user_id() ? __( 'My Replies', 'buddyboss-community-social-network-groups-forums-messaging' ) : __( 'Replies', 'buddyboss-community-social-network-groups-forums-messaging' ) ),
 				'slug'            => bboss_bbp_get_reply_archive_slug(),
 				'parent_url'      => $forums_link,
 				'parent_slug'     => $this->slug,
@@ -238,7 +238,7 @@ if ( ! class_exists( 'BBP_Forums_Component' ) ) :
 			if ( bboss_bbp_is_favorites_active() ) {
 				// Favorite topics
 				$sub_nav[] = array(
-					'name'            => ( bboss_loggedin_user_id() === bboss_displayed_user_id() ? __( 'My Favorites', 'buddyboss-platform' ) : __( 'Favorites', 'buddyboss-platform' ) ),
+					'name'            => ( bboss_loggedin_user_id() === bboss_displayed_user_id() ? __( 'My Favorites', 'buddyboss-community-social-network-groups-forums-messaging' ) : __( 'Favorites', 'buddyboss-community-social-network-groups-forums-messaging' ) ),
 					'slug'            => bboss_bbp_get_user_favorites_slug(),
 					'parent_url'      => $forums_link,
 					'parent_slug'     => $this->slug,
@@ -269,7 +269,7 @@ if ( ! class_exists( 'BBP_Forums_Component' ) ) :
 				$wp_admin_nav[] = array(
 					'parent' => bboss()->my_account_menu_id,
 					'id'     => 'my-account-' . $this->id,
-					'title'  => __( 'Forums', 'buddyboss-platform' ),
+					'title'  => __( 'Forums', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'href'   => trailingslashit( $forums_link ),
 				);
 
@@ -277,7 +277,7 @@ if ( ! class_exists( 'BBP_Forums_Component' ) ) :
 				$wp_admin_nav[] = array(
 					'parent' => 'my-account-' . $this->id,
 					'id'     => 'my-account-' . $this->id . '-topics',
-					'title'  => __( 'My Discussions', 'buddyboss-platform' ),
+					'title'  => __( 'My Discussions', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'href'   => trailingslashit( $forums_link . bboss_bbp_get_topic_archive_slug() ),
 				);
 
@@ -285,7 +285,7 @@ if ( ! class_exists( 'BBP_Forums_Component' ) ) :
 				$wp_admin_nav[] = array(
 					'parent' => 'my-account-' . $this->id,
 					'id'     => 'my-account-' . $this->id . '-replies',
-					'title'  => __( 'My Replies', 'buddyboss-platform' ),
+					'title'  => __( 'My Replies', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'href'   => trailingslashit( $forums_link . bboss_bbp_get_reply_archive_slug() ),
 				);
 
@@ -293,7 +293,7 @@ if ( ! class_exists( 'BBP_Forums_Component' ) ) :
 				$wp_admin_nav[] = array(
 					'parent' => 'my-account-' . $this->id,
 					'id'     => 'my-account-' . $this->id . '-favorites',
-					'title'  => __( 'My Favorites', 'buddyboss-platform' ),
+					'title'  => __( 'My Favorites', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'href'   => trailingslashit( $forums_link . bboss_bbp_get_user_favorites_slug() ),
 				);
 			}
@@ -312,7 +312,7 @@ if ( ! class_exists( 'BBP_Forums_Component' ) ) :
 			// Adjust title based on view
 			if ( bboss_is_forums_component() ) {
 				if ( bboss_is_my_profile() ) {
-					$bp->bp_options_title = __( 'Forums', 'buddyboss-platform' );
+					$bp->bp_options_title = __( 'Forums', 'buddyboss-community-social-network-groups-forums-messaging' );
 				} elseif ( bboss_is_user() ) {
 					$bp->bp_options_avatar = bboss_core_fetch_avatar(
 						array(
@@ -455,7 +455,7 @@ if ( ! class_exists( 'BBP_Forums_Component' ) ) :
 					array(
 						'parent' => '',
 						'id'     => 'edit-forum',
-						'title'  => __( 'Edit Forum', 'buddyboss-platform' ),
+						'title'  => __( 'Edit Forum', 'buddyboss-community-social-network-groups-forums-messaging' ),
 						'href'   => get_edit_post_link( $forum_id ),
 					)
 				);
@@ -464,7 +464,7 @@ if ( ! class_exists( 'BBP_Forums_Component' ) ) :
 				$menu_id = 'discussion';
 				$wp_admin_bar->add_menu(
 					array(
-						'title' => esc_html__( 'Edit Discussion', 'buddyboss-platform' ),
+						'title' => esc_html__( 'Edit Discussion', 'buddyboss-community-social-network-groups-forums-messaging' ),
 						'id'    => $menu_id,
 						'href'  => bboss_bbp_get_topic_edit_url( $topic_id ),
 					)
@@ -473,7 +473,7 @@ if ( ! class_exists( 'BBP_Forums_Component' ) ) :
 					$wp_admin_bar->add_menu(
 						array(
 							'parent' => $menu_id,
-							'title'  => ! bboss_bbp_is_topic_open( $topic_id ) ? esc_html__( 'Open Discussion', 'buddyboss-platform' ) : esc_html__( 'Close Discussion', 'buddyboss-platform' ),
+							'title'  => ! bboss_bbp_is_topic_open( $topic_id ) ? esc_html__( 'Open Discussion', 'buddyboss-community-social-network-groups-forums-messaging' ) : esc_html__( 'Close Discussion', 'buddyboss-community-social-network-groups-forums-messaging' ),
 							'id'     => 'open-' . $menu_id,
 							'href'   => wp_nonce_url(
 								add_query_arg(
@@ -490,7 +490,7 @@ if ( ! class_exists( 'BBP_Forums_Component' ) ) :
 				$wp_admin_bar->add_menu(
 					array(
 						'parent' => $menu_id,
-						'title'  => esc_html__( 'Merge Discussion', 'buddyboss-platform' ),
+						'title'  => esc_html__( 'Merge Discussion', 'buddyboss-community-social-network-groups-forums-messaging' ),
 						'id'     => 'merge-' . $menu_id,
 						'href'   => add_query_arg(
 							array(
@@ -505,7 +505,7 @@ if ( ! class_exists( 'BBP_Forums_Component' ) ) :
 						$wp_admin_bar->add_menu(
 							array(
 								'parent' => $menu_id,
-								'title'  => bboss_bbp_is_topic_trash( $topic_id ) ? esc_html__( 'Restore from Trash', 'buddyboss-platform' ) : esc_html__( 'Move to Trash', 'buddyboss-platform' ),
+								'title'  => bboss_bbp_is_topic_trash( $topic_id ) ? esc_html__( 'Restore from Trash', 'buddyboss-community-social-network-groups-forums-messaging' ) : esc_html__( 'Move to Trash', 'buddyboss-community-social-network-groups-forums-messaging' ),
 								'id'     => 'trash-' . $menu_id,
 								'href'   => wp_nonce_url(
 									add_query_arg(
@@ -524,7 +524,7 @@ if ( ! class_exists( 'BBP_Forums_Component' ) ) :
 						$wp_admin_bar->add_menu(
 							array(
 								'parent' => $menu_id,
-								'title'  => esc_html__( 'Delete', 'buddyboss-platform' ),
+								'title'  => esc_html__( 'Delete', 'buddyboss-community-social-network-groups-forums-messaging' ),
 								'id'     => 'delete-' . $menu_id,
 								'href'   => wp_nonce_url(
 									add_query_arg(
@@ -544,7 +544,7 @@ if ( ! class_exists( 'BBP_Forums_Component' ) ) :
 					$wp_admin_bar->add_menu(
 						array(
 							'parent' => $menu_id,
-							'title'  => bboss_bbp_is_topic_spam( $topic_id ) ? esc_html__( 'Mark as Unspam', 'buddyboss-platform' ) : esc_html__( 'Mark as Spam', 'buddyboss-platform' ),
+							'title'  => bboss_bbp_is_topic_spam( $topic_id ) ? esc_html__( 'Mark as Unspam', 'buddyboss-community-social-network-groups-forums-messaging' ) : esc_html__( 'Mark as Spam', 'buddyboss-community-social-network-groups-forums-messaging' ),
 							'id'     => 'spam-' . $menu_id,
 							'href'   => wp_nonce_url(
 								add_query_arg(

@@ -116,7 +116,7 @@ function bboss_get_options_title() {
 	$bp = bboss();
 
 	if ( empty( $bp->bp_options_title ) ) {
-		$bp->bp_options_title = __( 'Options', 'buddyboss-platform' );
+		$bp->bp_options_title = __( 'Options', 'buddyboss-community-social-network-groups-forums-messaging' );
 	}
 
 	// Already escaped before the filter; wp_kses_post() keeps entities as they are instead of encoding them twice.
@@ -144,7 +144,7 @@ function bboss_get_directory_title( $component = '' ) {
 		// If none is found, concatenate.
 	} elseif ( isset( bboss()->{$component}->name ) ) {
 		/* translators: %s: component name. */
-		$title = sprintf( __( '%s Directory', 'buddyboss-platform' ), bboss()->{$component}->name );
+		$title = sprintf( __( '%s Directory', 'buddyboss-community-social-network-groups-forums-messaging' ), bboss()->{$component}->name );
 	}
 
 	/**
@@ -202,7 +202,7 @@ function bboss_comment_author_avatar() {
 						'item_id' => $comment->user_id,
 						'type'    => 'thumb',
 						/* translators: %s: member display name. */
-						'alt'     => sprintf( __( 'Profile photo of %s', 'buddyboss-platform' ), bboss_core_get_user_displayname( $comment->user_id ) ),
+						'alt'     => sprintf( __( 'Profile photo of %s', 'buddyboss-community-social-network-groups-forums-messaging' ), bboss_core_get_user_displayname( $comment->user_id ) ),
 					)
 				)
 			)
@@ -229,7 +229,7 @@ function bboss_post_author_avatar() {
 						'item_id' => $post->post_author,
 						'type'    => 'thumb',
 						/* translators: %s: member display name. */
-						'alt'     => sprintf( __( 'Profile photo of %s', 'buddyboss-platform' ), bboss_core_get_user_displayname( $post->post_author ) ),
+						'alt'     => sprintf( __( 'Profile photo of %s', 'buddyboss-community-social-network-groups-forums-messaging' ), bboss_core_get_user_displayname( $post->post_author ) ),
 					)
 				)
 			)
@@ -446,7 +446,7 @@ function bboss_format_time( $time = '', $exclude_time = false, $gmt = true ) {
 
 		// Return string formatted with date and time.
 		/* translators: 1: formatted date, 2: formatted time. */
-		$formatted_date = sprintf( esc_html__( '%1$s at %2$s', 'buddyboss-platform' ), $formatted_date, $formatted_time );
+		$formatted_date = sprintf( esc_html__( '%1$s at %2$s', 'buddyboss-community-social-network-groups-forums-messaging' ), $formatted_date, $formatted_time );
 	}
 
 	/**
@@ -567,21 +567,21 @@ function bboss_search_form_type_select() {
 	$options = array();
 
 	if ( bboss_is_active( 'xprofile' ) ) {
-		$options['members'] = __( 'Members', 'buddyboss-platform' );
+		$options['members'] = __( 'Members', 'buddyboss-community-social-network-groups-forums-messaging' );
 	}
 
 	if ( bboss_is_active( 'groups' ) ) {
-		$options['groups'] = __( 'Groups', 'buddyboss-platform' );
+		$options['groups'] = __( 'Groups', 'buddyboss-community-social-network-groups-forums-messaging' );
 	}
 
 	if ( bboss_is_active( 'blogs' ) && is_multisite() ) {
-		$options['blogs'] = __( 'Blogs', 'buddyboss-platform' );
+		$options['blogs'] = __( 'Blogs', 'buddyboss-community-social-network-groups-forums-messaging' );
 	}
 
-	$options['posts'] = __( 'Posts', 'buddyboss-platform' );
+	$options['posts'] = __( 'Posts', 'buddyboss-community-social-network-groups-forums-messaging' );
 
 	// Eventually this won't be needed and a page will be built to integrate all search results.
-	$selection_box  = '<label for="search-which" class="accessibly-hidden">' . __( 'Search these:', 'buddyboss-platform' ) . '</label>';
+	$selection_box  = '<label for="search-which" class="accessibly-hidden">' . __( 'Search these:', 'buddyboss-community-social-network-groups-forums-messaging' ) . '</label>';
 	$selection_box .= '<select name="search-which" id="search-which" style="width: auto">';
 
 	/**
@@ -701,7 +701,7 @@ function bboss_get_search_default_text( $component = '' ) {
 		$component = bboss_current_component();
 	}
 
-	$default_text = __( 'Search anything&hellip;', 'buddyboss-platform' );
+	$default_text = __( 'Search anything&hellip;', 'buddyboss-community-social-network-groups-forums-messaging' );
 
 	// Most of the time, $component will be the actual component ID.
 	if ( ! empty( $component ) ) {
@@ -910,7 +910,7 @@ function bboss_create_excerpt( $text, $length = 225, $options = array() ) {
 	$r = bboss_parse_args(
 		$options,
 		array(
-			'ending'            => __( ' [&hellip;]', 'buddyboss-platform' ),
+			'ending'            => __( ' [&hellip;]', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'exact'             => false,
 			'html'              => true,
 			'filter_shortcodes' => $filter_shortcodes_default,
@@ -1283,7 +1283,7 @@ function bboss_get_email_subject( $args = array() ) {
 		array(
 			'before'  => '[',
 			'after'   => ']',
-			'default' => __( 'Community', 'buddyboss-platform' ),
+			'default' => __( 'Community', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'text'    => '',
 		),
 		'get_email_subject'
@@ -3608,7 +3608,7 @@ function bboss_get_title_parts( $seplocation = 'right' ) {
 		$current_component = bboss_current_component();
 
 		// No current component (when does this happen?).
-		$bp_title_parts = array( __( 'Directory', 'buddyboss-platform' ) );
+		$bp_title_parts = array( __( 'Directory', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 
 		if ( ! empty( $current_component ) ) {
 			$bp_title_parts = array( bboss_get_directory_title( $current_component ) );
@@ -3616,19 +3616,19 @@ function bboss_get_title_parts( $seplocation = 'right' ) {
 
 		// Sign up page.
 	} elseif ( bboss_is_register_page() ) {
-		$bp_title_parts = array( __( 'Create an Account', 'buddyboss-platform' ) );
+		$bp_title_parts = array( __( 'Create an Account', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 
 		// Activation page.
 	} elseif ( bboss_is_activation_page() ) {
-		$bp_title_parts = array( __( 'Activate Your Account', 'buddyboss-platform' ) );
+		$bp_title_parts = array( __( 'Activate Your Account', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 
 		// Group creation page.
 	} elseif ( bboss_is_group_create() ) {
-		$bp_title_parts = array( __( 'Create a Group', 'buddyboss-platform' ) );
+		$bp_title_parts = array( __( 'Create a Group', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 
 		// Blog creation page.
 	} elseif ( bboss_is_create_blog() ) {
-		$bp_title_parts = array( __( 'Create a Site', 'buddyboss-platform' ) );
+		$bp_title_parts = array( __( 'Create a Site', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 	}
 
 	// Strip spans.

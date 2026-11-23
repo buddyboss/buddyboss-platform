@@ -167,15 +167,15 @@ class BBoss_Media_Component extends BBoss_Component {
 
 		// Register the visibility levels. See bp_media_get_visibility_levels() to filter.
 		$this->visibility_levels = array(
-			'public'   => __( 'Public', 'buddyboss-platform' ),
-			'loggedin' => __( 'All Members', 'buddyboss-platform' ),
+			'public'   => __( 'Public', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'loggedin' => __( 'All Members', 'buddyboss-community-social-network-groups-forums-messaging' ),
 		);
 
 		if ( bboss_is_active( 'friends' ) ) {
-			$this->visibility_levels['friends'] = __( 'My Connections', 'buddyboss-platform' );
+			$this->visibility_levels['friends'] = __( 'My Connections', 'buddyboss-community-social-network-groups-forums-messaging' );
 		}
 
-		$this->visibility_levels['onlyme'] = __( 'Only Me', 'buddyboss-platform' );
+		$this->visibility_levels['onlyme'] = __( 'Only Me', 'buddyboss-community-social-network-groups-forums-messaging' );
 
 		$this->published_status = 'published';
 		$this->scheduled_status = 'scheduled';
@@ -199,7 +199,7 @@ class BBoss_Media_Component extends BBoss_Component {
 				'has_directory'   => true,
 				'global_tables'   => $global_tables,
 				'directory_title' => isset( $bp->pages->media->title ) ? $bp->pages->media->title : $default_directory_title,
-				'search_string'   => __( 'Search Photos&hellip;', 'buddyboss-platform' ),
+				'search_string'   => __( 'Search Photos&hellip;', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			)
 		);
 
@@ -261,7 +261,7 @@ class BBoss_Media_Component extends BBoss_Component {
 
 			$slug       = bboss_get_media_slug();
 			$media_link = trailingslashit( $user_domain . $slug );
-			$nav_name   = __( 'Photos', 'buddyboss-platform' );
+			$nav_name   = __( 'Photos', 'buddyboss-community-social-network-groups-forums-messaging' );
 
 			// Add 'Photos' to the main navigation.
 			$main_nav = array(
@@ -288,7 +288,7 @@ class BBoss_Media_Component extends BBoss_Component {
 
 				// Add the subnav items to the profile.
 				$sub_nav[] = array(
-					'name'            => __( 'Albums', 'buddyboss-platform' ),
+					'name'            => __( 'Albums', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'slug'            => 'albums',
 					'parent_url'      => $media_link,
 					'parent_slug'     => $slug,
@@ -323,7 +323,7 @@ class BBoss_Media_Component extends BBoss_Component {
 			$wp_admin_nav[] = array(
 				'parent' => bboss()->my_account_menu_id,
 				'id'     => 'my-account-' . $this->id,
-				'title'  => __( 'Photos', 'buddyboss-platform' ),
+				'title'  => __( 'Photos', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				'href'   => $media_link,
 			);
 
@@ -331,7 +331,7 @@ class BBoss_Media_Component extends BBoss_Component {
 			$wp_admin_nav[] = array(
 				'parent'   => 'my-account-' . $this->id,
 				'id'       => 'my-account-' . $this->id . '-my-media',
-				'title'    => __( 'My Photos', 'buddyboss-platform' ),
+				'title'    => __( 'My Photos', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				'href'     => $media_link,
 				'position' => 10,
 			);
@@ -341,7 +341,7 @@ class BBoss_Media_Component extends BBoss_Component {
 				$wp_admin_nav[] = array(
 					'parent'   => 'my-account-' . $this->id,
 					'id'       => 'my-account-' . $this->id . '-albums',
-					'title'    => __( 'My Albums', 'buddyboss-platform' ),
+					'title'    => __( 'My Albums', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'href'     => trailingslashit( $media_link . 'albums' ),
 					'position' => 20,
 				);
@@ -362,7 +362,7 @@ class BBoss_Media_Component extends BBoss_Component {
 			$bp = bboss();
 
 			if ( bboss_is_my_profile() && ! bboss_is_single_album() ) {
-				$bp->bp_options_title = __( 'My Photos', 'buddyboss-platform' );
+				$bp->bp_options_title = __( 'My Photos', 'buddyboss-community-social-network-groups-forums-messaging' );
 
 			} elseif ( ! bboss_is_my_profile() && ! bboss_is_single_album() ) {
 				$bp->bp_options_avatar = bboss_core_fetch_avatar(
@@ -370,7 +370,7 @@ class BBoss_Media_Component extends BBoss_Component {
 						'item_id' => bboss_displayed_user_id(),
 						'type'    => 'thumb',
 						/* translators: %s: displayed user's full name. */
-					'alt'     => sprintf( __( 'Profile photo of %s', 'buddyboss-platform' ), bboss_get_displayed_user_fullname() ),
+					'alt'     => sprintf( __( 'Profile photo of %s', 'buddyboss-community-social-network-groups-forums-messaging' ), bboss_get_displayed_user_fullname() ),
 					)
 				);
 				$bp->bp_options_title  = bboss_get_displayed_user_fullname();

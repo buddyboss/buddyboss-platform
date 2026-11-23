@@ -26,10 +26,10 @@ export function MimeCheckerPanel( { mimeChecker, onUseMimeType } ) {
 	return (
 		<div className="bb-extension-modal__mime-checker">
 			<h4 className="bb-extension-modal__mime-checker-title">
-				{ __( 'Check MIME type', 'buddyboss-platform' ) }
+				{ __( 'Check MIME type', 'buddyboss-community-social-network-groups-forums-messaging' ) }
 			</h4>
 			<p className="bb-extension-modal__mime-checker-desc">
-				{ __( 'Upload a sample file and click \'Get MIME Type\' to view its MIME type.', 'buddyboss-platform' ) }
+				{ __( 'Upload a sample file and click \'Get MIME Type\' to view its MIME type.', 'buddyboss-community-social-network-groups-forums-messaging' ) }
 			</p>
 			<div className="bb-extension-modal__mime-checker-upload-row">
 				<input
@@ -48,10 +48,10 @@ export function MimeCheckerPanel( { mimeChecker, onUseMimeType } ) {
 					} }
 				>
 					<i className="bb-icons-rl bb-icons-rl-upload" />
-					{ __( 'Upload File', 'buddyboss-platform' ) }
+					{ __( 'Upload File', 'buddyboss-community-social-network-groups-forums-messaging' ) }
 				</button>
 				<span className="bb-extension-modal__mime-checker-upload-name">
-					{ mimeChecker.selectedFileName || __( 'No file uploaded', 'buddyboss-platform' ) }
+					{ mimeChecker.selectedFileName || __( 'No file uploaded', 'buddyboss-community-social-network-groups-forums-messaging' ) }
 				</span>
 			</div>
 			<Button
@@ -60,7 +60,7 @@ export function MimeCheckerPanel( { mimeChecker, onUseMimeType } ) {
 				disabled={ mimeChecker.isMimeChecking }
 				className="bb-extension-modal__mime-checker-btn"
 			>
-				{ mimeChecker.isMimeChecking ? __( 'Checking...', 'buddyboss-platform' ) : __( 'Get MIME Type', 'buddyboss-platform' ) }
+				{ mimeChecker.isMimeChecking ? __( 'Checking...', 'buddyboss-community-social-network-groups-forums-messaging' ) : __( 'Get MIME Type', 'buddyboss-community-social-network-groups-forums-messaging' ) }
 			</Button>
 			{ mimeChecker.mimeCheckerError && (
 				<p className="bb-extension-modal__mime-checker-error">
@@ -70,7 +70,7 @@ export function MimeCheckerPanel( { mimeChecker, onUseMimeType } ) {
 			{ mimeChecker.mimeCheckerResult && (
 				<div className="bb-extension-modal__mime-checker-result">
 					<span className="bb-extension-modal__mime-checker-result-label">
-						{ __( 'Detected MIME type:', 'buddyboss-platform' ) }
+						{ __( 'Detected MIME type:', 'buddyboss-community-social-network-groups-forums-messaging' ) }
 					</span>
 					<code className="bb-extension-modal__mime-checker-result-value">
 						{ mimeChecker.mimeCheckerResult }
@@ -80,7 +80,7 @@ export function MimeCheckerPanel( { mimeChecker, onUseMimeType } ) {
 						onClick={ onUseMimeType }
 						className="bb-extension-modal__mime-checker-use-btn"
 					>
-						{ __( 'Use this MIME type', 'buddyboss-platform' ) }
+						{ __( 'Use this MIME type', 'buddyboss-community-social-network-groups-forums-messaging' ) }
 					</Button>
 				</div>
 			) }

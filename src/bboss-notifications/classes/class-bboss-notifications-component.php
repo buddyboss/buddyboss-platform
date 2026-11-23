@@ -118,7 +118,7 @@ class BBoss_Notifications_Component extends BBoss_Component {
 		$args = array(
 			'slug'          => BBOSS_NOTIFICATIONS_SLUG,
 			'has_directory' => false,
-			'search_string' => __( 'Search Notifications...', 'buddyboss-platform' ),
+			'search_string' => __( 'Search Notifications...', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'global_tables' => $global_tables,
 			'meta_tables'   => $meta_tables,
 		);
@@ -157,14 +157,14 @@ class BBoss_Notifications_Component extends BBoss_Component {
 		if ( bboss_is_user() && bboss_user_has_access() ) {
 			$count    = bboss_notifications_get_unread_notification_count( bboss_displayed_user_id() );
 			$class    = ( 0 === $count ) ? 'no-count' : 'count';
-			$nav_name = __( 'Notifications', 'buddyboss-platform' );
+			$nav_name = __( 'Notifications', 'buddyboss-community-social-network-groups-forums-messaging' );
 			$nav_name .= sprintf(
 				' <span class="%s">%s</span>',
 				esc_attr( $class ),
 				bboss_core_number_format( $count )
 			);
 		} else {
-			$nav_name = __( 'Notifications', 'buddyboss-platform' );
+			$nav_name = __( 'Notifications', 'buddyboss-community-social-network-groups-forums-messaging' );
 		}
 
 		// Add 'Notifications' to the main navigation.
@@ -180,7 +180,7 @@ class BBoss_Notifications_Component extends BBoss_Component {
 
 		// Add the subnav items to the notifications nav item.
 		$sub_nav[] = array(
-			'name'            => __( 'Unread', 'buddyboss-platform' ),
+			'name'            => __( 'Unread', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'slug'            => 'unread',
 			'parent_url'      => $notifications_link,
 			'parent_slug'     => $slug,
@@ -191,7 +191,7 @@ class BBoss_Notifications_Component extends BBoss_Component {
 		);
 
 		$sub_nav[] = array(
-			'name'            => __( 'Read', 'buddyboss-platform' ),
+			'name'            => __( 'Read', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'slug'            => 'read',
 			'parent_url'      => $notifications_link,
 			'parent_slug'     => $slug,
@@ -222,8 +222,8 @@ class BBoss_Notifications_Component extends BBoss_Component {
 			// Setup the logged in user variables.
 			$notifications_link = trailingslashit( bboss_loggedin_user_domain() . bboss_get_notifications_slug() );
 
-			$title  = __( 'Notifications', 'buddyboss-platform' );
-			$unread = __( 'Unread', 'buddyboss-platform' );
+			$title  = __( 'Notifications', 'buddyboss-community-social-network-groups-forums-messaging' );
+			$unread = __( 'Unread', 'buddyboss-community-social-network-groups-forums-messaging' );
 
 			// Add the "My Account" sub menus.
 			$wp_admin_nav[] = array(
@@ -246,7 +246,7 @@ class BBoss_Notifications_Component extends BBoss_Component {
 			$wp_admin_nav[] = array(
 				'parent'   => 'my-account-' . $this->id,
 				'id'       => 'my-account-' . $this->id . '-read',
-				'title'    => __( 'Read', 'buddyboss-platform' ),
+				'title'    => __( 'Read', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				'href'     => trailingslashit( $notifications_link . 'read' ),
 				'position' => 20,
 			);
@@ -267,14 +267,14 @@ class BBoss_Notifications_Component extends BBoss_Component {
 			$bp = bboss();
 
 			if ( bboss_is_my_profile() ) {
-				$bp->bp_options_title = __( 'Notifications', 'buddyboss-platform' );
+				$bp->bp_options_title = __( 'Notifications', 'buddyboss-community-social-network-groups-forums-messaging' );
 			} else {
 				$bp->bp_options_avatar = bboss_core_fetch_avatar(
 					array(
 						'item_id' => bboss_displayed_user_id(),
 						'type'    => 'thumb',
 						/* translators: %s: member display name. */
-						'alt'     => sprintf( __( 'Profile photo of %s', 'buddyboss-platform' ), bboss_get_displayed_user_fullname() ),
+						'alt'     => sprintf( __( 'Profile photo of %s', 'buddyboss-community-social-network-groups-forums-messaging' ), bboss_get_displayed_user_fullname() ),
 					)
 				);
 				$bp->bp_options_title  = bboss_get_displayed_user_fullname();

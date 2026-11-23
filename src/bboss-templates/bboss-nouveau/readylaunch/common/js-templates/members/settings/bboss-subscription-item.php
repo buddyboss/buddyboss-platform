@@ -36,7 +36,7 @@ defined( 'ABSPATH' ) || exit;
 			<# } #>
 		</div>
 	</a>
-	<button type="button" data-subscription-id="{{ item.id }}" class="subscription-item_remove bb-rl-button bb-rl-button--secondaryOutline bb-rl-button--small" aria-label="<?php esc_html_e( 'Unsubscribe', 'buddyboss-platform' ); ?>">
-		<?php esc_html_e( 'Unsubscribe', 'buddyboss-platform' ); ?>
+	<button type="button" data-subscription-id="{{ item.id }}" class="subscription-item_remove bb-rl-button bb-rl-button--secondaryOutline bb-rl-button--small" aria-label="<?php esc_html_e( 'Unsubscribe', 'buddyboss-community-social-network-groups-forums-messaging' ); ?>">
+		<?php esc_html_e( 'Unsubscribe', 'buddyboss-community-social-network-groups-forums-messaging' ); ?>
 	</button>
 </script>

@@ -149,14 +149,14 @@ function bboss_core_get_wp_profile() {
 	$ud = get_userdata( bboss_displayed_user_id() ); ?>
 
 <div class="bp-widget wp-profile">
-	<h4><?php esc_html_e( 'My Profile', 'buddyboss-platform' ); ?></h4>
+	<h4><?php esc_html_e( 'My Profile', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></h4>
 
 	<table class="wp-profile-fields">
 
 		<?php if ( $ud->display_name ) : ?>
 
 			<tr id="wp_displayname">
-				<td class="label"><?php esc_html_e( 'Name', 'buddyboss-platform' ); ?></td>
+				<td class="label"><?php esc_html_e( 'Name', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></td>
 				<td class="data"><?php echo esc_html( $ud->display_name ); ?></td>
 			</tr>
 
@@ -165,7 +165,7 @@ function bboss_core_get_wp_profile() {
 		<?php if ( $ud->user_description ) : ?>
 
 			<tr id="wp_desc">
-				<td class="label"><?php esc_html_e( 'About Me', 'buddyboss-platform' ); ?></td>
+				<td class="label"><?php esc_html_e( 'About Me', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></td>
 				<td class="data"><?php echo esc_html( $ud->user_description ); ?></td>
 			</tr>
 
@@ -174,7 +174,7 @@ function bboss_core_get_wp_profile() {
 		<?php if ( $ud->user_url ) : ?>
 
 			<tr id="wp_website">
-				<td class="label"><?php esc_html_e( 'Website', 'buddyboss-platform' ); ?></td>
+				<td class="label"><?php esc_html_e( 'Website', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></td>
 				<td class="data"><?php echo wp_kses_post( make_clickable( $ud->user_url ) ); ?></td>
 			</tr>
 
@@ -183,7 +183,7 @@ function bboss_core_get_wp_profile() {
 		<?php if ( $ud->jabber ) : ?>
 
 			<tr id="wp_jabber">
-				<td class="label"><?php esc_html_e( 'Jabber', 'buddyboss-platform' ); ?></td>
+				<td class="label"><?php esc_html_e( 'Jabber', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></td>
 				<td class="data"><?php echo esc_html( $ud->jabber ); ?></td>
 			</tr>
 
@@ -192,7 +192,7 @@ function bboss_core_get_wp_profile() {
 		<?php if ( $ud->aim ) : ?>
 
 			<tr id="wp_aim">
-				<td class="label"><?php esc_html_e( 'AOL Messenger', 'buddyboss-platform' ); ?></td>
+				<td class="label"><?php esc_html_e( 'AOL Messenger', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></td>
 				<td class="data"><?php echo esc_html( $ud->aim ); ?></td>
 			</tr>
 
@@ -201,7 +201,7 @@ function bboss_core_get_wp_profile() {
 		<?php if ( $ud->yim ) : ?>
 
 			<tr id="wp_yim">
-				<td class="label"><?php esc_html_e( 'Yahoo Messenger', 'buddyboss-platform' ); ?></td>
+				<td class="label"><?php esc_html_e( 'Yahoo Messenger', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></td>
 				<td class="data"><?php echo esc_html( $ud->yim ); ?></td>
 			</tr>
 
@@ -322,7 +322,7 @@ function bboss_get_page_title() {
 function bboss_log_out_link() {
 	_deprecated_function( __FUNCTION__, '1.5', 'wp_logout_url()' );
 
-	$logout_link = '<a href="' . wp_logout_url( bboss_get_root_domain() ) . '">' . __( 'Log Out', 'buddyboss-platform' ) . '</a>';
+	$logout_link = '<a href="' . wp_logout_url( bboss_get_root_domain() ) . '">' . __( 'Log Out', 'buddyboss-community-social-network-groups-forums-messaging' ) . '</a>';
 	echo wp_kses_post( apply_filters( 'bp_logout_link', $logout_link ) );
 }
 
@@ -371,7 +371,7 @@ function bboss_groups_at_message_notification( $content, $poster_user_id, $group
 			$ud      = bboss_core_get_core_userdata( $receiver_user_id );
 			$to      = $ud->user_email;
 			/* translators: 1: member display name, 2: group name. */
-			$subject = bboss_get_email_subject( array( 'text' => sprintf( __( '%1$s mentioned you in the group "%2$s"', 'buddyboss-platform' ), $poster_name, $group->name ) ) );
+			$subject = bboss_get_email_subject( array( 'text' => sprintf( __( '%1$s mentioned you in the group "%2$s"', 'buddyboss-community-social-network-groups-forums-messaging' ), $poster_name, $group->name ) ) );
 
 			$message = sprintf(
 				/* translators: 1: member display name, 2: group name, 3: message excerpt, 4: link to the activity, 5: link to the notification settings. */
@@ -384,7 +384,7 @@ To view and respond to the message, log in and visit: %4$s
 
 ---------------------
 ',
-					'buddyboss-platform'
+					'buddyboss-community-social-network-groups-forums-messaging'
 				),
 				$poster_name,
 				$group->name,
@@ -439,7 +439,7 @@ function bboss_search_form() {
 			<input type="text" id="search-terms" name="search-terms" value="" />
 			' . bboss_search_form_type_select() . '
 
-			<input type="submit" name="search-submit" id="search-submit" value="' . __( 'Search', 'buddyboss-platform' ) . '" />
+			<input type="submit" name="search-submit" id="search-submit" value="' . __( 'Search', 'buddyboss-community-social-network-groups-forums-messaging' ) . '" />
 			' . wp_nonce_field( 'bp_search_form' ) . '
 		</form>
 	';

@@ -26,7 +26,7 @@ function bboss_members_register_member_directory_panel_fields() {
 		'member_directory',
 		'member_directory',
 		array(
-			'title'       => __( 'Member Directory', 'buddyboss-platform' ),
+			'title'       => __( 'Member Directory', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'description' => '',
 			'order'       => 10,
 		)
@@ -39,22 +39,22 @@ function bboss_members_register_member_directory_panel_fields() {
 		'member_directory',
 		array(
 			'name'              => 'bp-profile-layout-format',
-			'label'             => __( 'Enabled View(s)', 'buddyboss-platform' ),
+			'label'             => __( 'Enabled View(s)', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'type'              => 'select',
-			'description'       => __( 'Display member directories in grid view, list view, or allow toggling between both views.', 'buddyboss-platform' ),
+			'description'       => __( 'Display member directories in grid view, list view, or allow toggling between both views.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'default'           => bboss_get_option( 'bp-profile-layout-format', 'list_grid' ),
 			'sanitize_callback' => 'bboss_members_sanitize_layout_format',
 			'options'           => array(
 				array(
-					'label' => __( 'Grid and List', 'buddyboss-platform' ),
+					'label' => __( 'Grid and List', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'value' => 'list_grid',
 				),
 				array(
-					'label' => __( 'Grid', 'buddyboss-platform' ),
+					'label' => __( 'Grid', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'value' => 'grid',
 				),
 				array(
-					'label' => __( 'List', 'buddyboss-platform' ),
+					'label' => __( 'List', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'value' => 'list',
 				),
 			),
@@ -69,18 +69,18 @@ function bboss_members_register_member_directory_panel_fields() {
 		'member_directory',
 		array(
 			'name'              => 'bp-profile-layout-default-format',
-			'label'             => __( 'Default View', 'buddyboss-platform' ),
+			'label'             => __( 'Default View', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'type'              => 'radio',
 			'description'       => '',
 			'default'           => bboss_profile_layout_default_format( 'grid' ),
 			'sanitize_callback' => 'bboss_members_sanitize_default_format',
 			'options'           => array(
 				array(
-					'label' => __( 'Grid', 'buddyboss-platform' ),
+					'label' => __( 'Grid', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'value' => 'grid',
 				),
 				array(
-					'label' => __( 'List', 'buddyboss-platform' ),
+					'label' => __( 'List', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'value' => 'list',
 				),
 			),
@@ -101,30 +101,30 @@ function bboss_members_register_member_directory_panel_fields() {
 		'member_directory',
 		array(
 			'name'              => 'bb-member-directory-elements',
-			'label'             => __( 'Elements', 'buddyboss-platform' ),
+			'label'             => __( 'Elements', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'type'              => 'toggle_list',
-			'description'       => __( 'Select which elements to show in your member directories.', 'buddyboss-platform' ),
+			'description'       => __( 'Select which elements to show in your member directories.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'default'           => array(),
 			'sanitize_callback' => 'bboss_members_sanitize_toggle_list',
 			'options'           => array(
 				array(
-					'label' => __( 'Online Status', 'buddyboss-platform' ),
+					'label' => __( 'Online Status', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'value' => 'online-status',
 				),
 				array(
-					'label' => __( 'Profile Type', 'buddyboss-platform' ),
+					'label' => __( 'Profile Type', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'value' => 'profile-type',
 				),
 				array(
-					'label' => __( 'Followers', 'buddyboss-platform' ),
+					'label' => __( 'Followers', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'value' => 'followers',
 				),
 				array(
-					'label' => __( 'Last Active', 'buddyboss-platform' ),
+					'label' => __( 'Last Active', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'value' => 'last-active',
 				),
 				array(
-					'label' => __( 'Joined Date', 'buddyboss-platform' ),
+					'label' => __( 'Joined Date', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'value' => 'joined-date',
 				),
 			),
@@ -142,22 +142,22 @@ function bboss_members_register_member_directory_panel_fields() {
 		'member_directory',
 		array(
 			'name'              => 'bb-member-profile-actions',
-			'label'             => __( 'Profile Actions', 'buddyboss-platform' ),
+			'label'             => __( 'Profile Actions', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'type'              => 'toggle_list',
-			'description'       => __( 'Select which profile actions to enable in your member directories.', 'buddyboss-platform' ),
+			'description'       => __( 'Select which profile actions to enable in your member directories.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'default'           => array(),
 			'sanitize_callback' => 'bboss_members_sanitize_toggle_list',
 			'options'           => array(
 				array(
-					'label' => __( 'Follow', 'buddyboss-platform' ),
+					'label' => __( 'Follow', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'value' => 'follow',
 				),
 				array(
-					'label' => __( 'Connect', 'buddyboss-platform' ),
+					'label' => __( 'Connect', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'value' => 'connect',
 				),
 				array(
-					'label' => __( 'Send Message', 'buddyboss-platform' ),
+					'label' => __( 'Send Message', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'value' => 'message',
 				),
 			),
@@ -175,26 +175,26 @@ function bboss_members_register_member_directory_panel_fields() {
 		'member_directory',
 		array(
 			'name'              => 'bb-member-profile-primary-action',
-			'label'             => __( 'Primary Action', 'buddyboss-platform' ),
+			'label'             => __( 'Primary Action', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'type'              => 'select',
-			'description'       => __( 'Select which profile action to show as a primary button. The remaining enabled profile actions will be shown as secondary buttons underneath.', 'buddyboss-platform' ),
+			'description'       => __( 'Select which profile action to show as a primary button. The remaining enabled profile actions will be shown as secondary buttons underneath.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'default'           => function_exists( 'bboss_get_member_directory_primary_action' ) ? bboss_get_member_directory_primary_action() : '',
 			'sanitize_callback' => 'sanitize_key',
 			'options'           => array(
 				array(
-					'label' => __( 'None', 'buddyboss-platform' ),
+					'label' => __( 'None', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'value' => '',
 				),
 				array(
-					'label' => __( 'Follow', 'buddyboss-platform' ),
+					'label' => __( 'Follow', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'value' => 'follow',
 				),
 				array(
-					'label' => __( 'Connect', 'buddyboss-platform' ),
+					'label' => __( 'Connect', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'value' => 'connect',
 				),
 				array(
-					'label' => __( 'Send Message', 'buddyboss-platform' ),
+					'label' => __( 'Send Message', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'value' => 'message',
 				),
 			),

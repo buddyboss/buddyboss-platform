@@ -226,7 +226,7 @@ function bboss_block_render_readylaunch_header_block( $attributes = array() ) {
 	?>
 	<header id="masthead" class="bb-rl-header bb-rl-header-block <?php echo esc_attr( $dark_mode_class . ' ' . $align_class ); ?>">
 		<div class="bb-rl-container bb-rl-header-container">
-			<a href="#" class="bb-rl-left-panel-mobile" aria-label="<?php esc_attr_e( 'Open left panel', 'buddyboss-platform' ); ?>"><i class="bb-icons-rl-list"></i></a>
+			<a href="#" class="bb-rl-left-panel-mobile" aria-label="<?php esc_attr_e( 'Open left panel', 'buddyboss-community-social-network-groups-forums-messaging' ); ?>"><i class="bb-icons-rl-list"></i></a>
 			<?php
 			bboss_get_template_part( 'header/site-logo' );
 			wp_nav_menu(
@@ -273,10 +273,10 @@ function bboss_block_render_readylaunch_header_block( $attributes = array() ) {
 					} else {
 						?>
 						<div class="bb-rl-header-buttons">
-							<a href="<?php echo esc_url( wp_login_url() ); ?>" class="bb-rl-button bb-rl-button--tertiaryLink bb-rl-button--small signin-button"><?php esc_html_e( 'Sign in', 'buddyboss-platform' ); ?></a>
+							<a href="<?php echo esc_url( wp_login_url() ); ?>" class="bb-rl-button bb-rl-button--tertiaryLink bb-rl-button--small signin-button"><?php esc_html_e( 'Sign in', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></a>
 
 							<?php if ( get_option( 'users_can_register' ) ) { ?>
-								<a href="<?php echo esc_url( wp_registration_url() ); ?>" class="bb-rl-button bb-rl-button--secondaryFill bb-rl-button--small signup"><?php esc_html_e( 'Sign up', 'buddyboss-platform' ); ?></a>
+								<a href="<?php echo esc_url( wp_registration_url() ); ?>" class="bb-rl-button bb-rl-button--secondaryFill bb-rl-button--small signup"><?php esc_html_e( 'Sign up', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></a>
 							<?php } ?>
 						</div>
 					<?php } ?>
@@ -289,15 +289,15 @@ function bboss_block_render_readylaunch_header_block( $attributes = array() ) {
 					if ( $block_args['showSearch'] && bboss_is_active( 'search' ) ) {
 						?>
 						<form action="<?php echo esc_url( home_url( '/' ) ); ?>" method="get" class="bp-dir-search-form search-form" id="search-form">
-							<label for="search" class="bp-screen-reader-text"><?php esc_html_e( 'Search', 'buddyboss-platform' ); ?></label>
+							<label for="search" class="bp-screen-reader-text"><?php esc_html_e( 'Search', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></label>
 							<div class="bb-rl-network-search-bar">
-								<input id="search" name="s" type="search" value="" placeholder="<?php esc_attr_e( 'Search community...', 'buddyboss-platform' ); ?>">
+								<input id="search" name="s" type="search" value="" placeholder="<?php esc_attr_e( 'Search community...', 'buddyboss-community-social-network-groups-forums-messaging' ); ?>">
 								<input type="hidden" name="bp_search" value="1">
 								<button type="submit" id="search-submit" class="nouveau-search-submit">
 									<span class="bb-icons-rl-magnifying-glass" aria-hidden="true"></span>
-									<span id="button-text" class="bp-screen-reader-text"><?php esc_html_e( 'Search', 'buddyboss-platform' ); ?></span>
+									<span id="button-text" class="bp-screen-reader-text"><?php esc_html_e( 'Search', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></span>
 								</button>
-								<a href="javascript:;" class="bb-rl-network-search-clear bp-hide"><?php esc_html_e( 'Clear Search', 'buddyboss-platform' ); ?></a>
+								<a href="javascript:;" class="bb-rl-network-search-clear bp-hide"><?php esc_html_e( 'Clear Search', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></a>
 							</div>
 						</form>
 					<?php } ?>
@@ -326,7 +326,7 @@ function bboss_block_render_readylaunch_header_block( $attributes = array() ) {
 									<li>
 										<a href="javascript:void(0);" ref="notification_bell" class="notification-link">
 											<i class="bb-icons-rl-chat-teardrop-text"></i>
-											<span class="notification-label"><?php esc_html_e( 'Messages', 'buddyboss-platform' ); ?></span>
+											<span class="notification-label"><?php esc_html_e( 'Messages', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></span>
 											<?php
 											$unread_message_count = bboss_messages_get_unread_count();
 											if ( $unread_message_count > 0 ) :
@@ -343,7 +343,7 @@ function bboss_block_render_readylaunch_header_block( $attributes = array() ) {
 									<li>
 										<a href="javascript:void(0);" ref="notification_bell" class="notification-link">
 											<i class="bb-icons-rl-bell-simple"></i>
-											<span class="notification-label"><?php esc_html_e( 'Notifications', 'buddyboss-platform' ); ?></span>
+											<span class="notification-label"><?php esc_html_e( 'Notifications', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></span>
 											<?php
 											$notifications             = bboss_notifications_get_unread_notification_count( bboss_loggedin_user_id() );
 											$unread_notification_count = ! empty( $notifications ) ? $notifications : 0;

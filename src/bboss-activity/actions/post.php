@@ -60,7 +60,7 @@ function bboss_activity_action_post_update() {
 
 	// No activity content so provide feedback and redirect.
 	if ( empty( $content ) ) {
-		bboss_core_add_message( __( 'Please enter some content to post.', 'buddyboss-platform' ), 'error' );
+		bboss_core_add_message( __( 'Please enter some content to post.', 'buddyboss-community-social-network-groups-forums-messaging' ), 'error' );
 		bboss_core_redirect( wp_get_referer() );
 	}
 
@@ -94,9 +94,9 @@ function bboss_activity_action_post_update() {
 
 	// Provide user feedback.
 	if ( ! empty( $activity_id ) ) {
-		bboss_core_add_message( __( 'Update Posted!', 'buddyboss-platform' ) );
+		bboss_core_add_message( __( 'Update Posted!', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 	} else {
-		bboss_core_add_message( __( 'There was an error when posting your update. Please try again.', 'buddyboss-platform' ), 'error' );
+		bboss_core_add_message( __( 'There was an error when posting your update. Please try again.', 'buddyboss-community-social-network-groups-forums-messaging' ), 'error' );
 	}
 
 	// Redirect.

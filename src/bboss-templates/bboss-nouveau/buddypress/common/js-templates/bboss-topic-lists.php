@@ -45,7 +45,7 @@ defined( 'ABSPATH' ) || exit;
 				<# } #>
 				<span class="bb-topic-title">{{topicName}}</span>
 				<# if ( topicData.is_global_activity ) { #>
-					<span class="bb-topic-privacy" data-bp-tooltip="<?php esc_html_e( 'Global', 'buddyboss-platform' ); ?>" data-bp-tooltip-pos="up"><i class="bb-icon-globe"></i></span>
+					<span class="bb-topic-privacy" data-bp-tooltip="<?php esc_html_e( 'Global', 'buddyboss-community-social-network-groups-forums-messaging' ); ?>" data-bp-tooltip-pos="up"><i class="bb-icon-globe"></i></span>
 				<# } #>
 			</div>
 			<div class="bb-topic-right">
@@ -54,18 +54,18 @@ defined( 'ABSPATH' ) || exit;
 				</span>
 			<div class="bb-topic-actions-wrapper">
 				<span class="bb-topic-actions">
-					<a href="#" class="bb-topic-actions_button" aria-label="<?php esc_attr_e( 'More options', 'buddyboss-platform' ); ?>">
+					<a href="#" class="bb-topic-actions_button" aria-label="<?php esc_attr_e( 'More options', 'buddyboss-community-social-network-groups-forums-messaging' ); ?>">
 						<i class="bb-icon-ellipsis-h"></i>
 					</a>
 				</span>
 				<div class="bb-topic-more-dropdown">
-					<a href="#" class="button edit bb-edit-topic bp-secondary-action bp-tooltip" title="<?php esc_html_e( 'Edit', 'buddyboss-platform' ); ?>" data-topic-attr="{{edit_data}}">
-						<span class="bp-screen-reader-text"><?php esc_html_e( 'Edit', 'buddyboss-platform' ); ?></span>
-						<span class="edit-label"><?php esc_html_e( 'Edit', 'buddyboss-platform' ); ?></span>
+					<a href="#" class="button edit bb-edit-topic bp-secondary-action bp-tooltip" title="<?php esc_html_e( 'Edit', 'buddyboss-community-social-network-groups-forums-messaging' ); ?>" data-topic-attr="{{edit_data}}">
+						<span class="bp-screen-reader-text"><?php esc_html_e( 'Edit', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></span>
+						<span class="edit-label"><?php esc_html_e( 'Edit', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></span>
 					</a>
-					<a href="#" class="button delete bb-delete-topic bp-secondary-action bp-tooltip" title="<?php esc_html_e( 'Delete', 'buddyboss-platform' ); ?>" data-topic-attr="{{delete_data}}">
-						<span class="bp-screen-reader-text"><?php esc_html_e( 'Delete', 'buddyboss-platform' ); ?></span>
-						<span class="delete-label"><?php esc_html_e( 'Delete', 'buddyboss-platform' ); ?></span>
+					<a href="#" class="button delete bb-delete-topic bp-secondary-action bp-tooltip" title="<?php esc_html_e( 'Delete', 'buddyboss-community-social-network-groups-forums-messaging' ); ?>" data-topic-attr="{{delete_data}}">
+						<span class="bp-screen-reader-text"><?php esc_html_e( 'Delete', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></span>
+						<span class="delete-label"><?php esc_html_e( 'Delete', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></span>
 					</a>
 					</div>
 				</div>

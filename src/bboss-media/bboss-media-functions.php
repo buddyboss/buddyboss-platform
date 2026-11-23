@@ -25,7 +25,7 @@ function bboss_media_upload() {
 	 * Make sure user is logged in
 	 */
 	if ( ! is_user_logged_in() ) {
-		return new WP_Error( 'not_logged_in', __( 'Please login in order to upload file media.', 'buddyboss-platform' ), array( 'status' => 500 ) );
+		return new WP_Error( 'not_logged_in', __( 'Please login in order to upload file media.', 'buddyboss-community-social-network-groups-forums-messaging' ), array( 'status' => 500 ) );
 	}
 
 	/**
@@ -206,13 +206,13 @@ function bboss_media_upload_handler( $file_id = 'file' ) {
 			'upload_error_strings' => array(
 				false,
 				/* translators: %d: maximum upload size in MB. */
-				sprintf( __( 'The uploaded file exceeds %d MB', 'buddyboss-platform' ), bboss_media_file_upload_max_size() ),
-				__( 'The uploaded file was only partially uploaded.', 'buddyboss-platform' ),
-				__( 'No file was uploaded.', 'buddyboss-platform' ),
+				sprintf( __( 'The uploaded file exceeds %d MB', 'buddyboss-community-social-network-groups-forums-messaging' ), bboss_media_file_upload_max_size() ),
+				__( 'The uploaded file was only partially uploaded.', 'buddyboss-community-social-network-groups-forums-messaging' ),
+				__( 'No file was uploaded.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				'',
-				__( 'Missing a temporary folder.', 'buddyboss-platform' ),
-				__( 'Failed to write file to disk.', 'buddyboss-platform' ),
-				__( 'File upload stopped by extension.', 'buddyboss-platform' ),
+				__( 'Missing a temporary folder.', 'buddyboss-community-social-network-groups-forums-messaging' ),
+				__( 'Failed to write file to disk.', 'buddyboss-community-social-network-groups-forums-messaging' ),
+				__( 'File upload stopped by extension.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			),
 		)
 	);
@@ -240,7 +240,7 @@ function bboss_media_upload_handler( $file_id = 'file' ) {
 		return $attachment;
 	}
 
-	return new WP_Error( 'error_uploading', __( 'Error while uploading media.', 'buddyboss-platform' ), array( 'status' => 500 ) );
+	return new WP_Error( 'error_uploading', __( 'Error while uploading media.', 'buddyboss-community-social-network-groups-forums-messaging' ), array( 'status' => 500 ) );
 
 }
 
@@ -2333,7 +2333,7 @@ function bboss_media_import_status_request() {
 
 	// Runs site-wide media import/reset operations: restrict to moderators.
 	if ( ! bboss_current_user_can( 'bp_moderate' ) ) {
-		wp_send_json_error( array( 'message' => __( 'Sorry, you are not allowed to do that.', 'buddyboss-platform' ) ) );
+		wp_send_json_error( array( 'message' => __( 'Sorry, you are not allowed to do that.', 'buddyboss-community-social-network-groups-forums-messaging' ) ) );
 	}
 
 	$import_status = get_option( 'bp_media_import_status' );
@@ -2426,8 +2426,8 @@ function bboss_media_import_status_request() {
 			'topics_total'  => $topics_total,
 			'replies_total' => $replies_total,
 			'import_status' => $import_status,
-			'success_msg'   => __( 'BuddyBoss Media data update is complete! Any previously uploaded member photos should display in their profiles now.', 'buddyboss-platform' ),
-			'error_msg'     => __( 'BuddyBoss Media data update is failing!', 'buddyboss-platform' ),
+			'success_msg'   => __( 'BuddyBoss Media data update is complete! Any previously uploaded member photos should display in their profiles now.', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'error_msg'     => __( 'BuddyBoss Media data update is failing!', 'buddyboss-community-social-network-groups-forums-messaging' ),
 		)
 	);
 }

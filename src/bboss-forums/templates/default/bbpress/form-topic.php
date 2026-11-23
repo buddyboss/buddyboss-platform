@@ -40,9 +40,9 @@ defined( 'ABSPATH' ) || exit;
 					if ( bboss_bbp_is_topic_edit() ) {
 						// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- HTML entities in literal; bbp_get_topic_title() is self-escaping.
 						/* translators: %s: discussion title. */
-						echo wp_kses_post( sprintf( __( 'Now Editing &ldquo;%s&rdquo;', 'buddyboss-platform' ), bboss_bbp_get_topic_title() ) );
+						echo wp_kses_post( sprintf( __( 'Now Editing &ldquo;%s&rdquo;', 'buddyboss-community-social-network-groups-forums-messaging' ), bboss_bbp_get_topic_title() ) );
 					} else {
-						bboss_bbp_is_single_forum() ? printf( esc_html__( 'Ask a question or share an idea.', 'buddyboss-platform' ), esc_html( bboss_bbp_get_forum_title() ) ) : esc_html_e( 'Start New Discussion', 'buddyboss-platform' );
+						bboss_bbp_is_single_forum() ? printf( esc_html__( 'Ask a question or share an idea.', 'buddyboss-community-social-network-groups-forums-messaging' ), esc_html( bboss_bbp_get_forum_title() ) ) : esc_html_e( 'Start New Discussion', 'buddyboss-community-social-network-groups-forums-messaging' );
 					}
 					?>
 
@@ -54,7 +54,7 @@ defined( 'ABSPATH' ) || exit;
 
 					<div class="bp-feedback info">
 						<span class="bp-icon" aria-hidden="true"></span>
-						<p><?php esc_html_e( 'This forum is marked as closed to new discussions, however your posting capabilities still allow you to do so.', 'buddyboss-platform' ); ?></p>
+						<p><?php esc_html_e( 'This forum is marked as closed to new discussions, however your posting capabilities still allow you to do so.', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></p>
 					</div>
 
 				<?php endif; ?>
@@ -68,7 +68,7 @@ defined( 'ABSPATH' ) || exit;
 					<?php do_action( 'bbp_theme_before_topic_form_title' ); ?>
 
 					<p>
-						<label for="bbp_topic_title"><?php esc_html_e( 'Discussion Title', 'buddyboss-platform' ); ?></label><br />
+						<label for="bbp_topic_title"><?php esc_html_e( 'Discussion Title', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></label><br />
 						<input type="text" id="bbp_topic_title" value="<?php bboss_bbp_form_topic_title(); ?>" tabindex="<?php bboss_bbp_tab_index(); ?>" size="40" name="bbp_topic_title" maxlength="<?php bboss_bbp_title_max_length(); ?>" />
 					</p>
 
@@ -85,7 +85,7 @@ defined( 'ABSPATH' ) || exit;
 					<?php if ( ! ( bboss_bbp_use_wp_editor() || current_user_can( 'unfiltered_html' ) ) ) : ?>
 
 						<p class="form-allowed-tags">
-							<label><?php echo wp_kses_post( __( 'You may use these <abbr title="HyperText Markup Language">HTML</abbr> tags and attributes:', 'buddyboss-platform' ) ); ?></label><br />
+							<label><?php echo wp_kses_post( __( 'You may use these <abbr title="HyperText Markup Language">HTML</abbr> tags and attributes:', 'buddyboss-community-social-network-groups-forums-messaging' ) ); ?></label><br />
 							<code><?php bboss_bbp_allowed_tags(); ?></code>
 						</p>
 
@@ -102,7 +102,7 @@ defined( 'ABSPATH' ) || exit;
 
 						<p>
 							<input type="hidden" value="<?php echo ( ! empty( $get_the_tags ) ) ? esc_attr( $get_the_tags ) : ''; ?>" name="bbp_topic_tags" class="bbp_topic_tags" id="bbp_topic_tags" >
-							<select name="bbp_topic_tags_dropdown[]" class="bbp_topic_tags_dropdown" id="bbp_topic_tags_dropdown" placeholder="<?php esc_html_e( 'Type one or more tags, comma separated', 'buddyboss-platform' ); ?>" autocomplete="off" multiple="multiple" style="width: 100%" tabindex="<?php bboss_bbp_tab_index(); ?>">
+							<select name="bbp_topic_tags_dropdown[]" class="bbp_topic_tags_dropdown" id="bbp_topic_tags_dropdown" placeholder="<?php esc_html_e( 'Type one or more tags, comma separated', 'buddyboss-community-social-network-groups-forums-messaging' ); ?>" autocomplete="off" multiple="multiple" style="width: 100%" tabindex="<?php bboss_bbp_tab_index(); ?>">
 								<?php
 								if ( ! empty( $get_the_tags ) ) {
 									$get_the_tags = explode( ',', $get_the_tags );
@@ -126,11 +126,11 @@ defined( 'ABSPATH' ) || exit;
 						<?php do_action( 'bbp_theme_before_topic_form_forum' ); ?>
 
 						<p>
-							<label for="bbp_forum_id"><?php esc_html_e( 'Forum:', 'buddyboss-platform' ); ?></label><br />
+							<label for="bbp_forum_id"><?php esc_html_e( 'Forum:', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></label><br />
 							<?php
 								bboss_bbp_dropdown(
 									array(
-										'show_none' => __( '(No Forum)', 'buddyboss-platform' ),
+										'show_none' => __( '(No Forum)', 'buddyboss-community-social-network-groups-forums-messaging' ),
 										'selected'  => bboss_bbp_get_form_topic_forum(),
 									)
 								);
@@ -147,7 +147,7 @@ defined( 'ABSPATH' ) || exit;
 
 						<p>
 
-							<label for="bbp_stick_topic"><?php esc_html_e( 'Type:', 'buddyboss-platform' ); ?></label><br />
+							<label for="bbp_stick_topic"><?php esc_html_e( 'Type:', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></label><br />
 
 							<?php bboss_bbp_form_topic_type_dropdown(); ?>
 
@@ -183,11 +183,11 @@ defined( 'ABSPATH' ) || exit;
 										)
 									) {
 										?>
-										<label for="bbp_topic_subscription"><?php esc_html_e( 'Notify the author of follow-up replies via email', 'buddyboss-platform' ); ?></label>
+										<label for="bbp_topic_subscription"><?php esc_html_e( 'Notify the author of follow-up replies via email', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></label>
 										<?php
 									} else {
 										?>
-										<label for="bbp_topic_subscription"><?php esc_html_e( 'Notify the author of follow-up replies', 'buddyboss-platform' ); ?></label>
+										<label for="bbp_topic_subscription"><?php esc_html_e( 'Notify the author of follow-up replies', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></label>
 										<?php
 									}
 								else :
@@ -201,11 +201,11 @@ defined( 'ABSPATH' ) || exit;
 										)
 									) {
 										?>
-										<label for="bbp_topic_subscription"><?php esc_html_e( 'Notify me of new replies by email', 'buddyboss-platform' ); ?></label>
+										<label for="bbp_topic_subscription"><?php esc_html_e( 'Notify me of new replies by email', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></label>
 										<?php
 									} else {
 										?>
-										<label for="bbp_topic_subscription"><?php esc_html_e( 'Notify me of new replies', 'buddyboss-platform' ); ?></label>
+										<label for="bbp_topic_subscription"><?php esc_html_e( 'Notify me of new replies', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></label>
 										<?php
 									}
 									endif;
@@ -225,11 +225,11 @@ defined( 'ABSPATH' ) || exit;
 						<fieldset class="bbp-form">
 							<div class="bp-checkbox-wrap">
 								<input name="bbp_log_topic_edit" id="bbp_log_topic_edit" class="bs-styled-checkbox" type="checkbox" value="1" <?php bboss_bbp_form_topic_log_edit(); ?> tabindex="<?php bboss_bbp_tab_index(); ?>" />
-								<label for="bbp_log_topic_edit"><?php esc_html_e( 'Keep a log of this edit:', 'buddyboss-platform' ); ?></label><br />
+								<label for="bbp_log_topic_edit"><?php esc_html_e( 'Keep a log of this edit:', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></label><br />
 							</div>
 
 							<div>
-								<label for="bbp_topic_edit_reason"><?php printf( esc_html__( 'Optional reason for editing:', 'buddyboss-platform' ), esc_html( bboss_bbp_get_current_user_name() ) ); ?></label><br />
+								<label for="bbp_topic_edit_reason"><?php printf( esc_html__( 'Optional reason for editing:', 'buddyboss-community-social-network-groups-forums-messaging' ), esc_html( bboss_bbp_get_current_user_name() ) ); ?></label><br />
 								<input type="text" value="<?php bboss_bbp_form_topic_edit_reason(); ?>" tabindex="<?php bboss_bbp_tab_index(); ?>" size="40" name="bbp_topic_edit_reason" id="bbp_topic_edit_reason" />
 							</div>
 						</fieldset>
@@ -244,9 +244,9 @@ defined( 'ABSPATH' ) || exit;
 
 						<?php do_action( 'bbp_theme_before_topic_form_submit_button' ); ?>
 
-						<button type="button" tabindex="<?php bboss_bbp_tab_index(); ?>" id="bb_topic_discard_draft" name="bb_topic_discard_draft" class="button discard small bb_discard_topic_reply_draft"><?php esc_html_e( 'Discard Draft', 'buddyboss-platform' ); ?></button>
+						<button type="button" tabindex="<?php bboss_bbp_tab_index(); ?>" id="bb_topic_discard_draft" name="bb_topic_discard_draft" class="button discard small bb_discard_topic_reply_draft"><?php esc_html_e( 'Discard Draft', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></button>
 
-						<button type="submit" tabindex="<?php bboss_bbp_tab_index(); ?>" id="bbp_topic_submit" name="bbp_topic_submit" class="button submit"><?php esc_html_e( 'Post', 'buddyboss-platform' ); ?></button>
+						<button type="submit" tabindex="<?php bboss_bbp_tab_index(); ?>" id="bbp_topic_submit" name="bbp_topic_submit" class="button submit"><?php esc_html_e( 'Post', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></button>
 
 						<?php do_action( 'bbp_theme_after_topic_form_submit_button' ); ?>
 
@@ -270,7 +270,7 @@ defined( 'ABSPATH' ) || exit;
 	<div id="no-topic-<?php bboss_bbp_topic_id(); ?>" class="bbp-no-topic">
 		<div class="bp-feedback info">
 			<span class="bp-icon" aria-hidden="true"></span>
-			<p><?php /* translators: %s: forum title. */ printf( esc_html__( 'The forum "%s" is closed to new discussions and replies.', 'buddyboss-platform' ), esc_html( bboss_bbp_get_forum_title() ) ); ?></p>
+			<p><?php /* translators: %s: forum title. */ printf( esc_html__( 'The forum "%s" is closed to new discussions and replies.', 'buddyboss-community-social-network-groups-forums-messaging' ), esc_html( bboss_bbp_get_forum_title() ) ); ?></p>
 		</div>
 	</div>
 
@@ -279,7 +279,7 @@ defined( 'ABSPATH' ) || exit;
 	<div id="no-topic-<?php bboss_bbp_topic_id(); ?>" class="bbp-no-topic">
 		<div class="bp-feedback info">
 			<span class="bp-icon" aria-hidden="true"></span>
-			<p><?php is_user_logged_in() ? esc_html_e( 'You cannot create new discussions.', 'buddyboss-platform' ) : esc_html_e( 'You must be logged in to create new discussions.', 'buddyboss-platform' ); ?></p>
+			<p><?php is_user_logged_in() ? esc_html_e( 'You cannot create new discussions.', 'buddyboss-community-social-network-groups-forums-messaging' ) : esc_html_e( 'You must be logged in to create new discussions.', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></p>
 		</div>
 	</div>
 

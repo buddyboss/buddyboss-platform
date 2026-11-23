@@ -80,12 +80,12 @@ class BBoss_Admin_Topic_Tags_Ajax {
 		bboss_admin_verify_ajax_request( self::NONCE_ACTION );
 
 		if ( ! bboss_is_active( 'forums' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Forums component is not active.', 'buddyboss-platform' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Forums component is not active.', 'buddyboss-community-social-network-groups-forums-messaging' ) ) );
 		}
 
 		$tag_tax_id = bboss_bbp_get_topic_tag_tax_id();
 		if ( empty( $tag_tax_id ) ) {
-			wp_send_json_error( array( 'message' => __( 'Topic tags are not available.', 'buddyboss-platform' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Topic tags are not available.', 'buddyboss-community-social-network-groups-forums-messaging' ) ) );
 		}
 
 		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by bb_admin_verify_ajax_request() above.
@@ -164,13 +164,13 @@ class BBoss_Admin_Topic_Tags_Ajax {
 			);
 
 			$response['bulk_actions'] = array(
-				'delete' => __( 'Delete', 'buddyboss-platform' ),
+				'delete' => __( 'Delete', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			);
 
 			$response['columns'] = array(
-				'name'  => __( 'Tag', 'buddyboss-platform' ),
-				'slug'  => __( 'Slug', 'buddyboss-platform' ),
-				'count' => __( 'Count', 'buddyboss-platform' ),
+				'name'  => __( 'Tag', 'buddyboss-community-social-network-groups-forums-messaging' ),
+				'slug'  => __( 'Slug', 'buddyboss-community-social-network-groups-forums-messaging' ),
+				'count' => __( 'Count', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			);
 		}
 
@@ -197,21 +197,21 @@ class BBoss_Admin_Topic_Tags_Ajax {
 		bboss_admin_verify_ajax_request( self::NONCE_ACTION );
 
 		if ( ! bboss_is_active( 'forums' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Forums component is not active.', 'buddyboss-platform' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Forums component is not active.', 'buddyboss-community-social-network-groups-forums-messaging' ) ) );
 		}
 
 		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce verified by bb_admin_verify_ajax_request() above.
 		$term_id = isset( $_POST['term_id'] ) ? absint( wp_unslash( $_POST['term_id'] ) ) : 0;
 
 		if ( empty( $term_id ) ) {
-			wp_send_json_error( array( 'message' => __( 'Tag ID is required.', 'buddyboss-platform' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Tag ID is required.', 'buddyboss-community-social-network-groups-forums-messaging' ) ) );
 		}
 
 		$tag_tax_id = bboss_bbp_get_topic_tag_tax_id();
 		$term       = get_term( $term_id, $tag_tax_id );
 
 		if ( ! $term || is_wp_error( $term ) ) {
-			wp_send_json_error( array( 'message' => __( 'Tag not found.', 'buddyboss-platform' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Tag not found.', 'buddyboss-community-social-network-groups-forums-messaging' ) ) );
 		}
 
 		$permalink = get_term_link( $term, $tag_tax_id );
@@ -247,7 +247,7 @@ class BBoss_Admin_Topic_Tags_Ajax {
 		bboss_admin_verify_ajax_request( self::NONCE_ACTION );
 
 		if ( ! bboss_is_active( 'forums' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Forums component is not active.', 'buddyboss-platform' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Forums component is not active.', 'buddyboss-community-social-network-groups-forums-messaging' ) ) );
 		}
 
 		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by bb_admin_verify_ajax_request() above.
@@ -257,7 +257,7 @@ class BBoss_Admin_Topic_Tags_Ajax {
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
 		if ( empty( $name ) ) {
-			wp_send_json_error( array( 'message' => __( 'Tag name is required.', 'buddyboss-platform' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Tag name is required.', 'buddyboss-community-social-network-groups-forums-messaging' ) ) );
 		}
 
 		$tag_tax_id = bboss_bbp_get_topic_tag_tax_id();
@@ -278,7 +278,7 @@ class BBoss_Admin_Topic_Tags_Ajax {
 
 		wp_send_json_success(
 			array(
-				'message' => __( 'Tag created successfully.', 'buddyboss-platform' ),
+				'message' => __( 'Tag created successfully.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				'term_id' => $result['term_id'],
 			)
 		);
@@ -295,7 +295,7 @@ class BBoss_Admin_Topic_Tags_Ajax {
 		bboss_admin_verify_ajax_request( self::NONCE_ACTION );
 
 		if ( ! bboss_is_active( 'forums' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Forums component is not active.', 'buddyboss-platform' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Forums component is not active.', 'buddyboss-community-social-network-groups-forums-messaging' ) ) );
 		}
 
 		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by bb_admin_verify_ajax_request() above.
@@ -306,18 +306,18 @@ class BBoss_Admin_Topic_Tags_Ajax {
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
 		if ( empty( $term_id ) ) {
-			wp_send_json_error( array( 'message' => __( 'Tag ID is required.', 'buddyboss-platform' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Tag ID is required.', 'buddyboss-community-social-network-groups-forums-messaging' ) ) );
 		}
 
 		if ( empty( $name ) ) {
-			wp_send_json_error( array( 'message' => __( 'Tag name is required.', 'buddyboss-platform' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Tag name is required.', 'buddyboss-community-social-network-groups-forums-messaging' ) ) );
 		}
 
 		$tag_tax_id = bboss_bbp_get_topic_tag_tax_id();
 		$term       = get_term( $term_id, $tag_tax_id );
 
 		if ( ! $term || is_wp_error( $term ) ) {
-			wp_send_json_error( array( 'message' => __( 'Tag not found.', 'buddyboss-platform' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Tag not found.', 'buddyboss-community-social-network-groups-forums-messaging' ) ) );
 		}
 
 		$args = array(
@@ -337,7 +337,7 @@ class BBoss_Admin_Topic_Tags_Ajax {
 
 		wp_send_json_success(
 			array(
-				'message' => __( 'Tag updated successfully.', 'buddyboss-platform' ),
+				'message' => __( 'Tag updated successfully.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				'term_id' => $result['term_id'],
 			)
 		);
@@ -354,21 +354,21 @@ class BBoss_Admin_Topic_Tags_Ajax {
 		bboss_admin_verify_ajax_request( self::NONCE_ACTION );
 
 		if ( ! bboss_is_active( 'forums' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Forums component is not active.', 'buddyboss-platform' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Forums component is not active.', 'buddyboss-community-social-network-groups-forums-messaging' ) ) );
 		}
 
 		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce verified by bb_admin_verify_ajax_request() above.
 		$term_id = isset( $_POST['term_id'] ) ? absint( wp_unslash( $_POST['term_id'] ) ) : 0;
 
 		if ( empty( $term_id ) ) {
-			wp_send_json_error( array( 'message' => __( 'Tag ID is required.', 'buddyboss-platform' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Tag ID is required.', 'buddyboss-community-social-network-groups-forums-messaging' ) ) );
 		}
 
 		$tag_tax_id = bboss_bbp_get_topic_tag_tax_id();
 		$term       = get_term( $term_id, $tag_tax_id );
 
 		if ( ! $term || is_wp_error( $term ) ) {
-			wp_send_json_error( array( 'message' => __( 'Tag not found.', 'buddyboss-platform' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Tag not found.', 'buddyboss-community-social-network-groups-forums-messaging' ) ) );
 		}
 
 		$result = wp_delete_term( $term_id, $tag_tax_id );
@@ -378,11 +378,11 @@ class BBoss_Admin_Topic_Tags_Ajax {
 		}
 
 		if ( ! $result ) {
-			wp_send_json_error( array( 'message' => __( 'Failed to delete tag.', 'buddyboss-platform' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Failed to delete tag.', 'buddyboss-community-social-network-groups-forums-messaging' ) ) );
 		}
 
 		wp_send_json_success(
-			array( 'message' => __( 'Tag deleted successfully.', 'buddyboss-platform' ) )
+			array( 'message' => __( 'Tag deleted successfully.', 'buddyboss-community-social-network-groups-forums-messaging' ) )
 		);
 	}
 
@@ -397,7 +397,7 @@ class BBoss_Admin_Topic_Tags_Ajax {
 		bboss_admin_verify_ajax_request( self::NONCE_ACTION );
 
 		if ( ! bboss_is_active( 'forums' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Forums component is not active.', 'buddyboss-platform' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Forums component is not active.', 'buddyboss-community-social-network-groups-forums-messaging' ) ) );
 		}
 
 		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by bb_admin_verify_ajax_request() above.
@@ -406,17 +406,17 @@ class BBoss_Admin_Topic_Tags_Ajax {
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
 		if ( 'delete' !== $do_action ) {
-			wp_send_json_error( array( 'message' => __( 'Invalid action.', 'buddyboss-platform' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Invalid action.', 'buddyboss-community-social-network-groups-forums-messaging' ) ) );
 		}
 
 		if ( empty( $raw_ids ) ) {
-			wp_send_json_error( array( 'message' => __( 'No tags selected.', 'buddyboss-platform' ) ) );
+			wp_send_json_error( array( 'message' => __( 'No tags selected.', 'buddyboss-community-social-network-groups-forums-messaging' ) ) );
 		}
 
 		$term_ids = array_filter( array_map( 'absint', explode( ',', $raw_ids ) ) );
 
 		if ( empty( $term_ids ) ) {
-			wp_send_json_error( array( 'message' => __( 'No valid tag IDs provided.', 'buddyboss-platform' ) ) );
+			wp_send_json_error( array( 'message' => __( 'No valid tag IDs provided.', 'buddyboss-community-social-network-groups-forums-messaging' ) ) );
 		}
 
 		// Cap bulk operations.
@@ -454,7 +454,7 @@ class BBoss_Admin_Topic_Tags_Ajax {
 					'%d tag deleted successfully.',
 					'%d tags deleted successfully.',
 					$processed,
-					'buddyboss-platform'
+					'buddyboss-community-social-network-groups-forums-messaging'
 				),
 				$processed
 			);
@@ -467,7 +467,7 @@ class BBoss_Admin_Topic_Tags_Ajax {
 				)
 			);
 		} else {
-			wp_send_json_error( array( 'message' => __( 'No tags were deleted.', 'buddyboss-platform' ) ) );
+			wp_send_json_error( array( 'message' => __( 'No tags were deleted.', 'buddyboss-community-social-network-groups-forums-messaging' ) ) );
 		}
 	}
 }

@@ -65,7 +65,7 @@ function bboss_notifications_register_web_push_panel_fields() {
 		'onesignal',
 		'onesignal',
 		array(
-			'title'       => $show_web_push_title ? __( 'Web Push Notifications', 'buddyboss-platform' ) : '',
+			'title'       => $show_web_push_title ? __( 'Web Push Notifications', 'buddyboss-community-social-network-groups-forums-messaging' ) : '',
 			'description' => '',
 			'order'       => 10,
 			'help_url'    => '636150',
@@ -84,9 +84,9 @@ function bboss_notifications_register_web_push_panel_fields() {
 				'label'                 => '',
 				'type'                  => 'empty_state',
 				'icon'                  => 'bb-icons-rl bb-icons-rl-warning-circle',
-				'empty_state_title'     => __( 'OneSignal Integration is Disabled', 'buddyboss-platform' ),
-				'empty_state_description' => __( 'OneSignal integration for BuddyBoss is currently disabled. Enable it to configure web push notifications.', 'buddyboss-platform' ),
-				'button_label'          => __( 'BuddyBoss Settings', 'buddyboss-platform' ),
+				'empty_state_title'     => __( 'OneSignal Integration is Disabled', 'buddyboss-community-social-network-groups-forums-messaging' ),
+				'empty_state_description' => __( 'OneSignal integration for BuddyBoss is currently disabled. Enable it to configure web push notifications.', 'buddyboss-community-social-network-groups-forums-messaging' ),
+				'button_label'          => __( 'BuddyBoss Settings', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				'button_url'            => admin_url( 'admin.php?page=bb-settings' ),
 				'sanitize_callback'     => '__return_empty_string',
 				'order'                 => 10,
@@ -107,9 +107,9 @@ function bboss_notifications_register_web_push_panel_fields() {
 				'label'                   => '',
 				'type'                    => 'empty_state',
 				'icon'                    => 'bb-icons-rl bb-icons-rl-warning-circle',
-				'empty_state_title'       => __( 'BuddyBoss Platform Pro Update Required', 'buddyboss-platform' ),
-				'empty_state_description' => __( 'Please update to the latest version of BuddyBoss Pro to manage your web push notification settings.', 'buddyboss-platform' ),
-				'button_label'            => __( 'Update Now', 'buddyboss-platform' ),
+				'empty_state_title'       => __( 'BuddyBoss Platform Pro Update Required', 'buddyboss-community-social-network-groups-forums-messaging' ),
+				'empty_state_description' => __( 'Please update to the latest version of BuddyBoss Pro to manage your web push notification settings.', 'buddyboss-community-social-network-groups-forums-messaging' ),
+				'button_label'            => __( 'Update Now', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				'button_url'              => admin_url( 'update-core.php' ),
 				'sanitize_callback'       => '__return_empty_string',
 				'order'                   => 10,
@@ -120,9 +120,9 @@ function bboss_notifications_register_web_push_panel_fields() {
 		version_compare( bb_platform_pro()->version, $min_pro_settings2_version, '<=' )
 	) {
 		// Builds without upsell links (the wordpress.org edition) name the plugin without a link.
-		$pro_link = __( 'BuddyBoss Platform Pro', 'buddyboss-platform' );
+		$pro_link = __( 'BuddyBoss Platform Pro', 'buddyboss-community-social-network-groups-forums-messaging' );
 		// @bbwt-com-start pro-field-upgrade-links
-		$pro_link = '<a target="_blank" rel="noopener noreferrer" href="' . esc_url( 'https://www.buddyboss.com/platform' ) . '">' . __( 'BuddyBoss Platform Pro', 'buddyboss-platform' ) . '</a>';
+		$pro_link = '<a target="_blank" rel="noopener noreferrer" href="' . esc_url( 'https://www.buddyboss.com/platform' ) . '">' . __( 'BuddyBoss Platform Pro', 'buddyboss-community-social-network-groups-forums-messaging' ) . '</a>';
 		// @bbwt-com-end pro-field-upgrade-links
 
 		// Pro installed but older version.
@@ -136,7 +136,7 @@ function bboss_notifications_register_web_push_panel_fields() {
 				'type'              => 'notice',
 				'description'       => sprintf(
 					/* translators: %s: BuddyBoss Pro link. */
-					__( 'Please update %s to version 2.0.3 to use web push notifications on your site.', 'buddyboss-platform' ),
+					__( 'Please update %s to version 2.0.3 to use web push notifications on your site.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					$pro_link
 				),
 				'sanitize_callback' => '__return_empty_string',
@@ -157,7 +157,7 @@ function bboss_notifications_register_web_push_panel_fields() {
 				'name'              => '_bb_web_push_legacy_notice',
 				'label'             => '',
 				'type'              => 'notice',
-				'description'       => __( 'Web Push Notifications are not supported when using the legacy notifications system.', 'buddyboss-platform' ),
+				'description'       => __( 'Web Push Notifications are not supported when using the legacy notifications system.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				'sanitize_callback' => '__return_empty_string',
 				'order'             => 10,
 			)
@@ -207,21 +207,21 @@ function bboss_notifications_register_web_push_pro_placeholder_fields() {
 		$panel_id,
 		'onesignal_connection',
 		array(
-			'title'       => __( 'OneSignal', 'buddyboss-platform' ),
+			'title'       => __( 'OneSignal', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'order'       => 20,
 			'status'      => array(
 				'type' => 'warning',
-				'text' => __( 'Not Connected', 'buddyboss-platform' ),
+				'text' => __( 'Not Connected', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			),
 			'pro_notice'  => array(
 				'show'       => true,
-				'badge_text' => __( 'UPGRADE LAUNCH', 'buddyboss-platform' ),
+				'badge_text' => __( 'UPGRADE LAUNCH', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				'badge_icon' => 'bb-icons-rl-crown-simple',
 				'link_url'   => $pro_notice_section_url,
 			),
 			'description' => sprintf(
 				/* translators: %s: OneSignal URL */
-				__( 'To use <a href="%s" target="_blank" rel="noopener noreferrer">OneSignal</a> for web push notifications, create an app in your account and enter the API credentials from the settings below.', 'buddyboss-platform' ),
+				__( 'To use <a href="%s" target="_blank" rel="noopener noreferrer">OneSignal</a> for web push notifications, create an app in your account and enter the API credentials from the settings below.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				'https://onesignal.com/'
 			),
 		)
@@ -234,15 +234,15 @@ function bboss_notifications_register_web_push_pro_placeholder_fields() {
 		'onesignal_connection',
 		array(
 			'name'              => 'bb-web-push-app-id',
-			'label'             => __( 'API Credentials', 'buddyboss-platform' ),
+			'label'             => __( 'API Credentials', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'type'              => 'password',
 			'default'           => '',
 			'sanitize_callback' => '__return_empty_string',
-			'placeholder'       => __( 'Enter OneSignal APP ID', 'buddyboss-platform' ),
+			'placeholder'       => __( 'Enter OneSignal APP ID', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'pro_only'          => true,
 			'group'             => array(
 				'key'   => 'web_push_credentials',
-				'label' => __( 'App ID', 'buddyboss-platform' ),
+				'label' => __( 'App ID', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			),
 			'order'             => 10,
 		)
@@ -259,11 +259,11 @@ function bboss_notifications_register_web_push_pro_placeholder_fields() {
 			'type'              => 'password',
 			'default'           => '',
 			'sanitize_callback' => '__return_empty_string',
-			'placeholder'       => __( 'Enter Rest API key', 'buddyboss-platform' ),
+			'placeholder'       => __( 'Enter Rest API key', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'pro_only'          => true,
 			'group'             => array(
 				'key'   => 'web_push_credentials',
-				'label' => __( 'Rest API Key', 'buddyboss-platform' ),
+				'label' => __( 'Rest API Key', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			),
 			'order'             => 20,
 		)
@@ -278,7 +278,7 @@ function bboss_notifications_register_web_push_pro_placeholder_fields() {
 			'name'              => '_bb_web_push_connect',
 			'label'             => '',
 			'type'              => 'input_button',
-			'button_label'      => __( 'Connect', 'buddyboss-platform' ),
+			'button_label'      => __( 'Connect', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'button_only'       => true,
 			'pro_only'          => true,
 			'sanitize_callback' => '__return_empty_string',

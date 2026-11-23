@@ -139,12 +139,12 @@ class BBoss_Members_MS_List_Table extends WP_MS_Users_List_Table {
 			'bp_members_ms_signup_columns',
 			array(
 				'cb'         => '<input type="checkbox" />',
-				'username'   => __( 'Username', 'buddyboss-platform' ),
-				'name'       => __( 'Name', 'buddyboss-platform' ),
-				'email'      => __( 'Email', 'buddyboss-platform' ),
-				'registered' => __( 'Registered', 'buddyboss-platform' ),
-				'date_sent'  => __( 'Last Sent', 'buddyboss-platform' ),
-				'count_sent' => __( 'Emails Sent', 'buddyboss-platform' ),
+				'username'   => __( 'Username', 'buddyboss-community-social-network-groups-forums-messaging' ),
+				'name'       => __( 'Name', 'buddyboss-community-social-network-groups-forums-messaging' ),
+				'email'      => __( 'Email', 'buddyboss-community-social-network-groups-forums-messaging' ),
+				'registered' => __( 'Registered', 'buddyboss-community-social-network-groups-forums-messaging' ),
+				'date_sent'  => __( 'Last Sent', 'buddyboss-community-social-network-groups-forums-messaging' ),
+				'count_sent' => __( 'Emails Sent', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			)
 		);
 	}
@@ -156,12 +156,12 @@ class BBoss_Members_MS_List_Table extends WP_MS_Users_List_Table {
 	 */
 	public function get_bulk_actions() {
 		$actions = array(
-			'activate' => __( 'Activate', 'buddyboss-platform' ),
-			'resend'   => __( 'Email', 'buddyboss-platform' ),
+			'activate' => __( 'Activate', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'resend'   => __( 'Email', 'buddyboss-community-social-network-groups-forums-messaging' ),
 		);
 
 		if ( current_user_can( 'delete_users' ) ) {
-			$actions['delete'] = __( 'Delete', 'buddyboss-platform' );
+			$actions['delete'] = __( 'Delete', 'buddyboss-community-social-network-groups-forums-messaging' );
 		}
 
 		return $actions;
@@ -176,16 +176,16 @@ class BBoss_Members_MS_List_Table extends WP_MS_Users_List_Table {
 	 */
 	public function no_items() {
 		if ( bboss_get_signup_allowed() ) {
-			esc_html_e( 'No pending accounts found.', 'buddyboss-platform' );
+			esc_html_e( 'No pending accounts found.', 'buddyboss-community-social-network-groups-forums-messaging' );
 		} else {
 			$link = false;
 
 			if ( current_user_can( 'manage_network_users' ) ) {
-				$link = sprintf( '<a href="%1$s">%2$s</a>', esc_url( network_admin_url( 'settings.php' ) ), esc_html__( 'Edit settings', 'buddyboss-platform' ) );
+				$link = sprintf( '<a href="%1$s">%2$s</a>', esc_url( network_admin_url( 'settings.php' ) ), esc_html__( 'Edit settings', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 			}
 
 			/* translators: %s: link to edit registration settings. */
-			printf( esc_html__( 'Registration is disabled. %s', 'buddyboss-platform' ), wp_kses_post( $link ) );
+			printf( esc_html__( 'Registration is disabled. %s', 'buddyboss-community-social-network-groups-forums-messaging' ), wp_kses_post( $link ) );
 		}
 	}
 
@@ -264,7 +264,7 @@ class BBoss_Members_MS_List_Table extends WP_MS_Users_List_Table {
 																 <?php
 																	printf(
 																		/* translators: accessibility text */
-																		esc_html__( 'Select user: %s', 'buddyboss-platform' ),
+																		esc_html__( 'Select user: %s', 'buddyboss-community-social-network-groups-forums-messaging' ),
 																		esc_html( $signup_object->user_login )
 																	);
 																	?>
@@ -317,11 +317,11 @@ class BBoss_Members_MS_List_Table extends WP_MS_Users_List_Table {
 
 		$actions = array();
 
-		$actions['activate'] = sprintf( '<a href="%1$s">%2$s</a>', esc_url( $activate_link ), __( 'Activate', 'buddyboss-platform' ) );
-		$actions['resend']   = sprintf( '<a href="%1$s">%2$s</a>', esc_url( $email_link ), __( 'Email', 'buddyboss-platform' ) );
+		$actions['activate'] = sprintf( '<a href="%1$s">%2$s</a>', esc_url( $activate_link ), __( 'Activate', 'buddyboss-community-social-network-groups-forums-messaging' ) );
+		$actions['resend']   = sprintf( '<a href="%1$s">%2$s</a>', esc_url( $email_link ), __( 'Email', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 
 		if ( current_user_can( 'delete_users' ) ) {
-			$actions['delete'] = sprintf( '<a href="%1$s" class="delete">%2$s</a>', esc_url( $delete_link ), __( 'Delete', 'buddyboss-platform' ) );
+			$actions['delete'] = sprintf( '<a href="%1$s" class="delete">%2$s</a>', esc_url( $delete_link ), __( 'Delete', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 		}
 
 		/** This filter is documented in bboss-members/admin/bp-members-classes.php */

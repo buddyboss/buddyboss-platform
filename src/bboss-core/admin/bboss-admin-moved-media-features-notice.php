@@ -306,24 +306,24 @@ function bboss_moved_media_features_render_notice() {
 	$features = array();
 	$items    = array();
 	if ( isset( $hidden['video'] ) ) {
-		$features[] = __( 'Videos', 'buddyboss-platform' );
+		$features[] = __( 'Videos', 'buddyboss-community-social-network-groups-forums-messaging' );
 		/* translators: %s: Number of videos. */
-		$items[] = sprintf( _n( '%s video', '%s videos', $hidden['video'], 'buddyboss-platform' ), number_format_i18n( $hidden['video'] ) );
+		$items[] = sprintf( _n( '%s video', '%s videos', $hidden['video'], 'buddyboss-community-social-network-groups-forums-messaging' ), number_format_i18n( $hidden['video'] ) );
 	}
 	if ( isset( $hidden['document'] ) ) {
-		$features[] = __( 'Documents', 'buddyboss-platform' );
+		$features[] = __( 'Documents', 'buddyboss-community-social-network-groups-forums-messaging' );
 		/* translators: %s: Number of documents. */
-		$items[] = sprintf( _n( '%s document', '%s documents', $hidden['document'], 'buddyboss-platform' ), number_format_i18n( $hidden['document'] ) );
+		$items[] = sprintf( _n( '%s document', '%s documents', $hidden['document'], 'buddyboss-community-social-network-groups-forums-messaging' ), number_format_i18n( $hidden['document'] ) );
 	}
 	if ( isset( $hidden['gif'] ) ) {
-		$features[] = __( 'Animated GIFs', 'buddyboss-platform' );
+		$features[] = __( 'Animated GIFs', 'buddyboss-community-social-network-groups-forums-messaging' );
 		/* translators: %s: Number of posts, comments and messages with a GIF. */
-		$items[] = sprintf( _n( '%s GIF', '%s GIFs', $hidden['gif'], 'buddyboss-platform' ), number_format_i18n( $hidden['gif'] ) );
+		$items[] = sprintf( _n( '%s GIF', '%s GIFs', $hidden['gif'], 'buddyboss-community-social-network-groups-forums-messaging' ), number_format_i18n( $hidden['gif'] ) );
 	}
 	if ( isset( $hidden['group_subscription'] ) ) {
-		$features[] = __( 'Group Subscriptions', 'buddyboss-platform' );
+		$features[] = __( 'Group Subscriptions', 'buddyboss-community-social-network-groups-forums-messaging' );
 		/* translators: %s: Number of members' group subscriptions. */
-		$items[] = sprintf( _n( '%s group subscription', '%s group subscriptions', $hidden['group_subscription'], 'buddyboss-platform' ), number_format_i18n( $hidden['group_subscription'] ) );
+		$items[] = sprintf( _n( '%s group subscription', '%s group subscriptions', $hidden['group_subscription'], 'buddyboss-community-social-network-groups-forums-messaging' ), number_format_i18n( $hidden['group_subscription'] ) );
 	}
 
 	$state       = bboss_moved_media_features_get_addons_state();
@@ -335,13 +335,13 @@ function bboss_moved_media_features_render_notice() {
 	$license_url = bboss_admin_license_screen_url();
 
 	if ( 'inactive' === $state ) {
-		$message   = __( 'Activate the BuddyBoss Add-ons plugin to show them to your members again.', 'buddyboss-platform' );
+		$message   = __( 'Activate the BuddyBoss Add-ons plugin to show them to your members again.', 'buddyboss-community-social-network-groups-forums-messaging' );
 		$primary   = array(
-			'label' => __( 'Activate BuddyBoss Add-ons', 'buddyboss-platform' ),
+			'label' => __( 'Activate BuddyBoss Add-ons', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'url'   => wp_nonce_url( self_admin_url( 'plugins.php?action=activate&plugin=' . rawurlencode( BBOSS_MOVED_MEDIA_FEATURES_ADDONS_PLUGIN ) ), 'activate-plugin_' . BBOSS_MOVED_MEDIA_FEATURES_ADDONS_PLUGIN ),
 		);
 		$secondary = array(
-			'label'    => __( 'View plans', 'buddyboss-platform' ),
+			'label'    => __( 'View plans', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'url'      => $upgrade_url,
 			'external' => true,
 		);
@@ -354,46 +354,46 @@ function bboss_moved_media_features_render_notice() {
 		)
 	) {
 		// Only an entitled site is helped by an update; otherwise the licence copy below applies.
-		$message   = __( 'Your BuddyBoss Add-ons plugin is out of date. Update it to show them to your members again.', 'buddyboss-platform' );
+		$message   = __( 'Your BuddyBoss Add-ons plugin is out of date. Update it to show them to your members again.', 'buddyboss-community-social-network-groups-forums-messaging' );
 		$primary   = array(
-			'label' => __( 'Update BuddyBoss Add-ons', 'buddyboss-platform' ),
+			'label' => __( 'Update BuddyBoss Add-ons', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'url'   => self_admin_url( 'update-core.php' ),
 		);
 		$secondary = array(
-			'label' => __( 'Manage license', 'buddyboss-platform' ),
+			'label' => __( 'Manage license', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'url'   => $license_url,
 		);
 	} elseif ( 'active' === $state ) {
-		$message   = __( 'Your current BuddyBoss license does not include them. Check your license or upgrade your plan to show them to your members again.', 'buddyboss-platform' );
+		$message   = __( 'Your current BuddyBoss license does not include them. Check your license or upgrade your plan to show them to your members again.', 'buddyboss-community-social-network-groups-forums-messaging' );
 		$primary   = array(
-			'label'    => __( 'Upgrade plan', 'buddyboss-platform' ),
+			'label'    => __( 'Upgrade plan', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'url'      => $upgrade_url,
 			'external' => true,
 		);
 		$secondary = array(
-			'label' => __( 'Manage license', 'buddyboss-platform' ),
+			'label' => __( 'Manage license', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'url'   => $license_url,
 		);
 	} elseif ( bboss_moved_media_features_is_entitled_from_cache() ) {
-		$message   = __( 'Your BuddyBoss plan includes the BuddyBoss Add-ons plugin. Install it to show them to your members again.', 'buddyboss-platform' );
+		$message   = __( 'Your BuddyBoss plan includes the BuddyBoss Add-ons plugin. Install it to show them to your members again.', 'buddyboss-community-social-network-groups-forums-messaging' );
 		$primary   = array(
-			'label' => __( 'Install BuddyBoss Add-ons', 'buddyboss-platform' ),
+			'label' => __( 'Install BuddyBoss Add-ons', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'url'   => $addons_url,
 		);
 		$secondary = array(
-			'label'    => __( 'View plans', 'buddyboss-platform' ),
+			'label'    => __( 'View plans', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'url'      => $upgrade_url,
 			'external' => true,
 		);
 	} else {
-		$message   = __( 'Install the BuddyBoss Add-ons plugin to show them to your members again. Available on the Start plan and above.', 'buddyboss-platform' );
+		$message   = __( 'Install the BuddyBoss Add-ons plugin to show them to your members again. Available on the Start plan and above.', 'buddyboss-community-social-network-groups-forums-messaging' );
 		$primary   = array(
-			'label'    => __( 'View plans', 'buddyboss-platform' ),
+			'label'    => __( 'View plans', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'url'      => $upgrade_url,
 			'external' => true,
 		);
 		$secondary = array(
-			'label' => __( 'Already have a plan? Install BuddyBoss Add-ons', 'buddyboss-platform' ),
+			'label' => __( 'Already have a plan? Install BuddyBoss Add-ons', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'url'   => $addons_url,
 		);
 	}
@@ -404,7 +404,7 @@ function bboss_moved_media_features_render_notice() {
 				<?php
 				printf(
 					/* translators: %s: Feature names, e.g. "Videos, Documents and Animated GIFs". */
-					esc_html__( '%s now come from the BuddyBoss Add-ons plugin', 'buddyboss-platform' ),
+					esc_html__( '%s now come from the BuddyBoss Add-ons plugin', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					esc_html( wp_sprintf( '%l', $features ) )
 				);
 				?>
@@ -414,7 +414,7 @@ function bboss_moved_media_features_render_notice() {
 			<?php
 			printf(
 				/* translators: 1: Item counts, e.g. "12 videos, 3 documents and 5 GIFs". 2: Call to action sentence. */
-				esc_html__( 'Hidden from your members right now: %1$s. %2$s', 'buddyboss-platform' ),
+				esc_html__( 'Hidden from your members right now: %1$s. %2$s', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				'<strong>' . esc_html( wp_sprintf( '%l', $items ) ) . '</strong>',
 				esc_html( $message )
 			);

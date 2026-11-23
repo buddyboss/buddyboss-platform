@@ -44,27 +44,27 @@ defined( 'ABSPATH' ) || exit;
 function bboss_platform_3_required_addons() {
 	return array(
 		'buddyboss-platform-pro/buddyboss-platform-pro.php'   => array(
-			'name'    => __( 'BuddyBoss Platform Pro', 'buddyboss-platform' ),
+			'name'    => __( 'BuddyBoss Platform Pro', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'version' => bboss_platform_3_pro_required_version(),
 		),
 		'buddyboss-addons/buddyboss-addons.php'               => array(
-			'name'    => __( 'BuddyBoss Add-ons', 'buddyboss-platform' ),
+			'name'    => __( 'BuddyBoss Add-ons', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'version' => bboss_platform_3_addons_required_version(),
 		),
 		'buddyboss-gamification/buddyboss-gamification.php'   => array(
-			'name'    => __( 'BuddyBoss Gamification', 'buddyboss-platform' ),
+			'name'    => __( 'BuddyBoss Gamification', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'version' => '2.0.0',
 		),
 		'buddyboss-learndash/buddyboss-learndash.php'         => array(
-			'name'    => __( 'BuddyBoss LearnDash', 'buddyboss-platform' ),
+			'name'    => __( 'BuddyBoss LearnDash', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'version' => '1.0.0',
 		),
 		'buddyboss-offload-media/buddyboss-offload-media.php' => array(
-			'name'    => __( 'BuddyBoss Offload Media', 'buddyboss-platform' ),
+			'name'    => __( 'BuddyBoss Offload Media', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'version' => bboss_platform_3_offload_media_required_version(),
 		),
 		'buddyboss-sharing/buddyboss-sharing.php'           => array(
-			'name'    => __( 'BuddyBoss Sharing', 'buddyboss-platform' ),
+			'name'    => __( 'BuddyBoss Sharing', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'version' => '2.0.0',
 		),
 	);
@@ -146,7 +146,7 @@ function bboss_platform_3_offload_media_required_version() {
 function bboss_platform_3_required_themes() {
 	return array(
 		'buddyboss-theme' => array(
-			'name'    => __( 'BuddyBoss Theme', 'buddyboss-platform' ),
+			'name'    => __( 'BuddyBoss Theme', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'version' => bboss_platform_3_theme_required_version(),
 		),
 	);
@@ -291,7 +291,7 @@ function bboss_platform_3_render_addon_compat_notice() {
 				<?php
 				printf(
 					/* translators: %s: Platform version */
-					esc_html__( 'BuddyBoss Platform %s requires updates to the following plugins:', 'buddyboss-platform' ),
+					esc_html__( 'BuddyBoss Platform %s requires updates to the following plugins:', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					esc_html( $platform_version )
 				);
 				?>
@@ -303,7 +303,7 @@ function bboss_platform_3_render_addon_compat_notice() {
 					<?php
 					printf(
 						/* translators: 1: Plugin name. 2: Required version. 3: Currently installed version. */
-						esc_html__( '%1$s (%2$s or higher) — currently %3$s', 'buddyboss-platform' ),
+						esc_html__( '%1$s (%2$s or higher) — currently %3$s', 'buddyboss-community-social-network-groups-forums-messaging' ),
 						'<strong>' . esc_html( $row['name'] ) . '</strong>',
 						esc_html( $row['required'] ),
 						esc_html( $row['current'] )
@@ -314,7 +314,7 @@ function bboss_platform_3_render_addon_compat_notice() {
 		</ul>
 		<p>
 			<a href="<?php echo esc_url( $update_url ); ?>" class="button button-primary">
-				<?php esc_html_e( 'Update plugins now', 'buddyboss-platform' ); ?>
+				<?php esc_html_e( 'Update plugins now', 'buddyboss-community-social-network-groups-forums-messaging' ); ?>
 			</a>
 		</p>
 	</div>

@@ -43,7 +43,7 @@ function bboss_activity_admin_menu() {
 	$wp_admin_bar->add_menu(
 		array(
 			'id'    => 'activity-admin',
-			'title' => __( 'Edit Activity', 'buddyboss-platform' ),
+			'title' => __( 'Edit Activity', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'href'  => esc_url( $activity_edit_link ),
 		)
 	);

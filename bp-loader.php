@@ -1,12 +1,12 @@
 <?php
 /**
- * Plugin Name: BuddyBoss Platform
+ * Plugin Name: BuddyBoss – Community, Social Network, Groups, Forums & Private Messaging
  * Plugin URI:  https://buddyboss.com/
  * Description: The BuddyBoss Platform adds community features to WordPress. Member Profiles, Activity Feeds, Direct Messaging, Notifications, and more!
  * Author:      BuddyBoss
  * Author URI:  https://buddyboss.com/
  * Version:     3.7.2
- * Text Domain: buddyboss-platform
+ * Text Domain: buddyboss-community-social-network-groups-forums-messaging
  * Domain Path: /src/languages
  * License:     GPLv2 or later
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html

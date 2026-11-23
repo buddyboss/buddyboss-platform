@@ -160,9 +160,9 @@ if ( ! class_exists( 'BBoss_Admin_Tab' ) ) :
 						<span class="count"><?php echo esc_html( $total_missing_count ); ?> </span>
 						<?php
 						if ( $total_missing_count > 1 ) {
-							esc_html_e( 'Emails Missing', 'buddyboss-platform' );
+							esc_html_e( 'Emails Missing', 'buddyboss-community-social-network-groups-forums-messaging' );
 						} else {
-							esc_html_e( 'Email Missing', 'buddyboss-platform' );
+							esc_html_e( 'Email Missing', 'buddyboss-community-social-network-groups-forums-messaging' );
 						}
 						?>
 					</a>
@@ -174,15 +174,15 @@ if ( ! class_exists( 'BBoss_Admin_Tab' ) ) :
 										<?php echo esc_html( $total_missing_count ); ?> </span>
 									<?php
 									if ( $total_missing_count > 1 ) {
-										esc_html_e( 'Emails Missing', 'buddyboss-platform' );
+										esc_html_e( 'Emails Missing', 'buddyboss-community-social-network-groups-forums-messaging' );
 									} else {
-										esc_html_e( 'Email Missing', 'buddyboss-platform' );
+										esc_html_e( 'Email Missing', 'buddyboss-community-social-network-groups-forums-messaging' );
 									}
 									?>
 							</div>
 							<div class="bp-hello-close">
-								<button type="button" class="close-modal button bp-tooltip" data-bp-tooltip-pos="down" data-bp-tooltip="<?php esc_attr_e( 'Close pop-up', 'buddyboss-platform' ); ?>">
-									<?php esc_html_e( 'Close', 'buddyboss-platform' ); ?>
+								<button type="button" class="close-modal button bp-tooltip" data-bp-tooltip-pos="down" data-bp-tooltip="<?php esc_attr_e( 'Close pop-up', 'buddyboss-community-social-network-groups-forums-messaging' ); ?>">
+									<?php esc_html_e( 'Close', 'buddyboss-community-social-network-groups-forums-messaging' ); ?>
 								</button>
 							</div>
 						</div>
@@ -218,7 +218,7 @@ if ( ! class_exists( 'BBoss_Admin_Tab' ) ) :
 								);
 								?>
 								" class="button">
-									<?php esc_html_e( 'Reset All Emails', 'buddyboss-platform' ); ?>
+									<?php esc_html_e( 'Reset All Emails', 'buddyboss-community-social-network-groups-forums-messaging' ); ?>
 								</a>
 								<a href="
 								<?php
@@ -238,7 +238,7 @@ if ( ! class_exists( 'BBoss_Admin_Tab' ) ) :
 								);
 								?>
 								" class="button button-primary">
-									<?php esc_html_e( 'Install Missing Emails', 'buddyboss-platform' ); ?>
+									<?php esc_html_e( 'Install Missing Emails', 'buddyboss-community-social-network-groups-forums-messaging' ); ?>
 								</a>
 							</div>
 						</div>
@@ -256,16 +256,16 @@ if ( ! class_exists( 'BBoss_Admin_Tab' ) ) :
 				'ajax_url'                     => admin_url( 'admin-ajax.php' ),
 				'tools'                        => array(
 					'repair_forums' => array(
-						'validate_site_id_message' => esc_html__( 'Select site to repair the forums', 'buddyboss-platform' ),
+						'validate_site_id_message' => esc_html__( 'Select site to repair the forums', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					),
 				),
 				'moderation'                   => array(
-					'suspend_confirm_message'   => esc_js( __( 'Please confirm you want to suspend this member. Members who are suspended will be logged out and not allowed to login again. Their content will be hidden from all members in your network. Please allow a few minutes for this process to complete.', 'buddyboss-platform' ) ),
-					'unsuspend_confirm_message' => esc_js( __( 'Please confirm you want to unsuspend this member. Members who are unsuspended will be allowed to login again, and their content will no longer be hidden from other members in your network. Please allow a few minutes for this process to complete.', 'buddyboss-platform' ) ),
+					'suspend_confirm_message'   => esc_js( __( 'Please confirm you want to suspend this member. Members who are suspended will be logged out and not allowed to login again. Their content will be hidden from all members in your network. Please allow a few minutes for this process to complete.', 'buddyboss-community-social-network-groups-forums-messaging' ) ),
+					'unsuspend_confirm_message' => esc_js( __( 'Please confirm you want to unsuspend this member. Members who are unsuspended will be allowed to login again, and their content will no longer be hidden from other members in your network. Please allow a few minutes for this process to complete.', 'buddyboss-community-social-network-groups-forums-messaging' ) ),
 				),
 				'cover_size_alert'             => array(
-					'profile' => esc_html__( 'Changing the Cover Image Size will reposition all of your members cover images. Are you sure you wish to save these changes?', 'buddyboss-platform' ),
-					'group'   => esc_html__( 'Changing the Cover Image Size will reposition all of your groups cover images. Are you sure you wish to save these changes?', 'buddyboss-platform' ),
+					'profile' => esc_html__( 'Changing the Cover Image Size will reposition all of your members cover images. Are you sure you wish to save these changes?', 'buddyboss-community-social-network-groups-forums-messaging' ),
+					'group'   => esc_html__( 'Changing the Cover Image Size will reposition all of your groups cover images. Are you sure you wish to save these changes?', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				),
 				'avatar_settings'              => array(
 					'wordpress_show_avatar'    => bboss_get_option( 'show_avatars' ),
@@ -281,18 +281,18 @@ if ( ! class_exists( 'BBoss_Admin_Tab' ) ) :
 					),
 				),
 				'profile_group_cover'          => array(
-					'select_file'       => esc_js( esc_html__( 'No file was uploaded.', 'buddyboss-platform' ) ),
-					'file_upload_error' => esc_js( esc_html__( 'There was a problem uploading the cover photo.', 'buddyboss-platform' ) ),
+					'select_file'       => esc_js( esc_html__( 'No file was uploaded.', 'buddyboss-community-social-network-groups-forums-messaging' ) ),
+					'file_upload_error' => esc_js( esc_html__( 'There was a problem uploading the cover photo.', 'buddyboss-community-social-network-groups-forums-messaging' ) ),
 					'feedback_messages' => array(
 						0 => sprintf(
 						/* translators: 1. Cover image width. 2. Cover image height. */
-							esc_html__( 'Cover photo was uploaded successfully. For best results, upload an image that is %1$spx by %2$spx or larger.', 'buddyboss-platform' ),
+							esc_html__( 'Cover photo was uploaded successfully. For best results, upload an image that is %1$spx by %2$spx or larger.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 							(int) $cover_dimensions['width'],
 							(int) $cover_dimensions['height']
 						),
-						1 => esc_html__( 'Cover photo was uploaded successfully.', 'buddyboss-platform' ),
-						2 => esc_html__( 'There was a problem deleting cover photo. Please try again.', 'buddyboss-platform' ),
-						3 => esc_html__( 'Cover photo was deleted successfully.', 'buddyboss-platform' ),
+						1 => esc_html__( 'Cover photo was uploaded successfully.', 'buddyboss-community-social-network-groups-forums-messaging' ),
+						2 => esc_html__( 'There was a problem deleting cover photo. Please try again.', 'buddyboss-community-social-network-groups-forums-messaging' ),
+						3 => esc_html__( 'Cover photo was deleted successfully.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					),
 					'upload'            => array(
 						'nonce'           => wp_create_nonce( 'bp-uploader' ),
@@ -317,14 +317,14 @@ if ( ! class_exists( 'BBoss_Admin_Tab' ) ) :
 				),
 				'bb_registration_restrictions' => array(
 					'feedback_messages' => array(
-						'empty'     => esc_html__( 'The rule content cannot be empty.', 'buddyboss-platform' ),
-						'duplicate' => esc_html__( 'The rule content cannot be duplicate.', 'buddyboss-platform' ),
+						'empty'     => esc_html__( 'The rule content cannot be empty.', 'buddyboss-community-social-network-groups-forums-messaging' ),
+						'duplicate' => esc_html__( 'The rule content cannot be duplicate.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					),
 				),
 				'group'                        => array(),
 				'forum_validation'             => array(
-					'escaped_html_tags' => esc_js( __( 'Your content contains escaped HTML tags. Please fix them before submitting.', 'buddyboss-platform' ) ),
-					'malformed_ul_li'   => esc_js( __( 'Content has malformed <ul> or <li> tags. Please fix them before submitting.', 'buddyboss-platform' ) ),
+					'escaped_html_tags' => esc_js( __( 'Your content contains escaped HTML tags. Please fix them before submitting.', 'buddyboss-community-social-network-groups-forums-messaging' ) ),
+					'malformed_ul_li'   => esc_js( __( 'Content has malformed <ul> or <li> tags. Please fix them before submitting.', 'buddyboss-community-social-network-groups-forums-messaging' ) ),
 				),
 				'components'                   => array_map( 'intval', bboss_get_option( 'bp-active-components' ) ),
 			);
@@ -517,7 +517,7 @@ if ( ! class_exists( 'BBoss_Admin_Tab' ) ) :
 				'<p class="submit">
 				<input type="submit" name="submit" class="button-primary" value="%s" />
 			</p>',
-				esc_attr__( 'Save Settings', 'buddyboss-platform' )
+				esc_attr__( 'Save Settings', 'buddyboss-community-social-network-groups-forums-messaging' )
 			);
 		}
 

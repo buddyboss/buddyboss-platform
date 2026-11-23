@@ -288,20 +288,20 @@ function bboss_legacy_bpagj_register_fields( $registry, $component ) {
 	$policy_options          = array(
 		array(
 			'value' => 'all_members',
-			'label' => __( 'All new registrations', 'buddyboss-platform' ),
+			'label' => __( 'All new registrations', 'buddyboss-community-social-network-groups-forums-messaging' ),
 		),
 		array(
 			'value' => 'bp_member_types',
-			'label' => __( 'Select by member type', 'buddyboss-platform' ),
+			'label' => __( 'Select by member type', 'buddyboss-community-social-network-groups-forums-messaging' ),
 		),
 		array(
 			'value' => 'none',
-			'label' => __( 'None', 'buddyboss-platform' ),
+			'label' => __( 'None', 'buddyboss-community-social-network-groups-forums-messaging' ),
 		),
 	);
 	$existing_policy_options = $policy_options;
 	// First option label differs between the two radios on the legacy screen.
-	$existing_policy_options[0]['label'] = __( 'All existing members', 'buddyboss-platform' );
+	$existing_policy_options[0]['label'] = __( 'All existing members', 'buddyboss-community-social-network-groups-forums-messaging' );
 
 	$bmt_enabled  = bboss_legacy_bpagj_member_types_enabled();
 	$mt_options   = bboss_legacy_bpagj_member_type_options();
@@ -315,7 +315,7 @@ function bboss_legacy_bpagj_register_fields( $registry, $component ) {
 		$existing_policy_options = array( $existing_policy_options[0], $existing_policy_options[2] );
 	}
 
-	$group_label = __( 'Auto-Join Users to this Group', 'buddyboss-platform' );
+	$group_label = __( 'Auto-Join Users to this Group', 'buddyboss-community-social-network-groups-forums-messaging' );
 
 	// Anchor every field to the modal's `details` tab. The auto-bridge default
 	// for groups is `details` (see `groups/legacy-meta-bridge.php` —
@@ -341,7 +341,7 @@ function bboss_legacy_bpagj_register_fields( $registry, $component ) {
 		$component,
 		'bpagj_aj_new_registrations',
 		array(
-			'label'             => __( 'Join New Registrations', 'buddyboss-platform' ),
+			'label'             => __( 'Join New Registrations', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'type'              => 'radio',
 			'order'             => 6000,
 			'context'           => 'after',
@@ -384,8 +384,8 @@ function bboss_legacy_bpagj_register_fields( $registry, $component ) {
 			$component,
 			'bpagj_aj_new_registrations_mt',
 			array(
-				'label'             => __( 'Member types for new registrations', 'buddyboss-platform' ),
-				'description'       => __( 'Choose which member types are auto-joined to this group when they register.', 'buddyboss-platform' ),
+				'label'             => __( 'Member types for new registrations', 'buddyboss-community-social-network-groups-forums-messaging' ),
+				'description'       => __( 'Choose which member types are auto-joined to this group when they register.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				'type'              => 'toggle_list',
 				'order'             => 6010,
 				'context'           => 'after',
@@ -431,8 +431,8 @@ function bboss_legacy_bpagj_register_fields( $registry, $component ) {
 		$component,
 		'bpagj_aj_existing_users',
 		array(
-			'label'             => __( 'Join Existing Members', 'buddyboss-platform' ),
-			'description'       => __( 'Selecting "All existing members" or a set of member types will enroll matching users into this group on save.', 'buddyboss-platform' ),
+			'label'             => __( 'Join Existing Members', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'description'       => __( 'Selecting "All existing members" or a set of member types will enroll matching users into this group on save.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'type'              => 'radio',
 			'order'             => 6020,
 			'context'           => 'after',
@@ -479,8 +479,8 @@ function bboss_legacy_bpagj_register_fields( $registry, $component ) {
 			$component,
 			'bpagj_aj_existing_users_mt',
 			array(
-				'label'             => __( 'Member types for existing members', 'buddyboss-platform' ),
-				'description'       => __( 'Choose which member types are enrolled into this group on save.', 'buddyboss-platform' ),
+				'label'             => __( 'Member types for existing members', 'buddyboss-community-social-network-groups-forums-messaging' ),
+				'description'       => __( 'Choose which member types are enrolled into this group on save.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				'type'              => 'toggle_list',
 				'order'             => 6030,
 				'context'           => 'after',

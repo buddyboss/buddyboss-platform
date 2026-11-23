@@ -42,12 +42,12 @@ import { useMediaFrame } from '../hooks/useMediaFrame';
  * @type {Array}
  */
 var sortOptions = [
-	{ label: __( 'Newest', 'buddyboss-platform' ), value: 'newest' },
-	{ label: __( 'Oldest', 'buddyboss-platform' ), value: 'oldest' },
-	{ label: __( 'Highest Discussions', 'buddyboss-platform' ), value: 'highest_discussions' },
-	{ label: __( 'Lowest Discussions', 'buddyboss-platform' ), value: 'lowest_discussions' },
-	{ label: __( 'Highest Replies', 'buddyboss-platform' ), value: 'highest_replies' },
-	{ label: __( 'Lowest Replies', 'buddyboss-platform' ), value: 'lowest_replies' },
+	{ label: __( 'Newest', 'buddyboss-community-social-network-groups-forums-messaging' ), value: 'newest' },
+	{ label: __( 'Oldest', 'buddyboss-community-social-network-groups-forums-messaging' ), value: 'oldest' },
+	{ label: __( 'Highest Discussions', 'buddyboss-community-social-network-groups-forums-messaging' ), value: 'highest_discussions' },
+	{ label: __( 'Lowest Discussions', 'buddyboss-community-social-network-groups-forums-messaging' ), value: 'lowest_discussions' },
+	{ label: __( 'Highest Replies', 'buddyboss-community-social-network-groups-forums-messaging' ), value: 'highest_replies' },
+	{ label: __( 'Lowest Replies', 'buddyboss-community-social-network-groups-forums-messaging' ), value: 'lowest_replies' },
 ];
 
 /**
@@ -80,9 +80,9 @@ var VISIBILITY_ICONS = {
  * @type {Object}
  */
 var VISIBILITY_LABELS = {
-	'publish': __( 'Public', 'buddyboss-platform' ),
-	'private': __( 'Private', 'buddyboss-platform' ),
-	'hidden': __( 'Hidden', 'buddyboss-platform' ),
+	'publish': __( 'Public', 'buddyboss-community-social-network-groups-forums-messaging' ),
+	'private': __( 'Private', 'buddyboss-community-social-network-groups-forums-messaging' ),
+	'hidden': __( 'Hidden', 'buddyboss-community-social-network-groups-forums-messaging' ),
 };
 
 /**
@@ -263,7 +263,7 @@ export function ForumsListScreen( { onNavigate } ) {
 			setIsLoading( false );
 			setNotice( {
 				type: 'error',
-				message: __( 'Failed to load forums. Please try again.', 'buddyboss-platform' ),
+				message: __( 'Failed to load forums. Please try again.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			} );
 		} );
 	}, [ currentPage, searchQuery, filter, sortBy, refetchCounter ] );
@@ -350,11 +350,11 @@ export function ForumsListScreen( { onNavigate } ) {
 				setBulkAction( '' );
 				resetAndRefetch();
 			} else {
-				setNotice( { type: 'error', message: ( response.data && response.data.message ) || __( 'Action failed.', 'buddyboss-platform' ) } );
+				setNotice( { type: 'error', message: ( response.data && response.data.message ) || __( 'Action failed.', 'buddyboss-community-social-network-groups-forums-messaging' ) } );
 			}
 		} ).catch( function () {
 			setIsBulkProcessing( false );
-			setNotice( { type: 'error', message: __( 'An error occurred.', 'buddyboss-platform' ) } );
+			setNotice( { type: 'error', message: __( 'An error occurred.', 'buddyboss-community-social-network-groups-forums-messaging' ) } );
 		} );
 	};
 
@@ -442,14 +442,14 @@ export function ForumsListScreen( { onNavigate } ) {
 			if ( response.success && response.data ) {
 				setEditForum( response.data );
 			} else {
-				setNotice( { type: 'error', message: ( response.data && response.data.message ) || __( 'Failed to load forum data.', 'buddyboss-platform' ) } );
+				setNotice( { type: 'error', message: ( response.data && response.data.message ) || __( 'Failed to load forum data.', 'buddyboss-community-social-network-groups-forums-messaging' ) } );
 			}
 		} ).catch( function ( err ) {
 			if ( err && 'AbortError' === err.name ) {
 				return;
 			}
 			setIsEditLoading( false );
-			setNotice( { type: 'error', message: __( 'An error occurred loading forum data.', 'buddyboss-platform' ) } );
+			setNotice( { type: 'error', message: __( 'An error occurred loading forum data.', 'buddyboss-community-social-network-groups-forums-messaging' ) } );
 		} );
 	};
 
@@ -469,11 +469,11 @@ export function ForumsListScreen( { onNavigate } ) {
 				setNotice( { type: 'success', message: response.data.message } );
 				resetAndRefetch();
 			} else {
-				setNotice( { type: 'error', message: ( response.data && response.data.message ) || __( 'Failed to save forum.', 'buddyboss-platform' ) } );
+				setNotice( { type: 'error', message: ( response.data && response.data.message ) || __( 'Failed to save forum.', 'buddyboss-community-social-network-groups-forums-messaging' ) } );
 			}
 		} ).catch( function ( err ) {
 			setIsEditSaving( false );
-			setNotice( { type: 'error', message: err.message || __( 'An error occurred saving the forum.', 'buddyboss-platform' ) } );
+			setNotice( { type: 'error', message: err.message || __( 'An error occurred saving the forum.', 'buddyboss-community-social-network-groups-forums-messaging' ) } );
 		} );
 	};
 
@@ -484,7 +484,7 @@ export function ForumsListScreen( { onNavigate } ) {
 	 */
 	var handleForumCreated = function () {
 		setCreateModalOpen( false );
-		setNotice( { type: 'success', message: __( 'Forum created successfully.', 'buddyboss-platform' ) } );
+		setNotice( { type: 'success', message: __( 'Forum created successfully.', 'buddyboss-community-social-network-groups-forums-messaging' ) } );
 		resetAndRefetch();
 	};
 
@@ -535,7 +535,7 @@ export function ForumsListScreen( { onNavigate } ) {
 				options.push( { label: label, value: key } );
 			} );
 		} else {
-			options.push( { label: __( 'All', 'buddyboss-platform' ), value: 'all' } );
+			options.push( { label: __( 'All', 'buddyboss-community-social-network-groups-forums-messaging' ), value: 'all' } );
 		}
 		return options;
 	}, [ views ] );
@@ -571,7 +571,7 @@ export function ForumsListScreen( { onNavigate } ) {
 
 			{ /* Header */ }
 			<div className="bb-forums-list__header">
-				<h2 className="bb-forums-list__title">{ __( 'Forums', 'buddyboss-platform' ) }</h2>
+				<h2 className="bb-forums-list__title">{ __( 'Forums', 'buddyboss-community-social-network-groups-forums-messaging' ) }</h2>
 				<Button
 					variant="primary"
 					className="bb-forums-list__create-btn"
@@ -580,7 +580,7 @@ export function ForumsListScreen( { onNavigate } ) {
 					} }
 				>
 					<i className="bb-icons-rl bb-icons-rl-plus"></i>
-					{ __( 'Create New Forum', 'buddyboss-platform' ) }
+					{ __( 'Create New Forum', 'buddyboss-community-social-network-groups-forums-messaging' ) }
 				</Button>
 			</div>
 
@@ -595,7 +595,7 @@ export function ForumsListScreen( { onNavigate } ) {
 				isBulkProcessing={ isBulkProcessing }
 				searchInput={ searchInput }
 				onSearchChange={ handleSearchChange }
-				searchPlaceholder={ __( 'Search forums', 'buddyboss-platform' ) }
+				searchPlaceholder={ __( 'Search forums', 'buddyboss-community-social-network-groups-forums-messaging' ) }
 			>
 				<SelectControl
 					value={ filter }
@@ -621,7 +621,7 @@ export function ForumsListScreen( { onNavigate } ) {
 					</div>
 				) : 0 === forums.length ? (
 					<div className="bb-forums-list__empty bb-admin-list-table__empty">
-						<p>{ __( 'No forums found.', 'buddyboss-platform' ) }</p>
+						<p>{ __( 'No forums found.', 'buddyboss-community-social-network-groups-forums-messaging' ) }</p>
 					</div>
 				) : (
 					<table className="bb-forums-list__table bb-admin-list-table">
@@ -635,22 +635,22 @@ export function ForumsListScreen( { onNavigate } ) {
 									/>
 								</th>
 								<th className="bb-forums-list__th--name">
-									{ __( 'Forum', 'buddyboss-platform' ) }
+									{ __( 'Forum', 'buddyboss-community-social-network-groups-forums-messaging' ) }
 								</th>
 								<th className="bb-forums-list__th--privacy">
-									{ __( 'Privacy', 'buddyboss-platform' ) }
+									{ __( 'Privacy', 'buddyboss-community-social-network-groups-forums-messaging' ) }
 								</th>
 								<th className="bb-forums-list__th--discussions">
-									{ __( 'Discussions', 'buddyboss-platform' ) }
+									{ __( 'Discussions', 'buddyboss-community-social-network-groups-forums-messaging' ) }
 								</th>
 								<th className="bb-forums-list__th--replies">
-									{ __( 'Replies', 'buddyboss-platform' ) }
+									{ __( 'Replies', 'buddyboss-community-social-network-groups-forums-messaging' ) }
 								</th>
 								<th className="bb-forums-list__th--author">
-									{ __( 'Author', 'buddyboss-platform' ) }
+									{ __( 'Author', 'buddyboss-community-social-network-groups-forums-messaging' ) }
 								</th>
 								<th className="bb-forums-list__th--last-post">
-									{ __( 'Last Post', 'buddyboss-platform' ) }
+									{ __( 'Last Post', 'buddyboss-community-social-network-groups-forums-messaging' ) }
 								</th>
 								{ /* Custom columns from bbp_admin_forums_column_headers filter */ }
 								{ customColumnKeys.map( function ( key ) {
@@ -727,7 +727,7 @@ export function ForumsListScreen( { onNavigate } ) {
 												</span>
 											) : (
 												<span className="bb-forums-list__no-activity">
-													{ __( 'No Discussions', 'buddyboss-platform' ) }
+													{ __( 'No Discussions', 'buddyboss-community-social-network-groups-forums-messaging' ) }
 												</span>
 											) }
 										</td>
@@ -742,7 +742,7 @@ export function ForumsListScreen( { onNavigate } ) {
 										<td className="bb-forums-list__td--actions bb-admin-actions-toggle">
 											<DropdownMenu
 												icon={ <i className="bb-icons-rl-dots-three"></i> }
-												label={ __( 'More options', 'buddyboss-platform' ) }
+												label={ __( 'More options', 'buddyboss-community-social-network-groups-forums-messaging' ) }
 											>
 												{ function ( dropdownProps ) {
 													var onClose = dropdownProps.onClose;
@@ -759,7 +759,7 @@ export function ForumsListScreen( { onNavigate } ) {
 																	} }
 																>
 																	<i className="bb-icons-rl bb-icons-rl-eye"></i>
-																	{ __( 'View', 'buddyboss-platform' ) }
+																	{ __( 'View', 'buddyboss-community-social-network-groups-forums-messaging' ) }
 																	<i className="bb-icons-rl bb-icons-rl-arrow-up-right bb-icons-external"></i>
 																</MenuItem>
 															) }
@@ -770,7 +770,7 @@ export function ForumsListScreen( { onNavigate } ) {
 																} }
 															>
 																<i className="bb-icons-rl bb-icons-rl-note-pencil"></i>
-																{ __( 'Edit', 'buddyboss-platform' ) }
+																{ __( 'Edit', 'buddyboss-community-social-network-groups-forums-messaging' ) }
 															</MenuItem>
 															<MenuItem
 																isDestructive
@@ -780,7 +780,7 @@ export function ForumsListScreen( { onNavigate } ) {
 																} }
 															>
 																<i className="bb-icons-rl bb-icons-rl-trash"></i>
-																{ __( 'Delete', 'buddyboss-platform' ) }
+																{ __( 'Delete', 'buddyboss-community-social-network-groups-forums-messaging' ) }
 															</MenuItem>
 														</MenuGroup>
 													);
@@ -825,24 +825,24 @@ export function ForumsListScreen( { onNavigate } ) {
 				className="bb-forum-bulk-edit-modal"
 			>
 				<SelectControl
-					label={ __( 'Status', 'buddyboss-platform' ) }
+					label={ __( 'Status', 'buddyboss-community-social-network-groups-forums-messaging' ) }
 					value={ bulkEditStatus }
 					options={ [
-						{ value: 'no_change', label: __( '\u2014 No Change \u2014', 'buddyboss-platform' ) },
-						{ value: 'open', label: __( 'Open', 'buddyboss-platform' ) },
-						{ value: 'closed', label: __( 'Closed', 'buddyboss-platform' ) },
+						{ value: 'no_change', label: __( '\u2014 No Change \u2014', 'buddyboss-community-social-network-groups-forums-messaging' ) },
+						{ value: 'open', label: __( 'Open', 'buddyboss-community-social-network-groups-forums-messaging' ) },
+						{ value: 'closed', label: __( 'Closed', 'buddyboss-community-social-network-groups-forums-messaging' ) },
 					] }
 					onChange={ setBulkEditStatus }
 					__nextHasNoMarginBottom
 				/>
 				<SelectControl
-					label={ __( 'Visibility', 'buddyboss-platform' ) }
+					label={ __( 'Visibility', 'buddyboss-community-social-network-groups-forums-messaging' ) }
 					value={ bulkEditVisibility }
 					options={ [
-						{ value: 'no_change', label: __( '\u2014 No Change \u2014', 'buddyboss-platform' ) },
-						{ value: 'publish', label: __( 'Public', 'buddyboss-platform' ) },
-						{ value: 'private', label: __( 'Private', 'buddyboss-platform' ) },
-						{ value: 'hidden', label: __( 'Hidden', 'buddyboss-platform' ) },
+						{ value: 'no_change', label: __( '\u2014 No Change \u2014', 'buddyboss-community-social-network-groups-forums-messaging' ) },
+						{ value: 'publish', label: __( 'Public', 'buddyboss-community-social-network-groups-forums-messaging' ) },
+						{ value: 'private', label: __( 'Private', 'buddyboss-community-social-network-groups-forums-messaging' ) },
+						{ value: 'hidden', label: __( 'Hidden', 'buddyboss-community-social-network-groups-forums-messaging' ) },
 					] }
 					onChange={ setBulkEditVisibility }
 					__nextHasNoMarginBottom
@@ -852,7 +852,7 @@ export function ForumsListScreen( { onNavigate } ) {
 			{ /* Delete Forum Modal */ }
 			<DeleteConfirmModal
 				isOpen={ deleteModalOpen }
-				singleTitle={ __( 'Delete forum?', 'buddyboss-platform' ) }
+				singleTitle={ __( 'Delete forum?', 'buddyboss-community-social-network-groups-forums-messaging' ) }
 				items={ deleteTargetForumNames }
 				onRemoveItem={ function ( id ) {
 					setDeleteTargetIds( function ( prev ) {
@@ -866,9 +866,9 @@ export function ForumsListScreen( { onNavigate } ) {
 						return prev.filter( function ( i ) { return i !== id; } );
 					} );
 				} }
-				warningText={ __( 'This permanently deletes forum from the community and cannot be undone.', 'buddyboss-platform' ) }
-				description={ __( 'Deletes the forum and all associated discussions, replies, media, and related content from the community. This action cannot be undone.', 'buddyboss-platform' ) }
-				confirmLabel={ __( 'I understand that this deletes the forum and its discussions.', 'buddyboss-platform' ) }
+				warningText={ __( 'This permanently deletes forum from the community and cannot be undone.', 'buddyboss-community-social-network-groups-forums-messaging' ) }
+				description={ __( 'Deletes the forum and all associated discussions, replies, media, and related content from the community. This action cannot be undone.', 'buddyboss-community-social-network-groups-forums-messaging' ) }
+				confirmLabel={ __( 'I understand that this deletes the forum and its discussions.', 'buddyboss-community-social-network-groups-forums-messaging' ) }
 				confirmChecked={ deleteConfirmChecked }
 				onConfirmChange={ setDeleteConfirmChecked }
 				onConfirm={ handleConfirmDelete }
@@ -926,7 +926,7 @@ export function ForumsListScreen( { onNavigate } ) {
  * @type {Object}
  */
 var forumTabLabels = {
-	details: __( 'Details', 'buddyboss-platform' ),
+	details: __( 'Details', 'buddyboss-community-social-network-groups-forums-messaging' ),
 };
 
 /**
@@ -1090,7 +1090,7 @@ function ForumEditModal( props ) {
 		} );
 
 		if ( ! opened ) {
-			setError( __( 'The WordPress Media Library is not available.', 'buddyboss-platform' ) );
+			setError( __( 'The WordPress Media Library is not available.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 		}
 	};
 
@@ -1113,7 +1113,7 @@ function ForumEditModal( props ) {
 	var handleSave = function () {
 		var nameVal = registeredValues.name || '';
 		if ( ! nameVal.trim() ) {
-			setError( __( 'Forum name is required.', 'buddyboss-platform' ) );
+			setError( __( 'Forum name is required.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 			return;
 		}
 
@@ -1264,7 +1264,7 @@ function ForumEditModal( props ) {
 		return (
 			<div className="bb-forum-modal__image-field bb-forum-create-modal__image-field">
 				<label className="components-base-control__label" htmlFor="bb-forum-edit-image">
-					{ __( 'Feature Image (Optional)', 'buddyboss-platform' ) }
+					{ __( 'Feature Image (Optional)', 'buddyboss-community-social-network-groups-forums-messaging' ) }
 				</label>
 				{ imageUrl ? (
 					<div className="bb-forum-modal__image-preview">
@@ -1275,7 +1275,7 @@ function ForumEditModal( props ) {
 								onClick={ openMediaLibrary }
 								className="bb-forum-modal__replace-image"
 							>
-								{ __( 'Replace', 'buddyboss-platform' ) }
+								{ __( 'Replace', 'buddyboss-community-social-network-groups-forums-messaging' ) }
 							</Button>
 							<Button
 								variant="secondary"
@@ -1283,7 +1283,7 @@ function ForumEditModal( props ) {
 								onClick={ handleRemoveImage }
 								className="bb-forum-modal__remove-image"
 							>
-								{ __( 'Reset', 'buddyboss-platform' ) }
+								{ __( 'Reset', 'buddyboss-community-social-network-groups-forums-messaging' ) }
 							</Button>
 						</div>
 					</div>
@@ -1297,7 +1297,7 @@ function ForumEditModal( props ) {
 					</button>
 				) }
 				<p className="bb-forum-create-modal__image-help">
-					{ __( 'For best results, use an image at least 1500px by 300px or higher.', 'buddyboss-platform' ) }
+					{ __( 'For best results, use an image at least 1500px by 300px or higher.', 'buddyboss-community-social-network-groups-forums-messaging' ) }
 				</p>
 			</div>
 		);
@@ -1338,7 +1338,7 @@ function ForumEditModal( props ) {
 
 	return (
 		<Modal
-			title={ __( 'Edit Forum', 'buddyboss-platform' ) }
+			title={ __( 'Edit Forum', 'buddyboss-community-social-network-groups-forums-messaging' ) }
 			onRequestClose={ function () {
 				if ( ! isSaving ) {
 					onClose();
@@ -1374,7 +1374,7 @@ function ForumEditModal( props ) {
 					onClick={ onClose }
 					disabled={ isSaving }
 				>
-					{ __( 'Cancel', 'buddyboss-platform' ) }
+					{ __( 'Cancel', 'buddyboss-community-social-network-groups-forums-messaging' ) }
 				</Button>
 				<Button
 					variant="primary"
@@ -1382,7 +1382,7 @@ function ForumEditModal( props ) {
 					isBusy={ isSaving }
 					disabled={ isSaving }
 				>
-					{ __( 'Save', 'buddyboss-platform' ) }
+					{ __( 'Save', 'buddyboss-community-social-network-groups-forums-messaging' ) }
 				</Button>
 			</div>
 		</Modal>

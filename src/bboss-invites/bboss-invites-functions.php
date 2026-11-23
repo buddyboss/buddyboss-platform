@@ -88,16 +88,16 @@ function bboss_get_invite_post_type_labels() {
 	return apply_filters(
 		'bp_get_invite_post_type_labels',
 		array(
-			'add_new_item'       => __( 'Send Invite', 'buddyboss-platform' ),
-			'all_items'          => __( 'Sent Invites', 'buddyboss-platform' ),
-			'edit_item'          => __( 'Edit Sent Invite', 'buddyboss-platform' ),
-			'menu_name'          => __( 'Invites', 'buddyboss-platform' ),
-			'name'               => __( 'Email Invites', 'buddyboss-platform' ),
-			'new_item'           => __( 'New Sent Invite', 'buddyboss-platform' ),
-			'not_found'          => __( 'No Sent Invites found', 'buddyboss-platform' ),
-			'not_found_in_trash' => __( 'No Sent Invites found in trash', 'buddyboss-platform' ),
-			'search_items'       => __( 'Search Sent Invites', 'buddyboss-platform' ),
-			'singular_name'      => __( 'Sent Invite', 'buddyboss-platform' ),
+			'add_new_item'       => __( 'Send Invite', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'all_items'          => __( 'Sent Invites', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'edit_item'          => __( 'Edit Sent Invite', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'menu_name'          => __( 'Invites', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'name'               => __( 'Email Invites', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'new_item'           => __( 'New Sent Invite', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'not_found'          => __( 'No Sent Invites found', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'not_found_in_trash' => __( 'No Sent Invites found in trash', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'search_items'       => __( 'Search Sent Invites', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'singular_name'      => __( 'Sent Invite', 'buddyboss-community-social-network-groups-forums-messaging' ),
 		)
 	);
 
@@ -191,7 +191,7 @@ function bboss_invites_member_invite_remove_registration_lock() {
 	$bp_get_invitee_email = new WP_Query( $args );
 
 	if ( ! $bp_get_invitee_email->have_posts() ) {
-		bboss_core_add_message( __( "We couldn't find any invitations associated with the provided email address.", 'buddyboss-platform' ), 'error' );
+		bboss_core_add_message( __( "We couldn't find any invitations associated with the provided email address.", 'buddyboss-community-social-network-groups-forums-messaging' ), 'error' );
 		return;
 	}
 
@@ -234,7 +234,7 @@ function bboss_invites_member_invite_register_screen_message() {
 
 	?>
 	<?php if ( empty( $email ) ) : ?>
-		<div id="message" class="error"><p><?php esc_html_e( "It looks like you're trying to accept an invitation to join the site, but some information is missing. Please try again by clicking on the link in the invitation email.", 'buddyboss-platform' ); ?></p></div>
+		<div id="message" class="error"><p><?php esc_html_e( "It looks like you're trying to accept an invitation to join the site, but some information is missing. Please try again by clicking on the link in the invitation email.", 'buddyboss-community-social-network-groups-forums-messaging' ); ?></p></div>
 	<?php endif; ?>
 
 	<?php if ( $bp->signup->step == 'request-details' && ! empty( $email ) ) : ?>
@@ -274,7 +274,7 @@ function bboss_invites_member_invite_register_screen_message() {
 
 		if ( ! empty( $inviters_names ) ) {
 			/* translators: %s: comma-separated list of inviter display names. */
-			$message = sprintf( _n( 'Welcome! You\'ve been invited to join the site by the following user: %s. Please fill out the information below to create your account.', 'Welcome! You\'ve been invited to join the site by the following users: %s. Please fill out the information below to create your account.', count( $inviters_names ), 'buddyboss-platform' ), implode( ', ', $inviters_names ) );
+			$message = sprintf( _n( 'Welcome! You\'ve been invited to join the site by the following user: %s. Please fill out the information below to create your account.', 'Welcome! You\'ve been invited to join the site by the following users: %s. Please fill out the information below to create your account.', count( $inviters_names ), 'buddyboss-community-social-network-groups-forums-messaging' ), implode( ', ', $inviters_names ) );
 
 			echo '<aside class="bp-feedback bp-messages info"><span class="bp-icon" aria-hidden="true"></span><p>' . esc_html( $message ) . '</p></aside>';
 		}
@@ -447,7 +447,7 @@ function bboss_get_member_invitation_message() {
  */
 function bboss_get_invites_member_invite_url() {
 
-	$invite_link = apply_filters( 'bp_get_invites_member_invite_url', __( 'To accept this invitation, please visit %%ACCEPTURL%%', 'buddyboss-platform' ) );
+	$invite_link = apply_filters( 'bp_get_invites_member_invite_url', __( 'To accept this invitation, please visit %%ACCEPTURL%%', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 
 	return stripslashes( $invite_link );
 }

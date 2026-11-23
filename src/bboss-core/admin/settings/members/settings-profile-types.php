@@ -27,7 +27,7 @@ function bboss_members_register_profile_types_panel_fields() {
 		'profile_types',
 		'profile_types_settings',
 		array(
-			'title'       => __( 'Profile Type Settings', 'buddyboss-platform' ),
+			'title'       => __( 'Profile Type Settings', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'description' => '',
 			'order'       => 10,
 			'help_url'    => '636004',
@@ -42,10 +42,10 @@ function bboss_members_register_profile_types_panel_fields() {
 		'profile_types_settings',
 		array(
 			'name'              => 'bp-member-type-enable-disable',
-			'label'             => __( 'Profile Types', 'buddyboss-platform' ),
+			'label'             => __( 'Profile Types', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'type'              => 'toggle',
-			'description'       => __( 'Enable profile types', 'buddyboss-platform' ),
-			'help_text'         => __( 'When enabled, profile types allow you to assign unique profile fields and permissions to different member types.', 'buddyboss-platform' ),
+			'description'       => __( 'Enable profile types', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'help_text'         => __( 'When enabled, profile types allow you to assign unique profile fields and permissions to different member types.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'default'           => bboss_member_type_enable_disable(),
 			'sanitize_callback' => 'absint',
 			'order'             => 10,
@@ -60,9 +60,9 @@ function bboss_members_register_profile_types_panel_fields() {
 		'profile_types_settings',
 		array(
 			'name'              => 'bp-member-type-display-on-profile',
-			'label'             => __( 'Display Profile Types', 'buddyboss-platform' ),
+			'label'             => __( 'Display Profile Types', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'type'              => 'toggle',
-			'description'       => __( 'Display profile type on member profiles', 'buddyboss-platform' ),
+			'description'       => __( 'Display profile type on member profiles', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'default'           => bboss_member_type_display_on_profile(),
 			'sanitize_callback' => 'absint',
 			'conditional'       => array(
@@ -84,11 +84,11 @@ function bboss_members_register_profile_types_panel_fields() {
 		'profile_types_settings',
 		array(
 			'name'              => 'bp-member-type-default-on-registration',
-			'label'             => __( 'Default Profile Type', 'buddyboss-platform' ),
+			'label'             => __( 'Default Profile Type', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'type'              => 'select',
 			'help_text'         => sprintf(
 				/* translators: %s: Repair Community link. */
-				__( 'Set a default profile type for new users. Use <a href="%s">Repair Community</a> tools to assign it to existing users.', 'buddyboss-platform' ),
+				__( 'Set a default profile type for new users. Use <a href="%s">Repair Community</a> tools to assign it to existing users.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				esc_url(
 					add_query_arg(
 						array(

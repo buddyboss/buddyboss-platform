@@ -119,7 +119,7 @@ function bboss_kb_enqueue_standalone( $args = array() ) {
 
 	// Translations so the modal strings render in the site locale.
 	if ( function_exists( 'wp_set_script_translations' ) ) {
-		wp_set_script_translations( 'bb-kb-standalone', 'buddyboss-platform' );
+		wp_set_script_translations( 'bb-kb-standalone', 'buddyboss-community-social-network-groups-forums-messaging' );
 	}
 
 	// Site-level config — identical for every consumer (H3: namespace-correct).

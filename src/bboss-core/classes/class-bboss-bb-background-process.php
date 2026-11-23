@@ -242,10 +242,10 @@ if ( ! class_exists( 'BBoss_BB_Background_Process' ) ) {
 			}
 
 			if ( 1 === $interval ) {
-				$display = __( 'Every Minute', 'buddyboss-platform' );
+				$display = __( 'Every Minute', 'buddyboss-community-social-network-groups-forums-messaging' );
 			} else {
 				/* translators: %d: Number of minutes */
-				$display = sprintf( __( 'Every %d Minutes', 'buddyboss-platform' ), $interval );
+				$display = sprintf( __( 'Every %d Minutes', 'buddyboss-community-social-network-groups-forums-messaging' ), $interval );
 			}
 
 			// Adds an "Every NNN Minute(s)" schedule to the existing cron schedules.

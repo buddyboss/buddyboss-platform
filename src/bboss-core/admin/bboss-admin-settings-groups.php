@@ -29,8 +29,8 @@ function bboss_admin_settings_register_groups_feature() {
 	bboss_register_feature(
 		'groups',
 		array(
-			'label'              => __( 'Social Groups', 'buddyboss-platform' ),
-			'description'        => __( 'Allow members to create and join groups with shared activity feeds, messaging, forums, and media.', 'buddyboss-platform' ),
+			'label'              => __( 'Social Groups', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'description'        => __( 'Allow members to create and join groups with shared activity feeds, messaging, forums, and media.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'icon'               => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-users-three',
@@ -73,7 +73,7 @@ function bboss_admin_settings_register_groups_feature() {
 		'groups',
 		'group_settings',
 		array(
-			'title'      => __( 'Group Settings', 'buddyboss-platform' ),
+			'title'      => __( 'Group Settings', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'icon'       => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-gear-six',
@@ -97,7 +97,7 @@ function bboss_admin_settings_register_groups_feature() {
 		'groups',
 		'group_images',
 		array(
-			'title'      => __( 'Group Images', 'buddyboss-platform' ),
+			'title'      => __( 'Group Images', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'icon'       => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-image',
@@ -121,7 +121,7 @@ function bboss_admin_settings_register_groups_feature() {
 		'groups',
 		'group_headers',
 		array(
-			'title'      => __( 'Group Headers', 'buddyboss-platform' ),
+			'title'      => __( 'Group Headers', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'icon'       => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-arrows-out-simple',
@@ -145,7 +145,7 @@ function bboss_admin_settings_register_groups_feature() {
 		'groups',
 		'group_directory',
 		array(
-			'title'      => __( 'Group Directory', 'buddyboss-platform' ),
+			'title'      => __( 'Group Directory', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'icon'       => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-grid-nine',
@@ -169,7 +169,7 @@ function bboss_admin_settings_register_groups_feature() {
 		'groups',
 		'access_controls',
 		array(
-			'title' => __( 'Access Controls', 'buddyboss-platform' ),
+			'title' => __( 'Access Controls', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'icon'  => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-lock-simple',
@@ -183,7 +183,7 @@ function bboss_admin_settings_register_groups_feature() {
 		'groups',
 		'all_groups',
 		array(
-			'title'      => __( 'All Groups', 'buddyboss-platform' ),
+			'title'      => __( 'All Groups', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'icon'       => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-list-bullets',
@@ -199,7 +199,7 @@ function bboss_admin_settings_register_groups_feature() {
 		'groups',
 		'group_types',
 		array(
-			'title'    => __( 'Group Types', 'buddyboss-platform' ),
+			'title'    => __( 'Group Types', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'icon'     => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-tag',
@@ -222,7 +222,7 @@ function bboss_admin_settings_register_groups_feature() {
 		'groups',
 		'group_navigation',
 		array(
-			'title' => __( 'Group Navigation', 'buddyboss-platform' ),
+			'title' => __( 'Group Navigation', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'icon'  => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-tabs',

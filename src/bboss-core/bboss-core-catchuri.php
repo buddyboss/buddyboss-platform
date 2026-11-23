@@ -372,7 +372,7 @@ function bboss_core_set_uri_globals() {
 			// If the displayed user is marked as a spammer, 404 (unless logged-in user is a super admin).
 			if ( bboss_displayed_user_id() && bboss_is_user_spammer( bboss_displayed_user_id() ) ) {
 				if ( bboss_current_user_can( 'bp_moderate' ) ) {
-					bboss_core_add_message( __( 'This user has been marked as a spammer. Only site admins can view this profile.', 'buddyboss-platform' ), 'warning' );
+					bboss_core_add_message( __( 'This user has been marked as a spammer. Only site admins can view this profile.', 'buddyboss-community-social-network-groups-forums-messaging' ), 'warning' );
 				} else {
 					bboss_do_404();
 					return;
@@ -382,7 +382,7 @@ function bboss_core_set_uri_globals() {
 			// If the displayed user is marked as a pending, 404 (unless logged-in user is a super admin).
 			if ( bboss_displayed_user_id() && ! bboss_is_user_active( bboss_displayed_user_id() ) ) {
 				if ( bboss_current_user_can( 'bp_moderate' ) ) {
-					bboss_core_add_message( __( 'This user\'s profile is not yet activated. Only site admins can view this profile.', 'buddyboss-platform' ), 'warning' );
+					bboss_core_add_message( __( 'This user\'s profile is not yet activated. Only site admins can view this profile.', 'buddyboss-community-social-network-groups-forums-messaging' ), 'warning' );
 				} else {
 					$bp->displayed_user->id = 0;
 					$bp->current_component = '';
@@ -708,7 +708,7 @@ function bboss_core_no_access( $args = '' ) {
 		'mode'     => 2,                    // 1 = $root, 2 = wp-login.php.
 		'redirect' => $redirect_url,        // the URL you get redirected to when a user successfully logs in.
 		'root'     => bboss_get_root_domain(), // the landing page you get redirected to when a user doesn't have access.
-		'message'  => __( 'Please login to access this website.', 'buddyboss-platform' ),
+		'message'  => __( 'Please login to access this website.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 	);
 
 	$r = bboss_parse_args( $args, $defaults );
@@ -816,9 +816,9 @@ function bboss_core_no_access_wp_login_error( $errors ) {
 	}
 
 	if ( isset( $_REQUEST['redirect_from'] ) && 'private_group' === $_REQUEST['redirect_from'] ) {
-		$bp_error_message = __( 'Please login to access this group.', 'buddyboss-platform' );
+		$bp_error_message = __( 'Please login to access this group.', 'buddyboss-community-social-network-groups-forums-messaging' );
 	} else {
-		$bp_error_message = __( 'Please login to access this website.', 'buddyboss-platform' );
+		$bp_error_message = __( 'Please login to access this website.', 'buddyboss-community-social-network-groups-forums-messaging' );
 	}
 
 	/**
@@ -1362,7 +1362,7 @@ function bboss_private_network_template_redirect() {
 										'mode'     => 2,
 										'redirect' => $redirect_url,
 										'root'     => bboss_get_root_domain(),
-										'message'  => __( 'Please login to access this website.', 'buddyboss-platform' ),
+										'message'  => __( 'Please login to access this website.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 									);
 
 									bboss_core_no_access( $defaults );
@@ -1376,7 +1376,7 @@ function bboss_private_network_template_redirect() {
 								'mode'     => 2,
 								'redirect' => $redirect_url,
 								'root'     => bboss_get_root_domain(),
-								'message'  => __( 'You must log in to access the page you requested.', 'buddyboss-platform' ),
+								'message'  => __( 'You must log in to access the page you requested.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 							);
 
 							bboss_core_no_access( $defaults );
@@ -1390,7 +1390,7 @@ function bboss_private_network_template_redirect() {
 							'mode'     => 2,
 							'redirect' => $redirect_url,
 							'root'     => bboss_get_root_domain(),
-							'message'  => __( 'You must log in to access the page you requested.', 'buddyboss-platform' ),
+							'message'  => __( 'You must log in to access the page you requested.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 						);
 
 						bboss_core_no_access( $defaults );
@@ -1408,7 +1408,7 @@ function bboss_private_network_template_redirect() {
 									'mode'     => 2,
 									'redirect' => $redirect_url,
 									'root'     => bboss_get_root_domain(),
-									'message'  => __( 'You must log in to access the page you requested.', 'buddyboss-platform' ),
+									'message'  => __( 'You must log in to access the page you requested.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 								);
 
 								bboss_core_no_access( $defaults );
@@ -1423,7 +1423,7 @@ function bboss_private_network_template_redirect() {
 							'mode'     => 2,
 							'redirect' => $redirect_url,
 							'root'     => bboss_get_root_domain(),
-							'message'  => __( 'You must log in to access the page you requested.', 'buddyboss-platform' ),
+							'message'  => __( 'You must log in to access the page you requested.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 						);
 
 						bboss_core_no_access( $defaults );
@@ -1443,7 +1443,7 @@ function bboss_private_network_template_redirect() {
 								'mode'     => 2,
 								'redirect' => $redirect_url,
 								'root'     => bboss_get_root_domain(),
-								'message'  => __( 'You must log in to access the page you requested.', 'buddyboss-platform' ),
+								'message'  => __( 'You must log in to access the page you requested.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 							);
 
 							bboss_core_no_access( $defaults );
@@ -1461,7 +1461,7 @@ function bboss_private_network_template_redirect() {
 						// the URL you get redirected to when a user successfully logs in.
 						'root'     => bboss_get_root_domain(),
 						// the landing page you get redirected to when a user doesn't have access.
-						'message'  => __( 'You must log in to access the page you requested.', 'buddyboss-platform' ),
+						'message'  => __( 'You must log in to access the page you requested.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					);
 
 					bboss_core_no_access( $defaults );
@@ -1616,7 +1616,7 @@ function bboss_core_change_privacy_policy_link_on_private_network( $link, $priva
 		$page_title       = ( $privacy ) ? get_the_title( $privacy ) : '';
 		$get_privacy      = get_post( $privacy );
 		$get_content      = apply_filters( 'bp_privacy_policy_content', apply_filters( 'the_content', $get_privacy->post_content ), $get_privacy->post_content );
-		$link            .= ' ' . __( 'and', 'buddyboss-platform' ) . ' ';
+		$link            .= ' ' . __( 'and', 'buddyboss-community-social-network-groups-forums-messaging' ) . ' ';
 		$link            .= sprintf(
 			'<a class="privacy-link popup-modal-login popup-privacy" href="%s">%s</a><div id="privacy-modal" class="mfp-hide login-popup bb-modal"><h1>%s</h1>%s<button title="%s" type="button" class="mfp-close">%s</button></div>',
 			'#privacy-modal',

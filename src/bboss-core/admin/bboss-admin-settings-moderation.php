@@ -129,8 +129,8 @@ function bboss_admin_settings_register_moderation_feature() {
 	bboss_register_feature(
 		'moderation',
 		array(
-			'label'              => __( 'Moderation', 'buddyboss-platform' ),
-			'description'        => __( 'Allow members to block one another and report inappropriate content for review by the site admin.', 'buddyboss-platform' ),
+			'label'              => __( 'Moderation', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'description'        => __( 'Allow members to block one another and report inappropriate content for review by the site admin.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'icon'               => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-flag',
@@ -157,18 +157,18 @@ function bboss_admin_settings_register_moderation_feature() {
 			// markup safe through the JSON trip; ConfirmToggleModal then
 			// double-sanitises via DOMPurify before rendering when
 			// confirm_off_message_is_html is true.
-			'confirm_off_message'         => '<p>' . __( 'Please confirm you want to deactivate the Moderation feature.', 'buddyboss-platform' ) . '</p>'
-				. '<h4>' . __( 'On Deactivation:', 'buddyboss-platform' ) . '</h4>'
+			'confirm_off_message'         => '<p>' . __( 'Please confirm you want to deactivate the Moderation feature.', 'buddyboss-community-social-network-groups-forums-messaging' ) . '</p>'
+				. '<h4>' . __( 'On Deactivation:', 'buddyboss-community-social-network-groups-forums-messaging' ) . '</h4>'
 				. '<ul>'
-				. '<li>' . __( 'All suspended members will regain permission to login and their content will be unhidden', 'buddyboss-platform' ) . '</li>'
-				. '<li>' . __( 'Members on the network will no longer be able to block other members. Any members they have blocked will be unblocked.', 'buddyboss-platform' ) . '</li>'
-				. '<li>' . __( 'All hidden content will be unhidden', 'buddyboss-platform' ) . '</li>'
+				. '<li>' . __( 'All suspended members will regain permission to login and their content will be unhidden', 'buddyboss-community-social-network-groups-forums-messaging' ) . '</li>'
+				. '<li>' . __( 'Members on the network will no longer be able to block other members. Any members they have blocked will be unblocked.', 'buddyboss-community-social-network-groups-forums-messaging' ) . '</li>'
+				. '<li>' . __( 'All hidden content will be unhidden', 'buddyboss-community-social-network-groups-forums-messaging' ) . '</li>'
 				. '</ul>'
-				. '<p>' . __( 'Please note: Data will not be deleted when you deactivate the Moderation feature. On reactivation, members who have previously been suspended or blocked will once again have their access removed or limited. Content that was previously unhidden will be hidden again.', 'buddyboss-platform' ) . '</p>',
+				. '<p>' . __( 'Please note: Data will not be deleted when you deactivate the Moderation feature. On reactivation, members who have previously been suspended or blocked will once again have their access removed or limited. Content that was previously unhidden will be hidden again.', 'buddyboss-community-social-network-groups-forums-messaging' ) . '</p>',
 			'confirm_off_message_is_html' => true,
-			'confirm_off_title'           => __( 'Disable Moderation?', 'buddyboss-platform' ),
-			'confirm_off_ok'              => __( 'Disable', 'buddyboss-platform' ),
-			'confirm_off_cancel'          => __( 'Cancel', 'buddyboss-platform' ),
+			'confirm_off_title'           => __( 'Disable Moderation?', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'confirm_off_ok'              => __( 'Disable', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'confirm_off_cancel'          => __( 'Cancel', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'confirm_off_destructive'     => true,
 		)
 	);
@@ -193,7 +193,7 @@ function bboss_admin_settings_register_moderation_feature() {
 		'moderation',
 		'member_moderation',
 		array(
-			'title'      => __( 'Member Moderation', 'buddyboss-platform' ),
+			'title'      => __( 'Member Moderation', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'icon'       => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-user-minus',
@@ -217,7 +217,7 @@ function bboss_admin_settings_register_moderation_feature() {
 		'moderation',
 		'content_reporting',
 		array(
-			'title'    => __( 'Content Reporting', 'buddyboss-platform' ),
+			'title'    => __( 'Content Reporting', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'icon'     => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-flag',
@@ -240,7 +240,7 @@ function bboss_admin_settings_register_moderation_feature() {
 		'moderation',
 		'reporting_categories',
 		array(
-			'title' => __( 'Reporting Categories', 'buddyboss-platform' ),
+			'title' => __( 'Reporting Categories', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'icon'  => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-squares-four',
@@ -254,7 +254,7 @@ function bboss_admin_settings_register_moderation_feature() {
 		'moderation',
 		'flagged_members',
 		array(
-			'title'   => __( 'Flagged Members', 'buddyboss-platform' ),
+			'title'   => __( 'Flagged Members', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'icon'    => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-users',
@@ -269,7 +269,7 @@ function bboss_admin_settings_register_moderation_feature() {
 		'moderation',
 		'reported_content',
 		array(
-			'title' => __( 'Reported Content', 'buddyboss-platform' ),
+			'title' => __( 'Reported Content', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'icon'  => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-file-text',

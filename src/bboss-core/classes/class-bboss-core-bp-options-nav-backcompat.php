@@ -37,7 +37,7 @@ class BBoss_Core_BP_Options_Nav_BackCompat extends BBoss_Core_BP_Nav_BackCompat 
 	public function offsetGet( $offset ) {
 		_doing_it_wrong(
 			'bp_nav',
-			esc_html__( 'These globals should not be used directly and are deprecated. Please use the BuddyPress nav functions instead.', 'buddyboss-platform' ),
+			esc_html__( 'These globals should not be used directly and are deprecated. Please use the BuddyPress nav functions instead.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'2.6.0'
 		);
 
@@ -77,7 +77,7 @@ class BBoss_Core_BP_Options_Nav_BackCompat extends BBoss_Core_BP_Nav_BackCompat 
 	public function offsetUnset( $offset ) {
 		_doing_it_wrong(
 			'bp_nav',
-			esc_html__( 'These globals should not be used directly and are deprecated. Please use the BuddyPress nav functions instead.', 'buddyboss-platform' ),
+			esc_html__( 'These globals should not be used directly and are deprecated. Please use the BuddyPress nav functions instead.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'2.6.0'
 		);
 

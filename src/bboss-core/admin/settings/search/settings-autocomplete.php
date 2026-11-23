@@ -29,7 +29,7 @@ function bboss_search_register_autocomplete_fields() {
 		'autocomplete',
 		'autocomplete_settings',
 		array(
-			'title'    => __( 'Autocomplete Settings', 'buddyboss-platform' ),
+			'title'    => __( 'Autocomplete Settings', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'order'    => 10,
 			'help_url' => '636186',
 		)
@@ -42,9 +42,9 @@ function bboss_search_register_autocomplete_fields() {
 		'autocomplete_settings',
 		array(
 			'name'              => 'bp_search_autocomplete',
-			'label'             => __( 'Autocomplete', 'buddyboss-platform' ),
+			'label'             => __( 'Autocomplete', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'type'              => 'toggle',
-			'description'       => __( 'Enable autocomplete dropdown when typing into search inputs.', 'buddyboss-platform' ),
+			'description'       => __( 'Enable autocomplete dropdown when typing into search inputs.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'default'           => absint( bboss_get_option( 'bp_search_autocomplete', 1 ) ),
 			'sanitize_callback' => 'absint',
 			'order'             => 10,
@@ -58,11 +58,11 @@ function bboss_search_register_autocomplete_fields() {
 		'autocomplete_settings',
 		array(
 			'name'              => 'bp_search_number_of_results',
-			'label'             => __( 'Number of Results', 'buddyboss-platform' ),
+			'label'             => __( 'Number of Results', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'type'              => 'number',
 			'default'           => (int) bboss_get_option( 'bp_search_number_of_results', 5 ),
 			'sanitize_callback' => 'bboss_search_sanitize_number_of_results',
-			'suffix'            => __( 'results', 'buddyboss-platform' ),
+			'suffix'            => __( 'results', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'order'             => 20,
 		)
 	);

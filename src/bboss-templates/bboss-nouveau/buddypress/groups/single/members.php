@@ -28,7 +28,7 @@ if ( $enable_count ) {
 							'<span class="bb-count">%d</span> Member',
 							'<span class="bb-count">%d</span> Members',
 							$count,
-							'buddyboss-platform'
+							'buddyboss-community-social-network-groups-forums-messaging'
 						),
 						array( 'span' => array( 'class' => true ) )
 					),

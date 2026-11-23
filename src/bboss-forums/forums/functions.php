@@ -122,7 +122,7 @@ function bboss_bbp_new_forum_handler( $action = '' ) {
 
 	// Nonce check.
 	if ( ! bboss_bbp_verify_nonce_request( 'bbp-new-forum' ) ) {
-		bboss_bbp_add_error( 'bbp_new_forum_nonce', __( '<strong>ERROR</strong>: Are you sure you wanted to do that?', 'buddyboss-platform' ) );
+		bboss_bbp_add_error( 'bbp_new_forum_nonce', __( '<strong>ERROR</strong>: Are you sure you wanted to do that?', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 		return;
 	}
 
@@ -135,7 +135,7 @@ function bboss_bbp_new_forum_handler( $action = '' ) {
 
 	// User cannot create forums.
 	if ( ! current_user_can( 'publish_forums' ) ) {
-		bboss_bbp_add_error( 'bbp_forum_permissions', __( '<strong>ERROR</strong>: You do not have permission to create new forums.', 'buddyboss-platform' ) );
+		bboss_bbp_add_error( 'bbp_forum_permissions', __( '<strong>ERROR</strong>: You do not have permission to create new forums.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 		return;
 	}
 
@@ -160,7 +160,7 @@ function bboss_bbp_new_forum_handler( $action = '' ) {
 
 	// No forum title.
 	if ( empty( $forum_title ) ) {
-		bboss_bbp_add_error( 'bbp_forum_title', __( '<strong>ERROR</strong>: Your forum needs a title.', 'buddyboss-platform' ) );
+		bboss_bbp_add_error( 'bbp_forum_title', __( '<strong>ERROR</strong>: Your forum needs a title.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 	}
 
 	/** Forum Content */
@@ -186,29 +186,29 @@ function bboss_bbp_new_forum_handler( $action = '' ) {
 
 		// Forum is a category.
 		if ( bboss_bbp_is_forum_category( $forum_parent_id ) ) {
-			bboss_bbp_add_error( 'bbp_new_forum_forum_category', __( 'This forum is a category. No forums can be created in this forum.', 'buddyboss-platform' ) );
+			bboss_bbp_add_error( 'bbp_new_forum_forum_category', __( 'This forum is a category. No forums can be created in this forum.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 		}
 
 		// Forum is closed and user cannot access.
 		if ( bboss_bbp_is_forum_closed( $forum_parent_id ) && ! current_user_can( 'edit_forum', $forum_parent_id ) ) {
-			bboss_bbp_add_error( 'bbp_new_forum_forum_closed', __( 'This forum has been closed to new forums.', 'buddyboss-platform' ) );
+			bboss_bbp_add_error( 'bbp_new_forum_forum_closed', __( 'This forum has been closed to new forums.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 		}
 
 		// Forum is private and user cannot access.
 		if ( bboss_bbp_is_forum_private( $forum_parent_id ) && ! current_user_can( 'read_private_forums' ) ) {
-			bboss_bbp_add_error( 'bbp_new_forum_forum_private', __( 'This forum is private and you do not have the capability to read or create new forums in it.', 'buddyboss-platform' ) );
+			bboss_bbp_add_error( 'bbp_new_forum_forum_private', __( 'This forum is private and you do not have the capability to read or create new forums in it.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 		}
 
 		// Forum is hidden and user cannot access.
 		if ( bboss_bbp_is_forum_hidden( $forum_parent_id ) && ! current_user_can( 'read_hidden_forums' ) ) {
-			bboss_bbp_add_error( 'bbp_new_forum_forum_hidden', __( 'This forum is hidden and you do not have the capability to read or create new forums in it.', 'buddyboss-platform' ) );
+			bboss_bbp_add_error( 'bbp_new_forum_forum_hidden', __( 'This forum is hidden and you do not have the capability to read or create new forums in it.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 		}
 	}
 
 	/** Forum Flooding */
 
 	if ( ! bboss_bbp_check_for_flood( $anonymous_data, $forum_author ) ) {
-		bboss_bbp_add_error( 'bbp_forum_flood', __( '<strong>ERROR</strong>: Slow down; you move too fast.', 'buddyboss-platform' ) );
+		bboss_bbp_add_error( 'bbp_forum_flood', __( '<strong>ERROR</strong>: Slow down; you move too fast.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 	}
 
 	/** Forum Duplicate */
@@ -221,13 +221,13 @@ function bboss_bbp_new_forum_handler( $action = '' ) {
 			'anonymous_data' => $anonymous_data,
 		)
 	) ) {
-		bboss_bbp_add_error( 'bbp_forum_duplicate', __( '<strong>ERROR</strong>: This forum already exists.', 'buddyboss-platform' ) );
+		bboss_bbp_add_error( 'bbp_forum_duplicate', __( '<strong>ERROR</strong>: This forum already exists.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 	}
 
 	/** Forum Blacklist */
 
 	if ( ! bboss_bbp_check_for_blacklist( $anonymous_data, $forum_author, $forum_title, $forum_content ) ) {
-		bboss_bbp_add_error( 'bbp_forum_blacklist', __( '<strong>ERROR</strong>: Your forum cannot be created at this time.', 'buddyboss-platform' ) );
+		bboss_bbp_add_error( 'bbp_forum_blacklist', __( '<strong>ERROR</strong>: Your forum cannot be created at this time.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 	}
 
 	/** Forum Moderation */
@@ -345,11 +345,11 @@ function bboss_bbp_new_forum_handler( $action = '' ) {
 	// WP_Error.
 	} elseif ( is_wp_error( $forum_id ) && $forum_id->get_error_message() ) {
 		/* translators: %s: error message. */
-		bboss_bbp_add_error( 'bbp_forum_error', sprintf( __( '<strong>Error</strong>: The following problem(s) occurred: %s', 'buddyboss-platform' ), $forum_id->get_error_message() ) );
+		bboss_bbp_add_error( 'bbp_forum_error', sprintf( __( '<strong>Error</strong>: The following problem(s) occurred: %s', 'buddyboss-community-social-network-groups-forums-messaging' ), $forum_id->get_error_message() ) );
 
 	// Generic error.
 	} else {
-		bboss_bbp_add_error( 'bbp_forum_error', __( '<strong>Error</strong>: The forum was not created.', 'buddyboss-platform' ) );
+		bboss_bbp_add_error( 'bbp_forum_error', __( '<strong>Error</strong>: The forum was not created.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 	}
 }
 
@@ -402,7 +402,7 @@ function bboss_bbp_edit_forum_handler( $action = '' ) {
 
 	// Forum id was not passed
 	if ( empty( $_POST['bbp_forum_id'] ) ) {
-		bboss_bbp_add_error( 'bbp_edit_forum_id', __( '<strong>ERROR</strong>: Forum ID not found.', 'buddyboss-platform' ) );
+		bboss_bbp_add_error( 'bbp_edit_forum_id', __( '<strong>ERROR</strong>: Forum ID not found.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 		return;
 
 		// Forum id was passed
@@ -413,17 +413,17 @@ function bboss_bbp_edit_forum_handler( $action = '' ) {
 
 	// Nonce check
 	if ( ! bboss_bbp_verify_nonce_request( 'bbp-edit-forum_' . $forum_id ) ) {
-		bboss_bbp_add_error( 'bbp_edit_forum_nonce', __( '<strong>ERROR</strong>: Are you sure you wanted to do that?', 'buddyboss-platform' ) );
+		bboss_bbp_add_error( 'bbp_edit_forum_nonce', __( '<strong>ERROR</strong>: Are you sure you wanted to do that?', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 		return;
 
 		// Forum does not exist
 	} elseif ( empty( $forum ) ) {
-		bboss_bbp_add_error( 'bbp_edit_forum_not_found', __( '<strong>ERROR</strong>: The forum you want to edit was not found.', 'buddyboss-platform' ) );
+		bboss_bbp_add_error( 'bbp_edit_forum_not_found', __( '<strong>ERROR</strong>: The forum you want to edit was not found.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 		return;
 
 		// User cannot edit this forum
 	} elseif ( ! current_user_can( 'edit_forum', $forum_id ) ) {
-		bboss_bbp_add_error( 'bbp_edit_forum_permissions', __( '<strong>ERROR</strong>: You do not have permission to edit that forum.', 'buddyboss-platform' ) );
+		bboss_bbp_add_error( 'bbp_edit_forum_permissions', __( '<strong>ERROR</strong>: You do not have permission to edit that forum.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 		return;
 	}
 
@@ -449,17 +449,17 @@ function bboss_bbp_edit_forum_handler( $action = '' ) {
 
 		// Forum is closed and user cannot access
 		if ( bboss_bbp_is_forum_closed( $forum_parent_id ) && ! current_user_can( 'edit_forum', $forum_parent_id ) ) {
-			bboss_bbp_add_error( 'bbp_edit_forum_forum_closed', __( '<strong>ERROR</strong>: This forum has been closed to new forums.', 'buddyboss-platform' ) );
+			bboss_bbp_add_error( 'bbp_edit_forum_forum_closed', __( '<strong>ERROR</strong>: This forum has been closed to new forums.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 		}
 
 		// Forum is private and user cannot access
 		if ( bboss_bbp_is_forum_private( $forum_parent_id ) && ! current_user_can( 'read_private_forums' ) ) {
-			bboss_bbp_add_error( 'bbp_edit_forum_forum_private', __( '<strong>ERROR</strong>: This forum is private and you do not have the capability to read or create new forums in it.', 'buddyboss-platform' ) );
+			bboss_bbp_add_error( 'bbp_edit_forum_forum_private', __( '<strong>ERROR</strong>: This forum is private and you do not have the capability to read or create new forums in it.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 		}
 
 		// Forum is hidden and user cannot access
 		if ( bboss_bbp_is_forum_hidden( $forum_parent_id ) && ! current_user_can( 'read_hidden_forums' ) ) {
-			bboss_bbp_add_error( 'bbp_edit_forum_forum_hidden', __( '<strong>ERROR</strong>: This forum is hidden and you do not have the capability to read or create new forums in it.', 'buddyboss-platform' ) );
+			bboss_bbp_add_error( 'bbp_edit_forum_forum_hidden', __( '<strong>ERROR</strong>: This forum is hidden and you do not have the capability to read or create new forums in it.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 		}
 	}
 
@@ -474,7 +474,7 @@ function bboss_bbp_edit_forum_handler( $action = '' ) {
 
 	// No forum title
 	if ( empty( $forum_title ) ) {
-		bboss_bbp_add_error( 'bbp_edit_forum_title', __( '<strong>ERROR</strong>: Your forum needs a title.', 'buddyboss-platform' ) );
+		bboss_bbp_add_error( 'bbp_edit_forum_title', __( '<strong>ERROR</strong>: Your forum needs a title.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 	}
 
 	/** Forum Content */
@@ -489,7 +489,7 @@ function bboss_bbp_edit_forum_handler( $action = '' ) {
 	/** Forum Blacklist */
 
 	if ( ! bboss_bbp_check_for_blacklist( $anonymous_data, bboss_bbp_get_forum_author_id( $forum_id ), $forum_title, $forum_content ) ) {
-		bboss_bbp_add_error( 'bbp_forum_blacklist', __( '<strong>ERROR</strong>: Your forum cannot be edited at this time.', 'buddyboss-platform' ) );
+		bboss_bbp_add_error( 'bbp_forum_blacklist', __( '<strong>ERROR</strong>: Your forum cannot be edited at this time.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 	}
 
 	/** Forum Moderation */
@@ -603,7 +603,7 @@ function bboss_bbp_edit_forum_handler( $action = '' ) {
 
 	} else {
 		$append_error = ( is_wp_error( $forum_id ) && $forum_id->get_error_message() ) ? $forum_id->get_error_message() . ' ' : '';
-		bboss_bbp_add_error( 'bbp_forum_error', sprintf( /* translators: %s: additional error details (may be empty). */ __( '<strong>ERROR</strong>: The following problem(s) have been found with your forum:%sPlease try again.', 'buddyboss-platform' ), $append_error ) );
+		bboss_bbp_add_error( 'bbp_forum_error', sprintf( /* translators: %s: additional error details (may be empty). */ __( '<strong>ERROR</strong>: The following problem(s) have been found with your forum:%sPlease try again.', 'buddyboss-community-social-network-groups-forums-messaging' ), $append_error ) );
 	}
 }
 
@@ -1737,8 +1737,8 @@ function bboss_bbp_get_forum_statuses( $forum_id = 0 ) {
 	return (array) apply_filters(
 		'bbp_get_forum_statuses',
 		array(
-			'open'   => __( 'Open', 'buddyboss-platform' ),
-			'closed' => __( 'Closed', 'buddyboss-platform' ),
+			'open'   => __( 'Open', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'closed' => __( 'Closed', 'buddyboss-community-social-network-groups-forums-messaging' ),
 		),
 		$forum_id
 	);
@@ -1757,8 +1757,8 @@ function bboss_bbp_get_forum_types( $forum_id = 0 ) {
 	return (array) apply_filters(
 		'bbp_get_forum_types',
 		array(
-			'forum'    => __( 'Forum', 'buddyboss-platform' ),
-			'category' => __( 'Category', 'buddyboss-platform' ),
+			'forum'    => __( 'Forum', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'category' => __( 'Category', 'buddyboss-community-social-network-groups-forums-messaging' ),
 		),
 		$forum_id
 	);
@@ -1777,9 +1777,9 @@ function bboss_bbp_get_forum_visibilities( $forum_id = 0 ) {
 	return (array) apply_filters(
 		'bbp_get_forum_visibilities',
 		array(
-			bboss_bbp_get_public_status_id()  => __( 'Public', 'buddyboss-platform' ),
-			bboss_bbp_get_private_status_id() => __( 'Private', 'buddyboss-platform' ),
-			bboss_bbp_get_hidden_status_id()  => __( 'Hidden', 'buddyboss-platform' ),
+			bboss_bbp_get_public_status_id()  => __( 'Public', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			bboss_bbp_get_private_status_id() => __( 'Private', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			bboss_bbp_get_hidden_status_id()  => __( 'Hidden', 'buddyboss-community-social-network-groups-forums-messaging' ),
 		),
 		$forum_id
 	);

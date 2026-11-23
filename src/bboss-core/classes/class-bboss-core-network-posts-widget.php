@@ -25,8 +25,8 @@ class BBoss_Core_Network_Posts_Widget extends WP_Widget {
 	public function __construct() {
 
 		// Setup widget name & description.
-		$name        = _x( 'BuddyBoss - Network Posts', 'widget name', 'buddyboss-platform' );
-		$description = __( 'A dynamic list of network posts', 'buddyboss-platform' );
+		$name        = _x( 'BuddyBoss - Network Posts', 'widget name', 'buddyboss-community-social-network-groups-forums-messaging' );
+		$description = __( 'A dynamic list of network posts', 'buddyboss-community-social-network-groups-forums-messaging' );
 
 		// Call WP_Widget constructor.
 		parent::__construct(
@@ -146,7 +146,7 @@ class BBoss_Core_Network_Posts_Widget extends WP_Widget {
 									<?php if ( $show_image && has_post_thumbnail() ) { ?>
 										<div class="data-photo"><a href="<?php the_permalink(); ?>"
 																   <?php /* translators: %s: post title. */ ?>
-																   title="<?php echo esc_attr( sprintf( __( 'Permalink to %s', 'buddyboss-platform' ), the_title_attribute( 'echo=0' ) ) ); ?>"
+																   title="<?php echo esc_attr( sprintf( __( 'Permalink to %s', 'buddyboss-community-social-network-groups-forums-messaging' ), the_title_attribute( 'echo=0' ) ) ); ?>"
 																   class="entry-media entry-img">
 												<?php the_post_thumbnail(); ?>
 											</a>
@@ -206,22 +206,22 @@ class BBoss_Core_Network_Posts_Widget extends WP_Widget {
 	public function form( $instance ) {
 
 		// Get widget settings.
-		$title      = isset( $instance['title'] ) ? esc_attr( $instance['title'] ) : __( 'Recent Networkside Posts', 'buddyboss-platform' );
+		$title      = isset( $instance['title'] ) ? esc_attr( $instance['title'] ) : __( 'Recent Networkside Posts', 'buddyboss-community-social-network-groups-forums-messaging' );
 		$number     = isset( $instance['number'] ) ? absint( $instance['number'] ) : 1;
 		$show_date  = isset( $instance['show_date'] ) ? (bool) $instance['show_date'] : true;
 		$show_image = isset( $instance['show_image'] ) ? (bool) $instance['show_image'] : true;
 		?>
-		<p><label for="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>"><?php esc_html_e( 'Title:', 'buddyboss-platform' ); ?></label>
+		<p><label for="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>"><?php esc_html_e( 'Title:', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></label>
 			<input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'title' ) ); ?>" type="text" value="<?php echo $title; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $title escaped with esc_attr() at assignment. ?>" /></p>
 
-		<p><label for="<?php echo esc_attr( $this->get_field_id( 'number' ) ); ?>"><?php esc_html_e( 'Number of posts to show for each blog:', 'buddyboss-platform' ); ?></label>
+		<p><label for="<?php echo esc_attr( $this->get_field_id( 'number' ) ); ?>"><?php esc_html_e( 'Number of posts to show for each blog:', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></label>
 			<input class="tiny-text" id="<?php echo esc_attr( $this->get_field_id( 'number' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'number' ) ); ?>" type="number" step="1" min="1" value="<?php echo $number; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $number escaped with absint() at assignment. ?>" size="3" /></p>
 
 		<p><input class="checkbox" type="checkbox"<?php checked( $show_date ); ?> id="<?php echo esc_attr( $this->get_field_id( 'show_date' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'show_date' ) ); ?>" />
-			<label for="<?php echo esc_attr( $this->get_field_id( 'show_date' ) ); ?>"><?php esc_html_e( 'Display post date?', 'buddyboss-platform' ); ?></label></p>
+			<label for="<?php echo esc_attr( $this->get_field_id( 'show_date' ) ); ?>"><?php esc_html_e( 'Display post date?', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></label></p>
 
 		<p><input class="checkbox" type="checkbox"<?php checked( $show_image ); ?> id="<?php echo esc_attr( $this->get_field_id( 'show_image' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'show_image' ) ); ?>" />
-			<label for="<?php echo esc_attr( $this->get_field_id( 'show_image' ) ); ?>"><?php esc_html_e( 'Display post featured image?', 'buddyboss-platform' ); ?></label></p>
+			<label for="<?php echo esc_attr( $this->get_field_id( 'show_image' ) ); ?>"><?php esc_html_e( 'Display post featured image?', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></label></p>
 
 		<?php
 	}
@@ -238,7 +238,7 @@ class BBoss_Core_Network_Posts_Widget extends WP_Widget {
 		return bboss_parse_args(
 			$instance,
 			array(
-				'title'      => __( 'Recent Networkside Posts', 'buddyboss-platform' ),
+				'title'      => __( 'Recent Networkside Posts', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				'number'     => 1,
 				'show_date'  => true,
 				'show_image' => true,

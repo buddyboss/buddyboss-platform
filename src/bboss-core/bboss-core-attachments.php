@@ -788,36 +788,36 @@ function bboss_attachments_get_plupload_l10n() {
 	return apply_filters(
 		'bp_attachments_get_plupload_l10n',
 		array(
-			'queue_limit_exceeded'      => __( 'You have attempted to queue too many files.', 'buddyboss-platform' ),
+			'queue_limit_exceeded'      => __( 'You have attempted to queue too many files.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			/* translators: 1: file name, 2: maximum upload size. */
-			'file_exceeds_size_limit'   => __( '%1$s exceeds the maximum upload size of %2$s for this site.', 'buddyboss-platform' ),
-			'zero_byte_file'            => __( 'This file is empty. Please try another.', 'buddyboss-platform' ),
-			'invalid_filetype'          => __( 'This file type is not allowed. Please try another.', 'buddyboss-platform' ),
-			'not_an_image'              => __( 'This file is not an image. Please try another.', 'buddyboss-platform' ),
-			'image_memory_exceeded'     => __( 'Memory exceeded. Please try another smaller file.', 'buddyboss-platform' ),
-			'image_dimensions_exceeded' => __( 'This is larger than the maximum size. Please try another.', 'buddyboss-platform' ),
-			'default_error'             => __( 'An error occurred. Please try again later.', 'buddyboss-platform' ),
-			'missing_upload_url'        => __( 'There was a configuration error. Please contact the server administrator.', 'buddyboss-platform' ),
-			'upload_limit_exceeded'     => __( 'You may only upload 1 file.', 'buddyboss-platform' ),
-			'http_error'                => __( 'HTTP error.', 'buddyboss-platform' ),
-			'upload_failed'             => __( 'Upload failed.', 'buddyboss-platform' ),
+			'file_exceeds_size_limit'   => __( '%1$s exceeds the maximum upload size of %2$s for this site.', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'zero_byte_file'            => __( 'This file is empty. Please try another.', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'invalid_filetype'          => __( 'This file type is not allowed. Please try another.', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'not_an_image'              => __( 'This file is not an image. Please try another.', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'image_memory_exceeded'     => __( 'Memory exceeded. Please try another smaller file.', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'image_dimensions_exceeded' => __( 'This is larger than the maximum size. Please try another.', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'default_error'             => __( 'An error occurred. Please try again later.', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'missing_upload_url'        => __( 'There was a configuration error. Please contact the server administrator.', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'upload_limit_exceeded'     => __( 'You may only upload 1 file.', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'http_error'                => __( 'HTTP error.', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'upload_failed'             => __( 'Upload failed.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			/* translators: 1: opening link tag, 2: closing link tag. */
-			'big_upload_failed'         => __( 'Please try uploading this file with the %1$sbrowser uploader%2$s.', 'buddyboss-platform' ),
+			'big_upload_failed'         => __( 'Please try uploading this file with the %1$sbrowser uploader%2$s.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			/* translators: %s: file name. */
-			'big_upload_queued'         => __( '%s exceeds the maximum upload size for the multi-file uploader when used in your browser.', 'buddyboss-platform' ),
-			'io_error'                  => __( 'IO error.', 'buddyboss-platform' ),
-			'security_error'            => __( 'Security error.', 'buddyboss-platform' ),
-			'file_cancelled'            => __( 'File canceled.', 'buddyboss-platform' ),
-			'upload_stopped'            => __( 'Upload stopped.', 'buddyboss-platform' ),
-			'dismiss'                   => __( 'Dismiss', 'buddyboss-platform' ),
-			'crunching'                 => __( 'Crunching&hellip;', 'buddyboss-platform' ),
-			'unique_file_warning'       => __( 'Make sure to upload a unique file', 'buddyboss-platform' ),
+			'big_upload_queued'         => __( '%s exceeds the maximum upload size for the multi-file uploader when used in your browser.', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'io_error'                  => __( 'IO error.', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'security_error'            => __( 'Security error.', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'file_cancelled'            => __( 'File canceled.', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'upload_stopped'            => __( 'Upload stopped.', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'dismiss'                   => __( 'Dismiss', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'crunching'                 => __( 'Crunching&hellip;', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'unique_file_warning'       => __( 'Make sure to upload a unique file', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			/* translators: %s: file name. */
-			'error_uploading'           => __( '"%s" has failed to upload.', 'buddyboss-platform' ),
-			'has_avatar_warning'        => __( 'If you\'d like to delete the existing profile photo but not upload a new one, please use the delete tab.', 'buddyboss-platform' ),
+			'error_uploading'           => __( '"%s" has failed to upload.', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'has_avatar_warning'        => __( 'If you\'d like to delete the existing profile photo but not upload a new one, please use the delete tab.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'avatar_size_warning'       => sprintf(
 				/* translators: 1: width in pixels, 2: height in pixels. */
-				__( 'For best results, upload an image that is %1$spx by %2$spx or larger.', 'buddyboss-platform' ),
+				__( 'For best results, upload an image that is %1$spx by %2$spx or larger.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				bboss_core_avatar_full_height(),
 				bboss_core_avatar_full_width()
 			),
@@ -932,14 +932,14 @@ function bboss_attachments_enqueue_scripts( $class = '' ) {
 		$avatar_nav = array(
 			'upload' => array(
 				'id'      => 'upload',
-				'caption' => __( 'Upload', 'buddyboss-platform' ),
+				'caption' => __( 'Upload', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				'order'   => 0,
 			),
 
 			// The delete view will only show if the object has an avatar.
 			'delete' => array(
 				'id'      => 'delete',
-				'caption' => __( 'Delete', 'buddyboss-platform' ),
+				'caption' => __( 'Delete', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				'order'   => 100,
 				'hide'    => (int) ! $has_avatar,
 			),
@@ -949,20 +949,20 @@ function bboss_attachments_enqueue_scripts( $class = '' ) {
 		if ( bboss_avatar_use_webcam() && 'user' === $object ) {
 			$avatar_nav['camera'] = array(
 				'id'      => 'camera',
-				'caption' => __( 'Take Photo', 'buddyboss-platform' ),
+				'caption' => __( 'Take Photo', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				'order'   => 10,
 			);
 
 			// Set warning messages.
 			$strings['camera_warnings'] = array(
-				'requesting' => __( 'Please allow application access to your camera.', 'buddyboss-platform' ),
-				'loading'    => __( 'Please wait while your camera connects.', 'buddyboss-platform' ),
-				'loaded'     => __( 'Camera loaded. Click "Capture" to take a photo.', 'buddyboss-platform' ),
-				'noaccess'   => __( 'Webcam not found or permission was denied. Please upload a photo.', 'buddyboss-platform' ),
-				'errormsg'   => __( 'Your browser is not supported. Please upload a photo instead.', 'buddyboss-platform' ),
-				'videoerror' => __( 'Video error. Please upload a photo instead.', 'buddyboss-platform' ),
-				'ready'      => __( 'Your profile photo is ready. Click "Save" to use this photo.', 'buddyboss-platform' ),
-				'nocapture'  => __( 'No photo captured. Click "Capture" to take your photo.', 'buddyboss-platform' ),
+				'requesting' => __( 'Please allow application access to your camera.', 'buddyboss-community-social-network-groups-forums-messaging' ),
+				'loading'    => __( 'Please wait while your camera connects.', 'buddyboss-community-social-network-groups-forums-messaging' ),
+				'loaded'     => __( 'Camera loaded. Click "Capture" to take a photo.', 'buddyboss-community-social-network-groups-forums-messaging' ),
+				'noaccess'   => __( 'Webcam not found or permission was denied. Please upload a photo.', 'buddyboss-community-social-network-groups-forums-messaging' ),
+				'errormsg'   => __( 'Your browser is not supported. Please upload a photo instead.', 'buddyboss-community-social-network-groups-forums-messaging' ),
+				'videoerror' => __( 'Video error. Please upload a photo instead.', 'buddyboss-community-social-network-groups-forums-messaging' ),
+				'ready'      => __( 'Your profile photo is ready. Click "Save" to use this photo.', 'buddyboss-community-social-network-groups-forums-messaging' ),
+				'nocapture'  => __( 'No photo captured. Click "Capture" to take your photo.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			);
 		}
 
@@ -1012,7 +1012,7 @@ function bboss_attachments_enqueue_scripts( $class = '' ) {
 			array(
 				'dimensions' => sprintf(
 					/* translators: 1: width in pixels, 2: height in pixels. */
-					__( 'For best results, upload an image that is %1$spx by %2$spx or larger.', 'buddyboss-platform' ),
+					__( 'For best results, upload an image that is %1$spx by %2$spx or larger.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					(int) $cover_dimensions['width'],
 					(int) $cover_dimensions['height']
 				),
@@ -1587,12 +1587,12 @@ function bboss_attachments_cover_image_ajax_upload() {
 			array(
 				'type'    => 'upload_error',
 				/* translators: %s: upload error message. */
-				'message' => sprintf( __( 'Upload Error: %s', 'buddyboss-platform' ), $uploaded['error'] ),
+				'message' => sprintf( __( 'Upload Error: %s', 'buddyboss-community-social-network-groups-forums-messaging' ), $uploaded['error'] ),
 			)
 		);
 	}
 
-	$error_message = __( 'There was a problem uploading the cover photo.', 'buddyboss-platform' );
+	$error_message = __( 'There was a problem uploading the cover photo.', 'buddyboss-community-social-network-groups-forums-messaging' );
 
 	$bp_attachments_uploads_dir = bboss_attachments_cover_image_upload_dir();
 
@@ -1673,7 +1673,7 @@ function bboss_attachments_cover_image_ajax_upload() {
 		$error_code = 'upload_error';
 		if ( ! bboss_is_gd_or_imagick_library_enabled() ) {
 			/* translators: %s: error message. */
-			$error_message = sprintf( esc_html__( 'Upload Error: %s', 'buddyboss-platform' ), esc_html__( 'Missing image editor! Enable GD or Imagick library.', 'buddyboss-platform' ) );
+			$error_message = sprintf( esc_html__( 'Upload Error: %s', 'buddyboss-community-social-network-groups-forums-messaging' ), esc_html__( 'Missing image editor! Enable GD or Imagick library.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 			$error_code    = 'image_no_editor';
 		}
 

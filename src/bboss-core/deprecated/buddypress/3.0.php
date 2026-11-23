@@ -134,9 +134,9 @@ function bboss_core_action_set_spammer_status( $user_id = 0 ) {
 
 		// Add feedback message. @todo - Error reporting.
 		if ( 'spam' == $status ) {
-			bboss_core_add_message( __( 'User marked as spammer. Spam users are visible only to site admins.', 'buddyboss-platform' ) );
+			bboss_core_add_message( __( 'User marked as spammer. Spam users are visible only to site admins.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 		} else {
-			bboss_core_add_message( __( 'User removed as spammer.', 'buddyboss-platform' ) );
+			bboss_core_add_message( __( 'User removed as spammer.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 		}
 
 		// Deprecated. Use bp_core_process_spammer_status.
@@ -174,10 +174,10 @@ function bboss_core_action_delete_user() {
 
 		if ( bboss_core_delete_account( bboss_displayed_user_id() ) ) {
 			/* translators: %s: Display name of the deleted user. */
-			bboss_core_add_message( sprintf( __( '%s has been deleted from the system.', 'buddyboss-platform' ), bboss_get_displayed_user_fullname() ) );
+			bboss_core_add_message( sprintf( __( '%s has been deleted from the system.', 'buddyboss-community-social-network-groups-forums-messaging' ), bboss_get_displayed_user_fullname() ) );
 		} else {
 			/* translators: %s: Display name of the user that could not be deleted. */
-			bboss_core_add_message( sprintf( __( 'There was an error deleting %s from the system. Please try again.', 'buddyboss-platform' ), bboss_get_displayed_user_fullname() ), 'error' );
+			bboss_core_add_message( sprintf( __( 'There was an error deleting %s from the system. Please try again.', 'buddyboss-community-social-network-groups-forums-messaging' ), bboss_get_displayed_user_fullname() ), 'error' );
 			$errors = true;
 		}
 

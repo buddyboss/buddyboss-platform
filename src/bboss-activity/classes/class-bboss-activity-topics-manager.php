@@ -133,8 +133,8 @@ class BBoss_Activity_Topics_Manager {
 			 */
 			'bb_activity_topic_permission_type',
 			array(
-				'anyone'      => __( 'Anyone', 'buddyboss-platform' ),
-				'mods_admins' => __( 'Admins', 'buddyboss-platform' ),
+				'anyone'      => __( 'Anyone', 'buddyboss-community-social-network-groups-forums-messaging' ),
+				'mods_admins' => __( 'Admins', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			)
 		);
 
@@ -177,11 +177,11 @@ class BBoss_Activity_Topics_Manager {
 
 		// Validate required fields.
 		if ( empty( $r['activity_id'] ) ) {
-			return new WP_Error( 'bb_activity_topic_relationship_missing_data', __( 'Topic ID and Activity ID are required.', 'buddyboss-platform' ) );
+			return new WP_Error( 'bb_activity_topic_relationship_missing_data', __( 'Topic ID and Activity ID are required.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 		}
 
 		if ( bboss_is_activity_topic_required() && empty( $r['topic_id'] ) ) {
-			return new WP_Error( 'bb_activity_topic_relationship_missing_data', __( 'Topic ID is required.', 'buddyboss-platform' ) );
+			return new WP_Error( 'bb_activity_topic_relationship_missing_data', __( 'Topic ID is required.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 		}
 
 		/**
@@ -219,7 +219,7 @@ class BBoss_Activity_Topics_Manager {
 
 			// Handle update errors.
 			if ( false === $updated ) {
-				$error_message = __( 'Failed to update activity-topic relationship.', 'buddyboss-platform' );
+				$error_message = __( 'Failed to update activity-topic relationship.', 'buddyboss-community-social-network-groups-forums-messaging' );
 				if ( 'wp_error' === $r['error_type'] ) {
 					return new WP_Error( 'bb_activity_topic_relationship_db_update_error', $error_message );
 				}
@@ -260,7 +260,7 @@ class BBoss_Activity_Topics_Manager {
 
 		// Handle insert errors.
 		if ( ! $inserted ) {
-			$error_message = __( 'Failed to add activity-topic relationship.', 'buddyboss-platform' );
+			$error_message = __( 'Failed to add activity-topic relationship.', 'buddyboss-community-social-network-groups-forums-messaging' );
 			if ( 'wp_error' === $r['error_type'] ) {
 				return new WP_Error( 'bb_activity_topic_relationship_db_insert_error', $error_message );
 			}
@@ -631,7 +631,7 @@ class BBoss_Activity_Topics_Manager {
 			'activity' === $args['item_type'] &&
 			! bboss_current_user_can( 'administrator' )
 		) {
-			$error_message = __( 'You are not allowed to add a topic.', 'buddyboss-platform' );
+			$error_message = __( 'You are not allowed to add a topic.', 'buddyboss-community-social-network-groups-forums-messaging' );
 			if ( 'wp_error' === $args['error_type'] ) {
 				return new WP_Error( 'bb_topic_not_allowed', $error_message );
 			}
@@ -745,7 +745,7 @@ class BBoss_Activity_Topics_Manager {
 		$strings['activity']['params']['topics']['bb_is_enabled_activity_topics']       = function_exists( 'bboss_is_enabled_activity_topics' ) ? bboss_is_enabled_activity_topics() : false;
 		$strings['activity']['params']['topics']['bb_is_activity_topic_required']       = function_exists( 'bboss_is_activity_topic_required' ) ? bboss_is_activity_topic_required() : false;
 		$strings['activity']['params']['topics']['topic_lists']                         = ! empty( $topic_lists ) ? $topic_lists : array();
-		$strings['activity']['params']['topics']['topic_tooltip_error']                 = esc_html__( 'Please select a topic', 'buddyboss-platform' );
+		$strings['activity']['params']['topics']['topic_tooltip_error']                 = esc_html__( 'Please select a topic', 'buddyboss-community-social-network-groups-forums-messaging' );
 		$strings['activity']['params']['topics']['is_activity_directory']               = bboss_is_activity_directory();
 		return $strings;
 	}
@@ -1018,7 +1018,7 @@ class BBoss_Activity_Topics_Manager {
 			<div class="activity-topic-selector">
 				<ul>
 					<li>
-						<a href="<?php echo esc_url( bboss_get_activity_directory_permalink() ); ?>"><?php esc_html_e( 'All', 'buddyboss-platform' ); ?></a>
+						<a href="<?php echo esc_url( bboss_get_activity_directory_permalink() ); ?>"><?php esc_html_e( 'All', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></a>
 					</li>
 					<?php
 					foreach ( $topics as $topic ) {
@@ -1071,7 +1071,7 @@ class BBoss_Activity_Topics_Manager {
 		foreach ( $columns as $key => $value ) {
 			$new_columns[ $key ] = $value;
 			if ( 'comment' === $key ) {
-				$new_columns['activity_topic'] = __( 'Topics', 'buddyboss-platform' );
+				$new_columns['activity_topic'] = __( 'Topics', 'buddyboss-community-social-network-groups-forums-messaging' );
 			}
 		}
 
@@ -1118,7 +1118,7 @@ class BBoss_Activity_Topics_Manager {
 			$component,
 			'activity_topic',
 			array(
-				'label'             => __( 'Topic', 'buddyboss-platform' ),
+				'label'             => __( 'Topic', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				'type'              => 'select',
 				'order'             => 40,
 				'context'           => 'normal',
@@ -1132,7 +1132,7 @@ class BBoss_Activity_Topics_Manager {
 				'get_options'       => function ( $activity ) {
 					$options = array(
 						array(
-							'label' => __( '--- Select a topic ---', 'buddyboss-platform' ),
+							'label' => __( '--- Select a topic ---', 'buddyboss-community-social-network-groups-forums-messaging' ),
 							'value' => '',
 						),
 					);

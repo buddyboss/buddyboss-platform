@@ -54,14 +54,14 @@ add_action( 'init', 'bboss_profile_search_register_post_type' );
 function bboss_profile_search_register_post_type() {
 	$args = array(
 		'labels'          => array(
-			'name'               => __( 'Profile Search Forms', 'buddyboss-platform' ),
-			'singular_name'      => __( 'Profile Search Form', 'buddyboss-platform' ),
-			'all_items'          => __( 'Profile Search', 'buddyboss-platform' ),
-			'add_new'            => __( 'Add New', 'buddyboss-platform' ),
-			'add_new_item'       => __( 'Add New Form', 'buddyboss-platform' ),
-			'edit_item'          => __( 'Profile Search', 'buddyboss-platform' ),
-			'not_found'          => __( 'No forms found', 'buddyboss-platform' ),
-			'not_found_in_trash' => __( 'No forms found in trash', 'buddyboss-platform' ),
+			'name'               => __( 'Profile Search Forms', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'singular_name'      => __( 'Profile Search Form', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'all_items'          => __( 'Profile Search', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'add_new'            => __( 'Add New', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'add_new_item'       => __( 'Add New Form', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'edit_item'          => __( 'Profile Search', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'not_found'          => __( 'No forms found', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'not_found_in_trash' => __( 'No forms found in trash', 'buddyboss-community-social-network-groups-forums-messaging' ),
 		),
 		'show_ui'         => false,
 		'show_in_menu'    => '',
@@ -156,7 +156,7 @@ function bboss_profile_search_main_form() {
  */
 function bboss_profile_search_add_main_form() {
 	$post_args = array(
-		'post_title'  => __( 'Filter Results', 'buddyboss-platform' ),
+		'post_title'  => __( 'Filter Results', 'buddyboss-community-social-network-groups-forums-messaging' ),
 		'post_type'   => 'bp_ps_form',
 		'post_status' => 'publish',
 	);

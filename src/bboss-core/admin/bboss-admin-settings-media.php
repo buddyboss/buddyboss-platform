@@ -40,10 +40,10 @@ function bboss_admin_settings_register_media_feature() {
 	bboss_register_feature(
 		'media',
 		array(
-			'label'              => __( 'Media Uploading', 'buddyboss-platform' ),
+			'label'              => __( 'Media Uploading', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'description'        => $has_moved_media
-				? __( 'Allow members to upload photos, videos, documents, emojis, and GIFs, and organize them into albums or folders.', 'buddyboss-platform' )
-				: __( 'Allow members to upload photos and emojis, and organize them into albums.', 'buddyboss-platform' ),
+				? __( 'Allow members to upload photos, videos, documents, emojis, and GIFs, and organize them into albums or folders.', 'buddyboss-community-social-network-groups-forums-messaging' )
+				: __( 'Allow members to upload photos and emojis, and organize them into albums.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'icon'               => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-image',
@@ -82,7 +82,7 @@ function bboss_admin_settings_register_media_feature() {
 		'media',
 		'photos',
 		array(
-			'title'      => __( 'Photos', 'buddyboss-platform' ),
+			'title'      => __( 'Photos', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'icon'       => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-image',
@@ -107,9 +107,9 @@ function bboss_admin_settings_register_media_feature() {
 	if ( ! bboss_is_active( 'video' ) ) {
 		bboss_media_register_addons_upsell_panel(
 			'videos',
-			__( 'Videos', 'buddyboss-platform' ),
+			__( 'Videos', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'bb-icons-rl bb-icons-rl-video-camera',
-			__( 'Let members upload and share videos on their profiles, in groups, messages and forums. Requires the BuddyBoss Add-ons plugin. Available on the Start plan and above.', 'buddyboss-platform' ),
+			__( 'Let members upload and share videos on their profiles, in groups, messages and forums. Requires the BuddyBoss Add-ons plugin. Available on the Start plan and above.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			20
 		);
 	}
@@ -120,9 +120,9 @@ function bboss_admin_settings_register_media_feature() {
 	if ( ! bboss_is_active( 'document' ) ) {
 		bboss_media_register_addons_upsell_panel(
 			'documents',
-			__( 'Documents', 'buddyboss-platform' ),
+			__( 'Documents', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'bb-icons-rl bb-icons-rl-file-text',
-			__( 'Let members upload, organize and share documents and folders on their profiles, in groups, messages and forums. Requires the BuddyBoss Add-ons plugin. Available on the Start plan and above.', 'buddyboss-platform' ),
+			__( 'Let members upload, organize and share documents and folders on their profiles, in groups, messages and forums. Requires the BuddyBoss Add-ons plugin. Available on the Start plan and above.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			30
 		);
 	}
@@ -132,7 +132,7 @@ function bboss_admin_settings_register_media_feature() {
 		'media',
 		'emoji',
 		array(
-			'title'    => __( 'Emoji', 'buddyboss-platform' ),
+			'title'    => __( 'Emoji', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'icon'     => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-smiley',
@@ -156,9 +156,9 @@ function bboss_admin_settings_register_media_feature() {
 	if ( ! bboss_giphy_provider_available() ) {
 		bboss_media_register_addons_upsell_panel(
 			'animated_gifs',
-			__( 'Animated GIFs', 'buddyboss-platform' ),
+			__( 'Animated GIFs', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'bb-icons-rl bb-icons-rl-gif',
-			__( 'Let members search and post animated GIFs from GIPHY in activity posts, comments, messages and forums. Requires the BuddyBoss Add-ons plugin. Available on the Start plan and above.', 'buddyboss-platform' ),
+			__( 'Let members search and post animated GIFs from GIPHY in activity posts, comments, messages and forums. Requires the BuddyBoss Add-ons plugin. Available on the Start plan and above.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			50
 		);
 	}
@@ -168,7 +168,7 @@ function bboss_admin_settings_register_media_feature() {
 		'media',
 		'security_performance',
 		array(
-			'title' => __( 'Security & Performance', 'buddyboss-platform' ),
+			'title' => __( 'Security & Performance', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'icon'  => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-shield-check',
@@ -182,7 +182,7 @@ function bboss_admin_settings_register_media_feature() {
 		'media',
 		'access_controls',
 		array(
-			'title' => __( 'Access Controls', 'buddyboss-platform' ),
+			'title' => __( 'Access Controls', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'icon'  => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-lock',
@@ -211,7 +211,7 @@ function bboss_admin_settings_register_media_feature() {
 			'media',
 			'offload_media_link',
 			array(
-				'title'        => __( 'Offload Media', 'buddyboss-platform' ),
+				'title'        => __( 'Offload Media', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				'icon'         => array(
 					'type'  => 'font',
 					'class' => 'bb-icons-rl bb-icons-rl-cloud',
@@ -307,7 +307,7 @@ function bboss_media_register_addons_upsell_panel( $panel_id, $title, $icon_clas
 			'pro_notice' => array(
 				'show'       => true,
 				'tier'       => 'start',
-				'badge_text' => __( 'UPGRADE START', 'buddyboss-platform' ),
+				'badge_text' => __( 'UPGRADE START', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				'badge_icon' => 'bb-icons-rl-crown-simple',
 				'link_url'   => bboss_media_get_addons_upgrade_url( $panel_id ),
 			),
@@ -325,7 +325,7 @@ function bboss_media_register_addons_upsell_panel( $panel_id, $title, $icon_clas
 			'icon'                    => $icon_class,
 			'empty_state_title'       => $title,
 			'empty_state_description' => $description,
-			'button_label'            => '' !== $button_label ? $button_label : __( 'Upgrade to Start', 'buddyboss-platform' ),
+			'button_label'            => '' !== $button_label ? $button_label : __( 'Upgrade to Start', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			// Fallback only: with `upgrade_from_catalog` on, the AJAX formatter swaps in the
 			// campaign-tagged URL from the field-upgrades catalog when it has an entry.
 			'button_url'              => bboss_media_get_addons_upgrade_url( $panel_id ),
@@ -567,27 +567,27 @@ function bboss_media_format_addons_upsell_field( $field_data, $field, $feature_i
 		case 'install':
 			$card['empty_state_description'] = sprintf(
 				/* translators: %s: Feature name, e.g. "Videos". */
-				__( 'Your plan includes %s. Install the BuddyBoss Add-ons plugin to use this feature.', 'buddyboss-platform' ),
+				__( 'Your plan includes %s. Install the BuddyBoss Add-ons plugin to use this feature.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				$title
 			);
-			$card['button_label']     = __( 'Install & Activate', 'buddyboss-platform' );
+			$card['button_label']     = __( 'Install & Activate', 'buddyboss-community-social-network-groups-forums-messaging' );
 			$card['button_url']       = bboss_admin_addons_screen_url();
 			$card['addon_action']     = isset( $actions['install'] ) ? $actions['install'] : null;
 			$card['addon_slug']       = 'buddyboss-addons';
-			$card['addon_busy_label'] = __( 'Installing…', 'buddyboss-platform' );
+			$card['addon_busy_label'] = __( 'Installing…', 'buddyboss-community-social-network-groups-forums-messaging' );
 			break;
 
 		case 'activate':
 			$card['empty_state_description'] = sprintf(
 				/* translators: %s: Feature name, e.g. "Videos". */
-				__( 'Your plan includes %s. Activate the BuddyBoss Add-ons plugin to use this feature.', 'buddyboss-platform' ),
+				__( 'Your plan includes %s. Activate the BuddyBoss Add-ons plugin to use this feature.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				$title
 			);
-			$card['button_label']     = __( 'Activate', 'buddyboss-platform' );
+			$card['button_label']     = __( 'Activate', 'buddyboss-community-social-network-groups-forums-messaging' );
 			$card['button_url']       = self_admin_url( 'plugins.php' );
 			$card['addon_action']     = isset( $actions['activate'] ) ? $actions['activate'] : null;
 			$card['addon_slug']       = 'buddyboss-addons';
-			$card['addon_busy_label'] = __( 'Activating…', 'buddyboss-platform' );
+			$card['addon_busy_label'] = __( 'Activating…', 'buddyboss-community-social-network-groups-forums-messaging' );
 			break;
 
 		case 'update':
@@ -599,46 +599,46 @@ function bboss_media_format_addons_upsell_field( $field_data, $field, $feature_i
 			if ( $below_floor && bboss_media_addons_update_available() ) {
 				$card['empty_state_description'] = sprintf(
 					/* translators: %s: Feature name, e.g. "Videos". */
-					__( 'Your plan includes %s, but the installed version of the BuddyBoss Add-ons plugin does not provide this feature. Update the plugin to use it.', 'buddyboss-platform' ),
+					__( 'Your plan includes %s, but the installed version of the BuddyBoss Add-ons plugin does not provide this feature. Update the plugin to use it.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					$title
 				);
-				$card['button_label'] = __( 'Update Plugin', 'buddyboss-platform' );
+				$card['button_label'] = __( 'Update Plugin', 'buddyboss-community-social-network-groups-forums-messaging' );
 				$card['button_url']   = self_admin_url( 'update-core.php' );
 			} else {
 				// Nothing newer is known yet; the update check may be stale, and the
 				// WordPress updates screen can re-run it.
 				$card['empty_state_description'] = sprintf(
 					/* translators: %s: Feature name, e.g. "Videos". */
-					__( 'Your plan includes %s, but the installed version of the BuddyBoss Add-ons plugin does not provide this feature. Check for a plugin update.', 'buddyboss-platform' ),
+					__( 'Your plan includes %s, but the installed version of the BuddyBoss Add-ons plugin does not provide this feature. Check for a plugin update.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					$title
 				);
-				$card['button_label'] = __( 'Go to Updates', 'buddyboss-platform' );
+				$card['button_label'] = __( 'Go to Updates', 'buddyboss-community-social-network-groups-forums-messaging' );
 				$card['button_url']   = self_admin_url( 'update-core.php' );
 			}
 			break;
 
 		case 'disabled':
-			$card['empty_state_description'] = __( 'This feature is turned off on your site. Turn it on to let members use it again.', 'buddyboss-platform' );
+			$card['empty_state_description'] = __( 'This feature is turned off on your site. Turn it on to let members use it again.', 'buddyboss-community-social-network-groups-forums-messaging' );
 			$card['button_label']            = sprintf(
 				/* translators: %s: Feature name, e.g. "Videos". */
-				__( 'Turn On %s', 'buddyboss-platform' ),
+				__( 'Turn On %s', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				$title
 			);
 			$card['button_url']       = bboss_get_admin_url( 'admin.php?page=bb-settings&tab=media' );
 			$card['addon_action']     = 'bb_media_enable_component';
 			$card['addon_slug']       = bboss_media_get_addons_component_for_panel( $panel_id );
 			$card['addon_nonce_key']  = 'ajaxNonce';
-			$card['addon_busy_label'] = __( 'Turning on…', 'buddyboss-platform' );
+			$card['addon_busy_label'] = __( 'Turning on…', 'buddyboss-community-social-network-groups-forums-messaging' );
 			break;
 
 		case 'unavailable':
 		default:
 			$card['empty_state_description'] = sprintf(
 				/* translators: %s: Feature name, e.g. "Videos". */
-				__( 'Your plan includes %s, but the BuddyBoss Add-ons plugin has not enabled this feature. Check your license.', 'buddyboss-platform' ),
+				__( 'Your plan includes %s, but the BuddyBoss Add-ons plugin has not enabled this feature. Check your license.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				$title
 			);
-			$card['button_label'] = __( 'Manage License', 'buddyboss-platform' );
+			$card['button_label'] = __( 'Manage License', 'buddyboss-community-social-network-groups-forums-messaging' );
 			$card['button_url']   = bboss_admin_license_screen_url();
 			break;
 	}
@@ -697,13 +697,13 @@ function bboss_media_ajax_enable_component() {
 	check_ajax_referer( 'bb_admin_settings', '_ajax_nonce' );
 
 	if ( ! bboss_current_user_can( 'bp_moderate' ) ) {
-		wp_send_json_error( array( 'message' => __( 'Sorry, you are not allowed to change this setting.', 'buddyboss-platform' ) ), 403 );
+		wp_send_json_error( array( 'message' => __( 'Sorry, you are not allowed to change this setting.', 'buddyboss-community-social-network-groups-forums-messaging' ) ), 403 );
 	}
 
 	$component = isset( $_POST['slug'] ) ? sanitize_key( wp_unslash( $_POST['slug'] ) ) : '';
 
 	if ( ! in_array( $component, array( 'video', 'document' ), true ) || ! bboss_is_active( 'media' ) || ! bboss_is_component_directory_available( $component ) ) {
-		wp_send_json_error( array( 'message' => __( 'This feature cannot be turned on right now.', 'buddyboss-platform' ) ) );
+		wp_send_json_error( array( 'message' => __( 'This feature cannot be turned on right now.', 'buddyboss-community-social-network-groups-forums-messaging' ) ) );
 	}
 
 	$active_components = (array) bboss_get_option( 'bp-active-components', array() );

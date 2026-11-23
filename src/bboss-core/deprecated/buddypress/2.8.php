@@ -118,10 +118,10 @@ function bboss_core_admin_php52_plugin_row( $file, $plugin_data ) {
 	echo wp_kses_post(
 		sprintf(
 			$p,
-			esc_html__( 'A BuddyPress update is available, but your system is not compatible.', 'buddyboss-platform' ) . ' ' .
+			esc_html__( 'A BuddyPress update is available, but your system is not compatible.', 'buddyboss-community-social-network-groups-forums-messaging' ) . ' ' .
 			sprintf(
 				/* translators: %s: URL to the Codex guide */
-				__( 'See <a href="%s">the Codex guide</a> for more information.', 'buddyboss-platform' ),
+				__( 'See <a href="%s">the Codex guide</a> for more information.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				esc_url( 'https://codex.buddypress.org/getting-started/buddypress-2-8-will-require-php-5-3/' )
 			)
 		)
@@ -177,17 +177,17 @@ function bboss_core_admin_php53_admin_notice() {
 	?>
 
 	<div id="message" class="error notice is-dismissible bp-is-dismissible" data-noticeid="<?php echo esc_attr( $notice_id ); ?>">
-		<p><strong><?php esc_html_e( 'Your site is not ready for BuddyPress 2.8.', 'buddyboss-platform' ); ?></strong></p>
+		<p><strong><?php esc_html_e( 'Your site is not ready for BuddyPress 2.8.', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></strong></p>
 		<p>
 			<?php
 			/* translators: %s: current PHP version */
-			printf( esc_html__( 'Your site is currently running PHP version %s, while BuddyPress 2.8 will require version 5.3+.', 'buddyboss-platform' ), esc_html( phpversion() ) );
+			printf( esc_html__( 'Your site is currently running PHP version %s, while BuddyPress 2.8 will require version 5.3+.', 'buddyboss-community-social-network-groups-forums-messaging' ), esc_html( phpversion() ) );
 			?>
 			<?php
 			echo wp_kses_post(
 				sprintf(
 					/* translators: %s: URL to the Codex guide */
-					__( 'See <a href="%s">the Codex guide</a> for more information.', 'buddyboss-platform' ),
+					__( 'See <a href="%s">the Codex guide</a> for more information.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					esc_url( 'https://codex.buddypress.org/getting-started/buddypress-2-8-will-require-php-5-3/' )
 				)
 			);

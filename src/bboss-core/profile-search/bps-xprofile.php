@@ -362,10 +362,10 @@ add_filter( 'bp_ps_add_fields', 'bboss_ps_anyfield_setup', 12 );
  */
 function bboss_ps_anyfield_setup( $fields ) {
 	$f              = new stdClass();
-	$f->group       = __( 'Other', 'buddyboss-platform' );
+	$f->group       = __( 'Other', 'buddyboss-community-social-network-groups-forums-messaging' );
 	$f->code        = 'field_any';
-	$f->name        = __( 'Search all fields', 'buddyboss-platform' );
-	$f->description = __( 'Search every profile field', 'buddyboss-platform' );
+	$f->name        = __( 'Search all fields', 'buddyboss-community-social-network-groups-forums-messaging' );
+	$f->description = __( 'Search every profile field', 'buddyboss-community-social-network-groups-forums-messaging' );
 
 	$f->format  = 'text';
 	$f->options = array();
@@ -427,11 +427,11 @@ function bboss_ps_gender_setup( $fields ) {
 			}
 
 			$f              = new stdClass();
-			$f->group       = __( 'Gender', 'buddyboss-platform' );
+			$f->group       = __( 'Gender', 'buddyboss-community-social-network-groups-forums-messaging' );
 			$f->id          = 'xprofile_gender';
 			$f->code        = 'field_xprofile_gender';
-			$f->name        = __( 'Gender', 'buddyboss-platform' );
-			$f->description = __( 'Gender', 'buddyboss-platform' );
+			$f->name        = __( 'Gender', 'buddyboss-community-social-network-groups-forums-messaging' );
+			$f->description = __( 'Gender', 'buddyboss-community-social-network-groups-forums-messaging' );
 			$f->type        = 'selectbox';
 			$f->format      = bboss_ps_xprofile_format( 'selectbox', 'xprofile_gender' );
 			$f->options     = $options;
@@ -649,10 +649,10 @@ add_filter( 'bp_ps_add_fields', 'bboss_ps_heading_field_setup', 11 );
  */
 function bboss_ps_heading_field_setup( $fields ) {
 	$f              = new stdClass();
-	$f->group       = __( 'Other', 'buddyboss-platform' );
+	$f->group       = __( 'Other', 'buddyboss-community-social-network-groups-forums-messaging' );
 	$f->code        = 'heading';
-	$f->name        = __( 'Heading', 'buddyboss-platform' );
-	$f->description = __( 'Used to segregate form into sections', 'buddyboss-platform' );
+	$f->name        = __( 'Heading', 'buddyboss-community-social-network-groups-forums-messaging' );
+	$f->description = __( 'Used to segregate form into sections', 'buddyboss-community-social-network-groups-forums-messaging' );
 
 	$f->format  = 'text';
 	$f->options = array();
@@ -683,11 +683,11 @@ function bboss_ps_search_dummy_fields( $f ) {
 function bboss_ps_email_setup( $fields ) {
 
 	$f              = new stdClass();
-	$f->group       = __( 'General Information', 'buddyboss-platform' );
+	$f->group       = __( 'General Information', 'buddyboss-community-social-network-groups-forums-messaging' );
 	$f->id          = 'xprofile_email';
 	$f->code        = 'field_xprofile_email';
-	$f->name        = __( 'Email Address', 'buddyboss-platform' );
-	$f->description = __( 'Email Address', 'buddyboss-platform' );
+	$f->name        = __( 'Email Address', 'buddyboss-community-social-network-groups-forums-messaging' );
+	$f->description = __( 'Email Address', 'buddyboss-community-social-network-groups-forums-messaging' );
 	$f->type        = 'textbox';
 	$f->format      = bboss_ps_xprofile_format( 'textbox', 'xprofile_email' );
 	$f->search      = 'bboss_ps_xprofile_email_users_search';

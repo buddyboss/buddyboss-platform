@@ -31,30 +31,30 @@ const EditReadyLaunchHeader = ({ attributes, setAttributes }) => {
     return (
         <div {...blockProps}>
             <InspectorControls>
-                <PanelBody title={__('Header Settings', 'buddyboss-platform')} initialOpen={true}>
+                <PanelBody title={__('Header Settings', 'buddyboss-community-social-network-groups-forums-messaging')} initialOpen={true}>
                     {searchEnabled && (
                         <ToggleControl
-                            label={__('Show Search', 'buddyboss-platform')}
+                            label={__('Show Search', 'buddyboss-community-social-network-groups-forums-messaging')}
                             checked={showSearch}
                             onChange={() => setAttributes({ showSearch: !showSearch })}
                         />
                     )}
                     {messagesEnabled && (
                         <ToggleControl
-                            label={__('Show Messages', 'buddyboss-platform')}
+                            label={__('Show Messages', 'buddyboss-community-social-network-groups-forums-messaging')}
                             checked={showMessages}
                             onChange={() => setAttributes({ showMessages: !showMessages })}
                         />
                     )}
                     {notificationsEnabled && (
                         <ToggleControl
-                            label={__('Show Notifications', 'buddyboss-platform')}
+                            label={__('Show Notifications', 'buddyboss-community-social-network-groups-forums-messaging')}
                             checked={showNotifications}
                             onChange={() => setAttributes({ showNotifications: !showNotifications })}
                         />
                     )}
                     <ToggleControl
-                        label={__('Show Profile Menu', 'buddyboss-platform')}
+                        label={__('Show Profile Menu', 'buddyboss-community-social-network-groups-forums-messaging')}
                         checked={showProfileMenu}
                         onChange={() => setAttributes({ showProfileMenu: !showProfileMenu })}
                     />

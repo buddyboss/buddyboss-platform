@@ -149,7 +149,7 @@ class BBoss_Readylaunch_Memberpress_Courses_Helper {
 		global $post;
 		if ( is_single() && ! empty( $post ) && is_a( $post, 'WP_Post' ) ) {
 			if ( class_exists( 'memberpress\courses\models\Course' ) && models\Course::$cpt === $post->post_type ) {
-				return '<div class="bb-rl-course-description"><h2>' . esc_html__( 'About course', 'buddyboss-platform' ) . '</h2>' . $content . '</div>';
+				return '<div class="bb-rl-course-description"><h2>' . esc_html__( 'About course', 'buddyboss-community-social-network-groups-forums-messaging' ) . '</h2>' . $content . '</div>';
 			}
 		}
 		return $content;
@@ -426,7 +426,7 @@ class BBoss_Readylaunch_Memberpress_Courses_Helper {
 			$this->bb_rl_mpcs_output_secondary_header();
 			?>
 			<div class="bb-rl-container-inner bb-rl-meprlms-no-courses">
-				<p><?php esc_html_e( 'No courses found', 'buddyboss-platform' ); ?></p>
+				<p><?php esc_html_e( 'No courses found', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></p>
 			</div>
 			<?php
 		}
@@ -457,7 +457,7 @@ class BBoss_Readylaunch_Memberpress_Courses_Helper {
 					if ( is_tax() ) {
 						echo single_term_title( '', false );
 					} else {
-						esc_html_e( 'Courses', 'buddyboss-platform' );
+						esc_html_e( 'Courses', 'buddyboss-community-social-network-groups-forums-messaging' );
 					}
 					?>
 					<span class="bb-rl-heading-count"><?php echo esc_html( $wp_query->found_posts ); ?></span>
@@ -467,10 +467,10 @@ class BBoss_Readylaunch_Memberpress_Courses_Helper {
 			<div class="bb-rl-course-filters bb-rl-sub-ctrls flex items-center">
 
 				<div class="bb-rl-grid-filters flex items-center" data-view="ld-course">
-					<a href="#" class="layout-view layout-view-course layout-grid-view bp-tooltip active" data-view="grid" data-bp-tooltip-pos="down" data-bp-tooltip="<?php esc_html_e( 'Grid View', 'buddyboss-platform' ); ?>">
+					<a href="#" class="layout-view layout-view-course layout-grid-view bp-tooltip active" data-view="grid" data-bp-tooltip-pos="down" data-bp-tooltip="<?php esc_html_e( 'Grid View', 'buddyboss-community-social-network-groups-forums-messaging' ); ?>">
 						<i class="bb-icons-rl-squares-four"></i>
 					</a>
-					<a href="#" class="layout-view layout-view-course layout-list-view bp-tooltip" data-view="list" data-bp-tooltip-pos="down" data-bp-tooltip="<?php esc_html_e( 'List View', 'buddyboss-platform' ); ?>">
+					<a href="#" class="layout-view layout-view-course layout-list-view bp-tooltip" data-view="list" data-bp-tooltip-pos="down" data-bp-tooltip="<?php esc_html_e( 'List View', 'buddyboss-community-social-network-groups-forums-messaging' ); ?>">
 						<i class="bb-icons-rl-rows"></i>
 					</a>
 				</div>
@@ -480,16 +480,16 @@ class BBoss_Readylaunch_Memberpress_Courses_Helper {
 						<div class="column col-sm-12">
 							<div class="dropdown">
 								<a href="#" class="btn btn-link dropdown-toggle" tabindex="0">
-									<?php esc_html_e( 'Category', 'buddyboss-platform' ); ?>
+									<?php esc_html_e( 'Category', 'buddyboss-community-social-network-groups-forums-messaging' ); ?>
 									<span></span><i class="bb-icons-rl-caret-down"></i>
 								</a>
 								<ul class="menu">
 									<?php
 									$terms = get_terms( 'mpcs-course-categories' ); // Get all terms of a taxonomy.
 
-									printf( '<li><input type="text" class="form-input mpcs-dropdown-search" placeholder="%s" id="mpmcSearchCategory"></li>', esc_html__( 'Search', 'buddyboss-platform' ) );
+									printf( '<li><input type="text" class="form-input mpcs-dropdown-search" placeholder="%s" id="mpmcSearchCategory"></li>', esc_html__( 'Search', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 
-									printf( '<li class="%s"><a href="%s">%s</a></li>', esc_attr( '' === $category ? 'active' : 'noactive' ), esc_url( add_query_arg( 'category', '', $filter_base_url ) ), esc_html__( 'All', 'buddyboss-platform' ) );
+									printf( '<li class="%s"><a href="%s">%s</a></li>', esc_attr( '' === $category ? 'active' : 'noactive' ), esc_url( add_query_arg( 'category', '', $filter_base_url ) ), esc_html__( 'All', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 									foreach ( $terms as $term ) {
 										printf( '<li class="%s"><a href="%s">%s</a></li>', esc_attr( $category === $term->slug ? 'active' : 'noactive' ), esc_url( add_query_arg( 'category', $term->slug, $filter_base_url ) ), esc_html( $term->name ) );
 									}
@@ -499,7 +499,7 @@ class BBoss_Readylaunch_Memberpress_Courses_Helper {
 
 							<div class="dropdown">
 								<a href="#" class="btn btn-link dropdown-toggle" tabindex="0">
-									<?php esc_html_e( 'Author', 'buddyboss-platform' ); ?>
+									<?php esc_html_e( 'Author', 'buddyboss-community-social-network-groups-forums-messaging' ); ?>
 									<span></span><i class="bb-icons-rl-caret-down"></i>
 								</a>
 								<!-- menu component -->
@@ -510,7 +510,7 @@ class BBoss_Readylaunch_Memberpress_Courses_Helper {
 									printf(
 										/* translators: %s: search placeholder */
 										'<li><input type="text" class="form-input mpcs-dropdown-search" placeholder="%s" id="mpmcSearchCourses"></li>',
-										esc_html__( 'Search', 'buddyboss-platform' )
+										esc_html__( 'Search', 'buddyboss-community-social-network-groups-forums-messaging' )
 									);
 
 									printf(
@@ -518,7 +518,7 @@ class BBoss_Readylaunch_Memberpress_Courses_Helper {
 										'<li class="%s"><a href="%s">%s</a></li>',
 										esc_attr( empty( $author ) ? 'active' : 'noactive' ),
 										esc_url( add_query_arg( 'author', '', $filter_base_url ) ),
-										esc_html__( 'All', 'buddyboss-platform' )
+										esc_html__( 'All', 'buddyboss-community-social-network-groups-forums-messaging' )
 									);
 
 									foreach ( $post_authors as $post_author ) {
@@ -539,9 +539,9 @@ class BBoss_Readylaunch_Memberpress_Courses_Helper {
 							<form method="GET" class="" action="<?php echo esc_url( $courses_page ); ?>">
 								<div class="input-group">
 									<input type="text" name="s" class="form-input"
-											placeholder="<?php esc_html_e( 'Find a course', 'buddyboss-platform' ); ?>"
+											placeholder="<?php esc_html_e( 'Find a course', 'buddyboss-community-social-network-groups-forums-messaging' ); ?>"
 											value="<?php echo esc_attr( $search ); ?>">
-									<button class="btn input-group-btn" aria-label="<?php esc_attr_e( 'Find a course', 'buddyboss-platform' ); ?>"><i class="bb-icons-rl-magnifying-glass"></i></button>
+									<button class="btn input-group-btn" aria-label="<?php esc_attr_e( 'Find a course', 'buddyboss-community-social-network-groups-forums-messaging' ); ?>"><i class="bb-icons-rl-magnifying-glass"></i></button>
 								</div>
 							</form>
 
@@ -595,7 +595,7 @@ class BBoss_Readylaunch_Memberpress_Courses_Helper {
 				<a class="tile bb-rl-button bb-rl-button--secondaryFill bb-rl-button--small" href="<?php echo esc_url( $course_url ); ?>">
 					<i class="bb-icons-rl-caret-left"></i>
 					<span>
-						<?php esc_html_e( 'Back to Course', 'buddyboss-platform' ); ?>
+						<?php esc_html_e( 'Back to Course', 'buddyboss-community-social-network-groups-forums-messaging' ); ?>
 					</span>
 				</a>
 			</div>
@@ -669,7 +669,7 @@ class BBoss_Readylaunch_Memberpress_Courses_Helper {
 		<div class="section bb-rl-lms-tab-menu">
 			<a class="bb-rl-lms-tab <?php \MeprAccountHelper::active_nav( 'home', 'is-active' ); ?>" href="<?php echo esc_url( get_permalink() ); ?>">
 				<div class="tile-content">
-					<p class="tile-title m-0"><?php esc_html_e( 'Course Info', 'buddyboss-platform' ); ?></p>
+					<p class="tile-title m-0"><?php esc_html_e( 'Course Info', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></p>
 				</div>
 			</a>
 			<?php
@@ -678,7 +678,7 @@ class BBoss_Readylaunch_Memberpress_Courses_Helper {
 				?>
 				<a class="bb-rl-lms-tab <?php \MeprAccountHelper::active_nav( 'resources', 'is-active' ); ?>" href="<?php echo esc_url( get_permalink() . '?action=resources' ); ?>">
 					<div class="tile-content">
-						<p class="tile-title m-0"><?php esc_html_e( 'Resources', 'buddyboss-platform' ); ?></p>
+						<p class="tile-title m-0"><?php esc_html_e( 'Resources', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></p>
 					</div>
 				</a>
 				<?php
@@ -704,10 +704,10 @@ class BBoss_Readylaunch_Memberpress_Courses_Helper {
 					<div class="tile-content">
 						<p class="tile-title m-0">
 							<?php
-							esc_html_e( 'Certificate', 'buddyboss-platform' );
+							esc_html_e( 'Certificate', 'buddyboss-community-social-network-groups-forums-messaging' );
 							if ( 'enabled' === $course->certificates_share_link ) {
 								?>
-								<i title="<?php esc_attr_e( 'Copied Shareable Certificate Link', 'buddyboss-platform' ); ?>" class="mpcs-share" data-clipboard-text="<?php echo esc_url( $share_link ); ?>" onclick="return false;"></i>
+								<i title="<?php esc_attr_e( 'Copied Shareable Certificate Link', 'buddyboss-community-social-network-groups-forums-messaging' ); ?>" class="mpcs-share" data-clipboard-text="<?php echo esc_url( $share_link ); ?>" onclick="return false;"></i>
 								<?php
 							}
 							?>
@@ -723,7 +723,7 @@ class BBoss_Readylaunch_Memberpress_Courses_Helper {
 				?>
 				<a class="bb-rl-lms-tab <?php \MeprAccountHelper::active_nav( 'instructor', 'is-active' ); ?>" href="<?php echo esc_url( get_permalink() . '?action=instructor' ); ?>">
 					<div class="tile-content">
-						<p class="tile-title m-0"><?php esc_html_e( 'Your Instructor', 'buddyboss-platform' ); ?></p>
+						<p class="tile-title m-0"><?php esc_html_e( 'Your Instructor', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></p>
 					</div>
 				</a>
 				<?php
@@ -791,7 +791,7 @@ class BBoss_Readylaunch_Memberpress_Courses_Helper {
 
 				<?php if ( '0' === (string) $comment->comment_approved ) { ?>
 					<p>
-						<em class="comment-awaiting-moderation"><?php esc_html_e( 'Your comment is awaiting moderation.', 'buddyboss-platform' ); ?></em>
+						<em class="comment-awaiting-moderation"><?php esc_html_e( 'Your comment is awaiting moderation.', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></em>
 					</p>
 				<?php } ?>
 
@@ -817,7 +817,7 @@ class BBoss_Readylaunch_Memberpress_Courses_Helper {
 						array_merge(
 							$args,
 							array(
-								'reply_text' => esc_html__( 'Reply', 'buddyboss-platform' ),
+								'reply_text' => esc_html__( 'Reply', 'buddyboss-community-social-network-groups-forums-messaging' ),
 								'add_below'  => $add_below,
 								'depth'      => $depth,
 								'max_depth'  => $args['max_depth'],
@@ -828,7 +828,7 @@ class BBoss_Readylaunch_Memberpress_Courses_Helper {
 					);
 					?>
 
-					<?php edit_comment_link( esc_html__( 'Edit', 'buddyboss-platform' ), '', '' ); ?>
+					<?php edit_comment_link( esc_html__( 'Edit', 'buddyboss-community-social-network-groups-forums-messaging' ), '', '' ); ?>
 				</footer>
 			</div>
 		</article>

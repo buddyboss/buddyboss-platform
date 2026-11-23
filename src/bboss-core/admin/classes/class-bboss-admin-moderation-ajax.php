@@ -84,7 +84,7 @@ class BBoss_Admin_Moderation_Ajax {
 	private function bb_verify_request() {
 		if ( ! bboss_current_user_can( 'bp_moderate' ) ) {
 			wp_send_json_error(
-				array( 'message' => __( 'You do not have permission to perform this action.', 'buddyboss-platform' ) ),
+				array( 'message' => __( 'You do not have permission to perform this action.', 'buddyboss-community-social-network-groups-forums-messaging' ) ),
 				403
 			);
 		}
@@ -161,7 +161,7 @@ class BBoss_Admin_Moderation_Ajax {
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
 		if ( empty( $name ) ) {
-			wp_send_json_error( array( 'message' => __( 'Category name is required.', 'buddyboss-platform' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Category name is required.', 'buddyboss-community-social-network-groups-forums-messaging' ) ) );
 		}
 
 		// Validate show_when value.
@@ -208,11 +208,11 @@ class BBoss_Admin_Moderation_Ajax {
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
 		if ( empty( $term_id ) ) {
-			wp_send_json_error( array( 'message' => __( 'Invalid category ID.', 'buddyboss-platform' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Invalid category ID.', 'buddyboss-community-social-network-groups-forums-messaging' ) ) );
 		}
 
 		if ( empty( $name ) ) {
-			wp_send_json_error( array( 'message' => __( 'Category name is required.', 'buddyboss-platform' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Category name is required.', 'buddyboss-community-social-network-groups-forums-messaging' ) ) );
 		}
 
 		// Validate show_when value.
@@ -260,7 +260,7 @@ class BBoss_Admin_Moderation_Ajax {
 		$term_id = isset( $_POST['term_id'] ) ? absint( $_POST['term_id'] ) : 0; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce verified in bb_verify_request() above.
 
 		if ( empty( $term_id ) ) {
-			wp_send_json_error( array( 'message' => __( 'Invalid category ID.', 'buddyboss-platform' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Invalid category ID.', 'buddyboss-community-social-network-groups-forums-messaging' ) ) );
 		}
 
 		$result = wp_delete_term( $term_id, self::TAXONOMY );
@@ -270,7 +270,7 @@ class BBoss_Admin_Moderation_Ajax {
 		}
 
 		if ( false === $result ) {
-			wp_send_json_error( array( 'message' => __( 'Category not found.', 'buddyboss-platform' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Category not found.', 'buddyboss-community-social-network-groups-forums-messaging' ) ) );
 		}
 
 		wp_send_json_success();
@@ -287,7 +287,7 @@ class BBoss_Admin_Moderation_Ajax {
 	private function bb_get_show_when_label( $value ) {
 		$options = bboss_moderation_get_reporting_category_fields_array();
 
-		return isset( $options[ $value ] ) ? $options[ $value ] : __( 'Content', 'buddyboss-platform' );
+		return isset( $options[ $value ] ) ? $options[ $value ] : __( 'Content', 'buddyboss-community-social-network-groups-forums-messaging' );
 	}
 
 	/**

@@ -88,15 +88,15 @@ class BBoss_ps_Fields {
 
 	public static function get_filters( $f ) {
 		$labels = array(
-			'contains'   => __( 'contains', 'buddyboss-platform' ),
-			''           => __( 'is', 'buddyboss-platform' ),
-			'like'       => __( 'is like', 'buddyboss-platform' ),
-			'range'      => __( 'range', 'buddyboss-platform' ),
-			'date_range' => __( 'date range', 'buddyboss-platform' ),
-			'distance'   => __( 'distance', 'buddyboss-platform' ),
-			'one_of'     => __( 'is one of', 'buddyboss-platform' ),
-			'match_any'  => __( 'match any', 'buddyboss-platform' ),
-			'match_all'  => __( 'match all', 'buddyboss-platform' ),
+			'contains'   => __( 'contains', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			''           => __( 'is', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'like'       => __( 'is like', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'range'      => __( 'range', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'date_range' => __( 'date range', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'distance'   => __( 'distance', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'one_of'     => __( 'is one of', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'match_any'  => __( 'match any', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'match_all'  => __( 'match all', 'buddyboss-community-social-network-groups-forums-messaging' ),
 		);
 
 		$filters = array();

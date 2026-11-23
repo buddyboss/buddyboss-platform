@@ -26,7 +26,7 @@ function bboss_groups_register_directory_panel_fields() {
 		'group_directory',
 		'group_directory',
 		array(
-			'title'       => __( 'Group Directory', 'buddyboss-platform' ),
+			'title'       => __( 'Group Directory', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'description' => '',
 			'order'       => 10,
 			'help_url'    => '636140',
@@ -40,22 +40,22 @@ function bboss_groups_register_directory_panel_fields() {
 		'group_directory',
 		array(
 			'name'              => 'bp-group-layout-format',
-			'label'             => __( 'Enabled View(s)', 'buddyboss-platform' ),
+			'label'             => __( 'Enabled View(s)', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'type'              => 'select',
-			'description'       => __( 'Display group directories in Grid View, List View, or allow toggling between both views.', 'buddyboss-platform' ),
+			'description'       => __( 'Display group directories in Grid View, List View, or allow toggling between both views.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'default'           => bboss_get_option( 'bp-group-layout-format', 'grid' ),
 			'sanitize_callback' => 'bboss_groups_sanitize_layout_format',
 			'options'           => array(
 				array(
-					'label' => __( 'Grid and List', 'buddyboss-platform' ),
+					'label' => __( 'Grid and List', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'value' => 'list_grid',
 				),
 				array(
-					'label' => __( 'Grid', 'buddyboss-platform' ),
+					'label' => __( 'Grid', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'value' => 'grid',
 				),
 				array(
-					'label' => __( 'List', 'buddyboss-platform' ),
+					'label' => __( 'List', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'value' => 'list',
 				),
 			),
@@ -70,18 +70,18 @@ function bboss_groups_register_directory_panel_fields() {
 		'group_directory',
 		array(
 			'name'              => 'bp-group-layout-default-format',
-			'label'             => __( 'Default View', 'buddyboss-platform' ),
+			'label'             => __( 'Default View', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'type'              => 'radio',
 			'description'       => '',
 			'default'           => bboss_group_layout_default_format( 'grid' ),
 			'sanitize_callback' => 'bboss_groups_sanitize_default_format',
 			'options'           => array(
 				array(
-					'label' => __( 'Grid', 'buddyboss-platform' ),
+					'label' => __( 'Grid', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'value' => 'grid',
 				),
 				array(
-					'label' => __( 'List', 'buddyboss-platform' ),
+					'label' => __( 'List', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'value' => 'list',
 				),
 			),
@@ -101,19 +101,19 @@ function bboss_groups_register_directory_panel_fields() {
 		'group_directory',
 		array(
 			'name'              => 'bb-group-directory-layout-grid-style',
-			'label'             => __( 'Grid Style', 'buddyboss-platform' ),
+			'label'             => __( 'Grid Style', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'type'              => 'image_radio',
-			'description'       => __( 'Select the grid layout style. Group avatars and cover images appear only if enabled.', 'buddyboss-platform' ),
+			'description'       => __( 'Select the grid layout style. Group avatars and cover images appear only if enabled.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'default'           => function_exists( 'bb_get_group_directory_grid_style' ) ? bb_get_group_directory_grid_style() : 'left',
 			'sanitize_callback' => 'bboss_groups_sanitize_grid_style',
 			'options'           => array(
 				array(
-					'label' => is_rtl() ? __( 'Right', 'buddyboss-platform' ) : __( 'Left', 'buddyboss-platform' ),
+					'label' => is_rtl() ? __( 'Right', 'buddyboss-community-social-network-groups-forums-messaging' ) : __( 'Left', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'value' => 'left',
 					'image' => 'header-left-group',
 				),
 				array(
-					'label' => __( 'Centered', 'buddyboss-platform' ),
+					'label' => __( 'Centered', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'value' => 'centered',
 					'image' => 'header-centered-group',
 				),
@@ -134,42 +134,42 @@ function bboss_groups_register_directory_panel_fields() {
 		'group_directory',
 		array(
 			'name'              => 'bb-group-directory-layout-elements',
-			'label'             => __( 'Elements', 'buddyboss-platform' ),
+			'label'             => __( 'Elements', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'type'              => 'toggle_list',
-			'description'       => __( 'Select which elements show in your group directories. Cover images will only display in grid view and group descriptions will only display in list view.', 'buddyboss-platform' ),
+			'description'       => __( 'Select which elements show in your group directories. Cover images will only display in grid view and group descriptions will only display in list view.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'default'           => array(),
 			'sanitize_callback' => 'bboss_groups_sanitize_toggle_list',
 			'options'           => array(
 				array(
-					'label' => __( 'Cover Images', 'buddyboss-platform' ),
+					'label' => __( 'Cover Images', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'value' => 'cover-images',
 				),
 				array(
-					'label' => __( 'Avatars', 'buddyboss-platform' ),
+					'label' => __( 'Avatars', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'value' => 'avatars',
 				),
 				array(
-					'label' => __( 'Group Privacy', 'buddyboss-platform' ),
+					'label' => __( 'Group Privacy', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'value' => 'group-privacy',
 				),
 				array(
-					'label' => __( 'Group Type', 'buddyboss-platform' ),
+					'label' => __( 'Group Type', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'value' => 'group-type',
 				),
 				array(
-					'label' => __( 'Last Activity', 'buddyboss-platform' ),
+					'label' => __( 'Last Activity', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'value' => 'last-activity',
 				),
 				array(
-					'label' => __( 'Members', 'buddyboss-platform' ),
+					'label' => __( 'Members', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'value' => 'members',
 				),
 				array(
-					'label' => __( 'Group Descriptions', 'buddyboss-platform' ),
+					'label' => __( 'Group Descriptions', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'value' => 'group-descriptions',
 				),
 				array(
-					'label' => __( 'Join Buttons', 'buddyboss-platform' ),
+					'label' => __( 'Join Buttons', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'value' => 'join-buttons',
 				),
 			),

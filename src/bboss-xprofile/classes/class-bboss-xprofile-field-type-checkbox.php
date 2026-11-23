@@ -24,8 +24,8 @@ class BBoss_XProfile_Field_Type_Checkbox extends BBoss_XProfile_Field_Type {
 	public function __construct() {
 		parent::__construct();
 
-		$this->category = __( 'Multi Fields', 'buddyboss-platform' );
-		$this->name     = __( 'Checkboxes', 'buddyboss-platform' );
+		$this->category = __( 'Multi Fields', 'buddyboss-community-social-network-groups-forums-messaging' );
+		$this->name     = __( 'Checkboxes', 'buddyboss-community-social-network-groups-forums-messaging' );
 
 		$this->supports_multiple_defaults = true;
 		$this->accepts_null_value         = true;

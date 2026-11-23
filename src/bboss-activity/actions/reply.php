@@ -43,7 +43,7 @@ function bboss_activity_action_post_comment() {
 	$content = apply_filters( 'bp_activity_post_comment_content', $_POST[ 'ac_input_' . $activity_id ] );
 
 	if ( empty( $content ) ) {
-		bboss_core_add_message( __( 'Please do not leave the comment area blank.', 'buddyboss-platform' ), 'error' );
+		bboss_core_add_message( __( 'Please do not leave the comment area blank.', 'buddyboss-community-social-network-groups-forums-messaging' ), 'error' );
 		bboss_core_redirect( wp_get_referer() . '#ac-form-' . $activity_id );
 	}
 
@@ -56,9 +56,9 @@ function bboss_activity_action_post_comment() {
 	);
 
 	if ( ! empty( $comment_id ) ) {
-		bboss_core_add_message( __( 'Reply Posted!', 'buddyboss-platform' ) );
+		bboss_core_add_message( __( 'Reply Posted!', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 	} else {
-		bboss_core_add_message( __( 'There was an error posting that reply. Please try again.', 'buddyboss-platform' ), 'error' );
+		bboss_core_add_message( __( 'There was an error posting that reply. Please try again.', 'buddyboss-community-social-network-groups-forums-messaging' ), 'error' );
 	}
 
 	bboss_core_redirect( wp_get_referer() . '#ac-form-' . $activity_id );

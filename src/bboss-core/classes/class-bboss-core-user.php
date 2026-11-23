@@ -174,7 +174,7 @@ class BBoss_Core_User {
 					/* translators: %s: member display name. */
 					__(
 						'Profile photo of %s',
-						'buddyboss-platform'
+						'buddyboss-community-social-network-groups-forums-messaging'
 					),
 					$this->fullname
 				),
@@ -188,7 +188,7 @@ class BBoss_Core_User {
 					/* translators: %s: member display name. */
 					__(
 						'Profile photo of %s',
-						'buddyboss-platform'
+						'buddyboss-community-social-network-groups-forums-messaging'
 					),
 					$this->fullname
 				),
@@ -199,13 +199,13 @@ class BBoss_Core_User {
 				'item_id' => $this->id,
 				'type'    => 'thumb',
 				/* translators: %s: member display name. */
-				'alt'     => sprintf( __( 'Profile photo of %s', 'buddyboss-platform' ), $this->fullname ),
+				'alt'     => sprintf( __( 'Profile photo of %s', 'buddyboss-community-social-network-groups-forums-messaging' ), $this->fullname ),
 				'width'   => 30,
 				'height'  => 30,
 			)
 		);
 		/* translators: %s: human-readable time since last activity. */
-		$this->last_active  = bboss_core_get_last_activity( bboss_get_user_last_activity( $this->id ), __( 'active %s', 'buddyboss-platform' ) );
+		$this->last_active  = bboss_core_get_last_activity( bboss_get_user_last_activity( $this->id ), __( 'active %s', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 	}
 
 	/**
@@ -220,7 +220,7 @@ class BBoss_Core_User {
 		if ( bboss_is_active( 'groups' ) ) {
 			$this->total_groups = BBoss_Groups_Member::total_group_count( $this->id );
 			/* translators: %d: number of groups. */
-			$this->total_groups = sprintf( _n( '%d group', '%d groups', $this->total_groups, 'buddyboss-platform' ), $this->total_groups );
+			$this->total_groups = sprintf( _n( '%d group', '%d groups', $this->total_groups, 'buddyboss-community-social-network-groups-forums-messaging' ), $this->total_groups );
 		}
 	}
 

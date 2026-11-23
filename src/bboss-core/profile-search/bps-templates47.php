@@ -252,25 +252,25 @@ function bboss_ps_escaped_filters_data47() {
 function bboss_ps_full_label( $f ) {
 	$labels = array(
 		/* translators: 1: field label. */
-		'contains'   => __( '<strong>%1$s</strong><span></span>', 'buddyboss-platform' ),
+		'contains'   => __( '<strong>%1$s</strong><span></span>', 'buddyboss-community-social-network-groups-forums-messaging' ),
 		/* translators: 1: field label. */
-		''           => __( '<strong>%1$s</strong><span> is:<span>', 'buddyboss-platform' ),
+		''           => __( '<strong>%1$s</strong><span> is:<span>', 'buddyboss-community-social-network-groups-forums-messaging' ),
 		/* translators: 1: field label. */
-		'like'       => __( '<strong>%1$s</strong><span> is like:<span>', 'buddyboss-platform' ),
+		'like'       => __( '<strong>%1$s</strong><span> is like:<span>', 'buddyboss-community-social-network-groups-forums-messaging' ),
 		/* translators: 1: field label. */
-		'range'      => __( '<strong>%1$s</strong><span> range:<span>', 'buddyboss-platform' ),
+		'range'      => __( '<strong>%1$s</strong><span> range:<span>', 'buddyboss-community-social-network-groups-forums-messaging' ),
 		/* translators: 1: field label. */
-		'date_range' => __( '<strong>%1$s</strong><span> range:<span>', 'buddyboss-platform' ),
+		'date_range' => __( '<strong>%1$s</strong><span> range:<span>', 'buddyboss-community-social-network-groups-forums-messaging' ),
 		/* translators: 1: field label. */
-		'distance'   => __( '<strong>%1$s</strong><span> is within:<span>', 'buddyboss-platform' ),
+		'distance'   => __( '<strong>%1$s</strong><span> is within:<span>', 'buddyboss-community-social-network-groups-forums-messaging' ),
 		/* translators: 1: field label. */
-		'one_of'     => __( '<strong>%1$s</strong><span> is one of:<span>', 'buddyboss-platform' ),
+		'one_of'     => __( '<strong>%1$s</strong><span> is one of:<span>', 'buddyboss-community-social-network-groups-forums-messaging' ),
 		/* translators: 1: field label. */
-		'match_any'  => __( '<strong>%1$s</strong><span> match any:<span>', 'buddyboss-platform' ),
+		'match_any'  => __( '<strong>%1$s</strong><span> match any:<span>', 'buddyboss-community-social-network-groups-forums-messaging' ),
 		/* translators: 1: field label. */
-		'match_all'  => __( '<strong>%1$s</strong><span> match all:<span>', 'buddyboss-platform' ),
+		'match_all'  => __( '<strong>%1$s</strong><span> match all:<span>', 'buddyboss-community-social-network-groups-forums-messaging' ),
 		/* translators: 1: field label. */
-		'unknown'    => __( '<strong>%1$s</strong>:', 'buddyboss-platform' ),
+		'unknown'    => __( '<strong>%1$s</strong>:', 'buddyboss-community-social-network-groups-forums-messaging' ),
 	);
 
 	$mode  = isset( $labels[ $f->mode ] ) ? $f->mode : 'unknown';
@@ -300,65 +300,65 @@ function bboss_ps_print_filter( $f ) {
 			case 'date_range':
 				if ( ! isset( $f->value['max'] ) ) {
 					/* translators: %1$s: minimum value. */
-					return sprintf( esc_html__( 'min: %1$s', 'buddyboss-platform' ), $f->value['min'] );
+					return sprintf( esc_html__( 'min: %1$s', 'buddyboss-community-social-network-groups-forums-messaging' ), $f->value['min'] );
 				}
 				if ( ! isset( $f->value['min'] ) ) {
 					/* translators: %1$s: maximum value. */
-					return sprintf( esc_html__( 'max: %1$s', 'buddyboss-platform' ), $f->value['max'] );
+					return sprintf( esc_html__( 'max: %1$s', 'buddyboss-community-social-network-groups-forums-messaging' ), $f->value['max'] );
 				}
 
 				/* translators: 1: minimum value, 2: maximum value. */
-				return sprintf( esc_html__( 'min: %1$s, max: %2$s', 'buddyboss-platform' ), $f->value['min'], $f->value['max'] );
+				return sprintf( esc_html__( 'min: %1$s, max: %2$s', 'buddyboss-community-social-network-groups-forums-messaging' ), $f->value['min'], $f->value['max'] );
 
 			case '':
 				if ( isset( $values ) ) {
 					/* translators: %1$s: field value. */
-					return sprintf( esc_html__( 'is: %1$s', 'buddyboss-platform' ), $values[0] );
+					return sprintf( esc_html__( 'is: %1$s', 'buddyboss-community-social-network-groups-forums-messaging' ), $values[0] );
 				}
 
 				/* translators: %1$s: field value. */
-				return sprintf( esc_html__( 'is: %1$s', 'buddyboss-platform' ), $f->value );
+				return sprintf( esc_html__( 'is: %1$s', 'buddyboss-community-social-network-groups-forums-messaging' ), $f->value );
 
 			case 'contains':
 				/* translators: %1$s: field value. */
-				return sprintf( esc_html__( 'contains: %1$s', 'buddyboss-platform' ), $f->value );
+				return sprintf( esc_html__( 'contains: %1$s', 'buddyboss-community-social-network-groups-forums-messaging' ), $f->value );
 
 			case 'like':
 				/* translators: %1$s: field value. */
-				return sprintf( esc_html__( 'is like: %1$s', 'buddyboss-platform' ), $f->value );
+				return sprintf( esc_html__( 'is like: %1$s', 'buddyboss-community-social-network-groups-forums-messaging' ), $f->value );
 
 			case 'one_of':
 				if ( count( $values ) == 1 ) {
 					/* translators: %1$s: field value. */
-					return sprintf( esc_html__( 'is: %1$s', 'buddyboss-platform' ), $values[0] );
+					return sprintf( esc_html__( 'is: %1$s', 'buddyboss-community-social-network-groups-forums-messaging' ), $values[0] );
 				}
 
 				/* translators: %1$s: comma-separated field values. */
-				return sprintf( esc_html__( 'is one of: %1$s', 'buddyboss-platform' ), implode( ', ', $values ) );
+				return sprintf( esc_html__( 'is one of: %1$s', 'buddyboss-community-social-network-groups-forums-messaging' ), implode( ', ', $values ) );
 
 			case 'match_any':
 				if ( count( $values ) == 1 ) {
 					/* translators: %1$s: field value. */
-					return sprintf( esc_html__( 'match: %1$s', 'buddyboss-platform' ), $values[0] );
+					return sprintf( esc_html__( 'match: %1$s', 'buddyboss-community-social-network-groups-forums-messaging' ), $values[0] );
 				}
 
 				/* translators: %1$s: comma-separated field values. */
-				return sprintf( esc_html__( 'match any: %1$s', 'buddyboss-platform' ), implode( ', ', $values ) );
+				return sprintf( esc_html__( 'match any: %1$s', 'buddyboss-community-social-network-groups-forums-messaging' ), implode( ', ', $values ) );
 
 			case 'match_all':
 				if ( count( $values ) == 1 ) {
 					/* translators: %1$s: field value. */
-					return sprintf( esc_html__( 'match: %1$s', 'buddyboss-platform' ), $values[0] );
+					return sprintf( esc_html__( 'match: %1$s', 'buddyboss-community-social-network-groups-forums-messaging' ), $values[0] );
 				}
 
 				/* translators: %1$s: comma-separated field values. */
-				return sprintf( esc_html__( 'match all: %1$s', 'buddyboss-platform' ), implode( ', ', $values ) );
+				return sprintf( esc_html__( 'match all: %1$s', 'buddyboss-community-social-network-groups-forums-messaging' ), implode( ', ', $values ) );
 
 			case 'distance':
 				if ( $f->value['units'] == 'km' ) {
 					return sprintf(
 						/* translators: 1: distance in km, 2: location. */
-						esc_html__( 'is within: %1$s km of %2$s', 'buddyboss-platform' ),
+						esc_html__( 'is within: %1$s km of %2$s', 'buddyboss-community-social-network-groups-forums-messaging' ),
 						$f->value['distance'],
 						$f->value['location']
 					);
@@ -366,7 +366,7 @@ function bboss_ps_print_filter( $f ) {
 
 				return sprintf(
 					/* translators: 1: distance in miles, 2: location. */
-					esc_html__( 'is within: %1$s miles of %2$s', 'buddyboss-platform' ),
+					esc_html__( 'is within: %1$s miles of %2$s', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					$f->value['distance'],
 					$f->value['location']
 				);

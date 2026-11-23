@@ -30,7 +30,7 @@ export function ReactionMigration({ field, onStartConversion }) {
 	}
 
 	const totalReactions = migrationData.total_reactions || 0;
-	const fromMode = 'like_to_emotions_action' === migrationData.action ? __( 'Likes', 'buddyboss-platform' ) : __( 'Reactions', 'buddyboss-platform' );
+	const fromMode = 'like_to_emotions_action' === migrationData.action ? __( 'Likes', 'buddyboss-community-social-network-groups-forums-messaging' ) : __( 'Reactions', 'buddyboss-community-social-network-groups-forums-messaging' );
 
 	const handleDismiss = (e) => {
 		e.preventDefault();
@@ -70,16 +70,16 @@ export function ReactionMigration({ field, onStartConversion }) {
 				</div>
 				<div className="bb-admin-notice__content">
 					<p>
-						{__('You have ', 'buddyboss-platform')}
+						{__('You have ', 'buddyboss-community-social-network-groups-forums-messaging')}
 						<strong>{formatNumber(totalReactions)}</strong>
 						{' '}
 						{fromMode}
 						{' '}
-						{__('previously submitted on your site which can be converted to', 'buddyboss-platform')}
+						{__('previously submitted on your site which can be converted to', 'buddyboss-community-social-network-groups-forums-messaging')}
 						{' '}
 						{ 'like_to_emotions_action' === migrationData.action
-							? __('an Emotion', 'buddyboss-platform')
-							: __('Likes', 'buddyboss-platform')}
+							? __('an Emotion', 'buddyboss-community-social-network-groups-forums-messaging')
+							: __('Likes', 'buddyboss-community-social-network-groups-forums-messaging')}
 						.
 					</p>
 				</div>
@@ -89,14 +89,14 @@ export function ReactionMigration({ field, onStartConversion }) {
 						className="bb-admin-notice__button"
 						onClick={handleStartConversion}
 					>
-						{__('Start Conversion', 'buddyboss-platform')}
+						{__('Start Conversion', 'buddyboss-community-social-network-groups-forums-messaging')}
 					</button>
 				</div>
 				<button
 					type="button"
 					className="bb-admin-notice__close"
 					onClick={handleDismiss}
-					aria-label={__('Dismiss', 'buddyboss-platform')}
+					aria-label={__('Dismiss', 'buddyboss-community-social-network-groups-forums-messaging')}
 				>
 					<span className="bb-icons-rl bb-icons-rl-x" />
 				</button>

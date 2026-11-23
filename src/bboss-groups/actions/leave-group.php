@@ -40,11 +40,11 @@ function bboss_groups_action_leave_group() {
 		$group_admins = bboss_groups_get_group_admins( bboss_get_current_group_id() );
 
 		if ( 1 == count( $group_admins ) && $group_admins[0]->user_id == bboss_loggedin_user_id() ) {
-			bboss_core_add_message( __( 'This group must have at least one organizer.', 'buddyboss-platform' ), 'error' );
+			bboss_core_add_message( __( 'This group must have at least one organizer.', 'buddyboss-community-social-network-groups-forums-messaging' ), 'error' );
 		} elseif ( ! bboss_groups_leave_group( $bp->groups->current_group->id ) ) {
-			bboss_core_add_message( __( 'There was an error leaving the group.', 'buddyboss-platform' ), 'error' );
+			bboss_core_add_message( __( 'There was an error leaving the group.', 'buddyboss-community-social-network-groups-forums-messaging' ), 'error' );
 		} else {
-			bboss_core_add_message( __( 'You left the group.', 'buddyboss-platform' ) );
+			bboss_core_add_message( __( 'You left the group.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 		}
 
 		$group    = bboss_groups_get_current_group();

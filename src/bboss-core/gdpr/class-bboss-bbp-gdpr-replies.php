@@ -36,7 +36,7 @@ class BBoss_Bbp_Gdpr_Replies {
 	 */
 	function register_exporter( $exporters ) {
 		$exporters['bbp-reply'] = array(
-			'exporter_friendly_name' => __( 'Discussion Replies', 'buddyboss-platform' ),
+			'exporter_friendly_name' => __( 'Discussion Replies', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'callback'               => array( $this, 'replies_exporter' ),
 		);
 
@@ -54,7 +54,7 @@ class BBoss_Bbp_Gdpr_Replies {
 	 */
 	function erase_exporter( $erasers ) {
 		$erasers['bbp-reply'] = array(
-			'eraser_friendly_name' => __( 'Forum Replies', 'buddyboss-platform' ),
+			'eraser_friendly_name' => __( 'Forum Replies', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'callback'             => array( $this, 'replies_eraser' ),
 		);
 
@@ -95,7 +95,7 @@ class BBoss_Bbp_Gdpr_Replies {
 
 				$group_id = 'bbp-replies';
 
-				$group_label = __( 'Discussion Replies', 'buddyboss-platform' );
+				$group_label = __( 'Discussion Replies', 'buddyboss-community-social-network-groups-forums-messaging' );
 
 				$permalink = get_permalink( $reply->ID );
 
@@ -104,30 +104,30 @@ class BBoss_Bbp_Gdpr_Replies {
 				// Plugins can add as many items in the item data array as they want
 				$data = array(
 					array(
-						'name'  => __( 'Reply Author', 'buddyboss-platform' ),
+						'name'  => __( 'Reply Author', 'buddyboss-community-social-network-groups-forums-messaging' ),
 						'value' => $user->display_name,
 					),
 					array(
-						'name'  => __( 'Reply Author Email', 'buddyboss-platform' ),
+						'name'  => __( 'Reply Author Email', 'buddyboss-community-social-network-groups-forums-messaging' ),
 						'value' => $user->user_email,
 					),
 					array(
-						'name'  => __( 'Reply Title', 'buddyboss-platform' ),
+						'name'  => __( 'Reply Title', 'buddyboss-community-social-network-groups-forums-messaging' ),
 						'value' => ! empty( $parent_title ) ? __(
 							'Reply To: ',
-							'buddyboss-platform'
+							'buddyboss-community-social-network-groups-forums-messaging'
 						) . html_entity_decode( $parent_title, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) : '',
 					),
 					array(
-						'name'  => __( 'Reply Content', 'buddyboss-platform' ),
+						'name'  => __( 'Reply Content', 'buddyboss-community-social-network-groups-forums-messaging' ),
 						'value' => $reply->post_content,
 					),
 					array(
-						'name'  => __( 'Reply Date', 'buddyboss-platform' ),
+						'name'  => __( 'Reply Date', 'buddyboss-community-social-network-groups-forums-messaging' ),
 						'value' => $reply->post_date,
 					),
 					array(
-						'name'  => __( 'Reply URL', 'buddyboss-platform' ),
+						'name'  => __( 'Reply URL', 'buddyboss-community-social-network-groups-forums-messaging' ),
 						'value' => $permalink,
 					),
 				);

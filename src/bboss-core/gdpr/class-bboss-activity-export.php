@@ -29,7 +29,7 @@ final class BBoss_Activity_Export extends BBoss_Export {
 
 		if ( null === $instance ) {
 			$instance = new BBoss_Activity_Export();
-			$instance->setup( 'bp_activity', __( 'Activities', 'buddyboss-platform' ) );
+			$instance->setup( 'bp_activity', __( 'Activities', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 		}
 
 		return $instance;
@@ -59,15 +59,15 @@ final class BBoss_Activity_Export extends BBoss_Export {
 		foreach ( $data_items['items'] as $item ) {
 
 			$group_id    = 'bp_activities';
-			$group_label = __( 'Activities & Comments', 'buddyboss-platform' );
+			$group_label = __( 'Activities & Comments', 'buddyboss-community-social-network-groups-forums-messaging' );
 			$item_id     = "{$this->exporter_name}-{$group_id}-{$item->id}";
 
-			$activity_type = __( 'Profile Update', 'buddyboss-platform' );
+			$activity_type = __( 'Profile Update', 'buddyboss-community-social-network-groups-forums-messaging' );
 
 			if ( 'groups' === $item->component ) {
-				$activity_type = __( 'Group Update', 'buddyboss-platform' );
+				$activity_type = __( 'Group Update', 'buddyboss-community-social-network-groups-forums-messaging' );
 			} elseif ( 'activity_comment' === $item->type ) {
-				$activity_type = __( 'Comment', 'buddyboss-platform' );
+				$activity_type = __( 'Comment', 'buddyboss-community-social-network-groups-forums-messaging' );
 
 			}
 
@@ -77,23 +77,23 @@ final class BBoss_Activity_Export extends BBoss_Export {
 
 			$data = array(
 				array(
-					'name'  => __( 'Activity Action', 'buddyboss-platform' ),
+					'name'  => __( 'Activity Action', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'value' => wp_strip_all_tags( $item->action ),
 				),
 				array(
-					'name'  => __( 'Activity Content', 'buddyboss-platform' ),
+					'name'  => __( 'Activity Content', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'value' => $item->content,
 				),
 				array(
-					'name'  => __( 'Created Date (GMT)', 'buddyboss-platform' ),
+					'name'  => __( 'Created Date (GMT)', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'value' => $item->date_recorded,
 				),
 				array(
-					'name'  => __( 'Activity Type', 'buddyboss-platform' ),
+					'name'  => __( 'Activity Type', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'value' => $activity_type,
 				),
 				array(
-					'name'  => __( 'Activity URL', 'buddyboss-platform' ),
+					'name'  => __( 'Activity URL', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'value' => $permalink,
 				),
 			);

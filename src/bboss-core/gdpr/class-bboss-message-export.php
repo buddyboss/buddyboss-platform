@@ -24,7 +24,7 @@ final class BBoss_Message_Export extends BBoss_Export {
 
 		if ( null === $instance ) {
 			$instance = new BBoss_Message_Export();
-			$instance->setup( 'bp_message', __( 'Private Messages', 'buddyboss-platform' ) );
+			$instance->setup( 'bp_message', __( 'Private Messages', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 		}
 
 		return $instance;
@@ -54,7 +54,7 @@ final class BBoss_Message_Export extends BBoss_Export {
 		foreach ( $data_items['items'] as $item ) {
 
 			$group_id    = 'bp_messages';
-			$group_label = __( 'Message Threads & Replies', 'buddyboss-platform' );
+			$group_label = __( 'Message Threads & Replies', 'buddyboss-community-social-network-groups-forums-messaging' );
 			$item_id     = "{$this->exporter_name}-{$group_id}-{$item->id}";
 
 			$permalink = bboss_get_message_thread_view_link( $item->thread_id, $user->ID );
@@ -81,23 +81,23 @@ final class BBoss_Message_Export extends BBoss_Export {
 
 			$data = array(
 				array(
-					'name'  => __( 'Message Subject', 'buddyboss-platform' ),
+					'name'  => __( 'Message Subject', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'value' => $item->subject,
 				),
 				array(
-					'name'  => __( 'Message Content', 'buddyboss-platform' ),
+					'name'  => __( 'Message Content', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'value' => $item->message,
 				),
 				array(
-					'name'  => __( 'Created Date (GMT)', 'buddyboss-platform' ),
+					'name'  => __( 'Created Date (GMT)', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'value' => $item->date_sent,
 				),
 				array(
-					'name'  => __( 'Message Recipients', 'buddyboss-platform' ),
+					'name'  => __( 'Message Recipients', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'value' => $recipients,
 				),
 				array(
-					'name'  => __( 'Thread URL', 'buddyboss-platform' ),
+					'name'  => __( 'Thread URL', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'value' => $permalink,
 				),
 			);

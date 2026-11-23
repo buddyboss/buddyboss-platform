@@ -100,7 +100,7 @@ class BBoss_BB_REST_Topics_Endpoint extends WP_REST_Controller {
 			array(
 				'args' => array(
 					'id' => array(
-						'description' => __( 'Unique identifier for the topic.', 'buddyboss-platform' ),
+						'description' => __( 'Unique identifier for the topic.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 						'type'        => 'integer',
 						'required'    => true,
 					),
@@ -249,18 +249,18 @@ class BBoss_BB_REST_Topics_Endpoint extends WP_REST_Controller {
 				! function_exists( 'bb_is_enabled_group_activity_topics' ) ||
 				! bb_is_enabled_group_activity_topics()
 			) {
-				$retval = new WP_Error( 'bp_rest_access_denied', __( 'You cannot view topics.', 'buddyboss-platform' ), array( 'status' => 403 ) );
+				$retval = new WP_Error( 'bp_rest_access_denied', __( 'You cannot view topics.', 'buddyboss-community-social-network-groups-forums-messaging' ), array( 'status' => 403 ) );
 			} elseif ( empty( $item_id ) ) {
-				$retval = new WP_Error( 'bp_rest_topic_item_id_required', __( 'Item ID is required.', 'buddyboss-platform' ), array( 'status' => 400 ) );
+				$retval = new WP_Error( 'bp_rest_topic_item_id_required', __( 'Item ID is required.', 'buddyboss-community-social-network-groups-forums-messaging' ), array( 'status' => 400 ) );
 			} elseif ( ! $group->id ) {
-				$retval = new WP_Error( 'bp_rest_group_invalid_id', __( 'Invalid group ID.', 'buddyboss-platform' ), array( 'status' => 404 ) );
+				$retval = new WP_Error( 'bp_rest_group_invalid_id', __( 'Invalid group ID.', 'buddyboss-community-social-network-groups-forums-messaging' ), array( 'status' => 404 ) );
 			} elseif ( ! bboss_current_user_can( 'administrator' ) && 'public' !== $group->status ) {
 				if (
 					! bboss_groups_is_user_member( bboss_loggedin_user_id(), $item_id ) &&
 					! bboss_groups_is_user_mod( bboss_loggedin_user_id(), $item_id ) &&
 					! bboss_groups_is_user_admin( bboss_loggedin_user_id(), $item_id )
 				) {
-					$retval = new WP_Error( 'bp_rest_group_access_denied', __( 'You cannot view topics for this group.', 'buddyboss-platform' ), array( 'status' => 403 ) );
+					$retval = new WP_Error( 'bp_rest_group_access_denied', __( 'You cannot view topics for this group.', 'buddyboss-community-social-network-groups-forums-messaging' ), array( 'status' => 403 ) );
 				}
 			}
 		}
@@ -324,7 +324,7 @@ class BBoss_BB_REST_Topics_Endpoint extends WP_REST_Controller {
 		if ( empty( $topic_relationship ) ) {
 			return new WP_Error(
 				'bp_rest_topic_creation_failed',
-				__( 'Failed to create the topic.', 'buddyboss-platform' ),
+				__( 'Failed to create the topic.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				array(
 					'status' => 500,
 				)
@@ -363,7 +363,7 @@ class BBoss_BB_REST_Topics_Endpoint extends WP_REST_Controller {
 	public function create_item_permissions_check( $request ) {
 		$retval = new WP_Error(
 			'bp_rest_authorization_required',
-			__( 'Sorry, you are not allowed to create topics.', 'buddyboss-platform' ),
+			__( 'Sorry, you are not allowed to create topics.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			array(
 				'status' => rest_authorization_required_code(),
 			)
@@ -380,13 +380,13 @@ class BBoss_BB_REST_Topics_Endpoint extends WP_REST_Controller {
 			if ( empty( $name ) ) {
 				$retval = new WP_Error(
 					'bp_rest_topic_name_required',
-					__( 'Topic name is required.', 'buddyboss-platform' ),
+					__( 'Topic name is required.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					array( 'status' => 400 )
 				);
 			} elseif ( empty( $permission_type ) ) {
 				$retval = new WP_Error(
 					'bp_rest_topic_permission_type_required',
-					__( 'Permission type is required.', 'buddyboss-platform' ),
+					__( 'Permission type is required.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					array(
 						'status' => 400,
 					)
@@ -394,7 +394,7 @@ class BBoss_BB_REST_Topics_Endpoint extends WP_REST_Controller {
 			} elseif ( empty( $item_type ) ) {
 				$retval = new WP_Error(
 					'bp_rest_topic_item_type_required',
-					__( 'Item type is required.', 'buddyboss-platform' ),
+					__( 'Item type is required.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					array( 'status' => 400 )
 				);
 			} elseif ( bboss_is_active( 'groups' ) && 'groups' === $item_type ) {
@@ -407,48 +407,48 @@ class BBoss_BB_REST_Topics_Endpoint extends WP_REST_Controller {
 				) {
 					$retval = new WP_Error(
 						'bp_rest_access_denied',
-						__( 'You cannot create a topic.', 'buddyboss-platform' ),
+						__( 'You cannot create a topic.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 						array( 'status' => 403 )
 					);
 				} elseif ( empty( $item_id ) ) {
 					$retval = new WP_Error(
 						'bp_rest_topic_item_id_required',
-						__( 'Item ID is required.', 'buddyboss-platform' ),
+						__( 'Item ID is required.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 						array( 'status' => 400 )
 					);
 				} elseif ( ! in_array( $permission_type, $valid_group_permissions, true ) ) {
 					$retval = new WP_Error(
 						'bp_rest_topic_invalid_permission_type',
-						__( 'Invalid permission type for group topics. Must be one of: admins, mods, members', 'buddyboss-platform' ),
+						__( 'Invalid permission type for group topics. Must be one of: admins, mods, members', 'buddyboss-community-social-network-groups-forums-messaging' ),
 						array( 'status' => 400 )
 					);
 				} elseif ( ! $group->id ) {
 					$retval = new WP_Error(
 						'bp_rest_group_invalid_id',
-						__( 'Invalid group ID.', 'buddyboss-platform' ),
+						__( 'Invalid group ID.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 						array( 'status' => 404 )
 					);
 				} elseif (
 					! bboss_current_user_can( 'administrator' ) &&
 					! bboss_groups_is_user_admin( bboss_loggedin_user_id(), $item_id )
 				) {
-					$retval = new WP_Error( 'bp_rest_group_access_denied', __( 'You cannot create a topic for this group.', 'buddyboss-platform' ), array( 'status' => 403 ) );
+					$retval = new WP_Error( 'bp_rest_group_access_denied', __( 'You cannot create a topic for this group.', 'buddyboss-community-social-network-groups-forums-messaging' ), array( 'status' => 403 ) );
 				} elseif (
 					'only_from_activity_topics' === $group_topics_options &&
 					! $this->is_activity_topic_name( $name )
 				) {
-					$retval = new WP_Error( 'bp_rest_topic_name_not_found', __( 'Topic name not found in activity topics.', 'buddyboss-platform' ), array( 'status' => 400 ) );
+					$retval = new WP_Error( 'bp_rest_topic_name_not_found', __( 'Topic name not found in activity topics.', 'buddyboss-community-social-network-groups-forums-messaging' ), array( 'status' => 400 ) );
 				}
 			} elseif ( 'activity' === $item_type ) {
 				$valid_global_permissions = array( 'mods_admins', 'anyone' );
 				if ( ! empty( $item_id ) ) {
-					$retval = new WP_Error( 'bp_rest_topic_item_id_not_required', __( 'Item ID is not required for activity topics.', 'buddyboss-platform' ), array( 'status' => 400 ) );
+					$retval = new WP_Error( 'bp_rest_topic_item_id_not_required', __( 'Item ID is not required for activity topics.', 'buddyboss-community-social-network-groups-forums-messaging' ), array( 'status' => 400 ) );
 				} elseif ( ! bboss_current_user_can( 'administrator' ) ) {
-					$retval = new WP_Error( 'bp_rest_topic_invalid_permission_type', __( 'You are not allowed to create a topic.', 'buddyboss-platform' ), array( 'status' => 403 ) );
+					$retval = new WP_Error( 'bp_rest_topic_invalid_permission_type', __( 'You are not allowed to create a topic.', 'buddyboss-community-social-network-groups-forums-messaging' ), array( 'status' => 403 ) );
 				} elseif ( ! in_array( $permission_type, $valid_global_permissions, true ) ) {
 					$retval = new WP_Error(
 						'bp_rest_topic_invalid_permission_type',
-						__( 'Invalid permission type for global topics. Must be one of: mods_admins, anyone', 'buddyboss-platform' ),
+						__( 'Invalid permission type for global topics. Must be one of: mods_admins, anyone', 'buddyboss-community-social-network-groups-forums-messaging' ),
 						array( 'status' => 400 )
 					);
 				}
@@ -487,7 +487,7 @@ class BBoss_BB_REST_Topics_Endpoint extends WP_REST_Controller {
 		$id = $request->get_param( 'id' );
 
 		if ( empty( $id ) ) {
-			return new WP_Error( 'bp_rest_topic_invalid_id', __( 'Invalid topic ID.', 'buddyboss-platform' ), array( 'status' => 404 ) );
+			return new WP_Error( 'bp_rest_topic_invalid_id', __( 'Invalid topic ID.', 'buddyboss-community-social-network-groups-forums-messaging' ), array( 'status' => 404 ) );
 		}
 
 		$args = array(
@@ -497,7 +497,7 @@ class BBoss_BB_REST_Topics_Endpoint extends WP_REST_Controller {
 		$topic = bboss_topics_manager_instance()->bb_get_topic( $args );
 
 		if ( empty( $topic ) ) {
-			return new WP_Error( 'bp_rest_topic_empty', __( 'Topic not found.', 'buddyboss-platform' ), array( 'status' => 404 ) );
+			return new WP_Error( 'bp_rest_topic_empty', __( 'Topic not found.', 'buddyboss-community-social-network-groups-forums-messaging' ), array( 'status' => 404 ) );
 		}
 
 		$retval = $this->prepare_response_for_collection(
@@ -537,9 +537,9 @@ class BBoss_BB_REST_Topics_Endpoint extends WP_REST_Controller {
 
 		$retval = false;
 		if ( empty( $id ) ) {
-			$retval = new WP_Error( 'bp_rest_topic_invalid_id', __( 'Invalid topic ID.', 'buddyboss-platform' ), array( 'status' => 404 ) );
+			$retval = new WP_Error( 'bp_rest_topic_invalid_id', __( 'Invalid topic ID.', 'buddyboss-community-social-network-groups-forums-messaging' ), array( 'status' => 404 ) );
 		} elseif ( empty( $topic ) ) {
-			$retval = new WP_Error( 'bp_rest_topic_empty', __( 'Topic not found.', 'buddyboss-platform' ), array( 'status' => 404 ) );
+			$retval = new WP_Error( 'bp_rest_topic_empty', __( 'Topic not found.', 'buddyboss-community-social-network-groups-forums-messaging' ), array( 'status' => 404 ) );
 		} elseif ( 'activity' === $item_type ) {
 			$retval = true;
 		} elseif ( 'groups' === $item_type && bboss_is_active( 'groups' ) ) {
@@ -549,11 +549,11 @@ class BBoss_BB_REST_Topics_Endpoint extends WP_REST_Controller {
 				! function_exists( 'bb_is_enabled_group_activity_topics' ) ||
 				! bb_is_enabled_group_activity_topics()
 			) {
-				$retval = new WP_Error( 'bp_rest_access_denied', __( 'You cannot view topics.', 'buddyboss-platform' ), array( 'status' => 403 ) );
+				$retval = new WP_Error( 'bp_rest_access_denied', __( 'You cannot view topics.', 'buddyboss-community-social-network-groups-forums-messaging' ), array( 'status' => 403 ) );
 			} elseif ( empty( $topic->item_id ) ) {
-				$retval = new WP_Error( 'bp_rest_topic_item_id_required', __( 'Item ID is required.', 'buddyboss-platform' ), array( 'status' => 400 ) );
+				$retval = new WP_Error( 'bp_rest_topic_item_id_required', __( 'Item ID is required.', 'buddyboss-community-social-network-groups-forums-messaging' ), array( 'status' => 400 ) );
 			} elseif ( empty( $group->id ) ) {
-				$retval = new WP_Error( 'bp_rest_group_invalid_id', __( 'Invalid group ID.', 'buddyboss-platform' ), array( 'status' => 404 ) );
+				$retval = new WP_Error( 'bp_rest_group_invalid_id', __( 'Invalid group ID.', 'buddyboss-community-social-network-groups-forums-messaging' ), array( 'status' => 404 ) );
 			} elseif ( ! bboss_current_user_can( 'administrator' ) && 'public' !== $group->status ) {
 				// Check if user has any level of access (member, mod, or admin).
 				if (
@@ -561,7 +561,7 @@ class BBoss_BB_REST_Topics_Endpoint extends WP_REST_Controller {
 					! bboss_groups_is_user_mod( bboss_loggedin_user_id(), $topic->item_id ) &&
 					! bboss_groups_is_user_admin( bboss_loggedin_user_id(), $topic->item_id )
 				) {
-					$retval = new WP_Error( 'bp_rest_group_access_denied', __( 'You cannot view topics for this group.', 'buddyboss-platform' ), array( 'status' => 403 ) );
+					$retval = new WP_Error( 'bp_rest_group_access_denied', __( 'You cannot view topics for this group.', 'buddyboss-community-social-network-groups-forums-messaging' ), array( 'status' => 403 ) );
 				}
 			}
 		}
@@ -604,7 +604,7 @@ class BBoss_BB_REST_Topics_Endpoint extends WP_REST_Controller {
 		if ( empty( $topic_id ) ) {
 			return new WP_Error(
 				'bp_rest_topic_invalid_id',
-				__( 'Invalid topic ID.', 'buddyboss-platform' ),
+				__( 'Invalid topic ID.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				array( 'status' => 404 )
 			);
 		}
@@ -626,7 +626,7 @@ class BBoss_BB_REST_Topics_Endpoint extends WP_REST_Controller {
 		if ( ! $topic ) {
 			return new WP_Error(
 				'bp_rest_topic_invalid_id',
-				__( 'Invalid topic ID.', 'buddyboss-platform' ),
+				__( 'Invalid topic ID.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				array(
 					'status' => 404,
 				)
@@ -686,7 +686,7 @@ class BBoss_BB_REST_Topics_Endpoint extends WP_REST_Controller {
 
 		$retval = new WP_Error(
 			'bp_rest_authorization_required',
-			__( 'Sorry, you are not allowed to create topics.', 'buddyboss-platform' ),
+			__( 'Sorry, you are not allowed to create topics.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			array(
 				'status' => rest_authorization_required_code(),
 			)
@@ -716,13 +716,13 @@ class BBoss_BB_REST_Topics_Endpoint extends WP_REST_Controller {
 			if ( empty( $name ) ) {
 				$retval = new WP_Error(
 					'bp_rest_topic_name_required',
-					__( 'Topic name is required.', 'buddyboss-platform' ),
+					__( 'Topic name is required.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					array( 'status' => 400 )
 				);
 			} elseif ( empty( $item_type ) ) {
 				$retval = new WP_Error(
 					'bp_rest_topic_item_type_required',
-					__( 'Item type is required.', 'buddyboss-platform' ),
+					__( 'Item type is required.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					array( 'status' => 400 )
 				);
 			} elseif ( bboss_is_active( 'groups' ) && ! empty( $item_type ) && 'groups' === $item_type ) {
@@ -732,28 +732,28 @@ class BBoss_BB_REST_Topics_Endpoint extends WP_REST_Controller {
 					! function_exists( 'bb_is_enabled_group_activity_topics' ) ||
 					! bb_is_enabled_group_activity_topics()
 				) {
-					$retval = new WP_Error( 'bp_rest_access_denied', __( 'You cannot update a topic.', 'buddyboss-platform' ), array( 'status' => 403 ) );
+					$retval = new WP_Error( 'bp_rest_access_denied', __( 'You cannot update a topic.', 'buddyboss-community-social-network-groups-forums-messaging' ), array( 'status' => 403 ) );
 				} elseif ( empty( $item_id ) ) {
 					$retval = new WP_Error(
 						'bp_rest_topic_item_id_required',
-						__( 'Item ID is required.', 'buddyboss-platform' ),
+						__( 'Item ID is required.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 						array( 'status' => 400 )
 					);
 				} elseif ( empty( $group->id ) ) {
 					$retval = new WP_Error(
 						'bp_rest_group_invalid_id',
-						__( 'Invalid group ID.', 'buddyboss-platform' ),
+						__( 'Invalid group ID.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 						array( 'status' => 404 )
 					);
 				} elseif (
 					! bboss_current_user_can( 'administrator' ) &&
 					! bboss_groups_is_user_admin( bboss_loggedin_user_id(), $item_id )
 				) {
-					$retval = new WP_Error( 'bp_rest_group_access_denied', __( 'You cannot create a topic for this group.', 'buddyboss-platform' ), array( 'status' => 403 ) );
+					$retval = new WP_Error( 'bp_rest_group_access_denied', __( 'You cannot create a topic for this group.', 'buddyboss-community-social-network-groups-forums-messaging' ), array( 'status' => 403 ) );
 				} elseif ( empty( $topic ) ) {
 					$retval = new WP_Error(
 						'bp_rest_topic_invalid_id',
-						__( 'Invalid topic ID.', 'buddyboss-platform' ),
+						__( 'Invalid topic ID.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 						array(
 							'status' => 404,
 						)
@@ -764,7 +764,7 @@ class BBoss_BB_REST_Topics_Endpoint extends WP_REST_Controller {
 					! $this->is_activity_topic_name( $name )
 				) {
 					// Keeping the same topic (for example to change its permission only) is still allowed.
-					$retval = new WP_Error( 'bp_rest_topic_name_not_found', __( 'Topic name not found in activity topics.', 'buddyboss-platform' ), array( 'status' => 400 ) );
+					$retval = new WP_Error( 'bp_rest_topic_name_not_found', __( 'Topic name not found in activity topics.', 'buddyboss-community-social-network-groups-forums-messaging' ), array( 'status' => 400 ) );
 				} else {
 					$valid_permissions = array( 'admins', 'mods', 'members' );
 					$permission_type   = empty( $permission_type ) ? $topic->permission_type : $permission_type;
@@ -773,7 +773,7 @@ class BBoss_BB_REST_Topics_Endpoint extends WP_REST_Controller {
 							'bp_rest_topic_invalid_permission_type',
 							sprintf(
 							/* translators: %s: Valid permission types for group topics. */
-								__( 'Invalid permission type for group topics. Must be one of: %s', 'buddyboss-platform' ),
+								__( 'Invalid permission type for group topics. Must be one of: %s', 'buddyboss-community-social-network-groups-forums-messaging' ),
 								implode( ', ', $valid_permissions )
 							),
 							array( 'status' => 400 )
@@ -784,20 +784,20 @@ class BBoss_BB_REST_Topics_Endpoint extends WP_REST_Controller {
 					) {
 						$retval = new WP_Error(
 							'bp_rest_topic_global_activity_update_error',
-							__( 'You cannot assign or update a global topic under a group.', 'buddyboss-platform' ),
+							__( 'You cannot assign or update a global topic under a group.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 							array( 'status' => 403 )
 						);
 					}
 				}
 			} elseif ( 'activity' === $item_type ) {
 				if ( ! empty( $item_id ) ) {
-					$retval = new WP_Error( 'bp_rest_topic_item_id_not_required', __( 'Item ID is not required for activity topics.', 'buddyboss-platform' ), array( 'status' => 400 ) );
+					$retval = new WP_Error( 'bp_rest_topic_item_id_not_required', __( 'Item ID is not required for activity topics.', 'buddyboss-community-social-network-groups-forums-messaging' ), array( 'status' => 400 ) );
 				} elseif ( ! bboss_current_user_can( 'administrator' ) ) {
-					$retval = new WP_Error( 'bp_rest_topic_invalid_permission_type', __( 'You are not allowed to create a topic.', 'buddyboss-platform' ), array( 'status' => 403 ) );
+					$retval = new WP_Error( 'bp_rest_topic_invalid_permission_type', __( 'You are not allowed to create a topic.', 'buddyboss-community-social-network-groups-forums-messaging' ), array( 'status' => 403 ) );
 				} elseif ( empty( $topic ) ) {
 					$retval = new WP_Error(
 						'bp_rest_topic_invalid_id',
-						__( 'Invalid topic ID.', 'buddyboss-platform' ),
+						__( 'Invalid topic ID.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 						array(
 							'status' => 404,
 						)
@@ -810,7 +810,7 @@ class BBoss_BB_REST_Topics_Endpoint extends WP_REST_Controller {
 							'bp_rest_topic_invalid_permission_type',
 							sprintf(
 							/* translators: %s: Valid permission types for global topics. */
-								__( 'Invalid permission type for group topics. Must be one of: %s', 'buddyboss-platform' ),
+								__( 'Invalid permission type for group topics. Must be one of: %s', 'buddyboss-community-social-network-groups-forums-messaging' ),
 								implode( ', ', $valid_permissions )
 							),
 							array( 'status' => 400 )
@@ -861,7 +861,7 @@ class BBoss_BB_REST_Topics_Endpoint extends WP_REST_Controller {
 		if ( ! empty( $migrate_type ) && 'migrate' !== $migrate_type ) {
 			$retval = new WP_Error(
 				'bp_rest_topic_invalid_migrate_type',
-				__( 'Invalid migrate type. Value must be "migrate".', 'buddyboss-platform' ),
+				__( 'Invalid migrate type. Value must be "migrate".', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				array( 'status' => 400 )
 			);
 			return $retval;
@@ -892,7 +892,7 @@ class BBoss_BB_REST_Topics_Endpoint extends WP_REST_Controller {
 			if ( is_wp_error( $migrated ) ) {
 				return new WP_Error(
 					'bp_rest_topic_migrate_failed',
-					__( 'There was an error while migrating the topic.', 'buddyboss-platform' ),
+					__( 'There was an error while migrating the topic.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					array( 'status' => 500 )
 				);
 			}
@@ -901,7 +901,7 @@ class BBoss_BB_REST_Topics_Endpoint extends WP_REST_Controller {
 		if ( ! $deleted ) {
 			return new WP_Error(
 				'bp_rest_topic_delete_failed',
-				__( 'There was an error while deleting the topic.', 'buddyboss-platform' ),
+				__( 'There was an error while deleting the topic.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				array(
 					'status' => 500,
 				)
@@ -943,7 +943,7 @@ class BBoss_BB_REST_Topics_Endpoint extends WP_REST_Controller {
 
 		$retval = new WP_Error(
 			'bp_rest_authorization_required',
-			__( 'Sorry, you are not allowed to delete topics.', 'buddyboss-platform' ),
+			__( 'Sorry, you are not allowed to delete topics.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			array(
 				'status' => rest_authorization_required_code(),
 			)
@@ -985,37 +985,37 @@ class BBoss_BB_REST_Topics_Endpoint extends WP_REST_Controller {
 			if ( ! empty( $migrate_type ) && 'migrate' !== $migrate_type ) {
 				$retval = new WP_Error(
 					'bp_rest_topic_invalid_migrate_type',
-					__( 'Invalid migrate type. Value must be "migrate".', 'buddyboss-platform' ),
+					__( 'Invalid migrate type. Value must be "migrate".', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					array( 'status' => 400 )
 				);
 			} elseif ( empty( $topic_id ) ) {
 				$retval = new WP_Error(
 					'bp_rest_topic_invalid_id',
-					__( 'Invalid topic ID.', 'buddyboss-platform' ),
+					__( 'Invalid topic ID.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					array( 'status' => 404 )
 				);
 			} elseif ( empty( $item_type ) ) {
 				$retval = new WP_Error(
 					'bp_rest_topic_item_type_required',
-					__( 'Item type is required.', 'buddyboss-platform' ),
+					__( 'Item type is required.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					array( 'status' => 404 )
 				);
 			} elseif ( empty( $get_topic['topics'] ) ) {
 				$retval = new WP_Error(
 					'bp_rest_topic_not_found',
-					__( 'Topic not found.', 'buddyboss-platform' ),
+					__( 'Topic not found.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					array( 'status' => 404 )
 				);
 			} elseif ( 'migrate' === $migrate_type && empty( $new_topic_id ) ) {
 				$retval = new WP_Error(
 					'bp_rest_topic_invalid_new_topic_id',
-					__( 'Invalid new topic ID.', 'buddyboss-platform' ),
+					__( 'Invalid new topic ID.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					array( 'status' => 400 )
 				);
 			} elseif ( 'migrate' === $migrate_type && ! empty( $new_topic_id ) && empty( $new_topic ) ) {
 				$retval = new WP_Error(
 					'bp_rest_topic_invalid_new_topic_data',
-					__( 'Invalid new topic data.', 'buddyboss-platform' ),
+					__( 'Invalid new topic data.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					array( 'status' => 400 )
 				);
 			} elseif ( bboss_is_active( 'groups' ) && ! empty( $item_type ) && 'groups' === $item_type ) {
@@ -1025,26 +1025,26 @@ class BBoss_BB_REST_Topics_Endpoint extends WP_REST_Controller {
 					! function_exists( 'bb_is_enabled_group_activity_topics' ) ||
 					! bb_is_enabled_group_activity_topics()
 				) {
-					$retval = new WP_Error( 'bp_rest_access_denied', __( 'You cannot delete a topic.', 'buddyboss-platform' ), array( 'status' => 403 ) );
+					$retval = new WP_Error( 'bp_rest_access_denied', __( 'You cannot delete a topic.', 'buddyboss-community-social-network-groups-forums-messaging' ), array( 'status' => 403 ) );
 				} elseif ( empty( $item_id ) ) {
 					$retval = new WP_Error(
 						'bp_rest_topic_item_id_required',
-						__( 'Item ID is required.', 'buddyboss-platform' ),
+						__( 'Item ID is required.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 						array( 'status' => 400 )
 					);
 				} elseif ( empty( $group ) ) {
-					$retval = new WP_Error( 'bp_rest_group_invalid_id', __( 'Invalid group ID.', 'buddyboss-platform' ), array( 'status' => 404 ) );
+					$retval = new WP_Error( 'bp_rest_group_invalid_id', __( 'Invalid group ID.', 'buddyboss-community-social-network-groups-forums-messaging' ), array( 'status' => 404 ) );
 				} elseif (
 					! bboss_current_user_can( 'administrator' ) &&
 					! bboss_groups_is_user_admin( bboss_loggedin_user_id(), $item_id )
 				) {
-					$retval = new WP_Error( 'bp_rest_group_access_denied', __( 'You cannot delete a topic for this group.', 'buddyboss-platform' ), array( 'status' => 403 ) );
+					$retval = new WP_Error( 'bp_rest_group_access_denied', __( 'You cannot delete a topic for this group.', 'buddyboss-community-social-network-groups-forums-messaging' ), array( 'status' => 403 ) );
 				}
 			} elseif ( 'activity' === $item_type ) {
 				if ( ! empty( $item_id ) ) {
-					$retval = new WP_Error( 'bp_rest_topic_item_id_not_required', __( 'Item ID is not required for activity topics.', 'buddyboss-platform' ), array( 'status' => 400 ) );
+					$retval = new WP_Error( 'bp_rest_topic_item_id_not_required', __( 'Item ID is not required for activity topics.', 'buddyboss-community-social-network-groups-forums-messaging' ), array( 'status' => 400 ) );
 				} elseif ( ! bboss_current_user_can( 'administrator' ) ) {
-					$retval = new WP_Error( 'bp_rest_topic_invalid_permission_type', __( 'Sorry, you are not allowed to delete topics.', 'buddyboss-platform' ), array( 'status' => 403 ) );
+					$retval = new WP_Error( 'bp_rest_topic_invalid_permission_type', __( 'Sorry, you are not allowed to delete topics.', 'buddyboss-community-social-network-groups-forums-messaging' ), array( 'status' => 403 ) );
 				}
 			}
 		}
@@ -1163,7 +1163,7 @@ class BBoss_BB_REST_Topics_Endpoint extends WP_REST_Controller {
 
 		return new WP_Error(
 			'bp_rest_topic_order_update_failed',
-			__( 'Failed to update topic order.', 'buddyboss-platform' ),
+			__( 'Failed to update topic order.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			array( 'status' => 500 )
 		);
 	}
@@ -1180,7 +1180,7 @@ class BBoss_BB_REST_Topics_Endpoint extends WP_REST_Controller {
 	public function update_order_permissions_check( $request ) {
 		$retval = new WP_Error(
 			'bp_rest_authorization_required',
-			__( 'Sorry, you are not allowed to create topics.', 'buddyboss-platform' ),
+			__( 'Sorry, you are not allowed to create topics.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			array(
 				'status' => rest_authorization_required_code(),
 			)
@@ -1196,13 +1196,13 @@ class BBoss_BB_REST_Topics_Endpoint extends WP_REST_Controller {
 			if ( empty( $item_type ) ) {
 				$retval = new WP_Error(
 					'bp_rest_topic_item_type_required',
-					__( 'Item type is required.', 'buddyboss-platform' ),
+					__( 'Item type is required.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					array( 'status' => 400 )
 				);
 			} elseif ( empty( $topics ) || ! is_array( $topics ) ) {
 				$retval = new WP_Error(
 					'bp_rest_topic_invalid_order',
-					__( 'Invalid topic order data.', 'buddyboss-platform' ),
+					__( 'Invalid topic order data.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					array( 'status' => 400 )
 				);
 			} elseif ( bboss_is_active( 'groups' ) && ! empty( $item_type ) && 'groups' === $item_type ) {
@@ -1212,30 +1212,30 @@ class BBoss_BB_REST_Topics_Endpoint extends WP_REST_Controller {
 					! function_exists( 'bb_is_enabled_group_activity_topics' ) ||
 					! bb_is_enabled_group_activity_topics()
 				) {
-					$retval = new WP_Error( 'bp_rest_access_denied', __( 'You cannot update topics order.', 'buddyboss-platform' ), array( 'status' => 403 ) );
+					$retval = new WP_Error( 'bp_rest_access_denied', __( 'You cannot update topics order.', 'buddyboss-community-social-network-groups-forums-messaging' ), array( 'status' => 403 ) );
 				} elseif ( empty( $item_id ) ) {
 					$retval = new WP_Error(
 						'bp_rest_topic_item_id_required',
-						__( 'Item ID is required.', 'buddyboss-platform' ),
+						__( 'Item ID is required.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 						array( 'status' => 400 )
 					);
 				} elseif ( empty( $group->id ) ) {
 					$retval = new WP_Error(
 						'bp_rest_group_invalid_id',
-						__( 'Invalid group ID.', 'buddyboss-platform' ),
+						__( 'Invalid group ID.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 						array( 'status' => 404 )
 					);
 				} elseif (
 					! bboss_current_user_can( 'administrator' ) &&
 					! bboss_groups_is_user_admin( bboss_loggedin_user_id(), $item_id )
 				) {
-					$retval = new WP_Error( 'bp_rest_group_access_denied', __( 'You cannot allow to order topics for this group.', 'buddyboss-platform' ), array( 'status' => 403 ) );
+					$retval = new WP_Error( 'bp_rest_group_access_denied', __( 'You cannot allow to order topics for this group.', 'buddyboss-community-social-network-groups-forums-messaging' ), array( 'status' => 403 ) );
 				}
 			} elseif ( 'activity' === $item_type ) {
 				if ( ! bboss_current_user_can( 'administrator' ) ) {
-					$retval = new WP_Error( 'bp_rest_topic_invalid_permission_type', __( 'You are not allowed to update order of topics.', 'buddyboss-platform' ), array( 'status' => 403 ) );
+					$retval = new WP_Error( 'bp_rest_topic_invalid_permission_type', __( 'You are not allowed to update order of topics.', 'buddyboss-community-social-network-groups-forums-messaging' ), array( 'status' => 403 ) );
 				} elseif ( ! empty( $item_id ) ) {
-					$retval = new WP_Error( 'bp_rest_topic_item_id_not_required', __( 'Item ID is not required for activity topics.', 'buddyboss-platform' ), array( 'status' => 400 ) );
+					$retval = new WP_Error( 'bp_rest_topic_item_id_not_required', __( 'Item ID is not required for activity topics.', 'buddyboss-community-social-network-groups-forums-messaging' ), array( 'status' => 400 ) );
 				}
 			} else {
 				$topic_ids = array_map(
@@ -1256,7 +1256,7 @@ class BBoss_BB_REST_Topics_Endpoint extends WP_REST_Controller {
 					if ( empty( $topic ) ) {
 						$retval = new WP_Error(
 							'bp_rest_topic_not_found',
-							__( 'One or more topics not found.', 'buddyboss-platform' ),
+							__( 'One or more topics not found.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 							array( 'status' => 404 )
 						);
 					}
@@ -1412,7 +1412,7 @@ class BBoss_BB_REST_Topics_Endpoint extends WP_REST_Controller {
 			}
 			$topic = bboss_topics_manager_instance()->bb_get_topic( $topic_args );
 			if ( empty( $topic ) ) {
-				return new WP_Error( 'bp_rest_topic_not_found', __( 'Topic not found.', 'buddyboss-platform' ), array( 'status' => 404 ) );
+				return new WP_Error( 'bp_rest_topic_not_found', __( 'Topic not found.', 'buddyboss-community-social-network-groups-forums-messaging' ), array( 'status' => 404 ) );
 			}
 
 			$can_use_topic = $this->bb_rest_activity_topic_permission_check( $topic, $activity_id );
@@ -1433,7 +1433,7 @@ class BBoss_BB_REST_Topics_Endpoint extends WP_REST_Controller {
 
 		return new WP_Error(
 			'bp_rest_topic_id_required',
-			__( 'Please select a topic before posting.', 'buddyboss-platform' ),
+			__( 'Please select a topic before posting.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			array( 'status' => 400 )
 		);
 	}
@@ -1504,7 +1504,7 @@ class BBoss_BB_REST_Topics_Endpoint extends WP_REST_Controller {
 		if ( ! empty( $topic->item_id ) && 'groups' === $topic->item_type && bboss_is_active( 'groups' ) ) {
 			$group = bboss_groups_get_group( $topic->item_id );
 			if ( empty( $group ) ) {
-				return new WP_Error( 'bp_rest_group_invalid_id', __( 'Invalid group ID.', 'buddyboss-platform' ), array( 'status' => 404 ) );
+				return new WP_Error( 'bp_rest_group_invalid_id', __( 'Invalid group ID.', 'buddyboss-community-social-network-groups-forums-messaging' ), array( 'status' => 404 ) );
 			}
 
 			if ( $keeps_its_topic ) {
@@ -1516,28 +1516,28 @@ class BBoss_BB_REST_Topics_Endpoint extends WP_REST_Controller {
 				! function_exists( 'bb_is_enabled_group_activity_topics' ) ||
 				! bb_is_enabled_group_activity_topics()
 			) {
-				return new WP_Error( 'bp_rest_access_denied', __( 'You cannot update a topic.', 'buddyboss-platform' ), array( 'status' => 403 ) );
+				return new WP_Error( 'bp_rest_access_denied', __( 'You cannot update a topic.', 'buddyboss-community-social-network-groups-forums-messaging' ), array( 'status' => 403 ) );
 			} elseif (
 				in_array( $permission_type, array( 'admins' ), true ) &&
 				! bboss_groups_is_user_admin( bboss_loggedin_user_id(), $topic->item_id )
 			) {
-				return new WP_Error( 'bp_rest_group_access_denied', __( 'You cannot update a topic for this group.', 'buddyboss-platform' ), array( 'status' => 403 ) );
+				return new WP_Error( 'bp_rest_group_access_denied', __( 'You cannot update a topic for this group.', 'buddyboss-community-social-network-groups-forums-messaging' ), array( 'status' => 403 ) );
 			} elseif (
 				in_array( $permission_type, array( 'mods' ), true ) &&
 				! bboss_groups_is_user_mod( bboss_loggedin_user_id(), $topic->item_id ) &&
 				! bboss_groups_is_user_admin( bboss_loggedin_user_id(), $topic->item_id )
 			) {
-				return new WP_Error( 'bp_rest_group_access_denied', __( 'You cannot update a topic for this group.', 'buddyboss-platform' ), array( 'status' => 403 ) );
+				return new WP_Error( 'bp_rest_group_access_denied', __( 'You cannot update a topic for this group.', 'buddyboss-community-social-network-groups-forums-messaging' ), array( 'status' => 403 ) );
 			} elseif (
 				in_array( $permission_type, array( 'members' ), true ) &&
 				! bboss_groups_is_user_member( bboss_loggedin_user_id(), $topic->item_id ) &&
 				! bboss_groups_is_user_mod( bboss_loggedin_user_id(), $topic->item_id ) &&
 				! bboss_groups_is_user_admin( bboss_loggedin_user_id(), $topic->item_id )
 			) {
-				return new WP_Error( 'bp_rest_group_access_denied', __( 'You cannot update a topic for this group.', 'buddyboss-platform' ), array( 'status' => 403 ) );
+				return new WP_Error( 'bp_rest_group_access_denied', __( 'You cannot update a topic for this group.', 'buddyboss-community-social-network-groups-forums-messaging' ), array( 'status' => 403 ) );
 			}
 		} elseif ( ! $keeps_its_topic && ! bboss_current_user_can( 'administrator' ) && 'mods_admins' === $permission_type ) {
-			return new WP_Error( 'bp_rest_access_denied', __( 'You cannot update a topic.', 'buddyboss-platform' ), array( 'status' => 403 ) );
+			return new WP_Error( 'bp_rest_access_denied', __( 'You cannot update a topic.', 'buddyboss-community-social-network-groups-forums-messaging' ), array( 'status' => 403 ) );
 		}
 
 		return true;
@@ -1558,7 +1558,7 @@ class BBoss_BB_REST_Topics_Endpoint extends WP_REST_Controller {
 
 		// Common item_type argument definition.
 		$item_type_arg = array(
-			'description'       => __( 'Type of item.', 'buddyboss-platform' ),
+			'description'       => __( 'Type of item.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'type'              => array( 'string', 'array' ),
 			'validate_callback' => function ( $param ) {
 				$allowed = array( 'activity', 'groups' );
@@ -1582,7 +1582,7 @@ class BBoss_BB_REST_Topics_Endpoint extends WP_REST_Controller {
 		// Common arguments for create and update.
 		$common_args = array(
 			'title'     => array(
-				'description' => __( 'The title of the topic.', 'buddyboss-platform' ),
+				'description' => __( 'The title of the topic.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				'type'        => 'string',
 				'required'    => true,
 			),
@@ -1595,21 +1595,21 @@ class BBoss_BB_REST_Topics_Endpoint extends WP_REST_Controller {
 			// Add get_items specific args.
 			$args = array(
 				'per_page'     => array(
-					'description'       => __( 'Number of items to return per page.', 'buddyboss-platform' ),
+					'description'       => __( 'Number of items to return per page.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'type'              => 'integer',
 					'default'           => 20,
 					'sanitize_callback' => 'absint',
 					'validate_callback' => 'rest_validate_request_arg',
 				),
 				'page'         => array(
-					'description'       => __( 'Current page of the collection.', 'buddyboss-platform' ),
+					'description'       => __( 'Current page of the collection.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'type'              => 'integer',
 					'default'           => 1,
 					'sanitize_callback' => 'absint',
 					'validate_callback' => 'rest_validate_request_arg',
 				),
 				'orderby'      => array(
-					'description'       => __( 'Order by attribute.', 'buddyboss-platform' ),
+					'description'       => __( 'Order by attribute.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'type'              => 'string',
 					'default'           => 'menu_order',
 					'enum'              => array( 'id', 'name', 'date_created', 'menu_order', 'date_updated' ),
@@ -1617,7 +1617,7 @@ class BBoss_BB_REST_Topics_Endpoint extends WP_REST_Controller {
 					'validate_callback' => 'rest_validate_request_arg',
 				),
 				'order'        => array(
-					'description'       => __( 'Order direction.', 'buddyboss-platform' ),
+					'description'       => __( 'Order direction.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'type'              => 'string',
 					'default'           => 'ASC',
 					'enum'              => array( 'ASC', 'DESC' ),
@@ -1625,14 +1625,14 @@ class BBoss_BB_REST_Topics_Endpoint extends WP_REST_Controller {
 					'validate_callback' => 'rest_validate_request_arg',
 				),
 				'item_id'      => array(
-					'description'       => __( 'Item ID.', 'buddyboss-platform' ),
+					'description'       => __( 'Item ID.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'type'              => 'integer',
 					'sanitize_callback' => 'absint',
 					'validate_callback' => 'rest_validate_request_arg',
 				),
 				'item_type'    => $item_type_arg,
 				'filter_query' => array(
-					'description'       => __( 'Whether to filter the query.', 'buddyboss-platform' ),
+					'description'       => __( 'Whether to filter the query.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'type'              => 'boolean',
 					'default'           => false,
 					'sanitize_callback' => 'rest_sanitize_boolean',
@@ -1650,7 +1650,7 @@ class BBoss_BB_REST_Topics_Endpoint extends WP_REST_Controller {
 				$common_args,
 				array(
 					'permission_type' => array(
-						'description' => __( 'The permission type of the topic.', 'buddyboss-platform' ),
+						'description' => __( 'The permission type of the topic.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 						'type'        => 'string',
 						'required'    => true,
 					),
@@ -1670,7 +1670,7 @@ class BBoss_BB_REST_Topics_Endpoint extends WP_REST_Controller {
 			$args = array(
 				'item_type' => array_merge( $item_type_arg, array( 'required' => true ) ),
 				'topics'    => array(
-					'description' => __( 'Array of topics with their IDs.', 'buddyboss-platform' ),
+					'description' => __( 'Array of topics with their IDs.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'type'        => 'array',
 					'required'    => true,
 					'items'       => array(
@@ -1691,7 +1691,7 @@ class BBoss_BB_REST_Topics_Endpoint extends WP_REST_Controller {
 		if ( 'delete_item' === $method ) {
 			$args = array(
 				'id'        => array(
-					'description'       => __( 'The ID of the topic.', 'buddyboss-platform' ),
+					'description'       => __( 'The ID of the topic.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'type'              => 'integer',
 					'sanitize_callback' => 'absint',
 					'validate_callback' => 'rest_validate_request_arg',
@@ -1830,28 +1830,28 @@ class BBoss_BB_REST_Topics_Endpoint extends WP_REST_Controller {
 			'type'       => 'object',
 			'properties' => array(
 				'name'               => array(
-					'description' => __( 'The name of the topic.', 'buddyboss-platform' ),
+					'description' => __( 'The name of the topic.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'type'        => 'string',
 					'context'     => array( 'view', 'edit' ),
 					'required'    => true,
 				),
 				'slug'               => array(
-					'description' => __( 'The slug of the topic.', 'buddyboss-platform' ),
+					'description' => __( 'The slug of the topic.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'type'        => 'string',
 					'context'     => array( 'view' ),
 				),
 				'topic_id'           => array(
-					'description' => __( 'The topic ID.', 'buddyboss-platform' ),
+					'description' => __( 'The topic ID.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'type'        => 'integer',
 					'context'     => array( 'embed', 'view', 'edit' ),
 				),
 				'is_global_activity' => array(
-					'description' => __( 'Whether this is a global topic.', 'buddyboss-platform' ),
+					'description' => __( 'Whether this is a global topic.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'type'        => 'boolean',
 					'context'     => array( 'view', 'edit' ),
 				),
 				'item_id'            => array(
-					'description' => __( 'The item ID (e.g., Group ID).', 'buddyboss-platform' ),
+					'description' => __( 'The item ID (e.g., Group ID).', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'type'        => 'integer',
 					'context'     => array( 'view', 'edit' ),
 				),
@@ -1948,7 +1948,7 @@ class BBoss_BB_REST_Topics_Endpoint extends WP_REST_Controller {
 
 			$get_topic = bboss_topics_manager_instance()->bb_get_topic( $args );
 			if ( empty( $get_topic ) ) {
-				return new WP_Error( 'bp_rest_topic_not_found', __( 'Topic not found.', 'buddyboss-platform' ), array( 'status' => 404 ) );
+				return new WP_Error( 'bp_rest_topic_not_found', __( 'Topic not found.', 'buddyboss-community-social-network-groups-forums-messaging' ), array( 'status' => 404 ) );
 			}
 
 			$can_use_topic = $this->bb_rest_activity_topic_permission_check( $get_topic, $value->id );

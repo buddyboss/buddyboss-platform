@@ -114,7 +114,7 @@ class BBoss_Admin_Topics_Ajax {
 		bboss_admin_verify_ajax_request( self::NONCE_ACTION );
 
 		if ( ! bboss_is_active( 'forums' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Forums component is not active.', 'buddyboss-platform' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Forums component is not active.', 'buddyboss-community-social-network-groups-forums-messaging' ) ) );
 		}
 
 		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by bb_admin_verify_ajax_request() above.
@@ -252,12 +252,12 @@ class BBoss_Admin_Topics_Ajax {
 			'bbp_admin_topics_column_headers',
 			array(
 				'cb'                    => '<input type="checkbox" />',
-				'title'                 => __( 'Discussion', 'buddyboss-platform' ),
-				'bbp_topic_author'      => __( 'Author', 'buddyboss-platform' ),
-				'bbp_topic_forum'       => __( 'Forum', 'buddyboss-platform' ),
-				'bbp_topic_reply_count' => __( 'Replies', 'buddyboss-platform' ),
-				'bbp_topic_voice_count' => __( 'Members', 'buddyboss-platform' ),
-				'bbp_topic_freshness'   => __( 'Last Post', 'buddyboss-platform' ),
+				'title'                 => __( 'Discussion', 'buddyboss-community-social-network-groups-forums-messaging' ),
+				'bbp_topic_author'      => __( 'Author', 'buddyboss-community-social-network-groups-forums-messaging' ),
+				'bbp_topic_forum'       => __( 'Forum', 'buddyboss-community-social-network-groups-forums-messaging' ),
+				'bbp_topic_reply_count' => __( 'Replies', 'buddyboss-community-social-network-groups-forums-messaging' ),
+				'bbp_topic_voice_count' => __( 'Members', 'buddyboss-community-social-network-groups-forums-messaging' ),
+				'bbp_topic_freshness'   => __( 'Last Post', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			)
 		);
 
@@ -281,10 +281,10 @@ class BBoss_Admin_Topics_Ajax {
 		ob_start();
 
 		$status_labels_map = array(
-			'future'  => __( 'Scheduled', 'buddyboss-platform' ),
-			'pending' => __( 'Pending Review', 'buddyboss-platform' ),
-			'draft'   => __( 'Draft', 'buddyboss-platform' ),
-			'spam'    => __( 'Spam', 'buddyboss-platform' ),
+			'future'  => __( 'Scheduled', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'pending' => __( 'Pending Review', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'draft'   => __( 'Draft', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'spam'    => __( 'Spam', 'buddyboss-community-social-network-groups-forums-messaging' ),
 		);
 
 		$items = array();
@@ -399,8 +399,8 @@ class BBoss_Admin_Topics_Ajax {
 			);
 
 			$response['bulk_actions'] = array(
-				'bulk_edit'   => __( 'Edit', 'buddyboss-platform' ),
-				'bulk_delete' => __( 'Delete', 'buddyboss-platform' ),
+				'bulk_edit'   => __( 'Edit', 'buddyboss-community-social-network-groups-forums-messaging' ),
+				'bulk_delete' => __( 'Delete', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			);
 
 			// Return column definitions (excluding cb).
@@ -451,19 +451,19 @@ class BBoss_Admin_Topics_Ajax {
 		bboss_admin_verify_ajax_request( self::NONCE_ACTION );
 
 		if ( ! bboss_is_active( 'forums' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Forums component is not active.', 'buddyboss-platform' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Forums component is not active.', 'buddyboss-community-social-network-groups-forums-messaging' ) ) );
 		}
 
 		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce verified by bb_admin_verify_ajax_request() above.
 		$topic_id = isset( $_POST['topic_id'] ) ? absint( wp_unslash( $_POST['topic_id'] ) ) : 0;
 
 		if ( empty( $topic_id ) ) {
-			wp_send_json_error( array( 'message' => __( 'Discussion ID is required.', 'buddyboss-platform' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Discussion ID is required.', 'buddyboss-community-social-network-groups-forums-messaging' ) ) );
 		}
 
 		$topic = get_post( $topic_id );
 		if ( ! $topic || bboss_bbp_get_topic_post_type() !== $topic->post_type ) {
-			wp_send_json_error( array( 'message' => __( 'Discussion not found.', 'buddyboss-platform' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Discussion not found.', 'buddyboss-community-social-network-groups-forums-messaging' ) ) );
 		}
 
 		$topic_forum_id = (int) get_post_meta( $topic_id, '_bbp_forum_id', true );
@@ -531,7 +531,7 @@ class BBoss_Admin_Topics_Ajax {
 		bboss_admin_verify_ajax_request( self::NONCE_ACTION );
 
 		if ( ! bboss_is_active( 'forums' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Forums component is not active.', 'buddyboss-platform' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Forums component is not active.', 'buddyboss-community-social-network-groups-forums-messaging' ) ) );
 		}
 
 		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by bb_admin_verify_ajax_request() above.
@@ -546,17 +546,17 @@ class BBoss_Admin_Topics_Ajax {
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
 		if ( empty( $title ) ) {
-			wp_send_json_error( array( 'message' => __( 'Discussion title is required.', 'buddyboss-platform' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Discussion title is required.', 'buddyboss-community-social-network-groups-forums-messaging' ) ) );
 		}
 
 		if ( empty( $forum_id ) ) {
-			wp_send_json_error( array( 'message' => __( 'Forum is required.', 'buddyboss-platform' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Forum is required.', 'buddyboss-community-social-network-groups-forums-messaging' ) ) );
 		}
 
 		// Validate that forum_id references an actual forum post type.
 		$forum_post = get_post( $forum_id );
 		if ( ! $forum_post || bboss_bbp_get_forum_post_type() !== $forum_post->post_type ) {
-			wp_send_json_error( array( 'message' => __( 'Invalid forum.', 'buddyboss-platform' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Invalid forum.', 'buddyboss-community-social-network-groups-forums-messaging' ) ) );
 		}
 
 		// Validate visibility.
@@ -639,7 +639,7 @@ class BBoss_Admin_Topics_Ajax {
 		$topic_id = bboss_bbp_insert_topic( $topic_data, $topic_meta );
 
 		if ( ! $topic_id || is_wp_error( $topic_id ) ) {
-			wp_send_json_error( array( 'message' => __( 'Failed to create discussion.', 'buddyboss-platform' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Failed to create discussion.', 'buddyboss-community-social-network-groups-forums-messaging' ) ) );
 		}
 
 		// Handle sticky type.
@@ -746,7 +746,7 @@ class BBoss_Admin_Topics_Ajax {
 
 		wp_send_json_success(
 			array(
-				'message'  => __( 'Discussion created successfully.', 'buddyboss-platform' ),
+				'message'  => __( 'Discussion created successfully.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				'topic_id' => $topic_id,
 			)
 		);
@@ -763,7 +763,7 @@ class BBoss_Admin_Topics_Ajax {
 		bboss_admin_verify_ajax_request( self::NONCE_ACTION );
 
 		if ( ! bboss_is_active( 'forums' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Forums component is not active.', 'buddyboss-platform' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Forums component is not active.', 'buddyboss-community-social-network-groups-forums-messaging' ) ) );
 		}
 
 		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by bb_admin_verify_ajax_request() above.
@@ -779,12 +779,12 @@ class BBoss_Admin_Topics_Ajax {
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
 		if ( empty( $topic_id ) ) {
-			wp_send_json_error( array( 'message' => __( 'Discussion ID is required.', 'buddyboss-platform' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Discussion ID is required.', 'buddyboss-community-social-network-groups-forums-messaging' ) ) );
 		}
 
 		$topic = get_post( $topic_id );
 		if ( ! $topic || bboss_bbp_get_topic_post_type() !== $topic->post_type ) {
-			wp_send_json_error( array( 'message' => __( 'Discussion not found.', 'buddyboss-platform' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Discussion not found.', 'buddyboss-community-social-network-groups-forums-messaging' ) ) );
 		}
 
 		// Build update args.
@@ -867,7 +867,7 @@ class BBoss_Admin_Topics_Ajax {
 		if ( ! empty( $forum_id ) ) {
 			$forum_post = get_post( $forum_id );
 			if ( ! $forum_post || bboss_bbp_get_forum_post_type() !== $forum_post->post_type ) {
-				wp_send_json_error( array( 'message' => __( 'Invalid forum.', 'buddyboss-platform' ) ) );
+				wp_send_json_error( array( 'message' => __( 'Invalid forum.', 'buddyboss-community-social-network-groups-forums-messaging' ) ) );
 			}
 			$update_args['post_parent'] = $forum_id;
 			update_post_meta( $topic_id, '_bbp_forum_id', $forum_id );
@@ -881,7 +881,7 @@ class BBoss_Admin_Topics_Ajax {
 
 		$result = wp_update_post( $update_args, true );
 		if ( is_wp_error( $result ) ) {
-			wp_send_json_error( array( 'message' => __( 'Failed to update discussion. Please try again.', 'buddyboss-platform' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Failed to update discussion. Please try again.', 'buddyboss-community-social-network-groups-forums-messaging' ) ) );
 		}
 
 		// Recalculate forum counts when forum changes.
@@ -1069,7 +1069,7 @@ class BBoss_Admin_Topics_Ajax {
 
 		wp_send_json_success(
 			array(
-				'message'  => __( 'Discussion updated successfully.', 'buddyboss-platform' ),
+				'message'  => __( 'Discussion updated successfully.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				'topic_id' => $topic_id,
 			)
 		);
@@ -1086,19 +1086,19 @@ class BBoss_Admin_Topics_Ajax {
 		bboss_admin_verify_ajax_request( self::NONCE_ACTION );
 
 		if ( ! bboss_is_active( 'forums' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Forums component is not active.', 'buddyboss-platform' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Forums component is not active.', 'buddyboss-community-social-network-groups-forums-messaging' ) ) );
 		}
 
 		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce verified by bb_admin_verify_ajax_request() above.
 		$topic_id = isset( $_POST['topic_id'] ) ? absint( wp_unslash( $_POST['topic_id'] ) ) : 0;
 
 		if ( empty( $topic_id ) ) {
-			wp_send_json_error( array( 'message' => __( 'Discussion ID is required.', 'buddyboss-platform' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Discussion ID is required.', 'buddyboss-community-social-network-groups-forums-messaging' ) ) );
 		}
 
 		$topic = get_post( $topic_id );
 		if ( ! $topic || bboss_bbp_get_topic_post_type() !== $topic->post_type ) {
-			wp_send_json_error( array( 'message' => __( 'Discussion not found.', 'buddyboss-platform' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Discussion not found.', 'buddyboss-community-social-network-groups-forums-messaging' ) ) );
 		}
 
 		// wp_delete_post() triggers bbp_delete_topic() via `delete_post` hook
@@ -1106,14 +1106,14 @@ class BBoss_Admin_Topics_Ajax {
 		$result = wp_delete_post( $topic_id, true );
 
 		if ( ! $result ) {
-			wp_send_json_error( array( 'message' => __( 'Failed to delete discussion.', 'buddyboss-platform' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Failed to delete discussion.', 'buddyboss-community-social-network-groups-forums-messaging' ) ) );
 		}
 
 		// Clear forum counts cache.
 		$this->bb_clear_forum_counts_cache();
 
 		wp_send_json_success(
-			array( 'message' => __( 'Discussion deleted successfully.', 'buddyboss-platform' ) )
+			array( 'message' => __( 'Discussion deleted successfully.', 'buddyboss-community-social-network-groups-forums-messaging' ) )
 		);
 	}
 
@@ -1128,7 +1128,7 @@ class BBoss_Admin_Topics_Ajax {
 		bboss_admin_verify_ajax_request( self::NONCE_ACTION );
 
 		if ( ! bboss_is_active( 'forums' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Forums component is not active.', 'buddyboss-platform' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Forums component is not active.', 'buddyboss-community-social-network-groups-forums-messaging' ) ) );
 		}
 
 		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by bb_admin_verify_ajax_request() above.
@@ -1142,17 +1142,17 @@ class BBoss_Admin_Topics_Ajax {
 
 		$allowed_actions = array( 'delete', 'edit', 'spam' );
 		if ( ! in_array( $do_action, $allowed_actions, true ) ) {
-			wp_send_json_error( array( 'message' => __( 'Invalid action.', 'buddyboss-platform' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Invalid action.', 'buddyboss-community-social-network-groups-forums-messaging' ) ) );
 		}
 
 		if ( empty( $raw_ids ) ) {
-			wp_send_json_error( array( 'message' => __( 'No discussions selected.', 'buddyboss-platform' ) ) );
+			wp_send_json_error( array( 'message' => __( 'No discussions selected.', 'buddyboss-community-social-network-groups-forums-messaging' ) ) );
 		}
 
 		$topic_ids = array_filter( array_map( 'absint', explode( ',', $raw_ids ) ) );
 
 		if ( empty( $topic_ids ) ) {
-			wp_send_json_error( array( 'message' => __( 'No valid discussion IDs provided.', 'buddyboss-platform' ) ) );
+			wp_send_json_error( array( 'message' => __( 'No valid discussion IDs provided.', 'buddyboss-community-social-network-groups-forums-messaging' ) ) );
 		}
 
 		// Cap bulk operations to prevent timeout.
@@ -1308,7 +1308,7 @@ class BBoss_Admin_Topics_Ajax {
 						'%d discussion deleted successfully.',
 						'%d discussions deleted successfully.',
 						$processed,
-						'buddyboss-platform'
+						'buddyboss-community-social-network-groups-forums-messaging'
 					),
 					$processed
 				);
@@ -1319,7 +1319,7 @@ class BBoss_Admin_Topics_Ajax {
 						'%d discussion updated successfully.',
 						'%d discussions updated successfully.',
 						$processed,
-						'buddyboss-platform'
+						'buddyboss-community-social-network-groups-forums-messaging'
 					),
 					$processed
 				);
@@ -1333,7 +1333,7 @@ class BBoss_Admin_Topics_Ajax {
 				)
 			);
 		} else {
-			wp_send_json_error( array( 'message' => __( 'No discussions were processed.', 'buddyboss-platform' ) ) );
+			wp_send_json_error( array( 'message' => __( 'No discussions were processed.', 'buddyboss-community-social-network-groups-forums-messaging' ) ) );
 		}
 	}
 
@@ -1350,7 +1350,7 @@ class BBoss_Admin_Topics_Ajax {
 		bboss_admin_verify_ajax_request( self::NONCE_ACTION );
 
 		if ( ! bboss_is_active( 'forums' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Forums component is not active.', 'buddyboss-platform' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Forums component is not active.', 'buddyboss-community-social-network-groups-forums-messaging' ) ) );
 		}
 
 		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce verified by bb_admin_verify_ajax_request() above.

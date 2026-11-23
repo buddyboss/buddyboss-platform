@@ -61,8 +61,8 @@ class BBoss_Forums_Notification extends BBoss_Core_Notification_Abstract {
 
 		$this->register_notification_group(
 			'forums',
-			esc_html__( 'Discussion Forums', 'buddyboss-platform' ),
-			esc_html__( 'Discussion Forums', 'buddyboss-platform' ),
+			esc_html__( 'Discussion Forums', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			esc_html__( 'Discussion Forums', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			15
 		);
 
@@ -73,7 +73,7 @@ class BBoss_Forums_Notification extends BBoss_Core_Notification_Abstract {
 		$this->register_notification_for_forums_following_reply();
 
 		$this->register_notification_filter(
-			esc_html__( 'Forum subscriptions', 'buddyboss-platform' ),
+			esc_html__( 'Forum subscriptions', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			array( 'bb_forums_subscribed_discussion', 'bb_forums_subscribed_reply' ),
 			110
 		);
@@ -85,15 +85,15 @@ class BBoss_Forums_Notification extends BBoss_Core_Notification_Abstract {
 	 * @since BuddyBoss 1.9.3
 	 */
 	public function register_notification_for_forums_following_reply() {
-		$notification_tooltip_text = __( 'Requires forum subscriptions to enable', 'buddyboss-platform' );
+		$notification_tooltip_text = __( 'Requires forum subscriptions to enable', 'buddyboss-community-social-network-groups-forums-messaging' );
 		if ( function_exists( 'bboss_bbp_is_subscriptions_active' ) && true === bboss_bbp_is_subscriptions_active() ) {
-			$notification_tooltip_text = __( 'Required by forum subscriptions', 'buddyboss-platform' );
+			$notification_tooltip_text = __( 'Required by forum subscriptions', 'buddyboss-community-social-network-groups-forums-messaging' );
 		}
 
 		$this->register_notification_type(
 			'bb_forums_subscribed_reply',
-			__( 'New reply in a discussion you\'re subscribed to', 'buddyboss-platform' ),
-			esc_html__( 'A new reply in a discussion a member is subscribed to', 'buddyboss-platform' ),
+			__( 'New reply in a discussion you\'re subscribed to', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			esc_html__( 'A new reply in a discussion a member is subscribed to', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'forums',
 			function_exists( 'bboss_bbp_is_subscriptions_active' ) && true === bboss_bbp_is_subscriptions_active(),
 			true,
@@ -104,13 +104,13 @@ class BBoss_Forums_Notification extends BBoss_Core_Notification_Abstract {
 			'bbp-new-forum-reply',
 			array(
 				/* translators: do not remove {} brackets or translate its contents. */
-				'email_title'         => __( '[{{{site.name}}}] {{poster.name}} replied to one of your forum discussions', 'buddyboss-platform' ),
+				'email_title'         => __( '[{{{site.name}}}] {{poster.name}} replied to one of your forum discussions', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				/* translators: do not remove {} brackets or translate its contents. */
-				'email_content'       => __( "{{poster.name}} replied to the discussion <a href=\"{{discussion.url}}\">{{discussion.title}}</a> in the forum <a href=\"{{forum.url}}\">{{forum.title}}</a>:\n\n{{{reply.content}}}", 'buddyboss-platform' ),
+				'email_content'       => __( "{{poster.name}} replied to the discussion <a href=\"{{discussion.url}}\">{{discussion.title}}</a> in the forum <a href=\"{{forum.url}}\">{{forum.title}}</a>:\n\n{{{reply.content}}}", 'buddyboss-community-social-network-groups-forums-messaging' ),
 				/* translators: do not remove {} brackets or translate its contents. */
-				'email_plain_content' => __( "{{poster.name}} replied to the discussion {{discussion.title}} in the forum {{forum.title}}:\n\n{{{reply.content}}}\n\nPost Link: {{reply.url}}", 'buddyboss-platform' ),
-				'situation_label'     => __( 'A new reply in a discussion a member is subscribed to', 'buddyboss-platform' ),
-				'unsubscribe_text'    => __( 'You will no longer receive emails when a member will reply to one of your forum discussions.', 'buddyboss-platform' ),
+				'email_plain_content' => __( "{{poster.name}} replied to the discussion {{discussion.title}} in the forum {{forum.title}}:\n\n{{{reply.content}}}\n\nPost Link: {{reply.url}}", 'buddyboss-community-social-network-groups-forums-messaging' ),
+				'situation_label'     => __( 'A new reply in a discussion a member is subscribed to', 'buddyboss-community-social-network-groups-forums-messaging' ),
+				'unsubscribe_text'    => __( 'You will no longer receive emails when a member will reply to one of your forum discussions.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				'group'               => 'groups_discussions',
 			),
 			'bb_forums_subscribed_reply'
@@ -126,8 +126,8 @@ class BBoss_Forums_Notification extends BBoss_Core_Notification_Abstract {
 		$this->bb_register_subscription_type(
 			array(
 				'label'              => array(
-					'singular' => __( 'Discussion', 'buddyboss-platform' ),
-					'plural'   => __( 'Discussions', 'buddyboss-platform' ),
+					'singular' => __( 'Discussion', 'buddyboss-community-social-network-groups-forums-messaging' ),
+					'plural'   => __( 'Discussions', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				),
 				'subscription_type'  => 'topic',
 				'items_callback'     => array( $this, 'bb_render_forums_subscribed_reply' ),
@@ -146,15 +146,15 @@ class BBoss_Forums_Notification extends BBoss_Core_Notification_Abstract {
 	 * @since BuddyBoss 1.9.3
 	 */
 	public function register_notification_for_forums_following_topic() {
-		$notification_tooltip_text = __( 'Requires forum subscriptions to enable', 'buddyboss-platform' );
+		$notification_tooltip_text = __( 'Requires forum subscriptions to enable', 'buddyboss-community-social-network-groups-forums-messaging' );
 		if ( function_exists( 'bboss_bbp_is_subscriptions_active' ) && true === bboss_bbp_is_subscriptions_active() ) {
-			$notification_tooltip_text = __( 'Required by forum subscriptions', 'buddyboss-platform' );
+			$notification_tooltip_text = __( 'Required by forum subscriptions', 'buddyboss-community-social-network-groups-forums-messaging' );
 		}
 
 		$this->register_notification_type(
 			'bb_forums_subscribed_discussion',
-			__( 'New discussion in a forum you\'re subscribed to', 'buddyboss-platform' ),
-			esc_html__( 'A new discussion in a forum a member is subscribed to', 'buddyboss-platform' ),
+			__( 'New discussion in a forum you\'re subscribed to', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			esc_html__( 'A new discussion in a forum a member is subscribed to', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'forums',
 			function_exists( 'bboss_bbp_is_subscriptions_active' ) && true === bboss_bbp_is_subscriptions_active(),
 			true,
@@ -165,13 +165,13 @@ class BBoss_Forums_Notification extends BBoss_Core_Notification_Abstract {
 			'bbp-new-forum-topic',
 			array(
 				/* translators: do not remove {} brackets or translate its contents. */
-				'email_title'         => __( '[{{{site.name}}}] New discussion: {{discussion.title}}', 'buddyboss-platform' ),
+				'email_title'         => __( '[{{{site.name}}}] New discussion: {{discussion.title}}', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				/* translators: do not remove {} brackets or translate its contents. */
-				'email_content'       => __( "{{poster.name}} started a new discussion <a href=\"{{discussion.url}}\">{{discussion.title}}</a> in the forum <a href=\"{{forum.url}}\">{{forum.title}}</a>:\n\n{{{discussion.content}}}", 'buddyboss-platform' ),
+				'email_content'       => __( "{{poster.name}} started a new discussion <a href=\"{{discussion.url}}\">{{discussion.title}}</a> in the forum <a href=\"{{forum.url}}\">{{forum.title}}</a>:\n\n{{{discussion.content}}}", 'buddyboss-community-social-network-groups-forums-messaging' ),
 				/* translators: do not remove {} brackets or translate its contents. */
-				'email_plain_content' => __( "{{poster.name}} started a new discussion {{discussion.title}} in the forum {{forum.title}}:\n\n{{{discussion.content}}}\n\nDiscussion Link: {{discussion.url}}", 'buddyboss-platform' ),
-				'situation_label'     => __( 'A new discussion in a forum a member is subscribed to', 'buddyboss-platform' ),
-				'unsubscribe_text'    => __( 'You will no longer receive emails when a member will create a new forum discussion.', 'buddyboss-platform' ),
+				'email_plain_content' => __( "{{poster.name}} started a new discussion {{discussion.title}} in the forum {{forum.title}}:\n\n{{{discussion.content}}}\n\nDiscussion Link: {{discussion.url}}", 'buddyboss-community-social-network-groups-forums-messaging' ),
+				'situation_label'     => __( 'A new discussion in a forum a member is subscribed to', 'buddyboss-community-social-network-groups-forums-messaging' ),
+				'unsubscribe_text'    => __( 'You will no longer receive emails when a member will create a new forum discussion.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				'group'               => 'groups_discussions',
 			),
 			'bb_forums_subscribed_discussion'
@@ -187,8 +187,8 @@ class BBoss_Forums_Notification extends BBoss_Core_Notification_Abstract {
 		$this->bb_register_subscription_type(
 			array(
 				'label'              => array(
-					'singular' => __( 'Forum', 'buddyboss-platform' ),
-					'plural'   => __( 'Forums', 'buddyboss-platform' ),
+					'singular' => __( 'Forum', 'buddyboss-community-social-network-groups-forums-messaging' ),
+					'plural'   => __( 'Forums', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				),
 				'subscription_type'  => 'forum',
 				'items_callback'     => array( $this, 'bb_render_forums_subscribed_discussion' ),
@@ -250,7 +250,7 @@ class BBoss_Forums_Notification extends BBoss_Core_Notification_Abstract {
 					if ( ! empty( $except ) ) {
 						$text = sprintf(
 						/* translators: 1. Member display name. 2. excerpt. */
-							__( '%1$s replied to a discussion: %2$s', 'buddyboss-platform' ),
+							__( '%1$s replied to a discussion: %2$s', 'buddyboss-community-social-network-groups-forums-messaging' ),
 							bboss_core_get_user_displayname( $notification->secondary_item_id ),
 							$except
 						);
@@ -259,13 +259,13 @@ class BBoss_Forums_Notification extends BBoss_Core_Notification_Abstract {
 						if ( count( $media_ids ) > 1 ) {
 							$text = sprintf(
 							/* translators: Member display name. */
-								esc_html__( '%s replied to a discussion: some photos', 'buddyboss-platform' ),
+								esc_html__( '%s replied to a discussion: some photos', 'buddyboss-community-social-network-groups-forums-messaging' ),
 								bboss_core_get_user_displayname( $notification->secondary_item_id )
 							);
 						} else {
 							$text = sprintf(
 							/* translators: Member display name. */
-								esc_html__( '%s replied to a discussion: a photo', 'buddyboss-platform' ),
+								esc_html__( '%s replied to a discussion: a photo', 'buddyboss-community-social-network-groups-forums-messaging' ),
 								bboss_core_get_user_displayname( $notification->secondary_item_id )
 							);
 						}
@@ -274,13 +274,13 @@ class BBoss_Forums_Notification extends BBoss_Core_Notification_Abstract {
 						if ( count( $document_ids ) > 1 ) {
 							$text = sprintf(
 							/* translators: Member display name. */
-								esc_html__( '%s replied to a discussion: some documents', 'buddyboss-platform' ),
+								esc_html__( '%s replied to a discussion: some documents', 'buddyboss-community-social-network-groups-forums-messaging' ),
 								bboss_core_get_user_displayname( $notification->secondary_item_id )
 							);
 						} else {
 							$text = sprintf(
 							/* translators: Member display name. */
-								esc_html__( '%s replied to a discussion: a document', 'buddyboss-platform' ),
+								esc_html__( '%s replied to a discussion: a document', 'buddyboss-community-social-network-groups-forums-messaging' ),
 								bboss_core_get_user_displayname( $notification->secondary_item_id )
 							);
 						}
@@ -289,33 +289,33 @@ class BBoss_Forums_Notification extends BBoss_Core_Notification_Abstract {
 						if ( count( $video_ids ) > 1 ) {
 							$text = sprintf(
 							/* translators: Member display name. */
-								esc_html__( '%s replied to a discussion: some videos', 'buddyboss-platform' ),
+								esc_html__( '%s replied to a discussion: some videos', 'buddyboss-community-social-network-groups-forums-messaging' ),
 								bboss_core_get_user_displayname( $notification->secondary_item_id )
 							);
 						} else {
 							$text = sprintf(
 							/* translators: Member display name. */
-								esc_html__( '%s replied to a discussion: a video', 'buddyboss-platform' ),
+								esc_html__( '%s replied to a discussion: a video', 'buddyboss-community-social-network-groups-forums-messaging' ),
 								bboss_core_get_user_displayname( $notification->secondary_item_id )
 							);
 						}
 					} elseif ( ! empty( $gif_data ) ) {
 						$text = sprintf(
 						/* translators: Member display name. */
-							esc_html__( '%s replied to a discussion: a gif', 'buddyboss-platform' ),
+							esc_html__( '%s replied to a discussion: a gif', 'buddyboss-community-social-network-groups-forums-messaging' ),
 							bboss_core_get_user_displayname( $notification->secondary_item_id )
 						);
 					} else {
 						$text = sprintf(
 						/* translators: Member display name. */
-							__( '%s replied to a discussion', 'buddyboss-platform' ),
+							__( '%s replied to a discussion', 'buddyboss-community-social-network-groups-forums-messaging' ),
 							bboss_core_get_user_displayname( $notification->secondary_item_id )
 						);
 					}
 				} else {
 					$text = sprintf(
 					/* translators: topic title. */
-						__( 'You have a new reply to %s', 'buddyboss-platform' ),
+						__( 'You have a new reply to %s', 'buddyboss-community-social-network-groups-forums-messaging' ),
 						$topic_title
 					);
 				}
@@ -330,7 +330,7 @@ class BBoss_Forums_Notification extends BBoss_Core_Notification_Abstract {
 				if ( (int) $total_items > 1 ) {
 					$text = sprintf(
 					/* translators: replies count. */
-						esc_html__( 'You have %d new replies', 'buddyboss-platform' ),
+						esc_html__( 'You have %d new replies', 'buddyboss-community-social-network-groups-forums-messaging' ),
 						(int) $total_items
 					);
 				} else {
@@ -338,7 +338,7 @@ class BBoss_Forums_Notification extends BBoss_Core_Notification_Abstract {
 						if ( ! empty( $except ) ) {
 							$text = sprintf(
 								/* translators: 1. Member display name. 2. excerpt. */
-								esc_html__( '%1$s replied to a discussion: %2$s', 'buddyboss-platform' ),
+								esc_html__( '%1$s replied to a discussion: %2$s', 'buddyboss-community-social-network-groups-forums-messaging' ),
 								bboss_core_get_user_displayname( $secondary_item_id ),
 								$except
 							);
@@ -347,13 +347,13 @@ class BBoss_Forums_Notification extends BBoss_Core_Notification_Abstract {
 							if ( count( $media_ids ) > 1 ) {
 								$text = sprintf(
 								/* translators: Member display name. */
-									esc_html__( '%s replied to a discussion: some photos', 'buddyboss-platform' ),
+									esc_html__( '%s replied to a discussion: some photos', 'buddyboss-community-social-network-groups-forums-messaging' ),
 									bboss_core_get_user_displayname( $secondary_item_id )
 								);
 							} else {
 								$text = sprintf(
 								/* translators: Member display name. */
-									esc_html__( '%s replied to a discussion: a photo', 'buddyboss-platform' ),
+									esc_html__( '%s replied to a discussion: a photo', 'buddyboss-community-social-network-groups-forums-messaging' ),
 									bboss_core_get_user_displayname( $secondary_item_id )
 								);
 							}
@@ -362,13 +362,13 @@ class BBoss_Forums_Notification extends BBoss_Core_Notification_Abstract {
 							if ( count( $document_ids ) > 1 ) {
 								$text = sprintf(
 								/* translators: Member display name. */
-									esc_html__( '%s replied to a discussion: some documents', 'buddyboss-platform' ),
+									esc_html__( '%s replied to a discussion: some documents', 'buddyboss-community-social-network-groups-forums-messaging' ),
 									bboss_core_get_user_displayname( $secondary_item_id )
 								);
 							} else {
 								$text = sprintf(
 								/* translators: Member display name. */
-									esc_html__( '%s replied to a discussion: a document', 'buddyboss-platform' ),
+									esc_html__( '%s replied to a discussion: a document', 'buddyboss-community-social-network-groups-forums-messaging' ),
 									bboss_core_get_user_displayname( $secondary_item_id )
 								);
 							}
@@ -377,33 +377,33 @@ class BBoss_Forums_Notification extends BBoss_Core_Notification_Abstract {
 							if ( count( $video_ids ) > 1 ) {
 								$text = sprintf(
 								/* translators: Member display name. */
-									esc_html__( '%s replied to a discussion: some videos', 'buddyboss-platform' ),
+									esc_html__( '%s replied to a discussion: some videos', 'buddyboss-community-social-network-groups-forums-messaging' ),
 									bboss_core_get_user_displayname( $secondary_item_id )
 								);
 							} else {
 								$text = sprintf(
 								/* translators: Member display name. */
-									esc_html__( '%s replied to a discussion: a video', 'buddyboss-platform' ),
+									esc_html__( '%s replied to a discussion: a video', 'buddyboss-community-social-network-groups-forums-messaging' ),
 									bboss_core_get_user_displayname( $secondary_item_id )
 								);
 							}
 						} elseif ( ! empty( $gif_data ) ) {
 							$text = sprintf(
 							/* translators: Member display name. */
-								esc_html__( '%s replied to a discussion: a gif', 'buddyboss-platform' ),
+								esc_html__( '%s replied to a discussion: a gif', 'buddyboss-community-social-network-groups-forums-messaging' ),
 								bboss_core_get_user_displayname( $secondary_item_id )
 							);
 						} else {
 							$text = sprintf(
 							/* translators: Member display name. */
-								esc_html__( '%s replied to a discussion', 'buddyboss-platform' ),
+								esc_html__( '%s replied to a discussion', 'buddyboss-community-social-network-groups-forums-messaging' ),
 								bboss_core_get_user_displayname( $secondary_item_id )
 							);
 						}
 					} else {
 						$text = sprintf(
 							/* translators: topic title. */
-							esc_html__( 'You have a new reply to %s', 'buddyboss-platform' ),
+							esc_html__( 'You have a new reply to %s', 'buddyboss-community-social-network-groups-forums-messaging' ),
 							$topic_title
 						);
 					}
@@ -425,7 +425,7 @@ class BBoss_Forums_Notification extends BBoss_Core_Notification_Abstract {
 				wp_strip_all_tags( bboss_bbp_get_topic_title( $topic_id ) ),
 				50,
 				array(
-					'ending' => __( '&hellip;', 'buddyboss-platform' ),
+					'ending' => __( '&hellip;', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				)
 			) . '"';
 
@@ -448,14 +448,14 @@ class BBoss_Forums_Notification extends BBoss_Core_Notification_Abstract {
 				if ( ! empty( $notification->secondary_item_id ) ) {
 					$text = sprintf(
 					/* translators: 1.Member display name 2. discussions title. */
-						__( '%1$s started a discussion: %2$s', 'buddyboss-platform' ),
+						__( '%1$s started a discussion: %2$s', 'buddyboss-community-social-network-groups-forums-messaging' ),
 						bboss_core_get_user_displayname( $notification->secondary_item_id ),
 						$topic_title
 					);
 				} else {
 					$text = sprintf(
 					/* translators: discussions title. */
-						__( 'You have a new discussion: %s', 'buddyboss-platform' ),
+						__( 'You have a new discussion: %s', 'buddyboss-community-social-network-groups-forums-messaging' ),
 						$topic_title
 					);
 				}
@@ -469,20 +469,20 @@ class BBoss_Forums_Notification extends BBoss_Core_Notification_Abstract {
 			} else {
 				if ( (int) $total_items > 1 ) {
 					/* translators: discussions count. */
-					$text = sprintf( __( 'You have %d new discussion', 'buddyboss-platform' ), (int) $total_items );
+					$text = sprintf( __( 'You have %d new discussion', 'buddyboss-community-social-network-groups-forums-messaging' ), (int) $total_items );
 				} else {
 
 					if ( ! empty( $secondary_item_id ) ) {
 						$text = sprintf(
 						/* translators: 1.Member display name 2. discussions title. */
-							esc_html__( '%1$s started a discussion: %2$s', 'buddyboss-platform' ),
+							esc_html__( '%1$s started a discussion: %2$s', 'buddyboss-community-social-network-groups-forums-messaging' ),
 							bboss_core_get_user_displayname( $secondary_item_id ),
 							$topic_title
 						);
 					} else {
 						$text = sprintf(
 						/* translators: discussions title. */
-							esc_html__( 'You have a new discussion: %s', 'buddyboss-platform' ),
+							esc_html__( 'You have a new discussion: %s', 'buddyboss-community-social-network-groups-forums-messaging' ),
 							$topic_title
 						);
 					}
@@ -539,7 +539,7 @@ class BBoss_Forums_Notification extends BBoss_Core_Notification_Abstract {
 		if ( empty( $r['item_id'] ) ) {
 			$retval = new WP_Error(
 				'bb_subscription_required_item_id',
-				__( 'The item ID is required.', 'buddyboss-platform' ),
+				__( 'The item ID is required.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				array(
 					'status' => 400,
 				)
@@ -547,7 +547,7 @@ class BBoss_Forums_Notification extends BBoss_Core_Notification_Abstract {
 		} elseif ( empty( $r['type'] ) ) {
 			$retval = new WP_Error(
 				'bb_subscription_required_item_type',
-				__( 'The item type is required.', 'buddyboss-platform' ),
+				__( 'The item type is required.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				array(
 					'status' => 400,
 				)
@@ -560,7 +560,7 @@ class BBoss_Forums_Notification extends BBoss_Core_Notification_Abstract {
 			if ( $post->post_type !== $r['type'] ) {
 				$retval = new WP_Error(
 					'bb_subscription_invalid_item_id_or_type',
-					__( 'The item id is not matching with the type.', 'buddyboss-platform' ),
+					__( 'The item id is not matching with the type.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					array(
 						'status' => 400,
 					)
@@ -570,7 +570,7 @@ class BBoss_Forums_Notification extends BBoss_Core_Notification_Abstract {
 				if ( ! empty( $r['secondary_item_id'] ) && $r['secondary_item_id'] !== $post->post_parent ) {
 					$retval = new WP_Error(
 						'bb_subscription_invalid_secondary_item_id',
-						__( 'The secondary item ID is not valid.', 'buddyboss-platform' ),
+						__( 'The secondary item ID is not valid.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 						array(
 							'status' => 400,
 						)
@@ -652,7 +652,7 @@ class BBoss_Forums_Notification extends BBoss_Core_Notification_Abstract {
 					$data['icon']['thumb'] = $default_forum_thumb_image;
 					$data['title']         = sprintf(
 					/* translators: Subscription label. */
-						__( 'Deleted %s', 'buddyboss-platform' ),
+						__( 'Deleted %s', 'buddyboss-community-social-network-groups-forums-messaging' ),
 						$type_data['label']['singular']
 					);
 				} else {
@@ -781,7 +781,7 @@ class BBoss_Forums_Notification extends BBoss_Core_Notification_Abstract {
 					$data['description_html'] = '';
 					$data['title']            = sprintf(
 					/* translators: Subscription label. */
-						__( 'Deleted %s', 'buddyboss-platform' ),
+						__( 'Deleted %s', 'buddyboss-community-social-network-groups-forums-messaging' ),
 						$type_data['label']['singular']
 					);
 				} else {
@@ -814,13 +814,13 @@ class BBoss_Forums_Notification extends BBoss_Core_Notification_Abstract {
 					}
 
 					if ( ! empty( $author_id ) ) {
-						$data['description_html'] .= esc_html__( 'Posted by', 'buddyboss-platform' ) . ' <strong>' . bboss_core_get_user_displayname( $author_id ) . '</strong>';
+						$data['description_html'] .= esc_html__( 'Posted by', 'buddyboss-community-social-network-groups-forums-messaging' ) . ' <strong>' . bboss_core_get_user_displayname( $author_id ) . '</strong>';
 					}
 
 					// Get topic forum.
 					$forum_id = bboss_bbp_get_topic_forum_id( $subscription['item_id'] );
 					if ( ! empty( $forum_id ) ) {
-						$data['description_html'] .= ' ' . esc_html__( 'in', 'buddyboss-platform' ) . ' <strong>' . bboss_bbp_get_forum_title( $forum_id ) . '</strong>';
+						$data['description_html'] .= ' ' . esc_html__( 'in', 'buddyboss-community-social-network-groups-forums-messaging' ) . ' <strong>' . bboss_bbp_get_forum_title( $forum_id ) . '</strong>';
 					}
 				}
 

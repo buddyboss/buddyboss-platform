@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
 	<?php do_action( 'bbp_template_before_user_replies' ); ?>
 
 	<div id="bbp-user-replies-created" class="bbp-user-replies-created">
-		<h2 class="screen-heading forum-replies-screen"><?php esc_html_e( 'Forum Replies Created', 'buddyboss-platform' ); ?></h2>
+		<h2 class="screen-heading forum-replies-screen"><?php esc_html_e( 'Forum Replies Created', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></h2>
 		<div class="bbp-user-section">
 
 			<?php if ( bboss_bbp_get_user_replies_created() ) : ?>
@@ -29,7 +29,7 @@ defined( 'ABSPATH' ) || exit;
 
 				<aside class="bp-feedback bp-messages info">
 					<span class="bp-icon" aria-hidden="true"></span>
-					<p><?php bboss_bbp_is_user_home() ? esc_html_e( 'You have not replied to any discussions.', 'buddyboss-platform' ) : esc_html_e( 'This user has not replied to any topics.', 'buddyboss-platform' ); ?></p>
+					<p><?php bboss_bbp_is_user_home() ? esc_html_e( 'You have not replied to any discussions.', 'buddyboss-community-social-network-groups-forums-messaging' ) : esc_html_e( 'This user has not replied to any topics.', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></p>
 				</aside>
 
 			<?php endif; ?>

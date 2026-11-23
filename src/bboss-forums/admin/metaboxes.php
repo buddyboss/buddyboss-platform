@@ -40,7 +40,7 @@ function bboss_bbp_dashboard_widget_right_now() {
 
 	<div class="table table_content">
 
-		<p class="sub"><?php esc_html_e( 'Forum Discussions', 'buddyboss-platform' ); ?></p>
+		<p class="sub"><?php esc_html_e( 'Forum Discussions', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></p>
 
 		<table>
 
@@ -50,7 +50,7 @@ function bboss_bbp_dashboard_widget_right_now() {
 				$num  = empty( $r['forum_count'] ) ? 0 : (int) $r['forum_count'];
 				$text = sprintf(
 					/* translators: Total Forums. */
-					_n( '%s Forum', '%s Forums', $num, 'buddyboss-platform' ),
+					_n( '%s Forum', '%s Forums', $num, 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'<span class="b b-forums">' . number_format_i18n( $num ) . '</span>'
 				);
 				if ( current_user_can( 'publish_forums' ) ) {
@@ -69,7 +69,7 @@ function bboss_bbp_dashboard_widget_right_now() {
 				$num  = empty( $r['topic_count'] ) ? 0 : (int) $r['topic_count'];
 				$text = sprintf(
 					/* translators: Total Discussions. */
-					_n( '%s Discussion', '%s Discussions', $num, 'buddyboss-platform' ),
+					_n( '%s Discussion', '%s Discussions', $num, 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'<span class="b b-topics">' . number_format_i18n( $num ) . '</span>'
 				);
 
@@ -91,7 +91,7 @@ function bboss_bbp_dashboard_widget_right_now() {
 					$num  = empty( $r['topic_tag_count'] ) ? 0 : (int) $r['topic_tag_count'];
 					$text = sprintf(
 						/* translators: Total Discussion Tag. */
-						_n( '%s Discussion Tag', '%s Discussion Tags', $num, 'buddyboss-platform' ),
+						_n( '%s Discussion Tag', '%s Discussion Tags', $num, 'buddyboss-community-social-network-groups-forums-messaging' ),
 						'<span class="b b-topic_tags">' . number_format_i18n( $num ) . '</span>'
 					);
 					if ( current_user_can( 'manage_topic_tags' ) ) {
@@ -118,7 +118,7 @@ function bboss_bbp_dashboard_widget_right_now() {
 				$num  = empty( $r['reply_count'] ) ? 0 : (int) $r['reply_count'];
 				$text = sprintf(
 					/* translators: Total Replies. */
-					_n( '%s Reply', '%s Replies', $num, 'buddyboss-platform' ),
+					_n( '%s Reply', '%s Replies', $num, 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'<span class="b b-replies">' . number_format_i18n( $num ) . '</span>'
 				);
 
@@ -141,7 +141,7 @@ function bboss_bbp_dashboard_widget_right_now() {
 
 	<div class="table table_discussion">
 
-		<p class="sub"><?php esc_html_e( 'Users &amp; Moderation', 'buddyboss-platform' ); ?></p>
+		<p class="sub"><?php esc_html_e( 'Users &amp; Moderation', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></p>
 
 		<table>
 
@@ -151,7 +151,7 @@ function bboss_bbp_dashboard_widget_right_now() {
 				$num  = empty( $r['user_count'] ) ? 0 : (int) $r['user_count'];
 				$text = sprintf(
 					/* translators: Total Users. */
-					_n( '%s User', '%s Users', $num, 'buddyboss-platform' ),
+					_n( '%s User', '%s Users', $num, 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'<span class="b b-users">' . number_format_i18n( $num ) . '</span>'
 				);
 
@@ -173,7 +173,7 @@ function bboss_bbp_dashboard_widget_right_now() {
 					$num  = $r['topic_count_hidden'];
 					$text = sprintf(
 						/* translators: Total Hidden Discussions. */
-						_n( '%s Hidden Discussion', '%s Hidden Discussions', $num, 'buddyboss-platform' ),
+						_n( '%s Hidden Discussion', '%s Hidden Discussions', $num, 'buddyboss-community-social-network-groups-forums-messaging' ),
 						'<span class="b b-hidden-topics">' . number_format_i18n( $num ) . '</span>'
 					);
 
@@ -198,7 +198,7 @@ function bboss_bbp_dashboard_widget_right_now() {
 					$num  = $r['reply_count_hidden'];
 					$text = sprintf(
 						/* translators: Total Hidden Reply. */
-						_n( '%s Hidden Reply', '%s Hidden Replies', $num, 'buddyboss-platform' ),
+						_n( '%s Hidden Reply', '%s Hidden Replies', $num, 'buddyboss-community-social-network-groups-forums-messaging' ),
 						'<span class="b b-hidden-replies">' . number_format_i18n( $num ) . '</span>'
 					);
 
@@ -223,7 +223,7 @@ function bboss_bbp_dashboard_widget_right_now() {
 					$num  = empty( $r['empty_topic_tag_count'] ) ? 0 : (int) $r['empty_topic_tag_count'];
 					$text = sprintf(
 						/* translators: Total Empty Discussion Tag. */
-						_n( '%s Empty Discussion Tag', '%s Empty Discussion Tags', $num, 'buddyboss-platform' ),
+						_n( '%s Empty Discussion Tag', '%s Empty Discussion Tags', $num, 'buddyboss-community-social-network-groups-forums-messaging' ),
 						'<span class="b b-hidden-topic-tags">' . number_format_i18n( $num ) . '</span>'
 					);
 
@@ -294,7 +294,7 @@ function bboss_bbp_filter_dashboard_glance_items( $elements = array() ) {
 	if ( isset( $r['user_count'] ) ) {
 		$link = admin_url( 'users.php' );
 		/* translators: %s: number of users */
-		$text       = sprintf( _n( '%s User', '%s Users', $r['user_count_int'], 'buddyboss-platform' ), $r['user_count'] );
+		$text       = sprintf( _n( '%s User', '%s Users', $r['user_count_int'], 'buddyboss-community-social-network-groups-forums-messaging' ), $r['user_count'] );
 		$elements[] = current_user_can( 'edit_users' )
 			? '<a href="' . esc_url( $link ) . '" class="bbp-glance-users">' . esc_html( $text ) . '</a>'
 			: esc_html( $text );
@@ -309,7 +309,7 @@ function bboss_bbp_filter_dashboard_glance_items( $elements = array() ) {
 			admin_url( 'edit.php' )
 		);
 		/* translators: %s: number of forums */
-		$text       = sprintf( _n( '%s Forum', '%s Forums', $r['forum_count_int'], 'buddyboss-platform' ), $r['forum_count'] );
+		$text       = sprintf( _n( '%s Forum', '%s Forums', $r['forum_count_int'], 'buddyboss-community-social-network-groups-forums-messaging' ), $r['forum_count'] );
 		$elements[] = current_user_can( 'publish_forums' )
 			? '<a href="' . esc_url( $link ) . '" class="bbp-glance-forums">' . esc_html( $text ) . '</a>'
 			: esc_html( $text );
@@ -324,7 +324,7 @@ function bboss_bbp_filter_dashboard_glance_items( $elements = array() ) {
 			admin_url( 'edit.php' )
 		);
 		/* translators: %s: number of topics */
-		$text       = sprintf( _n( '%s Discussion', '%s Discussions', $r['topic_count_int'], 'buddyboss-platform' ), $r['topic_count'] );
+		$text       = sprintf( _n( '%s Discussion', '%s Discussions', $r['topic_count_int'], 'buddyboss-community-social-network-groups-forums-messaging' ), $r['topic_count'] );
 		$elements[] = current_user_can( 'publish_topics' )
 			? '<a href="' . esc_url( $link ) . '" class="bbp-glance-topics">' . esc_html( $text ) . '</a>'
 			: esc_html( $text );
@@ -339,7 +339,7 @@ function bboss_bbp_filter_dashboard_glance_items( $elements = array() ) {
 			admin_url( 'edit.php' )
 		);
 		/* translators: %s: number of replies */
-		$text       = sprintf( _n( '%s Reply', '%s Replies', $r['reply_count_int'], 'buddyboss-platform' ), $r['reply_count'] );
+		$text       = sprintf( _n( '%s Reply', '%s Replies', $r['reply_count_int'], 'buddyboss-community-social-network-groups-forums-messaging' ), $r['reply_count'] );
 		$elements[] = current_user_can( 'publish_replies' )
 			? '<a href="' . esc_url( $link ) . '" class="bbp-glance-replies">' . esc_html( $text ) . '</a>'
 			: esc_html( $text );
@@ -355,7 +355,7 @@ function bboss_bbp_filter_dashboard_glance_items( $elements = array() ) {
 			admin_url( 'edit-tags.php' )
 		);
 		/* translators: %s: number of topic tags */
-		$text       = sprintf( _n( '%s Discussion Tag', '%s Discussion Tags', $r['topic_tag_count_int'], 'buddyboss-platform' ), $r['topic_tag_count'] );
+		$text       = sprintf( _n( '%s Discussion Tag', '%s Discussion Tags', $r['topic_tag_count_int'], 'buddyboss-community-social-network-groups-forums-messaging' ), $r['topic_tag_count'] );
 		$elements[] = current_user_can( 'manage_topic_tags' )
 			? '<a href="' . esc_url( $link ) . '" class="bbp-glance-topic-tags">' . esc_html( $text ) . '</a>'
 			: esc_html( $text );

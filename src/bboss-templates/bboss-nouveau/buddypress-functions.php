@@ -683,53 +683,53 @@ JS;
 		// does for every other 'buddyboss' string, so no separate wpml_register_single_string()
 		// registration is needed here.
 		$activity_editor_button_labels = array(
-			'bold'          => __( 'Bold', 'buddyboss-platform' ),
-			'italic'        => __( 'Italic', 'buddyboss-platform' ),
-			'unorderedlist' => __( 'Unordered list', 'buddyboss-platform' ),
-			'orderedlist'   => __( 'Ordered list', 'buddyboss-platform' ),
-			'quote'         => __( 'Quote', 'buddyboss-platform' ),
-			'anchor'        => __( 'Link', 'buddyboss-platform' ),
-			'pre'           => __( 'Code', 'buddyboss-platform' ),
-			'h3'            => __( 'Heading 3', 'buddyboss-platform' ),
-			'h4'            => __( 'Heading 4', 'buddyboss-platform' ),
+			'bold'          => __( 'Bold', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'italic'        => __( 'Italic', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'unorderedlist' => __( 'Unordered list', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'orderedlist'   => __( 'Ordered list', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'quote'         => __( 'Quote', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'anchor'        => __( 'Link', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'pre'           => __( 'Code', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'h3'            => __( 'Heading 3', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'h4'            => __( 'Heading 4', 'buddyboss-community-social-network-groups-forums-messaging' ),
 		);
 
 		$params = array(
 			'ajaxurl'                    => bboss_core_ajax_url(),
-			'only_admin_notice'          => __( 'As you are the only organizer of this group, you cannot leave it. You can either delete the group or promote another member to be an organizer first and then leave the group.', 'buddyboss-platform' ),
-			'is_friend_confirm'          => __( 'Are you sure you want to remove your connection with this member?', 'buddyboss-platform' ),
-			'confirm'                    => __( 'Are you sure?', 'buddyboss-platform' ),
-			'confirm_delete_set'         => __( 'Are you sure you want to delete this set? This cannot be undone.', 'buddyboss-platform' ),
-			'show_x_comments'            => __( 'View more comments', 'buddyboss-platform' ),
-			'unsaved_changes'            => __( 'Your profile has unsaved changes. If you leave the page, the changes will be lost.', 'buddyboss-platform' ),
+			'only_admin_notice'          => __( 'As you are the only organizer of this group, you cannot leave it. You can either delete the group or promote another member to be an organizer first and then leave the group.', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'is_friend_confirm'          => __( 'Are you sure you want to remove your connection with this member?', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'confirm'                    => __( 'Are you sure?', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'confirm_delete_set'         => __( 'Are you sure you want to delete this set? This cannot be undone.', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'show_x_comments'            => __( 'View more comments', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'unsaved_changes'            => __( 'Your profile has unsaved changes. If you leave the page, the changes will be lost.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'object_nav_parent'          => '#buddypress',
-			'anchorPlaceholderText'      => __( 'Paste or type a link', 'buddyboss-platform' ),
+			'anchorPlaceholderText'      => __( 'Paste or type a link', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'activityEditorButtonLabels' => $activity_editor_button_labels,
-			'empty_field'                => __( 'New Field', 'buddyboss-platform' ),
-			'close'                      => __( 'Close', 'buddyboss-platform' ),
-			'parent_group_leave_confirm' => esc_html__( 'By leaving this main group you will automatically be removed and unsubscribed to any subgroups relating to this group.', 'buddyboss-platform' ),
+			'empty_field'                => __( 'New Field', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'close'                      => __( 'Close', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'parent_group_leave_confirm' => esc_html__( 'By leaving this main group you will automatically be removed and unsubscribed to any subgroups relating to this group.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'group_leave_confirm'        => sprintf(
 				'<p>%s<span class="bb-group-name"></span>?</p>',
-				esc_html__( 'Are you sure you want to leave ', 'buddyboss-platform' )
+				esc_html__( 'Are you sure you want to leave ', 'buddyboss-community-social-network-groups-forums-messaging' )
 			),
 			'wpTime'                     => current_time( 'Y-m-d H:i:s' ),
 			'wpTimezone'                 => bboss_get_option( 'timezone_string' ),
 			'dir_labels'                 => array(
 				'members'   => array(
-					'singular' => esc_html__( 'Member', 'buddyboss-platform' ),
-					'plural'   => esc_html__( 'Members', 'buddyboss-platform' ),
+					'singular' => esc_html__( 'Member', 'buddyboss-community-social-network-groups-forums-messaging' ),
+					'plural'   => esc_html__( 'Members', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				),
 				'followers' => array(
-					'singular' => esc_html__( 'Follower', 'buddyboss-platform' ),
-					'plural'   => esc_html__( 'Followers', 'buddyboss-platform' ),
+					'singular' => esc_html__( 'Follower', 'buddyboss-community-social-network-groups-forums-messaging' ),
+					'plural'   => esc_html__( 'Followers', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				),
 			),
 			'rest_url'                   => untrailingslashit( home_url( 'wp-json/buddyboss/v1' ) ),
 			'rest_nonce'                 => wp_create_nonce( 'wp_rest' ),
 			// Shown in a hover pop-up card when its request fails.
-			'card_load_error'            => __( 'Failed to load data.', 'buddyboss-platform' ),
-			'member_label'               => __( 'member', 'buddyboss-platform' ),
-			'members_label'              => __( 'members', 'buddyboss-platform' ),
+			'card_load_error'            => __( 'Failed to load data.', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'member_label'               => __( 'member', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'members_label'              => __( 'members', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			// Logged-in user id, used by the hover pop-up cards to suppress a member's own card.
 			// The cards previously read BP_Nouveau.activity.params.user_id, which carries the
 			// same value but is only registered when the Activity component is enabled — with
@@ -740,8 +740,8 @@ JS;
 
 		if ( bboss_is_active( 'friends' ) ) {
 			$params['dir_labels']['connections'] = array(
-				'singular' => esc_html__( 'Connection', 'buddyboss-platform' ),
-				'plural'   => esc_html__( 'Connections', 'buddyboss-platform' ),
+				'singular' => esc_html__( 'Connection', 'buddyboss-community-social-network-groups-forums-messaging' ),
+				'plural'   => esc_html__( 'Connections', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			);
 		}
 
@@ -809,10 +809,10 @@ JS;
 		$params['bb_enable_content_counts'] = bboss_enable_content_counts();
 
 		// Add localize variable for more menu items.
-		$params['more_menu_items'] = esc_html__( 'Menu Items', 'buddyboss-platform' );
+		$params['more_menu_items'] = esc_html__( 'Menu Items', 'buddyboss-community-social-network-groups-forums-messaging' );
 
 		// Add localize variable for more menu text.
-		$params['more_menu_text'] = esc_html__( 'More', 'buddyboss-platform' );
+		$params['more_menu_text'] = esc_html__( 'More', 'buddyboss-community-social-network-groups-forums-messaging' );
 
 		/**
 		 * Filters core JavaScript strings for internationalization before AJAX usage.

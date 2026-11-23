@@ -134,7 +134,7 @@ class BBoss_Moderation_Component extends BBoss_Component {
 			$bp = bboss();
 
 			if ( bboss_is_my_profile() ) {
-				$bp->bp_options_title = __( 'My Moderation', 'buddyboss-platform' );
+				$bp->bp_options_title = __( 'My Moderation', 'buddyboss-community-social-network-groups-forums-messaging' );
 			}
 		}
 
@@ -169,24 +169,24 @@ class BBoss_Moderation_Component extends BBoss_Component {
 			'bpm_category',
 			'bp_moderation',
 			array(
-				'label'              => __( 'Reporting Category', 'buddyboss-platform' ),
-				'description'        => __( 'Create reporting categories for members to select when reporting content and members on the front-end. An additional "Other" category will also be available for members to specify their own reason for reporting.', 'buddyboss-platform' ),
+				'label'              => __( 'Reporting Category', 'buddyboss-community-social-network-groups-forums-messaging' ),
+				'description'        => __( 'Create reporting categories for members to select when reporting content and members on the front-end. An additional "Other" category will also be available for members to specify their own reason for reporting.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				'labels'             => array(
-					'name'                       => _x( 'Reporting Categories', 'taxonomy general name', 'buddyboss-platform' ),
-					'singular_name'              => _x( 'Reporting Category', 'taxonomy singular name', 'buddyboss-platform' ),
-					'search_items'               => __( 'Search Categories', 'buddyboss-platform' ),
-					'popular_items'              => __( 'Popular Categories', 'buddyboss-platform' ),
-					'all_items'                  => __( 'All Categories', 'buddyboss-platform' ),
-					'edit_item'                  => __( 'Edit Category', 'buddyboss-platform' ),
-					'update_item'                => __( 'Update Category', 'buddyboss-platform' ),
-					'add_new_item'               => __( 'Add New Category', 'buddyboss-platform' ),
-					'new_item_name'              => __( 'New Category Name', 'buddyboss-platform' ),
-					'separate_items_with_commas' => __( 'Separate categories with commas', 'buddyboss-platform' ),
-					'add_or_remove_items'        => __( 'Add or remove categories', 'buddyboss-platform' ),
-					'choose_from_most_used'      => __( 'Choose from the most used categories', 'buddyboss-platform' ),
-					'not_found'                  => __( 'No reporting categories found.', 'buddyboss-platform' ),
-					'menu_name'                  => __( 'Reporting Categories', 'buddyboss-platform' ),
-					'back_to_items'              => __( '&larr; Back to Reporting Categories', 'buddyboss-platform' ),
+					'name'                       => _x( 'Reporting Categories', 'taxonomy general name', 'buddyboss-community-social-network-groups-forums-messaging' ),
+					'singular_name'              => _x( 'Reporting Category', 'taxonomy singular name', 'buddyboss-community-social-network-groups-forums-messaging' ),
+					'search_items'               => __( 'Search Categories', 'buddyboss-community-social-network-groups-forums-messaging' ),
+					'popular_items'              => __( 'Popular Categories', 'buddyboss-community-social-network-groups-forums-messaging' ),
+					'all_items'                  => __( 'All Categories', 'buddyboss-community-social-network-groups-forums-messaging' ),
+					'edit_item'                  => __( 'Edit Category', 'buddyboss-community-social-network-groups-forums-messaging' ),
+					'update_item'                => __( 'Update Category', 'buddyboss-community-social-network-groups-forums-messaging' ),
+					'add_new_item'               => __( 'Add New Category', 'buddyboss-community-social-network-groups-forums-messaging' ),
+					'new_item_name'              => __( 'New Category Name', 'buddyboss-community-social-network-groups-forums-messaging' ),
+					'separate_items_with_commas' => __( 'Separate categories with commas', 'buddyboss-community-social-network-groups-forums-messaging' ),
+					'add_or_remove_items'        => __( 'Add or remove categories', 'buddyboss-community-social-network-groups-forums-messaging' ),
+					'choose_from_most_used'      => __( 'Choose from the most used categories', 'buddyboss-community-social-network-groups-forums-messaging' ),
+					'not_found'                  => __( 'No reporting categories found.', 'buddyboss-community-social-network-groups-forums-messaging' ),
+					'menu_name'                  => __( 'Reporting Categories', 'buddyboss-community-social-network-groups-forums-messaging' ),
+					'back_to_items'              => __( '&larr; Back to Reporting Categories', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				),
 				'public'             => true,
 				'publicly_queryable' => false,

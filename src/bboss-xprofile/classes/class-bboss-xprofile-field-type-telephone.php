@@ -24,8 +24,8 @@ class BBoss_XProfile_Field_Type_Telephone extends BBoss_XProfile_Field_Type {
 	public function __construct() {
 		parent::__construct();
 
-		$this->category = __( 'Single Fields', 'buddyboss-platform' );
-		$this->name     = __( 'Phone', 'buddyboss-platform' );
+		$this->category = __( 'Single Fields', 'buddyboss-community-social-network-groups-forums-messaging' );
+		$this->name     = __( 'Phone', 'buddyboss-community-social-network-groups-forums-messaging' );
 
 		$this->set_format( '/^.*$/', 'replace' );
 
@@ -129,7 +129,7 @@ class BBoss_XProfile_Field_Type_Telephone extends BBoss_XProfile_Field_Type {
 		<label for="<?php bboss_the_profile_field_input_name(); ?>" class="screen-reader-text">
 															 <?php
 																/* translators: accessibility text */
-																esc_html_e( 'Phone', 'buddyboss-platform' );
+																esc_html_e( 'Phone', 'buddyboss-community-social-network-groups-forums-messaging' );
 																?>
 		</label>
 		<input <?php echo $this->get_edit_field_html_elements( $r ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- get_edit_field_html_elements() returns esc_attr'd attribute markup. ?>>
@@ -164,7 +164,7 @@ class BBoss_XProfile_Field_Type_Telephone extends BBoss_XProfile_Field_Type {
 			<table class="form-table bp-date-options">
 				<tr>
 					<th scope="row">
-						<label for="phone-format-elapsed"><?php esc_html_e( 'Phone Format', 'buddyboss-platform' ); ?></label>
+						<label for="phone-format-elapsed"><?php esc_html_e( 'Phone Format', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></label>
 					</th>
 
 					<td>
@@ -202,7 +202,7 @@ class BBoss_XProfile_Field_Type_Telephone extends BBoss_XProfile_Field_Type {
 				'placeholder' => '(###) ###-####',
 			),
 			'international' => array(
-				'label'       => __( 'International', 'buddyboss-platform' ),
+				'label'       => __( 'International', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				'mask'        => false,
 				'placeholder' => '',
 			),

@@ -886,7 +886,7 @@ function bboss_bbp_forum_topic_reply_ajax_form_search_tags() {
 	$response = array(
 		'feedback' => sprintf(
 			'<div class="bp-feedback error bp-ajax-message"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-			esc_html__( 'There was a problem performing this action. Please try again.', 'buddyboss-platform' )
+			esc_html__( 'There was a problem performing this action. Please try again.', 'buddyboss-community-social-network-groups-forums-messaging' )
 		),
 	);
 
@@ -1038,7 +1038,7 @@ function bboss_nouveau_forum_localize_scripts( $params = array() ) {
 			'post_topic_reply_draft' => wp_create_nonce( 'post_topic_reply_draft_data' ),
 		),
 		'strings' => array(
-			'discardButton' => esc_html__( 'Discard Draft', 'buddyboss-platform' ),
+			'discardButton' => esc_html__( 'Discard Draft', 'buddyboss-community-social-network-groups-forums-messaging' ),
 		),
 	);
 
@@ -1100,40 +1100,40 @@ function bboss_nouveau_forum_localize_scripts( $params = array() ) {
 
 	$params['forums']['draft_retention_message'] = $draft_retention_days ? sprintf(
 		/* translators: %s: Number of days a draft is kept. */
-		_n( 'Drafts are kept for %s day.', 'Drafts are kept for %s days.', $draft_retention_days, 'buddyboss-platform' ),
+		_n( 'Drafts are kept for %s day.', 'Drafts are kept for %s days.', $draft_retention_days, 'buddyboss-community-social-network-groups-forums-messaging' ),
 		number_format_i18n( $draft_retention_days )
 	) : '';
 
 	// Forum-composer copies of the activity composer's draft messages. They are
 	// localized separately because the activity params are not present on
 	// forum-only pages.
-	$params['forums']['paste_image_blocked_message'] = __( 'Pasting images isn\'t supported. Please use the photo button to attach images.', 'buddyboss-platform' );
-	$params['forums']['draft_evicted_message']       = __( 'You had too many saved drafts, so your oldest draft is now saved only in this browser.', 'buddyboss-platform' );
+	$params['forums']['paste_image_blocked_message'] = __( 'Pasting images isn\'t supported. Please use the photo button to attach images.', 'buddyboss-community-social-network-groups-forums-messaging' );
+	$params['forums']['draft_evicted_message']       = __( 'You had too many saved drafts, so your oldest draft is now saved only in this browser.', 'buddyboss-community-social-network-groups-forums-messaging' );
 
 	// The lazy fetch can fail on a flaky connection. When it does, the member
 	// sees an empty composer even though a draft exists, and anything they type
 	// would otherwise overwrite the draft they were never shown.
-	$params['forums']['draft_fetch_failed_message'] = __( 'We could not load your saved draft. Reload the page before writing here, or your saved draft may be replaced.', 'buddyboss-platform' );
+	$params['forums']['draft_fetch_failed_message'] = __( 'We could not load your saved draft. Reload the page before writing here, or your saved draft may be replaced.', 'buddyboss-community-social-network-groups-forums-messaging' );
 
 	// Shown on a form that waits for the draft read before it accepts input,
 	// so a member whose typing is ignored knows why and that it is brief.
-	$params['forums']['draft_loading_message'] = __( 'Loading your saved draft. You can start writing in a moment.', 'buddyboss-platform' );
+	$params['forums']['draft_loading_message'] = __( 'Loading your saved draft. You can start writing in a moment.', 'buddyboss-community-social-network-groups-forums-messaging' );
 
 	// Shown when a draft SAVE is refused and the server sent no message of its
 	// own - a bare wp_send_json_error() carries none, which is what the nonce
 	// check and the authorization gate emit. Without it those rejections were
 	// indistinguishable from a successful save (H1).
-	$params['forums']['draft_save_failed_message'] = __( 'Your draft could not be saved. Please copy your text before leaving this page.', 'buddyboss-platform' );
+	$params['forums']['draft_save_failed_message'] = __( 'Your draft could not be saved. Please copy your text before leaving this page.', 'buddyboss-community-social-network-groups-forums-messaging' );
 
 	// Shown when a DISCARD is refused (e.g. an expired nonce, or the forum made
 	// private mid-session). The save message would wrongly say the draft "could
 	// not be saved" when the member was trying to remove it.
-	$params['forums']['draft_discard_failed_message'] = __( 'Your draft could not be discarded. Please reload the page and try again.', 'buddyboss-platform' );
+	$params['forums']['draft_discard_failed_message'] = __( 'Your draft could not be discarded. Please reload the page and try again.', 'buddyboss-community-social-network-groups-forums-messaging' );
 
 	// The restore is suppressed when the member has already typed into the
 	// form, and that suppression used to be silent - the stored draft is
 	// intact but nothing on screen said so.
-	$params['forums']['draft_not_restored_message'] = __( 'You have a saved draft. It was not loaded because you had already started writing here.', 'buddyboss-platform' );
+	$params['forums']['draft_not_restored_message'] = __( 'You have a saved draft. It was not loaded because you had already started writing here.', 'buddyboss-community-social-network-groups-forums-messaging' );
 
 	return $params;
 }
@@ -1211,7 +1211,7 @@ function bboss_forums_link_preview_parse_url() {
 
 	// Check if URL is validated.
 	if ( empty( $url ) || ! filter_var( $url, FILTER_VALIDATE_URL ) ) {
-		wp_send_json( array( 'error' => __( 'URL is not valid.', 'buddyboss-platform' ) ) );
+		wp_send_json( array( 'error' => __( 'URL is not valid.', 'buddyboss-community-social-network-groups-forums-messaging' ) ) );
 	}
 
 	// Get URL parsed data.
@@ -1219,7 +1219,7 @@ function bboss_forums_link_preview_parse_url() {
 
 	// If empty data then send error.
 	if ( empty( $parse_url_data ) ) {
-		wp_send_json( array( 'error' => esc_html__( 'There was a problem generating a link preview.', 'buddyboss-platform' ) ) );
+		wp_send_json( array( 'error' => esc_html__( 'There was a problem generating a link preview.', 'buddyboss-community-social-network-groups-forums-messaging' ) ) );
 	}
 
 	// send json success.

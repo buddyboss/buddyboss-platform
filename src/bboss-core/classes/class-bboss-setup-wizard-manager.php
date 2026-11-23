@@ -837,7 +837,7 @@ abstract class BBoss_Setup_Wizard_Manager {
 		if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), $this->wizard_id . '_wizard_nonce' ) ) {
 			wp_send_json_error(
 				array(
-					'message' => __( 'Invalid security token.', 'buddyboss-platform' ),
+					'message' => __( 'Invalid security token.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				)
 			);
 		}
@@ -862,7 +862,7 @@ abstract class BBoss_Setup_Wizard_Manager {
 		if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), $this->wizard_id . '_wizard_nonce' ) ) {
 			wp_send_json_error(
 				array(
-					'message' => __( 'Invalid security token.', 'buddyboss-platform' ),
+					'message' => __( 'Invalid security token.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				)
 			);
 		}
@@ -871,7 +871,7 @@ abstract class BBoss_Setup_Wizard_Manager {
 		if ( ! current_user_can( $this->config['capability_required'] ) ) {
 			wp_send_json_error(
 				array(
-					'message' => __( 'You do not have sufficient permissions to perform this action.', 'buddyboss-platform' ),
+					'message' => __( 'You do not have sufficient permissions to perform this action.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				)
 			);
 		}
@@ -889,7 +889,7 @@ abstract class BBoss_Setup_Wizard_Manager {
 			// Skip progress tracking but still return success.
 			wp_send_json_success(
 				array(
-					'message'  => __( 'Step acknowledged.', 'buddyboss-platform' ),
+					'message'  => __( 'Step acknowledged.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'step'     => $step,
 					'progress' => $this->get_progress(),
 				)
@@ -901,7 +901,7 @@ abstract class BBoss_Setup_Wizard_Manager {
 
 		wp_send_json_success(
 			array(
-				'message'  => __( 'Step progress saved successfully.', 'buddyboss-platform' ),
+				'message'  => __( 'Step progress saved successfully.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				'step'     => $step,
 				'progress' => $this->get_progress(),
 			)
@@ -919,7 +919,7 @@ abstract class BBoss_Setup_Wizard_Manager {
 		if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), $this->wizard_id . '_wizard_nonce' ) ) {
 			wp_send_json_error(
 				array(
-					'message' => __( 'Invalid security token.', 'buddyboss-platform' ),
+					'message' => __( 'Invalid security token.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				)
 			);
 		}
@@ -928,7 +928,7 @@ abstract class BBoss_Setup_Wizard_Manager {
 		if ( ! current_user_can( $this->config['capability_required'] ) ) {
 			wp_send_json_error(
 				array(
-					'message' => __( 'You do not have sufficient permissions to perform this action.', 'buddyboss-platform' ),
+					'message' => __( 'You do not have sufficient permissions to perform this action.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				)
 			);
 		}
@@ -948,7 +948,7 @@ abstract class BBoss_Setup_Wizard_Manager {
 
 		wp_send_json_success(
 			array(
-				'message'     => __( 'Preferences saved successfully.', 'buddyboss-platform' ),
+				'message'     => __( 'Preferences saved successfully.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				'preferences' => $preferences,
 			)
 		);
@@ -965,7 +965,7 @@ abstract class BBoss_Setup_Wizard_Manager {
 		if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), $this->wizard_id . '_wizard_nonce' ) ) {
 			wp_send_json_error(
 				array(
-					'message' => __( 'Invalid security token.', 'buddyboss-platform' ),
+					'message' => __( 'Invalid security token.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				)
 			);
 		}

@@ -159,7 +159,7 @@ class BBoss_Activity_Feed {
 
 		// Check if id is valid.
 		if ( empty( $this->id ) ) {
-			_doing_it_wrong( 'BBoss_Activity_Feed', esc_html__( "RSS feed 'id' must be defined", 'buddyboss-platform' ), 'BP 1.8' );
+			_doing_it_wrong( 'BBoss_Activity_Feed', esc_html__( "RSS feed 'id' must be defined", 'buddyboss-community-social-network-groups-forums-messaging' ), 'BP 1.8' );
 			return false;
 		}
 
@@ -309,7 +309,7 @@ class BBoss_Activity_Feed {
 			case 'personal':
 				if ( 'activity_comment' == bboss_get_activity_action_name() ) :
 					?>
-				<strong><?php esc_html_e( 'In reply to', 'buddyboss-platform' ); ?></strong> -
+				<strong><?php esc_html_e( 'In reply to', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></strong> -
 					<?php bboss_activity_parent_content(); ?>
 					<?php
 				endif;

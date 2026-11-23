@@ -20,12 +20,12 @@ defined( 'ABSPATH' ) || exit;
 						<?php
 						printf(
 							/* translators: %s: reported content type. */
-							esc_html__( 'Report %s', 'buddyboss-platform' ),
+							esc_html__( 'Report %s', 'buddyboss-community-social-network-groups-forums-messaging' ),
 							'<span class="bp-reported-type"></span>'
 						);
 						?>
 					</h4>
-					<button title="<?php esc_html_e( 'Close (Esc)', 'buddyboss-platform' ); ?>" type="button" class="mfp-close">
+					<button title="<?php esc_html_e( 'Close (Esc)', 'buddyboss-community-social-network-groups-forums-messaging' ); ?>" type="button" class="mfp-close">
 						<span class="bb-icon-l bb-icon-times"></span>
 					</button>
 				</header>
@@ -34,7 +34,7 @@ defined( 'ABSPATH' ) || exit;
 					<?php
 					printf(
 						/* translators: %s: reported content type (e.g. Post, Comment, Member). */
-						esc_html__( 'You have already reported this %s.', 'buddyboss-platform' ),
+						esc_html__( 'You have already reported this %s.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 						'<span class="bp-reported-type"></span>'
 					);
 					?>

@@ -81,7 +81,7 @@ class BBoss_REST_Reply_Endpoint extends WP_REST_Controller {
 			array(
 				'args'   => array(
 					'id' => array(
-						'description' => __( 'A unique numeric ID for the reply.', 'buddyboss-platform' ),
+						'description' => __( 'A unique numeric ID for the reply.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 						'type'        => 'integer',
 						'required'    => true,
 					),
@@ -359,7 +359,7 @@ class BBoss_REST_Reply_Endpoint extends WP_REST_Controller {
 		if ( function_exists( 'bboss_rest_enable_private_network' ) && true === bboss_rest_enable_private_network() && ! is_user_logged_in() ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
-				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss-platform' ),
+				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				array(
 					'status' => rest_authorization_required_code(),
 				)
@@ -494,7 +494,7 @@ class BBoss_REST_Reply_Endpoint extends WP_REST_Controller {
 		if ( function_exists( 'bboss_rest_enable_private_network' ) && true === bboss_rest_enable_private_network() && ! is_user_logged_in() ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
-				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss-platform' ),
+				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				array(
 					'status' => rest_authorization_required_code(),
 				)
@@ -506,7 +506,7 @@ class BBoss_REST_Reply_Endpoint extends WP_REST_Controller {
 		if ( true === $retval && empty( $reply->ID ) ) {
 			$retval = new WP_Error(
 				'bp_rest_reply_invalid_id',
-				__( 'Invalid reply ID.', 'buddyboss-platform' ),
+				__( 'Invalid reply ID.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				array(
 					'status' => 404,
 				)
@@ -516,7 +516,7 @@ class BBoss_REST_Reply_Endpoint extends WP_REST_Controller {
 		if ( true === $retval && ( ! isset( $reply->post_type ) || 'reply' !== $reply->post_type ) ) {
 			$retval = new WP_Error(
 				'bp_rest_reply_invalid_id',
-				__( 'Invalid reply ID.', 'buddyboss-platform' ),
+				__( 'Invalid reply ID.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				array(
 					'status' => 404,
 				)
@@ -528,7 +528,7 @@ class BBoss_REST_Reply_Endpoint extends WP_REST_Controller {
 			if ( ! current_user_can( $post_type->cap->read_post, $reply->ID ) ) {
 				$retval = new WP_Error(
 					'bp_rest_authorization_required',
-					__( 'Sorry, you are not allowed to access this reply.', 'buddyboss-platform' ),
+					__( 'Sorry, you are not allowed to access this reply.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					array(
 						'status' => rest_authorization_required_code(),
 					)
@@ -629,7 +629,7 @@ class BBoss_REST_Reply_Endpoint extends WP_REST_Controller {
 			if ( ! current_user_can( 'publish_replies' ) ) {
 				return new WP_Error(
 					'bp_rest_bbp_reply_permission',
-					__( 'Sorry, You do not have permission to reply.', 'buddyboss-platform' ),
+					__( 'Sorry, You do not have permission to reply.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					array(
 						'status' => rest_authorization_required_code(),
 					)
@@ -645,7 +645,7 @@ class BBoss_REST_Reply_Endpoint extends WP_REST_Controller {
 		if ( empty( $reply->bbp_topic_id ) ) {
 			return new WP_Error(
 				'bp_rest_bbp_reply_topic_id',
-				__( 'Sorry, Discussion ID is missing.', 'buddyboss-platform' ),
+				__( 'Sorry, Discussion ID is missing.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				array(
 					'status' => 400,
 				)
@@ -655,7 +655,7 @@ class BBoss_REST_Reply_Endpoint extends WP_REST_Controller {
 		} elseif ( ! is_numeric( $reply->bbp_topic_id ) ) {
 			return new WP_Error(
 				'bp_rest_bbp_reply_topic_id',
-				__( 'Sorry, Discussion ID must be a number.', 'buddyboss-platform' ),
+				__( 'Sorry, Discussion ID must be a number.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				array(
 					'status' => 400,
 				)
@@ -669,7 +669,7 @@ class BBoss_REST_Reply_Endpoint extends WP_REST_Controller {
 			if ( 0 > $posted_topic_id ) {
 				return new WP_Error(
 					'bp_rest_bbp_reply_topic_id',
-					__( 'Sorry, Discussion ID cannot be a negative number.', 'buddyboss-platform' ),
+					__( 'Sorry, Discussion ID cannot be a negative number.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					array(
 						'status' => 400,
 					)
@@ -679,7 +679,7 @@ class BBoss_REST_Reply_Endpoint extends WP_REST_Controller {
 			} elseif ( ! bboss_bbp_get_topic( $posted_topic_id ) ) {
 				return new WP_Error(
 					'bp_rest_bbp_reply_topic_id',
-					__( 'Sorry, Discussion does not exist.', 'buddyboss-platform' ),
+					__( 'Sorry, Discussion does not exist.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					array(
 						'status' => 400,
 					)
@@ -703,7 +703,7 @@ class BBoss_REST_Reply_Endpoint extends WP_REST_Controller {
 			if ( empty( $reply->bbp_forum_id ) ) {
 				return new WP_Error(
 					'bp_rest_bbp_reply_forum_id',
-					__( 'Sorry, Forum ID is missing.', 'buddyboss-platform' ),
+					__( 'Sorry, Forum ID is missing.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					array(
 						'status' => 400,
 					)
@@ -713,7 +713,7 @@ class BBoss_REST_Reply_Endpoint extends WP_REST_Controller {
 			} elseif ( ! is_numeric( $reply->bbp_forum_id ) ) {
 				return new WP_Error(
 					'bp_rest_bbp_reply_forum_id',
-					__( 'Sorry, Forum ID must be a number.', 'buddyboss-platform' ),
+					__( 'Sorry, Forum ID must be a number.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					array(
 						'status' => 400,
 					)
@@ -729,7 +729,7 @@ class BBoss_REST_Reply_Endpoint extends WP_REST_Controller {
 				if ( 0 === $posted_forum_id ) {
 					return new WP_Error(
 						'bp_rest_bbp_topic_forum_id',
-						__( 'Sorry, Forum ID is missing.', 'buddyboss-platform' ),
+						__( 'Sorry, Forum ID is missing.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 						array(
 							'status' => 400,
 						)
@@ -739,7 +739,7 @@ class BBoss_REST_Reply_Endpoint extends WP_REST_Controller {
 				} elseif ( 0 > $posted_forum_id ) {
 					return new WP_Error(
 						'bp_rest_bbp_topic_forum_id',
-						__( 'Sorry, Forum ID cannot be a negative number.', 'buddyboss-platform' ),
+						__( 'Sorry, Forum ID cannot be a negative number.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 						array(
 							'status' => 400,
 						)
@@ -749,7 +749,7 @@ class BBoss_REST_Reply_Endpoint extends WP_REST_Controller {
 				} elseif ( ! bboss_bbp_get_forum( $posted_forum_id ) ) {
 					return new WP_Error(
 						'bp_rest_bbp_topic_forum_id',
-						__( 'Sorry, Forum does not exist.', 'buddyboss-platform' ),
+						__( 'Sorry, Forum does not exist.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 						array(
 							'status' => 400,
 						)
@@ -769,7 +769,7 @@ class BBoss_REST_Reply_Endpoint extends WP_REST_Controller {
 			if ( bboss_bbp_is_forum_category( $forum_id ) ) {
 				return new WP_Error(
 					'bp_rest_bbp_new_reply_forum_category',
-					__( 'This forum is a category. No replies can be created in this forum.', 'buddyboss-platform' ),
+					__( 'This forum is a category. No replies can be created in this forum.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					array(
 						'status' => 400,
 					)
@@ -782,7 +782,7 @@ class BBoss_REST_Reply_Endpoint extends WP_REST_Controller {
 				if ( bboss_bbp_is_forum_closed( $forum_id ) && ! current_user_can( 'edit_forum', $forum_id ) ) {
 					return new WP_Error(
 						'bp_rest_bbp_new_reply_forum_closed',
-						__( 'This forum has been closed to new replies.', 'buddyboss-platform' ),
+						__( 'This forum has been closed to new replies.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 						array(
 							'status' => 400,
 						)
@@ -818,7 +818,7 @@ class BBoss_REST_Reply_Endpoint extends WP_REST_Controller {
 					) {
 						return new WP_Error(
 							'bp_rest_bbp_new_reply_forum_private',
-							__( 'This forum is private and you do not have the capability to read or create new replies in it.', 'buddyboss-platform' ),
+							__( 'This forum is private and you do not have the capability to read or create new replies in it.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 							array(
 								'status' => 400,
 							)
@@ -833,7 +833,7 @@ class BBoss_REST_Reply_Endpoint extends WP_REST_Controller {
 					) {
 						return new WP_Error(
 							'bp_rest_bbp_new_reply_forum_hidden',
-							__( 'This forum is hidden and you do not have the capability to read or create new replies in it.', 'buddyboss-platform' ),
+							__( 'This forum is hidden and you do not have the capability to read or create new replies in it.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 							array(
 								'status' => 400,
 							)
@@ -888,7 +888,7 @@ class BBoss_REST_Reply_Endpoint extends WP_REST_Controller {
 		) {
 			return new WP_Error(
 				'bp_rest_bbp_reply_content',
-				__( 'Sorry, Your reply cannot be empty.', 'buddyboss-platform' ),
+				__( 'Sorry, Your reply cannot be empty.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				array(
 					'status' => 400,
 				)
@@ -905,7 +905,7 @@ class BBoss_REST_Reply_Endpoint extends WP_REST_Controller {
 			if ( ! $can_send_media ) {
 				return new WP_Error(
 					'bp_rest_bbp_reply_media',
-					__( 'You don\'t have access to send the media.', 'buddyboss-platform' ),
+					__( 'You don\'t have access to send the media.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					array(
 						'status' => 400,
 					)
@@ -918,7 +918,7 @@ class BBoss_REST_Reply_Endpoint extends WP_REST_Controller {
 			if ( ! $can_send_document ) {
 				return new WP_Error(
 					'bp_rest_bbp_reply_media',
-					__( 'You don\'t have access to send the document.', 'buddyboss-platform' ),
+					__( 'You don\'t have access to send the document.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					array(
 						'status' => 400,
 					)
@@ -931,7 +931,7 @@ class BBoss_REST_Reply_Endpoint extends WP_REST_Controller {
 			if ( ! $can_send_video ) {
 				return new WP_Error(
 					'bp_rest_bbp_reply_media',
-					__( 'You don\'t have access to send the video.', 'buddyboss-platform' ),
+					__( 'You don\'t have access to send the video.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					array(
 						'status' => 400,
 					)
@@ -944,7 +944,7 @@ class BBoss_REST_Reply_Endpoint extends WP_REST_Controller {
 			if ( ! $can_send_gif ) {
 				return new WP_Error(
 					'bp_rest_bbp_reply_media',
-					__( 'You don\'t have access to send the gif.', 'buddyboss-platform' ),
+					__( 'You don\'t have access to send the gif.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					array(
 						'status' => 400,
 					)
@@ -959,7 +959,7 @@ class BBoss_REST_Reply_Endpoint extends WP_REST_Controller {
 		if ( ! bboss_bbp_check_for_flood( $anonymous_data, $reply_author ) ) {
 			return new WP_Error(
 				'bp_rest_bbp_reply_flood',
-				__( 'Slow down; you move too fast.', 'buddyboss-platform' ),
+				__( 'Slow down; you move too fast.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				array(
 					'status' => 400,
 				)
@@ -978,7 +978,7 @@ class BBoss_REST_Reply_Endpoint extends WP_REST_Controller {
 		) ) {
 			return new WP_Error(
 				'bp_rest_bbp_reply_duplicate',
-				__( 'Duplicate reply detected; it looks as though you\'ve already said that!', 'buddyboss-platform' ),
+				__( 'Duplicate reply detected; it looks as though you\'ve already said that!', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				array(
 					'status' => 400,
 				)
@@ -989,7 +989,7 @@ class BBoss_REST_Reply_Endpoint extends WP_REST_Controller {
 		if ( ! bboss_bbp_check_for_blacklist( $anonymous_data, $reply_author, $reply_title, $reply_content ) ) {
 			return new WP_Error(
 				'bp_rest_bbp_reply_blacklist',
-				__( 'Sorry, Your reply cannot be created at this time.', 'buddyboss-platform' ),
+				__( 'Sorry, Your reply cannot be created at this time.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				array(
 					'status' => 400,
 				)
@@ -1017,7 +1017,7 @@ class BBoss_REST_Reply_Endpoint extends WP_REST_Controller {
 		if ( bboss_bbp_is_topic_closed( $topic_id ) && ! current_user_can( 'moderate' ) ) {
 			return new WP_Error(
 				'bp_rest_bbp_reply_topic_closed',
-				__( 'Sorry, Discussion is closed.', 'buddyboss-platform' ),
+				__( 'Sorry, Discussion is closed.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				array(
 					'status' => 400,
 				)
@@ -1070,8 +1070,8 @@ class BBoss_REST_Reply_Endpoint extends WP_REST_Controller {
 		if ( empty( $reply_id ) || is_wp_error( $reply_id ) ) {
 			$append_error = (
 				( is_wp_error( $reply_id ) && $reply_id->get_error_message() )
-				? __( 'The following problem(s) have been found with your reply: ', 'buddyboss-platform' ) . $reply_id->get_error_message()
-				: __( 'We are facing a problem to creating a reply.', 'buddyboss-platform' )
+				? __( 'The following problem(s) have been found with your reply: ', 'buddyboss-community-social-network-groups-forums-messaging' ) . $reply_id->get_error_message()
+				: __( 'We are facing a problem to creating a reply.', 'buddyboss-community-social-network-groups-forums-messaging' )
 			);
 
 			return new WP_Error(
@@ -1101,7 +1101,7 @@ class BBoss_REST_Reply_Endpoint extends WP_REST_Controller {
 		if ( is_wp_error( $terms ) ) {
 			return new WP_Error(
 				'bp_rest_bbp_reply_tags',
-				__( 'There was a problem adding the tags to the topic.', 'buddyboss-platform' ),
+				__( 'There was a problem adding the tags to the topic.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				array(
 					'status' => 400,
 				)
@@ -1216,7 +1216,7 @@ class BBoss_REST_Reply_Endpoint extends WP_REST_Controller {
 	public function create_item_permissions_check( $request ) {
 		$retval = new WP_Error(
 			'bp_rest_authorization_required',
-			__( 'Sorry, you need to be logged in to create a reply.', 'buddyboss-platform' ),
+			__( 'Sorry, you need to be logged in to create a reply.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			array(
 				'status' => rest_authorization_required_code(),
 			)
@@ -1283,7 +1283,7 @@ class BBoss_REST_Reply_Endpoint extends WP_REST_Controller {
 		if ( empty( $reply_new->bbp_reply_id ) ) {
 			return new WP_Error(
 				'bp_rest_bbp_edit_reply_id',
-				__( 'Reply ID not found.', 'buddyboss-platform' ),
+				__( 'Reply ID not found.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				array(
 					'status' => 400,
 				)
@@ -1299,7 +1299,7 @@ class BBoss_REST_Reply_Endpoint extends WP_REST_Controller {
 		if ( empty( $reply ) ) {
 			return new WP_Error(
 				'bp_rest_bbp_edit_reply_not_found',
-				__( 'The reply you want to edit was not found.', 'buddyboss-platform' ),
+				__( 'The reply you want to edit was not found.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				array(
 					'status' => 400,
 				)
@@ -1315,7 +1315,7 @@ class BBoss_REST_Reply_Endpoint extends WP_REST_Controller {
 				if ( ! current_user_can( 'edit_reply', $reply_id ) ) {
 					return new WP_Error(
 						'bp_rest_bbp_edit_reply_permissions',
-						__( 'You do not have permission to edit that reply.', 'buddyboss-platform' ),
+						__( 'You do not have permission to edit that reply.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 						array(
 							'status' => rest_authorization_required_code(),
 						)
@@ -1377,7 +1377,7 @@ class BBoss_REST_Reply_Endpoint extends WP_REST_Controller {
 			if ( bboss_bbp_is_forum_category( $forum_id ) ) {
 				return new WP_Error(
 					'bp_rest_bbp_edit_reply_forum_category',
-					__( 'This forum is a category. No replies can be created in this forum.', 'buddyboss-platform' ),
+					__( 'This forum is a category. No replies can be created in this forum.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					array(
 						'status' => 400,
 					)
@@ -1390,7 +1390,7 @@ class BBoss_REST_Reply_Endpoint extends WP_REST_Controller {
 				if ( bboss_bbp_is_forum_closed( $forum_id ) && ! current_user_can( 'edit_forum', $forum_id ) ) {
 					return new WP_Error(
 						'bp_rest_bbp_edit_reply_forum_closed',
-						__( 'This forum has been closed to new replies.', 'buddyboss-platform' ),
+						__( 'This forum has been closed to new replies.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 						array(
 							'status' => 400,
 						)
@@ -1426,7 +1426,7 @@ class BBoss_REST_Reply_Endpoint extends WP_REST_Controller {
 					) {
 						return new WP_Error(
 							'bp_rest_bbp_edit_reply_forum_private',
-							__( 'This forum is private and you do not have the capability to read or create new replies in it.', 'buddyboss-platform' ),
+							__( 'This forum is private and you do not have the capability to read or create new replies in it.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 							array(
 								'status' => rest_authorization_required_code(),
 							)
@@ -1441,7 +1441,7 @@ class BBoss_REST_Reply_Endpoint extends WP_REST_Controller {
 					) {
 						return new WP_Error(
 							'bp_rest_bbp_edit_reply_forum_hidden',
-							__( 'This forum is hidden and you do not have the capability to read or create new replies in it.', 'buddyboss-platform' ),
+							__( 'This forum is hidden and you do not have the capability to read or create new replies in it.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 							array(
 								'status' => rest_authorization_required_code(),
 							)
@@ -1490,7 +1490,7 @@ class BBoss_REST_Reply_Endpoint extends WP_REST_Controller {
 		) {
 			return new WP_Error(
 				'bp_rest_bbp_edit_reply_content',
-				__( 'Your reply cannot be empty.', 'buddyboss-platform' ),
+				__( 'Your reply cannot be empty.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				array(
 					'status' => 400,
 				)
@@ -1507,7 +1507,7 @@ class BBoss_REST_Reply_Endpoint extends WP_REST_Controller {
 			if ( ! $can_send_media ) {
 				return new WP_Error(
 					'bp_rest_bbp_reply_media',
-					__( 'You don\'t have access to send the media.', 'buddyboss-platform' ),
+					__( 'You don\'t have access to send the media.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					array(
 						'status' => 400,
 					)
@@ -1520,7 +1520,7 @@ class BBoss_REST_Reply_Endpoint extends WP_REST_Controller {
 			if ( ! $can_send_document ) {
 				return new WP_Error(
 					'bp_rest_bbp_reply_media',
-					__( 'You don\'t have access to send the document.', 'buddyboss-platform' ),
+					__( 'You don\'t have access to send the document.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					array(
 						'status' => 400,
 					)
@@ -1533,7 +1533,7 @@ class BBoss_REST_Reply_Endpoint extends WP_REST_Controller {
 			if ( ! $can_send_video ) {
 				return new WP_Error(
 					'bp_rest_bbp_reply_media',
-					__( 'You don\'t have access to send the video.', 'buddyboss-platform' ),
+					__( 'You don\'t have access to send the video.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					array(
 						'status' => 400,
 					)
@@ -1546,7 +1546,7 @@ class BBoss_REST_Reply_Endpoint extends WP_REST_Controller {
 			if ( ! $can_send_gif ) {
 				return new WP_Error(
 					'bp_rest_bbp_reply_media',
-					__( 'You don\'t have access to send the gif.', 'buddyboss-platform' ),
+					__( 'You don\'t have access to send the gif.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					array(
 						'status' => 400,
 					)
@@ -1558,7 +1558,7 @@ class BBoss_REST_Reply_Endpoint extends WP_REST_Controller {
 		if ( ! bboss_bbp_check_for_blacklist( $anonymous_data, $reply_author, $reply_title, $reply_content ) ) {
 			return new WP_Error(
 				'bp_rest_bbp_reply_blacklist',
-				__( 'Sorry, Your reply cannot be edited at this time.', 'buddyboss-platform' ),
+				__( 'Sorry, Your reply cannot be edited at this time.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				array(
 					'status' => 400,
 				)
@@ -1667,7 +1667,7 @@ class BBoss_REST_Reply_Endpoint extends WP_REST_Controller {
 		if ( is_wp_error( $terms ) ) {
 			return new WP_Error(
 				'bp_rest_bbp_reply_tags',
-				__( 'There was a problem adding the tags to the topic.', 'buddyboss-platform' ),
+				__( 'There was a problem adding the tags to the topic.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				array(
 					'status' => 400,
 				)
@@ -1677,8 +1677,8 @@ class BBoss_REST_Reply_Endpoint extends WP_REST_Controller {
 		if ( empty( $reply_id ) || is_wp_error( $reply_id ) ) {
 			$append_error = (
 				( is_wp_error( $reply_id ) && $reply_id->get_error_message() )
-				? __( 'The following problem(s) have been found with your reply: ', 'buddyboss-platform' ) . $reply_id->get_error_message() . __( 'Please try again.', 'buddyboss-platform' )
-				: __( 'We are facing a problem to updating a reply.', 'buddyboss-platform' )
+				? __( 'The following problem(s) have been found with your reply: ', 'buddyboss-community-social-network-groups-forums-messaging' ) . $reply_id->get_error_message() . __( 'Please try again.', 'buddyboss-community-social-network-groups-forums-messaging' )
+				: __( 'We are facing a problem to updating a reply.', 'buddyboss-community-social-network-groups-forums-messaging' )
 			);
 
 			return new WP_Error(
@@ -1758,7 +1758,7 @@ class BBoss_REST_Reply_Endpoint extends WP_REST_Controller {
 	public function update_item_permissions_check( $request ) {
 		$retval = new WP_Error(
 			'bp_rest_authorization_required',
-			__( 'Sorry, you need to be logged in to create a reply.', 'buddyboss-platform' ),
+			__( 'Sorry, you need to be logged in to create a reply.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			array(
 				'status' => rest_authorization_required_code(),
 			)
@@ -1770,7 +1770,7 @@ class BBoss_REST_Reply_Endpoint extends WP_REST_Controller {
 			if ( bboss_bbp_get_user_id( 0, true, true ) !== $reply->post_author && ! current_user_can( 'edit_reply', $request['id'] ) ) {
 				$retval = new WP_Error(
 					'bp_rest_authorization_required',
-					__( 'Sorry, you are not allowed to update this reply.', 'buddyboss-platform' ),
+					__( 'Sorry, you are not allowed to update this reply.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					array(
 						'status' => rest_authorization_required_code(),
 					)
@@ -1854,7 +1854,7 @@ class BBoss_REST_Reply_Endpoint extends WP_REST_Controller {
 	public function delete_item_permissions_check( $request ) {
 		$retval = new WP_Error(
 			'bp_rest_authorization_required',
-			__( 'Sorry, you need to be logged in to perform this action.', 'buddyboss-platform' ),
+			__( 'Sorry, you need to be logged in to perform this action.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			array(
 				'status' => rest_authorization_required_code(),
 			)
@@ -1866,7 +1866,7 @@ class BBoss_REST_Reply_Endpoint extends WP_REST_Controller {
 			if ( true === $retval && ! current_user_can( 'delete_reply', $request->get_param( 'id' ) ) ) {
 				$retval = new WP_Error(
 					'bp_rest_authorization_required',
-					__( 'Sorry, you are not allowed to delete this reply.', 'buddyboss-platform' ),
+					__( 'Sorry, you are not allowed to delete this reply.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					array(
 						'status' => rest_authorization_required_code(),
 					)
@@ -1902,7 +1902,7 @@ class BBoss_REST_Reply_Endpoint extends WP_REST_Controller {
 
 			$args = array(
 				'id' => array(
-					'description' => __( 'A unique numeric ID for the reply.', 'buddyboss-platform' ),
+					'description' => __( 'A unique numeric ID for the reply.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'type'        => 'integer',
 					'required'    => true,
 				),
@@ -1942,14 +1942,14 @@ class BBoss_REST_Reply_Endpoint extends WP_REST_Controller {
 			$args['content']['required'] = true;
 
 			$args['reply_to'] = array(
-				'description'       => __( 'Parent Reply ID for reply.', 'buddyboss-platform' ),
+				'description'       => __( 'Parent Reply ID for reply.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				'type'              => 'integer',
 				'sanitize_callback' => 'absint',
 				'validate_callback' => 'rest_validate_request_arg',
 			);
 
 			$args['topic_id'] = array(
-				'description'       => __( 'ID of the topic to perform the reply on it.', 'buddyboss-platform' ),
+				'description'       => __( 'ID of the topic to perform the reply on it.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				'type'              => 'integer',
 				'required'          => true,
 				'sanitize_callback' => 'absint',
@@ -1957,7 +1957,7 @@ class BBoss_REST_Reply_Endpoint extends WP_REST_Controller {
 			);
 
 			$args['forum_id'] = array(
-				'description'       => __( 'Forum ID to reply on.', 'buddyboss-platform' ),
+				'description'       => __( 'Forum ID to reply on.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				'type'              => 'integer',
 				'required'          => false,
 				'sanitize_callback' => 'absint',
@@ -1965,14 +1965,14 @@ class BBoss_REST_Reply_Endpoint extends WP_REST_Controller {
 			);
 
 			$args['tags'] = array(
-				'description'       => __( 'Tags to add into the topic.', 'buddyboss-platform' ),
+				'description'       => __( 'Tags to add into the topic.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				'type'              => 'string',
 				'sanitize_callback' => 'sanitize_text_field',
 				'validate_callback' => 'rest_validate_request_arg',
 			);
 
 			$args['subscribe'] = array(
-				'description'       => __( 'Whether user subscribe topic or not.', 'buddyboss-platform' ),
+				'description'       => __( 'Whether user subscribe topic or not.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				'type'              => 'boolean',
 				'sanitize_callback' => 'rest_sanitize_boolean',
 				'validate_callback' => 'rest_validate_request_arg',
@@ -1983,13 +1983,13 @@ class BBoss_REST_Reply_Endpoint extends WP_REST_Controller {
 			$key = 'update_item';
 
 			$args['reason'] = array(
-				'description'       => __( 'Reason for editing a reply.', 'buddyboss-platform' ),
+				'description'       => __( 'Reason for editing a reply.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				'type'              => 'string',
 				'validate_callback' => 'rest_validate_request_arg',
 			);
 
 			$args['log'] = array(
-				'description'       => __( 'Keep a log of reply edit.', 'buddyboss-platform' ),
+				'description'       => __( 'Keep a log of reply edit.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				'type'              => 'boolean',
 				'default'           => true,
 				'sanitize_callback' => 'rest_sanitize_boolean',
@@ -2217,62 +2217,62 @@ class BBoss_REST_Reply_Endpoint extends WP_REST_Controller {
 			'type'       => 'object',
 			'properties' => array(
 				'id'                       => array(
-					'description' => __( 'Unique identifier for the reply.', 'buddyboss-platform' ),
+					'description' => __( 'Unique identifier for the reply.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'type'        => 'integer',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'readonly'    => true,
 				),
 				'date'                     => array(
-					'description' => __( 'The date the object was published, in the site\'s timezone.', 'buddyboss-platform' ),
+					'description' => __( 'The date the object was published, in the site\'s timezone.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'type'        => 'string',
 					'format'      => 'date-time',
 					'context'     => array( 'embed', 'view', 'edit' ),
 				),
 				'date_gmt'                 => array(
-					'description' => __( 'The date the object was published, as GMT.', 'buddyboss-platform' ),
+					'description' => __( 'The date the object was published, as GMT.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'type'        => 'string',
 					'format'      => 'date-time',
 					'context'     => array( 'embed', 'view', 'edit' ),
 				),
 				'guid'                     => array(
-					'description' => __( 'The url identifier for the reply.', 'buddyboss-platform' ),
+					'description' => __( 'The url identifier for the reply.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'type'        => 'object',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'readonly'    => true,
 					'properties'  => array(
 						'raw'      => array(
-							'description' => __( 'GUID for the reply, as it exists in the database.', 'buddyboss-platform' ),
+							'description' => __( 'GUID for the reply, as it exists in the database.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 							'type'        => 'string',
 							'context'     => array( 'embed', 'view', 'edit' ),
 						),
 						'rendered' => array(
-							'description' => __( 'GUID for the reply, transformed for display.', 'buddyboss-platform' ),
+							'description' => __( 'GUID for the reply, transformed for display.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 							'type'        => 'string',
 							'context'     => array( 'embed', 'view', 'edit' ),
 						),
 					),
 				),
 				'modified'                 => array(
-					'description' => __( 'The date for reply was last modified, in the site\'s timezone.', 'buddyboss-platform' ),
+					'description' => __( 'The date for reply was last modified, in the site\'s timezone.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'type'        => 'string',
 					'format'      => 'date-time',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'readonly'    => true,
 				),
 				'modified_gmt'             => array(
-					'description' => __( 'The date for reply was last modified, as GMT.', 'buddyboss-platform' ),
+					'description' => __( 'The date for reply was last modified, as GMT.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'type'        => 'string',
 					'format'      => 'date-time',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'readonly'    => true,
 				),
 				'password'                 => array(
-					'description' => __( 'A password to protect access to the post.', 'buddyboss-platform' ),
+					'description' => __( 'A password to protect access to the post.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'type'        => 'string',
 					'context'     => array( 'edit' ),
 				),
 				'slug'                     => array(
-					'description' => __( 'An alphanumeric unique identifier for the reply.', 'buddyboss-platform' ),
+					'description' => __( 'An alphanumeric unique identifier for the reply.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'arg_options' => array(
@@ -2280,85 +2280,85 @@ class BBoss_REST_Reply_Endpoint extends WP_REST_Controller {
 					),
 				),
 				'status'                   => array(
-					'description' => __( 'The current status of the reply.', 'buddyboss-platform' ),
+					'description' => __( 'The current status of the reply.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view', 'edit' ),
 				),
 				'link'                     => array(
-					'description' => __( 'The permalink to this reply on the site.', 'buddyboss-platform' ),
+					'description' => __( 'The permalink to this reply on the site.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'format'      => 'uri',
 				),
 				'author'                   => array(
-					'description' => __( 'The ID for the author of the reply.', 'buddyboss-platform' ),
+					'description' => __( 'The ID for the author of the reply.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'type'        => 'integer',
 					'context'     => array( 'embed', 'view', 'edit' ),
 				),
 				'parent'                   => array(
-					'description' => __( 'ID of the parent topic.', 'buddyboss-platform' ),
+					'description' => __( 'ID of the parent topic.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'type'        => 'integer',
 					'context'     => array( 'embed', 'view', 'edit' ),
 				),
 				'depth'                    => array(
-					'description' => __( 'Depth for the reply.', 'buddyboss-platform' ),
+					'description' => __( 'Depth for the reply.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'type'        => 'integer',
 					'context'     => array( 'embed', 'view', 'edit' ),
 				),
 				'reply_to'                 => array(
-					'description' => __( 'Parent reply ID.', 'buddyboss-platform' ),
+					'description' => __( 'Parent reply ID.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'type'        => 'integer',
 					'context'     => array( 'embed', 'view', 'edit' ),
 				),
 				'is_reply_anonymous'       => array(
-					'description' => __( 'Whether the post is by an anonymous user or not.', 'buddyboss-platform' ),
+					'description' => __( 'Whether the post is by an anonymous user or not.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'type'        => 'boolean',
 					'context'     => array( 'embed', 'view', 'edit' ),
 				),
 				'anonymous_author_data'    => array(
-					'description' => __( 'An anonymous users data.', 'buddyboss-platform' ),
+					'description' => __( 'An anonymous users data.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'type'        => 'object',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'properties'  => array(
 						'name'    => array(
-							'description' => __( 'Name of the anonymous user.', 'buddyboss-platform' ),
+							'description' => __( 'Name of the anonymous user.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 							'type'        => 'string',
 							'context'     => array( 'embed', 'view', 'edit' ),
 						),
 						'email'   => array(
-							'description' => __( 'Email address of the anonymous user.', 'buddyboss-platform' ),
+							'description' => __( 'Email address of the anonymous user.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 							'type'        => 'string',
 							'context'     => array( 'embed', 'view', 'edit' ),
 						),
 						'website' => array(
-							'description' => __( 'Website of the anonymous user.', 'buddyboss-platform' ),
+							'description' => __( 'Website of the anonymous user.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 							'type'        => 'string',
 							'context'     => array( 'embed', 'view', 'edit' ),
 						),
 						'avatar'  => array(
-							'description' => __( 'Avatar url of the anonymous user.', 'buddyboss-platform' ),
+							'description' => __( 'Avatar url of the anonymous user.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 							'type'        => 'string',
 							'context'     => array( 'embed', 'view', 'edit' ),
 						),
 					),
 				),
 				'classes'                  => array(
-					'description' => __( 'Classes lists for the reply.', 'buddyboss-platform' ),
+					'description' => __( 'Classes lists for the reply.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view', 'edit' ),
 				),
 				'title'                    => array(
-					'description' => __( 'The title of the reply.', 'buddyboss-platform' ),
+					'description' => __( 'The title of the reply.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'type'        => 'object',
 					'properties'  => array(
 						'raw'      => array(
-							'description' => __( 'Content for the title of the reply, as it exists in the database.', 'buddyboss-platform' ),
+							'description' => __( 'Content for the title of the reply, as it exists in the database.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 							'type'        => 'string',
 							'context'     => array( 'embed', 'view', 'edit' ),
 						),
 						'rendered' => array(
-							'description' => __( 'The title of the reply, transformed for display.', 'buddyboss-platform' ),
+							'description' => __( 'The title of the reply, transformed for display.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 							'type'        => 'string',
 							'context'     => array( 'embed', 'view', 'edit' ),
 						),
@@ -2366,65 +2366,65 @@ class BBoss_REST_Reply_Endpoint extends WP_REST_Controller {
 				),
 				'content'                  => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'The content of the reply.', 'buddyboss-platform' ),
+					'description' => __( 'The content of the reply.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'type'        => 'object',
 					'properties'  => array(
 						'raw'      => array(
-							'description' => __( 'Content for the reply, as it exists in the database.', 'buddyboss-platform' ),
+							'description' => __( 'Content for the reply, as it exists in the database.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 							'type'        => 'string',
 							'context'     => array( 'embed', 'view', 'edit' ),
 						),
 						'rendered' => array(
-							'description' => __( 'HTML content for the reply, transformed for display.', 'buddyboss-platform' ),
+							'description' => __( 'HTML content for the reply, transformed for display.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 							'type'        => 'string',
 							'context'     => array( 'embed', 'view', 'edit' ),
 						),
 					),
 				),
 				'short_content'            => array(
-					'description' => __( 'Short content of the reply.', 'buddyboss-platform' ),
+					'description' => __( 'Short content of the reply.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view', 'edit' ),
 				),
 				'preview_data'             => array(
-					'description' => __( 'WordPress Embed and link preview data.', 'buddyboss-platform' ),
+					'description' => __( 'WordPress Embed and link preview data.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'readonly'    => true,
 				),
 				'link_embed_url'    => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'WordPress Embed URL.', 'buddyboss-platform' ),
+					'description' => __( 'WordPress Embed URL.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'type'        => 'string',
 					'readonly'    => true,
 				),
 				'current_user_permissions' => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Current user\'s permission with the reply.', 'buddyboss-platform' ),
+					'description' => __( 'Current user\'s permission with the reply.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'type'        => 'object',
 					'properties'  => array(
 						'edit'  => array(
-							'description' => __( 'Whether the current user can edit the reply or not.', 'buddyboss-platform' ),
+							'description' => __( 'Whether the current user can edit the reply or not.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 							'type'        => 'boolean',
 							'context'     => array( 'embed', 'view', 'edit' ),
 						),
 						'move'  => array(
-							'description' => __( 'Whether the current user can move the reply or not.', 'buddyboss-platform' ),
+							'description' => __( 'Whether the current user can move the reply or not.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 							'type'        => 'boolean',
 							'context'     => array( 'embed', 'view', 'edit' ),
 						),
 						'split' => array(
-							'description' => __( 'Whether the current user can spit the reply or not.', 'buddyboss-platform' ),
+							'description' => __( 'Whether the current user can spit the reply or not.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 							'type'        => 'boolean',
 							'context'     => array( 'embed', 'view', 'edit' ),
 						),
 						'spam'  => array(
-							'description' => __( 'Whether the current user can spam the reply or not.', 'buddyboss-platform' ),
+							'description' => __( 'Whether the current user can spam the reply or not.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 							'type'        => 'boolean',
 							'context'     => array( 'embed', 'view', 'edit' ),
 						),
 						'trash' => array(
-							'description' => __( 'Whether the current user can trash the reply or not.', 'buddyboss-platform' ),
+							'description' => __( 'Whether the current user can trash the reply or not.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 							'type'        => 'boolean',
 							'context'     => array( 'embed', 'view', 'edit' ),
 						),
@@ -2432,23 +2432,23 @@ class BBoss_REST_Reply_Endpoint extends WP_REST_Controller {
 				),
 				'action_states'            => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Available actions with current user for reply.', 'buddyboss-platform' ),
+					'description' => __( 'Available actions with current user for reply.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'type'        => 'object',
 					'properties'  => array(
 						'spam'  => array(
-							'description' => __( 'Check whether the reply status is spam or not.', 'buddyboss-platform' ),
+							'description' => __( 'Check whether the reply status is spam or not.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 							'type'        => 'boolean',
 							'context'     => array( 'embed', 'view', 'edit' ),
 						),
 						'trash' => array(
-							'description' => __( 'Check whether the reply status is trash or not.', 'buddyboss-platform' ),
+							'description' => __( 'Check whether the reply status is trash or not.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 							'type'        => 'boolean',
 							'context'     => array( 'embed', 'view', 'edit' ),
 						),
 					),
 				),
 				'revisions'                => array(
-					'description' => __( 'Revisions for reply.', 'buddyboss-platform' ),
+					'description' => __( 'Revisions for reply.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'type'        => 'object',
 				),
@@ -2474,7 +2474,7 @@ class BBoss_REST_Reply_Endpoint extends WP_REST_Controller {
 		$params['context']['default'] = 'view';
 
 		$params['author'] = array(
-			'description'       => __( 'Author ID, or comma-separated list of IDs.', 'buddyboss-platform' ),
+			'description'       => __( 'Author ID, or comma-separated list of IDs.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'default'           => '',
 			'type'              => 'string',
 			'sanitize_callback' => 'sanitize_key',
@@ -2482,7 +2482,7 @@ class BBoss_REST_Reply_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['author_exclude'] = array(
-			'description'       => __( 'An array of author IDs not to query from.', 'buddyboss-platform' ),
+			'description'       => __( 'An array of author IDs not to query from.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'type'              => 'array',
 			'items'             => array( 'type' => 'integer' ),
 			'sanitize_callback' => 'wp_parse_id_list',
@@ -2490,7 +2490,7 @@ class BBoss_REST_Reply_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['exclude'] = array(
-			'description'       => __( 'An array of reply IDs not to retrieve.', 'buddyboss-platform' ),
+			'description'       => __( 'An array of reply IDs not to retrieve.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'type'              => 'array',
 			'items'             => array( 'type' => 'integer' ),
 			'sanitize_callback' => 'wp_parse_id_list',
@@ -2498,7 +2498,7 @@ class BBoss_REST_Reply_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['include'] = array(
-			'description'       => __( 'An array of reply IDs to retrieve.', 'buddyboss-platform' ),
+			'description'       => __( 'An array of reply IDs to retrieve.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'type'              => 'array',
 			'items'             => array( 'type' => 'integer' ),
 			'sanitize_callback' => 'wp_parse_id_list',
@@ -2506,14 +2506,14 @@ class BBoss_REST_Reply_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['offset'] = array(
-			'description'       => __( 'The number of reply to offset before retrieval.', 'buddyboss-platform' ),
+			'description'       => __( 'The number of reply to offset before retrieval.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'type'              => 'integer',
 			'sanitize_callback' => 'absint',
 			'validate_callback' => 'rest_validate_request_arg',
 		);
 
 		$params['order'] = array(
-			'description'       => __( 'Designates ascending or descending order of replies.', 'buddyboss-platform' ),
+			'description'       => __( 'Designates ascending or descending order of replies.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'default'           => 'asc',
 			'type'              => 'string',
 			'enum'              => array( 'asc', 'desc' ),
@@ -2522,7 +2522,7 @@ class BBoss_REST_Reply_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['orderby'] = array(
-			'description'       => __( 'Sort retrieved replies by parameter.', 'buddyboss-platform' ),
+			'description'       => __( 'Sort retrieved replies by parameter.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'type'              => 'array',
 			'items'             => array(
 				'type' => 'string',
@@ -2543,7 +2543,7 @@ class BBoss_REST_Reply_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['parent'] = array(
-			'description'       => __( 'Topic or Reply ID to retrieve all the child replies.', 'buddyboss-platform' ),
+			'description'       => __( 'Topic or Reply ID to retrieve all the child replies.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'default'           => '0',
 			'type'              => 'integer',
 			'sanitize_callback' => 'absint',
@@ -2551,7 +2551,7 @@ class BBoss_REST_Reply_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['thread_replies'] = array(
-			'description'       => __( 'Calculated value and the thread replies depth.', 'buddyboss-platform' ),
+			'description'       => __( 'Calculated value and the thread replies depth.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'default'           => bboss_bbp_thread_replies(),
 			'type'              => 'boolean',
 			'validate_callback' => 'rest_validate_request_arg',

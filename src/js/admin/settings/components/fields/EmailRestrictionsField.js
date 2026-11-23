@@ -24,9 +24,9 @@ import { __ } from '@wordpress/i18n';
  * @type {Array}
  */
 var conditionOptions = [
-	{ value: '', label: __( 'Select Condition', 'buddyboss-platform' ) },
-	{ value: 'always_allow', label: __( 'Always Allow', 'buddyboss-platform' ) },
-	{ value: 'never_allow', label: __( 'Never Allow', 'buddyboss-platform' ) },
+	{ value: '', label: __( 'Select Condition', 'buddyboss-community-social-network-groups-forums-messaging' ) },
+	{ value: 'always_allow', label: __( 'Always Allow', 'buddyboss-community-social-network-groups-forums-messaging' ) },
+	{ value: 'never_allow', label: __( 'Never Allow', 'buddyboss-community-social-network-groups-forums-messaging' ) },
 ];
 
 /**
@@ -163,7 +163,7 @@ export function EmailRestrictionsField( { field, value, onChange, disabled } ) {
 									onChange={ function( val ) {
 										updateRow( index, 'address', val );
 									} }
-									placeholder={ __( 'Email address', 'buddyboss-platform' ) }
+									placeholder={ __( 'Email address', 'buddyboss-community-social-network-groups-forums-messaging' ) }
 									disabled={ disabled }
 									__nextHasNoMarginBottom
 								/>
@@ -186,7 +186,7 @@ export function EmailRestrictionsField( { field, value, onChange, disabled } ) {
 									removeRow( index );
 								} }
 								disabled={ disabled }
-								aria-label={ __( 'Remove Rule', 'buddyboss-platform' ) }
+								aria-label={ __( 'Remove Rule', 'buddyboss-community-social-network-groups-forums-messaging' ) }
 							>
 								<i className="bb-icons-rl bb-icons-rl-x" />
 							</button>
@@ -201,7 +201,7 @@ export function EmailRestrictionsField( { field, value, onChange, disabled } ) {
 				disabled={ disabled }
 			>
 				<i className="bb-icons-rl-plus"></i>
-				{ __( 'Add Email', 'buddyboss-platform' ) }
+				{ __( 'Add Email', 'buddyboss-community-social-network-groups-forums-messaging' ) }
 			</Button>
 		</div>
 	);
