@@ -3846,6 +3846,94 @@ function bp_media_regenerate_attachment_thumbnails( $attachment_id ) {
 }
 
 /**
+ * Get the forum, discussion or reply a photo, video or document is attached to.
+ *
+ * Matches the exact ID in any post status, so a held, spam or trashed post is found too.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int    $id   Media, video or document ID.
+ * @param string $type Item type: photo, video or document.
+ *
+ * @return int Post ID, or 0 when the item is not attached to a forum post.
+ */
+function bb_media_get_forum_post_id( $id, $type ) {
+	global $wpdb;
+	static $cache = array();
+
+	$meta_keys = array(
+		'photo'    => 'bp_media_ids',
+		'video'    => 'bp_video_ids',
+		'document' => 'bp_document_ids',
+	);
+
+	$id = (int) $id;
+	if ( empty( $id ) || ! isset( $meta_keys[ $type ] ) || ! bp_is_active( 'forums' ) ) {
+		return 0;
+	}
+
+	$cache_key = $type . '_' . $id;
+	if ( isset( $cache[ $cache_key ] ) ) {
+		return $cache[ $cache_key ];
+	}
+
+	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+	$post_id = (int) $wpdb->get_var(
+		$wpdb->prepare(
+			"SELECT p.ID FROM {$wpdb->posts} p INNER JOIN {$wpdb->postmeta} pm ON pm.post_id = p.ID WHERE pm.meta_key = %s AND p.post_type IN ( %s, %s, %s ) AND FIND_IN_SET( %d, REPLACE( pm.meta_value, ' ', '' ) ) ORDER BY p.ID ASC LIMIT 1",
+			$meta_keys[ $type ],
+			bbp_get_forum_post_type(),
+			bbp_get_topic_post_type(),
+			bbp_get_reply_post_type(),
+			$id
+		)
+	);
+
+	// Only remember a match; an upload can be attached to its post later in the same request.
+	if ( ! empty( $post_id ) ) {
+		$cache[ $cache_key ] = $post_id;
+	}
+
+	return $post_id;
+}
+
+/**
+ * Check whether the forum post holding an attachment is published for regular members.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int $post_id Forum, discussion or reply ID.
+ *
+ * @return bool False for a held, spam or trashed post, and for a reply in such a discussion.
+ */
+function bb_media_is_forum_post_public( $post_id ) {
+	$post_id   = (int) $post_id;
+	$post_type = get_post_type( $post_id );
+
+	if ( empty( $post_id ) || empty( $post_type ) ) {
+		return false;
+	}
+
+	// Forum visibility is checked with bbp_user_can_view_forum().
+	if ( bbp_get_forum_post_type() === $post_type ) {
+		return true;
+	}
+
+	if ( bbp_get_reply_post_type() === $post_type ) {
+		if ( bbp_get_public_status_id() !== get_post_status( $post_id ) ) {
+			return false;
+		}
+
+		$post_id = (int) bbp_get_reply_topic_id( $post_id );
+		if ( empty( $post_id ) ) {
+			return false;
+		}
+	}
+
+	return in_array( get_post_status( $post_id ), bbp_get_public_topic_statuses(), true );
+}
+
+/**
  * Function which return the access based on the current user.
  *
  * @param int    $id            Media|Document|Video|Folder|Album id.
@@ -3891,6 +3979,7 @@ function bb_media_user_can_access( $id, $type, $attachment_id = 0 ) {
 	$group_manage    = false;
 	$media_group_id  = 0;
 	$forum_id        = 0;
+	$forum_post_id   = 0;
 	$thread_id       = 0;
 	$activity_id     = 0;
 	$attach_id       = 0;
@@ -3911,7 +4000,7 @@ function bb_media_user_can_access( $id, $type, $attachment_id = 0 ) {
 		$media_privacy  = $photo->privacy;
 		$media_group_id = (int) $photo->group_id;
 		if ( 'forums' === $media_privacy ) {
-			$forum_id = bp_media_get_forum_id( $id );
+			$forum_post_id = bb_media_get_forum_post_id( $id, 'photo' );
 		}
 		if ( 'message' === $media_privacy ) {
 			$thread_id = bp_media_get_thread_id( $id );
@@ -3924,7 +4013,7 @@ function bb_media_user_can_access( $id, $type, $attachment_id = 0 ) {
 		$media_privacy  = $video->privacy;
 		$media_group_id = (int) $video->group_id;
 		if ( 'forums' === $media_privacy ) {
-			$forum_id = bp_video_get_forum_id( $id );
+			$forum_post_id = bb_media_get_forum_post_id( $id, 'video' );
 		}
 		if ( 'message' === $media_privacy ) {
 			$thread_id = bp_video_get_thread_id( $id );
@@ -3937,13 +4026,24 @@ function bb_media_user_can_access( $id, $type, $attachment_id = 0 ) {
 		$media_privacy  = $document->privacy;
 		$media_group_id = (int) $document->group_id;
 		if ( 'forums' === $media_privacy ) {
-			$forum_id = bp_document_get_forum_id( $id );
+			$forum_post_id = bb_media_get_forum_post_id( $id, 'document' );
 		}
 		if ( 'message' === $media_privacy ) {
 			$thread_id = bp_document_get_thread_id( $id );
 		}
 		$activity_id    = $document->activity_id;
 		$attach_id      = $document->attachment_id;
+	}
+
+	// Resolve the forum from the post that holds the attachment.
+	if ( ! empty( $forum_post_id ) ) {
+		if ( bbp_get_reply_post_type() === get_post_type( $forum_post_id ) ) {
+			$forum_id = (int) bbp_get_reply_forum_id( $forum_post_id );
+		} elseif ( bbp_get_topic_post_type() === get_post_type( $forum_post_id ) ) {
+			$forum_id = (int) bbp_get_topic_forum_id( $forum_post_id );
+		} else {
+			$forum_id = (int) $forum_post_id;
+		}
 	}
 
 	if ( 'comment' === $media_privacy && bp_is_active( 'activity' ) && ! empty( $activity_id ) ) {
@@ -4117,7 +4217,23 @@ function bb_media_user_can_access( $id, $type, $attachment_id = 0 ) {
 					'check_ancestors' => false,
 				);
 
-				$has_access = bbp_user_can_view_forum( $args );
+				/*
+				 * Without a forum there is nothing to check against, and a held, spam or trashed
+				 * post is for its author and moderators only, so both stay closed to other members.
+				 */
+				$has_access = false;
+				if ( ! empty( $forum_id ) ) {
+					$can_moderate = current_user_can( 'moderate', $forum_id );
+					if ( ! $can_moderate && ! empty( $current_user_id ) && bp_is_active( 'groups' ) ) {
+						$forum_group_id = (int) bbp_forum_recursive_group_id( $forum_id );
+						$can_moderate   = ! empty( $forum_group_id ) && ( groups_is_user_admin( $current_user_id, $forum_group_id ) || groups_is_user_mod( $current_user_id, $forum_group_id ) );
+					}
+
+					if ( $can_moderate || bb_media_is_forum_post_public( $forum_post_id ) ) {
+						$has_access = bbp_user_can_view_forum( $args );
+					}
+				}
+
 				if ( $media_user_id === $current_user_id ) {
 					$can_view     = true;
 					$can_download = true;
