@@ -833,6 +833,15 @@ JS;
 	 */
 	public function presence_localize_scripts() {
 
+		// Presence falls back to the REST API when the standalone presence file is
+		// not part of the build.
+		$bb_native_presence     = false;
+		$bb_native_presence_url = '';
+		// @bbwt-com-start native-presence-endpoint
+		$bb_native_presence     = (bool) bp_get_option( 'bb_use_core_native_presence', false );
+		$bb_native_presence_url = buddypress()->plugin_url . 'bp-core/bb-core-native-presence.php';
+		// @bbwt-com-end native-presence-endpoint
+
 		$params = array(
 			'heartbeat_enabled'         => bb_is_heartbeat_enabled(),
 			'presence_interval'         => bb_presence_interval(),
@@ -840,8 +849,8 @@ JS;
 			'presence_time_span'        => bb_presence_time_span(),
 			'idle_inactive_span'        => bb_idle_inactive_span(),
 			'rest_nonce'                => wp_create_nonce( 'wp_rest' ),
-			'native_presence'           => (bool) bp_get_option( 'bb_use_core_native_presence', false ),
-			'native_presence_url'       => buddypress()->plugin_url . 'bp-core/bb-core-native-presence.php',
+			'native_presence'           => $bb_native_presence,
+			'native_presence_url'       => $bb_native_presence_url,
 			'presence_rest_url'         => home_url( 'wp-json/buddyboss/v1/members/presence' ),
 		);
 
