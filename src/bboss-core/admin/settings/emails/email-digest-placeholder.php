@@ -189,6 +189,7 @@ if ( function_exists( 'bboss_email_digest_required_plans' ) && ! function_exists
 // @bbwt-com-end compat-layer
 
 
+// @bbwt-com-start licence-state-probes
 /**
  * Whether the BuddyBoss license is currently activated.
  *
@@ -236,7 +237,9 @@ if ( function_exists( 'bboss_email_digest_is_license_active' ) && ! function_exi
 }
 // @bbwt-com-end compat-layer
 
+// @bbwt-com-end licence-state-probes
 
+// @bbwt-com-start licence-state-probes
 /**
  * The plan SKU the activated licence carries.
  *
@@ -279,6 +282,7 @@ if ( function_exists( 'bboss_email_digest_licensed_plan_sku' ) && ! function_exi
 }
 // @bbwt-com-end compat-layer
 
+// @bbwt-com-end licence-state-probes
 
 /**
  * Resolve which of the three stand-in states applies.
@@ -294,6 +298,7 @@ if ( function_exists( 'bboss_email_digest_licensed_plan_sku' ) && ! function_exi
  *                'addon_not_installed', 'addon_outdated'.
  */
 function bboss_email_digest_get_placeholder_state() {
+	// @bbwt-com-start licence-state-probes
 	// @bbwt-com-start mothership-hub
 	// The licence check belongs to the buddyboss.com build. Without it (the
 	// WordPress.org build) the plan SKU below is empty, so the panel resolves to
@@ -349,6 +354,10 @@ function bboss_email_digest_get_placeholder_state() {
 	// to a Start customer reads as a billing error on our side, so this gets a state of
 	// its own and a card that offers the update instead.
 	return 'addon_outdated';
+	// @bbwt-com-end licence-state-probes
+	// Builds without the licence layer (the wordpress.org edition) reach this instead:
+	// the panel always shows the locked form with its upgrade badge and link.
+	return 'not_in_plan';
 }
 // @bbwt-com-start compat-layer
 // bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
@@ -734,8 +743,17 @@ function bboss_admin_settings_register_email_digest_card( $state ) {
 			);
 			break;
 
+		// @bbwt-com-start licence-state-probes
 		case 'needs_license':
+		// @bbwt-com-end licence-state-probes
 		default:
+			// Builds without the licence layer never resolve to a state that needs this
+			// card; it is a plain description for a state a filter may have supplied.
+			$card = array(
+				'empty_state_title'       => __( 'Email Digest', 'buddyboss' ),
+				'empty_state_description' => __( 'Combine multiple notifications into a single daily or weekly email to reduce inbox clutter.', 'buddyboss' ),
+			);
+			// @bbwt-com-start licence-state-probes
 			// Plan membership cannot be resolved without an activated licence, so
 			// activation is the only honest next step — naming a plan here would be a
 			// guess, and guessing wrong sends a paying customer to buy what they hold.
@@ -745,6 +763,7 @@ function bboss_admin_settings_register_email_digest_card( $state ) {
 				'button_label'            => __( 'Activate License', 'buddyboss' ),
 				'button_url'              => bboss_admin_license_screen_url(),
 			);
+			// @bbwt-com-end licence-state-probes
 			break;
 	}
 

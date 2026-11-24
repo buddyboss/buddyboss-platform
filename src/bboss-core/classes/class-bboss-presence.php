@@ -378,6 +378,9 @@ if ( ! class_exists( 'BBoss_Presence' ) ) {
 		 * @since BuddyBoss 2.3.1
 		 */
 		public static function bb_check_native_presence_load_directly( $bypass = false ) {
+			// The standalone presence file is not part of every build; without it
+			// presence always goes through the REST API and there is nothing to probe.
+			// @bbwt-com-start native-presence-endpoint
 			$bb_check_native_presence_load_directly = get_site_option( 'bb_check_native_presence_load_directly', 0 );
 			if (
 				0 !== $bb_check_native_presence_load_directly &&
@@ -408,6 +411,7 @@ if ( ! class_exists( 'BBoss_Presence' ) ) {
 			}
 
 			update_site_option( 'bb_check_native_presence_load_directly', microtime( true ) );
+			// @bbwt-com-end native-presence-endpoint
 		}
 
 		/**

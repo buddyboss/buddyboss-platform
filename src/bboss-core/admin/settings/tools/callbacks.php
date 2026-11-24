@@ -47,6 +47,7 @@ if ( function_exists( 'bboss_tools_mothership_available' ) && ! function_exists(
 // @bbwt-com-end compat-layer
 
 
+// @bbwt-com-start licence-state-probes
 /**
  * Whether the BuddyBoss license is currently activated.
  *
@@ -77,7 +78,9 @@ if ( function_exists( 'bboss_tools_is_license_active' ) && ! function_exists( 'b
 }
 // @bbwt-com-end compat-layer
 
+// @bbwt-com-end licence-state-probes
 
+// @bbwt-com-start licence-state-probes
 /**
  * Admin URL of the BuddyBoss license activation page.
  *
@@ -108,14 +111,18 @@ if ( function_exists( 'bboss_tools_get_license_url' ) && ! function_exists( 'bb_
 }
 // @bbwt-com-end compat-layer
 
+// @bbwt-com-end licence-state-probes
 
 /**
  * AJAX: Report installed/active state of the buddyboss-tools plugin.
  *
  * The Activation Required CTA component calls this on mount to decide
- * whether the action button shows "Install Now", "Activate Now", or
- * "Activate License" (when the addon is not installed and no valid license
- * is present to install it with). Builds without the in-dashboard installer
+ * whether the action button shows "Install Now" or "Activate Now".
+ * @bbwt-com-start licence-state-probes
+ * It reports `needs-license` when the addon is not installed and no valid
+ * license is present to install it with.
+ * @bbwt-com-end licence-state-probes
+ * Builds without the in-dashboard installer
  * report `download` with a `download_url` instead of `not-installed`.
  *
  * @since BuddyBoss 3.1.0
@@ -145,6 +152,7 @@ function bboss_tools_ajax_check_plugin_state() {
 		wp_send_json_success( array( 'state' => 'installed' ) );
 	}
 
+	// @bbwt-com-start licence-state-probes
 	// Not installed: if the Mothership license layer is present but the license
 	// is inactive, the addon cannot be pulled from the BuddyBoss add-on server —
 	// surface a license-activation CTA instead of a dead "Install Now" button.
@@ -156,6 +164,7 @@ function bboss_tools_ajax_check_plugin_state() {
 			)
 		);
 	}
+	// @bbwt-com-end licence-state-probes
 
 	// @bbwt-com-start installers
 	wp_send_json_success( array( 'state' => 'not-installed' ) );

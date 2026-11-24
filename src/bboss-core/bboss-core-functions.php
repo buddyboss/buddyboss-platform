@@ -14257,6 +14257,15 @@ function bboss_admin_settings_get_pro_notice( $args = array() ) {
 
 	$is_pro_locked = false;
 
+	// Whether a loaded BuddyBoss Platform Pro keeps its features locked. Builds that
+	// carry no licence code treat a loaded Pro as unlocked; Pro guards its own features.
+	$bb_pro_keeps_locked = false;
+	// @bbwt-com-start licence-state-probes
+	$bb_pro_keeps_locked = function_exists( 'bb_pro_should_lock_features' )
+		? bb_pro_should_lock_features()
+		: ( function_exists( 'bbp_pro_is_license_valid' ) && ! bbp_pro_is_license_valid() );
+	// @bbwt-com-end licence-state-probes
+
 	if ( function_exists( 'bb_platform_pro' ) && version_compare( bb_platform_pro()->version, '1.1.9.1', '<=' ) ) {
 		$is_pro_locked = true;
 	} elseif (
@@ -14311,14 +14320,7 @@ function bboss_admin_settings_get_pro_notice( $args = array() ) {
 		)
 	) {
 		$is_pro_locked = true;
-	} elseif (
-		! function_exists( 'bb_platform_pro' ) ||
-		(
-			function_exists( 'bb_pro_should_lock_features' )
-				? bb_pro_should_lock_features()
-				: ( function_exists( 'bbp_pro_is_license_valid' ) && ! bbp_pro_is_license_valid() )
-		)
-	) {
+	} elseif ( ! function_exists( 'bb_platform_pro' ) || $bb_pro_keeps_locked ) {
 		$is_pro_locked = true;
 	}
 

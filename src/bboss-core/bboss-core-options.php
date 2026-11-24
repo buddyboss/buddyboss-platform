@@ -4337,18 +4337,21 @@ function bboss_get_reaction_mode( $default = 'likes' ) {
 		//
 		// The third branch is gated on bp_register_reaction() — a marker defined
 		// only by a legacy Pro build that still ships the emotion layer itself.
-		// A licensed Pro post-PROD-10191 no longer provides reactions (that moved
-		// to the add-on), so bbp_pro_is_license_valid() alone must not be treated
-		// as proof of a provider; without this gate a new-Pro + no-add-on +
-		// licensed site would report emotions "available" with nothing behind it.
+		// A Pro build post-PROD-10191 no longer provides reactions (that moved
+		// to the add-on), so Pro being present alone must not be treated
+		// as proof of a provider; without this gate a new-Pro + no-add-on
+		// site would report emotions "available" with nothing behind it.
+		$bb_legacy_pro_emotions = function_exists( 'bp_register_reaction' );
+		// @bbwt-com-start licence-state-probes
+		$bb_legacy_pro_emotions = function_exists( 'bp_register_reaction' )
+			&& function_exists( 'bbp_pro_is_license_valid' )
+			&& bbp_pro_is_license_valid();
+		// @bbwt-com-end licence-state-probes
+
 		$emotion_layer_available =
 			class_exists( 'BB_Reactions' )
 			|| bboss_addons_provides_module( 'reactions' )
-			|| (
-				function_exists( 'bp_register_reaction' )
-				&& function_exists( 'bbp_pro_is_license_valid' )
-				&& bbp_pro_is_license_valid()
-			);
+			|| $bb_legacy_pro_emotions;
 
 		if ( ! $emotion_layer_available ) {
 			$mode = 'likes';

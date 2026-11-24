@@ -1545,8 +1545,12 @@ class BBoss_REST_Settings_Endpoint extends WP_REST_Controller {
 
 		$results['bb-presence-idle-inactive-span'] = function_exists( 'bboss_idle_inactive_span' ) ? bboss_idle_inactive_span() : 180;
 
+		// Empty when the standalone presence file is not part of the build.
+		$results['bb-native-presence'] = '';
+		// @bbwt-com-start native-presence-endpoint
 		$native_presence               = (bool) bboss_get_option( 'bb_use_core_native_presence', false );
 		$results['bb-native-presence'] = true === $native_presence ? bboss()->plugin_url . 'bboss-core/bboss-core-native-presence.php' : '';
+		// @bbwt-com-end native-presence-endpoint
 
 		// Allowed messaging without connection for profile types.
 		if (
