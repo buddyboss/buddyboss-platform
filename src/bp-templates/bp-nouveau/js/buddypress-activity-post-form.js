@@ -179,19 +179,6 @@ window.bp = window.bp || {};
 				}
 			);
 
-			$( document ).on( 'click', '.activity-form #whats-new-attachments .dz-error', function () {
-				$( '.activity-form #whats-new-attachments .dz-error' ).removeClass( 'dz-single-error' );
-				$( this ).addClass( 'dz-single-error' );
-				var mediaName         = $( this ).find( '.dz-details .dz-filename span' ).html();
-				var mediaErrorMessage = $( this ).find( '.dz-error-message span' ).html();
-				var errorMessage;
-				if ( '' !== mediaName ) {
-					errorMessage = mediaName + '<br>';
-				}
-				errorMessage = errorMessage + mediaErrorMessage;
-				Backbone.trigger( 'onError', '<div>' + errorMessage + '</div>' );
-			} );
-
 			Backbone.trigger( 'mediaprivacy' );
 		},
 
@@ -280,45 +267,6 @@ window.bp = window.bp || {};
 				0
 			);
 
-		},
-
-		removeErrorClass: function () {
-			if ( $( '.activity-form #whats-new-attachments .dz-error' ).hasClass('dz-single-error') ) {
-				$( '.activity-form #whats-new-attachments .dz-error' ).removeClass( 'dz-single-error' );
-			}
-		},
-
-		displayMediaError: function ( count, self ) {
-			if ( 0 !== count ) {
-				if ( count > 1 ) { // Error on more than one file.
-					self.model.set(
-						'errors',
-						{
-							type: 'error',
-							value: '<div>' + BP_Nouveau.media.multipleErrorOnFile + '</div>'
-						}
-					);
-				} else { // Error on single file.
-					var mediaName         = self.$el.find( '.dz-preview.dz-error .dz-details .dz-filename span' ).html();
-					var mediaErrorMessage = self.$el.find( '.dz-preview.dz-error .dz-error-message span' ).html();
-					var errorMessage;
-					if ( '' !== mediaName ) {
-						errorMessage = mediaName + '<br>';
-					}
-					errorMessage = errorMessage + mediaErrorMessage;
-					self.model.set(
-						'errors',
-						{
-							type: 'error',
-							value: '<div>' + errorMessage + '</div>'
-						}
-					);
-				}
-				// Disable post submit button
-				$( '#whats-new-form' ).addClass( 'focus-in--empty' );
-			} else {
-				self.model.unset( 'errors' );
-			}
 		},
 
 		/**
@@ -474,6 +422,40 @@ window.bp = window.bp || {};
 					self.dropzone.emit( 'complete', mock_file );
 				}
 			);
+		},
+
+		/**
+		 * Puts the fresh topic list into a restored draft and keeps the stored choice only when it is still in that list.
+		 *
+		 * A draft stores a copy of the topic list taken when it was saved. Topics can be deleted, renamed,
+		 * reordered or restricted after that, so the list and the choice are taken from the current page instead.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param {Object} draftTopics Draft topics data: topic_id, topic_name and topic_lists. Changed in place.
+		 * @param {Array}  freshLists  Topic list localized for the current page.
+		 */
+		reconcileDraftTopics: function ( draftTopics, freshLists ) {
+			freshLists              = _.isArray( freshLists ) ? freshLists : [];
+			draftTopics.topic_lists = freshLists;
+
+			var draftTopicId = parseInt( draftTopics.topic_id, 10 ) || 0;
+			if ( ! draftTopicId ) {
+				return;
+			}
+
+			var chosenTopic = _.find( freshLists, function ( topic ) {
+				return parseInt( topic.topic_id, 10 ) === draftTopicId;
+			} );
+
+			if ( chosenTopic ) {
+				// Pick up a rename made after the draft was saved.
+				draftTopics.topic_name = chosenTopic.name;
+			} else {
+				// The topic was deleted or the member can no longer post in it.
+				draftTopics.topic_id   = 0;
+				draftTopics.topic_name = '';
+			}
 		},
 
 		displayEditDraftActivityData: function ( activity_data, bpActivityEvent, activity_URL_preview ) {
@@ -652,7 +634,7 @@ window.bp = window.bp || {};
 				self.postForm.model.set( 'poll', pollObject );
 				self.postForm.model.set( 'poll_id', activity_data.poll.id );
 			}
-
+			
 			var tool_box = $( '.activity-form.focus-in #whats-new-toolbar' );
 
 			if ( ! _.isUndefined( self.activityToolbar ) ) {
@@ -668,9 +650,12 @@ window.bp = window.bp || {};
 
 			// Inject GIF.
 			if ( ! _.isUndefined( activity_data.gif ) && Object.keys( activity_data.gif ).length ) {
-				// close and destroy existing media instance.
-				self.activityToolbar.toggleGifSelector( bpActivityEvent );
-				self.activityToolbar.gifMediaSearchDropdownView.model.set( 'gif_data', activity_data.gif );
+				// Open the GIF picker when it is available. The saved GIF goes on the form model either
+				// way, so it is kept on save without a GIF provider.
+				if ( ! _.isUndefined( self.activityToolbar ) ) {
+					self.activityToolbar.toggleGifSelector( bpActivityEvent );
+				}
+				self.postForm.model.set( 'gif_data', activity_data.gif );
 
 				// Make tool box button disable.
 				if ( tool_box.find( '#activity-media-button' ) ) {
@@ -1090,11 +1075,31 @@ window.bp = window.bp || {};
 			) {
 				activity_data.topics.topic_id   = activity_data.topics.topic_id || 0;
 				activity_data.topics.topic_name = activity_data.topics.topic_name || '';
+
+				var isEditActivity = 0 < parseInt( activity_data.id, 10 );
 				if (
+					isEditActivity &&
 					activity_data.item_id &&
 					'groups' === activity_data.object
 				) {
+					// Edit a group post: keep the fresh group topic list supplied with the activity (PROD-8796).
 					activity_data.topics.topic_lists = activity_data.topics.topic_lists;
+				} else if (
+					! isEditActivity &&
+					activity_data.item_id &&
+					'groups' === activity_data.object
+				) {
+					// Group draft: the page list belongs to this group only on the group's own page.
+					// Elsewhere there is no fresh list for the group, so the draft's list is kept.
+					if (
+						'group' === BP_Nouveau.activity.params.object &&
+						parseInt( BP_Nouveau.activity.params.item_id, 10 ) === parseInt( activity_data.item_id, 10 )
+					) {
+						self.reconcileDraftTopics( activity_data.topics, BP_Nouveau.activity.params.topics.topic_lists );
+					}
+				} else if ( ! isEditActivity ) {
+					// Draft: use the fresh list for this page and drop a stored choice that is no longer in it.
+					self.reconcileDraftTopics( activity_data.topics, BP_Nouveau.activity.params.topics.topic_lists );
 				} else {
 					activity_data.topics.topic_lists = BP_Nouveau.activity.params.topics.topic_lists;
 				}
@@ -4313,9 +4318,8 @@ window.bp = window.bp || {};
 		},
 
 		validateContent: function() {
-			var $whatsNew            = $( '#whats-new-form' ).find( '#whats-new' );
-			var content              = $.trim($whatsNew[0].innerHTML.replace(/<div>/gi, '\n').replace(/<\/div>/gi, ''));
-			var dropzone_error_check = $whatsNew.find( '.dz-preview.dz-error' ).length;
+			var $whatsNew = $( '#whats-new-form' ).find( '#whats-new' );
+			var content = $.trim( $whatsNew[0].innerHTML.replace( /<div>/gi, '\n' ).replace( /<\/div>/gi, '' ) );
 			content     = content.replace( /&nbsp;/g, ' ' );
 
 			if ( content.replace( /<p>/gi, '' ).replace( /<\/p>/gi, '' ).replace( /<br>/gi, '' ) === '' ) {
@@ -4326,7 +4330,7 @@ window.bp = window.bp || {};
 			var isTitleRequired = BP_Nouveau.activity.params.is_activity_post_title_required;
 			var title           = isTitleRequired ? $.trim( $( '#whats-new-title' ).val() || '' ) : true;
 
-			var contentValidate = dropzone_error_check === 0 && (
+			var contentValidate = (
 				$( $.parseHTML( content ) ).text().trim() !== '' ||
 				// Typed emoji render as img.emoji, while the emoji picker and restored drafts or edits use img.emojioneemoji.
 				0 < $( '<div></div>' ).append( $.parseHTML( content ) ).find( 'img.emoji, img.emojioneemoji' ).length ||
@@ -4779,13 +4783,7 @@ window.bp = window.bp || {};
 								if ( self.media.length === response.data.menu_order_error_count ) {
 									self.model.unset( 'media' );
 								}
-
-								bp.Nouveau.Activity.postForm.removeErrorClass();
-								file.error = true;
-								$( file.previewElement ).find( '.dz-error-message span' ).html( message );
 								return _results;
-							} else {
-								file.error = false;
 							}
 
 
@@ -4801,7 +4799,6 @@ window.bp = window.bp || {};
 				bp.Nouveau.Activity.postForm.dropzone.on(
 					'error',
 					function ( file, response ) {
-						bp.Nouveau.Activity.postForm.removeErrorClass();
 						if ( file.accepted ) {
 							if ( ! _.isUndefined( response ) && ! _.isUndefined( response.data ) && ! _.isUndefined( response.data.feedback ) ) {
 								$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
@@ -4821,9 +4818,6 @@ window.bp = window.bp || {};
 				bp.Nouveau.Activity.postForm.dropzone.on(
 					'removedfile',
 					function ( file ) {
-						bp.Nouveau.Activity.postForm.removeErrorClass();
-						var dropzone_error_count = self.$el.find( '.dz-preview.dz-error' ).length;
-
 						if ( true === bp.draft_activity.allow_delete_media ) {
 							if ( self.media.length ) {
 								for ( var i in self.media ) {
@@ -4848,7 +4842,8 @@ window.bp = window.bp || {};
 								}
 
 								// Unset media if all uploaded media has error.
-								if ( self.media.length === dropzone_error_count ) {
+								var media_error_count = self.$el.find( '.dz-preview.dz-error' ).length;
+								if ( self.media.length === media_error_count ) {
 									self.model.unset( 'media' );
 								}
 							}
@@ -4877,79 +4872,6 @@ window.bp = window.bp || {};
 
 							bp.draft_content_changed = true;
 						}
-
-						if (
-							'undefined' !== typeof bp.Nouveau.Activity.postForm.dropzone.files &&
-							'undefined' !== typeof bp.Nouveau.Activity.postForm.dropzone.options.maxFiles &&
-							bp.Nouveau.Activity.postForm.dropzone.options.maxFiles > bp.Nouveau.Activity.postForm.dropzone.files.length
-						) {
-							if ( self.$el.find( '.dropzone.open' ).hasClass( 'bb-max-files-reached' ) ) {
-								self.$el.find('.dropzone.open').removeClass('bb-max-files-reached');
-							}
-							// If error is not related to multiple file then set false.
-							bp.Nouveau.Activity.postForm.dropzone.maxFileError = false;
-							if ( 0 === dropzone_error_count ) {
-								self.model.unset( 'errors' );
-								if ( 0 !== bp.Nouveau.Activity.postForm.dropzone.files.length ) {
-									// Enable post submit button
-									$( '#whats-new-form' ).removeClass( 'focus-in--empty' );
-								}
-							} else {
-								bp.Nouveau.Activity.postForm.displayMediaError( dropzone_error_count, self );
-							}
-						}
-
-					}
-				);
-
-				bp.Nouveau.Activity.postForm.dropzone.on(
-					'complete',
-					function () {
-						var queuedFiles    = bp.Nouveau.Activity.postForm.dropzone.getQueuedFiles().length;
-						var uploadingFiles = bp.Nouveau.Activity.postForm.dropzone.getUploadingFiles().length;
-						if (
-							'undefined' !== typeof bp.Nouveau.Activity.postForm.dropzone.files &&
-							bp.Nouveau.Activity.postForm.dropzone.files.length !== 0 &&
-							'undefined' !== typeof bp.Nouveau.Activity.postForm.dropzone.options.maxFiles &&
-							bp.Nouveau.Activity.postForm.dropzone.options.maxFiles <= bp.Nouveau.Activity.postForm.dropzone.files.length
-						) {
-							if ( ! self.$el.find( '.dropzone.open' ).hasClass( 'dz-max-files-reached' ) ) {
-								self.$el.find( '.dropzone.open' ).addClass( 'bb-max-files-reached' );
-							}
-						}
-
-						if (
-							'undefined' !== typeof bp.Nouveau.Activity.postForm.dropzone.files &&
-							bp.Nouveau.Activity.postForm.dropzone.files.length !== 0 &&
-							'undefined' !== typeof bp.Nouveau.Activity.postForm.dropzone.options.maxFiles &&
-							bp.Nouveau.Activity.postForm.dropzone.options.maxFiles < bp.Nouveau.Activity.postForm.dropzone.files.length
-						) {
-							// If error is related to multiple file then set true.
-							bp.Nouveau.Activity.postForm.dropzone.maxFileError = true;
-							self.model.set(
-								'errors',
-								{
-									type: 'info',
-									value: '<div>' + bp.Nouveau.Activity.postForm.dropzone.options.dictMaxFilesExceeded + '</div>'
-								}
-							);
-							var $this = this;
-							bp.Nouveau.Activity.postForm.dropzone.files.map( function ( item, key ) {
-								if ( key >= bp.Nouveau.Activity.postForm.dropzone.options.maxFiles ) {
-									$this.removeFile( item );
-								}
-							});
-						} else {
-							if ( 0 === queuedFiles && 0 === uploadingFiles ) {
-								var errorCount = bp.Nouveau.Activity.postForm.dropzone.files.filter( function ( item ) {
-									return true === item.error;
-								}).length;
-								if ( 0 !== errorCount && true !== bp.Nouveau.Activity.postForm.dropzone.maxFileError ) {
-									bp.Nouveau.Activity.postForm.displayMediaError( errorCount, self );
-								}
-							}
-						}
-
 					}
 				);
 
@@ -5124,10 +5046,6 @@ window.bp = window.bp || {};
 								node = _ref[_i];
 								_results.push( node.textContent = message );
 							}
-
-							bp.Nouveau.Activity.postForm.removeErrorClass();
-							file.error = true;
-							$( file.previewElement ).find( '.dz-error-message span' ).html( message );
 							return _results;
 						}
 
@@ -5149,7 +5067,6 @@ window.bp = window.bp || {};
 				bp.Nouveau.Activity.postForm.dropzone.on(
 					'error',
 					function ( file, response ) {
-						bp.Nouveau.Activity.postForm.removeErrorClass();
 						if ( file.accepted ) {
 							if ( ! _.isUndefined( response ) && ! _.isUndefined( response.data ) && ! _.isUndefined( response.data.feedback ) ) {
 								$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
@@ -5169,8 +5086,6 @@ window.bp = window.bp || {};
 				bp.Nouveau.Activity.postForm.dropzone.on(
 					'removedfile',
 					function ( file ) {
-						bp.Nouveau.Activity.postForm.removeErrorClass();
-						var dropzone_error_count = self.$el.find( '.dz-preview.dz-error' ).length;
 						if ( true === bp.draft_activity.allow_delete_media ) {
 							if ( self.document.length ) {
 								for ( var i in self.document ) {
@@ -5219,78 +5134,6 @@ window.bp = window.bp || {};
 
 							bp.draft_content_changed = true;
 						}
-
-						if (
-							'undefined' !== typeof bp.Nouveau.Activity.postForm.dropzone.files &&
-							'undefined' !== typeof bp.Nouveau.Activity.postForm.dropzone.options.maxFiles &&
-							bp.Nouveau.Activity.postForm.dropzone.options.maxFiles > bp.Nouveau.Activity.postForm.dropzone.files.length
-						) {
-							if ( self.$el.find( '.dropzone.open' ).hasClass( 'bb-max-files-reached' ) ) {
-								self.$el.find('.dropzone.open').removeClass('bb-max-files-reached');
-							}
-							// If error is not related to multiple file then set false.
-							bp.Nouveau.Activity.postForm.dropzone.maxFileError = false;
-							if ( 0 === dropzone_error_count ) {
-								self.model.unset( 'errors' );
-								if ( 0 !== bp.Nouveau.Activity.postForm.dropzone.files.length ) {
-									// Enable post submit button
-									$( '#whats-new-form' ).removeClass( 'focus-in--empty' );
-								}
-							} else {
-								bp.Nouveau.Activity.postForm.displayMediaError( dropzone_error_count, self );
-							}
-						}
-					}
-				);
-
-				bp.Nouveau.Activity.postForm.dropzone.on(
-					'complete',
-					function () {
-						var queuedFiles    = bp.Nouveau.Activity.postForm.dropzone.getQueuedFiles().length;
-						var uploadingFiles = bp.Nouveau.Activity.postForm.dropzone.getUploadingFiles().length;
-						if (
-							'undefined' !== typeof bp.Nouveau.Activity.postForm.dropzone.files &&
-							bp.Nouveau.Activity.postForm.dropzone.files.length !== 0 &&
-							'undefined' !== typeof bp.Nouveau.Activity.postForm.dropzone.options.maxFiles &&
-							bp.Nouveau.Activity.postForm.dropzone.options.maxFiles <= bp.Nouveau.Activity.postForm.dropzone.files.length
-						) {
-							if ( ! self.$el.find( '.dropzone.open' ).hasClass( 'dz-max-files-reached' ) ) {
-								self.$el.find( '.dropzone.open' ).addClass( 'bb-max-files-reached' );
-							}
-						}
-
-						if (
-							'undefined' !== typeof bp.Nouveau.Activity.postForm.dropzone.files &&
-							bp.Nouveau.Activity.postForm.dropzone.files.length !== 0 &&
-							'undefined' !== typeof bp.Nouveau.Activity.postForm.dropzone.options.maxFiles &&
-							bp.Nouveau.Activity.postForm.dropzone.options.maxFiles < bp.Nouveau.Activity.postForm.dropzone.files.length
-						) {
-							// If error is related to multiple file then set true.
-							bp.Nouveau.Activity.postForm.dropzone.maxFileError = true;
-							self.model.set(
-								'errors',
-								{
-									type: 'info',
-									value: '<div>' + bp.Nouveau.Activity.postForm.dropzone.options.dictMaxFilesExceeded + '</div>'
-								}
-							);
-							var $this = this;
-							bp.Nouveau.Activity.postForm.dropzone.files.map( function ( item, key ) {
-								if ( key >= bp.Nouveau.Activity.postForm.dropzone.options.maxFiles ) {
-									$this.removeFile( item );
-								}
-							});
-						} else {
-							if ( 0 === queuedFiles && 0 === uploadingFiles ) {
-								var errorCount = bp.Nouveau.Activity.postForm.dropzone.files.filter( function ( item ) {
-									return true === item.error;
-								}).length;
-								if ( 0 !== errorCount && true !== bp.Nouveau.Activity.postForm.dropzone.maxFileError ) {
-									bp.Nouveau.Activity.postForm.displayMediaError( errorCount, self );
-								}
-							}
-						}
-
 					}
 				);
 
@@ -5505,8 +5348,6 @@ window.bp = window.bp || {};
 								node = _ref[ _i ];
 								_results.push( node.textContent = message );
 							}
-							bp.Nouveau.Activity.postForm.removeErrorClass();
-							file.error = true;
 							return _results;
 						}
 
@@ -5528,7 +5369,6 @@ window.bp = window.bp || {};
 				bp.Nouveau.Activity.postForm.dropzone.on(
 					'error',
 					function ( file, response ) {
-						bp.Nouveau.Activity.postForm.removeErrorClass();
 						if ( file.accepted ) {
 							if ( ! _.isUndefined( response ) && ! _.isUndefined( response.data ) && ! _.isUndefined( response.data.feedback ) ) {
 								$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
@@ -5548,8 +5388,6 @@ window.bp = window.bp || {};
 				bp.Nouveau.Activity.postForm.dropzone.on(
 					'removedfile',
 					function ( file ) {
-						bp.Nouveau.Activity.postForm.removeErrorClass();
-						var dropzone_error_count = self.$el.find( '.dz-preview.dz-error' ).length;
 						if ( true === bp.draft_activity.allow_delete_media ) {
 							if ( self.video.length ) {
 								for ( var i in self.video ) {
@@ -5595,78 +5433,6 @@ window.bp = window.bp || {};
 
 							bp.draft_content_changed = true;
 						}
-
-						if (
-							'undefined' !== typeof bp.Nouveau.Activity.postForm.dropzone.files &&
-							'undefined' !== typeof bp.Nouveau.Activity.postForm.dropzone.options.maxFiles &&
-							bp.Nouveau.Activity.postForm.dropzone.options.maxFiles > bp.Nouveau.Activity.postForm.dropzone.files.length
-						) {
-							if ( self.$el.find( '.dropzone.open' ).hasClass( 'bb-max-files-reached' ) ) {
-								self.$el.find('.dropzone.open').removeClass('bb-max-files-reached');
-							}
-							// If error is not related to multiple file then set false.
-							bp.Nouveau.Activity.postForm.dropzone.maxFileError = false;
-							if ( 0 === dropzone_error_count ) {
-								self.model.unset( 'errors' );
-								if ( 0 !== bp.Nouveau.Activity.postForm.dropzone.files.length ) {
-									// Enable post submit button
-									$( '#whats-new-form' ).removeClass( 'focus-in--empty' );
-								}
-							} else {
-								bp.Nouveau.Activity.postForm.displayMediaError( dropzone_error_count, self );
-							}
-						}
-					}
-				);
-
-				bp.Nouveau.Activity.postForm.dropzone.on(
-					'complete',
-					function () {
-						var queuedFiles    = bp.Nouveau.Activity.postForm.dropzone.getQueuedFiles().length;
-						var uploadingFiles = bp.Nouveau.Activity.postForm.dropzone.getUploadingFiles().length;
-						if (
-							'undefined' !== typeof bp.Nouveau.Activity.postForm.dropzone.files &&
-							bp.Nouveau.Activity.postForm.dropzone.files.length !== 0 &&
-							'undefined' !== typeof bp.Nouveau.Activity.postForm.dropzone.options.maxFiles &&
-							bp.Nouveau.Activity.postForm.dropzone.options.maxFiles <= bp.Nouveau.Activity.postForm.dropzone.files.length
-						) {
-							if ( ! self.$el.find( '.dropzone.open' ).hasClass( 'dz-max-files-reached' ) ) {
-								self.$el.find( '.dropzone.open' ).addClass( 'bb-max-files-reached' );
-							}
-						}
-
-						if (
-							'undefined' !== typeof bp.Nouveau.Activity.postForm.dropzone.files &&
-							bp.Nouveau.Activity.postForm.dropzone.files.length !== 0 &&
-							'undefined' !== typeof bp.Nouveau.Activity.postForm.dropzone.options.maxFiles &&
-							bp.Nouveau.Activity.postForm.dropzone.options.maxFiles < bp.Nouveau.Activity.postForm.dropzone.files.length
-						) {
-							// If error is related to multiple file then set true.
-							bp.Nouveau.Activity.postForm.dropzone.maxFileError = true;
-							self.model.set(
-								'errors',
-								{
-									type: 'info',
-									value: '<div>' + bp.Nouveau.Activity.postForm.dropzone.options.dictMaxFilesExceeded + '</div>'
-								}
-							);
-							var $this = this;
-							bp.Nouveau.Activity.postForm.dropzone.files.map( function ( item, key ) {
-								if ( key >= bp.Nouveau.Activity.postForm.dropzone.options.maxFiles ) {
-									$this.removeFile( item );
-								}
-							});
-						} else {
-							if ( 0 === queuedFiles && 0 === uploadingFiles ) {
-								var errorCount = bp.Nouveau.Activity.postForm.dropzone.files.filter( function ( item ) {
-									return true === item.error;
-								}).length;
-								if ( 0 !== errorCount && true !== bp.Nouveau.Activity.postForm.dropzone.maxFileError ) {
-									bp.Nouveau.Activity.postForm.displayMediaError( errorCount, self );
-								}
-							}
-						}
-
 					}
 				);
 
@@ -6002,7 +5768,9 @@ window.bp = window.bp || {};
 				}
 
 				this.options = options || {};
-				this.giphy   = new window.Giphy( bbRlMedia.gif_api_key );
+				// The GIPHY library ships with BuddyBoss Add-ons. Without it the view still keeps
+				// an attached GIF (activity and comment edits) but cannot search.
+				this.giphy   = 'undefined' !== typeof window.Giphy ? new window.Giphy( bbRlMedia.gif_api_key ) : null;
 
 				this.gifDataItems = new bp.Collections.GifDatas();
 				this.listenTo( this.gifDataItems, 'add', this.addOne );
@@ -6049,6 +5817,10 @@ window.bp = window.bp || {};
 			},
 
 			searchGif: function ( q ) {
+				if ( ! this.giphy ) {
+					return;
+				}
+
 				var self    = this;
 				self.q      = q;
 				self.offset = 0;
@@ -6145,6 +5917,10 @@ window.bp = window.bp || {};
 			},
 
 			loadTrending: function () {
+				if ( ! this.giphy ) {
+					return;
+				}
+
 				var self    = this;
 				self.offset = 0;
 				self.q      = null;
@@ -6469,14 +6245,6 @@ window.bp = window.bp || {};
 
 				if ( div.innerHTML.length > 0 ) {
 					responseUrl = div.innerHTML;
-				}
-
-				// remove unwanted double quote & strings
-				if ( responseUrl.indexOf( '"' ) >= 0 ) {
-					var splitUrl = responseUrl.split( '"' );
-					if ( splitUrl[ 0 ] != '' ) {
-						responseUrl = splitUrl[ 0 ];
-					}
 				}
 
 				return responseUrl;
@@ -8169,11 +7937,16 @@ window.bp = window.bp || {};
 					this.activityMedia = new bp.Views.ActivityMedia( { model: this.model } );
 					this.views.add( this.activityMedia );
 
-					this.activityDocument = new bp.Views.ActivityDocument( { model: this.model } );
-					this.views.add( this.activityDocument );
+					// The document and video templates ship with BuddyBoss Add-ons; skip their views without them.
+					if ( document.getElementById( 'tmpl-activity-document' ) ) {
+						this.activityDocument = new bp.Views.ActivityDocument( { model: this.model } );
+						this.views.add( this.activityDocument );
+					}
 
-					this.activityVideo = new bp.Views.ActivityVideo( { model: this.model } );
-					this.views.add( this.activityVideo );
+					if ( document.getElementById( 'tmpl-activity-video' ) ) {
+						this.activityVideo = new bp.Views.ActivityVideo( { model: this.model } );
+						this.views.add( this.activityVideo );
+					}
 				}
 
 				this.activityAttachedGifPreview = new bp.Views.ActivityAttachedGifPreview( { model: this.model } );
@@ -9214,9 +8987,15 @@ window.bp = window.bp || {};
 				var topicSelector = $( '#buddypress .whats-new-topic-selector .bb-topic-selector-list li' );
 				if ( topicSelector.length ) {
 					var topicId   = topicSelector.find( 'a.selected' ).data( 'topic-id' ) || 0;
+					var topics    = self.model.get( 'topics' );
+
+					// Editing a post whose topic the author can no longer pick: it is not in the list, so keep it.
+					if ( ! topicId && 0 < parseInt( data.id, 10 ) && topics && 0 < parseInt( topics.topic_id, 10 ) ) {
+						topicId = topics.topic_id;
+					}
 					data.topic_id = topicId;
 				}
-
+				
 
 				// Form link preview data to pass in request if available.
 				if ( self.model.get( 'link_success' ) ) {
@@ -9739,12 +9518,12 @@ window.bp = window.bp || {};
 			},
 
 			onError: function ( error, type ) {
-				var errorType = type || 'error';
+				var erroType = type || 'error';
 				this.model.unset( 'errors' );
 				this.model.set(
 					'errors',
 					{
-						type: errorType,
+						type: erroType,
 						value: error
 					}
 				);

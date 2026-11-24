@@ -478,9 +478,6 @@ Hello, this is the BuddyPress Nouveau stylesheet.
 @import "../common-styles/_bp_media";
 @import "../common-styles/_codemirror";
 
-// Import Video style
-@import "../common-styles/_bp_video";
-
 /**
 *-------------------------------------------------------------------------------
 * @section 15.0 - Media Dropzone
@@ -541,6 +538,7 @@ Hello, this is the BuddyPress Nouveau stylesheet.
 // Import Toast Messages
 
 @import "../common-styles/_bp_toast_messages";
+
 
 /*
 *-----------------------------------------

@@ -333,7 +333,7 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 
 
 	// Required PHP version.
-	define( 'BP_REQUIRED_PHP_VERSION', '8.0' );
+	define( 'BP_REQUIRED_PHP_VERSION', '5.3.0' );
 
 	/**
 	 * Adds an admin notice to installations that don't meet minimum PHP requirement.

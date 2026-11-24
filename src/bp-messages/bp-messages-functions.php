@@ -89,7 +89,6 @@ function messages_new_message( $args = '' ) {
 			$feedback   = __( 'Your message was not sent. Please use a valid sender.', 'buddyboss' );
 
 			return new WP_Error( $error_code, $feedback );
-
 		} else {
 			return false;
 		}
@@ -1099,11 +1098,7 @@ function group_messages_notification_new_message( $raw_args = array() ) {
 	// case rather than fatalling on the missing function.
 	$group_name = '';
 	if ( ! empty( $group ) && bp_is_active( 'groups' ) && function_exists( 'groups_get_group' ) ) {
-		$post_group = filter_input( INPUT_POST, 'group', FILTER_VALIDATE_INT );
-	if ( ! $group && isset( $post_group ) ) {
-		$group = $post_group;
-	}
-	$group_name = bp_get_group_name( groups_get_group( $group ) );
+		$group_name = bp_get_group_name( groups_get_group( $group ) );
 	}
 
 	// check if it has enough recipients to use batch emails.
@@ -1156,10 +1151,10 @@ function group_messages_notification_new_message( $raw_args = array() ) {
 
 		foreach ( $recipients as $recipient ) {
 
-		if (
-			(int) $sender_id === (int) $recipient->user_id ||
-			false === bb_is_notification_enabled( $recipient->user_id, $type_key )
-		) {
+			if (
+				(int) $sender_id === (int) $recipient->user_id ||
+				false === bb_is_notification_enabled( $recipient->user_id, $type_key )
+			) {
 				continue;
 			}
 
@@ -2841,7 +2836,7 @@ function bb_get_message_response_object( $message ) {
 		}
 	}
 
-	if ( bp_is_active( 'media' ) && $has_message_document_access ) {
+	if ( bp_is_active( 'document' ) && $has_message_document_access ) {
 		$document_ids = bp_messages_get_meta( $message_id, 'bp_document_ids', true );
 
 		if ( ! empty( $document_ids ) && bp_has_document(

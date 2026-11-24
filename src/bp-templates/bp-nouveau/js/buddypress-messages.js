@@ -3227,7 +3227,8 @@ window.bp = window.bp || {};
 
 			initialize: function( options ) {
 				this.options = options || {};
-				this.giphy   = new window.Giphy( BP_Nouveau.media.gif_api_key );
+				// The GIPHY library ships with BuddyBoss Add-ons; without it the picker cannot search.
+				this.giphy   = 'undefined' !== typeof window.Giphy ? new window.Giphy( BP_Nouveau.media.gif_api_key ) : null;
 
 				this.gifDataItems = new bp.Collections.GifDatas();
 				this.listenTo( this.gifDataItems, 'add', this.addOne );
@@ -3266,6 +3267,10 @@ window.bp = window.bp || {};
 			},
 
 			searchGif: function( q ) {
+				if ( ! this.giphy ) {
+					return;
+				}
+
 				var self 	= this;
 				self.q 		= q;
 				self.offset = 0;
@@ -3335,6 +3340,10 @@ window.bp = window.bp || {};
 			},
 
 			loadTrending: function() {
+				if ( ! this.giphy ) {
+					return;
+				}
+
 				var self 	= this;
 				self.offset = 0;
 				self.q 		= null;

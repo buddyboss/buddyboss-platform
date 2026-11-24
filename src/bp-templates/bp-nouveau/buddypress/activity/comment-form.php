@@ -46,16 +46,20 @@ $activity_id = bp_get_activity_id();
 								</a>
 							</div>
 
+							<?php if ( bp_is_active( 'video' ) ) : ?>
 							<div class="post-elements-buttons-item post-video video-support">
 								<a href="#" id="ac-reply-video-button-<?php echo esc_attr( $activity_id ); ?>" class="toolbar-button bp-tooltip ac-reply-video-button" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Attach video', 'buddyboss' ); ?>" data-ac-id="<?php echo esc_attr( $activity_id ); ?>" aria-label="<?php esc_attr_e( 'Attach video', 'buddyboss' ); ?>">
 									<i class="bb-icon-l bb-icon-video"></i>
 								</a>
 							</div>
+							<?php endif; ?>
+							<?php if ( bp_is_active( 'document' ) ) : ?>
 							<div class="post-elements-buttons-item post-media document-support">
 								<a href="#" id="ac-reply-document-button-<?php echo esc_attr( $activity_id ); ?>" class="toolbar-button bp-tooltip ac-reply-document-button" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Attach document', 'buddyboss' ); ?>" data-ac-id="<?php echo esc_attr( $activity_id ); ?>" aria-label="<?php esc_attr_e( 'Attach document', 'buddyboss' ); ?>">
 									<i class="bb-icon-l bb-icon-attach"></i>
 								</a>
 							</div>
+							<?php endif; ?>
 
 							<div class="post-elements-buttons-item post-gif">
 								<div class="gif-media-search">
@@ -132,6 +136,7 @@ $activity_id = bp_get_activity_id();
 						</div>
 					</div>
 
+					<?php if ( bp_is_active( 'document' ) ) : ?>
 					<div class="dropzone closed document document-dropzone" id="ac-reply-post-document-uploader-<?php echo esc_attr( $activity_id ); ?>"></div>
 					<div class="ac-reply-post-document-template" style="display:none;">
 						<div class="dz-preview dz-file-preview">
@@ -166,7 +171,9 @@ $activity_id = bp_get_activity_id();
 							</div>
 						</div>
 					</div>
+					<?php endif; ?>
 
+					<?php if ( bp_is_active( 'video' ) ) : ?>
 					<div class="dropzone closed video video-dropzone" id="ac-reply-post-video-uploader-<?php echo esc_attr( $activity_id ); ?>"></div>
 					<div class="ac-reply-post-video-template" style="display:none;">
 						<div class="dz-preview dz-file-preview well" id="dz-preview-template">
@@ -208,6 +215,7 @@ $activity_id = bp_get_activity_id();
 							<div class="dz-video-thumbnail"></div>
 						</div>
 					</div>
+					<?php endif; ?>
 
 					<div id="ac-reply-post-gif-<?php echo esc_attr( $activity_id ); ?>"></div>
 

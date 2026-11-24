@@ -1426,6 +1426,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 					false === strpos( $src, '/wp-includes/' ) &&
 					false === strpos( $src, '/buddyboss-platform/' ) &&
 					false === strpos( $src, '/buddyboss-platform-pro/' ) &&
+					false === strpos( $src, '/buddyboss-addons/' ) &&
 					false === strpos( $src, '/sfwd-lms/' ) &&
 					false === strpos( $src, '/learndash-course-reviews/' ) &&
 					false === strpos( $src, '/instructor-role/' ) &&
@@ -1445,6 +1446,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 						false === strpos( $src, '/wp-includes/' ) &&
 						false === strpos( $src, '/buddyboss-platform/' ) &&
 						false === strpos( $src, '/buddyboss-platform-pro/' ) &&
+						false === strpos( $src, '/buddyboss-addons/' ) &&
 						false === strpos( $src, '/sfwd-lms/' ) &&
 						false === strpos( $src, '/instructor-role/' ) &&
 						false === strpos( $src, 'wp-content/plugins/' ) &&
@@ -3291,6 +3293,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 * Return the theme logo option.
 		 *
 		 * @since BuddyBoss 2.9.00
+		 * @since BuddyBoss 3.7.0 Resolves the URL from the attachment ID and drops deleted attachments.
 		 *
 		 * @param string $key The key of the logo.
 		 *

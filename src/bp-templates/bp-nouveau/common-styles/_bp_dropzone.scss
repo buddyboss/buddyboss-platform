@@ -1,3 +1,18 @@
+// All uploader UI. Moved here from _bp_video.scss because it styles
+// every uploader, not only the video one.
+div.dropzone.dz-started {
+	margin: 0 0 20px;
+
+	.dz-default.dz-message {
+		flex-basis: 100%;
+		max-width: 130px !important;
+		min-height: 130px !important;
+		margin: 0 4px 10px;
+		padding: 0 5px;
+	}
+
+}
+
 .dropzone,
 .dropzone * {
 	box-sizing: border-box;
@@ -258,12 +273,12 @@
 }
 
 .dropzone .dz-preview.dz-error .dz-error-message {
-	display: none; // Hide single media error messages since moved in main notices feedback area
+	display: block;
 	line-height: 1.35;
 }
 
 .dropzone .dz-preview.dz-error:hover .dz-error-message {
-	opacity: 0; // Hide single media error messages since moved in main notices feedback area
+	opacity: 1;
 	pointer-events: auto;
 }
 
@@ -271,6 +286,7 @@
 	pointer-events: none;
 	z-index: 100;
 	position: absolute;
+	display: block;
 	display: none;
 	opacity: 0;
 	-webkit-transition: opacity 0.3s ease;
@@ -617,8 +633,7 @@
 	}
 }
 
-.dropzone.dz-max-files-reached .dz-default.dz-message,
-.dropzone.bb-max-files-reached .dz-default.dz-message {
+.dropzone.dz-max-files-reached .dz-default.dz-message {
 	display: none;
 }
 

@@ -239,8 +239,7 @@ class BP_Email_Tokens {
 									<tbody>
 									<tr>
 										<td width="20%" class="mobile-block-full">
-											<a class="group-avatar-wrap mobile-center" href="<?php echo bp_get_group_permalink( $group ); ?>"
-											   style="display: block; width: 104px;">
+											<a class="group-avatar-wrap mobile-center" href="<?php echo bp_get_group_permalink( $group ); ?>" style="display: block; width: 104px;">
 												<?php
 												$group_avatar = bp_core_fetch_avatar(
 													array(
@@ -2938,7 +2937,7 @@ class BP_Email_Tokens {
 				}
 			}
 
-			if ( ! empty( $video_ids ) ) {
+			if ( ! empty( $video_ids ) && bp_is_active( 'video' ) ) {
 				$video_ids       = explode( ',', $video_ids );
 				$total_video_ids = count( $video_ids );
 				$video_ids       = implode( ',', array_slice( $video_ids, 0, 5 ) );
@@ -3000,7 +2999,7 @@ class BP_Email_Tokens {
 				}
 			}
 
-			if ( ! empty( $document_ids ) ) {
+			if ( ! empty( $document_ids ) && bp_is_active( 'document' ) ) {
 				$document_ids       = explode( ',', $document_ids );
 				$total_document_ids = count( $document_ids );
 				$document_ids       = implode( ',', array_slice( $document_ids, 0, 5 ) );
