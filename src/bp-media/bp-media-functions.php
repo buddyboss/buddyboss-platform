@@ -3653,7 +3653,7 @@ function bp_media_get_preview_image_url( $media_id, $attachment_id, $size = 'bb-
 				$file_extension          = pathinfo( $output_file_src, PATHINFO_EXTENSION );
 				$preview_attachment_path = $preview_attachment_path . '.' . $file_extension;
 
-				if ( ! file_exists( $preview_attachment_path ) && $generate ) {
+				if ( ! file_exists( $preview_attachment_path ) && $generate && ! empty( bp_get_option( 'bb_media_symlink_type' ) ) ) {
 					bp_media_create_symlinks( $media, $size );
 				}
 
