@@ -3854,6 +3854,7 @@ function bp_media_regenerate_attachment_thumbnails( $attachment_id ) {
  *
  * @since BuddyBoss 1.7.0
  * @since BuddyBoss X.X.X
+ * @since BuddyBoss [BBVERSION] A file on an activity comment follows who can read that comment.
  */
 function bb_media_user_can_access( $id, $type, $attachment_id = 0 ) {
 
@@ -3945,6 +3946,9 @@ function bb_media_user_can_access( $id, $type, $attachment_id = 0 ) {
 		$activity_id    = $document->activity_id;
 		$attach_id      = $document->attachment_id;
 	}
+
+	// Remember the comment before its privacy is swapped for the root post's below.
+	$comment_activity_id = ( 'comment' === $media_privacy && bp_is_active( 'activity' ) && ! empty( $activity_id ) ) ? (int) $activity_id : 0;
 
 	if ( 'comment' === $media_privacy && bp_is_active( 'activity' ) && ! empty( $activity_id ) ) {
 		$hierarchy = bb_get_activity_hierarchy( $activity_id );
@@ -4173,6 +4177,25 @@ function bb_media_user_can_access( $id, $type, $attachment_id = 0 ) {
 				}
 			}
 			break;
+	}
+
+	// A file on a comment is for those who can read the comment. The root's privacy value cannot tell:
+	// a group post is "public" even in a private group, and "friends" means the post author's (PROD-10904).
+	if (
+		! empty( $comment_activity_id ) &&
+		function_exists( 'bb_activity_user_can_view' ) &&
+		$media_user_id !== $current_user_id &&
+		! bp_current_user_can( 'bp_moderate' )
+	) {
+		$can_view     = bb_activity_user_can_view( $comment_activity_id, $current_user_id );
+		$can_download = $can_view;
+
+		if ( ! $can_view ) {
+			$can_add    = false;
+			$can_edit   = false;
+			$can_delete = false;
+			$can_move   = false;
+		}
 	}
 
 	// A stored attachment ID that is not positive can never match, so fail closed.
