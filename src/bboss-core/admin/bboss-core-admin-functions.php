@@ -2216,6 +2216,10 @@ function bboss_get_pro_label_notice( $type = 'default' ) {
 
 	$bb_pro_notice = '';
 
+	// Whether a loaded BuddyBoss Platform Pro keeps its features locked. Builds that
+	// carry no licence code treat a loaded Pro as unlocked; Pro guards its own features.
+	$bb_pro_locked = false;
+
 	if ( function_exists( 'bb_platform_pro' ) && version_compare( bb_platform_pro()->version, '1.1.9.1', '<=' ) ) {
 		$bb_pro_notice = sprintf(
 			'<br/><span class="bb-head-notice"> %1$s <strong>%2$s</strong> %3$s</span>',
@@ -2259,7 +2263,7 @@ function bboss_get_pro_label_notice( $type = 'default' ) {
 			esc_html__( 'BuddyBoss Platform Pro', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			esc_html__( 'to unlock', 'buddyboss-community-social-network-groups-forums-messaging' )
 		);
-	} elseif ( ! function_exists( 'bb_platform_pro' ) || ( function_exists( 'bb_pro_should_lock_features' ) ? bb_pro_should_lock_features() : ! bbp_pro_is_license_valid() ) ) {
+	} elseif ( ! function_exists( 'bb_platform_pro' ) || $bb_pro_locked ) {
 		// Builds without upsell links (the wordpress.org edition) add no "Install ... to unlock" notice.
 		// @bbwt-com-start pro-field-upgrade-links
 		$bb_pro_notice = sprintf(
@@ -2293,12 +2297,11 @@ function bboss_get_pro_fields_class( $type = 'default' ) {
 		return $retval[ $type ];
 	}
 
-	$pro_class = 'bb-pro-inactive';
-	if ( function_exists( 'bb_pro_should_lock_features' ) && ! bb_pro_should_lock_features() ) {
-		$pro_class = 'bb-pro-active';
-	} elseif ( ! function_exists( 'bb_pro_should_lock_features' ) && function_exists( 'bbp_pro_is_license_valid' ) && bbp_pro_is_license_valid() ) {
-		$pro_class = 'bb-pro-active';
-	}
+	// Whether BuddyBoss Platform Pro is loaded with its features unlocked. Builds that
+	// carry no licence code only test that Pro is loaded; Pro guards its own features.
+	$bb_pro_unlocked = function_exists( 'bb_platform_pro' );
+
+	$pro_class = $bb_pro_unlocked ? 'bb-pro-active' : 'bb-pro-inactive';
 
 	if ( function_exists( 'bb_platform_pro' ) && version_compare( bb_platform_pro()->version, '1.1.9.1', '<=' ) ) {
 		$pro_class = 'bb-pro-inactive';

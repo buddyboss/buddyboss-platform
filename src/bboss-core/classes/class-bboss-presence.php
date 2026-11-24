@@ -262,36 +262,8 @@ if ( ! class_exists( 'BBoss_Presence' ) ) {
 		 * @since BuddyBoss 2.3.1
 		 */
 		public static function bb_check_native_presence_load_directly( $bypass = false ) {
-			$bb_check_native_presence_load_directly = get_site_option( 'bb_check_native_presence_load_directly', 0 );
-			if (
-				0 !== $bb_check_native_presence_load_directly &&
-				$bb_check_native_presence_load_directly + WEEK_IN_SECONDS > microtime( true ) &&
-				! $bypass
-			) {
-				return;
-			}
-
-			$file_url = trailingslashit( plugin_dir_url( __DIR__ ) ) . 'bboss-core-native-presence.php?direct_allow=true';
-			$response = wp_remote_get( $file_url );
-
-			if ( ! is_wp_error( $response ) && 200 === wp_remote_retrieve_response_code( $response ) ) {
-				$response_body = wp_remote_retrieve_body( $response );
-				$result        = json_decode( $response_body, true );
-				if (
-					! empty( $result ) &&
-					isset( $result['success'] ) &&
-					isset( $result['data']['direct_allow'] ) &&
-					true === $result['data']['direct_allow']
-				) {
-					update_option( 'bb_use_core_native_presence', true );
-				} else {
-					update_option( 'bb_use_core_native_presence', false );
-				}
-			} else {
-				update_option( 'bb_use_core_native_presence', false );
-			}
-
-			update_site_option( 'bb_check_native_presence_load_directly', microtime( true ) );
+			// The standalone presence file is not part of every build; without it
+			// presence always goes through the REST API and there is nothing to probe.
 		}
 
 		/**

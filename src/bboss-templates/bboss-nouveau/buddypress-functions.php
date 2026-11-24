@@ -833,6 +833,11 @@ JS;
 	 */
 	public function presence_localize_scripts() {
 
+		// Presence falls back to the REST API when the standalone presence file is
+		// not part of the build.
+		$bb_native_presence     = false;
+		$bb_native_presence_url = '';
+
 		$params = array(
 			'heartbeat_enabled'         => bboss_is_heartbeat_enabled(),
 			'presence_interval'         => bboss_presence_interval(),
@@ -840,8 +845,8 @@ JS;
 			'presence_time_span'        => bboss_presence_time_span(),
 			'idle_inactive_span'        => bboss_idle_inactive_span(),
 			'rest_nonce'                => wp_create_nonce( 'wp_rest' ),
-			'native_presence'           => (bool) bboss_get_option( 'bb_use_core_native_presence', false ),
-			'native_presence_url'       => bboss()->plugin_url . 'bboss-core/bboss-core-native-presence.php',
+			'native_presence'           => $bb_native_presence,
+			'native_presence_url'       => $bb_native_presence_url,
 			'presence_rest_url'         => home_url( 'wp-json/buddyboss/v1/members/presence' ),
 		);
 

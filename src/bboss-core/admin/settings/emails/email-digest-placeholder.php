@@ -147,68 +147,7 @@ function bboss_email_digest_required_plans() {
 	return (array) apply_filters( 'bb_email_digest_required_plans', $plans );
 }
 
-/**
- * Whether the BuddyBoss license is currently activated.
- *
- * Split out from the state resolver so the licence fact and the plan fact can be
- * exercised independently — a QA site can reach the plan branches without holding a
- * matching licence, and reaching the unlicensed screen never means deactivating a real
- * one. Fails closed: an unreadable licence layer counts as not activated.
- *
- * @since BuddyBoss 3.5.0
- *
- * @return bool True when a licence is activated.
- */
-function bboss_email_digest_is_license_active() {
-	$active = false;
 
-	if ( class_exists( '\BuddyBoss\Core\Admin\Mothership\BB_Plugin_Connector' ) ) {
-		try {
-			$connector = new \BuddyBoss\Core\Admin\Mothership\BB_Plugin_Connector();
-			$active    = (bool) $connector->getLicenseActivationStatus();
-		} catch ( \Exception $e ) {
-			$active = false;
-		}
-	}
-
-	/**
-	 * Filters whether the licence counts as activated for the Email Digest panel.
-	 *
-	 * @since BuddyBoss 3.5.0
-	 *
-	 * @param bool $active Whether a licence is activated.
-	 */
-	return (bool) apply_filters( 'bb_email_digest_is_license_active', $active );
-}
-
-/**
- * The plan SKU the activated licence carries.
- *
- * @since BuddyBoss 3.5.0
- *
- * @return string Lowercase SKU, or an empty string when it cannot be determined.
- */
-function bboss_email_digest_licensed_plan_sku() {
-	$sku = '';
-
-	if ( class_exists( '\BuddyBoss\Core\Admin\Mothership\BB_Plugin_Connector' ) ) {
-		try {
-			$connector = new \BuddyBoss\Core\Admin\Mothership\BB_Plugin_Connector();
-			$sku       = strtolower( (string) $connector->getCurrentPluginId() );
-		} catch ( \Exception $e ) {
-			$sku = '';
-		}
-	}
-
-	/**
-	 * Filters the plan SKU used to decide Email Digest entitlement.
-	 *
-	 * @since BuddyBoss 3.5.0
-	 *
-	 * @param string $sku Lowercase plan SKU.
-	 */
-	return (string) apply_filters( 'bb_email_digest_licensed_plan_sku', $sku );
-}
 
 /**
  * Resolve which of the three stand-in states applies.
@@ -224,52 +163,9 @@ function bboss_email_digest_licensed_plan_sku() {
  *                'addon_not_installed', 'addon_outdated'.
  */
 function bboss_email_digest_get_placeholder_state() {
-
-	$sku = bboss_email_digest_licensed_plan_sku();
-
-	if ( '' === $sku ) {
-		return 'not_in_plan';
-	}
-
-	$in_plan = false;
-	foreach ( bboss_email_digest_required_plans() as $prefix ) {
-		$prefix = strtolower( trim( (string) $prefix ) );
-		if ( '' !== $prefix && 0 === strpos( $sku, $prefix ) ) {
-			$in_plan = true;
-			break;
-		}
-	}
-
-	if ( ! $in_plan ) {
-		return 'not_in_plan';
-	}
-
-	// Entitled by plan, yet the real panel is absent — the caller established that before
-	// calling. Two explanations remain and they need different screens.
-	if ( ! function_exists( 'is_plugin_active' ) ) {
-		require_once ABSPATH . 'wp-admin/includes/plugin.php';
-	}
-
-	if ( ! is_plugin_active( bboss_email_digest_addon_plugin_file() ) ) {
-		// The plugin that carries the digest is not running at all. Nothing about the
-		// licence is wrong, so the fix is the plugin, not the plan — but WHICH fix
-		// depends on whether it is on disk. A plugin sitting there switched off is one
-		// click away; one that was never installed has to be fetched from the add-on
-		// server first, which is a different button and a different handler.
-		return file_exists( WP_PLUGIN_DIR . '/' . bboss_email_digest_addon_plugin_file() )
-			? 'addon_inactive'
-			: 'addon_not_installed';
-	}
-
-	// The plugin IS running and still registered nothing, so this build of it does not
-	// carry the digest module — the add-on ships module folders per build, and a build
-	// without that folder is a build without the feature.
-	//
-	// This is NOT an upgrade case, and it used to be treated as one. The plan already
-	// includes the digest; only the installed build is behind. Showing "Upgrade to Start"
-	// to a Start customer reads as a billing error on our side, so this gets a state of
-	// its own and a card that offers the update instead.
-	return 'addon_outdated';
+	// Builds without the licence layer (the wordpress.org edition) reach this instead:
+	// the panel always shows the locked form with its upgrade badge and link.
+	return 'not_in_plan';
 }
 
 /**
@@ -565,16 +461,12 @@ function bboss_admin_settings_register_email_digest_card( $state ) {
 			);
 			break;
 
-		case 'needs_license':
 		default:
-			// Plan membership cannot be resolved without an activated licence, so
-			// activation is the only honest next step — naming a plan here would be a
-			// guess, and guessing wrong sends a paying customer to buy what they hold.
+			// Builds without the licence layer never resolve to a state that needs this
+			// card; it is a plain description for a state a filter may have supplied.
 			$card = array(
-				'empty_state_title'       => __( 'License Activation Required', 'buddyboss-community-social-network-groups-forums-messaging' ),
-				'empty_state_description' => __( 'Combine multiple notifications into a single daily or weekly email to reduce inbox clutter. Activate your license to unlock Email Digest.', 'buddyboss-community-social-network-groups-forums-messaging' ),
-				'button_label'            => __( 'Activate License', 'buddyboss-community-social-network-groups-forums-messaging' ),
-				'button_url'              => bboss_admin_license_screen_url(),
+				'empty_state_title'       => __( 'Email Digest', 'buddyboss-community-social-network-groups-forums-messaging' ),
+				'empty_state_description' => __( 'Combine multiple notifications into a single daily or weekly email to reduce inbox clutter.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			);
 			break;
 	}

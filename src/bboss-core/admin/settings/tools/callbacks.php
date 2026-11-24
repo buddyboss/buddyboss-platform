@@ -33,44 +33,14 @@ function bboss_tools_mothership_available() {
 		&& class_exists( '\BuddyBoss\Core\Admin\Mothership\BB_Addons_Manager' );
 }
 
-/**
- * Whether the BuddyBoss license is currently activated.
- *
- * @since BuddyBoss 3.1.0
- *
- * @return bool True when the Mothership connector reports an active license.
- */
-function bboss_tools_is_license_active() {
-	if ( ! class_exists( '\BuddyBoss\Core\Admin\Mothership\BB_Plugin_Connector' ) ) {
-		return false;
-	}
 
-	$connector = new \BuddyBoss\Core\Admin\Mothership\BB_Plugin_Connector();
-
-	return (bool) $connector->getLicenseActivationStatus();
-}
-
-/**
- * Admin URL of the BuddyBoss license activation page.
- *
- * @since BuddyBoss 3.1.0
- *
- * @return string Admin URL for the license activation screen.
- */
-function bboss_tools_get_license_url() {
-	// Empty in builds without the BuddyBoss licence screen (the wordpress.org edition).
-	$url = '';
-
-	return $url;
-}
 
 /**
  * AJAX: Report installed/active state of the buddyboss-tools plugin.
  *
  * The Activation Required CTA component calls this on mount to decide
- * whether the action button shows "Install Now", "Activate Now", or
- * "Activate License" (when the addon is not installed and no valid license
- * is present to install it with). Builds without the in-dashboard installer
+ * whether the action button shows "Install Now" or "Activate Now".
+ * Builds without the in-dashboard installer
  * report `download` with a `download_url` instead of `not-installed`.
  *
  * @since BuddyBoss 3.1.0
@@ -100,17 +70,6 @@ function bboss_tools_ajax_check_plugin_state() {
 		wp_send_json_success( array( 'state' => 'installed' ) );
 	}
 
-	// Not installed: if the Mothership license layer is present but the license
-	// is inactive, the addon cannot be pulled from the BuddyBoss add-on server —
-	// surface a license-activation CTA instead of a dead "Install Now" button.
-	if ( bboss_tools_mothership_available() && ! bboss_tools_is_license_active() ) {
-		wp_send_json_success(
-			array(
-				'state'       => 'needs-license',
-				'license_url' => bboss_tools_get_license_url(),
-			)
-		);
-	}
 
 	// Builds without the in-dashboard installer (the wordpress.org edition) reach this
 	// instead: the addon is downloaded from the BuddyBoss account and uploaded by hand.

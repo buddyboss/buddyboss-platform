@@ -164,6 +164,10 @@ function bboss_admin_settings_register_reactions_settings() {
 	// -------------------------------------------------------------------------
 
 	// Build reaction mode options with id, notice, and disabled state.
+	// Whether BuddyBoss Platform Pro can provide the emotion layer. Builds that
+	// carry no licence code only test that Pro is loaded; Pro guards its own features.
+	$bb_reactions_pro_provider = function_exists( 'bb_platform_pro' );
+
 	$reactions_modes = array(
 		'likes'    => array(
 			'label'    => esc_html__( 'Likes', 'buddyboss-community-social-network-groups-forums-messaging' ),
@@ -182,11 +186,11 @@ function bboss_admin_settings_register_reactions_settings() {
 			'disabled' => (
 				! class_exists( 'BB_Reactions' ) ||
 				! (
-					// Emotion layer is licensed by EITHER provider: BuddyBoss
+					// Emotion layer comes from EITHER provider: BuddyBoss
 					// Platform Pro (legacy) or the BuddyBoss Addons plugin (the
 					// feature's new home). Each is function_exists-guarded so
 					// Platform never hard-depends on an optional plugin.
-					( function_exists( 'bbp_pro_is_license_valid' ) && bbp_pro_is_license_valid() ) ||
+					$bb_reactions_pro_provider ||
 					bboss_addons_provides_module( 'reactions' )
 				)
 			),

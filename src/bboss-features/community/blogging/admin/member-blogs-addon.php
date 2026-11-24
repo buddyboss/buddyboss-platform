@@ -76,51 +76,8 @@ function bboss_member_blogging_mothership_available() {
 		&& class_exists( '\BuddyBoss\Core\Admin\Mothership\BB_Addons_Manager' );
 }
 
-/**
- * Whether the BuddyBoss license is currently activated.
- *
- * @since BuddyBoss 3.3.0
- *
- * @return bool True when the Mothership connector reports an active license.
- */
-function bboss_member_blogging_is_license_active() {
-	if ( ! class_exists( '\BuddyBoss\Core\Admin\Mothership\BB_Plugin_Connector' ) ) {
-		return false;
-	}
 
-	$connector = new \BuddyBoss\Core\Admin\Mothership\BB_Plugin_Connector();
 
-	return (bool) $connector->getLicenseActivationStatus();
-}
-
-/**
- * Admin URL of the BuddyBoss license activation page.
- *
- * @since BuddyBoss 3.3.0
- *
- * @return string Admin URL for the license activation screen.
- */
-function bboss_member_blogging_get_license_url() {
-	return bboss_admin_license_screen_url();
-}
-
-/**
- * Whether DRM would lock the Member Blogging add-on's features.
- *
- * Needed because activation is no longer implicitly license-gated (see the file
- * header): an unlicensed site can now switch the add-on on from this panel, so
- * the panel must not promise functionality that DRM will immediately deny.
- *
- *
- * @since BuddyBoss 3.3.0
- *
- * @return bool True when the add-on's features are DRM-locked.
- */
-function bboss_member_blogging_addon_is_drm_locked() {
-	$is_locked = false;
-
-	return $is_locked;
-}
 
 /**
  * Resolve the current state of the Member Blogging add-on.
@@ -187,7 +144,7 @@ function bboss_member_blogging_get_addon_state() {
 		// (unlicensed past the grace period), offering a bare "Activate Plugin"
 		// promises a feature the add-on will refuse to load — surface the
 		// licence blocker instead.
-		$state = bboss_member_blogging_addon_is_drm_locked() ? 'installed_locked' : 'installed_inactive';
+		$state = 'installed_inactive';
 
 		return $state;
 	}
@@ -200,11 +157,6 @@ function bboss_member_blogging_get_addon_state() {
 		return $state;
 	}
 
-	if ( ! bboss_member_blogging_is_license_active() ) {
-		$state = 'needs_license';
-
-		return $state;
-	}
 
 	$product = \BuddyBoss\Core\Admin\Mothership\BB_Addons_Manager::checkProductBySlug( bboss_member_blogging_plugin_slug() );
 
@@ -299,16 +251,6 @@ function bboss_member_blogging_get_upsell_field_data() {
 			);
 			break;
 
-		case 'installed_locked':
-			// Installed, but DRM has already locked it (unlicensed past the
-			// grace period). Activating would boot straight into the add-on's
-			// locked mode, so lead with the actual blocker.
-			$data = array(
-				'empty_state_description' => __( 'The Member Blogging add-on is installed, but your BuddyBoss license is not active. Activate your license to use Member Blogging.', 'buddyboss-community-social-network-groups-forums-messaging' ),
-				'button_label'            => __( 'Activate License', 'buddyboss-community-social-network-groups-forums-messaging' ),
-				'button_url'              => bboss_member_blogging_get_license_url(),
-			);
-			break;
 
 		case 'installed_inactive':
 			$data = array(
@@ -336,18 +278,6 @@ function bboss_member_blogging_get_upsell_field_data() {
 			// @bbwt-com-end pro-field-upgrade-links
 			break;
 
-		case 'needs_license':
-			// Plan membership cannot be resolved without an activated license,
-			// so the license screen is the only honest next step: a Plus
-			// customer completes activation there, and everyone else sees their
-			// options on it. The description names the required plan so a site
-			// without Plus is not sent chasing a license it does not hold.
-			$data = array(
-				'empty_state_description' => __( 'Member Blogging is available with the Member Blogging add-on on the Plus plan. Activate your BuddyBoss license to install it.', 'buddyboss-community-social-network-groups-forums-messaging' ),
-				'button_label'            => __( 'Activate License', 'buddyboss-community-social-network-groups-forums-messaging' ),
-				'button_url'              => bboss_member_blogging_get_license_url(),
-			);
-			break;
 
 		case 'api_unavailable':
 			// The license is active but the add-ons API did not answer, so plan
