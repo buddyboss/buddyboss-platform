@@ -77,8 +77,8 @@ function bb_tools_get_license_url() {
  * The Activation Required CTA component calls this on mount to decide
  * whether the action button shows "Install Now" or "Activate Now".
  * @bbwt-com-start licence-state-probes
- * It reports `needs-license` when the addon is not installed and no valid
- * license is present to install it with.
+ * It reports `notice` with a licence prompt when the addon is not installed
+ * and no valid license is present to install it with.
  * @bbwt-com-end licence-state-probes
  * Builds without the in-dashboard installer
  * report `download` with a `download_url` instead of `not-installed`.
@@ -117,8 +117,13 @@ function bb_tools_ajax_check_plugin_state() {
 	if ( bb_tools_mothership_available() && ! bb_tools_is_license_active() ) {
 		wp_send_json_success(
 			array(
-				'state'       => 'needs-license',
-				'license_url' => bb_tools_get_license_url(),
+				'state'  => 'notice',
+				'notice' => array(
+					'title'        => __( 'License Required', 'buddyboss' ),
+					'description'  => __( 'Please activate your BuddyBoss license to install and use this feature.', 'buddyboss' ),
+					'button_label' => __( 'Activate License', 'buddyboss' ),
+					'button_url'   => bb_tools_get_license_url(),
+				),
 			)
 		);
 	}
