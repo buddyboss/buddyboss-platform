@@ -19,7 +19,7 @@ export default function ActivationRequiredCTA() {
 	const [ pluginState, setPluginState ] = useState( 'loading' );
 	const [ isWorking, setIsWorking ] = useState( false );
 	const [ error, setError ] = useState( null );
-	const [ licenseUrl, setLicenseUrl ] = useState( '' );
+	const [ notice, setNotice ] = useState( null );
 	const [ downloadUrl, setDownloadUrl ] = useState( '' );
 	const abortRef = useRef( null );
 
@@ -49,8 +49,8 @@ export default function ActivationRequiredCTA() {
 			.then( function ( res ) {
 				if ( res && res.success && res.data ) {
 					setPluginState( res.data.state );
-					if ( res.data.license_url ) {
-						setLicenseUrl( res.data.license_url );
+					if ( res.data.notice ) {
+						setNotice( res.data.notice );
 					}
 					if ( res.data.download_url ) {
 						setDownloadUrl( res.data.download_url );
@@ -149,26 +149,28 @@ export default function ActivationRequiredCTA() {
 		);
 	}
 
-	if ( 'needs-license' === pluginState ) {
-		// The addon is not installed and there is no active license to pull it
-		// from the BuddyBoss add-on server. Point the admin at the license page.
+	if ( 'notice' === pluginState && notice ) {
+		// The server answered with a blocker it describes itself (title, text
+		// and an optional button), so this component carries no wording for it.
 		return (
 			<div className="bb-tools-activation-cta">
 				<div className="bb-tools-activation-cta__icon">
 					<span className="bb-icons-rl bb-icons-rl-info"></span>
 				</div>
 				<h2 className="bb-tools-activation-cta__title">
-					{ __( 'License Required', 'buddyboss-community-social-network-groups-forums-messaging' ) }
+					{ notice.title }
 				</h2>
 				<p className="bb-tools-activation-cta__description">
-					{ __( 'Please activate your BuddyBoss license to install and use this feature.', 'buddyboss-community-social-network-groups-forums-messaging' ) }
+					{ notice.description }
 				</p>
-				<Button
-					variant="primary"
-					href={ licenseUrl || '#' }
-				>
-					{ __( 'Activate License', 'buddyboss-community-social-network-groups-forums-messaging' ) }
-				</Button>
+				{ notice.button_label && (
+					<Button
+						variant="primary"
+						href={ notice.button_url || '#' }
+					>
+						{ notice.button_label }
+					</Button>
+				) }
 			</div>
 		);
 	}
