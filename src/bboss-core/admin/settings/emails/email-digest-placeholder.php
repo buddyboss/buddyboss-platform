@@ -294,8 +294,11 @@ if ( function_exists( 'bboss_email_digest_licensed_plan_sku' ) && ! function_exi
  *
  * @since BuddyBoss 3.5.0
  *
- * @return string One of 'needs_license', 'not_in_plan', 'addon_inactive',
- *                'addon_not_installed', 'addon_outdated'.
+ * @return string One of 'not_in_plan', 'addon_inactive', 'addon_not_installed',
+ *                'addon_outdated'.
+ * @bbwt-com-start licence-state-probes
+ *                Also 'needs_license'.
+ * @bbwt-com-end licence-state-probes
  */
 function bboss_email_digest_get_placeholder_state() {
 	// @bbwt-com-start licence-state-probes
@@ -541,8 +544,11 @@ function bboss_email_digest_placeholder_state() {
 	 *
 	 * @since BuddyBoss 3.5.0
 	 *
-	 * @param string $state One of 'needs_license', 'not_in_plan', 'addon_inactive',
+	 * @param string $state One of 'not_in_plan', 'addon_inactive',
 	 *                      'addon_not_installed', 'addon_outdated'.
+	 * @bbwt-com-start licence-state-probes
+	 *                      Also 'needs_license'.
+	 * @bbwt-com-end licence-state-probes
 	 */
 	return apply_filters( 'bb_email_digest_placeholder_state', bboss_email_digest_get_placeholder_state() );
 }
