@@ -9928,7 +9928,8 @@ function bb_generate_default_avatar( $args ) {
 	 *
 	 * @param string $font_family Full path of font family. It should be a TTF file.
 	 */
-	$font_family = apply_filters( 'bb_default_png_avatar_font_family', trailingslashit( buddypress()->plugin_dir ) . 'bp-core/fonts/SFUIText-Medium.ttf' );
+	// Bundled font is a subset of Inter Medium (A-Z, a-z, 0-9, underscore): initials are English letters and digits only.
+	$font_family = apply_filters( 'bb_default_png_avatar_font_family', trailingslashit( buddypress()->plugin_dir ) . 'bp-core/fonts/Inter-Medium.ttf' );
 
 	if ( empty( $font_family ) ) {
 		return $prepare_response;
