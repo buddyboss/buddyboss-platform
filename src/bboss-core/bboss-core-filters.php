@@ -3279,6 +3279,7 @@ function buddyboss_menu_order( $menu_order ) {
 	$buddyboss_theme_font_menu    = array();
 	$buddyboss_updater_menu       = array();
 	$buddyboss_license_menu       = array();
+	$buddyboss_theme_license_menu = array();
 	$buddyboss_addon_menu         = array();
 	$buddyboss_gamification_menu  = array();
 	$sep_position                 = null; // Use null to detect if found.
@@ -3307,6 +3308,13 @@ function buddyboss_menu_order( $menu_order ) {
 
 				if ( 'buddyboss-license' === $val[2] ) {
 					$buddyboss_license_menu = $submenu['buddyboss-platform'][ $key ];
+					unset( $submenu['buddyboss-platform'][ $key ] );
+					continue;
+				}
+
+				// The BuddyBoss Theme's own license page, shown when the theme handles its license itself.
+				if ( 'buddyboss-theme-license' === $val[2] ) {
+					$buddyboss_theme_license_menu = $submenu['buddyboss-platform'][ $key ];
 					unset( $submenu['buddyboss-platform'][ $key ] );
 					continue;
 				}
@@ -3359,6 +3367,9 @@ function buddyboss_menu_order( $menu_order ) {
 			if ( ! empty( $buddyboss_license_menu ) ) {
 				$submenu['buddyboss-platform'][ ++ $insert_pos ] = $buddyboss_license_menu;
 			}
+			if ( ! empty( $buddyboss_theme_license_menu ) ) {
+				$submenu['buddyboss-platform'][ ++ $insert_pos ] = $buddyboss_theme_license_menu;
+			}
 			if ( ! empty( $buddyboss_addon_menu ) ) {
 				$submenu['buddyboss-platform'][ ++ $insert_pos ] = $buddyboss_addon_menu;
 			}
@@ -3396,6 +3407,9 @@ function buddyboss_menu_order( $menu_order ) {
 			}
 			if ( ! empty( $buddyboss_license_menu ) ) {
 				$submenu['buddyboss-platform'][] = $buddyboss_license_menu;
+			}
+			if ( ! empty( $buddyboss_theme_license_menu ) ) {
+				$submenu['buddyboss-platform'][] = $buddyboss_theme_license_menu;
 			}
 			if ( ! empty( $buddyboss_addon_menu ) ) {
 				$submenu['buddyboss-platform'][] = $buddyboss_addon_menu;
