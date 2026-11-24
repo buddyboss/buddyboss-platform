@@ -89,17 +89,12 @@ function bboss_member_blogging_mothership_available() {
  *                        undefined, reaching this state means the installed
  *                        add-on is too old (or failed to boot) to register its
  *                        own settings — the admin needs to update it.
- * - `installed_locked`   On disk, not activated, and DRM would lock it on boot
- *                        (unlicensed past the grace period). Needs a license,
- *                        not an activation.
  * - `installed_inactive` On disk, not activated, not DRM-locked. Activatable
  *                        without a license (WordPress lets any admin do this
  *                        from Plugins anyway; DRM's grace period then governs
  *                        how long it keeps working).
  * - `not_installed`      Not on disk, license active, product in the plan.
  *                        Installable in place from the add-on server.
- * - `needs_license`      Not on disk, Mothership present, license not activated.
- *                        Plan membership is unknowable until the license is on.
  * - `not_in_plan`        Not on disk and either the license is active but the
  *                        product is absent from the plan, or the Mothership
  *                        layer is missing entirely (no supported install path).
@@ -116,9 +111,8 @@ function bboss_member_blogging_mothership_available() {
  *
  * @since BuddyBoss 3.3.0
  *
- * @return string One of: 'active', 'installed_locked', 'installed_inactive',
- *                'not_installed', 'needs_license', 'not_in_plan',
- *                'api_unavailable'.
+ * @return string One of: 'active', 'installed_inactive', 'not_installed',
+ *                'not_in_plan', 'api_unavailable'.
  */
 function bboss_member_blogging_get_addon_state() {
 	static $state = null;
@@ -196,9 +190,8 @@ function bboss_member_blogging_addon_state() {
 	 *
 	 * @since BuddyBoss 3.3.0
 	 *
-	 * @param string $state One of: 'active', 'installed_locked',
-	 *                      'installed_inactive', 'not_installed',
-	 *                      'needs_license', 'not_in_plan', 'api_unavailable'.
+	 * @param string $state One of: 'active', 'installed_inactive',
+	 *                      'not_installed', 'not_in_plan', 'api_unavailable'.
 	 */
 	return apply_filters( 'bb_member_blogging_addon_state', bboss_member_blogging_get_addon_state() );
 }
@@ -362,8 +355,8 @@ function bboss_member_blogging_format_upsell_field_data( $field_data, $field, $f
 	/*
 	 * This filter runs after the formatter, so assigning `button_url` here would
 	 * discard the catalog URL the formatter resolved. Take it back for the states
-	 * whose button is a marketing upsell, and only those — `needs_license` and the
-	 * add-ons-screen states must keep pointing inside this install.
+	 * whose button is a marketing upsell, and only those — the states that link to
+	 * a screen of this install must keep pointing inside it.
 	 */
 	$button_url = ! empty( $overrides['button_url'] ) ? esc_url_raw( $overrides['button_url'] ) : null;
 
