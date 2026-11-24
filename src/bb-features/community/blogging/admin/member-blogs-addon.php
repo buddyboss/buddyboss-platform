@@ -76,6 +76,7 @@ function bb_member_blogging_mothership_available() {
 		&& class_exists( '\BuddyBoss\Core\Admin\Mothership\BB_Addons_Manager' );
 }
 
+// @bbwt-com-start licence-state-probes
 /**
  * Whether the BuddyBoss license is currently activated.
  *
@@ -92,7 +93,9 @@ function bb_member_blogging_is_license_active() {
 
 	return (bool) $connector->getLicenseActivationStatus();
 }
+// @bbwt-com-end licence-state-probes
 
+// @bbwt-com-start licence-state-probes
 /**
  * Admin URL of the BuddyBoss license activation page.
  *
@@ -103,7 +106,9 @@ function bb_member_blogging_is_license_active() {
 function bb_member_blogging_get_license_url() {
 	return bb_admin_license_screen_url();
 }
+// @bbwt-com-end licence-state-probes
 
+// @bbwt-com-start licence-state-probes
 /**
  * Whether DRM would lock the Member Blogging add-on's features.
  *
@@ -155,6 +160,7 @@ function bb_member_blogging_addon_is_drm_locked() {
 
 	return $is_locked;
 }
+// @bbwt-com-end licence-state-probes
 
 /**
  * Resolve the current state of the Member Blogging add-on.
@@ -221,7 +227,10 @@ function bb_member_blogging_get_addon_state() {
 		// (unlicensed past the grace period), offering a bare "Activate Plugin"
 		// promises a feature the add-on will refuse to load — surface the
 		// licence blocker instead.
+		$state = 'installed_inactive';
+		// @bbwt-com-start licence-state-probes
 		$state = bb_member_blogging_addon_is_drm_locked() ? 'installed_locked' : 'installed_inactive';
+		// @bbwt-com-end licence-state-probes
 
 		return $state;
 	}
@@ -234,11 +243,13 @@ function bb_member_blogging_get_addon_state() {
 		return $state;
 	}
 
+	// @bbwt-com-start licence-state-probes
 	if ( ! bb_member_blogging_is_license_active() ) {
 		$state = 'needs_license';
 
 		return $state;
 	}
+	// @bbwt-com-end licence-state-probes
 
 	$product = \BuddyBoss\Core\Admin\Mothership\BB_Addons_Manager::checkProductBySlug( bb_member_blogging_plugin_slug() );
 
@@ -333,6 +344,7 @@ function bb_member_blogging_get_upsell_field_data() {
 			);
 			break;
 
+		// @bbwt-com-start licence-state-probes
 		case 'installed_locked':
 			// Installed, but DRM has already locked it (unlicensed past the
 			// grace period). Activating would boot straight into the add-on's
@@ -343,6 +355,7 @@ function bb_member_blogging_get_upsell_field_data() {
 				'button_url'              => bb_member_blogging_get_license_url(),
 			);
 			break;
+		// @bbwt-com-end licence-state-probes
 
 		case 'installed_inactive':
 			$data = array(
@@ -379,6 +392,7 @@ function bb_member_blogging_get_upsell_field_data() {
 			// @bbwt-com-end installers
 			break;
 
+		// @bbwt-com-start licence-state-probes
 		case 'needs_license':
 			// Plan membership cannot be resolved without an activated license,
 			// so the license screen is the only honest next step: a Plus
@@ -391,6 +405,7 @@ function bb_member_blogging_get_upsell_field_data() {
 				'button_url'              => bb_member_blogging_get_license_url(),
 			);
 			break;
+		// @bbwt-com-end licence-state-probes
 
 		case 'api_unavailable':
 			// The license is active but the add-ons API did not answer, so plan
