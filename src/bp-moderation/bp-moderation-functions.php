@@ -2344,6 +2344,11 @@ function bp_moderation_maybe_translate_report_term( $term ) {
 		return $term;
 	}
 
+	// Admin has customised this term's name/description — leave it untouched.
+	if ( get_term_meta( (int) $term->term_id, '_bp_moderation_category_customized', true ) ) {
+		return $term;
+	}
+
 	$key = get_term_meta( (int) $term->term_id, '_bp_moderation_default_key', true );
 
 	// Fallback for installs that pre-date the meta marker: match by slug.
