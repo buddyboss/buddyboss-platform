@@ -119,7 +119,7 @@ function bp_media_activity_entry() {
 	);
 
 	if ( ! empty( $is_media ) ) {
-		print (int) $is_media;
+		echo $is_media; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- buffered media template output (gallery markup with data attributes); the template escapes its own values.
 	}
 }
 
