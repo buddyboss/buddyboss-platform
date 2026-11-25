@@ -3993,14 +3993,16 @@ function bp_email_get_template( WP_Post $object ) {
  * Intended for use with the email system introduced in BuddyPress 2.5.0.
  *
  * @since BuddyPress 2.5.0
+ * @since BuddyBoss [BBVERSION] Removes the scheme that the link dialog adds in front of a URL token in a link and its text.
  *
  * @param string $text   Text to replace tokens in.
  * @param array  $tokens Token names and replacement values for the $text.
  * @return string
  */
 function bp_core_replace_tokens_in_text( $text, $tokens ) {
-	$unescaped = array();
-	$escaped   = array();
+	$unescaped  = array();
+	$escaped    = array();
+	$url_tokens = array();
 
 	foreach ( $tokens as $token => $value ) {
 		if ( ! is_string( $value ) && is_callable( $value ) ) {
@@ -4014,6 +4016,28 @@ function bp_core_replace_tokens_in_text( $text, $tokens ) {
 
 		$unescaped[ '{{{' . $token . '}}}' ] = $value;
 		$escaped[ '{{' . $token . '}}' ]     = esc_html( $value );
+
+		if ( is_string( $value ) && preg_match( '#^https?://#i', $value ) ) {
+			$url_tokens[] = preg_quote( $token, '/' );
+		}
+	}
+
+	// WordPress's link dialog adds "http://" in front of a URL it doesn't
+	// recognise, so a link to a token is saved as href="http://{{{message.url}}}".
+	// With no text selected it also uses that URL as the link text. When the
+	// token's value is already a full http(s) URL, drop that scheme from the href and
+	// from link text that is only the token, so neither is sent as http://http://...
+	if ( ! empty( $url_tokens ) && false !== strpos( $text, '://{{' ) ) {
+		$names     = implode( '|', $url_tokens );
+		$url_token = '(\{\{\{(?:' . $names . ')\}\}\}|\{\{(?:' . $names . ')\}\})';
+		$text      = preg_replace(
+			array(
+				'/(\bhref\s*=\s*["\'])https?:\/\/' . $url_token . '/i',
+				'/(<a\b[^<>]*>)https?:\/\/' . $url_token . '(<\/a>)/i',
+			),
+			array( '$1$2', '$1$2$3' ),
+			$text
+		);
 	}
 
 	$text = strtr( $text, $unescaped );  // Do first.
@@ -4444,11 +4468,16 @@ function bp_strip_script_and_style_tags( $string ) {
 }
 
 /**
- * Check if logged in member type is allowed to send invites
+ * Check if a member's profile type is allowed to select the invitee's profile type.
  *
  * @since BuddyBoss 1.0.0
+ * @since BuddyBoss [BBVERSION] Added the `$user_id` parameter.
+ *
+ * @param int $user_id Optional. Member to check. Default: the logged-in member.
+ *
+ * @return bool
  */
-function bp_check_member_send_invites_tab_member_type_allowed() {
+function bp_check_member_send_invites_tab_member_type_allowed( $user_id = 0 ) {
 
 	// default allowed false
 	$allowed = false;
@@ -4457,7 +4486,7 @@ function bp_check_member_send_invites_tab_member_type_allowed() {
 	if ( true === bp_member_type_enable_disable() ) {
 		// Check BuddyBoss > Settings > Email Invites > Allow users to select profile type of invitee.
 		if ( true === bp_disable_invite_member_type() ) {
-			$current_user = bp_loggedin_user_id();
+			$current_user = ! empty( $user_id ) ? (int) $user_id : bp_loggedin_user_id();
 			$member_type  = bp_get_member_type( $current_user );
 			// If current user don't have any profile type then we are not allow.
 			if ( false === $member_type ) {
@@ -7708,6 +7737,35 @@ function bb_enabled_legacy_email_preference() {
 }
 
 /**
+ * Get the admin "main" setting of each saved notification type.
+ *
+ * Rows of the `bb_enabled_notification` option that have no `main` key (for example
+ * a Settings 2.0 save that only changed an email/web/app sub-type) are skipped, so the
+ * notification type falls back to its registered default.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $enabled_all_notification Saved `bb_enabled_notification` option value.
+ *
+ * @return array Map of notification key => 'yes'|'no'.
+ */
+function bb_get_enabled_notification_main_settings( $enabled_all_notification ) {
+	$enabled_notification = array();
+
+	if ( empty( $enabled_all_notification ) || ! is_array( $enabled_all_notification ) ) {
+		return $enabled_notification;
+	}
+
+	foreach ( $enabled_all_notification as $key => $value ) {
+		if ( is_array( $value ) && isset( $value['main'] ) ) {
+			$enabled_notification[ $key ] = $value['main'];
+		}
+	}
+
+	return array_filter( $enabled_notification );
+}
+
+/**
  * Get the member whose notification preferences the settings screen shows.
  *
  * The member settings screen saves to the displayed member (bp_settings_action_notifications()
@@ -7771,7 +7829,7 @@ function bb_render_notification( $notification_group ) {
 	}
 
 	$default_enabled_notifications = array_column( $options['fields'], 'default', 'key' );
-	$enabled_notification          = array_filter( array_combine( array_keys( $enabled_all_notification ), array_column( $enabled_all_notification, 'main' ) ) );
+	$enabled_notification          = bb_get_enabled_notification_main_settings( $enabled_all_notification );
 	$enabled_notification          = array_merge( $default_enabled_notifications, $enabled_notification );
 
 	$options['fields'] = array_filter(
@@ -8172,7 +8230,7 @@ function bb_get_modern_notification_admin_settings_is_enabled( $notification_key
 		}
 
 		$default_enabled_notifications = array_column( $options['fields'], 'default', 'key' );
-		$enabled_notification          = array_filter( array_combine( array_keys( $enabled_all_notification ), array_column( $enabled_all_notification, 'main' ) ) );
+		$enabled_notification          = bb_get_enabled_notification_main_settings( $enabled_all_notification );
 		$enabled_notification          = array_merge( $default_enabled_notifications, $enabled_notification );
 
 		$fields = array_filter(
