@@ -1279,22 +1279,15 @@ if ( ! class_exists( 'BBoss_Readylaunch' ) ) {
 				}
 			}
 
-			// The Like button and the reactions list on an activity feed use the BB icon
-			// font. A group shows its own feed on the group pages, so the font is needed
-			// there as well as on the activity pages.
-			if (
-				bboss_is_active( 'activity' ) &&
-				(
-					bboss_is_activity_component() ||
-					( bboss_is_active( 'groups' ) && bboss_is_group() )
-				)
-			) {
-				// BB icon version.
-				$bb_icon_version = function_exists( 'bboss_icon_font_map_data' ) ? bboss_icon_font_map_data( 'version' ) : '';
-				$bb_icon_version = ! empty( $bb_icon_version ) ? $bb_icon_version : bboss_get_version();
-				wp_enqueue_style( 'bb-readylaunch-bb-icons', bboss()->plugin_url . "bboss-templates/bboss-nouveau/icons/css/bboss-icons{$min}.css", array(), $bb_icon_version );
-				wp_enqueue_style( 'bb-readylaunch-bb-icons-map', bboss()->plugin_url . "bboss-templates/bboss-nouveau/icons/css/icons-map{$min}.css", array(), $bb_icon_version );
-			}
+			// ReadyLaunch templates use the BB icon font well beyond the activity pages: the
+			// Like button on a group feed, the check mark in a member header, the thread
+			// menu in Messages, the close button of the group modals. So the font loads on
+			// every ReadyLaunch page; it used to load on the activity pages only, which left
+			// those icons blank elsewhere.
+			$bb_icon_version = function_exists( 'bboss_icon_font_map_data' ) ? bboss_icon_font_map_data( 'version' ) : '';
+			$bb_icon_version = ! empty( $bb_icon_version ) ? $bb_icon_version : bboss_get_version();
+			wp_enqueue_style( 'bb-readylaunch-bb-icons', bboss()->plugin_url . "bboss-templates/bboss-nouveau/icons/css/bboss-icons{$min}.css", array(), $bb_icon_version );
+			wp_enqueue_style( 'bb-readylaunch-bb-icons-map', bboss()->plugin_url . "bboss-templates/bboss-nouveau/icons/css/icons-map{$min}.css", array(), $bb_icon_version );
 
 			// Register only if it's Message component.
 			if ( bboss_is_active( 'messages' ) && bboss_is_messages_component() ) {
