@@ -1277,7 +1277,18 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				if ( $min ) {
 					wp_style_add_data( 'bb-readylaunch-activity', 'suffix', $min );
 				}
+			}
 
+			// The Like button and the reactions list on an activity feed use the BB icon
+			// font. A group shows its own feed on the group pages, so the font is needed
+			// there as well as on the activity pages.
+			if (
+				bp_is_active( 'activity' ) &&
+				(
+					bp_is_activity_component() ||
+					( bp_is_active( 'groups' ) && bp_is_group() )
+				)
+			) {
 				// BB icon version.
 				$bb_icon_version = function_exists( 'bb_icon_font_map_data' ) ? bb_icon_font_map_data( 'version' ) : '';
 				$bb_icon_version = ! empty( $bb_icon_version ) ? $bb_icon_version : bp_get_version();
