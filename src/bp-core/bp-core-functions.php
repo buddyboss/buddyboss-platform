@@ -7766,9 +7766,52 @@ function bb_get_enabled_notification_main_settings( $enabled_all_notification ) 
 }
 
 /**
+ * Get the member whose notification preferences the settings screen shows.
+ *
+ * The member settings screen saves to the displayed member (bp_settings_action_notifications()
+ * writes to bp_displayed_user_id()), so it must also show that member's values. Reading the
+ * logged-in member instead showed an administrator their own preferences and mention name on
+ * another member's screen, and pressing Save there copied the administrator's values onto
+ * that member.
+ *
+ * Falls back to the logged-in member when no member is displayed, or when the viewer may not
+ * edit the displayed member's settings, so every other caller (REST, wp-admin, custom
+ * templates) keeps its current behaviour.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return int User ID, or 0 when nobody is logged in.
+ */
+function bb_get_notification_settings_user_id() {
+	$user_id           = (int) bp_loggedin_user_id();
+	$displayed_user_id = (int) bp_displayed_user_id();
+
+	if (
+		! empty( $displayed_user_id ) &&
+		$displayed_user_id !== $user_id &&
+		function_exists( 'bp_core_can_edit_settings' ) &&
+		bp_core_can_edit_settings()
+	) {
+		$user_id = $displayed_user_id;
+	}
+
+	/**
+	 * Filters the member whose notification preferences are rendered.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param int $user_id           Member the preferences are read for.
+	 * @param int $displayed_user_id Displayed member, or 0 when no member is displayed.
+	 */
+	return (int) apply_filters( 'bb_get_notification_settings_user_id', $user_id, $displayed_user_id );
+}
+
+/**
  * Render the notification settings on the front end.
  *
  * @since BuddyBoss 1.9.3
+ * @since BuddyBoss [BBVERSION] Shows the preferences of the member being edited, see
+ *                              bb_get_notification_settings_user_id().
  *
  * @param string $notification_group Notification group name.
  */
@@ -7829,6 +7872,8 @@ function bb_render_notification( $notification_group ) {
 	}
 
 	if ( ! empty( $options['fields'] ) ) {
+		// The member being edited, which is who the form saves to.
+		$user_id = bb_get_notification_settings_user_id();
 		?>
 
 		<table class="main-notification-settings">
@@ -7851,7 +7896,7 @@ function bb_render_notification( $notification_group ) {
 					continue;
 				}
 
-				$options = bb_notification_preferences_types( $field, bp_loggedin_user_id() );
+				$options = bb_notification_preferences_types( $field, $user_id );
 
 				?>
 				<tr>
@@ -7993,6 +8038,8 @@ function bb_enable_notifications_options() {
  * Render the enable notification settings on the front end.
  *
  * @since BuddyBoss 1.9.3
+ * @since BuddyBoss [BBVERSION] Shows the preferences of the member being edited, see
+ *                              bb_get_notification_settings_user_id().
  */
 function bb_render_enable_notification_options() {
 	$enable_notifications = bb_enable_notifications_options();
@@ -8001,7 +8048,7 @@ function bb_render_enable_notification_options() {
 		return;
 	}
 
-	$user_id = bp_loggedin_user_id();
+	$user_id = bb_get_notification_settings_user_id();
 
 	?>
 	<table class="main-notification-settings" data-text-all="<?php esc_html_e( 'All', 'buddyboss' ); ?> " data-text-none="<?php esc_html_e( 'None', 'buddyboss' ); ?> ">
@@ -8075,6 +8122,8 @@ function bb_manual_notification_options() {
  * Render the manual notification settings on the front end.
  *
  * @since BuddyBoss 1.9.3
+ * @since BuddyBoss [BBVERSION] Shows the preferences of the member being edited, see
+ *                              bb_get_notification_settings_user_id().
  */
 function bb_render_manual_notification() {
 
@@ -8084,7 +8133,7 @@ function bb_render_manual_notification() {
 		return;
 	}
 
-	$user_id = bp_loggedin_user_id();
+	$user_id = bb_get_notification_settings_user_id();
 
 	if ( ! empty( $manual_notifications['fields'] ) ) {
 		?>
