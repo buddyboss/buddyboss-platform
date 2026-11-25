@@ -1279,22 +1279,15 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				}
 			}
 
-			// The Like button and the reactions list on an activity feed use the BB icon
-			// font. A group shows its own feed on the group pages, so the font is needed
-			// there as well as on the activity pages.
-			if (
-				bp_is_active( 'activity' ) &&
-				(
-					bp_is_activity_component() ||
-					( bp_is_active( 'groups' ) && bp_is_group() )
-				)
-			) {
-				// BB icon version.
-				$bb_icon_version = function_exists( 'bb_icon_font_map_data' ) ? bb_icon_font_map_data( 'version' ) : '';
-				$bb_icon_version = ! empty( $bb_icon_version ) ? $bb_icon_version : bp_get_version();
-				wp_enqueue_style( 'bb-readylaunch-bb-icons', buddypress()->plugin_url . "bp-templates/bp-nouveau/icons/css/bb-icons{$min}.css", array(), $bb_icon_version );
-				wp_enqueue_style( 'bb-readylaunch-bb-icons-map', buddypress()->plugin_url . "bp-templates/bp-nouveau/icons/css/icons-map{$min}.css", array(), $bb_icon_version );
-			}
+			// ReadyLaunch templates use the BB icon font well beyond the activity pages: the
+			// Like button on a group feed, the check mark in a member header, the thread
+			// menu in Messages, the close button of the group modals. So the font loads on
+			// every ReadyLaunch page; it used to load on the activity pages only, which left
+			// those icons blank elsewhere.
+			$bb_icon_version = function_exists( 'bb_icon_font_map_data' ) ? bb_icon_font_map_data( 'version' ) : '';
+			$bb_icon_version = ! empty( $bb_icon_version ) ? $bb_icon_version : bp_get_version();
+			wp_enqueue_style( 'bb-readylaunch-bb-icons', buddypress()->plugin_url . "bp-templates/bp-nouveau/icons/css/bb-icons{$min}.css", array(), $bb_icon_version );
+			wp_enqueue_style( 'bb-readylaunch-bb-icons-map', buddypress()->plugin_url . "bp-templates/bp-nouveau/icons/css/icons-map{$min}.css", array(), $bb_icon_version );
 
 			// Register only if it's Message component.
 			if ( bp_is_active( 'messages' ) && bp_is_messages_component() ) {
