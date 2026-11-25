@@ -990,7 +990,7 @@ window.bp = window.bp || {};
 									$( document ).find( 'a.bb-open-document-theatre[data-id="' + itemId + '"]' ).attr( 'href', response.data.url );
 								}
 							} else {
-								target.find( 'option[value="' + target.attr( 'data-privacy' ) + '"]' ).attr( 'selected', 'selected' );
+								target.val( target.attr( 'data-privacy' ) );
 								target.siblings( 'span' ).text( target.find( 'option[value="' + target.attr( 'data-privacy' ) + '"]' ).text() );
 								/* jshint ignore:start */
 								alert( response.data.feedback.replace( '&#039;', '\'' ) );
@@ -1156,7 +1156,7 @@ window.bp = window.bp || {};
 									self.removeDeletedActivityComment( activityId );
 								} else {
 									self.removeDeletedItemsFromCommentEditData( activityId, 'document', [ id ] );
-									$( 'body #buddypress .activity-list li#activity-' + activityId ).replaceWith( response.data.activity_content );
+									bp.Nouveau.replaceActivityItem( $( 'body #buddypress .activity-list li#activity-' + activityId ), response.data.activity_content, [ '.activity-inner > .bb-activity-media-wrap' ] );
 								}
 							}
 						}
@@ -1662,7 +1662,7 @@ window.bp = window.bp || {};
 								} else {
 									self.removeDeletedItemsFromCommentEditData( activityId, 'media', media );
 									self.refreshKeptCommentAttachments( activityId, '.bb-activity-media-wrap', '.bp-media-move-photo', response.data.media_content );
-									$( 'body #buddypress .activity-list li#activity-' + activityId ).replaceWith( response.data.activity_content );
+									bp.Nouveau.replaceActivityItem( $( 'body #buddypress .activity-list li#activity-' + activityId ), response.data.activity_content, [ '.activity-inner > .bb-activity-media-wrap' ] );
 								}
 							}
 						} else if ( fromWhere && fromWhere.length && 'media' === fromWhere ) {
@@ -5011,6 +5011,12 @@ window.bp = window.bp || {};
 			if ( !$currentTarget || $currentTarget.length === 0 ) {
 				// Last resort: find any modal in the context, but this should rarely happen
 				$currentTarget = $contextContainer.find( '.bp-media-move-file' ).first();
+			}
+
+			// Activity move popups are rendered before the document loop, so they share id "bp-media-move-file-0".
+			// Give this one its own id, or the selector below resolves to the first popup on the page.
+			if ( $currentTarget.attr( 'id' ) && 1 < $( '[id="' + $currentTarget.attr( 'id' ) + '"]' ).length ) {
+				$currentTarget.attr( 'id', 'bp-media-move-file-' + _.uniqueId( 'popup-' ) );
 			}
 
 			// Convert to selector string for compatibility with existing code
@@ -8576,6 +8582,10 @@ window.bp = window.bp || {};
 						type    : 'document',
 					},
 					success: function ( response ) {
+						if ( ! response || ! response.success ) {
+							self.revertDocumentPrivacy( target, older_privacy, response );
+							return;
+						}
 						target.closest('.bb-document-privacy-wrap').find('.privacy').removeClass('loading').removeClass(older_privacy);
 						target.closest('.bb-document-privacy-wrap').find('.privacy').addClass(privacy);
 						target.closest('.bb-document-privacy-wrap').find('.bp-tooltip').attr('data-bp-tooltip', target.text());
@@ -8584,10 +8594,33 @@ window.bp = window.bp || {};
 						}
 					},
 					error  : function () {
-						target.closest('.bb-document-privacy-wrap').find('.privacy').removeClass('loading');
+						self.revertDocumentPrivacy( target, older_privacy );
 					}
 				}
 			);
+		},
+
+		/**
+		 * Put the previous privacy back in the document viewer when the server refuses the change.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param {Object} target        Clicked privacy item.
+		 * @param {string} older_privacy Privacy before the change.
+		 * @param {Object} response      AJAX response, when there is one.
+		 */
+		revertDocumentPrivacy: function ( target, older_privacy, response ) {
+			var privacy_wrap = target.closest( '.bb-document-privacy-wrap' );
+
+			privacy_wrap.find( '.privacy' ).removeClass( 'loading' );
+			privacy_wrap.find( 'ul.document-privacy li' ).removeClass( 'selected' );
+			privacy_wrap.find( 'ul.document-privacy li[data-value="' + older_privacy + '"]' ).addClass( 'selected' );
+
+			if ( response && response.data && response.data.feedback ) {
+				/* jshint ignore:start */
+				alert( response.data.feedback.replace( '&#039;', '\'' ) );
+				/* jshint ignore:end */
+			}
 		},
 
 		resetActivityMedia: function ( activityId ) {

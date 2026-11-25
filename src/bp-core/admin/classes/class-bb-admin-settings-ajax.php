@@ -2457,8 +2457,9 @@ class BB_Admin_Settings_Ajax {
 				foreach ( $field_group['fields'] as $notification_field ) {
 					$checked = isset( $notification_field['default'] ) && 'yes' === $notification_field['default'];
 
-					if ( array_key_exists( $notification_field['key'], $enabled_notification ) ) {
-						$checked = isset( $enabled_notification[ $notification_field['key'] ]['main'] ) && 'yes' === $enabled_notification[ $notification_field['key'] ]['main'];
+					// A saved row without 'main' keeps the registered default, matching bb_is_notification_type_enabled().
+					if ( isset( $enabled_notification[ $notification_field['key'] ]['main'] ) ) {
+						$checked = 'yes' === $enabled_notification[ $notification_field['key'] ]['main'];
 					}
 
 					// Get email template info using pre-fetched batch data.
