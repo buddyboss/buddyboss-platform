@@ -933,9 +933,9 @@ function bp_nouveau_member_template_part() {
 			$template = 'invites';
 		} elseif ( bp_is_user_media() ) {
 			$template = 'media';
-		} elseif ( bp_is_user_document() ) {
+		} elseif ( bp_is_active( 'document' ) && bp_is_user_document() ) {
 			$template = 'document';
-		} elseif ( bp_is_user_video() ) {
+		} elseif ( bp_is_active( 'video' ) && bp_is_user_video() ) {
 			$template = 'video';
 		}
 
@@ -1231,9 +1231,11 @@ function bb_get_member_joined_date( $user_id = 0 ) {
 	 * Filters the user registered date meta.
 	 *
 	 * @since BuddyPress 1.9.1
+	 * @since BuddyBoss 3.8.0 Added the `$user_id` parameter.
 	 *
 	 * @param string The user registered date meta.
 	 * @param string The user registered date.
+	 * @param int    The user ID.
 	 */
-	return apply_filters( 'bb_get_member_joined_date', $user_registered_date, $register_date );
+	return apply_filters( 'bb_get_member_joined_date', $user_registered_date, $register_date, $user_id );
 }

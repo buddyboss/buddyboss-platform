@@ -752,6 +752,11 @@ class BB_License_Manager {
 		if ( function_exists( 'bb_flush_field_upgrades_cache_full' ) ) {
 			bb_flush_field_upgrades_cache_full();
 		}
+
+		// A queued Add-ons update kept while the license was not entitled can run now.
+		if ( function_exists( 'bb_retry_queued_addons_bundle_update_soon' ) ) {
+			bb_retry_queued_addons_bundle_update_soon();
+		}
 	}
 
 	/**
@@ -1047,7 +1052,7 @@ class BB_License_Manager {
 			}
 
 			// Whitelist: Must be a known BuddyBoss product ID pattern.
-			$allowed_prefixes = array( 'bb-platform', 'bb-web', 'buddyboss' );
+			$allowed_prefixes = array( 'bb-platform', 'bb-web', 'buddyboss', 'bb-' );
 			$is_valid_prefix  = false;
 			foreach ( $allowed_prefixes as $prefix ) {
 				if ( strpos( $plugin_id, $prefix ) === 0 ) {

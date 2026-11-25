@@ -132,6 +132,34 @@ function bp_is_forums_emoji_support_enabled( $default = 0 ) {
 }
 
 /**
+ * Whether a GIPHY integration provider is available to power the GIF feature.
+ *
+ * The provider is the code that saves, renders and deletes GIF attachments
+ * (`bp_media_activity_embed_gif()` and friends). It ships in the BuddyBoss
+ * Add-ons plugin (older Platform builds had it in the media component), with
+ * the same function names. When neither is
+ * loaded, every `bp_is_*_gif_support_enabled()` gate returns false (via
+ * {@see bb_media_gifs_force_disable()}), so GIF UI never renders against a
+ * missing backend.
+ *
+ * @since BuddyBoss 3.7.0
+ *
+ * @return bool True when a GIF provider (Platform-bundled or addon) is loaded.
+ */
+function bb_giphy_provider_available() {
+	$available = function_exists( 'bp_media_activity_embed_gif' );
+
+	/**
+	 * Filters whether a GIPHY integration provider is available.
+	 *
+	 * @since BuddyBoss 3.7.0
+	 *
+	 * @param bool $available True when the GIF save/render/delete functions are loaded.
+	 */
+	return (bool) apply_filters( 'bb_giphy_module_active', $available );
+}
+
+/**
  * Return GIFs API Key
  *
  * @param string $default Optional. Fallback value if not found in the database.
@@ -162,7 +190,7 @@ function bp_media_get_gif_api_key( $default = '' ) {
  */
 function bp_is_profiles_gif_support_enabled( $default = 0 ) {
 	$result = false;
-	if ( bb_check_valid_giphy_api_key() ) {
+	if ( function_exists( 'bb_check_valid_giphy_api_key' ) && bb_check_valid_giphy_api_key() ) {
 		$result = (bool) get_option( 'bp_media_profiles_gif_support', $default );
 	}
 	return (bool) apply_filters( 'bp_is_profiles_gif_support_enabled', $result );
@@ -178,7 +206,7 @@ function bp_is_profiles_gif_support_enabled( $default = 0 ) {
  */
 function bp_is_groups_gif_support_enabled( $default = 0 ) {
 	$result = false;
-	if ( bb_check_valid_giphy_api_key() ) {
+	if ( function_exists( 'bb_check_valid_giphy_api_key' ) && bb_check_valid_giphy_api_key() ) {
 		$result = (bool) get_option( 'bp_media_groups_gif_support', $default );
 	}
 	return (bool) apply_filters( 'bp_is_groups_gif_support_enabled', $result );
@@ -194,7 +222,7 @@ function bp_is_groups_gif_support_enabled( $default = 0 ) {
  */
 function bp_is_messages_gif_support_enabled( $default = 0 ) {
 	$result = false;
-	if ( bb_check_valid_giphy_api_key() ) {
+	if ( function_exists( 'bb_check_valid_giphy_api_key' ) && bb_check_valid_giphy_api_key() ) {
 		$result = (bool) get_option( 'bp_media_messages_gif_support', $default );
 	}
 	return (bool) apply_filters( 'bp_is_messages_gif_support_enabled', $result );
@@ -210,7 +238,7 @@ function bp_is_messages_gif_support_enabled( $default = 0 ) {
  */
 function bp_is_forums_gif_support_enabled( $default = 0 ) {
 	$result = false;
-	if ( bb_check_valid_giphy_api_key() ) {
+	if ( function_exists( 'bb_check_valid_giphy_api_key' ) && bb_check_valid_giphy_api_key() ) {
 		$result = (bool) get_option( 'bp_media_forums_gif_support', $default );
 	}
 	return (bool) apply_filters( 'bp_is_forums_gif_support_enabled', $result );
@@ -264,6 +292,73 @@ function bp_is_profile_document_support_enabled( $default = 0 ) {
 	return (bool) apply_filters( 'bp_is_profile_document_support_enabled', (bool) get_option( 'bp_media_profile_document_support', $default ) );
 }
 
+/*
+ * Video support helpers.
+ *
+ * These mirror the document twins above and live in the Platform (not the video
+ * component) on purpose: the video component was extracted to the buddyboss-addons
+ * plugin, but Platform code (REST endpoints, group settings, templates) calls these
+ * helpers directly and unconditionally. Keeping them here means those callers resolve
+ * whether or not the addon is present. When the video component is inactive,
+ * bb_media_videos_force_disable() (bp-media-filters.php) forces all four to false via
+ * their filters — so an unlicensed/absent addon degrades cleanly instead of fataling.
+ * Option names are the frozen video contract (bp_video_*_video_support).
+ *
+ * @since BuddyBoss 3.7.0
+ */
+
+/**
+ * Checks if profile video support is enabled.
+ *
+ * @since BuddyBoss 1.7.0
+ * @since BuddyBoss 3.7.0 Moved from the video component, which ships in BuddyBoss Add-ons.
+ *
+ * @param int $default Default value.
+ * @return bool Whether profile video support is enabled.
+ */
+function bp_is_profile_video_support_enabled( $default = 0 ) {
+	return (bool) apply_filters( 'bp_is_profile_video_support_enabled', (bool) get_option( 'bp_video_profile_video_support', $default ) );
+}
+
+/**
+ * Checks if group video support is enabled.
+ *
+ * @since BuddyBoss 1.7.0
+ * @since BuddyBoss 3.7.0 Moved from the video component, which ships in BuddyBoss Add-ons.
+ *
+ * @param int $default Default value.
+ * @return bool Whether group video support is enabled.
+ */
+function bp_is_group_video_support_enabled( $default = 0 ) {
+	return (bool) apply_filters( 'bp_is_group_video_support_enabled', (bool) get_option( 'bp_video_group_video_support', $default ) );
+}
+
+/**
+ * Checks if messages video support is enabled.
+ *
+ * @since BuddyBoss 1.7.0
+ * @since BuddyBoss 3.7.0 Moved from the video component, which ships in BuddyBoss Add-ons.
+ *
+ * @param int $default Default value.
+ * @return bool Whether messages video support is enabled.
+ */
+function bp_is_messages_video_support_enabled( $default = 0 ) {
+	return (bool) apply_filters( 'bp_is_messages_video_support_enabled', (bool) get_option( 'bp_video_messages_video_support', $default ) );
+}
+
+/**
+ * Checks if forums video support is enabled.
+ *
+ * @since BuddyBoss 1.7.0
+ * @since BuddyBoss 3.7.0 Moved from the video component, which ships in BuddyBoss Add-ons.
+ *
+ * @param int $default Default value.
+ * @return bool Whether forums video support is enabled.
+ */
+function bp_is_forums_video_support_enabled( $default = 0 ) {
+	return (bool) apply_filters( 'bp_is_forums_video_support_enabled', (bool) get_option( 'bp_video_forums_video_support', $default ) );
+}
+
 /**
  * Checks if extension support is enabled.
  *
@@ -272,9 +367,10 @@ function bp_is_profile_document_support_enabled( $default = 0 ) {
  */
 function bp_document_extensions_list() {
 
-	$default = bp_media_allowed_document_type();
+	// The default-type helper loads with the document component (BuddyBoss Add-ons), so fall back to the stored option.
+	$default = function_exists( 'bp_media_allowed_document_type' ) ? bp_media_allowed_document_type() : array();
 	$saved   = bp_get_option( 'bp_document_extensions_support', $default );
-	$merge   = array_merge( $default, $saved );
+	$merge   = array_merge( (array) $default, (array) $saved );
 	$final   = array_unique( $merge, SORT_REGULAR );
 
 	/**
@@ -309,7 +405,7 @@ function bp_media_allowed_upload_media_size() {
  */
 function bp_media_allowed_upload_document_size() {
 	$max_size = bp_core_upload_max_size();
-	$default  = bp_document_format_size_units( $max_size, false, 'MB' );
+	$default  = function_exists( 'bp_document_format_size_units' ) ? bp_document_format_size_units( $max_size, false, 'MB' ) : bp_media_format_size_units( $max_size, false, 'MB' );
 	return (int) apply_filters( 'bp_media_allowed_upload_document_size', (int) get_option( 'bp_document_allowed_size', $default ) );
 }
 
@@ -359,5 +455,8 @@ function bp_media_allowed_upload_document_per_batch() {
  * @since BuddyBoss 1.7.0
  */
 function bp_video_extensions_list() {
-	return apply_filters( 'bp_video_extensions_list', bp_get_option( 'bp_video_extensions_support', bp_video_allowed_video_type() ) );
+	// The default-type helper loads with the video component (BuddyBoss Add-ons), so fall back to the stored option.
+	$default = function_exists( 'bp_video_allowed_video_type' ) ? bp_video_allowed_video_type() : array();
+
+	return apply_filters( 'bp_video_extensions_list', bp_get_option( 'bp_video_extensions_support', $default ) );
 }

@@ -152,6 +152,15 @@ function bp_admin_repair_list() {
 		'bb_sync_profile_completion_widget',
 	);
 
+	// Activity topics: drop relationship rows left behind by activities deleted before PROD-10670.
+	if ( bp_is_active( 'activity' ) && function_exists( 'bb_activity_topics_manager_instance' ) ) {
+		$repair_list[113] = array(
+			'bp-activity-topic-relationships',
+			esc_html__( 'Remove activity topic relationships whose activity no longer exists', 'buddyboss' ),
+			'bb_admin_repair_activity_topic_relationships',
+		);
+	}
+
 	ksort( $repair_list );
 
 	/**
@@ -401,6 +410,53 @@ function repair_default_profiles_fields() {
 	return array(
 		'status'  => 1,
 		'message' => sprintf( $statement, __( 'Complete!', 'buddyboss' ) ),
+	);
+}
+
+/**
+ * Remove activity topic relationship rows whose activity no longer exists.
+ *
+ * Batched through the paginated repair protocol (`status: running` + `offset`), idempotent, so it
+ * is safe to re-run. Activities deleted after PROD-10670 clean their rows on `bp_activity_after_delete`.
+ *
+ * @since BuddyBoss 3.7.0
+ *
+ * @return array Repair status.
+ */
+function bb_admin_repair_activity_topic_relationships() {
+	$offset = isset( $_POST['offset'] ) ? (int) $_POST['offset'] : 0; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce verified by the dispatcher.
+
+	if ( ! function_exists( 'bb_activity_topics_manager_instance' ) || ! bb_activity_topics_manager_instance() ) {
+		return array(
+			'status'  => 0,
+			'message' => __( 'Activity topics are not available.', 'buddyboss' ),
+		);
+	}
+
+	$deleted = bb_activity_topics_manager_instance()->bb_delete_orphan_activity_topic_relationships( 500 );
+
+	if ( $deleted > 0 ) {
+		$offset += $deleted;
+
+		return array(
+			'status'  => 'running',
+			'offset'  => $offset,
+			/* translators: %s: number of rows removed so far. */
+			'records' => sprintf( __( '%s orphaned activity topic relationships removed.', 'buddyboss' ), bp_core_number_format( $offset ) ),
+		);
+	}
+
+	return array(
+		'status'  => 1,
+		'message' => sprintf(
+			/* translators: %s: number of rows removed. */
+			__( 'Removing orphaned activity topic relationships &hellip; %s', 'buddyboss' ),
+			sprintf(
+				/* translators: %s: number of rows removed. */
+				__( 'Complete! %s removed.', 'buddyboss' ),
+				bp_core_number_format( $offset )
+			)
+		),
 	);
 }
 

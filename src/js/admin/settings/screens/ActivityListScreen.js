@@ -129,6 +129,10 @@ export function ActivityListScreen( { onNavigate } ) {
 	var deleteConfirm = deleteConfirmState[ 0 ];
 	var setDeleteConfirm = deleteConfirmState[ 1 ];
 
+	var refetchCounterState = useState( 0 );
+	var refetchCounter = refetchCounterState[ 0 ];
+	var setRefetchCounter = refetchCounterState[ 1 ];
+
 	var hasMetaRef = useRef( false );
 
 	var totalPages = Math.ceil( total / perPage );
@@ -214,7 +218,7 @@ export function ActivityListScreen( { onNavigate } ) {
 				message: __( 'Failed to load activities. Please try again.', 'buddyboss' ),
 			} );
 		} );
-	}, [ currentPage, perPage, searchQuery, actionFilter, filter ] );
+	}, [ currentPage, perPage, searchQuery, actionFilter, filter, refetchCounter ] );
 
 	// Fetch on mount and when filters change. Abort stale requests on cleanup.
 	useEffect( function () {
@@ -257,6 +261,25 @@ export function ActivityListScreen( { onNavigate } ) {
 	};
 
 	/**
+	 * Reset metadata and refetch the activity list from page 1.
+	 *
+	 * Re-requests meta (include_meta=1) so the "All (N)" / "Spam (N)" view
+	 * counts reflect the mutation. The refetch runs through the fetch
+	 * useEffect, so it gets an AbortController like any other fetch.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	var resetAndRefetch = function () {
+		hasMetaRef.current = false;
+		if ( 1 === currentPage ) {
+			// Increment counter to trigger fetchActivities useEffect with proper AbortController.
+			setRefetchCounter( function ( prev ) { return prev + 1; } );
+		} else {
+			setCurrentPage( 1 );
+		}
+	};
+
+	/**
 	 * Perform action on activity/activities.
 	 *
 	 * @param {string}       action The action (spam, ham, delete).
@@ -278,13 +301,8 @@ export function ActivityListScreen( { onNavigate } ) {
 				setSelectedIds( [] );
 				setBulkAction( '' );
 
-				// If we're beyond page 1, go back to page 1 to avoid landing on an empty page.
-				// Otherwise re-fetch the current page (page 1).
-				if ( currentPage > 1 ) {
-					setCurrentPage( 1 );
-				} else {
-					fetchActivities();
-				}
+				// Back to page 1 (avoids landing on an empty page) and refresh view counts.
+				resetAndRefetch();
 			} else {
 				setNotice( { type: 'error', message: response.data?.message || __( 'Action failed.', 'buddyboss' ) } );
 			}
@@ -375,7 +393,8 @@ export function ActivityListScreen( { onNavigate } ) {
 			if ( response.success ) {
 				setNotice( { type: 'success', message: response.data.message } );
 				setEditActivity( null );
-				fetchActivities();
+				// Edit can change spam status (is_spam), so refresh view counts too.
+				resetAndRefetch();
 			} else {
 				setNotice( { type: 'error', message: response.data?.message || __( 'Failed to save activity.', 'buddyboss' ) } );
 			}
@@ -397,7 +416,8 @@ export function ActivityListScreen( { onNavigate } ) {
 			if ( response.success ) {
 				setNotice( { type: 'success', message: response.data.message } );
 				setCommentActivity( null );
-				fetchActivities();
+				// A new comment changes the "All (N)" count (comments are counted in stream mode).
+				resetAndRefetch();
 			} else {
 				setNotice( { type: 'error', message: response.data?.message || __( 'Failed to post comment.', 'buddyboss' ) } );
 			}
@@ -412,8 +432,10 @@ export function ActivityListScreen( { onNavigate } ) {
 	 *
 	 * Uses dateI18n() from @wordpress/date so the output respects the
 	 * WordPress timezone setting and translates month names.
-	 * date_recorded is stored as UTC in the database; passing the raw
-	 * string lets dateI18n convert it to the site's local time.
+	 * date_recorded is stored as a naive UTC datetime string (no
+	 * timezone designator), so it must be normalized to an explicit
+	 * UTC ISO string first — otherwise dateI18n()/moment() parses it
+	 * as the browser's local time instead of UTC before converting.
 	 *
 	 * @param {string} dateStr UTC date string (e.g. "2026-02-27 14:23:45").
 	 * @returns {string} Formatted date in site timezone.
@@ -422,7 +444,7 @@ export function ActivityListScreen( { onNavigate } ) {
 		if ( ! dateStr ) {
 			return '';
 		}
-		return dateI18n( 'j M, H:i:s', dateStr );
+		return dateI18n( 'j M, H:i:s', dateStr.replace( ' ', 'T' ) + 'Z' );
 	};
 
 	// Build action type options for select.

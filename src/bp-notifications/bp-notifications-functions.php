@@ -495,6 +495,7 @@ function bp_notifications_check_notification_access( $user_id, $notification_id 
  * Get a count of unread notification items for a user.
  *
  * @since BuddyPress 1.9.0
+ * @since BuddyBoss [BBVERSION] No longer keeps its own cache; relies on BP_Notifications_Notification::get_total_count().
  *
  * @param int $user_id ID of the user whose unread notifications are being
  *                     counted.
@@ -505,16 +506,15 @@ function bp_notifications_get_unread_notification_count( $user_id = 0 ) {
 		$user_id = ( bp_displayed_user_id() ) ? bp_displayed_user_id() : bp_loggedin_user_id();
 	}
 
-	$count = wp_cache_get( $user_id, 'bp_notifications_unread_count' );
-	if ( false === $count ) {
-		$count = BP_Notifications_Notification::get_total_count(
-			array(
-				'user_id' => $user_id,
-				'is_new'  => true,
-			)
-		);
-		wp_cache_set( $user_id, $count, 'bp_notifications_unread_count' );
-	}
+	// get_total_count() already caches this under a hash of the final count
+	// SQL plus the user's count incrementor (see bp_notifications_get_count_cache_key()),
+	// so a second cache layer isn't needed here.
+	$count = BP_Notifications_Notification::get_total_count(
+		array(
+			'user_id' => $user_id,
+			'is_new'  => true,
+		)
+	);
 
 	/**
 	 * Filters the count of unread notification items for a user.
@@ -1881,6 +1881,8 @@ function bb_notifications_on_screen_get_where_conditions( $where_sql, $tbl_alias
  * then this notification will only for read purpose.
  *
  * @since BuddyBoss 2.2.7
+ * @since BuddyBoss [BBVERSION] Resolve the triggering user from item_id for the legacy
+ *                              'friendship_request' and 'friendship_accepted' actions.
  *
  * @param object $notification Notification item.
  *
@@ -1888,10 +1890,12 @@ function bb_notifications_on_screen_get_where_conditions( $where_sql, $tbl_alias
  */
 function bb_notification_is_read_only( $notification ) {
 	static $cache = array();
-	// item_id is the user_id and secondary_item_id is the friend_id for the below component action.
+	// item_id is the triggering user_id and secondary_item_id is the friendship_id for the below component actions.
 	$allowed_component_action = array(
 		'bb_connections_request_accepted',
 		'bb_connections_new_request',
+		'friendship_accepted',
+		'friendship_request',
 	);
 
 	if ( empty( $notification->id ) ) {
@@ -1904,38 +1908,40 @@ function bb_notification_is_read_only( $notification ) {
 		return $cache[ $cache_key ];
 	}
 
-	$retval = ! empty( $notification ) &&
-	(
-		(
-				! in_array( $notification->component_action, $allowed_component_action, true ) &&
-				! empty( $notification->secondary_item_id ) &&
-				bp_is_user_inactive( $notification->secondary_item_id )
-		) ||
-		(
-				in_array( $notification->component_action, $allowed_component_action, true ) &&
-				! empty( $notification->item_id ) &&
-				bp_is_user_inactive( $notification->item_id )
-		) ||
-		(
-			bp_is_active( 'moderation' ) &&
+	/*
+	 * Resolve the ID of the user who triggered the notification. Connection
+	 * notifications (modern and legacy) store that user in item_id and the
+	 * friendship ID in secondary_item_id; every other notification type stores
+	 * the triggering user in secondary_item_id. Passing the friendship ID to
+	 * bp_is_user_inactive() would mark the notification read-only whenever no
+	 * user with that ID exists.
+	 */
+	if ( in_array( $notification->component_action, $allowed_component_action, true ) ) {
+		$triggering_user_id = ! empty( $notification->item_id ) ? (int) $notification->item_id : 0;
+	} else {
+		$triggering_user_id = ! empty( $notification->secondary_item_id ) ? (int) $notification->secondary_item_id : 0;
+	}
+
+	$retval = ! empty( $notification )
+		&& (
 			(
-				(
-					! in_array( $notification->component_action, $allowed_component_action, true ) &&
-					! empty( $notification->secondary_item_id ) &&
-					bb_moderation_moderated_user_ids( $notification->secondary_item_id )
-				) ||
-				(
-					in_array( $notification->component_action, $allowed_component_action, true ) &&
-					! empty( $notification->item_id ) &&
-					bb_moderation_moderated_user_ids( $notification->item_id )
-				) ||
-				(
-					! empty( $notification->user_id ) &&
-					bb_moderation_moderated_user_ids( $notification->user_id )
+				! empty( $triggering_user_id )
+				&& bp_is_user_inactive( $triggering_user_id )
+			) ||
+			(
+				bp_is_active( 'moderation' )
+				&& (
+					(
+						! empty( $triggering_user_id )
+						&& bb_moderation_moderated_user_ids( $triggering_user_id )
+					) ||
+					(
+						! empty( $notification->user_id )
+						&& bb_moderation_moderated_user_ids( (int) $notification->user_id )
+					)
 				)
 			)
-		)
-	);
+		);
 
 	$retval = (bool) apply_filters( 'bb_notification_is_read_only', $retval, $notification );
 
@@ -2159,17 +2165,23 @@ add_filter( 'bb_notification_is_read_only', 'bb_notification_linkable_specific_n
  * Function to exclude the notification actions.
  *
  * @since BuddyBoss 2.2.9
+ * @since BuddyBoss 3.7.0 Also excludes the group subscription notifications when BuddyBoss Add-ons does not provide group subscriptions.
  *
  * @return array
  */
 function bb_notification_excluded_component_actions() {
 	$actions = array();
 
-	if ( ! bp_is_active( 'activity' ) ) {
+	// Group subscriptions ship with BuddyBoss Add-ons. Without it nothing formats their notifications.
+	// Check the formatter, not the subscription type: the type is not registered while the setting
+	// is off, and existing notifications should still show then.
+	$has_group_subscriptions = function_exists( 'bb_format_groups_subscription_notification' );
+
+	if ( ! bp_is_active( 'activity' ) || ! $has_group_subscriptions ) {
 		$actions[] = 'bb_groups_subscribed_activity';
 	}
 
-	if ( ! bp_is_active( 'forums' ) ) {
+	if ( ! bp_is_active( 'forums' ) || ! $has_group_subscriptions ) {
 		$actions[] = 'bb_groups_subscribed_discussion';
 	}
 

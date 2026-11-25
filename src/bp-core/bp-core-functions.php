@@ -2512,6 +2512,106 @@ function bp_core_get_minified_asset_suffix() {
 }
 
 /**
+ * Check whether a component's directory is present in this build.
+ *
+ * Optional components can be stripped from a distribution (e.g. the video and
+ * document components moved to the BuddyBoss Add-ons plugin). This checks for
+ * the component's loader file on disk, and lets a provider plugin claim the
+ * component through the `bb_component_directory_available` filter. Video and
+ * Documents are not available from a BuddyBoss Add-ons build below the version
+ * this Platform requires.
+ *
+ * @since BuddyBoss 3.7.0
+ *
+ * @param string $component Component ID (e.g. 'video', 'document').
+ * @return bool True when the component's code is available to load.
+ */
+function bb_is_component_directory_available( $component ) {
+	static $available = array();
+
+	if ( isset( $available[ $component ] ) ) {
+		return $available[ $component ];
+	}
+
+	$exists = file_exists( buddypress()->plugin_dir . 'bp-' . $component . '/bp-' . $component . '-loader.php' );
+
+	/**
+	 * Filters whether a component's code is available to load.
+	 *
+	 * By default this reflects whether the component's loader file exists
+	 * inside the Platform build. An external plugin that provides a
+	 * component (e.g. BuddyBoss Add-ons supplying video/document) returns
+	 * true for its component so the availability scrub keeps it active
+	 * and the admin UI keeps offering the toggle.
+	 *
+	 * @since BuddyBoss 3.7.0
+	 *
+	 * @param bool   $exists    Whether the component's loader file exists in this build.
+	 * @param string $component Component ID (e.g. 'video', 'document').
+	 */
+	$is_available = (bool) apply_filters( 'bb_component_directory_available', $exists, $component );
+
+	/*
+	 * Videos and Documents moved their template pack code, settings panels and
+	 * group screens from Platform into BuddyBoss Add-ons. An older Add-ons
+	 * build still claims the components but lacks that code, so they stay off
+	 * (their data is kept) until Add-ons is updated to the required version.
+	 */
+	if (
+		$is_available &&
+		! $exists &&
+		in_array( $component, array( 'video', 'document' ), true ) &&
+		defined( 'BB_ADDONS_PLUGIN_VERSION' ) &&
+		bb_is_addons_below_required_version( (string) BB_ADDONS_PLUGIN_VERSION )
+	) {
+		$is_available = false;
+	}
+
+	// Providers register their claims on `bp_loaded`, so only memoise once it
+	// has finished — an earlier call must not freeze a premature `false`.
+	if ( did_action( 'bp_loaded' ) && ! doing_action( 'bp_loaded' ) ) {
+		$available[ $component ] = $is_available;
+	}
+
+	return $is_available;
+}
+
+/**
+ * Record that Videos or Documents are not available on this site.
+ *
+ * Their cleanup and moderation hooks ship in BuddyBoss Add-ons, so members,
+ * posts and messages deleted, and members suspended, while they are off leave
+ * their files behind. BuddyBoss Add-ons reads this record when the components
+ * are back and repairs the data.
+ *
+ * @since BuddyBoss 3.7.0
+ *
+ * @return void
+ */
+function bb_media_record_unavailable_components() {
+	// The record lives on the root blog, like the active components option.
+	if ( is_multisite() && ! bp_is_root_blog() ) {
+		return;
+	}
+
+	$pending = bp_get_option( 'bb_media_reconcile_pending', false );
+	$changed = false === $pending;
+	$pending = $changed ? array() : (array) $pending;
+
+	foreach ( array( 'video', 'document' ) as $component ) {
+		if ( ! bp_is_active( $component ) && empty( $pending[ $component ] ) ) {
+			$pending[ $component ] = time();
+			$changed               = true;
+		}
+	}
+
+	if ( $changed ) {
+		bp_update_option( 'bb_media_reconcile_pending', $pending );
+	}
+}
+add_action( 'bp_init', 'bb_media_record_unavailable_components', 20 );
+
+/**
  * Return a list of component information.
  *
  * @since BuddyPress 2.6.0
@@ -2703,6 +2803,14 @@ function bp_core_get_components( $type = 'all' ) {
 	// Add blogs tracking if multisite.
 	if ( is_multisite() ) {
 		$optional_components['blogs']['description'] = __( 'Record activity for new sites, posts, and comments across your network.', 'buddyboss' );
+	}
+
+	// Hide optional components whose directories are not present in this build
+	// (e.g. the video and document components stripped from the free package).
+	foreach ( array_keys( $optional_components ) as $component_key ) {
+		if ( ! bb_is_component_directory_available( $component_key ) ) {
+			unset( $optional_components[ $component_key ] );
+		}
 	}
 
 	$default_components = array();
@@ -3555,6 +3663,8 @@ function bp_get_email( $email_type ) {
  * process the request without any errors.
  *
  * @since BuddyPress 2.5.0
+ * @since BuddyBoss 3.8.0 Added the `bb_pre_bp_send_email` filter, which can stop a validated
+ *                              email before any mail transport runs.
  *
  * @param string                   $email_type Type of email being sent.
  * @param string|array|int|WP_User $to         Either an email address, user ID, WP_User object,
@@ -3639,6 +3749,31 @@ function bp_send_email( $email_type, $to, $args = array() ) {
 	$status = $email->validate();
 	if ( is_wp_error( $status ) ) {
 		return $status;
+	}
+
+	/**
+	 * Filters whether to stop a validated email before it reaches a mail transport.
+	 *
+	 * Return anything other than null to end bp_send_email() here: that value is returned to
+	 * the caller and neither wp_mail() nor the delivery class runs. This fires before the
+	 * transport is chosen, so it behaves the same whichever mail plugin the site uses,
+	 * including plugins that declare their own wp_mail(), which may not apply `pre_wp_mail`.
+	 * Return true when the email was handled another way (for example held for a digest), or
+	 * a WP_Error to report that it was not sent.
+	 *
+	 * Plugins should check for bb_email_supports_pre_send_filter() before relying on it.
+	 *
+	 * @since BuddyBoss 3.8.0
+	 *
+	 * @param null|bool|WP_Error       $pre_send   Null to send the email as usual.
+	 * @param BP_Email                 $email      The validated email.
+	 * @param string                   $email_type Type of email being sent.
+	 * @param string|array|int|WP_User $to         The recipient passed to bp_send_email().
+	 * @param array                    $args       Extra parameters, notably `tokens`.
+	 */
+	$pre_send = apply_filters( 'bb_pre_bp_send_email', null, $email, $email_type, $to, $args );
+	if ( null !== $pre_send ) {
+		return $pre_send;
 	}
 
 	/**
@@ -3757,6 +3892,21 @@ function bp_send_email( $email_type, $to, $args = array() ) {
 }
 
 /**
+ * Whether bp_send_email() applies the `bb_pre_bp_send_email` filter.
+ *
+ * A capability marker. Plugins that hold or reroute BuddyBoss emails should gate their
+ * `bb_pre_bp_send_email` callback on function_exists() of this function and keep their older
+ * route (such as `pre_wp_mail`) for Platform versions without the filter.
+ *
+ * @since BuddyBoss 3.8.0
+ *
+ * @return bool Always true when this function exists.
+ */
+function bb_email_supports_pre_send_filter() {
+	return true;
+}
+
+/**
  * Return email appearance settings.
  *
  * @since BuddyPress 2.5.0
@@ -3843,14 +3993,16 @@ function bp_email_get_template( WP_Post $object ) {
  * Intended for use with the email system introduced in BuddyPress 2.5.0.
  *
  * @since BuddyPress 2.5.0
+ * @since BuddyBoss [BBVERSION] Removes the scheme that the link dialog adds in front of a URL token in a link and its text.
  *
  * @param string $text   Text to replace tokens in.
  * @param array  $tokens Token names and replacement values for the $text.
  * @return string
  */
 function bp_core_replace_tokens_in_text( $text, $tokens ) {
-	$unescaped = array();
-	$escaped   = array();
+	$unescaped  = array();
+	$escaped    = array();
+	$url_tokens = array();
 
 	foreach ( $tokens as $token => $value ) {
 		if ( ! is_string( $value ) && is_callable( $value ) ) {
@@ -3864,6 +4016,28 @@ function bp_core_replace_tokens_in_text( $text, $tokens ) {
 
 		$unescaped[ '{{{' . $token . '}}}' ] = $value;
 		$escaped[ '{{' . $token . '}}' ]     = esc_html( $value );
+
+		if ( is_string( $value ) && preg_match( '#^https?://#i', $value ) ) {
+			$url_tokens[] = preg_quote( $token, '/' );
+		}
+	}
+
+	// WordPress's link dialog adds "http://" in front of a URL it doesn't
+	// recognise, so a link to a token is saved as href="http://{{{message.url}}}".
+	// With no text selected it also uses that URL as the link text. When the
+	// token's value is already a full http(s) URL, drop that scheme from the href and
+	// from link text that is only the token, so neither is sent as http://http://...
+	if ( ! empty( $url_tokens ) && false !== strpos( $text, '://{{' ) ) {
+		$names     = implode( '|', $url_tokens );
+		$url_token = '(\{\{\{(?:' . $names . ')\}\}\}|\{\{(?:' . $names . ')\}\})';
+		$text      = preg_replace(
+			array(
+				'/(\bhref\s*=\s*["\'])https?:\/\/' . $url_token . '/i',
+				'/(<a\b[^<>]*>)https?:\/\/' . $url_token . '(<\/a>)/i',
+			),
+			array( '$1$2', '$1$2$3' ),
+			$text
+		);
 	}
 
 	$text = strtr( $text, $unescaped );  // Do first.
@@ -4294,11 +4468,16 @@ function bp_strip_script_and_style_tags( $string ) {
 }
 
 /**
- * Check if logged in member type is allowed to send invites
+ * Check if a member's profile type is allowed to select the invitee's profile type.
  *
  * @since BuddyBoss 1.0.0
+ * @since BuddyBoss [BBVERSION] Added the `$user_id` parameter.
+ *
+ * @param int $user_id Optional. Member to check. Default: the logged-in member.
+ *
+ * @return bool
  */
-function bp_check_member_send_invites_tab_member_type_allowed() {
+function bp_check_member_send_invites_tab_member_type_allowed( $user_id = 0 ) {
 
 	// default allowed false
 	$allowed = false;
@@ -4307,7 +4486,7 @@ function bp_check_member_send_invites_tab_member_type_allowed() {
 	if ( true === bp_member_type_enable_disable() ) {
 		// Check BuddyBoss > Settings > Email Invites > Allow users to select profile type of invitee.
 		if ( true === bp_disable_invite_member_type() ) {
-			$current_user = bp_loggedin_user_id();
+			$current_user = ! empty( $user_id ) ? (int) $user_id : bp_loggedin_user_id();
 			$member_type  = bp_get_member_type( $current_user );
 			// If current user don't have any profile type then we are not allow.
 			if ( false === $member_type ) {
@@ -4803,21 +4982,23 @@ function bp_core_get_group_avatar( $legacy_user_avatar_name, $legacy_group_avata
  *
  * @return array Parsed URL data.
  * @since BuddyBoss 1.3.2
+ * @since BuddyBoss 3.8.0 Skips avatar images when collecting the page images.
  */
 function bp_core_parse_url( $url ) {
 
 	$parse_url_data = wp_parse_url( $url, PHP_URL_HOST );
 	$original_url   = $url;
+	$user_agent     = bb_get_url_preview_user_agent();
 
-	if ( in_array( $parse_url_data, apply_filters( 'bp_core_parse_url_shorten_url_provider', array( 'bit.ly', 'snip.ly', 'rb.gy', 'tinyurl.com', 'tiny.one', 'rotf.lol', 'b.link', '4ubr.short.gy', '' ) ), true ) ) {
+	if ( in_array( $parse_url_data, apply_filters( 'bp_core_parse_url_shorten_url_provider', array( 'bit.ly', 'snip.ly', 'rb.gy', 'tinyurl.com', 'tiny.one', 'rotf.lol', 'b.link', '4ubr.short.gy', 'maps.app.goo.gl', '' ) ), true ) ) {
 		$response = wp_safe_remote_get(
 			$url,
 			array(
-				'stream'      => true,
-				'headers'     => array(
-					'user-agent' => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:71.0) Gecko/20100101 Firefox/71.0',
+				'stream'  => true,
+				'headers' => array(
+					'user-agent' => $user_agent,
 				),
-			),
+			)
 		);
 
 		if ( ! is_wp_error( $response ) && ! empty( $response['http_response']->get_response_object()->url ) && $response['http_response']->get_response_object()->url !== $url ) {
@@ -4830,16 +5011,24 @@ function bp_core_parse_url( $url ) {
 		if ( $original_url === $url ) {
 			$context = array(
 				'http' => array(
-					'method'        => 'GET',
-					'max_redirects' => 1,
+					'method'          => 'GET',
+					// Stop at the first response so the Location header below reflects the redirect.
+					'follow_location' => 0,
+					'user_agent'      => $user_agent,
 				),
 			);
 
 			@file_get_contents( $url, null, stream_context_create( $context ) );
-			if ( isset( $http_response_header ) && isset( $http_response_header[6] ) ) {
-				$new_url = str_replace( 'Location: ', '', $http_response_header[6] );
-				if ( filter_var( $new_url, FILTER_VALIDATE_URL ) ) {
-					$url = $new_url;
+			if ( ! empty( $http_response_header ) && is_array( $http_response_header ) ) {
+				// Find the redirect target instead of relying on a fixed header position.
+				foreach ( $http_response_header as $response_header ) {
+					if ( 0 === stripos( $response_header, 'Location:' ) ) {
+						$new_url = trim( substr( $response_header, strlen( 'Location:' ) ) );
+						if ( filter_var( $new_url, FILTER_VALIDATE_URL ) ) {
+							$url = $new_url;
+						}
+						break;
+					}
 				}
 			}
 		}
@@ -4880,7 +5069,7 @@ function bp_core_parse_url( $url ) {
 		$parsed_url_data['error']       = '';
 		$parsed_url_data['wp_embed']    = true;
 	} else {
-		$args = array( 'user-agent' => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:71.0) Gecko/20100101 Firefox/71.0' );
+		$args = array( 'user-agent' => $user_agent );
 
 		if ( bb_is_same_site_url( $url ) ) {
 			if ( ! bp_enable_private_network() ) {
@@ -4962,6 +5151,12 @@ function bp_core_parse_url( $url ) {
 			for ( $i = 0; $i < $image_elements->length; $i ++ ) {
 				$image = $image_elements->item( $i );
 				$src   = $image->getAttribute( 'src' );
+
+				// Skip avatars (get_avatar() and BuddyBoss avatars carry an "avatar" class token),
+				// so a member photo is not used as the preview image when the page has no og:image.
+				if ( preg_match( '/(^|\s)avatar(\s|$)/i', $image->getAttribute( 'class' ) ) ) {
+					continue;
+				}
 
 				if ( filter_var( $src, FILTER_VALIDATE_URL ) ) {
 					$images[] = $src;
@@ -7593,9 +7788,81 @@ function bb_enabled_legacy_email_preference() {
 }
 
 /**
+ * Get the admin "main" setting of each saved notification type.
+ *
+ * Rows of the `bb_enabled_notification` option that have no `main` key (for example
+ * a Settings 2.0 save that only changed an email/web/app sub-type) are skipped, so the
+ * notification type falls back to its registered default.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $enabled_all_notification Saved `bb_enabled_notification` option value.
+ *
+ * @return array Map of notification key => 'yes'|'no'.
+ */
+function bb_get_enabled_notification_main_settings( $enabled_all_notification ) {
+	$enabled_notification = array();
+
+	if ( empty( $enabled_all_notification ) || ! is_array( $enabled_all_notification ) ) {
+		return $enabled_notification;
+	}
+
+	foreach ( $enabled_all_notification as $key => $value ) {
+		if ( is_array( $value ) && isset( $value['main'] ) ) {
+			$enabled_notification[ $key ] = $value['main'];
+		}
+	}
+
+	return array_filter( $enabled_notification );
+}
+
+/**
+ * Get the member whose notification preferences the settings screen shows.
+ *
+ * The member settings screen saves to the displayed member (bp_settings_action_notifications()
+ * writes to bp_displayed_user_id()), so it must also show that member's values. Reading the
+ * logged-in member instead showed an administrator their own preferences and mention name on
+ * another member's screen, and pressing Save there copied the administrator's values onto
+ * that member.
+ *
+ * Falls back to the logged-in member when no member is displayed, or when the viewer may not
+ * edit the displayed member's settings, so every other caller (REST, wp-admin, custom
+ * templates) keeps its current behaviour.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return int User ID, or 0 when nobody is logged in.
+ */
+function bb_get_notification_settings_user_id() {
+	$user_id           = (int) bp_loggedin_user_id();
+	$displayed_user_id = (int) bp_displayed_user_id();
+
+	if (
+		! empty( $displayed_user_id ) &&
+		$displayed_user_id !== $user_id &&
+		function_exists( 'bp_core_can_edit_settings' ) &&
+		bp_core_can_edit_settings()
+	) {
+		$user_id = $displayed_user_id;
+	}
+
+	/**
+	 * Filters the member whose notification preferences are rendered.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param int $user_id           Member the preferences are read for.
+	 * @param int $displayed_user_id Displayed member, or 0 when no member is displayed.
+	 */
+	return (int) apply_filters( 'bb_get_notification_settings_user_id', $user_id, $displayed_user_id );
+}
+
+/**
  * Render the notification settings on the front end.
  *
  * @since BuddyBoss 1.9.3
+ * @since BuddyBoss [BBVERSION] Shows the preferences of the member being edited, see
+ *                              bb_get_notification_settings_user_id().
  *
  * @param string $notification_group Notification group name.
  */
@@ -7613,7 +7880,7 @@ function bb_render_notification( $notification_group ) {
 	}
 
 	$default_enabled_notifications = array_column( $options['fields'], 'default', 'key' );
-	$enabled_notification          = array_filter( array_combine( array_keys( $enabled_all_notification ), array_column( $enabled_all_notification, 'main' ) ) );
+	$enabled_notification          = bb_get_enabled_notification_main_settings( $enabled_all_notification );
 	$enabled_notification          = array_merge( $default_enabled_notifications, $enabled_notification );
 
 	$options['fields'] = array_filter(
@@ -7656,6 +7923,8 @@ function bb_render_notification( $notification_group ) {
 	}
 
 	if ( ! empty( $options['fields'] ) ) {
+		// The member being edited, which is who the form saves to.
+		$user_id = bb_get_notification_settings_user_id();
 		?>
 
 		<table class="main-notification-settings">
@@ -7678,7 +7947,7 @@ function bb_render_notification( $notification_group ) {
 					continue;
 				}
 
-				$options = bb_notification_preferences_types( $field, bp_loggedin_user_id() );
+				$options = bb_notification_preferences_types( $field, $user_id );
 
 				?>
 				<tr>
@@ -7820,6 +8089,8 @@ function bb_enable_notifications_options() {
  * Render the enable notification settings on the front end.
  *
  * @since BuddyBoss 1.9.3
+ * @since BuddyBoss [BBVERSION] Shows the preferences of the member being edited, see
+ *                              bb_get_notification_settings_user_id().
  */
 function bb_render_enable_notification_options() {
 	$enable_notifications = bb_enable_notifications_options();
@@ -7828,7 +8099,7 @@ function bb_render_enable_notification_options() {
 		return;
 	}
 
-	$user_id = bp_loggedin_user_id();
+	$user_id = bb_get_notification_settings_user_id();
 
 	?>
 	<table class="main-notification-settings" data-text-all="<?php esc_html_e( 'All', 'buddyboss' ); ?> " data-text-none="<?php esc_html_e( 'None', 'buddyboss' ); ?> ">
@@ -7902,6 +8173,8 @@ function bb_manual_notification_options() {
  * Render the manual notification settings on the front end.
  *
  * @since BuddyBoss 1.9.3
+ * @since BuddyBoss [BBVERSION] Shows the preferences of the member being edited, see
+ *                              bb_get_notification_settings_user_id().
  */
 function bb_render_manual_notification() {
 
@@ -7911,7 +8184,7 @@ function bb_render_manual_notification() {
 		return;
 	}
 
-	$user_id = bp_loggedin_user_id();
+	$user_id = bb_get_notification_settings_user_id();
 
 	if ( ! empty( $manual_notifications['fields'] ) ) {
 		?>
@@ -8008,7 +8281,7 @@ function bb_get_modern_notification_admin_settings_is_enabled( $notification_key
 		}
 
 		$default_enabled_notifications = array_column( $options['fields'], 'default', 'key' );
-		$enabled_notification          = array_filter( array_combine( array_keys( $enabled_all_notification ), array_column( $enabled_all_notification, 'main' ) ) );
+		$enabled_notification          = bb_get_enabled_notification_main_settings( $enabled_all_notification );
 		$enabled_notification          = array_merge( $default_enabled_notifications, $enabled_notification );
 
 		$fields = array_filter(
@@ -12401,4 +12674,55 @@ if ( ! function_exists( 'bb_media_delete_legacy_gif_attachment' ) ) {
 
 		return (bool) wp_delete_attachment( $value, true );
 	}
+}
+
+/**
+ * Whether the BuddyBoss Add-ons plugin provides a given module on this site.
+ *
+ * The plugin-wide lock (bb_addons_should_lock_features()) only says the plan
+ * entitles the site to at least one add-on module. A plan can carry some
+ * modules and not others (Legacy Free carries Video, Documents and GIFs
+ * only), so callers that stand in for one module must also check that module.
+ * Add-ons builds without the per-module API fall back to the plugin-wide lock.
+ *
+ * @since BuddyBoss 3.7.0
+ *
+ * @param string $module_id Add-ons module ID, e.g. 'reactions' or 'pinned-posts'.
+ *
+ * @return bool True when the add-on is unlocked and entitled to the module.
+ */
+function bb_addons_provides_module( $module_id ) {
+	if ( ! function_exists( 'bb_addons_should_lock_features' ) || bb_addons_should_lock_features() ) {
+		return false;
+	}
+
+	if ( function_exists( 'bb_addons_is_module_entitled' ) ) {
+		return (bool) bb_addons_is_module_entitled( $module_id );
+	}
+
+	return true;
+}
+
+/**
+ * Get the user agent string used for URL preview HTTP requests.
+ *
+ * A modern browser UA is required so URL redirect resolvers (e.g. Google's
+ * maps.app.goo.gl short-link service) return proper 3xx redirects instead of
+ * empty JS-only interstitials that contain no scrapeable metadata.
+ *
+ * @since BuddyBoss 3.8.0
+ *
+ * @return string User agent string.
+ */
+function bb_get_url_preview_user_agent() {
+	$user_agent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36';
+
+	/**
+	 * Filters the user agent string used for URL preview HTTP requests.
+	 *
+	 * @since BuddyBoss 3.8.0
+	 *
+	 * @param string $user_agent User agent string.
+	 */
+	return apply_filters( 'bb_url_preview_user_agent', $user_agent );
 }
