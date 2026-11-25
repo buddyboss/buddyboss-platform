@@ -358,7 +358,8 @@ window.bp = window.bp || {};
 			}
 
 			var topic_tags   = [];
-			var tagSelector  = '.item-tags ul li';
+			// The lead discussion prints its tags as a paragraph of links, the replies loop as a list.
+			var tagSelector  = '.item-tags ul li, .bbp-topic-tags p a';
 			this.currentForm.closest( '#bbpress-forums' ).find( tagSelector ).each( function() {
 				topic_tags.push( $(this).text().trim() );
 			} );
