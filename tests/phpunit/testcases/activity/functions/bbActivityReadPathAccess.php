@@ -105,7 +105,7 @@ class BP_Tests_Activity_Functions_BbActivityReadPathAccess extends BP_UnitTestCa
 	}
 
 	/**
-	 * The personal feed of bp_activity_action_personal_feed(): the 'feed' action is the scope.
+	 * The personal feed of bp_activity_action_personal_feed(), which asks for the 'just-me' scope.
 	 */
 	protected function personal_feed( $viewer_id, $ungated = false ) {
 		return $this->render_feed(
@@ -113,7 +113,7 @@ class BP_Tests_Activity_Functions_BbActivityReadPathAccess extends BP_UnitTestCa
 			$this->author,
 			array(
 				'user_id' => $this->author,
-				'scope'   => 'feed',
+				'scope'   => 'just-me',
 			),
 			$ungated
 		);
@@ -171,7 +171,19 @@ class BP_Tests_Activity_Functions_BbActivityReadPathAccess extends BP_UnitTestCa
 			)
 		);
 
-		$this->assertStringContainsString( 'friends only comment', $this->personal_feed( 0, true ) );
+		// A feed query that does not limit privacy leaves it to the feed's own check.
+		$this->assertStringContainsString(
+			'friends only comment',
+			$this->render_feed(
+				0,
+				$this->author,
+				array(
+					'user_id' => $this->author,
+					'scope'   => 'feed',
+				),
+				true
+			)
+		);
 
 		$xml = $this->personal_feed( 0 );
 		$this->assertStringContainsString( 'public profile post', $xml );
@@ -729,5 +741,273 @@ class BP_Tests_Activity_Functions_BbActivityReadPathAccess extends BP_UnitTestCa
 		$this->assertNotContains( $friends_post, $ids );
 		$this->assertNotContains( $loggedin_post, $ids );
 		$this->assertContains( $this->public_post, $ids );
+	}
+
+	/**
+	 * Create one post by $user_id for each privacy level.
+	 *
+	 * @return int[] Activity IDs keyed by privacy.
+	 */
+	protected function private_posts( $user_id, $content = '' ) {
+		$ids = array();
+		foreach ( array( 'public', 'loggedin', 'friends', 'onlyme' ) as $privacy ) {
+			$ids[ $privacy ] = self::factory()->activity->create(
+				array(
+					'component' => buddypress()->activity->id,
+					'type'      => 'activity_update',
+					'user_id'   => $user_id,
+					'privacy'   => $privacy,
+					'content'   => $content . ' ' . $privacy,
+				)
+			);
+		}
+
+		return $ids;
+	}
+
+	/**
+	 * Run the activity loop with the URL state an AJAX request takes from its Referer.
+	 *
+	 * @param int        $user_id      Viewer.
+	 * @param string     $action       URL segment after the component, e.g. 'p' for /news-feed/p/1/.
+	 * @param int        $displayed_id Member whose profile the Referer points at, 0 for the directory.
+	 * @param array|null $post         Request values for the activity_filter AJAX, or null to call
+	 *                                 bp_has_activities() with no scope of its own.
+	 *
+	 * @return int[] IDs of the activities the loop returns.
+	 */
+	protected function referer_loop_ids( $user_id, $action, $displayed_id = 0, $post = null ) {
+		$this->set_current_user( $user_id );
+
+		$bp                     = buddypress();
+		$bp->displayed_user->id = $displayed_id;
+		$bp->current_component  = 'activity';
+		$bp->current_action     = $action;
+
+		$args = array( 'per_page' => 0 );
+		if ( null !== $post ) {
+			$_POST = array_merge(
+				array(
+					'object' => 'activity',
+					'page'   => 1,
+				),
+				$post
+			);
+			$args  = bp_nouveau_ajax_querystring( '', 'activity' );
+		}
+
+		$ids = array();
+		if ( bp_has_activities( $args ) ) {
+			while ( bp_activities() ) {
+				bp_the_activity();
+				$ids[] = (int) bp_get_activity_id();
+			}
+		}
+
+		$bp->displayed_user->id = 0;
+		$bp->current_component  = '';
+		$bp->current_action     = '';
+		$_POST                  = array();
+
+		return $ids;
+	}
+
+	/**
+	 * Assert the listed IDs hold none of the posts a guest, or a member who is not the author's
+	 * friend, may not read.
+	 */
+	protected function assertNoPrivatePosts( $posts, $listed, $message ) {
+		$hidden = is_user_logged_in() ? array( 'friends', 'onlyme' ) : array( 'loggedin', 'friends', 'onlyme' );
+		foreach ( $hidden as $privacy ) {
+			$this->assertNotContains( $posts[ $privacy ], $listed, "{$message}: {$privacy}" );
+		}
+	}
+
+	public function test_url_segment_nothing_handles_falls_back_to_the_default() {
+		$posts = $this->private_posts( $this->author );
+
+		// /news-feed/p/1/, /news-feed/xyz/, /members/<author>/activity/xyz/ and /feed/.
+		$pages = array(
+			'dir p'       => array( 'p', 0 ),
+			'dir xyz'     => array( 'xyz', 0 ),
+			'user xyz'    => array( 'xyz', $this->author ),
+			'user feed'   => array( 'feed', $this->author ),
+			'user groups' => array( 'my-groups', $this->author ),
+		);
+
+		foreach ( array( 'guest' => 0, 'stranger' => $this->stranger ) as $viewer_name => $viewer ) {
+			foreach ( $pages as $page => $state ) {
+				$listed = $this->referer_loop_ids( $viewer, $state[0], $state[1] );
+				$this->assertNoPrivatePosts( $posts, $listed, "{$viewer_name} {$page}" );
+				$this->assertContains( $posts['public'], $listed, "{$viewer_name} {$page}" );
+			}
+
+			// The activity_filter AJAX sends its own 'all' scope; the Referer still decides.
+			$listed = $this->referer_loop_ids( $viewer, 'p', 0, array( 'scope' => 'all' ) );
+			$this->assertNoPrivatePosts( $posts, $listed, "{$viewer_name} ajax dir p" );
+		}
+
+		// The author still sees all their own posts on their timeline.
+		$listed = $this->referer_loop_ids( $this->author, 'just-me', $this->author );
+		foreach ( $posts as $privacy => $id ) {
+			$this->assertContains( $id, $listed, "author just-me: {$privacy}" );
+		}
+	}
+
+	public function test_following_scope_matches_nothing_when_follow_is_off() {
+		$posts = $this->private_posts( $this->author );
+
+		add_filter( 'bp_is_activity_follow_active', '__return_false' );
+
+		foreach ( array( 'guest' => 0, 'stranger' => $this->stranger ) as $viewer_name => $viewer ) {
+			// Referer /news-feed/following/, the scope sent by the AJAX request, and a member's tab.
+			$this->assertNoPrivatePosts( $posts, $this->referer_loop_ids( $viewer, 'following' ), "{$viewer_name} referer" );
+			$this->assertNoPrivatePosts( $posts, $this->referer_loop_ids( $viewer, '', 0, array( 'scope' => 'following' ) ), "{$viewer_name} post" );
+			$this->assertNoPrivatePosts( $posts, $this->referer_loop_ids( $viewer, 'following', $this->author ), "{$viewer_name} user following" );
+		}
+
+		$this->assertSame(
+			array(
+				'column' => 'id',
+				'value'  => 0,
+			),
+			apply_filters( 'bp_activity_set_following_scope_args', array(), array() )
+		);
+
+		remove_filter( 'bp_is_activity_follow_active', '__return_false' );
+
+		// With follow on, a stranger following the author gets the public and logged-in posts only.
+		add_filter( 'bp_is_activity_follow_active', '__return_true' );
+		bp_start_following(
+			array(
+				'leader_id'   => $this->author,
+				'follower_id' => $this->stranger,
+			)
+		);
+
+		$listed = $this->referer_loop_ids( $this->stranger, 'following' );
+		$this->assertContains( $posts['public'], $listed );
+		$this->assertContains( $posts['loggedin'], $listed );
+		$this->assertNotContains( $posts['friends'], $listed );
+		$this->assertNotContains( $posts['onlyme'], $listed );
+		$this->assertNoPrivatePosts( $posts, $this->referer_loop_ids( 0, 'following' ), 'guest follow on' );
+
+		remove_filter( 'bp_is_activity_follow_active', '__return_true' );
+	}
+
+	public function test_mentions_scope_matches_nothing_when_mentions_are_off() {
+		$posts = $this->private_posts( $this->author );
+
+		add_filter( 'bp_activity_do_mentions', '__return_false' );
+
+		foreach ( array( 'guest' => 0, 'stranger' => $this->stranger ) as $viewer_name => $viewer ) {
+			$this->assertNoPrivatePosts( $posts, $this->referer_loop_ids( $viewer, 'mentions' ), "{$viewer_name} referer" );
+			$this->assertNoPrivatePosts( $posts, $this->referer_loop_ids( $viewer, '', 0, array( 'scope' => 'mentions' ) ), "{$viewer_name} post" );
+		}
+
+		$this->assertSame(
+			array(
+				'column' => 'id',
+				'value'  => 0,
+			),
+			apply_filters( 'bp_activity_set_mentions_scope_args', array(), array() )
+		);
+
+		remove_filter( 'bp_activity_do_mentions', '__return_false' );
+	}
+
+	public function test_reacted_and_mentioned_friends_only_posts_follow_the_viewers_friendships() {
+		$listed_member     = self::factory()->user->create();
+		$author_friend     = self::factory()->user->create();
+		$listed_friend     = self::factory()->user->create();
+		$listed_friend_pal = self::factory()->user->create();
+		friends_add_friend( $this->author, $listed_member, true );
+		friends_add_friend( $this->author, $author_friend, true );
+		friends_add_friend( $listed_friend, $listed_member, true );
+		friends_add_friend( $listed_friend, $listed_friend_pal, true );
+
+		$mention = '<a href="#">@' . bp_activity_get_user_mentionname( $listed_member ) . '</a> ';
+
+		// Friends-only posts by two friends of the listed member, who mention the member.
+		$by_author        = self::factory()->activity->create(
+			array(
+				'component' => buddypress()->activity->id,
+				'type'      => 'activity_update',
+				'user_id'   => $this->author,
+				'privacy'   => 'friends',
+				'content'   => $mention . 'friends only by the author',
+			)
+		);
+		$by_listed_friend = self::factory()->activity->create(
+			array(
+				'component' => buddypress()->activity->id,
+				'type'      => 'activity_update',
+				'user_id'   => $listed_friend,
+				'privacy'   => 'friends',
+				'content'   => $mention . 'friends only by another friend',
+			)
+		);
+
+		// The listed member reacted to both. Only the listed member's reactions are looked up.
+		$reacted = function () use ( $by_author, $by_listed_friend ) {
+			return array( $by_author, $by_listed_friend );
+		};
+		add_filter( 'bp_activity_get_user_favorites', $reacted );
+
+		foreach ( array( 'favorites', 'mentions' ) as $scope ) {
+			$queries = array(
+				// The scope query on its own, as the REST API runs it for ?scope=&user_id=.
+				'query'    => function ( $viewer ) use ( $listed_member, $scope ) {
+					$this->set_current_user( $viewer );
+					$result = bp_activity_get(
+						array(
+							'scope'    => $scope,
+							'filter'   => array( 'user_id' => $listed_member ),
+							'per_page' => 0,
+						)
+					);
+
+					return array_map( 'intval', wp_list_pluck( $result['activities'], 'id' ) );
+				},
+				// "Reacted To" / "Mentioned In" on the listed member's timeline.
+				'dropdown' => function ( $viewer ) use ( $listed_member, $scope ) {
+					return $this->referer_loop_ids( $viewer, '', $listed_member, array( 'scope' => $scope ) );
+				},
+				// The same tab in the Referer.
+				'referer'  => function ( $viewer ) use ( $listed_member, $scope ) {
+					return $this->referer_loop_ids( $viewer, $scope, $listed_member );
+				},
+			);
+
+			foreach ( $queries as $how => $seen ) {
+				$label = "{$scope} {$how}";
+
+				// Neither the author's friend nor the author: the post is not for them.
+				$listed = $seen( $this->stranger );
+				$this->assertNotContains( $by_author, $listed, "{$label} stranger" );
+				$this->assertNotContains( $by_listed_friend, $listed, "{$label} stranger" );
+				$this->assertNotContains( $by_author, $seen( 0 ), "{$label} guest" );
+
+				// A friend of the author, who is not the listed member's friend.
+				$listed = $seen( $author_friend );
+				$this->assertContains( $by_author, $listed, "{$label} author's friend" );
+				$this->assertNotContains( $by_listed_friend, $listed, "{$label} author's friend" );
+
+				// The author.
+				$this->assertContains( $by_author, $seen( $this->author ), "{$label} author" );
+
+				// A friend of the other author, whom the listed member's other friends do not know.
+				$listed = $seen( $listed_friend_pal );
+				$this->assertContains( $by_listed_friend, $listed, "{$label} other author's friend" );
+				$this->assertNotContains( $by_author, $listed, "{$label} other author's friend" );
+
+				// The listed member sees both, as before.
+				$listed = $seen( $listed_member );
+				$this->assertContains( $by_author, $listed, "{$label} listed member" );
+				$this->assertContains( $by_listed_friend, $listed, "{$label} listed member" );
+			}
+		}
+
+		remove_filter( 'bp_activity_get_user_favorites', $reacted );
 	}
 }

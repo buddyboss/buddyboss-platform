@@ -136,6 +136,14 @@ function bp_member_invite_submit() {
 		$email          = sanitize_email( wp_unslash( $value['email'] ) );
 		$name           = sanitize_text_field( wp_unslash( $value['name'] ) );
 		$member_type    = $value['member_type'];
+
+		// A name is plain text; a serialized PHP value stored as invite meta can be turned into an object by code
+		// that unserializes meta. Check what update_post_meta() will store, after its own wp_unslash().
+		if ( is_serialized( wp_unslash( $name ) ) ) {
+			$invite_wrong_array[] = $value;
+			continue;
+		}
+
 		$query_string[] = $email;
 		// Delivered to a plain email address with no member behind it - resolve the inviter's name
 		// as the public, logged-out view rather than as the inviter sees their own profile.
