@@ -218,6 +218,7 @@ function bb_moved_media_features_is_entitled_from_cache() {
 		return false;
 	}
 
+	// @bbwt-com-start licence-state-probes
 	/** This filter is documented in bp-core/bp-core-update.php */
 	if ( null !== apply_filters( 'bb_pre_is_entitled_to_addons', null ) ) {
 		return bb_is_entitled_to_addons();
@@ -240,6 +241,10 @@ function bb_moved_media_features_is_entitled_from_cache() {
 	}
 
 	return bb_is_entitled_to_addons();
+	// @bbwt-com-end licence-state-probes
+
+	// Builds without the BuddyBoss licence screens hold no entitlement data.
+	return false; // phpcs:ignore Squiz.PHP.NonExecutableCode.Unreachable -- reached in builds where the block above is absent.
 }
 
 /**
@@ -345,6 +350,16 @@ function bb_moved_media_features_render_notice() {
 	$addons_url  = bb_admin_addons_screen_url();
 	$license_url = bb_admin_license_screen_url();
 
+	// Whether updating an outdated Add-ons plugin brings the features back. Builds
+	// without the BuddyBoss licence screens cannot tell, so they suggest the update.
+	$addons_update_helps = true;
+	// @bbwt-com-start licence-state-probes
+	if ( 'active' === $state && bb_is_addons_below_required_version() ) {
+		$addons_update_helps = bb_moved_media_features_is_entitled_from_cache() ||
+			( function_exists( 'bb_addons_should_lock_features' ) && ! bb_addons_should_lock_features() );
+	}
+	// @bbwt-com-end licence-state-probes
+
 	if ( 'inactive' === $state ) {
 		$message   = __( 'Activate the BuddyBoss Add-ons plugin to show them to your members again.', 'buddyboss' );
 		$primary   = array(
@@ -356,25 +371,29 @@ function bb_moved_media_features_render_notice() {
 			'url'      => $upgrade_url,
 			'external' => true,
 		);
-	} elseif (
-		'active' === $state &&
-		bb_is_addons_below_required_version() &&
-		(
-			bb_moved_media_features_is_entitled_from_cache() ||
-			( function_exists( 'bb_addons_should_lock_features' ) && ! bb_addons_should_lock_features() )
-		)
-	) {
-		// Only an entitled site is helped by an update; otherwise the licence copy below applies.
+	} elseif ( 'active' === $state && bb_is_addons_below_required_version() && $addons_update_helps ) {
+		// Only a site the update helps gets this copy; otherwise the copy below applies.
 		$message   = __( 'Your BuddyBoss Add-ons plugin is out of date. Update it to show them to your members again.', 'buddyboss' );
 		$primary   = array(
 			'label' => __( 'Update BuddyBoss Add-ons', 'buddyboss' ),
 			'url'   => self_admin_url( 'update-core.php' ),
 		);
+		$secondary = array();
+		// @bbwt-com-start licence-state-probes
 		$secondary = array(
 			'label' => __( 'Manage license', 'buddyboss' ),
 			'url'   => $license_url,
 		);
+		// @bbwt-com-end licence-state-probes
 	} elseif ( 'active' === $state ) {
+		$message   = __( 'The BuddyBoss Add-ons plugin on this site does not provide them. See the available plans to show them to your members again.', 'buddyboss' );
+		$primary   = array(
+			'label'    => __( 'View plans', 'buddyboss' ),
+			'url'      => $upgrade_url,
+			'external' => true,
+		);
+		$secondary = array();
+		// @bbwt-com-start licence-state-probes
 		$message   = __( 'Your current BuddyBoss license does not include them. Check your license or upgrade your plan to show them to your members again.', 'buddyboss' );
 		$primary   = array(
 			'label'    => __( 'Upgrade plan', 'buddyboss' ),
@@ -385,6 +404,7 @@ function bb_moved_media_features_render_notice() {
 			'label' => __( 'Manage license', 'buddyboss' ),
 			'url'   => $license_url,
 		);
+		// @bbwt-com-end licence-state-probes
 	} elseif ( bb_moved_media_features_is_entitled_from_cache() ) {
 		$message   = __( 'Your BuddyBoss plan includes the BuddyBoss Add-ons plugin. Install it to show them to your members again.', 'buddyboss' );
 		$primary   = array(
