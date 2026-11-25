@@ -136,12 +136,12 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 		$this->alias = $suspend->alias;
 
 		$exclude_group_sql = '';
-		// Allow group activities from blocked/suspended users.
+		// Allow group activity comments (not top-level posts) from blocked/suspended users.
 		if (
 			bp_is_active( 'groups' ) &&
 			function_exists( 'did_action' ) && ! did_action( 'get_template_part_activity/widget' )
 		) {
-			$exclude_group_sql = ' OR a.component = "groups"';
+			$exclude_group_sql = ' OR ( a.component = "groups" AND a.type = "activity_comment" )';
 		}
 
 		$sql = $this->exclude_where_query();
@@ -201,12 +201,7 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 
 		if (
 			'activity_comment' !== $activity->type &&
-			$this->is_content_hidden( (int) $activity->id ) &&
-			(
-				// Allow comment to group activity.
-				! bp_is_active( 'groups' ) ||
-				'groups' !== $activity->component
-			)
+			$this->is_content_hidden( (int) $activity->id )
 		) {
 			return false;
 		}
