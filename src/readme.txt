@@ -107,10 +107,20 @@ BuddyBoss Platform connects to the services below only in the situations describ
 * **What and when:** the Help screen in BuddyBoss > Settings has a "Chat with Buddy" button. Nothing is loaded until an administrator clicks it; then the browser loads the chat widget script from `https://widget.docsbot.ai/chat.js` and the questions typed into the chat are sent to DocsBot AI to generate answers from the BuddyBoss documentation. No site data is sent automatically.
 * **Who provides it:** DocsBot AI (Insight Studio LLC). [Terms of Service](https://docsbot.ai/legal/terms-of-service), [Privacy Policy](https://docsbot.ai/legal/privacy-policy).
 
-= Emoji images (jsDelivr CDN) =
+= Emoji images (WordPress.org) =
 
-* **What and when:** the emoji picker and emoji rendering use the bundled EmojiOne library, but the emoji artwork itself is not included in the plugin. When a page shows an emoji inserted with the picker, the visitor's browser requests that emoji's image from `https://cdn.jsdelivr.net/emojione/assets/`. The request carries only the image URL, as for any image on the page.
-* **Who provides it:** jsDelivr, operated by Prospect One. [Terms of Use](https://www.jsdelivr.com/terms), [Privacy Policy](https://www.jsdelivr.com/privacy-policy-jsdelivr-net).
+* **What and when:** the emoji picker and emoji rendering use the bundled EmojiOne library, but the emoji artwork itself is not included in the plugin. When a page shows an emoji inserted with the picker, the visitor's browser requests that emoji's image from `https://s.w.org/images/core/emoji/`, the same address WordPress itself uses for emoji. The request carries only the image URL, as for any image on the page.
+* **Who provides it:** WordPress.org. [Privacy Policy](https://wordpress.org/about/privacy/).
+
+= Gravatar (profile photos) =
+
+* **What and when:** for a member who has not uploaded a profile photo, and only while Gravatar is allowed as a fallback in the profile photo settings, the photo is requested from `https://www.gravatar.com/avatar/`. The address contains an MD5 hash of the member's email address and is requested by the visitor's browser; with the default "mystery person" setting the site itself also asks Gravatar, at most once every three hours per member, whether a photo exists for that hash.
+* **Who provides it:** Automattic Inc. [Terms of Service](https://wordpress.com/tos/), [Privacy Policy](https://automattic.com/privacy/).
+
+= YouTube and Vimeo (admin only, upgrade windows) =
+
+* **What and when:** some upgrade windows in BuddyBoss > Settings show a short preview video. Nothing is loaded until an administrator opens such a window; then the browser loads the video player from `https://www.youtube-nocookie.com` or `https://player.vimeo.com`. No site data is sent by the plugin.
+* **Who provides it:** Google LLC ([Terms of Service](https://www.youtube.com/t/terms), [Privacy Policy](https://policies.google.com/privacy)) and Vimeo.com, Inc. ([Terms of Service](https://vimeo.com/terms), [Privacy Policy](https://vimeo.com/privacy)).
 
 == Changelog ==
 
