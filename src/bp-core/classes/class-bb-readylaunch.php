@@ -2306,7 +2306,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 
 			// Verify nonce.
 			if (
-				! empty( $nonce ) &&
+				empty( $nonce ) ||
 				! wp_verify_nonce( $nonce, 'bb_rl_invite_form_action' )
 			) {
 				$response['message'] = esc_html__( 'Nonce verification failed.', 'buddyboss' );
