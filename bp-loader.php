@@ -2,7 +2,7 @@
 /**
  * Plugin Name: BuddyBoss – Community, Social Network, Groups, Forums & Private Messaging
  * Plugin URI:  https://buddyboss.com/
- * Description: The BuddyBoss Platform adds community features to WordPress. Member Profiles, Activity Feeds, Direct Messaging, Notifications, and more!
+ * Description: Build your online community with member profiles, activity feeds, groups, forums and private messaging in one social network plugin.
  * Author:      BuddyBoss
  * Author URI:  https://buddyboss.com/
  * Version:     3.7.2
@@ -11,7 +11,7 @@
  * License:     GPLv2 or later
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
  *
- * BuddyBoss Platform began as a fork of BuddyPress (https://buddypress.org/) and
+ * BuddyBoss Community began as a fork of BuddyPress (https://buddypress.org/) and
  * bbPress (https://bbpress.org/) and still contains code from both, released under
  * the GPL. Copyright for that code remains with its original authors.
  */
@@ -41,7 +41,7 @@ if ( ! defined( 'BBOSS_PLUGIN_URL' ) ) {
 	define( 'BBOSS_PLUGIN_URL', plugins_url( trailingslashit( basename( constant( 'BBOSS_PLUGIN_DIR' ) ) ) ) );
 }
 
-// Include BuddyBoss Platform.
+// Include BuddyBoss Community.
 include( $bp_loader );
 
 // Unset the loader, since it's loaded in global scope.

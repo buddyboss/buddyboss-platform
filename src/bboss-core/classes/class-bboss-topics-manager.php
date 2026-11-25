@@ -1,6 +1,6 @@
 <?php
 /**
- * BuddyBoss Platform Topics Manager.
+ * BuddyBoss Community Topics Manager.
  *
  * Handles database schema creation and CRUD operations for topics.
  *

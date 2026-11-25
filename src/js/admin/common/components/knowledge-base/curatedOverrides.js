@@ -35,8 +35,8 @@ export function getCuratedOverrides() {
 		},
 		'buddyboss-platform': {
 			icon:        'bb-icons-rl-app-window',
-			title:       __( 'BuddyBoss Platform', 'buddyboss-community-social-network-groups-forums-messaging' ),
-			description: __( 'Learn how to enable and configure the BuddyBoss Platform – including profiles, groups, activity, forums and more.', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			title:       __( 'BuddyBoss Community', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			description: __( 'Learn how to enable and configure the BuddyBoss Community – including profiles, groups, activity, forums and more.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			order:       3,
 		},
 		'buddyboss-theme': {

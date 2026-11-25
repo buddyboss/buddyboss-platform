@@ -2,7 +2,7 @@
 /**
  * Plugin Name: BuddyBoss – Community, Social Network, Groups, Forums & Private Messaging
  * Plugin URI:  https://buddyboss.com/
- * Description: The BuddyBoss Platform adds community features to WordPress. Member Profiles, Activity Feeds, Direct Messaging, Notifications, and more!
+ * Description: Build your online community with member profiles, activity feeds, groups, forums and private messaging in one social network plugin.
  * Author:      BuddyBoss
  * Author URI:  https://buddyboss.com/
  * Version:     3.7.2
@@ -10,7 +10,7 @@
  * License:     GPLv2 or later
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
  *
- * BuddyBoss Platform began as a fork of BuddyPress (https://buddypress.org/) and
+ * BuddyBoss Community began as a fork of BuddyPress (https://buddypress.org/) and
  * bbPress (https://bbpress.org/) and still contains code from both, released under
  * the GPL. Copyright for that code remains with its original authors.
  */
@@ -167,7 +167,7 @@ if ( ! $is_bb_active && ( class_exists( 'bbPress', false ) || function_exists( '
 // @bbwt-keep-end.
 
 /**
- * Prevent running BuddyBoss Platform if any incompatible plugins are active.
+ * Prevent running BuddyBoss Community if any incompatible plugins are active.
  * Show admin error message instead.
  */
 $bp_incompatible_plugins_list = array(
@@ -409,11 +409,11 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 		?>
 
 		<div id="message" class="error notice">
-			<p><strong><?php esc_html_e( 'Your site does not support BuddyBoss Platform.', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></strong>
+			<p><strong><?php esc_html_e( 'Your site does not support BuddyBoss Community.', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></strong>
 			</p>
 			<?php /* translators: 1: current PHP version, 2: required PHP version */ ?>
-			<p><?php printf( esc_html__( 'Your site is currently running PHP version %1$s, while BuddyBoss Platform requires version %2$s or greater.', 'buddyboss-community-social-network-groups-forums-messaging' ), esc_html( phpversion() ), esc_html( BBOSS_REQUIRED_PHP_VERSION ) ); ?></p>
-			<p><?php esc_html_e( 'Please update your server or deactivate BuddyBoss Platform.', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></p>
+			<p><?php printf( esc_html__( 'Your site is currently running PHP version %1$s, while BuddyBoss Community requires version %2$s or greater.', 'buddyboss-community-social-network-groups-forums-messaging' ), esc_html( phpversion() ), esc_html( BBOSS_REQUIRED_PHP_VERSION ) ); ?></p>
+			<p><?php esc_html_e( 'Please update your server or deactivate BuddyBoss Community.', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></p>
 		</div>
 
 		<?php
@@ -447,9 +447,9 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 		/*
 		 * Hook BuddyPress early onto the 'plugins_loaded' action.
 		 *
-		 * This gives all other plugins the chance to load before BuddyBoss Platform,
+		 * This gives all other plugins the chance to load before BuddyBoss Community,
 		 * to get their actions, filters, and overrides setup without
-		 * BuddyBoss Platform being in the way.
+		 * BuddyBoss Community being in the way.
 		 */
 		if ( defined( 'BUDDYPRESS_LATE_LOAD' ) ) {
 			add_action( 'plugins_loaded', 'bboss', (int) BUDDYPRESS_LATE_LOAD );
@@ -499,8 +499,8 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 			?>
 
 			<div id="message" class="error notice">
-				<p><strong><?php esc_html_e( 'BuddyBoss Platform is disabled.', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></strong></p>
-				<p><?php /* translators: %s: link to the Plugins screen. */ printf( esc_html__( 'The BuddyBoss Platform can\'t work while BuddyPress plugin is active. Please %s BuddyPress to re-enable BuddyBoss Platform.', 'buddyboss-community-social-network-groups-forums-messaging' ), wp_kses_post( $link_plugins ) ); ?></p>
+				<p><strong><?php esc_html_e( 'BuddyBoss Community is disabled.', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></strong></p>
+				<p><?php /* translators: %s: link to the Plugins screen. */ printf( esc_html__( 'The BuddyBoss Community can\'t work while BuddyPress plugin is active. Please %s BuddyPress to re-enable BuddyBoss Community.', 'buddyboss-community-social-network-groups-forums-messaging' ), wp_kses_post( $link_plugins ) ); ?></p>
 			</div>
 
 			<?php
@@ -513,8 +513,8 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 			?>
 
 			<div id="message" class="error notice">
-				<p><strong><?php esc_html_e( 'BuddyBoss Platform is disabled.', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></strong></p>
-				<p><?php /* translators: %s: link to the Plugins screen. */ printf( esc_html__( 'The BuddyBoss Platform can\'t work while bbPress plugin is active. Please %s bbPress to re-enable BuddyBoss Platform.', 'buddyboss-community-social-network-groups-forums-messaging' ), wp_kses_post( $link_plugins ) ); ?></p>
+				<p><strong><?php esc_html_e( 'BuddyBoss Community is disabled.', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></strong></p>
+				<p><?php /* translators: %s: link to the Plugins screen. */ printf( esc_html__( 'The BuddyBoss Community can\'t work while bbPress plugin is active. Please %s bbPress to re-enable BuddyBoss Community.', 'buddyboss-community-social-network-groups-forums-messaging' ), wp_kses_post( $link_plugins ) ); ?></p>
 			</div>
 
 			<?php
@@ -522,13 +522,13 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 
 		if ( ! empty( $bp_incompatible_plugins ) ) {
 			$incompatible_plugins_list_messages = array(
-				'buddypress-global-search/buddypress-global-search.php' => __( 'The BuddyBoss Platform can\'t work while BuddyPress Global Search plugin is active. Global Search functionality is built into the platform. Please deactivate BuddyPress Global Search first, if you wish to activate BuddyBoss Platform.', 'buddyboss-community-social-network-groups-forums-messaging' ),
-				'buddypress-followers/loader.php'                       => __( 'The BuddyBoss Platform can\'t work while BuddyPress Follow plugin is active. Follow functionality is built into the platform. Please deactivate BuddyPress Follow first, if you wish to activate BuddyBoss Platform.', 'buddyboss-community-social-network-groups-forums-messaging' ),
+				'buddypress-global-search/buddypress-global-search.php' => __( 'The BuddyBoss Community can\'t work while BuddyPress Global Search plugin is active. Global Search functionality is built into the platform. Please deactivate BuddyPress Global Search first, if you wish to activate BuddyBoss Community.', 'buddyboss-community-social-network-groups-forums-messaging' ),
+				'buddypress-followers/loader.php'                       => __( 'The BuddyBoss Community can\'t work while BuddyPress Follow plugin is active. Follow functionality is built into the platform. Please deactivate BuddyPress Follow first, if you wish to activate BuddyBoss Community.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			);
 			foreach ( $bp_incompatible_plugins as $incompatible_plugin_key ) {
 				?>
 				<div id="message" class="error notice">
-					<p><strong><?php esc_html_e( 'BuddyBoss Platform is disabled.', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></strong></p>
+					<p><strong><?php esc_html_e( 'BuddyBoss Community is disabled.', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></strong></p>
 					<?php
 					printf( '<p>%s</p>', wp_kses_post( $incompatible_plugins_list_messages[ $incompatible_plugin_key ] ) );
 					?>
@@ -539,7 +539,7 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 	}
 
 	/**
-	 * You can't have bbPress and BuddyBoss Platform both active at the same time!
+	 * You can't have bbPress and BuddyBoss Community both active at the same time!
 	 */
 	add_action( 'admin_notices', 'bboss_duplicate_notice' );
 	add_action( 'network_admin_notices', 'bboss_duplicate_notice' );

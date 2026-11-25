@@ -1042,7 +1042,7 @@ function bboss_media_activation_notice() {
 			);
 			$notice    = sprintf(
 				'%1$s <a href="%2$s">%3$s</a>',
-				__( 'We have found some media uploaded from the <strong>BuddyBoss Media</strong></strong> plugin, which is not compatible with BuddyBoss Platform as it has its own media component. You should  import the media into BuddyBoss Platform, and then remove the BuddyBoss Media plugin if you are still using it.', 'buddyboss-community-social-network-groups-forums-messaging' ),
+				__( 'We have found some media uploaded from the <strong>BuddyBoss Media</strong></strong> plugin, which is not compatible with BuddyBoss Community as it has its own media component. You should  import the media into BuddyBoss Community, and then remove the BuddyBoss Media plugin if you are still using it.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 				esc_url( $admin_url ),
 				__( 'Import Media', 'buddyboss-community-social-network-groups-forums-messaging' )
 			);

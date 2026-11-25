@@ -89,7 +89,7 @@ class BBoss_REST_Settings_Endpoint extends WP_REST_Controller {
 			include_once ABSPATH . 'wp-admin/includes/plugin.php';
 		}
 
-		// Check BuddyBoss Platform activate and get the settings.
+		// Check BuddyBoss Community activate and get the settings.
 		if ( is_plugin_active( $buddyboss_platform_plugin_file ) ) {
 			$platform_settings   = $this->get_buddyboss_platform_settings();
 			$results['platform'] = apply_filters( 'bp_rest_platform_settings', $platform_settings );
@@ -1153,7 +1153,7 @@ class BBoss_REST_Settings_Endpoint extends WP_REST_Controller {
 	}
 
 	/**
-	 * Get BuddyBoss Platform Settings.
+	 * Get BuddyBoss Community Settings.
 	 *
 	 * @return array
 	 */

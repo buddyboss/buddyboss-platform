@@ -557,7 +557,7 @@ if ( ! class_exists( 'BBoss_Telemetry' ) ) {
 				}
 			}
 
-			// Filterable list of BuddyBoss Platform options to fetch from the database.
+			// Filterable list of BuddyBoss Community options to fetch from the database.
 			$bb_platform_db_options = apply_filters(
 				'bb_telemetry_platform_options',
 				array(

@@ -912,7 +912,7 @@ class BBoss_REST_Group_Membership_Endpoint extends WP_REST_Controller {
 			)
 		);
 
-		// BuddyBoss Platform support.
+		// BuddyBoss Community support.
 		if ( function_exists( 'bboss_get_user_group_role_title' ) && ! empty( $request['group_id'] ) ) {
 			$data['role'] = bboss_get_user_group_role_title( $group_member->user_id, $request['group_id'] );
 

@@ -2289,7 +2289,7 @@ function bboss_moderation_moderated_user_ids_sql( $user_id = 0 ) {
 }
 
 /**
- * Default reporting categories that ship with BuddyBoss Platform.
+ * Default reporting categories that ship with BuddyBoss Community.
  *
  * Keeping the source strings here lets us re-translate them at render
  * time without depending on the locale that was active during install.

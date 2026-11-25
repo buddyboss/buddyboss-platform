@@ -440,7 +440,7 @@ function bboss_media_ajax_check_ffmpeg_status() {
 					'message' => sprintf(
 						/* translators: 1: FFmpeg link, 2: wp-config.php, 3: FFMPEG constant, 4: FFPROBE constant */
 						_x(
-							'Your server needs %1$s installed to automatically create thumbnails after uploading videos (optional). Ask your web host.<br /><br />If FFmpeg is already installed on your server and you still see the above warning, this means BuddyBoss Platform is unable to auto-detect the binary file path for FFmpeg. You will need to add the below FFmpeg absolute path constants into your %2$s file, replacing PATH_OF_BINARY_FILE with the actual file path to the FFmpeg binary file. Ask your web host to provide the absolute path for the FFmpeg binary file.<br /><br />%3$s<br />%4$s',
+							'Your server needs %1$s installed to automatically create thumbnails after uploading videos (optional). Ask your web host.<br /><br />If FFmpeg is already installed on your server and you still see the above warning, this means BuddyBoss Community is unable to auto-detect the binary file path for FFmpeg. You will need to add the below FFmpeg absolute path constants into your %2$s file, replacing PATH_OF_BINARY_FILE with the actual file path to the FFmpeg binary file. Ask your web host to provide the absolute path for the FFmpeg binary file.<br /><br />%3$s<br />%4$s',
 							'extension notification',
 							'buddyboss-community-social-network-groups-forums-messaging'
 						),

@@ -405,7 +405,7 @@ function bboss_core_allow_activity_page_content_restriction_memberpress() {
 add_action( 'bp_init', 'bboss_core_allow_activity_page_content_restriction_memberpress' );
 
 /**
- * Add User meta as first and last name is update by BuddyBoss Platform itself
+ * Add User meta as first and last name is update by BuddyBoss Community itself
  *
  * @since BuddyBoss 1.1.9
  *
@@ -599,7 +599,7 @@ function bboss_core_add_support_for_google_captcha_pro( $section_notice, $sectio
 add_filter( 'gglcptch_section_notice', 'bboss_core_add_support_for_google_captcha_pro', 100, 2 );
 
 /**
- * Update the BuddyBoss Platform Fields when user register from MemberPress Registration form
+ * Update the BuddyBoss Community Fields when user register from MemberPress Registration form
  *
  * Support MemberPress and MemberPress Pro
  *
@@ -1075,7 +1075,7 @@ function bboss_wp_gravity_forms_compatibility_helper() {
 add_action( 'init', 'bboss_wp_gravity_forms_compatibility_helper', 999 );
 
 /**
- * Enqueue the BuddyBoss Platform styles for the MemberPress Classroom.
+ * Enqueue the BuddyBoss Community styles for the MemberPress Classroom.
  *
  * @since BuddyBoss 2.6.60
  *

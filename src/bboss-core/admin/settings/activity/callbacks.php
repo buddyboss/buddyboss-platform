@@ -163,7 +163,7 @@ function bboss_activity_sanitize_comment_loading( $value ) {
 /**
  * Sanitize platform activity types toggle list.
  *
- * Handles the toggle_list for BuddyBoss Platform activity types.
+ * Handles the toggle_list for BuddyBoss Community activity types.
  *
  * @since BuddyBoss 3.0.0
  *

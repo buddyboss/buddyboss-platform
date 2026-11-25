@@ -1622,7 +1622,7 @@ if ( ! function_exists( 'buddyboss_platform_plugin_update_notice' ) ) {
 		$buddyboss_theme = wp_get_theme( 'buddyboss-theme' );
 		if ( $buddyboss_theme->exists() && $buddyboss_theme->get( 'Version' ) && function_exists( 'buddyboss_theme' ) && version_compare( $buddyboss_theme->get( 'Version' ), '1.5.0', '<' ) ) {
 			$class   = 'notice notice-error';
-			$message = __( 'Please update BuddyBoss Theme to v1.5.0 to maintain compatibility with BuddyBoss Platform. Some icons in your theme will look wrong until you update.', 'buddyboss-community-social-network-groups-forums-messaging' );
+			$message = __( 'Please update BuddyBoss Theme to v1.5.0 to maintain compatibility with BuddyBoss Community. Some icons in your theme will look wrong until you update.', 'buddyboss-community-social-network-groups-forums-messaging' );
 			printf( '<div class="%1$s"><p>%2$s</p></div>', esc_attr( $class ), esc_html( $message ) );
 		}
 	}

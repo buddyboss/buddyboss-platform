@@ -1,6 +1,6 @@
 <?php
 /**
- * BuddyBoss Platform 3.0 — addon version compatibility admin notice.
+ * BuddyBoss Community 3.0 — addon version compatibility admin notice.
  *
  * Surfaces a non-dismissible warning to admins when Platform is on the
  * 3.0 backend-settings architecture but one or more installed-and-active
@@ -291,7 +291,7 @@ function bboss_platform_3_render_addon_compat_notice() {
 				<?php
 				printf(
 					/* translators: %s: Platform version */
-					esc_html__( 'BuddyBoss Platform %s requires updates to the following plugins:', 'buddyboss-community-social-network-groups-forums-messaging' ),
+					esc_html__( 'BuddyBoss Community %s requires updates to the following plugins:', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					esc_html( $platform_version )
 				);
 				?>

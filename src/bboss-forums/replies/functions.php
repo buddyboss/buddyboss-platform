@@ -2649,7 +2649,7 @@ function bboss_bbp_validate_reply_to( $reply_to = 0, $reply_id = 0 ) {
 }
 
 /**
- * Change forum role labels to conform to BuddyBoss Platform naming conventions
+ * Change forum role labels to conform to BuddyBoss Community naming conventions
  *
  * @since BuddyBoss 1.0.0
  */

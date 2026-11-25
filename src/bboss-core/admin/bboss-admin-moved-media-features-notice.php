@@ -1,6 +1,6 @@
 <?php
 /**
- * BuddyBoss Platform — moved media features admin notice.
+ * BuddyBoss Community — moved media features admin notice.
  *
  * Videos, Documents and Animated GIFs (GIPHY) moved out of Platform into the
  * BuddyBoss Add-ons plugin. Sites that already have that content keep it in

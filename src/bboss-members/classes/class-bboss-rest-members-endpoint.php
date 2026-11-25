@@ -778,7 +778,7 @@ class BBoss_REST_Members_Endpoint extends WP_REST_Users_Controller {
 
 		// Names are viewer-dependent (a member may hide their last name from guests/non-friends).
 		// NOTE for reviewers: bp_core_get_user_displayname()'s 2nd argument is the VIEWER id in
-		// BuddyBoss Platform (bboss-members-functions.php: an empty value falls back to
+		// BuddyBoss Community (bboss-members-functions.php: an empty value falls back to
 		// bp_loggedin_user_id(), and it is passed to bp_xprofile_get_hidden_fields_for_user() as
 		// the visibility_user_id) - it is NOT BuddyPress core's historical username-lookup hint, so
 		// this performs real per-viewer redaction. The repeated hidden-fields lookups this and

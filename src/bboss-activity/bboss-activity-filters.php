@@ -132,7 +132,7 @@ add_action( 'bp_activity_before_save', 'bboss_activity_check_blacklist_keys', 2,
 add_action( 'bp_activity_after_save', 'bboss_activity_save_link_data', 2, 1 );
 add_action( 'bp_activity_after_save', 'bboss_activity_update_comment_privacy', 3 );
 
-// Remove Activity if uncheck the options from the backend BuddyBoss > Settings > Activity > Posts in Activity Feed >BuddyBoss Platform
+// Remove Activity if uncheck the options from the backend BuddyBoss > Settings > Activity > Posts in Activity Feed >BuddyBoss Community
 add_action( 'bp_activity_before_save', 'bboss_activity_remove_platform_updates', 999, 1 );
 
 add_action( 'bp_media_add', 'bboss_activity_media_add', 9 );
@@ -1740,7 +1740,7 @@ add_filter( 'bp_activity_set_following_scope_args', 'bboss_users_filter_activity
 
 /**
  * Do not add the activity if uncheck the options from the
- * backend BuddyBoss > Settings > Activity > Posts in Activity Feed >BuddyBoss Platform
+ * backend BuddyBoss > Settings > Activity > Posts in Activity Feed >BuddyBoss Community
  *
  * @param $activity_object
  *

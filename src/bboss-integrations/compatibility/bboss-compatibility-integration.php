@@ -42,7 +42,7 @@ class BBoss_Compatibility_Integration extends BBoss_Integration {
 	 */
 	public function action_links( $link, $file ) {
 
-		// Return normal links if not BuddyBoss Platform plugin or it's does not have a setting links
+		// Return normal links if not BuddyBoss Community plugin or it's does not have a setting links
 		if (
 			plugin_basename( 'buddyboss-community-social-network-groups-forums-messaging/bp-loader.php' ) == $file
 			|| empty( $link['settings'] )

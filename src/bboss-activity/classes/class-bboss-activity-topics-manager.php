@@ -1,6 +1,6 @@
 <?php
 /**
- * BuddyBoss Platform Activity Topics Manager.
+ * BuddyBoss Community Activity Topics Manager.
  *
  * Handles database schema creation and CRUD operations for activity topics.
  *

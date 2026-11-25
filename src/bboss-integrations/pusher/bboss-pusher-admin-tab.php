@@ -231,7 +231,7 @@ class BBoss_Pusher_Admin_Integration_Tab extends BBoss_Admin_Integration_tab {
 	public function setting_callback_pusher_information() {
 		printf(
 			/* translators: pusher channels link */
-			esc_html__( 'The BuddyBoss Platform has an integration with %s, a WebSocket service which can power realtime features on your BuddyBoss community such as live messaging.', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			esc_html__( 'The BuddyBoss Community has an integration with %s, a WebSocket service which can power realtime features on your BuddyBoss community such as live messaging.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'<a href="https://pusher.com/channels" target="_blank">' . esc_html__( 'Pusher Channels', 'buddyboss-community-social-network-groups-forums-messaging' ) . '</a>'
 		);
 	}

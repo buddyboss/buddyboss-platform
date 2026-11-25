@@ -85,7 +85,7 @@ $video_url = 'https://www.youtube.com/embed/ThTdHOYwNxU';
 
 		<div class="bp-hello-title">
 			<h1 id="bp-hello-title" tabindex="-1"><?php esc_html_e( 'Release Notes', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></h1>
-			<span class="bb-version"><?php echo esc_html__( 'BuddyBoss Platform v', 'buddyboss-community-social-network-groups-forums-messaging' ) . esc_html( BBOSS_PLATFORM_VERSION ); ?></span>
+			<span class="bb-version"><?php echo esc_html__( 'BuddyBoss Community v', 'buddyboss-community-social-network-groups-forums-messaging' ) . esc_html( BBOSS_PLATFORM_VERSION ); ?></span>
 		</div>
 		<ul class="bb-hello-tabs">
 			<?php

@@ -254,7 +254,7 @@ function bboss_core_activation_notice() {
 	// Add notice if no rewrite rules are enabled.
 	if ( empty( $wp_rewrite->permalink_structure ) ) {
 		/* translators: %s: URL of the Pages settings screen. */
-		bboss_core_add_admin_notice( sprintf( __( '<strong>BuddyBoss Platform is almost ready</strong>. You must <a href="%s">update your permalink structure</a> to something other than the default for it to work.', 'buddyboss-community-social-network-groups-forums-messaging' ), admin_url( 'options-permalink.php' ) ), 'error' );
+		bboss_core_add_admin_notice( sprintf( __( '<strong>BuddyBoss Community is almost ready</strong>. You must <a href="%s">update your permalink structure</a> to something other than the default for it to work.', 'buddyboss-community-social-network-groups-forums-messaging' ), admin_url( 'options-permalink.php' ) ), 'error' );
 	}
 
 	// Get BuddyPress instance.
@@ -1954,7 +1954,7 @@ function bboss_discussion_page_show_notice_in_avatar_section() {
 
 		$avatar_notice = sprintf(
 			/* translators: %s: URL of the Discussion settings screen. */
-			__( 'Profile avatars are currently provided by the BuddyBoss Platform. To use the WordPress avatar system, change the <strong>Profile Avatars</strong> setting to "WordPress" in the <a href="%s">Profile</a> settings.', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			__( 'Profile avatars are currently provided by the BuddyBoss Community. To use the WordPress avatar system, change the <strong>Profile Avatars</strong> setting to "WordPress" in the <a href="%s">Profile</a> settings.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			add_query_arg(
 				array(
 					'page' => 'bp-settings',

@@ -26,10 +26,10 @@ function bboss_nouveau_customize_register( WP_Customize_Manager $wp_customize ) 
 	$wp_customize->register_control_type( 'BBoss_Nouveau_Nav_Customize_Control' );
 	$wp_customize->register_control_type( 'BBoss_Nouveau_Profile_Header_Customize_Control' );
 	$bp_nouveau_options = bboss_nouveau_get_appearance_settings();
-	//@todo is the BuddyBoss Platform really translatable?
+	//@todo is the BuddyBoss Community really translatable?
 	$wp_customize->add_panel( 'bp_nouveau_panel', array(
-		'description' => __( 'Customize the appearance of the BuddyBoss Platform.', 'buddyboss-community-social-network-groups-forums-messaging' ),
-		'title'       => __( 'BuddyBoss Platform', 'buddyboss-community-social-network-groups-forums-messaging' ),
+		'description' => __( 'Customize the appearance of the BuddyBoss Community.', 'buddyboss-community-social-network-groups-forums-messaging' ),
+		'title'       => __( 'BuddyBoss Community', 'buddyboss-community-social-network-groups-forums-messaging' ),
 		'priority'    => 200,
 	) );
 

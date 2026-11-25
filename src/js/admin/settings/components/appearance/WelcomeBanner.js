@@ -330,7 +330,7 @@ export function WelcomeBanner( props ) {
 							<div className="bb-admin-welcome-banner__intro-body">
 								<p className="bb-admin-welcome-banner__description">
 									{ __(
-										'ReadyLaunch provides a complete, ready-to-use UI for your community, directly connected to the BuddyBoss Platform backend.',
+										'ReadyLaunch provides a complete, ready-to-use UI for your community, directly connected to the BuddyBoss Community backend.',
 										'buddyboss-community-social-network-groups-forums-messaging'
 									) }
 								</p>
@@ -382,7 +382,7 @@ export function WelcomeBanner( props ) {
 						<div className="bb-admin-welcome-banner__intro-body">
 							<p className="bb-admin-welcome-banner__description">
 								{ __(
-									'A premium theme designed to work with BuddyBoss Platform, offering deep design control for courses and communities.',
+									'A premium theme designed to work with BuddyBoss Community, offering deep design control for courses and communities.',
 									'buddyboss-community-social-network-groups-forums-messaging'
 								) }
 							</p>

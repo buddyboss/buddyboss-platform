@@ -1,12 +1,12 @@
 {
     "name": "buddyboss/buddyboss-platform",
-    "description": "The BuddyBoss Platform adds community features to WordPress. Member Profiles, Activity Feeds, Direct Messaging, Notifications, and more!",
+    "description": "Build your online community with member profiles, activity feeds, groups, forums and private messaging in one social network plugin.",
     "type": "wordpress-plugin",
     "keywords": ["activity", "community", "friends", "groups", "messaging", "notifications", "profiles", "social network"],
     "homepage": "https://www.buddyboss.com/",
     "license": "GPL-2.0-or-later",
     "authors": [{
-        "name": "BuddyBoss Platform",
+        "name": "BuddyBoss Community",
         "homepage": "https://www.buddyboss.com/platform/"
     }],
     "support": {

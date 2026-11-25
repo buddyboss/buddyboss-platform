@@ -2605,7 +2605,7 @@ class BBoss_REST_Media_Endpoint extends WP_REST_Controller {
 	/**
 	 * Whether this endpoint has to register the GIF REST fields itself.
 	 *
-	 * Animated GIFs moved from the BuddyBoss Platform into the BuddyBoss Add-ons
+	 * Animated GIFs moved from the BuddyBoss Community into the BuddyBoss Add-ons
 	 * giphy module, which registers the `media_gif` / `bbp_media_gif` REST fields
 	 * itself (`bb_addons_giphy_rest_field_support()`, on `bp_rest_api_init`). A
 	 * Platform build that still ships the GIF core keeps that module dormant, so

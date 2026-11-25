@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * ReadyLaunch Onboarding Class
  *
- * Handles the onboarding modal for first-time BuddyBoss Platform activation.
+ * Handles the onboarding modal for first-time BuddyBoss Community activation.
  * Extends the base Setup Wizard Manager to provide ReadyLaunch-specific functionality.
  *
  * @since BuddyBoss 2.10.0

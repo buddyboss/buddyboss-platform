@@ -7,15 +7,15 @@ Stable tag: 3.7.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-BuddyBoss Platform helps site builders & developers add community features to their websites, with user profiles, activity feeds, and more!
+Build your online community with member profiles, activity feeds, groups, forums and private messaging in one social network plugin.
 
 == Description ==
 
-BuddyBoss Platform adds member profiles, activity feeds, groups, private messaging, notifications, media, forums and more to WordPress.
+BuddyBoss Community adds member profiles, activity feeds, groups, private messaging, notifications, media, forums and more to WordPress.
 
 = Credits =
 
-BuddyBoss Platform began as a fork of [BuddyPress](https://buddypress.org/) and [bbPress](https://bbpress.org/), and still contains code from both. Both are free software released under the GPL, and we thank the BuddyPress and bbPress contributors for the work this plugin builds on. Copyright for that code remains with its original authors.
+BuddyBoss Community began as a fork of [BuddyPress](https://buddypress.org/) and [bbPress](https://bbpress.org/), and still contains code from both. Both are free software released under the GPL, and we thank the BuddyPress and bbPress contributors for the work this plugin builds on. Copyright for that code remains with its original authors.
 
 = Source code =
 
@@ -29,7 +29,7 @@ The full source code, including the uncompressed JavaScript and SCSS sources and
 
 == Requirements ==
 
-To run BuddyBoss Platform, we recommend your host supports:
+To run BuddyBoss Community, we recommend your host supports:
 
 * PHP version 7.4 or greater.
 * MySQL version 5.6 or greater, or, MariaDB version 10.0 or greater.
@@ -46,29 +46,29 @@ To run BuddyBoss Platform, we recommend your host supports:
 
 1. Visit 'BuddyBoss > Components' and adjust the active components to match your community. (You can always toggle these later.)
 2. Visit 'BuddyBoss > Pages' and setup your directories and registration pages. We create a few automatically, but suggest you customize these to fit the flow and verbiage of your site.
-3. Visit 'BuddyBoss > Settings' and take a moment to match BuddyBoss Platform's settings to your expectations. We pick the most common configuration by default, but every community is different.
+3. Visit 'BuddyBoss > Settings' and take a moment to match BuddyBoss Community's settings to your expectations. We pick the most common configuration by default, but every community is different.
 4. Visit 'BuddyBoss > Help' for tutorials on further configuration.
 
 == Frequently Asked Questions ==
 
 = Can I use my existing WordPress theme? =
 
-Yes! BuddyBoss Platform works out-of-the-box with most generic WordPress themes.
+Yes! BuddyBoss Community works out-of-the-box with most generic WordPress themes.
 
 = Will this work on WordPress multisite? =
 
-Yes! If your WordPress installation has multisite enabled, BuddyBoss Platform will support the global tracking of blogs, posts, comments, and even custom post types with a little bit of custom code.
+Yes! If your WordPress installation has multisite enabled, BuddyBoss Community will support the global tracking of blogs, posts, comments, and even custom post types with a little bit of custom code.
 
-Furthermore, BuddyBoss Platform can be activated and operate in just about any scope you need for it to:
+Furthermore, BuddyBoss Community can be activated and operate in just about any scope you need for it to:
 
-* Activate at the site level to only load BuddyBoss Platform on that site.
+* Activate at the site level to only load BuddyBoss Community on that site.
 * Activate at the network level for full integration with all sites in your network. (This is the most common multisite installation type.)
-* Enable multiblog mode to allow your BuddyBoss Platform content to be displayed on any site in your WordPress Multisite network, using the same central data.
-* Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
+* Enable multiblog mode to allow your BuddyBoss Community content to be displayed on any site in your WordPress Multisite network, using the same central data.
+* Extend BuddyBoss Community with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == External services ==
 
-BuddyBoss Platform connects to the services below only in the situations described. None of them is contacted unless the feature is in use.
+BuddyBoss Community connects to the services below only in the situations described. None of them is contacted unless the feature is in use.
 
 = Google reCAPTCHA =
 
@@ -334,7 +334,7 @@ BuddyBoss Platform connects to the services below only in the situations describ
 * Bug: Core - Resolved a vulnerability that allowed unauthenticated access to document folder views
 * Bug: Media - Fixed an issue where videos in the activity feed were not playing correctly on macOS Safari and iOS devices
 * Bug: Media - Updated album permissions and server-side validation so members can no longer upload, edit, or delete photos/videos in other users’ group albums, ensuring consistent and secure behavior across app and web
-* Bug: MemberPress - Fixed UI inconsistencies in MemberPress Courses by aligning icons, colors, and spacing with the BuddyBoss Platform design
+* Bug: MemberPress - Fixed UI inconsistencies in MemberPress Courses by aligning icons, colors, and spacing with the BuddyBoss Community design
 * Bug: ReadyLaunch - Fixed an issue where the Group Leave confirmation modal in ReadyLaunch was misaligned and displayed incorrectly
 * Bug: ReadyLaunch - Fixed an issue where the loader was not displayed while fetching subscription data in Notification Settings
 * Bug: ReadyLaunch - Fixed search filter dropdown options being cut off on smaller screen sizes
@@ -344,7 +344,7 @@ BuddyBoss Platform connects to the services below only in the situations describ
 * Bug: ReadyLaunch - Resolved Show More button misalignment on ReadyLaunch media pages for small screens
 
 = 2.18.0 =
-* Enhancement: Translations - Added new hooks to extend BuddyPress Multilingual 1.8.3 compatibility with BuddyBoss Platform components
+* Enhancement: Translations - Added new hooks to extend BuddyPress Multilingual 1.8.3 compatibility with BuddyBoss Community components
 * Bug: Activity - Fixed a fatal error where the Activity Feed block caused pages to load empty when Platform Pro was not installed
 * Bug: Activity - Fixed an issue where newsfeed filter labels were incorrectly lowercased
 * Bug: Blog - Resolved an issue where the Report action was missing on comments at the maximum threading depth
@@ -372,7 +372,7 @@ BuddyBoss Platform connects to the services below only in the situations describ
 * Bug: Core - Fixed a security vulnerability that allowed unauthorized access to protected or paid media files via document preview URLs
 * Bug: Core - Fixed an issue where both Profile and Members menus were incorrectly highlighted at the same time when viewing the logged-in user’s profile
 * Bug: Core - Fixed an issue where link previews were not displaying correctly for private communities, ensuring previews now work properly across all pages
-* Bug: Core - Fixed an issue where the “Select All” checkbox on the WordPress Plugins page did not work when BuddyBoss Platform was active
+* Bug: Core - Fixed an issue where the “Select All” checkbox on the WordPress Plugins page did not work when BuddyBoss Community was active
 * Bug: Core - Fixed an issue where the “Settings Saved” admin notice appeared twice on non-BuddyBoss settings pages
 * Bug: Email - Fixed an issue where password reset emails were not sent when ReadyLaunch was enabled
 * Bug: Forums - Fixed a visual alignment issue with the “Notify me of new replies” checkbox in forum discussion modals
@@ -425,7 +425,7 @@ BuddyBoss Platform connects to the services below only in the situations describ
 * Enhancement: Core - Improved reliability of license status checks by optimizing API requests to prevent delays experience
 
 = 2.15.0 =
-* New Feature! - Added support for the new Gamification, Offload Media, and Sharing features, enabling seamless integration and enhanced functionality across the BuddyBoss Platform
+* New Feature! - Added support for the new Gamification, Offload Media, and Sharing features, enabling seamless integration and enhanced functionality across the BuddyBoss Community
 
 = 2.14.4 =
 * Bug: Core - Fixed an issue where theme updates were not being received
@@ -582,7 +582,7 @@ BuddyBoss Platform connects to the services below only in the situations describ
 * Enhancement: Members - Introduced a new Followers page, allowing users to view a list of people following them
 * Bug: Core - Fixed an issue where display names showed as nicknames in wp-admin and caused inconsistencies between the member directory on mobile and web
 * Bug: Core - Fixed an issue where moderation component texts appeared during browser print of a LearnDash lesson with non-BuddyBoss themes
-* Bug: Elementor - Resolved an issue where the BuddyBoss Platform was restricting the display of Elementor maintenance mode content
+* Bug: Elementor - Resolved an issue where the BuddyBoss Community was restricting the display of Elementor maintenance mode content
 * Bug: Email - Resolved an issue with the recipient name token in the Activation Email Template
 * Bug: Forums - Resolved an issue where incomplete HTML tags in forum replies were breaking the page layout
 * Bug: Moderation - Resolved incorrect counts for "My Connections" and "Following" when a member is suspended
@@ -651,7 +651,7 @@ BuddyBoss Platform connects to the services below only in the situations describ
 * Bug: Core - Code refactoring to improve security and fix vulnerabilities
 * Bug: Elementor - Fixed an issue where the page count in search results was incorrect for pages edited with Elementor
 * Bug: Forum - Fixed an issue where disabling autocomplete in the forum search bar caused the page to reload with search results after typing a character
-* Bug: Forums - Fixed a JavaScript error on the Forums > Discussions page caused by the BuddyBoss Platform plugin, ensuring compatibility with Yoast SEO features like meta descriptions and readability analysis
+* Bug: Forums - Fixed a JavaScript error on the Forums > Discussions page caused by the BuddyBoss Community plugin, ensuring compatibility with Yoast SEO features like meta descriptions and readability analysis
 * Bug: Groups - Fixed an issue where a Private Group incorrectly displayed a message indicating it was a subgroup, even when it was a parent group
 * Bug: Members - Fixed spacing issue with the display name separator when the first name contains multiple names and no last name, in the member list API for logged-out users
 * Bug: Messages - Fixed an issue where the “More Options” button remained active after closing the dropdown
@@ -688,7 +688,7 @@ BuddyBoss Platform connects to the services below only in the situations describ
 * Bug: The Events Calendar - Fixed the insecure connection prompt when opening Events in iCalendar
 
 = 2.7.10 =
-* Enhanced: Activity - Enhanced the ability to generate link previews when the BuddyBoss Platform is set to Private mode
+* Enhanced: Activity - Enhanced the ability to generate link previews when the BuddyBoss Community is set to Private mode
 * Bug: Activity - Fixed an issue where embedded videos were not displaying in blog custom posts on the activity feed
 * Bug: Activity - Resolved the emoji icon inconsistency when adding comments or replies
 * Bug: Activity - Resolved the issue with adding reactions to comments
@@ -930,7 +930,7 @@ BuddyBoss Platform connects to the services below only in the situations describ
 * Bug: Core - Previous custom posts on the news feed page from group discussions and replies were not reflecting the updated translation from LocoTranslate plugin
 * Bug: Core - While typing a longer reply or comment in a pinned post on the Activity Feed the feed would refresh while typing which then clearing the text
 * Bug: Forums - URL link embedded into a forum page would not show
-* Bug: Platform - On a fresh WP install, after activating the BuddyBoss Platform it triggered a WordPress Database error in the debug log
+* Bug: Platform - On a fresh WP install, after activating the BuddyBoss Community it triggered a WordPress Database error in the debug log
 * Bug: Styling - Notification settings tabs under the user Account Settings page did not display correctly
 
 = 2.5.31 =

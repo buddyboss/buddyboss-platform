@@ -2,7 +2,7 @@
 /**
  * BuddyBoss Setup Wizard Manager Base Class
  *
- * Provides common functionality for all setup wizards in the BuddyBoss Platform.
+ * Provides common functionality for all setup wizards in the BuddyBoss Community.
  * This abstract class should be extended by specific wizard implementations.
  *
  * @package BuddyBoss\Core\Administration
@@ -17,7 +17,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Base Setup Wizard Manager Class
  *
- * Provides common functionality for all setup wizards in the BuddyBoss Platform.
+ * Provides common functionality for all setup wizards in the BuddyBoss Community.
  * This abstract class should be extended by specific wizard implementations.
  *
  * @since BuddyBoss 2.10.0

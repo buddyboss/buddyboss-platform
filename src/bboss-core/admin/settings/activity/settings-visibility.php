@@ -24,7 +24,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Register Posts Visibility panel sections and fields.
  *
- * Only registers the section and BuddyBoss Platform activity types field,
+ * Only registers the section and BuddyBoss Community activity types field,
  * which are available at early registration time.
  *
  * @since BuddyBoss 3.0.0
@@ -46,7 +46,7 @@ function bboss_activity_register_visibility_panel_fields() {
 		)
 	);
 
-	// FIELD: BuddyBoss Platform activity types (toggle list).
+	// FIELD: BuddyBoss Community activity types (toggle list).
 	// Legacy stores each type in a separate option (bp-feed-platform-{activity_name}). Core AJAX
 	// reads/writes per-option when option_prefix is set (see class-bboss-admin-settings-ajax.php).
 	$platform_activity_types = function_exists( 'bboss_platform_default_activity_types' ) ? bboss_platform_default_activity_types() : array();
@@ -65,7 +65,7 @@ function bboss_activity_register_visibility_panel_fields() {
 		'posts_visibility',
 		array(
 			'name'                 => 'bp_platform_activity_types',
-			'label'                => __( 'BuddyBoss Platform', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'label'                => __( 'BuddyBoss Community', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'type'                 => 'toggle_list',
 			'description'          => '',
 			'options'              => $platform_type_options,

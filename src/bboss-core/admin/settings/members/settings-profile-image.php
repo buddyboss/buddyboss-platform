@@ -182,7 +182,7 @@ function bboss_members_register_profile_image_panel_fields() {
 	// Note: bp_is_active( 'xprofile', 'cover_image' ) cannot be used here because
 	// BP_Nouveau::setup_support() (which registers the cover_image feature) runs
 	// at bp_after_setup_theme — after Settings 2.0 initializes at bp_loaded priority 4.
-	// BP_Nouveau always registers cover_image support for BuddyBoss Platform.
+	// BP_Nouveau always registers cover_image support for BuddyBoss Community.
 	// -------------------------------------------------------------------------
 
 	bboss_register_feature_section(

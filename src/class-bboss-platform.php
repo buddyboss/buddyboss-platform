@@ -12,7 +12,7 @@ defined( 'ABSPATH' ) || exit;
  */
 class BBoss_Platform {
 	/**
-	 * Identify if ths BuddyPress class is from BuddyBoss Platform
+	 * Identify if ths BuddyPress class is from BuddyBoss Community
 	 *
 	 * @since BuddyPress 1.0.0
 	 * @var boolean
@@ -736,7 +736,7 @@ class BBoss_Platform {
 			'BBoss_Readylaunch'                               => 'core',
 			'BBoss_Activity_Readylaunch'                      => 'activity',
 
-			// BuddyBoss Platform Rest API classes.
+			// BuddyBoss Community Rest API classes.
 			'BBoss_REST_Components_Endpoint'                  => 'core',
 			'BBoss_BB_REST_Topics_Endpoint'                      => 'core',
 			'BBoss_REST_Attachments'                          => 'core',
