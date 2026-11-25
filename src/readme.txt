@@ -3,7 +3,7 @@ Contributors: buddyboss
 Requires at least: 4.9.1
 Tested up to: 7.1
 Requires PHP: 7.4.0
-Stable tag: 3.7.2
+Stable tag: 3.8.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -55,6 +55,33 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 3.8.0 =
+* Enhancement: Members - Added an option to load member and group lists with infinite scroll
+* Bug: Activity - Fixed an error message shown when pasting Google Maps links into an activity post
+* Bug: Activity - Fixed an issue where link previews showed a member avatar instead of the page image
+* Bug: Activity - Fixed an issue where link previews kept loading and never appeared
+* Bug: Activity - Fixed an issue where older posts without a title could not be updated from the app after post titles were made required
+* Bug: Activity - Fixed incorrect times shown on the admin Activity screen
+* Bug: Core - Fixed an issue where regular pages could show a 404 error until permalinks were saved again
+* Bug: Core - Fixed repeated database queries that slowed down page loads
+* Bug: Elementor - Fixed an issue where Elementor global colors and fonts could stop showing on the site
+* Bug: Email - Fixed an issue where the email digest did not work with some email sending plugins
+* Bug: Forums - Fixed an issue where membership access settings on forums were not saved correctly
+* Bug: Forums - Fixed PHP 8.3 errors when forum discussions are enabled
+* Bug: Groups - Fixed an issue where group email notifications were not sent for some groups
+* Bug: Groups - Fixed an issue where line breaks in group descriptions were removed when editing from the dashboard
+* Bug: Groups - Fixed an issue where the group type list did not appear on the group settings page with ReadyLaunch enabled
+* Bug: Media - Fixed an issue where video thumbnails were missing in comments and small videos slowed down page loads
+* Bug: Members - Fixed incorrect joined dates on member cards for sites in other languages
+* Bug: Messages - Fixed an issue where delayed email notifications for new messages were not sent after turning on Private Messaging
+* Bug: Moderation - Fixed an issue where reports for hidden posts with multiple images showed an unknown reporter and a broken link
+* Bug: Notifications - Fixed an issue where notification preferences could save unexpected values
+* Bug: ReadyLaunch - Fixed an issue where the Messages and Notifications quick links in the mobile menu could not be tapped
+* Bug: ReadyLaunch - Fixed issues with error messages and post status not updating correctly when managing media in pop-up windows
+* Bug: ReadyLaunch - Fixed the description placeholder text shown when uploading photos, videos and documents
+* Bug: Translations - Fixed an issue where profile field section labels were not translated in the Profile Completion widget
+* Bug: Translations - Fixed an issue where translated gender values did not show on the profile page
 
 = 3.7.2 =
 * Bug: Activity - Fixed an issue where an activity post containing only an emoji could not be posted
