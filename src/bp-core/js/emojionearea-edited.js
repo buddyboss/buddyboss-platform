@@ -250,7 +250,7 @@ document = window.document || {};
 			autocomplete      : true,
 			autocompleteTones : false,
 			standalone        : false,
-			useInternalCDN    : true, // Use the self loading mechanism
+			useInternalCDN    : false, // The self loading mechanism is not used
 			imageType         : "png", // Default image type used by internal CDN
 			recentEmojis      : true,
 			textcomplete: {
@@ -1661,17 +1661,10 @@ document = window.document || {};
 				}
 			}
 
+			// Autocomplete needs the jQuery textcomplete plugin to be loaded by the page;
+			// it is never fetched from a remote server.
 			if ($.fn.textcomplete) {
 				initAutocomplete();
-			} else {
-				$.ajax(
-					{
-						url: "https://cdn.rawgit.com/yuku-t/jquery-textcomplete/v1.3.4/dist/jquery.textcomplete.js",
-						dataType: "script",
-						cache: true,
-						success: initAutocomplete
-					}
-				);
 			}
 		}
 
@@ -1698,8 +1691,10 @@ document = window.document || {};
 		// }, self.id === 1); // calcElapsedTime()
 	};
 	var cdn = {
-		defaultBase: "https://cdnjs.cloudflare.com/ajax/libs/emojione/",
-		defaultBase3: "https://cdn.jsdelivr.net/",
+		// No remote base: the emojione library is a registered script dependency and
+		// emoji images come from the copy WordPress serves (see getTemplate above).
+		defaultBase: "",
+		defaultBase3: "",
 		base: null,
 		isLoading: false
 	};

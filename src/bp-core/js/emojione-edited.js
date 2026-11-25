@@ -145,8 +145,9 @@
     ns.emojiSize = '32';
     ns.greedyMatch = false; // set to true for greedy unicode matching
     ns.blacklistChars = '';
-    ns.imagePathPNG = 'https://cdn.jsdelivr.net/emojione/assets/' + ns.emojiVersion + '/png/';
-    ns.defaultPathPNG = ns.imagePathPNG;
+    // Emoji images come from the copy WordPress itself serves, not from a third-party CDN.
+    ns.imagePathPNG = typeof _wpemojiSettings !== 'undefined' ? _wpemojiSettings.baseUrl : 'https://s.w.org/images/core/emoji/12.0.0-1/72x72/';
+    ns.defaultPathPNG = '';
     ns.fileExtension = '.png';
     ns.imageTitleTag = true; // set to false to remove title attribute from img tag
     ns.sprites = false; // if this is true then sprite markup will be used
