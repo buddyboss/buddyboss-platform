@@ -757,7 +757,7 @@ window.bp = window.bp || {};
 									$document.find( 'a.bb-rl-open-document-theatre[data-id="' + itemId + '"]' ).attr( 'href', response.data.url );
 								}
 							} else {
-								target.find( 'option[value="' + target.attr( 'data-privacy' ) + '"]' ).attr( 'selected', 'selected' );
+								target.val( target.attr( 'data-privacy' ) );
 								target.siblings( 'span' ).text( target.find( 'option[value="' + target.attr( 'data-privacy' ) + '"]' ).text() );
 								/* jshint ignore:start */
 								alert( response.data.feedback.replace( '&#039;', '\'' ) );
@@ -3578,6 +3578,12 @@ window.bp = window.bp || {};
 				$currentTarget = $contextContainer.find( '.bb-rl-media-move-file' ).first();
 			}
 
+			// Activity move popups are rendered before the document loop, so they share id "bb-rl-media-move-file-0".
+			// Give this one its own id, or folderLocationUI() binds its folder picker to the first popup on the page.
+			if ( $currentTarget.attr( 'id' ) && 1 < $( '[id="' + $currentTarget.attr( 'id' ) + '"]' ).length ) {
+				$currentTarget.attr( 'id', 'bb-rl-media-move-file-' + _.uniqueId( 'popup-' ) );
+			}
+
 			$currentTarget.find( '.bb-rl-location-folder-list-wrap .location-folder-list' ).remove();
 			$currentTarget.find( '.bb-rl-location-folder-list-wrap' ).append( '<ul class="location-folder-list is-loading"><li><i class="bb-icon-l bb-icon-spinner animate-spin"></i></li></ul>' );
 			if ( 'document' === action ) {
@@ -3952,6 +3958,14 @@ window.bp = window.bp || {};
 
 			if ( matchStatus ) {
 				return; // prevent user to add not supported characters.
+			}
+
+			// Block an empty title before sending the request.
+			if ( '' === document_name_val ) {
+				document_edit.addClass( 'error' );
+				$errorBox.text( bbRlMedia.i18n_strings.title_required ).show();
+				event.preventDefault();
+				return;
 			}
 
 			// If nothing changed, just close the modal.
@@ -7396,6 +7410,11 @@ window.bp = window.bp || {};
 			self.resetRemoveActivityCommentsData( action );
 
 			self.current_media = false;
+
+			if ( 'undefined' !== typeof bp.Nouveau.Activity && 'function' === typeof bp.Nouveau.Activity.syncPinPostActivityOnCloseTheatre ) {
+				bp.Nouveau.Activity.syncPinPostActivityOnCloseTheatre( target );
+			}
+
 			self.getParentActivityHtml( {
 				target : target,
 				action : action
@@ -7980,6 +7999,9 @@ window.bp = window.bp || {};
 						}
 						$infoSection.show();
 
+						if ( 'undefined' !== typeof bp.Nouveau.Activity && bp.Nouveau.Activity.syncPinIconToModal ) {
+							bp.Nouveau.Activity.syncPinIconToModal();
+						}
 						$infoSection.find( '.bb-activity-more-options-action' ).attr( 'data-balloon-pos', 'left' );
 
 						self.updateTheaterHeaderTitle(
@@ -8114,6 +8136,9 @@ window.bp = window.bp || {};
 							}
 							$( '.bb-media-info-section:visible' ).show();
 
+							if ( 'undefined' !== typeof bp.Nouveau.Activity && bp.Nouveau.Activity.syncPinIconToModal ) {
+								bp.Nouveau.Activity.syncPinIconToModal();
+							}
 							self.updateTheaterHeaderTitle(
 								{
 									wrapper : $( '.bb-rl-media-model-wrapper' ),
@@ -8467,16 +8492,43 @@ window.bp = window.bp || {};
 						value   : privacy,
 						type    : 'document',
 					},
-					success: function () {
+					success: function ( response ) {
+						if ( ! response || ! response.success ) {
+							self.revertDocumentPrivacy( target, older_privacy, response );
+							return;
+						}
 						target.closest( '.bb-document-privacy-wrap' ).find( '.privacy' ).removeClass( 'loading' ).removeClass( older_privacy );
 						target.closest( '.bb-document-privacy-wrap' ).find( '.privacy' ).addClass( privacy );
 						target.closest( '.bb-document-privacy-wrap' ).find( '.bp-tooltip' ).attr( 'data-bp-tooltip', target.text() );
 					},
 					error  : function () {
-						target.closest( '.bb-document-privacy-wrap' ).find( '.privacy' ).removeClass( 'loading' );
+						self.revertDocumentPrivacy( target, older_privacy );
 					}
 				}
 			);
+		},
+
+		/**
+		 * Put the previous privacy back in the document viewer when the server refuses the change.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param {Object} target        Clicked privacy item.
+		 * @param {string} older_privacy Privacy before the change.
+		 * @param {Object} response      AJAX response, when there is one.
+		 */
+		revertDocumentPrivacy: function ( target, older_privacy, response ) {
+			var privacy_wrap = target.closest( '.bb-document-privacy-wrap' );
+
+			privacy_wrap.find( '.privacy' ).removeClass( 'loading' );
+			privacy_wrap.find( 'ul.document-privacy li' ).removeClass( 'selected' );
+			privacy_wrap.find( 'ul.document-privacy li[data-value="' + older_privacy + '"]' ).addClass( 'selected' );
+
+			if ( response && response.data && response.data.feedback ) {
+				/* jshint ignore:start */
+				alert( response.data.feedback.replace( '&#039;', '\'' ) );
+				/* jshint ignore:end */
+			}
 		},
 
 		resetActivityMedia: function ( activityId ) {

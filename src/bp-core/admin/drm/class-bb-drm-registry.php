@@ -949,6 +949,9 @@ class BB_DRM_Registry {
 				array( '%d' )
 			);
 
+			// This update bypasses BB_DRM_Event::store(), so flush the latest() cache here.
+			BB_DRM_Event::flush_latest_cache( $event->event );
+
 			// Log if update failed.
 			if ( false === $result ) {
 				error_log( sprintf( 'BB DRM: Failed to mark %s email as sent for addon: %s (event ID: %d, wpdb error: %s)', $status_key, $addon['product_slug'], $event->id, $wpdb->last_error ) );

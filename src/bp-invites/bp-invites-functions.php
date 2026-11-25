@@ -294,7 +294,7 @@ function bp_invites_member_invite_register_screen_message() {
 			$bp_get_invitee_email_new = new WP_Query( $args );
 			$posts                    = $bp_get_invitee_email_new->posts;
 			$post_id                  = $posts[0]->ID;
-			$get_invite_profile_type  = get_post_meta( $post_id, '_bp_invitee_member_type', true );
+			$get_invite_profile_type  = bb_get_invite_allowed_member_type( $post_id );
 			if ( isset( $get_invite_profile_type ) && '' !== $get_invite_profile_type ) {
 				$member_type_post_id = bp_member_type_post_by_type( $get_invite_profile_type );
 				?>
@@ -543,7 +543,7 @@ function bp_invites_member_invite_activate_user( $user_id, $key, $user ) {
 			update_post_meta( get_the_ID(), '_bp_invitee_status', 1 );
 			update_post_meta( get_the_ID(), '_bp_invitee_registered_date', date( 'Y-m-d H:i:s' ) );
 
-			$member_type = get_post_meta( get_the_ID(), '_bp_invitee_member_type', true );
+			$member_type = bb_get_invite_allowed_member_type( get_the_ID() );
 			if ( isset( $member_type ) && ! empty( $member_type ) ) {
 				bp_set_member_type( $user_id, '' );
 				bp_set_member_type( $user_id, $member_type );
@@ -627,7 +627,7 @@ function bp_invites_member_invite_mark_register_user( $user_id ) {
 			update_post_meta( get_the_ID(), '_bp_invitee_status', 1 );
 			update_post_meta( get_the_ID(), '_bp_invitee_registered_date', date( 'Y-m-d H:i:s' ) );
 
-			$member_type = get_post_meta( get_the_ID(), '_bp_invitee_member_type', true );
+			$member_type = bb_get_invite_allowed_member_type( get_the_ID() );
 			if ( isset( $member_type ) && ! empty( $member_type ) ) {
 				bp_set_member_type( $user_id, '' );
 				bp_set_member_type( $user_id, $member_type );

@@ -215,9 +215,10 @@ if ( isset( $restricted ) && '' !== $restricted ) {
 					<p class="pag-data">
 						<?php
 							$current_page = max( 1, get_query_var( 'paged' ) );
+							// Drop the query string from base; paginate_links() re-adds the current query args (e.g. the after-send notice args) after ?paged=N.
 							echo paginate_links(
 								array(
-									'base'      => get_pagenum_link( 1 ) . '%_%',
+									'base'      => strtok( get_pagenum_link( 1 ), '?' ) . '%_%',
 									'format'    => '?paged=%#%',
 									'current'   => $current_page,
 									'total'     => $total_pages,

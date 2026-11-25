@@ -627,7 +627,7 @@ window.bp = window.bp || {};
 				);
 			}
 
-			$( '.activity-item.bb-closed-comments' ).find( '.edit-activity, .acomment-edit' ).parents( '.generic-button' ).hide();
+			$( '.activity-item.bb-closed-comments' ).find( '.acomment-edit' ).parents( '.generic-button' ).hide();
 		},
 
 		/**
@@ -1231,7 +1231,11 @@ window.bp = window.bp || {};
 							}
 
 							if ( response.data.parent_activity_id && response.data.activity ) {
-								$( 'body:not(.activity-singular) #buddypress #activity-stream ul.activity-list li#activity-' + response.data.parent_activity_id ).replaceWith( response.data.activity );
+								bp.Nouveau.replaceActivityItem(
+									$( 'body:not(.activity-singular) #buddypress #activity-stream ul.activity-list li#activity-' + response.data.parent_activity_id ),
+									response.data.activity,
+									[ '.activity-inner > .bb-activity-media-wrap', '.activity-inner > .bb-activity-video-wrap', '.activity-state' ]
+								);
 							}
 
 							if ( activity_comment_id ) {
@@ -2358,7 +2362,7 @@ window.bp = window.bp || {};
 									target.addClass( 'unclose-activity-comment' );
 									target.removeClass( 'close-activity-comment' );
 									target.find( 'span' ).html( BP_Nouveau.activity.strings.uncloseComments );
-									target.closest( 'li.activity-item.bb-closed-comments' ).find( '.edit-activity, .acomment-edit' ).parents( '.generic-button' ).hide();
+									target.closest( 'li.activity-item.bb-closed-comments' ).find( '.acomment-edit' ).parents( '.generic-button' ).hide();
 									target.closest( '.activity-item' ).find( '.activity-comments' ).before( '<div class="bb-activity-closed-comments-notice">' + response.data.feedback + '</div>' );
 
 									// Handle event from media theatre.
@@ -2367,12 +2371,12 @@ window.bp = window.bp || {};
 											$media_parent.addClass( 'bb-closed-comments' );
 											$media_parent.find( '.bb-activity-more-options .close-activity-comment span' ).html( BP_Nouveau.activity.strings.uncloseComments );
 											$media_parent.find( '.bb-activity-more-options .close-activity-comment' ).addClass( 'unclose-activity-comment' ).removeClass( 'close-activity-comment' );
-											$media_parent.find( '.edit-activity, .acomment-edit' ).parents( '.generic-button' ).hide();
+											$media_parent.find( '.acomment-edit' ).parents( '.generic-button' ).hide();
 											$media_parent.find( '.activity-comments' ).before( '<div class="bb-activity-closed-comments-notice">' + response.data.feedback + '</div>' );
 										}
 									}
 								} else if ( 'unclose_comments' === close_comments_action ) {
-									target.closest( 'li.activity-item.bb-closed-comments' ).find( '.edit-activity, .acomment-edit' ).parents( '.generic-button' ).show();
+									target.closest( 'li.activity-item.bb-closed-comments' ).find( '.acomment-edit' ).parents( '.generic-button' ).show();
 									target.closest( 'li.activity-item' ).removeClass( 'bb-closed-comments' );
 									if ( target.closest( '#activity-modal' ).length > 0 ) {
 										target.closest( '#activity-modal' ).removeClass( 'bb-closed-comments' );
@@ -2384,7 +2388,7 @@ window.bp = window.bp || {};
 									// Handle event from media theatre.
 									if ( target.parents( '.bb-media-model-wrapper' ).length > 0 ) {
 										if ( $media_parent.length > 0 ) {
-											$media_parent.find( '.edit-activity, .acomment-edit' ).parents( '.generic-button' ).show();
+											$media_parent.find( '.acomment-edit' ).parents( '.generic-button' ).show();
 											$media_parent.removeClass( 'bb-closed-comments' );
 											$media_parent.find( '.bb-activity-more-options .unclose-activity-comment span' ).html( BP_Nouveau.activity.strings.closeComments );
 											$media_parent.find( '.bb-activity-more-options .unclose-activity-comment' ).addClass( 'close-activity-comment' ).removeClass( 'unclose-activity-comment' );
@@ -3310,6 +3314,32 @@ window.bp = window.bp || {};
 								response.data.saved      = false;
 								response.data.js_preview = $( file.previewElement ).find( '.dz-video-thumbnail img' ).attr( 'src' );
 								self.dropzone_video.push( response.data );
+
+								// The thumbnail capture (bp.Nouveau.getVideoThumb) runs async and can still be
+								// in progress here. Backfill js_preview on this same object (already pushed
+								// above, by reference) once the capture finishes, instead of reading the
+								// <img> immediately and losing the preview.
+								if ( ! response.data.js_preview ) {
+									var thumbnailCheckAttempts = 0;
+									// getVideoThumb() reads the whole file before capturing, so on large files or
+									// slow devices it can settle well after the upload. Poll every 200ms until it
+									// settles, the preview leaves the page (file removed or comment submitted), or
+									// 60s pass, so the interval never outlives the comment form.
+									var thumbnailCheck = setInterval(
+										function () {
+											var $thumbnailPreview = $( file.previewElement ).closest( '.dz-preview' );
+											thumbnailCheckAttempts++;
+											if ( $thumbnailPreview.hasClass( 'dz-has-no-thumbnail' ) || $thumbnailPreview.hasClass( 'dz-has-thumbnail' ) ) {
+												response.data.js_preview = $( file.previewElement ).find( '.dz-video-thumbnail img' ).attr( 'src' );
+												clearInterval( thumbnailCheck );
+											} else if ( ! file.previewElement || ! document.body.contains( file.previewElement ) || thumbnailCheckAttempts >= 300 ) {
+												clearInterval( thumbnailCheck );
+											}
+										},
+										200
+									);
+								}
+
 								return file.previewElement.classList.add( 'dz-success' );
 							} else {
 								var node, _i, _len, _ref, _results;
@@ -4454,7 +4484,11 @@ window.bp = window.bp || {};
 								return;
 							} else if ( 'undefined' !== typeof response.data && 'undefined' !== typeof response.data.activity ) {
 								// success
-								$pageActivityListItem.replaceWith( $.parseHTML( response.data.activity ) );
+								bp.Nouveau.replaceActivityItem(
+									$pageActivityListItem,
+									$.parseHTML( response.data.activity ),
+									[ '.activity-inner > .bb-activity-media-wrap', '.activity-inner > .bb-activity-video-wrap', '.activity-state', '.activity-comments ul[data-activity_id]' ]
+								);
 								// replace dummy image with original image by faking scroll event to call bp.Nouveau.lazyLoad.
 								jQuery( window ).scroll();
 
