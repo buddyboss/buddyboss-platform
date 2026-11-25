@@ -47,3 +47,42 @@ describe( 'buildRegisteredFieldPayload', () => {
 		expect( payload ).not.toHaveProperty( 'ro' );
 	} );
 } );
+
+// Richtext fields are read through wp.editor.getContent(), so a link typed in
+// the Code tab is saved and email content is stored in WordPress's
+// paragraph-free format (wpautop() runs on it at send time) (PROD-10488).
+describe( 'buildRegisteredFieldPayload richtext fields', () => {
+	var fields = [ { id: 'content', type: 'richtext', extra_data: {} } ];
+
+	afterEach( function () {
+		delete window.wp;
+		delete window.tinymce;
+	} );
+
+	test( 'uses wp.editor.getContent() for the field editor, on both payload keys', () => {
+		var saved = 'Hi,\n\nOpen <a href="http://{{{message.url}}}">the message</a>';
+		window.wp = { editor: { getContent: jest.fn( () => saved ), removep: jest.fn() } };
+		// TinyMCE's own buffer is stale while the Code tab is active.
+		window.tinymce = { get: () => ( { getContent: () => '<p>stale</p>' } ) };
+
+		var payload = buildRegisteredFieldPayload( fields, { content: '<p>old</p>' }, 7 );
+
+		expect( window.wp.editor.getContent ).toHaveBeenCalledWith( 'bb-admin-edit-content-7' );
+		expect( payload.content ).toBe( saved );
+		expect( payload.registered_field_content ).toBe( saved );
+	} );
+
+	test( 'editor not mounted: the onChange HTML is converted with removep()', () => {
+		window.wp = {
+			editor: {
+				getContent: () => undefined,
+				removep: ( html ) => html.replace( /<\/p>\s*<p>/g, '\n\n' ).replace( /<\/?p>/g, '' ),
+			},
+		};
+
+		var payload = buildRegisteredFieldPayload( fields, { content: '<p>One</p><p>Two <a href="https://example.org" data-wplink-url-error="true">x</a></p>' }, 7 );
+
+		expect( payload.content ).toBe( 'One\n\nTwo <a href="https://example.org">x</a>' );
+		expect( payload.registered_field_content ).toBe( payload.content );
+	} );
+} );

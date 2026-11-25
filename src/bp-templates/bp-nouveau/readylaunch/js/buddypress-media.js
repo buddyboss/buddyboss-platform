@@ -3578,6 +3578,12 @@ window.bp = window.bp || {};
 				$currentTarget = $contextContainer.find( '.bb-rl-media-move-file' ).first();
 			}
 
+			// Activity move popups are rendered before the document loop, so they share id "bb-rl-media-move-file-0".
+			// Give this one its own id, or folderLocationUI() binds its folder picker to the first popup on the page.
+			if ( $currentTarget.attr( 'id' ) && 1 < $( '[id="' + $currentTarget.attr( 'id' ) + '"]' ).length ) {
+				$currentTarget.attr( 'id', 'bb-rl-media-move-file-' + _.uniqueId( 'popup-' ) );
+			}
+
 			$currentTarget.find( '.bb-rl-location-folder-list-wrap .location-folder-list' ).remove();
 			$currentTarget.find( '.bb-rl-location-folder-list-wrap' ).append( '<ul class="location-folder-list is-loading"><li><i class="bb-icon-l bb-icon-spinner animate-spin"></i></li></ul>' );
 			if ( 'document' === action ) {
@@ -7396,6 +7402,11 @@ window.bp = window.bp || {};
 			self.resetRemoveActivityCommentsData( action );
 
 			self.current_media = false;
+
+			if ( 'undefined' !== typeof bp.Nouveau.Activity && 'function' === typeof bp.Nouveau.Activity.syncPinPostActivityOnCloseTheatre ) {
+				bp.Nouveau.Activity.syncPinPostActivityOnCloseTheatre( target );
+			}
+
 			self.getParentActivityHtml( {
 				target : target,
 				action : action
@@ -7980,6 +7991,9 @@ window.bp = window.bp || {};
 						}
 						$infoSection.show();
 
+						if ( 'undefined' !== typeof bp.Nouveau.Activity && bp.Nouveau.Activity.syncPinIconToModal ) {
+							bp.Nouveau.Activity.syncPinIconToModal();
+						}
 						$infoSection.find( '.bb-activity-more-options-action' ).attr( 'data-balloon-pos', 'left' );
 
 						self.updateTheaterHeaderTitle(
@@ -8114,6 +8128,9 @@ window.bp = window.bp || {};
 							}
 							$( '.bb-media-info-section:visible' ).show();
 
+							if ( 'undefined' !== typeof bp.Nouveau.Activity && bp.Nouveau.Activity.syncPinIconToModal ) {
+								bp.Nouveau.Activity.syncPinIconToModal();
+							}
 							self.updateTheaterHeaderTitle(
 								{
 									wrapper : $( '.bb-rl-media-model-wrapper' ),
