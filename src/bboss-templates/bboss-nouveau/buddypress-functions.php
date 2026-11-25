@@ -606,7 +606,9 @@ JS;
 		// two handles stay registered, so whatever enqueues them keeps working.
 		if ( bboss_is_active( 'media' ) && ! wp_script_is( 'bp-nouveau-codemirror', 'registered' ) ) {
 			wp_register_script( 'bp-nouveau-codemirror', false, array( 'wp-codemirror' ), $this->version, true );
-			wp_add_inline_script( 'bp-nouveau-codemirror', 'window.CodeMirror = window.CodeMirror || ( window.wp && window.wp.CodeMirror );' );
+			// A page can already carry a partial CodeMirror object (mode helpers only), so
+			// the global is pointed at the editor whenever it is not a function yet.
+			wp_add_inline_script( 'bp-nouveau-codemirror', 'if ( window.wp && window.wp.CodeMirror && "function" !== typeof window.CodeMirror ) { window.CodeMirror = window.wp.CodeMirror; }' );
 			wp_register_script( 'bp-nouveau-codemirror-css', false, array( 'bp-nouveau-codemirror' ), $this->version, true );
 		}
 
