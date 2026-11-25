@@ -5879,7 +5879,7 @@ function bb_is_member_type_allowed_on_registration( $member_type_id ) {
  * path for any member who can send invites.
  *
  * @since BuddyBoss 3.5.0
- * @since BuddyBoss [BBVERSION] Added the `$inviter_id` parameter.
+ * @since BuddyBoss 3.8.1 Added the `$inviter_id` parameter.
  *
  * @param string $member_type_key Profile type key submitted on the invite form.
  * @param int    $inviter_id      Optional. Inviter to check. Default: the logged-in member.
@@ -5928,7 +5928,7 @@ function bb_is_member_type_allowed_on_invite( $member_type_key, $inviter_id = 0 
  * Invites form is never applied, whichever path saved it, including invites saved
  * before the input checks existed.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.8.1
  *
  * @param int $invite_id Invite post ID.
  *

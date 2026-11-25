@@ -40,7 +40,7 @@ add_action( 'bp_actions', 'bp_activity_action_sitewide_feed' );
  * Load a user's personal activity feed.
  *
  * @since BuddyPress 1.0.0
- * @since BuddyBoss [BBVERSION] Uses the 'just-me' scope.
+ * @since BuddyBoss 3.8.1 Uses the 'just-me' scope.
  *
  * @return bool False on failure.
  */

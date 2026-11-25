@@ -3993,7 +3993,7 @@ function bp_email_get_template( WP_Post $object ) {
  * Intended for use with the email system introduced in BuddyPress 2.5.0.
  *
  * @since BuddyPress 2.5.0
- * @since BuddyBoss [BBVERSION] Removes the scheme that the link dialog adds in front of a URL token in a link and its text.
+ * @since BuddyBoss 3.8.1 Removes the scheme that the link dialog adds in front of a URL token in a link and its text.
  *
  * @param string $text   Text to replace tokens in.
  * @param array  $tokens Token names and replacement values for the $text.
@@ -4471,7 +4471,7 @@ function bp_strip_script_and_style_tags( $string ) {
  * Check if a member's profile type is allowed to select the invitee's profile type.
  *
  * @since BuddyBoss 1.0.0
- * @since BuddyBoss [BBVERSION] Added the `$user_id` parameter.
+ * @since BuddyBoss 3.8.1 Added the `$user_id` parameter.
  *
  * @param int $user_id Optional. Member to check. Default: the logged-in member.
  *
@@ -6053,7 +6053,7 @@ function bb_core_symlink_generator( $type, $item, $size, $file, $output_file_src
  * get a symlink to their uploads month directory instead of the file. A preview symlink never
  * points at a directory, so any such symlink is removed.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.8.1
  *
  * @return array List of deleted symlink paths.
  */
@@ -7794,7 +7794,7 @@ function bb_enabled_legacy_email_preference() {
  * a Settings 2.0 save that only changed an email/web/app sub-type) are skipped, so the
  * notification type falls back to its registered default.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.8.1
  *
  * @param array $enabled_all_notification Saved `bb_enabled_notification` option value.
  *
@@ -7829,7 +7829,7 @@ function bb_get_enabled_notification_main_settings( $enabled_all_notification ) 
  * edit the displayed member's settings, so every other caller (REST, wp-admin, custom
  * templates) keeps its current behaviour.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.8.1
  *
  * @return int User ID, or 0 when nobody is logged in.
  */
@@ -7849,7 +7849,7 @@ function bb_get_notification_settings_user_id() {
 	/**
 	 * Filters the member whose notification preferences are rendered.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.8.1
 	 *
 	 * @param int $user_id           Member the preferences are read for.
 	 * @param int $displayed_user_id Displayed member, or 0 when no member is displayed.
@@ -7861,7 +7861,7 @@ function bb_get_notification_settings_user_id() {
  * Render the notification settings on the front end.
  *
  * @since BuddyBoss 1.9.3
- * @since BuddyBoss [BBVERSION] Shows the preferences of the member being edited, see
+ * @since BuddyBoss 3.8.1 Shows the preferences of the member being edited, see
  *                              bb_get_notification_settings_user_id().
  *
  * @param string $notification_group Notification group name.
@@ -8089,7 +8089,7 @@ function bb_enable_notifications_options() {
  * Render the enable notification settings on the front end.
  *
  * @since BuddyBoss 1.9.3
- * @since BuddyBoss [BBVERSION] Shows the preferences of the member being edited, see
+ * @since BuddyBoss 3.8.1 Shows the preferences of the member being edited, see
  *                              bb_get_notification_settings_user_id().
  */
 function bb_render_enable_notification_options() {
@@ -8173,7 +8173,7 @@ function bb_manual_notification_options() {
  * Render the manual notification settings on the front end.
  *
  * @since BuddyBoss 1.9.3
- * @since BuddyBoss [BBVERSION] Shows the preferences of the member being edited, see
+ * @since BuddyBoss 3.8.1 Shows the preferences of the member being edited, see
  *                              bb_get_notification_settings_user_id().
  */
 function bb_render_manual_notification() {

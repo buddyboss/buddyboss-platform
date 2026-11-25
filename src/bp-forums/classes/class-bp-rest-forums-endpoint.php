@@ -1273,7 +1273,7 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 	 * hidden forums, because hidden forums map to read_private_forums. Group forums (and their sub-forums) follow group access; other hidden
 	 * forums (and forums under one) need read_hidden_forums. Moderators and items without a forum are allowed.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.8.1
 	 *
 	 * @param int $forum_id Forum ID.
 	 *

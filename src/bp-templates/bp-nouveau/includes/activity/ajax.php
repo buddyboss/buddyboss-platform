@@ -834,7 +834,7 @@ function bp_nouveau_ajax_get_activity_objects() {
  * Processes Activity updates received via a POST request.
  *
  * @since BuddyPress 3.0.0
- * @since BuddyBoss [BBVERSION] Turned-off commenting no longer blocks editing the activity.
+ * @since BuddyBoss 3.8.1 Turned-off commenting no longer blocks editing the activity.
  *
  * @return string JSON reply.
  */

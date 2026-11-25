@@ -18,7 +18,7 @@
  * users accounts already, without knowing their existing password.
  *
  * @since BuddyPress 1.6.0
- * @since BuddyBoss [BBVERSION] An unchanged email address containing an apostrophe or ampersand is no longer treated as changed.
+ * @since BuddyBoss 3.8.1 An unchanged email address containing an apostrophe or ampersand is no longer treated as changed.
  *                              The user is only updated when a new password is saved.
  *
  * @global BuddyPress $bp

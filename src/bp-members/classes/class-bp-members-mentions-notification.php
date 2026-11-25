@@ -77,7 +77,7 @@ class BP_Members_Mentions_Notification extends BP_Core_Notification_Abstract {
 	 * Register notification for user mention.
 	 *
 	 * @since BuddyBoss 1.9.3
-	 * @since BuddyBoss [BBVERSION] The label shows the mention name of the member whose settings
+	 * @since BuddyBoss 3.8.1 The label shows the mention name of the member whose settings
 	 *                              are displayed, see bb_get_notification_settings_user_id().
 	 */
 	public function register_notification_for_mentions() {

@@ -1395,7 +1395,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 	 * are stored as public, so uploads on comments in private or hidden groups would pass it. Items outside a group,
 	 * items in public groups and moderators are always allowed.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.8.1
 	 *
 	 * @param int $group_id Group ID the item belongs to.
 	 *

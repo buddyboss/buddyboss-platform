@@ -1249,7 +1249,7 @@ add_filter( 'bp_activity_set_public_scope_args', 'bp_activity_filter_public_scop
  *
  * @since BuddyPress 2.2.0
  * @since BuddyBoss 3.7.1 Returns nothing for guests, and hides hidden items of groups the user is not a member of.
- * @since BuddyBoss [BBVERSION] Shows friends-only items by the viewer's friends, not the listed member's.
+ * @since BuddyBoss 3.8.1 Shows friends-only items by the viewer's friends, not the listed member's.
  *
  * @param array $retval Empty array by default.
  * @param array $filter Current activity arguments.
@@ -1406,7 +1406,7 @@ add_filter( 'bp_activity_set_favorites_scope_args', 'bp_activity_filter_favorite
  * Set up activity arguments for use with the 'favorites' scope.
  *
  * @since BuddyPress 2.2.0
- * @since BuddyBoss [BBVERSION] Matches nothing when mentions are off, and shows friends-only items by the viewer's friends.
+ * @since BuddyBoss 3.8.1 Matches nothing when mentions are off, and shows friends-only items by the viewer's friends.
  *
  * @param array $retval Empty array by default.
  * @param array $filter Current activity arguments.
@@ -1635,7 +1635,7 @@ add_filter( 'bp_ajax_querystring', 'bp_add_member_follow_scope_filter', 20, 2 );
  * For details on the syntax, see {@link BP_Activity_Query}.
  *
  * @since BuddyBoss 1.0.0
- * @since BuddyBoss [BBVERSION] Matches nothing when activity follow is off.
+ * @since BuddyBoss 3.8.1 Matches nothing when activity follow is off.
  *
  * @param array $retval Empty array by default.
  * @param array $filter Current activity arguments.
@@ -3586,7 +3586,7 @@ function bb_load_activity_notifications() {
  * Add activity notifications settings to the notifications settings page.
  *
  * @since BuddyPress 1.2.0
- * @since BuddyBoss [BBVERSION] The mention label shows the displayed member's mention name.
+ * @since BuddyBoss 3.8.1 The mention label shows the displayed member's mention name.
  */
 function bp_activity_screen_notification_settings() {
 

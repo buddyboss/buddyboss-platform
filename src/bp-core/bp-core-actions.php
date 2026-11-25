@@ -1426,7 +1426,7 @@ add_action( 'bp_init', 'bb_load_readylaunch', 1 );
  * directory scan never runs during a page request. Skips scheduling when the cleanup has
  * already run on this site or is already queued.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.8.1
  */
 function bb_core_schedule_delete_directory_symlinks() {
 	if ( get_option( 'bb_directory_symlinks_deleted' ) || wp_next_scheduled( 'bb_core_delete_directory_symlinks' ) ) {

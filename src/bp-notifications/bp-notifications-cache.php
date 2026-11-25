@@ -46,7 +46,7 @@ function bp_notifications_update_meta_cache( $notification_ids = false ) {
  * item_id/etc. combination produced it - unreachable in one operation,
  * without needing to enumerate or individually delete each variant's key.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.8.1
  *
  * @param int $user_id User ID.
  * @return string Incrementor value.
@@ -66,7 +66,7 @@ function bp_notifications_get_user_count_cache_incrementor( $user_id ) {
  * Invalidate every cached notification count for a user, regardless of
  * which component_name/item_id/etc. arguments produced it.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.8.1
  *
  * @param int $user_id User ID.
  */
@@ -85,7 +85,7 @@ function bp_notifications_bump_user_count_cache_incrementor( $user_id ) {
  * Used by BP_Notifications_Notification::get_total_count() so that two queries
  * for the same user with different filters never share a cache slot. See PROD-10344.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.8.1
  *
  * @param int    $user_id User ID the count belongs to.
  * @param string $sql     The final SQL of the count query.
@@ -107,7 +107,7 @@ function bp_notifications_get_count_cache_key( $user_id, $sql ) {
  * Clear all notifications cache for a given user ID.
  *
  * @since BuddyPress 2.3.0
- * @since BuddyBoss [BBVERSION] Invalidates counts by bumping the user's count incrementor instead of deleting $user_id keys.
+ * @since BuddyBoss 3.8.1 Invalidates counts by bumping the user's count incrementor instead of deleting $user_id keys.
  *
  * @param int $user_id The user ID's cache to clear.
  */
@@ -173,7 +173,7 @@ add_action( 'bp_notification_before_delete', 'bp_notifications_clear_all_for_use
  * notification did not clear its user's counts. delete() passes the exact rows it
  * removed to this action, so clearing from them covers every deleted row.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.8.1
  *
  * @param int|false $retval        Number of rows deleted on success, false on failure.
  * @param array     $notifications Deleted notification rows.
@@ -199,7 +199,7 @@ add_action( 'bp_notification_after_delete', 'bb_notifications_clear_all_for_user
  * Invalidates 'all_for_user_' cache when updating.
  *
  * @since BuddyPress 2.3.0
- * @since BuddyBoss [BBVERSION] Clears every affected user when the WHERE has no user_id or id.
+ * @since BuddyBoss 3.8.1 Clears every affected user when the WHERE has no user_id or id.
  *
  * @param array $update_args See BP_Notifications_Notification::update() for description.
  * @param array $where_args  See BP_Notifications_Notification::update() for description.
@@ -237,7 +237,7 @@ add_action( 'bp_notification_before_update', 'bp_notifications_clear_all_for_use
  * with no user. It reads the matching rows with the same column = value conditions that
  * update() applies, so no default component, is_new or moderation filter can skip a row.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.8.1
  *
  * @param array $where_args See BP_Notifications_Notification::update() for description.
  */

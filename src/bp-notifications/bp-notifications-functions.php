@@ -495,7 +495,7 @@ function bp_notifications_check_notification_access( $user_id, $notification_id 
  * Get a count of unread notification items for a user.
  *
  * @since BuddyPress 1.9.0
- * @since BuddyBoss [BBVERSION] No longer keeps its own cache; relies on BP_Notifications_Notification::get_total_count().
+ * @since BuddyBoss 3.8.1 No longer keeps its own cache; relies on BP_Notifications_Notification::get_total_count().
  *
  * @param int $user_id ID of the user whose unread notifications are being
  *                     counted.
@@ -1881,7 +1881,7 @@ function bb_notifications_on_screen_get_where_conditions( $where_sql, $tbl_alias
  * then this notification will only for read purpose.
  *
  * @since BuddyBoss 2.2.7
- * @since BuddyBoss [BBVERSION] Resolve the triggering user from item_id for the legacy
+ * @since BuddyBoss 3.8.1 Resolve the triggering user from item_id for the legacy
  *                              'friendship_request' and 'friendship_accepted' actions.
  *
  * @param object $notification Notification item.
