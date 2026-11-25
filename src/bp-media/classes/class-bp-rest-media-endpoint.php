@@ -3804,9 +3804,18 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 	 *
 	 * @param BP_Media $media Media object.
 	 *
+	 * @since BuddyBoss [BBVERSION] Covers comment, forum and message attachments.
+	 *
 	 * @return bool
 	 */
 	protected function bp_rest_check_privacy_restriction( $media ) {
+		// Comment, forum and message attachments follow the shared access check (PROD-10904).
+		if ( in_array( $media->privacy, array( 'comment', 'forums', 'message' ), true ) && function_exists( 'bb_media_user_can_access' ) ) {
+			$access = bb_media_user_can_access( $media->id, 'photo' );
+
+			return empty( $access['can_view'] );
+		}
+
 		$bool = ( 'onlyme' === $media->privacy && bp_loggedin_user_id() !== $media->user_id ) ||
 			(
 				'loggedin' === $media->privacy
