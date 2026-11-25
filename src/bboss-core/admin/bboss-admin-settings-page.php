@@ -27,19 +27,14 @@ defined( 'ABSPATH' ) || exit;
  * @since BuddyBoss 3.5.1
  *
  * @return array<string,string> Action names keyed by `install`, `activate`, `deactivate`.
+ *                              Empty in builds without the add-on handlers; callers then
+ *                              fall back to a plain link.
  */
 function bboss_admin_settings_get_addon_ajax_actions() {
-	$plugin_id = defined( 'BBOSS_PLATFORM_EDITION' ) ? BBOSS_PLATFORM_EDITION : 'buddyboss-platform';
+	$actions = array();
 
-	if ( class_exists( '\BuddyBoss\Core\Admin\Mothership\BB_Plugin_Connector' ) ) {
-		$plugin_id = ( new \BuddyBoss\Core\Admin\Mothership\BB_Plugin_Connector() )->getDynamicPluginId();
-	}
 
-	return array(
-		'install'    => $plugin_id . '_addon_install',
-		'activate'   => $plugin_id . '_addon_activate',
-		'deactivate' => $plugin_id . '_addon_deactivate',
-	);
+	return $actions;
 }
 
 
@@ -233,6 +228,10 @@ function bboss_admin_settings_page() {
 		wp_enqueue_style( 'bb-admin-common-style' );
 	}
 
+	// Nonce for the add-on install / activate handlers. Empty in builds without those
+	// handlers, and the settings screen then never posts to them.
+	$addon_nonce = '';
+
 	// Localize script with admin data.
 	$groups_per_page_option = bboss_core_do_network_admin() ? 'buddyboss_page_bp_groups_network_per_page' : 'buddyboss_page_bp_groups_per_page';
 	$groups_per_page        = absint( get_user_option( $groups_per_page_option, get_current_user_id() ) );
@@ -250,10 +249,9 @@ function bboss_admin_settings_page() {
 		// list-table behavior).
 		'adminUrl'                  => esc_url( admin_url() ),
 		'ajaxNonce'                 => wp_create_nonce( 'bb_admin_settings' ),
-		'addonNonce'                => wp_create_nonce( 'mosh_addons' ),
-		// GroundLevel 9.x scopes the add-on AJAX actions to the (dynamic) plugin ID,
-		// e.g. `bb-platform-free_addon_install`. Resolve them server-side so the React
-		// settings screen never hardcodes an action name.
+		'addonNonce'                => $addon_nonce,
+		// The add-on AJAX action names are resolved server-side so the React settings
+		// screen never hardcodes one.
 		'addonActions'              => bboss_admin_settings_get_addon_ajax_actions(),
 		'logoUrl'                   => bboss()->plugin_url . 'bboss-core/images/admin/BBLogo.png',
 		'isReadyLaunch'             => function_exists( 'bboss_is_readylaunch_enabled' ) && bboss_is_readylaunch_enabled(),
