@@ -553,6 +553,7 @@ JS;
 			'footer'       => false,
 		);
 
+		// @bbwt-com-start wporg-libraries
 		if ( bp_is_active( 'media' ) ) {
 
 			$scripts['bp-nouveau-codemirror'] = array(
@@ -568,6 +569,7 @@ JS;
 			);
 
 		}
+		// @bbwt-com-end wporg-libraries
 
 		foreach ( $scripts as $handle => $script ) {
 			if ( ! isset( $script['file'] ) ) {
@@ -597,6 +599,15 @@ JS;
 			);
 
 			wp_register_script( $handle, $file, $data['dependencies'], $data['version'], $data['footer'] );
+		}
+
+		// Builds that do not bundle CodeMirror use the copy WordPress ships (it includes
+		// the css, javascript, htmlmixed and xml modes the text file previews need). The
+		// two handles stay registered, so whatever enqueues them keeps working.
+		if ( bp_is_active( 'media' ) && ! wp_script_is( 'bp-nouveau-codemirror', 'registered' ) ) {
+			wp_register_script( 'bp-nouveau-codemirror', false, array( 'wp-codemirror' ), $this->version, true );
+			wp_add_inline_script( 'bp-nouveau-codemirror', 'window.CodeMirror = window.CodeMirror || ( window.wp && window.wp.CodeMirror );' );
+			wp_register_script( 'bp-nouveau-codemirror-css', false, array( 'bp-nouveau-codemirror' ), $this->version, true );
 		}
 
 		wp_localize_script( 'bp-nouveau-messages-at', 'BP_Mentions_Options', bp_at_mention_default_options() );
