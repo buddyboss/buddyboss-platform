@@ -504,6 +504,25 @@ function bboss_moderation_content_report_popup() {
 add_action( 'wp_footer', 'bboss_moderation_content_report_popup' );
 
 /**
+ * Keep the report and block pop-ups hidden until they are opened.
+ *
+ * The pop-ups are printed in the footer of every front-end page and rely on the
+ * template pack's stylesheet to hide them. A page that loads no such stylesheet (an
+ * ordinary post or page on a site that uses ReadyLaunch with a third-party theme)
+ * showed all three as plain text at the bottom of the page. The pop-up script removes
+ * the `mfp-hide` class when it opens one, so this rule never keeps an opened pop-up hidden.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bboss_moderation_popups_hidden_style() {
+	wp_register_style( 'bb-moderation-popups', false, array(), bboss_get_version() );
+	wp_enqueue_style( 'bb-moderation-popups' );
+	wp_add_inline_style( 'bb-moderation-popups', '.moderation-popup.mfp-hide{display:none !important;}' );
+}
+
+add_action( 'wp_enqueue_scripts', 'bboss_moderation_popups_hidden_style' );
+
+/**
  * Function to add the block user button in customizer section
  *
  * @since BuddyBoss 1.5.6
