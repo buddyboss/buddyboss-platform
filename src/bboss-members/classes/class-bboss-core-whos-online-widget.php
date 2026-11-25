@@ -200,7 +200,7 @@ class BBoss_Core_Whos_Online_Widget extends WP_Widget {
 			$connection_html = ob_get_clean();
 		}
 
-		$refresh_online_users = '<a href="" class="bs-widget-reload bs-heartbeat-reload hide" aria-label="' . esc_attr__( 'Reload', 'buddyboss' ) . '"><i class="bb-icon-spin6"></i></a>';
+		$refresh_online_users = '<a href="" class="bs-widget-reload bs-heartbeat-reload hide" hidden aria-label="' . esc_attr__( 'Reload', 'buddyboss' ) . '"><i class="bb-icon-l bb-icon-spinner animate-spin"></i></a>';
 
 		echo wp_kses_post( $args['before_widget'] ) . wp_kses_post( $args['before_title'] ) . esc_html( $title ) . wp_kses_post( $refresh_online_users ) . wp_kses_post( $args['after_title'] );
 

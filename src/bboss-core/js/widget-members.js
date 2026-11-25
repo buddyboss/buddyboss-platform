@@ -29,7 +29,7 @@ jQuery( document ).ready(
 					if ( jQuery( '#recently-active-members' ).length ) {
 						data.buddyboss_members_widget_active = jQuery( '#recently-active-members' ).data( 'max' );
 					}
-					jQuery( '.bs-heartbeat-reload' ).removeClass( 'hide' );
+					jQuery( '.bs-heartbeat-reload' ).removeClass( 'hide' ).prop( 'hidden', false );
 				}
 			);
 
@@ -67,7 +67,7 @@ jQuery( document ).ready(
 						jQuery( '.widget_bp_core_members_widget' ).find('#members-list').html( data.buddyboss_members_widget_active );
 					}
 
-					jQuery( '.bs-heartbeat-reload' ).addClass( 'hide' );
+					jQuery( '.bs-heartbeat-reload' ).addClass( 'hide' ).prop( 'hidden', true );
 				}
 			);
 
