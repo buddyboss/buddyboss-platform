@@ -1216,7 +1216,7 @@ function bbp_get_reply_author_display_name( $reply_id = 0, $viewer_user_id = 0 )
 
 	// Encode possible UTF8 display names (utf8_encode() is deprecated since PHP 8.2).
 	// wp_is_valid_utf8() was added in WP 6.9.0; fall back to seems_utf8() on older versions.
-	$bbp_is_valid_utf8 = function_exists( 'wp_is_valid_utf8' ) ? wp_is_valid_utf8( $author_name ) : seems_utf8( $author_name );
+	$bbp_is_valid_utf8 = function_exists( 'wp_is_valid_utf8' ) ? wp_is_valid_utf8( $author_name ) : seems_utf8( $author_name ); // phpcs:ignore WordPress.WP.DeprecatedFunctions.seems_utf8Found -- fallback for WordPress older than 6.9 only.
 	if ( false === $bbp_is_valid_utf8 && function_exists( 'mb_convert_encoding' ) ) {
 		$author_name = mb_convert_encoding( $author_name, 'UTF-8', 'ISO-8859-1' );
 	}

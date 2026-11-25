@@ -288,7 +288,7 @@ abstract class BP_Attachment {
 	 */
 	public function sanitize_utf8_filename( $retval ) {
 		// wp_is_valid_utf8() was added in WP 6.9.0 (seems_utf8() is deprecated there); fall back on older versions.
-		$is_utf8 = function_exists( 'wp_is_valid_utf8' ) ? wp_is_valid_utf8( $retval ) : seems_utf8( $retval );
+		$is_utf8 = function_exists( 'wp_is_valid_utf8' ) ? wp_is_valid_utf8( $retval ) : seems_utf8( $retval ); // phpcs:ignore WordPress.WP.DeprecatedFunctions.seems_utf8Found -- fallback for WordPress older than 6.9 only.
 
 		// PHP 5.4+ or with PECL intl 2.0+
 		if ( function_exists( 'transliterator_transliterate' ) && $is_utf8 ) {
@@ -302,7 +302,7 @@ abstract class BP_Attachment {
 			$new_retval = wp_check_invalid_utf8( $retval, true );
 
 			// Still here? use iconv().
-			if ( empty( $new_retval ) && function_exists( 'iconv' ) && ( function_exists( 'wp_is_valid_utf8' ) ? wp_is_valid_utf8( $retval ) : seems_utf8( $retval ) ) ) {
+			if ( empty( $new_retval ) && function_exists( 'iconv' ) && ( function_exists( 'wp_is_valid_utf8' ) ? wp_is_valid_utf8( $retval ) : seems_utf8( $retval ) ) ) { // phpcs:ignore WordPress.WP.DeprecatedFunctions.seems_utf8Found -- fallback for WordPress older than 6.9 only.
 				$retval = iconv( 'UTF-8', 'ASCII//TRANSLIT//IGNORE', $retval );
 			} else {
 				$retval = $new_retval;
