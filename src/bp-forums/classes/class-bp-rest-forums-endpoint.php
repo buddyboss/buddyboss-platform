@@ -367,10 +367,16 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 			);
 		}
 
-		if ( true === $retval && is_user_logged_in() && isset( $forum->post_type ) ) {
+		if ( true === $retval && isset( $forum->post_type ) ) {
 			$post_type = get_post_type_object( $forum->post_type );
 
-			if ( ! current_user_can( $post_type->cap->read_post, $forum->ID ) ) {
+			// read_forum always fails for guests, so limit them to published forums outside private/hidden groups.
+			// Members also need access to the forum's group, and hidden forums need read_hidden_forums, like the website.
+			$can_read = is_user_logged_in()
+				? current_user_can( $post_type->cap->read_post, $forum->ID ) && $this->bb_rest_member_can_read_forum( $forum->ID )
+				: bbp_get_public_status_id() === $forum->post_status && $this->can_access_content( $forum->ID );
+
+			if ( ! $can_read ) {
 				$retval = new WP_Error(
 					'bp_rest_authorization_required',
 					__( 'Sorry, you are not allowed to access this forum.', 'buddyboss' ),
@@ -1258,6 +1264,38 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 				&& ( ! bbp_is_user_keymaster() ? bbp_is_forum_open( (int) $forum_id ) : true )
 			),
 		);
+	}
+
+	/**
+	 * Whether the logged-in member may read a forum, its topics and replies, like the website.
+	 *
+	 * The read_forum capability alone lets any forum participant read private and hidden group forums and
+	 * hidden forums, because hidden forums map to read_private_forums. Group forums (and their sub-forums) follow group access; other hidden
+	 * forums (and forums under one) need read_hidden_forums. Moderators and items without a forum are allowed.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param int $forum_id Forum ID.
+	 *
+	 * @return bool
+	 */
+	public function bb_rest_member_can_read_forum( $forum_id ) {
+		$forum_id = (int) $forum_id;
+
+		if ( empty( $forum_id ) || bp_current_user_can( 'bp_moderate' ) ) {
+			return true;
+		}
+
+		// Group forums and their sub-forums follow group access.
+		if ( bp_is_active( 'groups' ) && function_exists( 'bbp_forum_recursive_group_id' ) && bbp_forum_recursive_group_id( $forum_id ) ) {
+			return $this->can_access_content( $forum_id );
+		}
+
+		if ( bbp_is_forum_hidden( $forum_id ) && ! current_user_can( 'read_hidden_forums' ) ) {
+			return false;
+		}
+
+		return $this->can_access_content( $forum_id );
 	}
 
 	/**
