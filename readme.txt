@@ -3,7 +3,7 @@ Contributors: buddyboss
 Requires at least: 4.9.1
 Tested up to: 7.1
 Requires PHP: 7.4.0
-Stable tag: 3.8.0
+Stable tag: 3.8.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -55,6 +55,28 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 3.8.1 =
+* Bug: Activity - Fixed an issue where the close button on the discussion quick reply window did not work in the activity feed
+* Bug: Activity - Fixed an issue where the Edit option disappeared from the activity More Options menu when commenting was turned off
+* Bug: Activity - Fixed an issue where the emoji picker and topic dropdown were cut off on mobile and tablet screens in the post form
+* Bug: Blog - Fixed an issue where Member Blog pagination links broke and ignored the selected sort order
+* Bug: Core - Fixed a critical error that could make the website unavailable on the front end
+* Bug: Email - Fixed an issue where custom links could not be added in the email template editor
+* Bug: Email - Fixed an issue where WordPress system emails contained invalid markup around the user avatar
+* Bug: Groups - Fixed an issue where group members did not load when editing a group in the admin while BuddyPress Group Email Subscription was active
+* Bug: Groups - Fixed issues with the member search in group Manage > Members, including the reset button, the Enter key, and searches stopping after the first letter
+* Bug: Media - Fixed an issue where PHP symlink warnings flooded the error log on every media page load
+* Bug: Media - Fixed an issue where renaming a document or folder to an empty name appeared to succeed without showing an error
+* Bug: Members Account - Fixed an issue where saving an unchanged email address containing an apostrophe or ampersand created a false pending email change
+* Bug: Notifications - Fixed an issue where admins viewing another member's notification settings saw their own preferences instead
+* Bug: Notifications - Fixed an issue where notification counts could show incorrect numbers
+* Bug: Notifications - Fixed an issue where some notifications were incorrectly treated as read-only
+* Bug: Security - Fixed a security issue related to access to private activity content
+* Bug: Security - Fixed a security issue related to document privacy settings
+* Bug: Security - Fixed a security issue related to member invitations in the REST API
+* Bug: Security - Fixed a security issue related to renaming documents
+* Bug: Security - Fixed several security issues in the REST API related to access permissions
 
 = 3.8.0 =
 * Enhancement: Members - Added an option to load member and group lists with infinite scroll

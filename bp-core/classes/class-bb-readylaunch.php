@@ -2306,7 +2306,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 
 			// Verify nonce.
 			if (
-				! empty( $nonce ) &&
+				empty( $nonce ) ||
 				! wp_verify_nonce( $nonce, 'bb_rl_invite_form_action' )
 			) {
 				$response['message'] = esc_html__( 'Nonce verification failed.', 'buddyboss' );
@@ -2342,6 +2342,18 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 
 			$name        = isset( $_POST['bb-rl-invite-name'] ) ? sanitize_text_field( wp_unslash( $_POST['bb-rl-invite-name'] ) ) : '';
 			$member_type = isset( $_POST['bb-rl-invite-type'] ) ? sanitize_text_field( wp_unslash( $_POST['bb-rl-invite-type'] ) ) : '';
+
+			// The invitee's profile type maps to WP roles at activation, so only a type the
+			// form offers this inviter may be stored. Matches bp-invites/actions/invites.php.
+			if ( '' !== $member_type && ! bb_is_member_type_allowed_on_invite( $member_type ) ) {
+				$member_type = '';
+			}
+
+			// A name is plain text; a serialized PHP value stored as invite meta can be turned into an object by code
+			// that unserializes meta. Check what update_post_meta() will store, after its own wp_unslash().
+			if ( is_serialized( wp_unslash( $name ) ) ) {
+				wp_send_json_error( $response );
+			}
 
 			$subject = bp_disable_invite_member_email_subject() && ! empty( sanitize_text_field( wp_unslash( $_POST['bp_member_invites_custom_subject'] ) ) )
 				? stripslashes( wp_strip_all_tags( sanitize_text_field( wp_unslash( $_POST['bp_member_invites_custom_subject'] ) ) ) )
@@ -4625,6 +4637,12 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				wp_send_json_error( $response );
 			}
 
+			// A rename needs a title; don't report success when nothing is renamed.
+			if ( $update_name && '' === trim( (string) $name ) ) {
+				$response['feedback'] = esc_html__( 'Please enter a title.', 'buddyboss' );
+				wp_send_json_error( $response );
+			}
+
 			$result = array(
 				'document_id' => $document_id,
 				'type'        => $type,
@@ -4639,7 +4657,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				}
 
 				// Update name if requested.
-				if ( $update_name && ! empty( $name ) ) {
+				if ( $update_name ) {
 					$renamed = bp_document_rename_file( $document_id, $attachment_document_id, $name );
 					if ( isset( $renamed['document_id'] ) && $renamed['document_id'] > 0 ) {
 						$result['name']    = $name;
@@ -4663,7 +4681,10 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 						'grouponly' !== $privacy &&
 						! empty( $document_object->id ) &&
 						0 === (int) $document_object->group_id &&
-						0 === (int) $document_object->folder_id
+						0 === (int) $document_object->folder_id &&
+						// Message, forum and comment items keep the privacy of where they were shared.
+						array_key_exists( $document_object->privacy, $document_visibilities ) &&
+						'grouponly' !== $document_object->privacy
 					) {
 						bp_document_update_privacy( $document_id, $privacy, 'document' );
 						$result['privacy']         = $privacy;
@@ -4706,7 +4727,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				}
 
 				// Update name if requested.
-				if ( $update_name && ! empty( $name ) ) {
+				if ( $update_name ) {
 					$renamed = bp_document_rename_folder( $document_id, $name );
 					if ( $renamed > 0 ) {
 						$result['name']    = $name;

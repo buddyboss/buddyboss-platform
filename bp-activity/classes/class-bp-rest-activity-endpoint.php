@@ -979,6 +979,17 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			}
 		}
 
+		// An `id` makes create overwrite that activity with no update checks, so only moderators may send one.
+		if ( true === $retval && ! empty( $request->get_param( 'id' ) ) && ! bp_current_user_can( 'bp_moderate' ) ) {
+			$retval = new WP_Error(
+				'bp_rest_activity_create_id_not_allowed',
+				__( 'Sorry, you are not allowed to edit an existing activity from here. Use the update endpoint instead.', 'buddyboss' ),
+				array(
+					'status' => rest_authorization_required_code(),
+				)
+			);
+		}
+
 		/**
 		 * Filter the activity `create_item` permissions check.
 		 *
@@ -1434,18 +1445,6 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 					)
 				);
 			} elseif (
-				function_exists( 'bb_is_close_activity_comments_enabled' ) &&
-				bb_is_close_activity_comments_enabled() &&
-				bb_is_activity_comments_closed( $activity->id )
-			) {
-				$retval = new WP_Error(
-					'bp_rest_authorization_required',
-					__( 'Sorry, you are not allowed to update this activity. The comments are closed for the activity.', 'buddyboss' ),
-					array(
-						'status' => rest_authorization_required_code(),
-					)
-				);
-			} elseif (
 				// A privacy-only change falls through to the bp_activity_user_can_delete() branch
 				// below, which is the same authority the website's privacy handler uses.
 				! $this->bb_rest_is_privacy_only_update( $request, $activity )
@@ -1557,6 +1556,44 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 				);
 			} elseif ( bp_activity_user_can_delete( $activity ) ) {
 				$retval = true;
+			}
+
+			// The update saves type and group as sent (the author is always kept, see prepare_item_for_database());
+			// like the website, members may not change the type, and may only move a post into a group they can post in.
+			if ( true === $retval && ! bp_current_user_can( 'bp_moderate' ) ) {
+				$current_user_id = bp_loggedin_user_id();
+
+				// Values sent in the request (null when not sent).
+				$sent_type      = $request->get_param( 'type' );
+				$sent_component = $request->get_param( 'component' );
+				$sent_item_id   = $request->get_param( 'primary_item_id' );
+
+				// Where the activity will be after this update, worked out the way prepare_item_for_database() and
+				// bp_activity_add() save it: with component 'groups' the sent primary_item_id only goes to group_id,
+				// which the update ignores, so the stored item_id stays the group.
+				$new_component = ! empty( $sent_component ) ? $sent_component : $activity->component;
+				$to_groups     = bp_is_active( 'groups' ) && buddypress()->groups->id === $new_component;
+				$new_group_id  = null !== $sent_item_id && ! $to_groups ? (int) $sent_item_id : (int) $activity->item_id;
+
+				// 1. Type: a sent type that isn't the current type.
+				$changes_type = ! empty( $sent_type ) && $sent_type !== $activity->type;
+
+				// 2. Group: the activity ends up in a group (component 'groups') other than where it is now,
+				// and the member can't post there (or there is no group to post in).
+				$changes_place  = $new_component !== $activity->component || $new_group_id !== (int) $activity->item_id;
+				$moves_to_group = $to_groups && $changes_place;
+				$can_post_there = $moves_to_group && ! empty( $new_group_id ) && ( groups_is_user_member( $current_user_id, $new_group_id ) || groups_is_user_allowed_posting( $current_user_id, $new_group_id ) );
+				$blocked_group  = $moves_to_group && ! $can_post_there;
+
+				if ( $changes_type || $blocked_group ) {
+					$retval = new WP_Error(
+						'bp_rest_authorization_required',
+						__( 'Sorry, you are not allowed to change the type or group of this activity.', 'buddyboss' ),
+						array(
+							'status' => rest_authorization_required_code(),
+						)
+					);
+				}
 			}
 		}
 
