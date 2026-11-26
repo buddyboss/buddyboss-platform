@@ -298,9 +298,9 @@ if ( bp_has_members( $members_query_string ) ) :
 						<div class="bb_more_options_list bb_more_dropdown bb-rl-context-dropdown">
 							<?php bp_get_template_part( 'common/more-options-view' ); ?>
 							<?php
-							echo wp_kses_post( $member_switch_button );
-							echo wp_kses_post( $member_report_button );
-							echo wp_kses_post( $member_block_button );
+							echo wp_kses_post( (string) $member_switch_button );
+							echo wp_kses_post( (string) $member_report_button );
+							echo wp_kses_post( (string) $member_block_button );
 							?>
 						</div>
 						<div class="bb_more_dropdown_overlay"></div>
