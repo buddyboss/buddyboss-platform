@@ -238,6 +238,10 @@ class BB_Admin_Moderation_Ajax {
 			update_term_meta( $term_id, self::META_KEY, $show_when );
 		}
 
+		// Once an admin customises a default category, stop re-translating
+		// it back to the shipped English name/description at render time.
+		update_term_meta( $term_id, '_bp_moderation_category_customized', 1 );
+
 		$term     = get_term( $term_id, self::TAXONOMY );
 		$meta_val = get_term_meta( $term_id, self::META_KEY, true );
 		$show_val = ! empty( $meta_val ) ? $meta_val : 'content';
