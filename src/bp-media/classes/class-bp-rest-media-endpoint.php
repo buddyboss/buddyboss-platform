@@ -1942,6 +1942,9 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 
 			$media_activity_id = $activity_id;
 
+			// True when the media was moved into another album from a multi-media activity.
+			$is_moved_media = false;
+
 			$parent_activity = get_post_meta( $wp_attachment_id, 'bp_media_parent_activity_id', true );
 			if ( ! empty( $parent_activity ) && bp_is_active( 'activity' ) ) {
 				$activity_id = $parent_activity;
@@ -1995,15 +1998,24 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 				}
 
 				$created_media_ids[] = $media_id;
+
+				$is_moved_media = ! empty( $parent_activity ) && bb_media_is_moved_from_parent_activity( $media_id, $parent_activity );
 			}
 
-			if ( ! empty( $all_medias ) ) {
+			if ( $is_moved_media ) {
+				// The moved media's album controls its privacy. Leave the original activity and its other media as they are.
+				$activity_id = false;
+			} elseif ( ! empty( $all_medias ) ) {
 				foreach ( $all_medias as $m_id ) {
 					$media = new BP_Media( $m_id );
 					if ( ! empty( $media->id ) ) {
 						$created_media_ids[] = $media->id;
-						$media->privacy      = $media_privacy;
-						$media->save();
+
+						// Media moved from this activity into another album keeps its album privacy.
+						if ( ! bb_media_is_moved_from_parent_activity( $media, $parent_activity ) ) {
+							$media->privacy = $media_privacy;
+							$media->save();
+						}
 					}
 				}
 			}

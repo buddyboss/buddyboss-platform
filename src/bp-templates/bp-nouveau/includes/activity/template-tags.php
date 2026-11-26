@@ -1300,12 +1300,11 @@ function bp_nouveau_activity_privacy() {
 			} else {
 				$media_ids = $activity_metas['bp_media_ids'][0] ?? '';
 				if ( ! empty( $media_ids ) ) {
-					$media_ids = explode( ',', $media_ids );
-					$media_id  = ! empty( $media_ids ) ? $media_ids[0] : false;
-					$media     = new BP_Media( $media_id );
+					// Only an album post when all its media are in the same album, not when one media was moved to an album.
+					$activity_album_id = bb_media_get_activity_album_id( bp_get_activity_id(), $media_ids );
 
-					if ( ! empty( $media->album_id ) ) {
-						$album_id       = $media->album_id;
+					if ( ! empty( $activity_album_id ) ) {
+						$album_id       = $activity_album_id;
 						$album          = new BP_Media_Album( $album_id );
 						$privacy        = $album->privacy;
 						$album_url      = trailingslashit( bp_core_get_user_domain( $album->user_id ) . bp_get_media_slug() . '/albums/' . $album_id );

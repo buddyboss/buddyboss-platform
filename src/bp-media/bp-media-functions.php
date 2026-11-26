@@ -3050,6 +3050,9 @@ function bp_media_move_media_to_album( $media_id = 0, $album_id = 0, $group_id =
 	$media->menu_order   = 0;
 	$media->save();
 
+	// Album media lists are cached, so reset them now that the media changed album.
+	bp_media_reset_cache_incrementor();
+
 	// Update media activity privacy.
 	if ( ! empty( $media ) && ! empty( $media->attachment_id ) ) {
 
@@ -3186,6 +3189,98 @@ function bb_media_get_multi_media_parent_activity( $media ) {
 	$parent_activity = new BP_Activity_Activity( $parent_activity_id );
 
 	return ! empty( $parent_activity->id ) ? $parent_activity : false;
+}
+
+/**
+ * Get the album an activity post was created in.
+ *
+ * Uses the 'bp_media_album_activity' meta. Older posts may not have that meta, so it falls back
+ * to the album shared by every media of the activity. A media that was moved to an album later
+ * does not make the whole post an album post.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int          $activity_id Activity ID.
+ * @param array|string $media_ids   Optional. Media IDs of the activity. Read from the activity meta when empty.
+ *
+ * @return int Album ID or 0 when the activity was not created in an album.
+ */
+function bb_media_get_activity_album_id( $activity_id, $media_ids = array() ) {
+	$activity_id = (int) $activity_id;
+
+	if ( empty( $activity_id ) || ! bp_is_active( 'activity' ) ) {
+		return 0;
+	}
+
+	$album_id = (int) bp_activity_get_meta( $activity_id, 'bp_media_album_activity', true );
+	if ( ! empty( $album_id ) ) {
+		return $album_id;
+	}
+
+	if ( empty( $media_ids ) ) {
+		$media_ids = bp_activity_get_meta( $activity_id, 'bp_media_ids', true );
+	}
+
+	$media_ids = ! empty( $media_ids ) ? wp_parse_id_list( $media_ids ) : array();
+	if ( empty( $media_ids ) ) {
+		return 0;
+	}
+
+	foreach ( $media_ids as $media_id ) {
+		$media = new BP_Media( $media_id );
+
+		// Every media must be in the same album.
+		if ( empty( $media->album_id ) || ( ! empty( $album_id ) && (int) $media->album_id !== $album_id ) ) {
+			return 0;
+		}
+
+		$album_id = (int) $media->album_id;
+	}
+
+	return $album_id;
+}
+
+/**
+ * Check whether a media of a multi-media activity was moved into an album other than the activity's album.
+ *
+ * Such media stays in the original post, but its privacy follows its album, not the post.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param BP_Media|int $media              Media object or media ID.
+ * @param int          $parent_activity_id Optional. Parent activity ID. Read from the attachment meta when empty.
+ *
+ * @return bool True when the media was moved to another album, otherwise false.
+ */
+function bb_media_is_moved_from_parent_activity( $media, $parent_activity_id = 0 ) {
+	if ( ! bp_is_active( 'activity' ) ) {
+		return false;
+	}
+
+	if ( is_numeric( $media ) ) {
+		$media = new BP_Media( (int) $media );
+	}
+
+	if ( empty( $media->id ) || empty( $media->album_id ) || empty( $media->attachment_id ) ) {
+		return false;
+	}
+
+	if ( empty( $parent_activity_id ) ) {
+		$parent_activity_id = (int) get_post_meta( $media->attachment_id, 'bp_media_parent_activity_id', true );
+	}
+
+	if ( empty( $parent_activity_id ) ) {
+		return false;
+	}
+
+	$parent_media_ids = bp_activity_get_meta( $parent_activity_id, 'bp_media_ids', true );
+	$parent_media_ids = ! empty( $parent_media_ids ) ? wp_parse_id_list( $parent_media_ids ) : array();
+
+	if ( count( $parent_media_ids ) < 2 || ! in_array( (int) $media->id, $parent_media_ids, true ) ) {
+		return false;
+	}
+
+	return (int) $media->album_id !== bb_media_get_activity_album_id( $parent_activity_id, $parent_media_ids );
 }
 
 /**

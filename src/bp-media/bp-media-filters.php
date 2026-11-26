@@ -457,11 +457,7 @@ function bp_media_update_media_privacy( $album ) {
 				$video_main_activity_id = get_post_meta( $attachment_id, 'bp_video_parent_activity_id', true );
 
 				// Media moved into this album from a multi-media post must not change that post's privacy.
-				if (
-					! empty( $main_activity_id ) &&
-					bb_media_get_multi_media_parent_activity( $media_obj ) &&
-					(int) bp_activity_get_meta( $main_activity_id, 'bp_media_album_activity', true ) !== (int) $album->id
-				) {
+				if ( ! empty( $main_activity_id ) && bb_media_is_moved_from_parent_activity( $media_obj, $main_activity_id ) ) {
 					$main_activity_id = 0;
 				}
 
@@ -1117,10 +1113,12 @@ function bp_media_activity_update_media_privacy( $activity ) {
 		foreach ( $media_ids as $media_id ) {
 			$media = new BP_Media( $media_id );
 			// Do not update the privacy if the media is added to forum.
+			// Media moved from this post into another album keeps its album privacy.
 			if (
 				! in_array( $media->privacy, array( 'forums', 'message', 'media', 'document', 'grouponly', 'video' ), true ) &&
 				'comment' !== $media->privacy &&
-				! empty( $media->blog_id )
+				! empty( $media->blog_id ) &&
+				! bb_media_is_moved_from_parent_activity( $media, $activity->id )
 			) {
 				$media->privacy = $activity->privacy;
 				$media->save();
@@ -1919,7 +1917,8 @@ function bp_media_get_edit_activity_data( $activity ) {
 					'menu_order'    => $media->menu_order,
 				);
 
-				if ( 0 === $album_id && $media->album_id > 0 ) {
+				// A media moved to an album from this post does not make the post an album post.
+				if ( 0 === $album_id && $media->album_id > 0 && ! bb_media_is_moved_from_parent_activity( $media, $activity['id'] ) ) {
 					$album_id                     = $media->album_id;
 					$activity['can_edit_privacy'] = false;
 				}
