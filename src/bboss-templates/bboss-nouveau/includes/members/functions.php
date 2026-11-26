@@ -52,7 +52,7 @@ function bboss_nouveau_get_members_directory_nav_items() {
 					'component' => 'members',
 					'slug'      => 'following', // slug is used because BP_Core_Nav requires it, but it's the scope
 					'li_class'  => array(),
-					'link'      => bboss_loggedin_user_domain() . bboss_get_follow_slug() . '/my-following/',
+					'link'      => bboss_get_members_directory_permalink(), // The tab is a scope of this directory; a member has no screen at the follow slug.
 					'text'      => __( 'Following', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'position'  => 16,
 					'count'     => false,
@@ -65,7 +65,7 @@ function bboss_nouveau_get_members_directory_nav_items() {
 					'component' => 'members',
 					'slug'      => 'followers', // slug is used because BP_Core_Nav requires it, but it's the scope
 					'li_class'  => array(),
-					'link'      => bboss_loggedin_user_domain() . bboss_get_follow_slug() . '/my-followers/',
+					'link'      => bboss_get_members_directory_permalink(), // The tab is a scope of this directory; a member has no screen at the follow slug.
 					'text'      => __( 'Followers', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					'count'     => false,
 					'position'  => 16,
