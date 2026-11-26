@@ -7325,6 +7325,33 @@ function bb_get_activity_comment_loading( $default = 10 ) {
 }
 
 /**
+ * Get the sort direction of the activity comment query.
+ *
+ * Reads the direction of the first ORDER BY column after the `bp_activity_comments_get_misc_sql`
+ * filter, so the "View more comments" paging moves the same way as the query. This is the
+ * default of the `bb_activity_recurse_comments_order_by` filter, which can still override it.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return string 'ASC' or 'DESC'.
+ */
+function bb_get_activity_comments_order() {
+
+	/** This filter is documented in bp-activity/classes/class-bp-activity-activity.php */
+	$misc_sql = apply_filters( 'bp_activity_comments_get_misc_sql', BP_Activity_Activity::COMMENTS_ORDER_SQL );
+
+	if (
+		is_string( $misc_sql ) &&
+		preg_match( '/ORDER\s+BY\s+([^,]+)/i', $misc_sql, $matches ) &&
+		preg_match( '/\bDESC\b/i', $matches[1] )
+	) {
+		return 'DESC';
+	}
+
+	return 'ASC';
+}
+
+/**
  * Get the ancestor chain info for an activity comment.
  *
  * Traverses up the comment tree in a single pass to build the full ancestor
