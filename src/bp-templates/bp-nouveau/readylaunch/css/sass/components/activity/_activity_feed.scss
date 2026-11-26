@@ -79,6 +79,7 @@
 .activity-topic-selector {
 	flex: 1;
 	min-width: 0;
+	width: 0; // Grow from zero, so the topic pills cannot stretch the page column wider than the screen.
 
 	> ul {
 		display: flex;
@@ -90,6 +91,7 @@
 		> li {
 			position: relative;
 			padding: 0;
+			flex-shrink: 0; // Keep the real width, wrapNavigation() measures it to decide what goes under "More".
 
 			> a {
 				display: block;
@@ -2084,6 +2086,7 @@
 
 	.activity-topic-selector {
 		max-width: 100%;
+		width: auto;
 
 		.bb-rl-group-details & {
 			min-width: 100%;
