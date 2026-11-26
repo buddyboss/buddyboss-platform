@@ -130,6 +130,28 @@ spl_autoload_register(
 	}
 );
 
+// Old names a bundled sibling plugin declares itself (bboss-compat-shared-classes.php): when that
+// plugin is not active, load Platform's class; the alias next to its declaration does the rest.
+if ( is_file( __DIR__ . '/bboss-compat-shared-classes.php' ) ) {
+	spl_autoload_register(
+		static function ( $class ) {
+			static $shared = null;
+			if ( null === $shared ) {
+				$shared = require __DIR__ . '/bboss-compat-shared-classes.php';
+			}
+			$key = strtolower( ltrim( (string) $class, '\\' ) );
+			if ( ! isset( $shared[ $key ] ) || function_exists( $shared[ $key ]['unless'] ) ) {
+				return;
+			}
+			$new = $shared[ $key ]['new'];
+			$old = $shared[ $key ]['old'];
+			if ( ( class_exists( $new ) || interface_exists( $new ) || trait_exists( $new ) ) && ! class_exists( $old, false ) && ! interface_exists( $old, false ) && ! trait_exists( $old, false ) ) {
+				class_alias( $new, $old, false );
+			}
+		}
+	);
+}
+
 bb_compat_import_constants();
 
 /**
