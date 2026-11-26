@@ -681,7 +681,7 @@ class BB_Feature_Registry {
 		}
 
 		_deprecated_argument(
-			__CLASS__ . '::' . $caller,
+			esc_html( __CLASS__ . '::' . $caller ),
 			'3.8.0',
 			sprintf(
 				/* translators: 1: old section ID, 2: current section ID */
