@@ -40,6 +40,7 @@ add_action( 'bp_actions', 'bp_activity_action_sitewide_feed' );
  * Load a user's personal activity feed.
  *
  * @since BuddyPress 1.0.0
+ * @since BuddyBoss 3.8.1 Uses the 'just-me' scope.
  *
  * @return bool False on failure.
  */
@@ -61,7 +62,12 @@ function bp_activity_action_personal_feed() {
 			'link'          => trailingslashit( bp_displayed_user_domain() . bp_get_activity_slug() ),
 			/* translators: Activity feed for [User Display Name]. */
 			'description'   => sprintf( __( 'Activity feed for %s.', 'buddyboss' ), $displayed_user_fullname ),
-			'activity_args' => 'user_id=' . bp_displayed_user_id(),
+			// The URL action 'feed' is no scope; ask for the timeline's own (PROD-10890). The
+			// scope compares user IDs strictly, so keep the ID an integer.
+			'activity_args' => array(
+				'user_id' => bp_displayed_user_id(),
+				'scope'   => 'just-me',
+			),
 		)
 	);
 }

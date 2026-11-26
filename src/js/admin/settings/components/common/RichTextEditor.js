@@ -10,6 +10,120 @@
 import { useEffect, useRef } from '@wordpress/element';
 
 /**
+ * Open WordPress's link modal for a TinyMCE editor.
+ *
+ * wpLink only treats a link as the one being edited when it carries
+ * data-wplink-edit, which core's WP_Link command normally adds first.
+ * Mark the link under the selection the same way, so editing a link opens
+ * with its URL and "Open link in a new tab" filled in and keeps its target.
+ * Without a link, wpLink inserts a new one around the selection.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {Object} editor TinyMCE editor instance.
+ */
+function openLinkModal( editor ) {
+	var linkNode = editor.dom.getParent( editor.selection.getStart(), 'a[href]' );
+
+	// Same as core's getSelectedLink(): the selection can wrap a whole link.
+	if ( ! linkNode ) {
+		var html = editor.selection.getContent( { format: 'raw' } );
+		var href = html && -1 !== html.indexOf( '</a>' ) ? html.match( /href="([^">]+)"/ ) : null;
+
+		if ( href && href[ 1 ] ) {
+			linkNode = editor.$( 'a[href="' + href[ 1 ] + '"]', editor.selection.getStart() )[ 0 ];
+
+			if ( linkNode ) {
+				editor.selection.select( linkNode );
+			}
+		}
+	}
+
+	// Clear a mark left by an earlier open, then mark the link being edited.
+	editor.$( 'a[data-wplink-edit]' ).attr( 'data-wplink-edit', null );
+
+	if ( linkNode ) {
+		editor.dom.setAttribs( linkNode, { 'data-wplink-edit': true } );
+	}
+
+	window.wpLink.open( editor.id );
+}
+
+/**
+ * Open WordPress's link modal from an editor's link button and Ctrl/Cmd+K.
+ *
+ * The wplink plugin's inline link toolbar hides itself in these editors,
+ * because it expects the editor toolbar above the text area and the Settings
+ * screens show it below. Call from the TinyMCE setup callback; the command is
+ * registered on init, after the wplink plugin has added its own WP_Link.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {Object} editor TinyMCE editor instance.
+ */
+export function addLinkModalCommand( editor ) {
+	editor.on( 'init', function () {
+		if ( window.wpLink ) {
+			editor.addCommand( 'WP_Link', function () {
+				openLinkModal( editor );
+			} );
+		}
+	} );
+}
+
+/**
+ * Remove the attributes the wplink plugin adds to links while editing.
+ *
+ * TinyMCE's getContent() and the last value sent through onChange skip the
+ * wplink plugin's "savecontent" cleanup, so they can still carry the edit
+ * mark and the "link may be broken" flag. Remove them the same way core does
+ * when it saves, so they are never stored with the content.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {*} content Editor content.
+ * @returns {*} Content without the wplink editing attributes. Non-strings are returned unchanged.
+ */
+export function stripLinkEditorAttributes( content ) {
+	if ( 'string' !== typeof content || -1 === content.indexOf( 'data-wplink-' ) ) {
+		return content;
+	}
+
+	return content.replace( /<a [^>]+>/g, function ( tag ) {
+		return tag.replace( / data-wplink-(?:edit|url-error)="true"/g, '' );
+	} );
+}
+
+/**
+ * Get the HTML content of a TinyMCE editor, including Code tab edits.
+ *
+ * For content that is stored as HTML (activity posts and comments, forum and
+ * discussion descriptions, forum replies) rather than in the paragraph-free
+ * format of getRichTextEditorContent(). In the Code tab TinyMCE is hidden and
+ * its content is stale, so load the textarea into it first, the same way
+ * switching back to the Visual tab does, then read it.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {string} editorId Editor ID.
+ * @param {string} fallback Value to return when the editor is not available.
+ * @returns {string} Editor content.
+ */
+export function getRichTextEditorHtml( editorId, fallback ) {
+	var editor = window.tinymce ? window.tinymce.get( editorId ) : null;
+
+	if ( ! editor ) {
+		return stripLinkEditorAttributes( fallback );
+	}
+
+	if ( editor.isHidden() ) {
+		editor.load();
+	}
+
+	return stripLinkEditorAttributes( editor.getContent() );
+}
+
+/**
  * Forcefully remove any existing TinyMCE editor for the given ID.
  *
  * Cleans up TinyMCE, WordPress editor API, and QTags instances.
@@ -63,6 +177,9 @@ export function forceRemoveEditor( editorId ) {
  * @returns {string} Editor content.
  */
 export function getRichTextEditorContent( editorId, fallback ) {
+	// The fallback is the last onChange value, which skipped the wplink cleanup.
+	fallback = stripLinkEditorAttributes( fallback );
+
 	if ( ! window.wp || ! window.wp.editor ) {
 		return fallback;
 	}
@@ -70,7 +187,7 @@ export function getRichTextEditorContent( editorId, fallback ) {
 	if ( 'function' === typeof window.wp.editor.getContent ) {
 		var content = window.wp.editor.getContent( editorId );
 		if ( 'string' === typeof content ) {
-			return content;
+			return stripLinkEditorAttributes( content );
 		}
 	}
 
@@ -147,6 +264,8 @@ export function RichTextEditor( { id, label, value, onChange } ) {
 								editor.on( 'change keyup', function () {
 									onChangeRef.current( editor.getContent() );
 								} );
+
+								addLinkModalCommand( editor );
 
 								// Edits in the Code tab don't fire TinyMCE events: typing
 								// fires input and the Code tab buttons fire change on the

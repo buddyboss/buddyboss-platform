@@ -4624,8 +4624,8 @@ function bp_assign_default_member_type_to_activate_user( $user_id, $key, $user )
 		 *
 		 * The admin-configured default registration type is unaffected. The
 		 * send-invite type is NOT admin-only — any member who can send invites
-		 * chooses it — so it is gated separately, at its own input, by
-		 * bb_is_member_type_allowed_on_invite() in bp_member_invite_submit().
+		 * chooses it — so it is gated separately: at each invite input, and
+		 * again when applied, by bb_get_invite_allowed_member_type().
 		 */
 		if (
 			'' !== $get_selected_member_type_on_register
@@ -4662,7 +4662,7 @@ function bp_assign_default_member_type_to_activate_user( $user_id, $key, $user )
 
 				if ( $bp_get_invitee_email->have_posts() ) {
 
-					$member_type = get_post_meta( get_the_ID(), '_bp_invitee_member_type', true );
+					$member_type = bb_get_invite_allowed_member_type( $bp_get_invitee_email->posts[0]->ID );
 					// Check if user is invited for specific member type.
 					if ( isset( $member_type ) && ! empty( $member_type ) ) {
 
@@ -4843,7 +4843,7 @@ function bp_assign_default_member_type_to_activate_user_on_admin( $user_id ) {
 
 			if ( $bp_get_invitee_email->have_posts() ) {
 
-				$member_type = get_post_meta( get_the_ID(), '_bp_invitee_member_type', true );
+				$member_type = bb_get_invite_allowed_member_type( $bp_get_invitee_email->posts[0]->ID );
 				// Check if user is invited for specific member type.
 				if ( isset( $member_type ) && ! empty( $member_type ) ) {
 					// Assign the invited member type to user.
@@ -6195,24 +6195,27 @@ function bb_is_member_type_allowed_on_registration( $member_type_id ) {
  * path for any member who can send invites.
  *
  * @since BuddyBoss 3.5.0
+ * @since BuddyBoss 3.8.1 Added the `$inviter_id` parameter.
  *
  * @param string $member_type_key Profile type key submitted on the invite form.
+ * @param int    $inviter_id      Optional. Inviter to check. Default: the logged-in member.
  *
  * @return bool True when the type is offered to this inviter.
  */
-function bb_is_member_type_allowed_on_invite( $member_type_key ) {
+function bb_is_member_type_allowed_on_invite( $member_type_key, $inviter_id = 0 ) {
 	$member_type_key = is_string( $member_type_key ) ? trim( $member_type_key ) : '';
+	$inviter_id      = ! empty( $inviter_id ) ? (int) $inviter_id : bp_loggedin_user_id();
 
-	if ( '' === $member_type_key ) {
+	if ( '' === $member_type_key || empty( $inviter_id ) ) {
 		return false;
 	}
 
 	// The invitee type selector is only rendered when this gate passes.
-	if ( ! bp_check_member_send_invites_tab_member_type_allowed() ) {
+	if ( ! bp_check_member_send_invites_tab_member_type_allowed( $inviter_id ) ) {
 		return false;
 	}
 
-	$inviter_member_type = bp_get_member_type( bp_loggedin_user_id() );
+	$inviter_member_type = bp_get_member_type( $inviter_id );
 	$inviter_type_id     = ! empty( $inviter_member_type ) ? bp_member_type_post_by_type( $inviter_member_type ) : 0;
 
 	// Same source, and same fallback, the dropdown iterates.
@@ -6234,29 +6237,60 @@ function bb_is_member_type_allowed_on_invite( $member_type_key ) {
 }
 
 /**
- * Get the cache context for profile type visibility queries.
+ * Get the profile type stored on an invite, if its inviter may still choose it.
  *
- * Queries such as {@see bp_get_removed_member_types()} and
- * {@see bp_get_hidden_member_types()} read per-language visibility settings:
- * multilingual plugins filter them to the current language's posts, and each
- * translation can toggle its own "hide" settings. Their results therefore
- * cannot be cached under a single shared entry. This context string scopes the
- * cached result; multilingual compatibility layers (e.g. WPML) filter it to
- * the current language code.
+ * Every place that applies an invite's profile type (and its mapped WordPress role)
+ * reads it through here, so a type the inviter could not have selected on the Send
+ * Invites form is never applied, whichever path saved it, including invites saved
+ * before the input checks existed.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.8.1
  *
- * @return string Cache context. Default 'default'.
+ * @param int $invite_id Invite post ID.
+ *
+ * @return string Profile type key, or an empty string.
  */
-function bb_member_type_query_cache_context() {
-	/**
-	 * Filters the cache context for profile type visibility queries.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @param string $context Cache context. Default 'default'.
-	 */
-	$context = apply_filters( 'bb_member_type_query_cache_context', 'default' );
+function bb_get_invite_allowed_member_type( $invite_id ) {
+	$invite = get_post( $invite_id );
 
-	return sanitize_key( $context );
+	// Without an author there is no inviter to check, and the fallback would test the current user.
+	if ( ! $invite || bp_get_invite_post_type() !== $invite->post_type || empty( $invite->post_author ) ) {
+		return '';
+	}
+
+	$member_type = get_post_meta( $invite->ID, '_bp_invitee_member_type', true );
+
+	if ( empty( $member_type ) || ! bb_is_member_type_allowed_on_invite( $member_type, (int) $invite->post_author ) ) {
+		return '';
+	}
+
+	return $member_type;
+}
+
+/**
+* Get the cache context for profile type visibility queries.
+*
+* Queries such as {@see bp_get_removed_member_types()} and
+* {@see bp_get_hidden_member_types()} read per-language visibility settings:
+* multilingual plugins filter them to the current language's posts, and each
+* translation can toggle its own "hide" settings. Their results therefore
+* cannot be cached under a single shared entry. This context string scopes the
+* cached result; multilingual compatibility layers (e.g. WPML) filter it to
+* the current language code.
+*
+* @since BuddyBoss [BBVERSION]
+*
+* @return string Cache context. Default 'default'.
+*/
+function bb_member_type_query_cache_context() {
+   /**
+	* Filters the cache context for profile type visibility queries.
+	*
+	* @since BuddyBoss [BBVERSION]
+	*
+	* @param string $context Cache context. Default 'default'.
+	*/
+   $context = apply_filters( 'bb_member_type_query_cache_context', 'default' );
+
+   return sanitize_key( $context );
 }
