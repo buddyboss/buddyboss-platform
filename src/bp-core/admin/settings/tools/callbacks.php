@@ -16,6 +16,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
+// @bbwt-com-start licence-state-probes
 /**
  * Whether the BuddyBoss Mothership license layer is available.
  *
@@ -32,6 +33,7 @@ function bb_tools_mothership_available() {
 	return class_exists( '\BuddyBoss\Core\Admin\Mothership\BB_Plugin_Connector' )
 		&& class_exists( '\BuddyBoss\Core\Admin\Mothership\BB_Addons_Manager' );
 }
+// @bbwt-com-end licence-state-probes
 
 // @bbwt-com-start licence-state-probes
 /**

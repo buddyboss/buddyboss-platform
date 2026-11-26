@@ -549,6 +549,7 @@ function bb_flush_field_upgrades_cache_full() {
 	bb_schedule_field_upgrades_refresh();
 }
 
+// @bbwt-com-start licence-state-probes
 /**
  * Clear the field upgrades cache when the license status changes.
  *
@@ -578,3 +579,4 @@ function bb_register_field_upgrades_license_hooks() {
 	}
 }
 add_action( 'admin_init', 'bb_register_field_upgrades_license_hooks' );
+// @bbwt-com-end licence-state-probes

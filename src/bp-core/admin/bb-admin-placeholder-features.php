@@ -222,6 +222,7 @@ function bb_get_placeholder_plugin_status( $item, $active_plugins = null ) {
 	// This must come first — if not in plan, always show upgrade badge
 	// regardless of install status. Free products are exempt (always in plan).
 	$in_plan = $is_free;
+	// @bbwt-com-start licence-state-probes
 	if ( ! $in_plan && class_exists( '\\BuddyBoss\\Core\\Admin\\Mothership\\BB_Addons_Manager' ) ) {
 		// Same slug resolution as the injected card's plugin_slug — the plan
 		// lookup keys off the Mothership product slug, not the folder name.
@@ -237,6 +238,7 @@ function bb_get_placeholder_plugin_status( $item, $active_plugins = null ) {
 			$in_plan = file_exists( WP_PLUGIN_DIR . '/' . $plugin_file );
 		}
 	}
+	// @bbwt-com-end licence-state-probes
 
 	/**
 	 * Filters whether a placeholder feature counts as included in the site's plan.
@@ -768,6 +770,7 @@ function bb_clear_placeholder_cache_on_license_change() {
 	bb_schedule_placeholder_features_refresh();
 }
 
+// @bbwt-com-start licence-state-probes
 /**
  * Register the license change hook with the dynamic plugin ID.
  *
@@ -791,3 +794,4 @@ function bb_register_placeholder_cache_clear_hooks() {
 	}
 }
 add_action( 'admin_init', 'bb_register_placeholder_cache_clear_hooks' );
+// @bbwt-com-end licence-state-probes

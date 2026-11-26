@@ -499,6 +499,11 @@ function bb_media_get_addons_panel_state( $panel_id ) {
  * @return bool
  */
 function bb_media_addons_update_available() {
+	$available = false;
+	$installed = '';
+	$latest    = '';
+
+	// @bbwt-com-start licence-state-probes
 	if ( ! class_exists( '\BuddyBoss\Core\Admin\Mothership\BB_Addons_Manager' ) ) {
 		return false;
 	}
@@ -510,6 +515,7 @@ function bb_media_addons_update_available() {
 
 	// A newer build that is still below the floor is refused by the updater, so it does not count.
 	$available = '' !== $installed && '' !== $latest && version_compare( $latest, $installed, '>' ) && ! bb_is_addons_below_required_version( $latest );
+	// @bbwt-com-end licence-state-probes
 
 	/**
 	 * Filters whether a BuddyBoss Add-ons update is available for the Media upsell panels.

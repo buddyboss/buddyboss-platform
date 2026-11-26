@@ -4617,6 +4617,10 @@ function bb_is_entitled_to_addons() {
 		return (bool) $override;
 	}
 
+	$entitled = false;
+	$product  = null;
+
+	// @bbwt-com-start licence-state-probes
 	$has_mothership = class_exists( '\BuddyBoss\Core\Admin\Mothership\BB_Plugin_Connector' )
 		&& class_exists( '\BuddyBoss\Core\Admin\Mothership\BB_Addons_Manager' );
 
@@ -4639,6 +4643,7 @@ function bb_is_entitled_to_addons() {
 	}
 
 	$entitled = ! empty( $product );
+	// @bbwt-com-end licence-state-probes
 
 	/**
 	 * Filters the computed BuddyBoss Addons entitlement decision.
