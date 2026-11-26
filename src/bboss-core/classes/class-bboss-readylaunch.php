@@ -657,15 +657,17 @@ if ( ! class_exists( 'BBoss_Readylaunch' ) ) {
 		}
 
 		/**
-		 * Get the order of sidebar items.
+		 * The side menu items and their state when nothing has been saved for them.
 		 *
-		 * @since BuddyBoss 2.9.00
+		 * One list for the sidebar and for the settings screen, so the screen shows what the
+		 * sidebar prints. Messages and notifications are off: the header already has them.
 		 *
-		 * @return array The ordered array of sidebar items.
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @return array Item id => { enabled, order, icon }.
 		 */
-		public function bb_rl_get_sidebar_order() {
-
-			$defaults = array(
+		public static function bb_rl_get_sidebar_defaults() {
+			return array(
 				'activity_feed' => array(
 					'enabled' => true,
 					'order'   => 0,
@@ -702,6 +704,18 @@ if ( ! class_exists( 'BBoss_Readylaunch' ) ) {
 					'icon'    => 'bell',
 				),
 			);
+		}
+
+		/**
+		 * Get the order of sidebar items.
+		 *
+		 * @since BuddyBoss 2.9.00
+		 *
+		 * @return array The ordered array of sidebar items.
+		 */
+		public function bb_rl_get_sidebar_order() {
+
+			$defaults = self::bb_rl_get_sidebar_defaults();
 
 			if ( ! bboss_is_active( 'activity' ) ) {
 				unset( $defaults['activity_feed'] );
