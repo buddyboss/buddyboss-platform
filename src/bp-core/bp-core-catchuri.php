@@ -657,7 +657,7 @@ add_filter( 'bp_core_set_uri_globals_member_slug', 'bp_core_members_shortlink_re
 /**
  * Build the rewrite rules in WordPress's own order, whatever page this request is for.
  *
- * bp_core_set_uri_globals() turns `$wp_rewrite->use_verbose_page_rules` off on a community page
+ * The URI parser, bp_core_set_uri_globals(), turns `$wp_rewrite->use_verbose_page_rules` off on a community page
  * (and under WP-CLI when the front page is a community page) so WordPress accepts the page rule
  * without looking the page up. That flag also decides whether the page rules are stored above
  * the post rules, so a flush during such a request stored them below, and every static page
