@@ -310,6 +310,7 @@ if ( ! class_exists( 'BB_WPML_Helpers' ) ) {
 		 * Reference: https://wpml.org/errata/buddyboss-alphabetical-sorting-issue-for-translated-taxonomy-fields-in-frontend/
 		 *
 		 * @since 2.7.40
+		 * @since BuddyBoss [BBVERSION] Compare with the default language instead of English.
 		 *
 		 * @param string $html      The HTML output of the field.
 		 * @param object $field_obj The field object.
@@ -317,7 +318,8 @@ if ( ! class_exists( 'BB_WPML_Helpers' ) ) {
 		 * @return string $html The sorted HTML output of the field.
 		 */
 		public function bb_wpml_profile_field_options_order( $html, $field_obj ) {
-			if ( class_exists( 'Sitepress' ) && 'en' !== apply_filters( 'wpml_current_language', null ) ) {
+			// Options are already sorted in the default language, so re-sort only for the other languages.
+			if ( class_exists( 'Sitepress' ) && apply_filters( 'wpml_current_language', null ) !== apply_filters( 'wpml_default_language', null ) ) {
 				$order_by = ! empty( $field_obj->order_by ) ? $field_obj->order_by : 'asc';
 
 				if ( 'custom' === $order_by ) {
