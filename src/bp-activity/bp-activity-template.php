@@ -218,6 +218,12 @@ function bp_has_activities( $args = '' ) {
 			: ( isset( $_REQUEST['scope'] ) ? bb_activity_get_request_scope( wp_unslash( $_REQUEST['scope'] ) ) : 'all' ) // phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Only registered scope names pass.
 		);
 
+	// AJAX takes the URL from the Referer, so its segment can be anything. Outside a group,
+	// one that no scope handles would add no condition to the query (PROD-10890).
+	if ( ! bp_is_group() ) {
+		$scope = bb_activity_get_request_scope( $scope );
+	}
+
 	if ( bp_is_user_activity() || bp_is_activity_directory() ) {
 
 		// Scope from the heartbeat passed from the filter dropdown.
