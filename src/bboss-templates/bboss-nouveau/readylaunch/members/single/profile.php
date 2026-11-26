@@ -30,6 +30,11 @@ bboss_nouveau_member_hook( 'before', 'profile_content' );
 			bboss_get_template_part( 'members/single/profile/change-avatar' );
 			break;
 
+		// Change Cover Photo.
+		case 'change-cover-image':
+			bboss_get_template_part( 'members/single/profile/change-cover-image' );
+			break;
+
 		// Compose.
 		case 'public':
 			// Display XProfile
