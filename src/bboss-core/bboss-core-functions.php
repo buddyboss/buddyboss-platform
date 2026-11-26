@@ -6112,7 +6112,7 @@ function bboss_core_delete_directory_symlinks() {
 
 				$file = $dir . '/' . $file;
 				if ( is_link( $file ) && is_dir( $file ) ) {
-					unlink( $file );
+					wp_delete_file( $file );
 					$deleted[] = $file;
 				}
 			}
