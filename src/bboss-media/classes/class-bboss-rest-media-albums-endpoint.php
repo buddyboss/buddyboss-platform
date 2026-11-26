@@ -171,8 +171,13 @@ class BBoss_REST_Media_Albums_Endpoint extends WP_REST_Controller {
 			$args['per_page'] = 0;
 		}
 
-		$privacy   = array();
-		$privacy[] = $args['privacy'];
+		// The requested privacy used to be added to the levels below, so privacy=onlyme or privacy=friends listed other
+		// members' private albums. Only moderators may still ask for a level outside what they would see anyway.
+		$is_moderator = bboss_current_user_can( 'bp_moderate' );
+		$privacy      = array( 'public' );
+		if ( $is_moderator ) {
+			$privacy[] = $args['privacy'];
+		}
 		if ( is_user_logged_in() ) {
 			$privacy[]       = 'loggedin';
 			$current_user_id = ( isset( $args['user_id'] ) && ! empty( $args['user_id'] ) ? $args['user_id'] : 0 );
@@ -204,6 +209,23 @@ class BBoss_REST_Media_Albums_Endpoint extends WP_REST_Controller {
 
 		$args['privacy'] = $privacy;
 
+		// Requested IDs are fetched without any privacy check, so only pass on the albums this viewer may open.
+		$can_see_albums = true;
+		if ( ! empty( $args['album_ids'] ) && ! $is_moderator ) {
+			$args['album_ids'] = array_values(
+				array_filter(
+					wp_parse_id_list( $args['album_ids'] ),
+					function ( $album_id ) {
+						$access = bboss_media_user_can_access( $album_id, 'album' );
+						$album  = new BBoss_Media_Album( $album_id );
+						return ! empty( $access['can_view'] ) && $this->media_endpoint->bb_rest_viewer_can_access_item_group( $album->group_id );
+					}
+				)
+			);
+
+			$can_see_albums = ! empty( $args['album_ids'] );
+		}
+
 		/**
 		 * Filter the query arguments for the request.
 		 *
@@ -214,7 +236,16 @@ class BBoss_REST_Media_Albums_Endpoint extends WP_REST_Controller {
 		 */
 		$args = apply_filters( 'bp_rest_media_albums_get_items_query_args', $args, $request );
 
-		$medias = $this->assemble_response_data( $args );
+		// Nothing this viewer may see: skip the query but keep the normal response flow (headers and the action below).
+		if ( $can_see_albums ) {
+			$medias = $this->assemble_response_data( $args );
+		} else {
+			$medias = array(
+				'albums'         => array(),
+				'total'          => 0,
+				'has_more_items' => false,
+			);
+		}
 
 		$retval = array();
 		foreach ( $medias['albums'] as $album ) {
@@ -259,6 +290,30 @@ class BBoss_REST_Media_Albums_Endpoint extends WP_REST_Controller {
 					'status' => rest_authorization_required_code(),
 				)
 			);
+		}
+
+		// A private or hidden group's albums are listed only to its members, checked for the viewer.
+		$group_id = (int) $request->get_param( 'group_id' );
+		if ( true === $retval && ! empty( $group_id ) && bboss_is_active( 'groups' ) && ! bboss_current_user_can( 'bp_moderate' ) ) {
+			$group = bboss_groups_get_group( $group_id );
+
+			if ( empty( $group->id ) ) {
+				$retval = new WP_Error(
+					'bp_rest_group_invalid_id',
+					__( 'Invalid group ID.', 'buddyboss-community-social-network-groups-forums-messaging' ),
+					array(
+						'status' => 404,
+					)
+				);
+			} elseif ( 'public' !== bboss_get_group_status( $group ) && ! bboss_groups_is_user_member( bboss_loggedin_user_id(), $group->id ) ) {
+				$retval = new WP_Error(
+					'bp_rest_authorization_required',
+					__( 'Sorry, Restrict access to only group members.', 'buddyboss-community-social-network-groups-forums-messaging' ),
+					array(
+						'status' => rest_authorization_required_code(),
+					)
+				);
+			}
 		}
 
 		/**

@@ -845,8 +845,13 @@ function bboss_xprofile_bp_user_query_search( $sql, BBoss_User_Query $query ) {
 	// that omits it serves whichever context asked second the first one's answer.
 	$cache_key = 'bb_xprofile_user_query_search_sql_' . sanitize_title( $search_terms_clean . '_' . $query->uid_name . '_' . $query->uid_table . '_' . bboss_core_get_viewer_user_id() . '_' . bboss_core_display_name_format() );
 
+	// Only the search clause is cached. The rest of $sql (type, scope, per_page, page) belongs to
+	// the query being run, so reusing it would hand a later query with the same search terms the
+	// first one's LIMIT - e.g. the per_page=1 member count run before the directory loop.
 	if ( isset( $cache[ $cache_key ] ) ) {
-		return $cache[ $cache_key ];
+		$sql['where']['search'] = $cache[ $cache_key ];
+
+		return $sql;
 	}
 
 	if ( $query->query_vars['search_wildcard'] === 'left' ) {
@@ -904,7 +909,7 @@ function bboss_xprofile_bp_user_query_search( $sql, BBoss_User_Query $query ) {
 		$sql['where']['search'] = " ( {$search_profile} OR {$search_core} )";
 	}
 
-	$cache[ $cache_key ] = $sql;
+	$cache[ $cache_key ] = $sql['where']['search'];
 
 	return $sql;
 }
@@ -3483,9 +3488,16 @@ function bboss_xprofile_get_user_progress_formatted( $user_progress_arr ) {
 
 			$group_link = trailingslashit( $loggedin_user_domain . $profile_slug . '/edit/group/' . $group_id );
 
+			/*
+			 * Translate at render time: the progress array is cached per user without a language,
+			 * so the cache keeps the raw group name and each request filters it in its own language.
+			 */
+			/* This filter is documented in bboss-xprofile/bboss-xprofile-template.php */
+			$group_label = apply_filters( 'bp_get_the_profile_group_name', $group_details['group_name'] );
+
 			$user_prgress_formatted['groups'][] = array(
 				'number'             => $listing_number,
-				'label'              => $group_details['group_name'],
+				'label'              => $group_label,
 				'link'               => $group_link,
 				'is_group_completed' => ( $group_details['group_total_fields'] === $group_details['group_completed_fields'] ) ? true : false,
 				'total'              => $group_details['group_total_fields'],
@@ -3504,7 +3516,8 @@ function bboss_xprofile_get_user_progress_formatted( $user_progress_arr ) {
 
 		$user_prgress_formatted['groups'][] = array(
 			'number'             => $listing_number,
-			'label'              => $user_progress_arr['photo_type']['profile_photo']['name'],
+			// Translated here, not from the cached name, so the label follows the current language.
+			'label'              => __( 'Profile Photo', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'link'               => $change_avatar_link,
 			'is_group_completed' => ( $is_profile_uploaded ) ? true : false,
 			'total'              => 1,
@@ -3522,7 +3535,8 @@ function bboss_xprofile_get_user_progress_formatted( $user_progress_arr ) {
 
 		$user_prgress_formatted['groups'][] = array(
 			'number'             => $listing_number,
-			'label'              => $user_progress_arr['photo_type']['cover_photo']['name'],
+			// Translated here, not from the cached name, so the label follows the current language.
+			'label'              => __( 'Cover Photo', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'link'               => $change_cover_link,
 			'is_group_completed' => ( $is_cover_uploaded ) ? true : false,
 			'total'              => 1,

@@ -552,6 +552,7 @@ class BBoss_REST_Activity_Endpoint extends WP_REST_Controller {
 	 *
 	 * @return WP_REST_Response | WP_Error
 	 * @since 0.1.0
+	 * @since BuddyBoss 3.8.0 An `id` sent with the request is ignored, so a create never changes an existing activity.
 	 *
 	 * @api            {POST} /wp-json/buddyboss/v1/activity Create activity
 	 * @apiName        CreateBBActivity
@@ -575,6 +576,13 @@ class BBoss_REST_Activity_Endpoint extends WP_REST_Controller {
 	 */
 	public function create_item( $request ) {
 		$request->set_param( 'context', 'edit' );
+
+		/*
+		 * The create route registers no id argument, but get_param() still returns one sent in the
+		 * body. prepare_item_for_database() would then load that stored activity and bp_activity_add()
+		 * would overwrite it, with no ownership check. A create always makes a new activity.
+		 */
+		$request->set_param( 'id', 0 );
 
 		/**
 		 * Map data into POST to work with link preview.
@@ -971,6 +979,17 @@ class BBoss_REST_Activity_Endpoint extends WP_REST_Controller {
 			}
 		}
 
+		// An `id` makes create overwrite that activity with no update checks, so only moderators may send one.
+		if ( true === $retval && ! empty( $request->get_param( 'id' ) ) && ! bboss_current_user_can( 'bp_moderate' ) ) {
+			$retval = new WP_Error(
+				'bp_rest_activity_create_id_not_allowed',
+				__( 'Sorry, you are not allowed to edit an existing activity from here. Use the update endpoint instead.', 'buddyboss-community-social-network-groups-forums-messaging' ),
+				array(
+					'status' => rest_authorization_required_code(),
+				)
+			);
+		}
+
 		/**
 		 * Filter the activity `create_item` permissions check.
 		 *
@@ -989,6 +1008,8 @@ class BBoss_REST_Activity_Endpoint extends WP_REST_Controller {
 	 *
 	 * @return WP_REST_Response | WP_Error
 	 * @since 0.1.0
+	 * @since BuddyBoss 3.8.0 A privacy-only update keeps the stored title, status and link preview, as the
+	 *                             website's privacy handler does. The author cannot be changed: user_id is ignored.
 	 *
 	 * @api            {PATCH} /wp-json/buddyboss/v1/activity/:id Update activity
 	 * @apiName        UpdateBBActivity
@@ -999,7 +1020,7 @@ class BBoss_REST_Activity_Endpoint extends WP_REST_Controller {
 	 * @apiParam {Number} id A unique numeric ID for the activity.
 	 * @apiParam {Number} [primary_item_id] The ID of some other object primarily associated with this one.
 	 * @apiParam {Number} [secondary_item_id] The ID of some other object also associated with this one.
-	 * @apiParam {Number} [user_id] The ID for the author of the activity.
+	 * @apiParam {Number} [user_id] The ID for the author of the activity. The author cannot be changed, so this value is ignored on update.
 	 * @apiParam {string} [link] The permalink to this activity on the site.
 	 * @apiParam {String=settings,notifications,groups,forums,activity,media,messages,friends,invites,search,members,xprofile,blogs} [component] The active component the activity relates to.
 	 * @apiParam {String=new_member,new_avatar,updated_profile,activity_update,created_group,joined_group,group_details_updated,bbp_topic_create,bbp_reply_create,activity_comment,friendship_accepted,friendship_created,new_blog_post,new_blog_comment} [type] The activity type of the activity.
@@ -1013,6 +1034,11 @@ class BBoss_REST_Activity_Endpoint extends WP_REST_Controller {
 	 */
 	public function update_item( $request ) {
 		$request->set_param( 'context', 'edit' );
+
+		// Decided against the stored activity, before prepare_item_for_database() writes the request onto it.
+		$stored_activity = $this->get_activity_object( $request );
+		$is_privacy_only = $this->bb_rest_is_privacy_only_update( $request, $stored_activity );
+
 		$activity_object = $this->prepare_item_for_database( $request );
 
 		$activity_metas = bboss_activity_get_metadata( $activity_object->id );
@@ -1022,16 +1048,26 @@ class BBoss_REST_Activity_Endpoint extends WP_REST_Controller {
 		$old_video_ids    = $activity_metas['bp_video_ids'][0] ?? '';
 		$old_gif_data     = ! empty( $activity_metas['_gif_data'][0] ) ? maybe_unserialize( $activity_metas['_gif_data'][0] ) : array();
 
-		// Validate post title.
-		$validation = bboss_validate_activity_post_title( $activity_object->post_title );
-		if ( ! $validation['valid'] ) {
-			return new WP_Error(
-				'bp_rest_update_activity_title_validation_failed',
-				$validation['message'],
-				array(
-					'status' => 400,
-				)
-			);
+		if ( $is_privacy_only ) {
+			// The title is not being edited, so a post saved before titles became required stays updatable,
+			// as with the website's privacy handler. Also skips the check in BP_Activity_Activity::save().
+			$activity_object->title_required = false;
+
+			// prepare_item_for_database() publishes by default; a scheduled post stays scheduled at its time.
+			$activity_object->status        = $stored_activity->status;
+			$activity_object->recorded_time = $stored_activity->date_recorded;
+		} else {
+			// Validate post title.
+			$validation = bboss_validate_activity_post_title( $activity_object->post_title );
+			if ( ! $validation['valid'] ) {
+				return new WP_Error(
+					'bp_rest_update_activity_title_validation_failed',
+					$validation['message'],
+					array(
+						'status' => 400,
+					)
+				);
+			}
 		}
 
 		if (
@@ -1113,7 +1149,8 @@ class BBoss_REST_Activity_Endpoint extends WP_REST_Controller {
 			}
 		}
 
-		$_POST[ 'action' ] = 'edit-activity'; // phpcs:ignore
+		// A privacy change uses the website's privacy action, so bp_activity_save_link_data() leaves the link preview alone.
+		$_POST[ 'action' ] = $is_privacy_only ? 'activity_update_privacy' : 'edit-activity'; // phpcs:ignore
 
 		$allow_edit = $this->bp_rest_activitiy_edit_data( $activity_object );
 		$activity   = new BBoss_Activity_Activity( $activity_object->id );
@@ -1145,7 +1182,18 @@ class BBoss_REST_Activity_Endpoint extends WP_REST_Controller {
 		if ( empty( $activity->action ) ) {
 			$activity_object->action = '';
 		}
+
+		// As in the website's privacy handler, unchanged content is not moderated again on a privacy change.
+		$skip_moderation = $is_privacy_only && false !== has_action( 'bp_activity_before_save', 'bboss_activity_check_moderation_keys' );
+		if ( $skip_moderation ) {
+			remove_action( 'bp_activity_before_save', 'bboss_activity_check_moderation_keys', 2 );
+		}
+
 		$activity_id = bboss_activity_add( $activity_object );
+
+		if ( $skip_moderation ) {
+			add_action( 'bp_activity_before_save', 'bboss_activity_check_moderation_keys', 2, 1 );
+		}
 
 		if ( ! is_numeric( $activity_id ) ) {
 			return new WP_Error(
@@ -1249,7 +1297,8 @@ class BBoss_REST_Activity_Endpoint extends WP_REST_Controller {
 	 * The registered set is not quite the whole contract, though — get_param() also returns
 	 * unregistered parameters, and update_item() reads one the editable route never registers
 	 * (see bb_rest_update_read_params()), so that is added back. A registered argument that
-	 * merely echoes the stored value (post_title, content) is not an edit; anything else is.
+	 * merely echoes the stored value (post_title, content) is not an edit, nor is user_id, which an
+	 * update ignores; anything else is.
 	 *
 	 * @since BuddyBoss 3.5.1
 	 *
@@ -1295,6 +1344,11 @@ class BBoss_REST_Activity_Endpoint extends WP_REST_Controller {
 				continue;
 			}
 
+			// The author cannot change on update and prepare_item_for_database() ignores user_id, so it is not an edit.
+			if ( 'user_id' === $param ) {
+				continue;
+			}
+
 			return false;
 		}
 
@@ -1308,7 +1362,8 @@ class BBoss_REST_Activity_Endpoint extends WP_REST_Controller {
 	 * read directly still reaches the update while array_intersect_key() against the registered
 	 * arguments would drop it. bb_activity_post_feature_image_id is the current case: Pro adds it
 	 * through bp_rest_activity_create_item_query_arguments only, with no update counterpart, yet
-	 * update_item() reads it.
+	 * update_item() reads it. The link_* keys are copied into $_POST for the link preview, which
+	 * bboss_activity_save_link_data() then writes to the activity meta.
 	 *
 	 * Keep this in step with the direct get_param() reads in update_item(); anything listed here
 	 * counts as data when deciding whether an update touches more than the privacy.
@@ -1318,7 +1373,14 @@ class BBoss_REST_Activity_Endpoint extends WP_REST_Controller {
 	 * @return array Parameter names.
 	 */
 	protected function bb_rest_update_read_params() {
-		return array( 'bb_activity_post_feature_image_id' );
+		return array(
+			'bb_activity_post_feature_image_id',
+			'link_url',
+			'link_embed',
+			'link_title',
+			'link_description',
+			'link_image',
+		);
 	}
 
 	/**
@@ -1380,18 +1442,6 @@ class BBoss_REST_Activity_Endpoint extends WP_REST_Controller {
 					__( 'Invalid activity ID.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 					array(
 						'status' => 404,
-					)
-				);
-			} elseif (
-				function_exists( 'bboss_is_close_activity_comments_enabled' ) &&
-				bboss_is_close_activity_comments_enabled() &&
-				bboss_is_activity_comments_closed( $activity->id )
-			) {
-				$retval = new WP_Error(
-					'bp_rest_authorization_required',
-					__( 'Sorry, you are not allowed to update this activity. The comments are closed for the activity.', 'buddyboss-community-social-network-groups-forums-messaging' ),
-					array(
-						'status' => rest_authorization_required_code(),
 					)
 				);
 			} elseif (
@@ -1506,6 +1556,44 @@ class BBoss_REST_Activity_Endpoint extends WP_REST_Controller {
 				);
 			} elseif ( bboss_activity_user_can_delete( $activity ) ) {
 				$retval = true;
+			}
+
+			// The update saves type and group as sent (the author is always kept, see prepare_item_for_database());
+			// like the website, members may not change the type, and may only move a post into a group they can post in.
+			if ( true === $retval && ! bboss_current_user_can( 'bp_moderate' ) ) {
+				$current_user_id = bboss_loggedin_user_id();
+
+				// Values sent in the request (null when not sent).
+				$sent_type      = $request->get_param( 'type' );
+				$sent_component = $request->get_param( 'component' );
+				$sent_item_id   = $request->get_param( 'primary_item_id' );
+
+				// Where the activity will be after this update, worked out the way prepare_item_for_database() and
+				// bp_activity_add() save it: with component 'groups' the sent primary_item_id only goes to group_id,
+				// which the update ignores, so the stored item_id stays the group.
+				$new_component = ! empty( $sent_component ) ? $sent_component : $activity->component;
+				$to_groups     = bboss_is_active( 'groups' ) && bboss()->groups->id === $new_component;
+				$new_group_id  = null !== $sent_item_id && ! $to_groups ? (int) $sent_item_id : (int) $activity->item_id;
+
+				// 1. Type: a sent type that isn't the current type.
+				$changes_type = ! empty( $sent_type ) && $sent_type !== $activity->type;
+
+				// 2. Group: the activity ends up in a group (component 'groups') other than where it is now,
+				// and the member can't post there (or there is no group to post in).
+				$changes_place  = $new_component !== $activity->component || $new_group_id !== (int) $activity->item_id;
+				$moves_to_group = $to_groups && $changes_place;
+				$can_post_there = $moves_to_group && ! empty( $new_group_id ) && ( bboss_groups_is_user_member( $current_user_id, $new_group_id ) || groups_is_user_allowed_posting( $current_user_id, $new_group_id ) );
+				$blocked_group  = $moves_to_group && ! $can_post_there;
+
+				if ( $changes_type || $blocked_group ) {
+					$retval = new WP_Error(
+						'bp_rest_authorization_required',
+						__( 'Sorry, you are not allowed to change the type or group of this activity.', 'buddyboss-community-social-network-groups-forums-messaging' ),
+						array(
+							'status' => rest_authorization_required_code(),
+						)
+					);
+				}
 			}
 		}
 
@@ -1779,6 +1867,7 @@ class BBoss_REST_Activity_Endpoint extends WP_REST_Controller {
 	 *
 	 * @return bool|WP_Error
 	 * @since 0.1.0
+	 * @since BuddyBoss 3.7.1 The user must be able to read the activity.
 	 */
 	public function update_favorite_permissions_check( $request ) {
 		$retval = new WP_Error(
@@ -2636,6 +2725,7 @@ class BBoss_REST_Activity_Endpoint extends WP_REST_Controller {
 	 *
 	 * @return stdClass|WP_Error Object or WP_Error.
 	 * @since 0.1.0
+	 * @since BuddyBoss 3.8.0 An update always keeps the stored author.
 	 */
 	protected function prepare_item_for_database( $request ) {
 		$prepared_activity = new stdClass();
@@ -2652,7 +2742,10 @@ class BBoss_REST_Activity_Endpoint extends WP_REST_Controller {
 		}
 
 		// Activity author ID.
-		if ( ! empty( $schema['properties']['user_id'] ) && isset( $request['user_id'] ) ) {
+		if ( ! empty( $activity->id ) ) {
+			// An update never changes the author, whoever makes it, and ignores any user_id it is sent.
+			$prepared_activity->user_id = (int) $activity->user_id;
+		} elseif ( ! empty( $schema['properties']['user_id'] ) && isset( $request['user_id'] ) ) {
 			$prepared_activity->user_id = (int) $request['user_id'];
 		} else {
 			$prepared_activity->user_id = get_current_user_id();
@@ -3039,6 +3132,13 @@ class BBoss_REST_Activity_Endpoint extends WP_REST_Controller {
 
 		} elseif ( WP_REST_Server::DELETABLE === $method ) {
 			$key = 'delete_item';
+		}
+
+		// Only a new post must carry a title: one saved before titles became required has none, and
+		// update_item() validates the title of a real edit itself. Decided after every post_title
+		// definition above, so no later definition can make updates require it again.
+		if ( WP_REST_Server::EDITABLE === $method && isset( $args['post_title'] ) ) {
+			$args['post_title']['required'] = false;
 		}
 
 		/**

@@ -3922,8 +3922,14 @@ function bboss_member_type_shortcode_callback( $atts ) {
 		bboss()->is_directory        = true;
 	}
 
+	// The shortcode marks its page as a members directory, but Members & Groups Loading only
+	// applies to the real directory and the profile/group lists, so the shortcode keeps pagination.
+	add_filter( 'bb_is_list_autoload_active', '__return_false', 9999 );
+
 	// Get a BuddyPress members-loop template part for display in a theme.
 	bboss_get_template_part( 'members/members-loop' );
+
+	remove_filter( 'bb_is_list_autoload_active', '__return_false', 9999 );
 
 	echo '</div> <!-- #members-dir-list -->';
 	echo '</div><!-- .members-directory-content -->';
@@ -4307,8 +4313,8 @@ function bboss_assign_default_member_type_to_activate_user( $user_id, $key, $use
 		 *
 		 * The admin-configured default registration type is unaffected. The
 		 * send-invite type is NOT admin-only — any member who can send invites
-		 * chooses it — so it is gated separately, at its own input, by
-		 * bb_is_member_type_allowed_on_invite() in bp_member_invite_submit().
+		 * chooses it — so it is gated separately: at each invite input, and
+		 * again when applied, by bb_get_invite_allowed_member_type().
 		 */
 		if (
 			'' !== $get_selected_member_type_on_register
@@ -4345,7 +4351,7 @@ function bboss_assign_default_member_type_to_activate_user( $user_id, $key, $use
 
 				if ( $bp_get_invitee_email->have_posts() ) {
 
-					$member_type = get_post_meta( get_the_ID(), '_bp_invitee_member_type', true );
+					$member_type = bboss_get_invite_allowed_member_type( $bp_get_invitee_email->posts[0]->ID );
 					// Check if user is invited for specific member type.
 					if ( isset( $member_type ) && ! empty( $member_type ) ) {
 
@@ -4526,7 +4532,7 @@ function bboss_assign_default_member_type_to_activate_user_on_admin( $user_id ) 
 
 			if ( $bp_get_invitee_email->have_posts() ) {
 
-				$member_type = get_post_meta( get_the_ID(), '_bp_invitee_member_type', true );
+				$member_type = bboss_get_invite_allowed_member_type( $bp_get_invitee_email->posts[0]->ID );
 				// Check if user is invited for specific member type.
 				if ( isset( $member_type ) && ! empty( $member_type ) ) {
 					// Assign the invited member type to user.
@@ -5882,24 +5888,27 @@ function bboss_is_member_type_allowed_on_registration( $member_type_id ) {
  * path for any member who can send invites.
  *
  * @since BuddyBoss 3.5.0
+ * @since BuddyBoss 3.8.1 Added the `$inviter_id` parameter.
  *
  * @param string $member_type_key Profile type key submitted on the invite form.
+ * @param int    $inviter_id      Optional. Inviter to check. Default: the logged-in member.
  *
  * @return bool True when the type is offered to this inviter.
  */
-function bboss_is_member_type_allowed_on_invite( $member_type_key ) {
+function bboss_is_member_type_allowed_on_invite( $member_type_key, $inviter_id = 0 ) {
 	$member_type_key = is_string( $member_type_key ) ? trim( $member_type_key ) : '';
+	$inviter_id      = ! empty( $inviter_id ) ? (int) $inviter_id : bboss_loggedin_user_id();
 
-	if ( '' === $member_type_key ) {
+	if ( '' === $member_type_key || empty( $inviter_id ) ) {
 		return false;
 	}
 
 	// The invitee type selector is only rendered when this gate passes.
-	if ( ! bboss_check_member_send_invites_tab_member_type_allowed() ) {
+	if ( ! bboss_check_member_send_invites_tab_member_type_allowed( $inviter_id ) ) {
 		return false;
 	}
 
-	$inviter_member_type = bboss_get_member_type( bboss_loggedin_user_id() );
+	$inviter_member_type = bboss_get_member_type( $inviter_id );
 	$inviter_type_id     = ! empty( $inviter_member_type ) ? bboss_member_type_post_by_type( $inviter_member_type ) : 0;
 
 	// Same source, and same fallback, the dropdown iterates.
@@ -5918,4 +5927,35 @@ function bboss_is_member_type_allowed_on_invite( $member_type_key ) {
 	}
 
 	return false;
+}
+
+/**
+ * Get the profile type stored on an invite, if its inviter may still choose it.
+ *
+ * Every place that applies an invite's profile type (and its mapped WordPress role)
+ * reads it through here, so a type the inviter could not have selected on the Send
+ * Invites form is never applied, whichever path saved it, including invites saved
+ * before the input checks existed.
+ *
+ * @since BuddyBoss 3.8.1
+ *
+ * @param int $invite_id Invite post ID.
+ *
+ * @return string Profile type key, or an empty string.
+ */
+function bboss_get_invite_allowed_member_type( $invite_id ) {
+	$invite = get_post( $invite_id );
+
+	// Without an author there is no inviter to check, and the fallback would test the current user.
+	if ( ! $invite || bboss_get_invite_post_type() !== $invite->post_type || empty( $invite->post_author ) ) {
+		return '';
+	}
+
+	$member_type = get_post_meta( $invite->ID, '_bp_invitee_member_type', true );
+
+	if ( empty( $member_type ) || ! bboss_is_member_type_allowed_on_invite( $member_type, (int) $invite->post_author ) ) {
+		return '';
+	}
+
+	return $member_type;
 }

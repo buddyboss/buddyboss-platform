@@ -62,7 +62,20 @@ export function DateInput( props ) {
 		if ( ! date ) {
 			return '';
 		}
-		var d = new Date( date );
+		// A bare YYYY-MM-DD string is parsed by Date as UTC midnight, which
+		// shows the previous day in browsers west of UTC. Parse it as a
+		// local calendar date instead.
+		var parts =
+			'string' === typeof date
+				? date.match( /^(\d{4})-(\d{2})-(\d{2})$/ )
+				: null;
+		var d = parts
+			? new Date(
+					Number( parts[ 1 ] ),
+					Number( parts[ 2 ] ) - 1,
+					Number( parts[ 3 ] )
+			  )
+			: new Date( date );
 		if ( isNaN( d.getTime() ) ) {
 			return '';
 		}

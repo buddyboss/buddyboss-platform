@@ -54,6 +54,33 @@ function bboss_advanced_sanitize_activity_load_type( $value ) {
 }
 
 /**
+ * Sanitize the directory load type value.
+ *
+ * Ensures only valid directory loading types are saved.
+ *
+ * @since BuddyBoss 3.8.0
+ *
+ * @param mixed $value The value to sanitize.
+ *
+ * @return string Sanitized directory load type.
+ */
+function bboss_advanced_sanitize_directory_load_type( $value ) {
+	$value   = sanitize_text_field( $value );
+	$allowed = array_keys(
+		bboss_parse_args(
+			/** This filter is documented in bboss-core/admin/settings/advanced/settings-general.php */
+			apply_filters( 'bb_performance_directory_autoload', array() ),
+			array(
+				'pagination' => __( 'Pagination', 'buddyboss-community-social-network-groups-forums-messaging' ),
+				'infinite'   => __( 'Infinite Scroll', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			)
+		)
+	);
+
+	return in_array( $value, $allowed, true ) ? $value : 'pagination';
+}
+
+/**
  * Capture telemetry value before save for change detection.
  *
  * Stores the pre-save value in a static so the after-save handler

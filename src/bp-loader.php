@@ -5,7 +5,7 @@
  * Description: Build your online community with member profiles, activity feeds, groups, forums and private messaging in one social network plugin.
  * Author:      BuddyBoss
  * Author URI:  https://buddyboss.com/
- * Version:     3.7.2
+ * Version:     3.8.1
  * Text Domain: buddyboss-community-social-network-groups-forums-messaging
  * License:     GPLv2 or later
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -31,7 +31,7 @@ if ( ! defined( 'BBOSS_SOURCE_SUBDIRECTORY' ) && file_exists( dirname( __FILE__ 
 }
 
 if ( ! defined( 'BBOSS_PLATFORM_VERSION' ) ) {
-	define( 'BBOSS_PLATFORM_VERSION', '3.7.2' );
+	define( 'BBOSS_PLATFORM_VERSION', '3.8.1' );
 }
 
 if ( ! defined( 'BBOSS_PLATFORM_API' ) ) {

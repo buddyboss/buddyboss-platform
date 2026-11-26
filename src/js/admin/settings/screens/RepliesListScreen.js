@@ -30,7 +30,7 @@ import { useListScreenState } from '../hooks/useListScreenState';
 import { groupFieldsWithLayout, buildRegisteredFieldPayload, getVisibleFields, isFieldConditionalDisabled, needsSeparator, splitFieldsByMetaboxGroup } from '../utils/format';
 import { ReplyCreateModal } from '../components/forums/ReplyCreateModal';
 import { RegisteredMetaField } from '../components/common/RegisteredMetaField';
-import { forceRemoveEditor } from '../components/common/RichTextEditor';
+import { forceRemoveEditor, getRichTextEditorHtml } from '../components/common/RichTextEditor';
 
 /**
  * Sort options for replies.
@@ -538,14 +538,8 @@ export default function RepliesListScreen( { onNavigate } ) {
 	 * @since BuddyBoss [BBVERSION]
 	 */
 	var handleEditSave = function () {
-		var contentVal = editRegisteredValues.content || '';
-		// Pull from TinyMCE if available.
-		if ( window.tinymce ) {
-			var tinymceEditor = window.tinymce.get( 'bb-admin-edit-content-' + editReply.id );
-			if ( tinymceEditor ) {
-				contentVal = tinymceEditor.getContent();
-			}
-		}
+		// Pull latest content from the editor, including Code tab edits.
+		var contentVal = getRichTextEditorHtml( 'bb-admin-edit-content-' + editReply.id, editRegisteredValues.content || '' );
 
 		if ( ! contentVal.trim() ) {
 			setEditError( __( 'Description is required.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
@@ -564,6 +558,11 @@ export default function RepliesListScreen( { onNavigate } ) {
 			reply_id: editReply.id,
 			content: contentVal, // Override with TinyMCE-pulled value.
 		} );
+
+		// Send the same HTML in the registry key, so the registry sees what is saved.
+		if ( undefined !== payload.registered_field_content ) {
+			payload.registered_field_content = contentVal;
+		}
 
 		saveReply( payload ).then( function ( response ) {
 			setIsEditSaving( false );

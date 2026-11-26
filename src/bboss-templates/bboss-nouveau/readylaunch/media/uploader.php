@@ -48,7 +48,7 @@ $bp_is_single_album = bboss_is_single_album();
 							) :
 								?>
 								<div class="media-uploader-post-content">
-									<textarea name="bp-media-post-content" id="bp-media-post-content" placeholder="<?php esc_html_e( 'Write a description', 'buddyboss-community-social-network-groups-forums-messaging' ); ?>"></textarea>
+									<textarea name="bp-media-post-content" id="bp-media-post-content" placeholder="<?php bboss_is_group() ? esc_html_e( 'Write something about your photos, to be shown on the group feed', 'buddyboss-community-social-network-groups-forums-messaging' ) : esc_html_e( 'Write something about your photos, to be shown on your timeline', 'buddyboss-community-social-network-groups-forums-messaging' ); ?>"></textarea>
 								</div>
 							<?php endif; ?>
 

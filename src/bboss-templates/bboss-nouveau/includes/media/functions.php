@@ -205,6 +205,7 @@ function bboss_nouveau_media_localize_scripts( $params = array() ) {
 		'photos'               => __( 'photos', 'buddyboss-community-social-network-groups-forums-messaging' ),
 		'video'                => __( 'video', 'buddyboss-community-social-network-groups-forums-messaging' ),
 		'videos'               => __( 'videos', 'buddyboss-community-social-network-groups-forums-messaging' ),
+		'title_required'       => __( 'Please enter a title.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 	);
 
 	$params['dir_labels'] = array_merge(

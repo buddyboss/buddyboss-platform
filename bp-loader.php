@@ -5,7 +5,7 @@
  * Description: Build your online community with member profiles, activity feeds, groups, forums and private messaging in one social network plugin.
  * Author:      BuddyBoss
  * Author URI:  https://buddyboss.com/
- * Version:     3.7.2
+ * Version:     3.8.1
  * Text Domain: buddyboss-community-social-network-groups-forums-messaging
  * Domain Path: /src/languages
  * License:     GPLv2 or later

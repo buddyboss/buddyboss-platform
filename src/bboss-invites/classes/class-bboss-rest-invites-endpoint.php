@@ -252,6 +252,12 @@ class BBoss_REST_Invites_Endpoint extends WP_REST_Controller {
 					}
 					$duplicate_email_inputs[] = strtolower( trim( $field['email_id'] ) );
 
+					// Activation applies this type's mapped WP role, so only keep a type the inviter may choose.
+					$member_type = isset( $field['profile_type'] ) ? sanitize_text_field( wp_unslash( $field['profile_type'] ) ) : '';
+					if ( '' !== $member_type && ( ! function_exists( 'bboss_is_member_type_allowed_on_invite' ) || ! bboss_is_member_type_allowed_on_invite( $member_type ) ) ) {
+						$member_type = '';
+					}
+
 					if ( email_exists( (string) sanitize_email( wp_unslash( $field['email_id'] ) ) ) ) {
 						$invite_exists_array[] = sanitize_email( wp_unslash( $field['email_id'] ) );
 					} elseif ( function_exists( 'bboss_is_email_address_already_invited' ) && bboss_is_email_address_already_invited( sanitize_email( wp_unslash( $field['email_id'] ) ), bboss_loggedin_user_id() ) ) {
@@ -260,7 +266,7 @@ class BBoss_REST_Invites_Endpoint extends WP_REST_Controller {
 						$invite_correct_array[] = array(
 							'name'        => sanitize_text_field( wp_unslash( $field['name'] ) ),
 							'email'       => sanitize_email( wp_unslash( $field['email_id'] ) ),
-							'member_type' => ( isset( $field['profile_type'] ) && ! empty( $field['profile_type'] ) ) ? $field['profile_type'] : '',
+							'member_type' => $member_type,
 						);
 					} elseif (
 						function_exists( 'bboss_is_allowed_register_email_address' ) &&
@@ -269,7 +275,7 @@ class BBoss_REST_Invites_Endpoint extends WP_REST_Controller {
 						$invite_correct_array[] = array(
 							'name'        => sanitize_text_field( wp_unslash( $field['name'] ) ),
 							'email'       => sanitize_email( wp_unslash( $field['email_id'] ) ),
-							'member_type' => ( isset( $field['profile_type'] ) && ! empty( $field['profile_type'] ) ) ? $field['profile_type'] : '',
+							'member_type' => $member_type,
 						);
 					} else {
 						$invite_restricted_array[] =  $field['email_id'];
@@ -306,9 +312,29 @@ class BBoss_REST_Invites_Endpoint extends WP_REST_Controller {
 
 				$_POST = array();
 
-				$email          = sanitize_email( wp_unslash( $value['email'] ) );
-				$name           = sanitize_text_field( wp_unslash( $value['name'] ) );
-				$member_type    = $value['member_type'];
+				$email       = sanitize_email( wp_unslash( $value['email'] ) );
+				$name        = sanitize_text_field( wp_unslash( $value['name'] ) );
+				$member_type = is_string( $value['member_type'] ) ? sanitize_text_field( wp_unslash( $value['member_type'] ) ) : '';
+
+				// The invitee's profile type maps to WP roles at activation, so only a type the
+				// Send Invites form offers this inviter may be stored, as on the web form.
+				if (
+					'' !== $member_type
+					&& (
+						! function_exists( 'bboss_is_member_type_allowed_on_invite' )
+						|| ! bboss_is_member_type_allowed_on_invite( $member_type )
+					)
+				) {
+					$member_type = '';
+				}
+
+				// A name is plain text; a serialized PHP value stored as invite meta can be turned into an object by code
+				// that unserializes meta. Check what update_post_meta() will store, after its own wp_unslash().
+				if ( is_serialized( wp_unslash( $name ) ) ) {
+					$invite_wrong_array[] = $value;
+					continue;
+				}
+
 				$query_string[] = $email;
 				$inviter_name   = $inviter_public_name;
 
@@ -420,8 +446,12 @@ class BBoss_REST_Invites_Endpoint extends WP_REST_Controller {
 		);
 
 		if ( ! empty( $invite_wrong_array ) ) {
-			$failed_invite = wp_list_pluck( array_filter( $invite_wrong_array ), 'email' );
+			$failed_invite = array_merge( $failed_invite, $invite_wrong_array );
 		}
+
+		// Both sources hold invite rows; reduce them to their email addresses once so the messages below work with strings.
+		// Empty addresses are kept here so a row with an unusable email still produces a "failed" message.
+		$failed_invite = wp_list_pluck( array_filter( $failed_invite ), 'email' );
 
 		if ( ! empty( $invite_exists_array ) ) {
 			$retval['exists'] = trim( __( 'Invitations did not send to the following email addresses, because they are already members:', 'buddyboss-community-social-network-groups-forums-messaging' ) . ' ' . implode( ', ', $invite_exists_array ) );
@@ -437,12 +467,12 @@ class BBoss_REST_Invites_Endpoint extends WP_REST_Controller {
 		}
 
 		if ( ! empty( $failed_invite ) ) {
-			$retval['failed'] = trim( __( 'Invitations did not send because these email addresses are invalid:', 'buddyboss-community-social-network-groups-forums-messaging' ) . ' ' . implode( ', ', wp_list_pluck( array_filter( $failed_invite ), 'email' ) ) );
+			$retval['failed'] = trim( __( 'Invitations did not send because these email addresses are invalid:', 'buddyboss-community-social-network-groups-forums-messaging' ) . ' ' . implode( ', ', array_filter( $failed_invite ) ) );
 		}
 
 		if ( ! empty( $invite_restricted_array ) ) {
 			if ( ! empty( $failed_invite ) ) {
-				$merged_emails    = array_unique( array_merge( $failed_invite, $invite_restricted_array ) );
+				$merged_emails    = array_unique( array_merge( array_filter( $failed_invite ), $invite_restricted_array ) );
 				$retval['failed'] = trim( __( 'Invitations did not send to the following email addresses, because they are invalid email addresses or the address or domain has been blacklisted:', 'buddyboss-community-social-network-groups-forums-messaging' ) . ' ' . implode( ', ', $merged_emails ) );
 			} else {
 				$retval['failed'] = trim( __( 'Invitations did not send to the following email addresses, because the address or domain has been blacklisted:', 'buddyboss-community-social-network-groups-forums-messaging' ) . ' ' . implode( ', ', $invite_restricted_array ) );

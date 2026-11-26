@@ -18,7 +18,7 @@ import { __ } from '@wordpress/i18n';
 
 import { createGroup } from '../../utils/ajax';
 import { toSlug } from '../../utils/format';
-import { RichTextEditor } from '../common/RichTextEditor';
+import { RichTextEditor, getRichTextEditorContent } from '../common/RichTextEditor';
 
 /**
  * Group Create Modal Component
@@ -107,14 +107,8 @@ export function GroupCreateModal( { isOpen, onClose, onCreated } ) {
 		setIsSaving( true );
 		setError( '' );
 
-		// Pull latest content from TinyMCE editor.
-		var descriptionVal = description;
-		if ( window.tinymce ) {
-			var editorInstance = window.tinymce.get( 'bb-admin-create-group-description' );
-			if ( editorInstance ) {
-				descriptionVal = editorInstance.getContent();
-			}
-		}
+		// Pull latest content from the editor.
+		var descriptionVal = getRichTextEditorContent( 'bb-admin-create-group-description', description );
 
 		createGroup( {
 			name: name.trim(),

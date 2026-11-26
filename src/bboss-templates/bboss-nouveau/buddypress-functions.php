@@ -670,6 +670,7 @@ JS;
 	 *
 	 * @since BuddyPress 3.0.0
 	 * @since BuddyBoss 3.6.2 Adds the `invites_revoke` nonce.
+	 * @since BuddyBoss 3.8.0 Adds the link_preview_error and link_preview_timeout values.
 	 */
 	public function localize_scripts() {
 
@@ -726,6 +727,8 @@ JS;
 			'card_load_error'            => __( 'Failed to load data.', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'member_label'               => __( 'member', 'buddyboss-community-social-network-groups-forums-messaging' ),
 			'members_label'              => __( 'members', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'loadingMore'                => esc_html__( 'Loading...', 'buddyboss-community-social-network-groups-forums-messaging' ),
+			'directory_autoload'         => function_exists( 'bboss_is_list_autoload_active' ) && bboss_is_list_autoload_active(),
 			// Logged-in user id, used by the hover pop-up cards to suppress a member's own card.
 			// The cards previously read BP_Nouveau.activity.params.user_id, which carries the
 			// same value but is only registered when the Activity component is enabled — with
@@ -809,6 +812,12 @@ JS;
 
 		// Add localize variable for more menu text.
 		$params['more_menu_text'] = esc_html__( 'More', 'buddyboss-community-social-network-groups-forums-messaging' );
+
+		// Add localize variable for the link preview error when the request fails.
+		$params['link_preview_error'] = esc_html__( 'There was a problem generating a link preview.', 'buddyboss-community-social-network-groups-forums-messaging' );
+
+		// Add localize variable for the link preview request time limit in milliseconds, above the server-side fetch time.
+		$params['link_preview_timeout'] = 20000;
 
 		/**
 		 * Filters core JavaScript strings for internationalization before AJAX usage.
