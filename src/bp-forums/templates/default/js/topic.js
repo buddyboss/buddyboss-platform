@@ -15,6 +15,16 @@ jQuery( document ).ready(
 				function ( response ) {
 					if ( response.success ) {
 						$( update_selector ).html( response.content );
+
+						// The reply form posts its own "notify me" checkbox, and an unchecked box unsubscribes the member on reply. Keep it equal to the button.
+						if ( 'subscription' === action ) {
+							var is_subscribed = $( update_selector ).find( '#subscribe-' + topic_id ).hasClass( 'is-subscribed' );
+							$( 'input[name="bbp_topic_id"]' ).filter(
+								function () {
+									return String( topic_id ) === String( $( this ).val() );
+								}
+							).closest( 'form' ).find( 'input[name="bbp_topic_subscription"]' ).prop( 'checked', is_subscribed );
+						}
 					} else {
 						if ( ! response.content ) {
 							response.content = bbpTopicJS.generic_ajax_error;
