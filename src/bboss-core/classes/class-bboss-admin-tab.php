@@ -327,6 +327,7 @@ if ( ! class_exists( 'BBoss_Admin_Tab' ) ) :
 					'malformed_ul_li'   => esc_js( __( 'Content has malformed <ul> or <li> tags. Please fix them before submitting.', 'buddyboss-community-social-network-groups-forums-messaging' ) ),
 				),
 				'components'                   => array_map( 'intval', bboss_get_option( 'bp-active-components' ) ),
+				'create_page_nonce'            => wp_create_nonce( 'bp_core_admin_create_background_page' ),
 			);
 
 			if ( function_exists( 'bboss_is_readylaunch_enabled' ) && bboss_is_readylaunch_enabled() && class_exists( 'BBoss_Readylaunch' ) ) {

@@ -1204,10 +1204,16 @@ function bboss_is_forum_group_forum( $forum_id = 0 ) {
  * AJAX endpoint for link preview URL parser.
  *
  * @since BuddyBoss 2.3.60
+ * @since BuddyBoss [BBVERSION] Checks the link preview nonce.
  */
 function bboss_forums_link_preview_parse_url() {
+	// Only a request from one of our own forms may ask the server to fetch a URL.
+	if ( ! check_ajax_referer( 'bb_link_preview', 'nonce', false ) ) {
+		wp_send_json( array( 'error' => esc_html__( 'There was a problem generating a link preview.', 'buddyboss-community-social-network-groups-forums-messaging' ) ) );
+	}
+
 	// Get URL.
-	$url = isset( $_POST['url'] ) ? $_POST['url'] : ''; // phpcs:ignore
+	$url = isset( $_POST['url'] ) ? esc_url_raw( wp_unslash( $_POST['url'] ) ) : '';
 
 	// Check if URL is validated.
 	if ( empty( $url ) || ! filter_var( $url, FILTER_VALIDATE_URL ) ) {

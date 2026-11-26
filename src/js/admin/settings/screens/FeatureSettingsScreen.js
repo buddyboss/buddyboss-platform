@@ -1617,7 +1617,7 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 								<iframe
 									width="100%"
 									height="315"
-									src={`https://www.youtube.com/embed/${helpContent.videoId}`}
+									src={`https://www.youtube-nocookie.com/embed/${helpContent.videoId}`}
 									title={__('Video tutorial', 'buddyboss-community-social-network-groups-forums-messaging')}
 									frameBorder="0"
 									allowFullScreen

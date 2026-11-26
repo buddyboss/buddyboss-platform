@@ -4573,28 +4573,9 @@ function bboss_is_entitled_to_addons() {
 		return (bool) $override;
 	}
 
-	$has_mothership = class_exists( '\BuddyBoss\Core\Admin\Mothership\BB_Plugin_Connector' )
-		&& class_exists( '\BuddyBoss\Core\Admin\Mothership\BB_Addons_Manager' );
+	$entitled = false;
+	$product  = null;
 
-	if ( ! $has_mothership ) {
-		return false;
-	}
-
-	$connector = new \BuddyBoss\Core\Admin\Mothership\BB_Plugin_Connector();
-
-	if ( ! $connector->getLicenseActivationStatus() ) {
-		return false;
-	}
-
-	// Fetch the product first (warms the products transient), then read the
-	// error flag from that same warm cache. An errored read returns false.
-	$product = \BuddyBoss\Core\Admin\Mothership\BB_Addons_Manager::checkProductBySlug( 'buddyboss-addons' );
-
-	if ( \BuddyBoss\Core\Admin\Mothership\BB_Addons_Manager::productsApiErrored() ) {
-		return false;
-	}
-
-	$entitled = ! empty( $product );
 
 	/**
 	 * Filters the computed BuddyBoss Addons entitlement decision.

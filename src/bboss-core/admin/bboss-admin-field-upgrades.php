@@ -549,32 +549,3 @@ function bboss_flush_field_upgrades_cache_full() {
 	bboss_schedule_field_upgrades_refresh();
 }
 
-/**
- * Clear the field upgrades cache when the license status changes.
- *
- * Mirrors the placeholder catalog's license-change handler — when the
- * site moves from "no license" to "Pro" or back, every modal payload
- * needs a fresh resolution because pro_notice may stop firing.
- *
- * @since BuddyBoss 3.0.0
- */
-function bboss_register_field_upgrades_license_hooks() {
-	if ( ! class_exists( '\\BuddyBoss\\Core\\Admin\\Mothership\\BB_Plugin_Connector' ) ) {
-		return;
-	}
-
-	// Network-wide when Platform is network-activated.
-	$plugin_id = \BuddyBoss\Core\Admin\Mothership\BB_Plugin_Connector::get_license_option( 'buddyboss_dynamic_plugin_id', '' );
-	if ( empty( $plugin_id ) && defined( 'BBOSS_PLATFORM_EDITION' ) ) {
-		$plugin_id = BBOSS_PLATFORM_EDITION;
-	}
-
-	if ( ! empty( $plugin_id ) ) {
-		// License change is one of the few events where we want to force a
-		// fresh remote fetch (drop stale option too) — Pro vs free changes
-		// what badges users should see, and we'd rather pay the synchronous
-		// S3 hit on the rare license-change request than serve stale data.
-		add_action( $plugin_id . '_license_status_changed', 'bboss_flush_field_upgrades_cache_full' );
-	}
-}
-add_action( 'admin_init', 'bboss_register_field_upgrades_license_hooks' );

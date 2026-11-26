@@ -5672,13 +5672,19 @@ function bboss_update_activity_feed_of_post( $post, $request, $action ) {
  * AJAX endpoint for link preview URL parser.
  *
  * @since BuddyBoss 1.0.0
+ * @since BuddyBoss [BBVERSION] Checks the link preview nonce.
  */
 function bboss_activity_action_parse_url() {
+	// Only a request from one of our own forms may ask the server to fetch a URL.
+	if ( ! check_ajax_referer( 'bb_link_preview', 'nonce', false ) ) {
+		wp_send_json( array( 'error' => esc_html__( 'There was a problem generating a link preview.', 'buddyboss-community-social-network-groups-forums-messaging' ) ) );
+	}
+
 	// Get URL.
-	$url = $_POST['url'];
+	$url = isset( $_POST['url'] ) ? esc_url_raw( wp_unslash( $_POST['url'] ) ) : '';
 
 	// Check if URL is validated.
-	if ( ! filter_var( $url, FILTER_VALIDATE_URL ) ) {
+	if ( empty( $url ) || ! filter_var( $url, FILTER_VALIDATE_URL ) ) {
 		wp_send_json( array( 'error' => __( 'URL is not valid.', 'buddyboss-community-social-network-groups-forums-messaging' ) ) );
 	}
 

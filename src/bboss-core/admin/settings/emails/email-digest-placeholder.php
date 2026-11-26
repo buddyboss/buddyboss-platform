@@ -217,26 +217,8 @@ function bboss_email_digest_addon_latest_release() {
 		'url'     => '',
 	);
 
-	if ( ! class_exists( '\BuddyBoss\Core\Admin\Mothership\BB_Addons_Manager' ) ) {
-		return $none;
-	}
 
-	try {
-		$product = \BuddyBoss\Core\Admin\Mothership\BB_Addons_Manager::checkProductBySlug( bboss_email_digest_addon_plugin_slug() );
-	} catch ( \Exception $e ) {
-		return $none;
-	}
-
-	$release = \BuddyBoss\Core\Admin\Mothership\BB_Addons_Manager::get_product_latest_version( $product );
-
-	if ( null === $release ) {
-		return $none;
-	}
-
-	return array(
-		'version' => isset( $release->number ) ? (string) $release->number : '',
-		'url'     => isset( $release->url ) ? (string) $release->url : '',
-	);
+	return $none;
 }
 
 /**

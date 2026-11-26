@@ -222,21 +222,6 @@ function bboss_get_placeholder_plugin_status( $item, $active_plugins = null ) {
 	// This must come first — if not in plan, always show upgrade badge
 	// regardless of install status. Free products are exempt (always in plan).
 	$in_plan = $is_free;
-	if ( ! $in_plan && class_exists( '\\BuddyBoss\\Core\\Admin\\Mothership\\BB_Addons_Manager' ) ) {
-		// Same slug resolution as the injected card's plugin_slug — the plan
-		// lookup keys off the Mothership product slug, not the folder name.
-		$plugin_slug = bboss_get_placeholder_product_slug( $item );
-		$product     = \BuddyBoss\Core\Admin\Mothership\BB_Addons_Manager::checkProductBySlug( $plugin_slug );
-		$in_plan     = ! empty( $product );
-
-		// A failed add-ons API lookup (outage, rate limit backoff) is not
-		// evidence the product is missing from the plan. Fall back to the
-		// install state so a licensed customer's installed add-ons don't
-		// flip to an "UPGRADE" badge while the API is unreachable.
-		if ( ! $in_plan && \BuddyBoss\Core\Admin\Mothership\BB_Addons_Manager::productsApiErrored() ) {
-			$in_plan = file_exists( WP_PLUGIN_DIR . '/' . $plugin_file );
-		}
-	}
 
 	/**
 	 * Filters whether a placeholder feature counts as included in the site's plan.
@@ -651,26 +636,3 @@ function bboss_clear_placeholder_cache_on_license_change() {
 	bboss_schedule_placeholder_features_refresh();
 }
 
-/**
- * Register the license change hook with the dynamic plugin ID.
- *
- * Must run after the Mothership loader initializes so the plugin ID is available.
- *
- * @since BuddyBoss 3.0.0
- */
-function bboss_register_placeholder_cache_clear_hooks() {
-	if ( ! class_exists( '\\BuddyBoss\\Core\\Admin\\Mothership\\BB_Plugin_Connector' ) ) {
-		return;
-	}
-
-	// Network-wide when Platform is network-activated.
-	$plugin_id = \BuddyBoss\Core\Admin\Mothership\BB_Plugin_Connector::get_license_option( 'buddyboss_dynamic_plugin_id', '' );
-	if ( empty( $plugin_id ) && defined( 'BBOSS_PLATFORM_EDITION' ) ) {
-		$plugin_id = BBOSS_PLATFORM_EDITION;
-	}
-
-	if ( ! empty( $plugin_id ) ) {
-		add_action( $plugin_id . '_license_status_changed', 'bboss_clear_placeholder_cache_on_license_change' );
-	}
-}
-add_action( 'admin_init', 'bboss_register_placeholder_cache_clear_hooks' );

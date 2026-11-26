@@ -16,22 +16,6 @@
 
 defined( 'ABSPATH' ) || exit;
 
-/**
- * Whether the BuddyBoss Mothership license layer is available.
- *
- * The buddyboss-tools addon is a licensed BuddyBoss product served from the
- * BuddyBoss add-on server (not wordpress.org). When these Mothership helper
- * classes are present, license status and the authorized download URL can be
- * resolved; otherwise the install path falls back to the generic plugin API.
- *
- * @since BuddyBoss 3.1.0
- *
- * @return bool True when both Mothership helper classes are loaded.
- */
-function bboss_tools_mothership_available() {
-	return class_exists( '\BuddyBoss\Core\Admin\Mothership\BB_Plugin_Connector' )
-		&& class_exists( '\BuddyBoss\Core\Admin\Mothership\BB_Addons_Manager' );
-}
 
 
 

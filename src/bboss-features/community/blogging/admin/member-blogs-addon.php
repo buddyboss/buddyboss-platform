@@ -64,17 +64,6 @@ function bboss_member_blogging_plugin_slug() {
 	return 'buddyboss-member-blogging';
 }
 
-/**
- * Whether the BuddyBoss Mothership license layer is available.
- *
- * @since BuddyBoss 3.3.0
- *
- * @return bool True when both Mothership helper classes are loaded.
- */
-function bboss_member_blogging_mothership_available() {
-	return class_exists( '\BuddyBoss\Core\Admin\Mothership\BB_Plugin_Connector' )
-		&& class_exists( '\BuddyBoss\Core\Admin\Mothership\BB_Addons_Manager' );
-}
 
 
 
@@ -145,30 +134,8 @@ function bboss_member_blogging_get_addon_state() {
 
 	// Not on disk from here down — an install is the only path forward, and the
 	// add-on is not on wordpress.org, so it needs the licensed add-on server.
-	if ( ! bboss_member_blogging_mothership_available() ) {
-		$state = 'not_in_plan';
+	$state = 'not_in_plan';
 
-		return $state;
-	}
-
-
-	$product = \BuddyBoss\Core\Admin\Mothership\BB_Addons_Manager::checkProductBySlug( bboss_member_blogging_plugin_slug() );
-
-	if ( ! empty( $product ) ) {
-		$state = 'not_installed';
-
-		return $state;
-	}
-
-	/*
-	 * An empty product is ambiguous: it means either "not in this customer's plan" or
-	 * "the add-ons API did not answer". Telling a licensed customer to upgrade because
-	 * of a network blip is the worse failure, so only claim not_in_plan when the API
-	 * actually reported back.
-	 */
-	$state = \BuddyBoss\Core\Admin\Mothership\BB_Addons_Manager::productsApiErrored()
-		? 'api_unavailable'
-		: 'not_in_plan';
 
 	return $state;
 }
