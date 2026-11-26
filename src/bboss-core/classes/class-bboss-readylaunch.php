@@ -229,6 +229,51 @@ if ( ! class_exists( 'BBoss_Readylaunch' ) ) {
 			// Add Readylaunch template locations.
 			add_filter( 'bp_get_template_stack', array( $this, 'add_template_stack' ), PHP_INT_MAX );
 			add_filter( 'bbp_get_template_stack', array( $this, 'add_forum_template_stack' ), PHP_INT_MAX );
+
+			// Before any script or style is located in the stack.
+			add_action( 'wp_enqueue_scripts', array( $this, 'bb_rl_maybe_restore_default_template_stack' ), 0 );
+		}
+
+		/**
+		 * Hand the template stack back to the default template pack on a page ReadyLaunch does not render.
+		 *
+		 * The ReadyLaunch stack is in place from the start and override_page_templates() swaps it back
+		 * at the very end of `template_include`. A request that never gets there kept the ReadyLaunch
+		 * stack while the theme rendered the page: a 404, or a plugin that includes its own template
+		 * and exits from an earlier `template_include` callback. Such a page then loaded the ReadyLaunch
+		 * scripts without the ReadyLaunch front script they depend on. Block themes and pages with the
+		 * ReadyLaunch header block keep the ReadyLaunch stack, as before.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @return void
+		 */
+		public function bb_rl_maybe_restore_default_template_stack() {
+			if (
+				! is_404() &&
+				(
+					$this->bb_is_readylaunch_enabled_for_page() ||
+					$this->bb_is_readylaunch_forums()
+				)
+			) {
+				return;
+			}
+
+			if (
+				(
+					function_exists( 'wp_is_block_theme' ) &&
+					wp_is_block_theme()
+				) ||
+				has_block( 'buddyboss/readylaunch-header', get_post( get_the_ID() ) )
+			) {
+				return;
+			}
+
+			add_filter( 'bp_get_template_stack', 'bp_add_template_stack_locations' );
+			add_filter( 'bbp_get_template_stack', 'bbp_add_template_stack_locations' );
+
+			remove_filter( 'bp_get_template_stack', array( $this, 'add_template_stack' ), PHP_INT_MAX );
+			remove_filter( 'bbp_get_template_stack', array( $this, 'add_forum_template_stack' ), PHP_INT_MAX );
 		}
 
 		/**
@@ -1090,6 +1135,8 @@ if ( ! class_exists( 'BBoss_Readylaunch' ) ) {
 			if ( $wp_query->is_404() ) {
 				// For 404 pages, don't use ReadyLaunch layout.
 				// Let WordPress handle the 404 template naturally.
+				$this->bb_rl_maybe_restore_default_template_stack();
+
 				return $template;
 			}
 
@@ -1141,22 +1188,7 @@ if ( ! class_exists( 'BBoss_Readylaunch' ) ) {
 				return bboss_locate_template( 'layout.php' );
 			}
 
-			if (
-				! $this->bb_is_readylaunch_enabled_for_page() &&
-				! $this->bb_is_readylaunch_forums() &&
-				! (
-					function_exists( 'wp_is_block_theme' ) &&
-					wp_is_block_theme()
-				) &&
-				! has_block( 'buddyboss/readylaunch-header', get_post( get_the_ID() ) )
-			) {
-				add_filter( 'bp_get_template_stack', 'bp_add_template_stack_locations' );
-				add_filter( 'bbp_get_template_stack', 'bbp_add_template_stack_locations' );
-
-				// Add Readylaunch template locations.
-				remove_filter( 'bp_get_template_stack', array( $this, 'add_template_stack' ), PHP_INT_MAX );
-				remove_filter( 'bbp_get_template_stack', array( $this, 'add_forum_template_stack' ), PHP_INT_MAX );
-			}
+			$this->bb_rl_maybe_restore_default_template_stack();
 
 			return $template;
 		}
