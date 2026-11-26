@@ -677,6 +677,16 @@ function bboss_version_updater() {
 		}
 		// @bbwt-com-end installers
 
+		// DB version 23633 — rewrite rules regenerated during a BuddyBoss page request were
+		// stored with the post rule ahead of the page rule, so regular pages returned 404
+		// (PROD-10720). This version bump runs the updater on every update path, including
+		// auto-updates and FTP or deploy copies that never flush the rules themselves.
+		// Regenerate them here explicitly, so the repair does not depend on the flush in
+		// bp_core_install().
+		if ( $raw_db_version < 23641 ) {
+			flush_rewrite_rules( false );
+		}
+
 		// DB version 23632 — the activity REST endpoints now refuse comments whose root
 		// activity the user cannot read (PROD-10649). Purge their App API cache so comments
 		// cached before the update are not served for 30 days.

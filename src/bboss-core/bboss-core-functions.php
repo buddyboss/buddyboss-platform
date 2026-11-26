@@ -5065,6 +5065,8 @@ if ( function_exists( 'bboss_get_email' ) && ! function_exists( 'bp_get_email' )
  * process the request without any errors.
  *
  * @since BuddyPress 2.5.0
+ * @since BuddyBoss 3.8.0 Added the `bb_pre_bp_send_email` filter, which can stop a validated
+ *                              email before any mail transport runs.
  *
  * @param string                   $email_type Type of email being sent.
  * @param string|array|int|WP_User $to         Either an email address, user ID, WP_User object,
@@ -5149,6 +5151,31 @@ function bboss_send_email( $email_type, $to, $args = array() ) {
 	$status = $email->validate();
 	if ( is_wp_error( $status ) ) {
 		return $status;
+	}
+
+	/**
+	 * Filters whether to stop a validated email before it reaches a mail transport.
+	 *
+	 * Return anything other than null to end bboss_send_email() here: that value is returned to
+	 * the caller and neither wp_mail() nor the delivery class runs. This fires before the
+	 * transport is chosen, so it behaves the same whichever mail plugin the site uses,
+	 * including plugins that declare their own wp_mail(), which may not apply `pre_wp_mail`.
+	 * Return true when the email was handled another way (for example held for a digest), or
+	 * a WP_Error to report that it was not sent.
+	 *
+	 * Plugins should check for bboss_email_supports_pre_send_filter() before relying on it.
+	 *
+	 * @since BuddyBoss 3.8.0
+	 *
+	 * @param null|bool|WP_Error       $pre_send   Null to send the email as usual.
+	 * @param BBoss_Email                 $email      The validated email.
+	 * @param string                   $email_type Type of email being sent.
+	 * @param string|array|int|WP_User $to         The recipient passed to bboss_send_email().
+	 * @param array                    $args       Extra parameters, notably `tokens`.
+	 */
+	$pre_send = apply_filters( 'bb_pre_bp_send_email', null, $email, $email_type, $to, $args );
+	if ( null !== $pre_send ) {
+		return $pre_send;
 	}
 
 	/**
@@ -5281,6 +5308,35 @@ if ( function_exists( 'bboss_send_email' ) && ! function_exists( 'bp_send_email'
 
 
 /**
+ * Whether bboss_send_email() applies the `bb_pre_bp_send_email` filter.
+ *
+ * A capability marker. Plugins that hold or reroute BuddyBoss emails should gate their
+ * `bb_pre_bp_send_email` callback on function_exists() of this function and keep their older
+ * route (such as `pre_wp_mail`) for Platform versions without the filter.
+ *
+ * @since BuddyBoss 3.8.0
+ *
+ * @return bool Always true when this function exists.
+ */
+function bboss_email_supports_pre_send_filter() {
+	return true;
+}
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_email_supports_pre_send_filter' ) && ! function_exists( 'bb_email_supports_pre_send_filter' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_email_supports_pre_send_filter()}.
+	 *
+	 * @deprecated Use bboss_email_supports_pre_send_filter() instead.
+	 */
+	function bb_email_supports_pre_send_filter() {
+		return bboss_email_supports_pre_send_filter();
+	}
+}
+// @bbwt-com-end compat-layer
+
+
+/**
  * Return email appearance settings.
  *
  * @since BuddyPress 2.5.0
@@ -5395,14 +5451,16 @@ if ( function_exists( 'bboss_email_get_template' ) && ! function_exists( 'bp_ema
  * Intended for use with the email system introduced in BuddyPress 2.5.0.
  *
  * @since BuddyPress 2.5.0
+ * @since BuddyBoss 3.8.1 Removes the scheme that the link dialog adds in front of a URL token in a link and its text.
  *
  * @param string $text   Text to replace tokens in.
  * @param array  $tokens Token names and replacement values for the $text.
  * @return string
  */
 function bboss_core_replace_tokens_in_text( $text, $tokens ) {
-	$unescaped = array();
-	$escaped   = array();
+	$unescaped  = array();
+	$escaped    = array();
+	$url_tokens = array();
 
 	foreach ( $tokens as $token => $value ) {
 		if ( ! is_string( $value ) && is_callable( $value ) ) {
@@ -5416,6 +5474,28 @@ function bboss_core_replace_tokens_in_text( $text, $tokens ) {
 
 		$unescaped[ '{{{' . $token . '}}}' ] = $value;
 		$escaped[ '{{' . $token . '}}' ]     = esc_html( $value );
+
+		if ( is_string( $value ) && preg_match( '#^https?://#i', $value ) ) {
+			$url_tokens[] = preg_quote( $token, '/' );
+		}
+	}
+
+	// WordPress's link dialog adds "http://" in front of a URL it doesn't
+	// recognise, so a link to a token is saved as href="http://{{{message.url}}}".
+	// With no text selected it also uses that URL as the link text. When the
+	// token's value is already a full http(s) URL, drop that scheme from the href and
+	// from link text that is only the token, so neither is sent as http://http://...
+	if ( ! empty( $url_tokens ) && false !== strpos( $text, '://{{' ) ) {
+		$names     = implode( '|', $url_tokens );
+		$url_token = '(\{\{\{(?:' . $names . ')\}\}\}|\{\{(?:' . $names . ')\}\})';
+		$text      = preg_replace(
+			array(
+				'/(\bhref\s*=\s*["\'])https?:\/\/' . $url_token . '/i',
+				'/(<a\b[^<>]*>)https?:\/\/' . $url_token . '(<\/a>)/i',
+			),
+			array( '$1$2', '$1$2$3' ),
+			$text
+		);
 	}
 
 	$text = strtr( $text, $unescaped );  // Do first.
@@ -5972,11 +6052,16 @@ if ( function_exists( 'bboss_strip_script_and_style_tags' ) && ! function_exists
 
 
 /**
- * Check if logged in member type is allowed to send invites
+ * Check if a member's profile type is allowed to select the invitee's profile type.
  *
  * @since BuddyBoss 1.0.0
+ * @since BuddyBoss 3.8.1 Added the `$user_id` parameter.
+ *
+ * @param int $user_id Optional. Member to check. Default: the logged-in member.
+ *
+ * @return bool
  */
-function bboss_check_member_send_invites_tab_member_type_allowed() {
+function bboss_check_member_send_invites_tab_member_type_allowed( $user_id = 0 ) {
 
 	// default allowed false
 	$allowed = false;
@@ -5985,7 +6070,7 @@ function bboss_check_member_send_invites_tab_member_type_allowed() {
 	if ( true === bboss_member_type_enable_disable() ) {
 		// Check BuddyBoss > Settings > Email Invites > Allow users to select profile type of invitee.
 		if ( true === bboss_disable_invite_member_type() ) {
-			$current_user = bboss_loggedin_user_id();
+			$current_user = ! empty( $user_id ) ? (int) $user_id : bboss_loggedin_user_id();
 			$member_type  = bboss_get_member_type( $current_user );
 			// If current user don't have any profile type then we are not allow.
 			if ( false === $member_type ) {
@@ -6013,8 +6098,8 @@ if ( function_exists( 'bboss_check_member_send_invites_tab_member_type_allowed' 
 	 *
 	 * @deprecated Use bboss_check_member_send_invites_tab_member_type_allowed() instead.
 	 */
-	function bp_check_member_send_invites_tab_member_type_allowed() {
-		return bboss_check_member_send_invites_tab_member_type_allowed();
+	function bp_check_member_send_invites_tab_member_type_allowed( $user_id = 0 ) {
+		return bboss_check_member_send_invites_tab_member_type_allowed( $user_id );
 	}
 }
 // @bbwt-com-end compat-layer
@@ -6677,21 +6762,23 @@ if ( function_exists( 'bboss_core_get_group_avatar' ) && ! function_exists( 'bp_
  *
  * @return array Parsed URL data.
  * @since BuddyBoss 1.3.2
+ * @since BuddyBoss 3.8.0 Skips avatar images when collecting the page images.
  */
 function bboss_core_parse_url( $url ) {
 
 	$parse_url_data = wp_parse_url( $url, PHP_URL_HOST );
 	$original_url   = $url;
+	$user_agent     = bboss_get_url_preview_user_agent();
 
-	if ( in_array( $parse_url_data, apply_filters( 'bp_core_parse_url_shorten_url_provider', array( 'bit.ly', 'snip.ly', 'rb.gy', 'tinyurl.com', 'tiny.one', 'rotf.lol', 'b.link', '4ubr.short.gy', '' ) ), true ) ) {
+	if ( in_array( $parse_url_data, apply_filters( 'bp_core_parse_url_shorten_url_provider', array( 'bit.ly', 'snip.ly', 'rb.gy', 'tinyurl.com', 'tiny.one', 'rotf.lol', 'b.link', '4ubr.short.gy', 'maps.app.goo.gl', '' ) ), true ) ) {
 		$response = wp_safe_remote_get(
 			$url,
 			array(
-				'stream'      => true,
-				'headers'     => array(
-					'user-agent' => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:71.0) Gecko/20100101 Firefox/71.0',
+				'stream'  => true,
+				'headers' => array(
+					'user-agent' => $user_agent,
 				),
-			),
+			)
 		);
 
 		if ( ! is_wp_error( $response ) && ! empty( $response['http_response']->get_response_object()->url ) && $response['http_response']->get_response_object()->url !== $url ) {
@@ -6704,16 +6791,24 @@ function bboss_core_parse_url( $url ) {
 		if ( $original_url === $url ) {
 			$context = array(
 				'http' => array(
-					'method'        => 'GET',
-					'max_redirects' => 1,
+					'method'          => 'GET',
+					// Stop at the first response so the Location header below reflects the redirect.
+					'follow_location' => 0,
+					'user_agent'      => $user_agent,
 				),
 			);
 
 			@file_get_contents( $url, null, stream_context_create( $context ) );
-			if ( isset( $http_response_header ) && isset( $http_response_header[6] ) ) {
-				$new_url = str_replace( 'Location: ', '', $http_response_header[6] );
-				if ( filter_var( $new_url, FILTER_VALIDATE_URL ) ) {
-					$url = $new_url;
+			if ( ! empty( $http_response_header ) && is_array( $http_response_header ) ) {
+				// Find the redirect target instead of relying on a fixed header position.
+				foreach ( $http_response_header as $response_header ) {
+					if ( 0 === stripos( $response_header, 'Location:' ) ) {
+						$new_url = trim( substr( $response_header, strlen( 'Location:' ) ) );
+						if ( filter_var( $new_url, FILTER_VALIDATE_URL ) ) {
+							$url = $new_url;
+						}
+						break;
+					}
 				}
 			}
 		}
@@ -6754,7 +6849,7 @@ function bboss_core_parse_url( $url ) {
 		$parsed_url_data['error']       = '';
 		$parsed_url_data['wp_embed']    = true;
 	} else {
-		$args = array( 'user-agent' => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:71.0) Gecko/20100101 Firefox/71.0' );
+		$args = array( 'user-agent' => $user_agent );
 
 		if ( bboss_is_same_site_url( $url ) ) {
 			if ( ! bboss_enable_private_network() ) {
@@ -6836,6 +6931,12 @@ function bboss_core_parse_url( $url ) {
 			for ( $i = 0; $i < $image_elements->length; $i ++ ) {
 				$image = $image_elements->item( $i );
 				$src   = $image->getAttribute( 'src' );
+
+				// Skip avatars (get_avatar() and BuddyBoss avatars carry an "avatar" class token),
+				// so a member photo is not used as the preview image when the page has no og:image.
+				if ( preg_match( '/(^|\s)avatar(\s|$)/i', $image->getAttribute( 'class' ) ) ) {
+					continue;
+				}
 
 				if ( filter_var( $src, FILTER_VALIDATE_URL ) ) {
 					$images[] = $src;
@@ -7876,6 +7977,12 @@ function bboss_core_symlink_generator( $type, $item, $size, $file, $output_file_
 				}
 				if ( is_dir( 'wp-content/' . $sym_path ) ) {
 					chdir( 'wp-content/' . $sym_path );
+
+					// Callers pass false when the image size is missing.
+					if ( ! is_array( $file ) ) {
+						$file = array();
+					}
+
 					if ( empty( $file['path'] ) ) {
 						$file['path'] = get_post_meta( $attachment_id, '_wp_attached_file', true );
 						if ( 'document' === $type ) {
@@ -7888,7 +7995,7 @@ function bboss_core_symlink_generator( $type, $item, $size, $file, $output_file_
 							if ( ! $is_image ) {
 								if ( ! empty( $meta['sizes'][ $size ] ) ) {
 									$img_url = str_replace( $img_url_basename, $meta['sizes'][ $size ]['file'], $img_url );
-								} else {
+								} elseif ( ! empty( $meta['sizes']['full']['file'] ) ) {
 									$img_url = str_replace( $img_url_basename, $meta['sizes']['full']['file'], $img_url );
 								}
 							}
@@ -7896,6 +8003,9 @@ function bboss_core_symlink_generator( $type, $item, $size, $file, $output_file_
 						}
 					}
 					$output_file_src = '../../' . $file['path'];
+
+					// Use the same file name the caller checks and serves (includes the extension).
+					$filename = wp_basename( $attachment_path );
 					if ( file_exists( $output_file_src ) ) {
 						symlink( $output_file_src, $filename );
 					}
@@ -7916,6 +8026,62 @@ if ( function_exists( 'bboss_core_symlink_generator' ) && ! function_exists( 'bb
 	 */
 	function bb_core_symlink_generator( $type, $item, $size, $file, $output_file_src, string $attachment_path ) {
 		return bboss_core_symlink_generator( $type, $item, $size, $file, $output_file_src, $attachment_path );
+	}
+}
+// @bbwt-com-end compat-layer
+
+
+/**
+ * Delete document preview symlinks that point at a directory.
+ *
+ * In the relative symlink mode, documents without image sizes (for example audio files) used to
+ * get a symlink to their uploads month directory instead of the file. A preview symlink never
+ * points at a directory, so any such symlink is removed.
+ *
+ * @since BuddyBoss 3.8.1
+ *
+ * @return array List of deleted symlink paths.
+ */
+function bboss_core_delete_directory_symlinks() {
+	$deleted = array();
+
+	// Same directory as bp_document_symlink_path(), which is not loaded when documents are inactive.
+	$upload_dir = wp_upload_dir();
+	$dir        = $upload_dir['basedir'] . '/bb-platform-previews/' . md5( 'bb-documents' );
+
+	if ( is_dir( $dir ) ) {
+		$dh = opendir( $dir );
+		if ( false !== $dh ) {
+			while ( false !== ( $file = readdir( $dh ) ) ) {
+				if ( '.' === $file || '..' === $file ) {
+					continue;
+				}
+
+				$file = $dir . '/' . $file;
+				if ( is_link( $file ) && is_dir( $file ) ) {
+					unlink( $file );
+					$deleted[] = $file;
+				}
+			}
+			closedir( $dh );
+		}
+	}
+
+	// Per-site flag: the uploads directory, and so the symlinks, belong to the current site.
+	update_option( 'bb_directory_symlinks_deleted', 1 );
+
+	return $deleted;
+}
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_core_delete_directory_symlinks' ) && ! function_exists( 'bb_core_delete_directory_symlinks' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_delete_directory_symlinks()}.
+	 *
+	 * @deprecated Use bboss_core_delete_directory_symlinks() instead.
+	 */
+	function bb_core_delete_directory_symlinks() {
+		return bboss_core_delete_directory_symlinks();
 	}
 }
 // @bbwt-com-end compat-layer
@@ -10282,9 +10448,109 @@ if ( function_exists( 'bboss_enabled_legacy_email_preference' ) && ! function_ex
 
 
 /**
+ * Get the admin "main" setting of each saved notification type.
+ *
+ * Rows of the `bb_enabled_notification` option that have no `main` key (for example
+ * a Settings 2.0 save that only changed an email/web/app sub-type) are skipped, so the
+ * notification type falls back to its registered default.
+ *
+ * @since BuddyBoss 3.8.1
+ *
+ * @param array $enabled_all_notification Saved `bb_enabled_notification` option value.
+ *
+ * @return array Map of notification key => 'yes'|'no'.
+ */
+function bboss_get_enabled_notification_main_settings( $enabled_all_notification ) {
+	$enabled_notification = array();
+
+	if ( empty( $enabled_all_notification ) || ! is_array( $enabled_all_notification ) ) {
+		return $enabled_notification;
+	}
+
+	foreach ( $enabled_all_notification as $key => $value ) {
+		if ( is_array( $value ) && isset( $value['main'] ) ) {
+			$enabled_notification[ $key ] = $value['main'];
+		}
+	}
+
+	return array_filter( $enabled_notification );
+}
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_enabled_notification_main_settings' ) && ! function_exists( 'bb_get_enabled_notification_main_settings' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_enabled_notification_main_settings()}.
+	 *
+	 * @deprecated Use bboss_get_enabled_notification_main_settings() instead.
+	 */
+	function bb_get_enabled_notification_main_settings( $enabled_all_notification ) {
+		return bboss_get_enabled_notification_main_settings( $enabled_all_notification );
+	}
+}
+// @bbwt-com-end compat-layer
+
+
+/**
+ * Get the member whose notification preferences the settings screen shows.
+ *
+ * The member settings screen saves to the displayed member (bboss_settings_action_notifications()
+ * writes to bboss_displayed_user_id()), so it must also show that member's values. Reading the
+ * logged-in member instead showed an administrator their own preferences and mention name on
+ * another member's screen, and pressing Save there copied the administrator's values onto
+ * that member.
+ *
+ * Falls back to the logged-in member when no member is displayed, or when the viewer may not
+ * edit the displayed member's settings, so every other caller (REST, wp-admin, custom
+ * templates) keeps its current behaviour.
+ *
+ * @since BuddyBoss 3.8.1
+ *
+ * @return int User ID, or 0 when nobody is logged in.
+ */
+function bboss_get_notification_settings_user_id() {
+	$user_id           = (int) bboss_loggedin_user_id();
+	$displayed_user_id = (int) bboss_displayed_user_id();
+
+	if (
+		! empty( $displayed_user_id ) &&
+		$displayed_user_id !== $user_id &&
+		function_exists( 'bboss_core_can_edit_settings' ) &&
+		bboss_core_can_edit_settings()
+	) {
+		$user_id = $displayed_user_id;
+	}
+
+	/**
+	 * Filters the member whose notification preferences are rendered.
+	 *
+	 * @since BuddyBoss 3.8.1
+	 *
+	 * @param int $user_id           Member the preferences are read for.
+	 * @param int $displayed_user_id Displayed member, or 0 when no member is displayed.
+	 */
+	return (int) apply_filters( 'bb_get_notification_settings_user_id', $user_id, $displayed_user_id );
+}
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_notification_settings_user_id' ) && ! function_exists( 'bb_get_notification_settings_user_id' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_notification_settings_user_id()}.
+	 *
+	 * @deprecated Use bboss_get_notification_settings_user_id() instead.
+	 */
+	function bb_get_notification_settings_user_id() {
+		return bboss_get_notification_settings_user_id();
+	}
+}
+// @bbwt-com-end compat-layer
+
+
+/**
  * Render the notification settings on the front end.
  *
  * @since BuddyBoss 1.9.3
+ * @since BuddyBoss 3.8.1 Shows the preferences of the member being edited, see
+ *                              bboss_get_notification_settings_user_id().
  *
  * @param string $notification_group Notification group name.
  */
@@ -10302,7 +10568,7 @@ function bboss_render_notification( $notification_group ) {
 	}
 
 	$default_enabled_notifications = array_column( $options['fields'], 'default', 'key' );
-	$enabled_notification          = array_filter( array_combine( array_keys( $enabled_all_notification ), array_column( $enabled_all_notification, 'main' ) ) );
+	$enabled_notification          = bboss_get_enabled_notification_main_settings( $enabled_all_notification );
 	$enabled_notification          = array_merge( $default_enabled_notifications, $enabled_notification );
 
 	$options['fields'] = array_filter(
@@ -10345,6 +10611,8 @@ function bboss_render_notification( $notification_group ) {
 	}
 
 	if ( ! empty( $options['fields'] ) ) {
+		// The member being edited, which is who the form saves to.
+		$user_id = bboss_get_notification_settings_user_id();
 		?>
 
 		<table class="main-notification-settings">
@@ -10367,7 +10635,7 @@ function bboss_render_notification( $notification_group ) {
 					continue;
 				}
 
-				$options = bboss_notification_preferences_types( $field, bboss_loggedin_user_id() );
+				$options = bboss_notification_preferences_types( $field, $user_id );
 
 				?>
 				<tr>
@@ -10551,6 +10819,8 @@ if ( function_exists( 'bboss_enable_notifications_options' ) && ! function_exist
  * Render the enable notification settings on the front end.
  *
  * @since BuddyBoss 1.9.3
+ * @since BuddyBoss 3.8.1 Shows the preferences of the member being edited, see
+ *                              bboss_get_notification_settings_user_id().
  */
 function bboss_render_enable_notification_options() {
 	$enable_notifications = bboss_enable_notifications_options();
@@ -10559,7 +10829,7 @@ function bboss_render_enable_notification_options() {
 		return;
 	}
 
-	$user_id = bboss_loggedin_user_id();
+	$user_id = bboss_get_notification_settings_user_id();
 
 	?>
 	<table class="main-notification-settings" data-text-all="<?php esc_html_e( 'All', 'buddyboss' ); ?> " data-text-none="<?php esc_html_e( 'None', 'buddyboss' ); ?> ">
@@ -10661,6 +10931,8 @@ if ( function_exists( 'bboss_manual_notification_options' ) && ! function_exists
  * Render the manual notification settings on the front end.
  *
  * @since BuddyBoss 1.9.3
+ * @since BuddyBoss 3.8.1 Shows the preferences of the member being edited, see
+ *                              bboss_get_notification_settings_user_id().
  */
 function bboss_render_manual_notification() {
 
@@ -10670,7 +10942,7 @@ function bboss_render_manual_notification() {
 		return;
 	}
 
-	$user_id = bboss_loggedin_user_id();
+	$user_id = bboss_get_notification_settings_user_id();
 
 	if ( ! empty( $manual_notifications['fields'] ) ) {
 		?>
@@ -10781,7 +11053,7 @@ function bboss_get_modern_notification_admin_settings_is_enabled( $notification_
 		}
 
 		$default_enabled_notifications = array_column( $options['fields'], 'default', 'key' );
-		$enabled_notification          = array_filter( array_combine( array_keys( $enabled_all_notification ), array_column( $enabled_all_notification, 'main' ) ) );
+		$enabled_notification          = bboss_get_enabled_notification_main_settings( $enabled_all_notification );
 		$enabled_notification          = array_merge( $default_enabled_notifications, $enabled_notification );
 
 		$fields = array_filter(
@@ -16861,6 +17133,44 @@ if ( function_exists( 'bboss_addons_provides_module' ) && ! function_exists( 'bb
 	 */
 	function bb_addons_provides_module( $module_id ) {
 		return bboss_addons_provides_module( $module_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
+
+/**
+ * Get the user agent string used for URL preview HTTP requests.
+ *
+ * A modern browser UA is required so URL redirect resolvers (e.g. Google's
+ * maps.app.goo.gl short-link service) return proper 3xx redirects instead of
+ * empty JS-only interstitials that contain no scrapeable metadata.
+ *
+ * @since BuddyBoss 3.8.0
+ *
+ * @return string User agent string.
+ */
+function bboss_get_url_preview_user_agent() {
+	$user_agent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36';
+
+	/**
+	 * Filters the user agent string used for URL preview HTTP requests.
+	 *
+	 * @since BuddyBoss 3.8.0
+	 *
+	 * @param string $user_agent User agent string.
+	 */
+	return apply_filters( 'bb_url_preview_user_agent', $user_agent );
+}
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_get_url_preview_user_agent' ) && ! function_exists( 'bb_get_url_preview_user_agent' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_get_url_preview_user_agent()}.
+	 *
+	 * @deprecated Use bboss_get_url_preview_user_agent() instead.
+	 */
+	function bb_get_url_preview_user_agent() {
+		return bboss_get_url_preview_user_agent();
 	}
 }
 // @bbwt-com-end compat-layer

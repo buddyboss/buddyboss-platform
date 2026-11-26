@@ -406,9 +406,12 @@ function bboss_block_render_readylaunch_header_block( $attributes = array() ) {
 						?>
 						<div class="bb-readylaunch-mobile-menu_items">
 							<ul>
-								<?php if ( $block_args['showMessages'] && bboss_is_active( 'messages' ) ) { ?>
+								<?php
+								if ( $block_args['showMessages'] && bboss_is_active( 'messages' ) ) {
+									$messages_menu_link = trailingslashit( bboss_loggedin_user_domain() . bboss_get_messages_slug() );
+									?>
 									<li>
-										<a href="javascript:void(0);" ref="notification_bell" class="notification-link">
+										<a href="<?php echo esc_url( $messages_menu_link ); ?>" ref="notification_bell">
 											<i class="bb-icons-rl-chat-teardrop-text"></i>
 											<span class="notification-label"><?php esc_html_e( 'Messages', 'buddyboss' ); ?></span>
 											<?php
@@ -423,9 +426,10 @@ function bboss_block_render_readylaunch_header_block( $attributes = array() ) {
 								}
 
 								if ( $block_args['showNotifications'] && bboss_is_active( 'notifications' ) ) {
+									$notification_menu_link = trailingslashit( bboss_loggedin_user_domain() . bboss_get_notifications_slug() );
 									?>
 									<li>
-										<a href="javascript:void(0);" ref="notification_bell" class="notification-link">
+										<a href="<?php echo esc_url( $notification_menu_link ); ?>" ref="notification_bell">
 											<i class="bb-icons-rl-bell-simple"></i>
 											<span class="notification-label"><?php esc_html_e( 'Notifications', 'buddyboss' ); ?></span>
 											<?php

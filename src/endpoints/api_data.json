@@ -826,7 +826,7 @@
             "type": "Number",
             "optional": true,
             "field": "user_id",
-            "description": "<p>The ID for the author of the activity.</p>"
+            "description": "<p>The ID for the author of the activity. The author cannot be changed, so this value is ignored on update.</p>"
           },
           {
             "group": "Parameter",

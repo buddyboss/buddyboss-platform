@@ -1554,11 +1554,13 @@ function bboss_get_member_joined_date( $user_id = 0 ) {
 	 * Filters the user registered date meta.
 	 *
 	 * @since BuddyPress 1.9.1
+	 * @since BuddyBoss 3.8.0 Added the `$user_id` parameter.
 	 *
 	 * @param string The user registered date meta.
 	 * @param string The user registered date.
+	 * @param int    The user ID.
 	 */
-	return apply_filters( 'bb_get_member_joined_date', $user_registered_date, $register_date );
+	return apply_filters( 'bb_get_member_joined_date', $user_registered_date, $register_date, $user_id );
 }
 // @bbwt-com-start compat-layer
 // bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.

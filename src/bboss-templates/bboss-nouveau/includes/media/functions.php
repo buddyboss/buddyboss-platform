@@ -233,6 +233,7 @@ function bboss_nouveau_media_localize_scripts( $params = array() ) {
 		'photos'               => __( 'photos', 'buddyboss' ),
 		'video'                => __( 'video', 'buddyboss' ),
 		'videos'               => __( 'videos', 'buddyboss' ),
+		'title_required'       => __( 'Please enter a title.', 'buddyboss' ),
 	);
 
 	$params['dir_labels'] = array_merge(

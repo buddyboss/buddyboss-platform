@@ -733,6 +733,7 @@ if ( function_exists( 'bboss_notifications_check_notification_access' ) && ! fun
  * Get a count of unread notification items for a user.
  *
  * @since BuddyPress 1.9.0
+ * @since BuddyBoss 3.8.1 No longer keeps its own cache; relies on BBoss_Notifications_Notification::get_total_count().
  *
  * @param int $user_id ID of the user whose unread notifications are being
  *                     counted.
@@ -743,16 +744,15 @@ function bboss_notifications_get_unread_notification_count( $user_id = 0 ) {
 		$user_id = ( bboss_displayed_user_id() ) ? bboss_displayed_user_id() : bboss_loggedin_user_id();
 	}
 
-	$count = wp_cache_get( $user_id, 'bp_notifications_unread_count' );
-	if ( false === $count ) {
-		$count = BBoss_Notifications_Notification::get_total_count(
-			array(
-				'user_id' => $user_id,
-				'is_new'  => true,
-			)
-		);
-		wp_cache_set( $user_id, $count, 'bp_notifications_unread_count' );
-	}
+	// get_total_count() already caches this under a hash of the final count
+	// SQL plus the user's count incrementor (see bp_notifications_get_count_cache_key()),
+	// so a second cache layer isn't needed here.
+	$count = BBoss_Notifications_Notification::get_total_count(
+		array(
+			'user_id' => $user_id,
+			'is_new'  => true,
+		)
+	);
 
 	/**
 	 * Filters the count of unread notification items for a user.
@@ -2539,6 +2539,8 @@ if ( function_exists( 'bboss_notifications_on_screen_get_where_conditions' ) && 
  * then this notification will only for read purpose.
  *
  * @since BuddyBoss 2.2.7
+ * @since BuddyBoss 3.8.1 Resolve the triggering user from item_id for the legacy
+ *                              'friendship_request' and 'friendship_accepted' actions.
  *
  * @param object $notification Notification item.
  *
@@ -2546,10 +2548,12 @@ if ( function_exists( 'bboss_notifications_on_screen_get_where_conditions' ) && 
  */
 function bboss_notification_is_read_only( $notification ) {
 	static $cache = array();
-	// item_id is the user_id and secondary_item_id is the friend_id for the below component action.
+	// item_id is the triggering user_id and secondary_item_id is the friendship_id for the below component actions.
 	$allowed_component_action = array(
 		'bb_connections_request_accepted',
 		'bb_connections_new_request',
+		'friendship_accepted',
+		'friendship_request',
 	);
 
 	if ( empty( $notification->id ) ) {
@@ -2562,38 +2566,40 @@ function bboss_notification_is_read_only( $notification ) {
 		return $cache[ $cache_key ];
 	}
 
-	$retval = ! empty( $notification ) &&
-	(
-		(
-				! in_array( $notification->component_action, $allowed_component_action, true ) &&
-				! empty( $notification->secondary_item_id ) &&
-				bboss_is_user_inactive( $notification->secondary_item_id )
-		) ||
-		(
-				in_array( $notification->component_action, $allowed_component_action, true ) &&
-				! empty( $notification->item_id ) &&
-				bboss_is_user_inactive( $notification->item_id )
-		) ||
-		(
-			bboss_is_active( 'moderation' ) &&
+	/*
+	 * Resolve the ID of the user who triggered the notification. Connection
+	 * notifications (modern and legacy) store that user in item_id and the
+	 * friendship ID in secondary_item_id; every other notification type stores
+	 * the triggering user in secondary_item_id. Passing the friendship ID to
+	 * bp_is_user_inactive() would mark the notification read-only whenever no
+	 * user with that ID exists.
+	 */
+	if ( in_array( $notification->component_action, $allowed_component_action, true ) ) {
+		$triggering_user_id = ! empty( $notification->item_id ) ? (int) $notification->item_id : 0;
+	} else {
+		$triggering_user_id = ! empty( $notification->secondary_item_id ) ? (int) $notification->secondary_item_id : 0;
+	}
+
+	$retval = ! empty( $notification )
+		&& (
 			(
-				(
-					! in_array( $notification->component_action, $allowed_component_action, true ) &&
-					! empty( $notification->secondary_item_id ) &&
-					bboss_moderation_moderated_user_ids( $notification->secondary_item_id )
-				) ||
-				(
-					in_array( $notification->component_action, $allowed_component_action, true ) &&
-					! empty( $notification->item_id ) &&
-					bboss_moderation_moderated_user_ids( $notification->item_id )
-				) ||
-				(
-					! empty( $notification->user_id ) &&
-					bboss_moderation_moderated_user_ids( $notification->user_id )
+				! empty( $triggering_user_id )
+				&& bboss_is_user_inactive( $triggering_user_id )
+			) ||
+			(
+				bboss_is_active( 'moderation' )
+				&& (
+					(
+						! empty( $triggering_user_id )
+						&& bboss_moderation_moderated_user_ids( $triggering_user_id )
+					) ||
+					(
+						! empty( $notification->user_id )
+						&& bboss_moderation_moderated_user_ids( (int) $notification->user_id )
+					)
 				)
 			)
-		)
-	);
+		);
 
 	$retval = (bool) apply_filters( 'bb_notification_is_read_only', $retval, $notification );
 

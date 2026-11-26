@@ -279,6 +279,8 @@ function bboss_core_set_uri_globals() {
 		return false;
 	}
 
+	// Rewrite rules generated later in this request are rebuilt with the
+	// flag WordPress expects, see bb_core_keep_verbose_page_rules_on_generate().
 	$wp_rewrite->use_verbose_page_rules = false;
 
 	// Find the offset. With $root_profile set, we fudge the offset down so later parsing works.
@@ -723,91 +725,6 @@ if ( function_exists( 'bboss_core_members_shortlink_redirector' ) && ! function_
 // @bbwt-com-end compat-layer
 
 add_filter( 'bp_core_set_uri_globals_member_slug', 'bp_core_members_shortlink_redirector' );
-
-/**
- * Build the rewrite rules in WordPress's own order, whatever page this request is for.
- *
- * The URI parser, bboss_core_set_uri_globals(), turns `$wp_rewrite->use_verbose_page_rules` off on a community page
- * (and under WP-CLI when the front page is a community page) so WordPress accepts the page rule
- * without looking the page up. That flag also decides whether the page rules are stored above
- * the post rules, so a flush during such a request stored them below, and every static page
- * then answered 404 until the next flush. The flag is put back to what the permalink structure
- * asks for while the rules are put together, and returned to its request value afterwards.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @param array $rules The post rewrite rules (the first set WordPress filters); returned as given.
- *
- * @return array
- */
-function bboss_core_rewrite_rules_set_verbose_page_rules( $rules ) {
-	global $wp_rewrite;
-
-	$bp = bboss();
-
-	if ( ! isset( $bp->request_verbose_page_rules ) ) {
-		$bp->request_verbose_page_rules = $wp_rewrite->use_verbose_page_rules;
-	}
-
-	// The test WP_Rewrite::init() uses.
-	$wp_rewrite->use_verbose_page_rules = (bool) preg_match( '/^[^%]*%(?:postname|category|tag|author)%/', (string) $wp_rewrite->permalink_structure );
-
-	return $rules;
-}
-// @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
-if ( function_exists( 'bboss_core_rewrite_rules_set_verbose_page_rules' ) && ! function_exists( 'bb_core_rewrite_rules_set_verbose_page_rules' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_core_rewrite_rules_set_verbose_page_rules()}.
-	 *
-	 * @deprecated Use bboss_core_rewrite_rules_set_verbose_page_rules() instead.
-	 */
-	function bb_core_rewrite_rules_set_verbose_page_rules( $rules ) {
-		return bboss_core_rewrite_rules_set_verbose_page_rules( $rules );
-	}
-}
-// @bbwt-com-end compat-layer
-
-add_filter( 'post_rewrite_rules', 'bb_core_rewrite_rules_set_verbose_page_rules', 0 );
-
-/**
- * Give `$wp_rewrite->use_verbose_page_rules` its request value back once the rules are built.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @see bboss_core_rewrite_rules_set_verbose_page_rules()
- *
- * @param array $rules The complete rewrite rules; returned as given.
- *
- * @return array
- */
-function bboss_core_rewrite_rules_reset_verbose_page_rules( $rules ) {
-	global $wp_rewrite;
-
-	$bp = bboss();
-
-	if ( isset( $bp->request_verbose_page_rules ) ) {
-		$wp_rewrite->use_verbose_page_rules = $bp->request_verbose_page_rules;
-		unset( $bp->request_verbose_page_rules );
-	}
-
-	return $rules;
-}
-// @bbwt-com-start compat-layer
-// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
-if ( function_exists( 'bboss_core_rewrite_rules_reset_verbose_page_rules' ) && ! function_exists( 'bb_core_rewrite_rules_reset_verbose_page_rules' ) ) {
-	/**
-	 * Backward-compatible alias of {@see bboss_core_rewrite_rules_reset_verbose_page_rules()}.
-	 *
-	 * @deprecated Use bboss_core_rewrite_rules_reset_verbose_page_rules() instead.
-	 */
-	function bb_core_rewrite_rules_reset_verbose_page_rules( $rules ) {
-		return bboss_core_rewrite_rules_reset_verbose_page_rules( $rules );
-	}
-}
-// @bbwt-com-end compat-layer
-
-add_filter( 'rewrite_rules_array', 'bb_core_rewrite_rules_reset_verbose_page_rules', PHP_INT_MAX );
 
 /**
  * Catch unauthorized access to certain BuddyPress pages and redirect accordingly.
@@ -2057,3 +1974,62 @@ if ( function_exists( 'bboss_core_change_privacy_policy_link_on_private_network'
 }
 // @bbwt-com-end compat-layer
 
+
+/**
+ * Rebuild rewrite rules with verbose page rules when they are generated while
+ * BuddyBoss has switched them off for the current request.
+ *
+ * The bboss_core_set_uri_globals() sets $wp_rewrite->use_verbose_page_rules to false on
+ * every BuddyBoss page request. WP_Rewrite::rewrite_rules() places the page rule
+ * after the post rule while that flag is false. If the rules are regenerated in
+ * the same request (a deferred flush on wp_loaded or shutdown, a flush from
+ * WP-CLI, or the lazy regeneration of an emptied rewrite_rules option), the
+ * stored rules match every page slug as a post and regular pages return 404
+ * until the rules are regenerated again. This filter rebuilds the rules once
+ * with the value WordPress derives from the permalink structure and restores
+ * the flag afterwards, so the parsing of the current request is unchanged.
+ *
+ * @since BuddyBoss 3.8.0
+ *
+ * @param array $rules Generated rewrite rules, keyed by their regex pattern.
+ *
+ * @return array
+ */
+function bboss_core_keep_verbose_page_rules_on_generate( $rules ) {
+	global $wp_rewrite;
+	static $rebuilding = false;
+
+	if ( $rebuilding || ! ( $wp_rewrite instanceof WP_Rewrite ) || ! is_array( $rules ) ) {
+		return $rules;
+	}
+
+	// Mirrors the test WP_Rewrite::init() uses to decide the flag.
+	$needs_verbose = (bool) preg_match( '/^[^%]*%(?:postname|category|tag|author)%/', (string) $wp_rewrite->permalink_structure );
+
+	if ( ! $needs_verbose || true === $wp_rewrite->use_verbose_page_rules ) {
+		return $rules;
+	}
+
+	$rebuilding                         = true;
+	$wp_rewrite->use_verbose_page_rules = true;
+	$rebuilt                            = $wp_rewrite->rewrite_rules();
+	$wp_rewrite->use_verbose_page_rules = false;
+	$rebuilding                         = false;
+
+	return ( is_array( $rebuilt ) && ! empty( $rebuilt ) ) ? $rebuilt : $rules;
+}
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_core_keep_verbose_page_rules_on_generate' ) && ! function_exists( 'bb_core_keep_verbose_page_rules_on_generate' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_core_keep_verbose_page_rules_on_generate()}.
+	 *
+	 * @deprecated Use bboss_core_keep_verbose_page_rules_on_generate() instead.
+	 */
+	function bb_core_keep_verbose_page_rules_on_generate( $rules ) {
+		return bboss_core_keep_verbose_page_rules_on_generate( $rules );
+	}
+}
+// @bbwt-com-end compat-layer
+
+add_filter( 'rewrite_rules_array', 'bb_core_keep_verbose_page_rules_on_generate', PHP_INT_MAX );

@@ -1021,6 +1021,16 @@ class BBoss_REST_Settings_Endpoint extends WP_REST_Controller {
 	 * @return mixed|WP_Error Validated value or WP_Error.
 	 */
 	protected function validate_setting_by_pattern( $key, $value ) {
+		// Directory loading type must be one of the supported modes.
+		if ( 'bb_directory_load_type' === $key && ! in_array( $value, array( 'infinite', 'pagination' ), true ) ) {
+			return new WP_Error(
+				'bp_rest_setting_invalid_value',
+				/* translators: %s: Setting key. */
+				sprintf( __( 'Setting "%s" must be either "infinite" or "pagination".', 'buddyboss' ), $key ),
+				array( 'status' => 400 )
+			);
+		}
+
 		// Time-based settings validation.
 		if ( strpos( $key, '_time' ) !== false || strpos( $key, '_lock' ) !== false ) {
 			if ( is_numeric( $value ) ) {
@@ -1188,6 +1198,7 @@ class BBoss_REST_Settings_Endpoint extends WP_REST_Controller {
 			'bp-profile-layout-format'                 => bboss_get_option( 'bp-profile-layout-format', 'list_grid' ),
 			'bp-profile-layout-default-format'         => bboss_profile_layout_default_format(),
 			'bb-enable-content-counts'                 => function_exists( 'bboss_enable_content_counts' ) ? bboss_enable_content_counts() : true,
+			'bb_directory_load_type'                   => function_exists( 'bboss_get_directory_load_type' ) ? bboss_get_directory_load_type() : 'pagination',
 			'bb-web-notification-enabled'              => function_exists( 'bboss_web_notification_enabled' ) && bboss_web_notification_enabled(),
 			'bb-app-notification-enabled'              => function_exists( 'bboss_app_notification_enabled' ) && bboss_app_notification_enabled(),
 			'bb_enabled_legacy_email_preference'       => function_exists( 'bboss_enabled_legacy_email_preference' ) && bboss_enabled_legacy_email_preference(),

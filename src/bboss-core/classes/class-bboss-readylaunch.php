@@ -2372,7 +2372,7 @@ if ( ! class_exists( 'BBoss_Readylaunch' ) ) {
 
 			// Verify nonce.
 			if (
-				! empty( $nonce ) &&
+				empty( $nonce ) ||
 				! wp_verify_nonce( $nonce, 'bb_rl_invite_form_action' )
 			) {
 				$response['message'] = esc_html__( 'Nonce verification failed.', 'buddyboss' );
@@ -2408,6 +2408,18 @@ if ( ! class_exists( 'BBoss_Readylaunch' ) ) {
 
 			$name        = isset( $_POST['bb-rl-invite-name'] ) ? sanitize_text_field( wp_unslash( $_POST['bb-rl-invite-name'] ) ) : '';
 			$member_type = isset( $_POST['bb-rl-invite-type'] ) ? sanitize_text_field( wp_unslash( $_POST['bb-rl-invite-type'] ) ) : '';
+
+			// The invitee's profile type maps to WP roles at activation, so only a type the
+			// form offers this inviter may be stored. Matches bboss-invites/actions/invites.php.
+			if ( '' !== $member_type && ! bboss_is_member_type_allowed_on_invite( $member_type ) ) {
+				$member_type = '';
+			}
+
+			// A name is plain text; a serialized PHP value stored as invite meta can be turned into an object by code
+			// that unserializes meta. Check what update_post_meta() will store, after its own wp_unslash().
+			if ( is_serialized( wp_unslash( $name ) ) ) {
+				wp_send_json_error( $response );
+			}
 
 			$subject = bboss_disable_invite_member_email_subject() && ! empty( sanitize_text_field( wp_unslash( $_POST['bp_member_invites_custom_subject'] ) ) )
 				? stripslashes( wp_strip_all_tags( sanitize_text_field( wp_unslash( $_POST['bp_member_invites_custom_subject'] ) ) ) )
@@ -4532,15 +4544,25 @@ JS;
 		 * Modify member's joined date.
 		 *
 		 * @since BuddyBoss 2.9.30
+		 * @since BuddyBoss 3.8.0 Added the `$user_id` parameter.
 		 *
 		 * @param string $user_registered_date The user registered date.
 		 * @param string $register_date        The register date.
+		 * @param int    $user_id              The user ID.
 		 *
 		 * @return string The modified user registered date.
 		 */
-		public static function bb_rl_modify_member_joined_date( $user_registered_date, $register_date ) {
+		public static function bb_rl_modify_member_joined_date( $user_registered_date, $register_date, $user_id = 0 ) {
 
-			$register_date        = date_i18n( 'd M Y', strtotime( $register_date ) );
+			$user = ! empty( $user_id ) ? get_userdata( $user_id ) : false;
+
+			if ( ! empty( $user ) ) {
+				// Format from the stored date; `$register_date` is localized and cannot be re-parsed.
+				$register_date = date_i18n( 'd M Y', strtotime( $user->user_registered ) );
+			} else {
+				$register_date = date_i18n( 'd M Y', strtotime( $register_date ) );
+			}
+
 			$user_registered_date = sprintf(
 				/* translators: 1: User joined date. */
 				esc_html__( 'Joined %s', 'buddyboss' ),
@@ -4685,6 +4707,12 @@ JS;
 				wp_send_json_error( $response );
 			}
 
+			// A rename needs a title; don't report success when nothing is renamed.
+			if ( $update_name && '' === trim( (string) $name ) ) {
+				$response['feedback'] = esc_html__( 'Please enter a title.', 'buddyboss' );
+				wp_send_json_error( $response );
+			}
+
 			$result = array(
 				'document_id' => $document_id,
 				'type'        => $type,
@@ -4699,7 +4727,7 @@ JS;
 				}
 
 				// Update name if requested.
-				if ( $update_name && ! empty( $name ) ) {
+				if ( $update_name ) {
 					$renamed = bp_document_rename_file( $document_id, $attachment_document_id, $name );
 					if ( isset( $renamed['document_id'] ) && $renamed['document_id'] > 0 ) {
 						$result['name']    = $name;
@@ -4723,7 +4751,10 @@ JS;
 						'grouponly' !== $privacy &&
 						! empty( $document_object->id ) &&
 						0 === (int) $document_object->group_id &&
-						0 === (int) $document_object->folder_id
+						0 === (int) $document_object->folder_id &&
+						// Message, forum and comment items keep the privacy of where they were shared.
+						array_key_exists( $document_object->privacy, $document_visibilities ) &&
+						'grouponly' !== $document_object->privacy
 					) {
 						bp_document_update_privacy( $document_id, $privacy, 'document' );
 						$result['privacy']         = $privacy;
@@ -4766,7 +4797,7 @@ JS;
 				}
 
 				// Update name if requested.
-				if ( $update_name && ! empty( $name ) ) {
+				if ( $update_name ) {
 					$renamed = bp_document_rename_folder( $document_id, $name );
 					if ( $renamed > 0 ) {
 						$result['name']    = $name;

@@ -25,9 +25,15 @@ $enabled_profile_type  = ! function_exists( 'bboss_enabled_member_directory_elem
 $enabled_followers     = ! function_exists( 'bboss_enabled_member_directory_element' ) || bboss_enabled_member_directory_element( 'followers' );
 $enabled_last_active   = ! function_exists( 'bboss_enabled_member_directory_element' ) || bboss_enabled_member_directory_element( 'last-active' );
 $enabled_joined_date   = ! function_exists( 'bboss_enabled_member_directory_element' ) || bboss_enabled_member_directory_element( 'joined-date' );
+
+// Members & Groups Loading: with infinite scroll, the Members directory and the profile
+// Connections lists load more items as the member scrolls; other screens that reuse this
+// loop keep classic pagination. Load more requests return only the list items.
+$bb_directory_autoload   = function_exists( 'bboss_is_list_autoload_active' ) && bboss_is_list_autoload_active( 'members' );
+$bb_is_load_more_request = $bb_directory_autoload && isset( $_POST['page'] ) && absint( $_POST['page'] ) > 1; // phpcs:ignore WordPress.Security.NonceVerification.Missing
 ?>
 
-<?php if ( bboss_get_current_member_type() ) : ?>
+<?php if ( ! $bb_is_load_more_request && bboss_get_current_member_type() ) : ?>
 	<div class="bp-feedback info">
 		<span class="bp-icon" aria-hidden="true"></span>
 		<p><?php bboss_current_member_type_message(); ?></p>
@@ -36,7 +42,10 @@ $enabled_joined_date   = ! function_exists( 'bboss_enabled_member_directory_elem
 
 <?php if ( bboss_has_members( bboss_ajax_querystring( 'members' ) ) ) : ?>
 
+	<?php if ( ! $bb_is_load_more_request ) : ?>
+
 	<ul id="members-list" class="<?php bboss_nouveau_loop_classes(); ?>">
+	<?php endif; ?>
 
 		<?php
 		while ( bboss_members() ) :
@@ -254,16 +263,40 @@ $enabled_joined_date   = ! function_exists( 'bboss_enabled_member_directory_elem
 
 		<?php endwhile; ?>
 
+	<?php
+	if ( $bb_directory_autoload ) :
+		// Load more button when more pages exist.
+		global $members_template;
+		$members_pag_num     = max( 1, (int) $members_template->pag_num );
+		$members_total_pages = ceil( (int) $members_template->total_member_count / $members_pag_num );
+		if ( (int) $members_template->pag_page < $members_total_pages ) :
+			$next_page_url = add_query_arg( $members_template->pag_arg, (int) $members_template->pag_page + 1, '' );
+			?>
+			<li class="load-more">
+				<a class="button outline" href="<?php echo esc_url( $next_page_url ); ?>"><?php esc_html_e( 'Load More', 'buddyboss' ); ?></a>
+			</li>
+			<?php
+		endif;
+	endif;
+	?>
+
+	<?php if ( ! $bb_is_load_more_request ) : ?>
 	</ul>
+	<?php endif; ?>
 
 	<?php
-	bboss_nouveau_pagination( 'bottom' );
-else :
+	if ( ! $bb_directory_autoload ) :
+		bboss_nouveau_pagination( 'bottom' );
+	endif;
+elseif ( ! $bb_is_load_more_request ) :
+	// An empty load-more page ends the list; the "none found" notice belongs to a full (re)load only.
 	bboss_nouveau_user_feedback( 'members-loop-none' );
 endif;
 
 bboss_nouveau_after_loop();
-?>
+
+if ( ! $bb_is_load_more_request ) :
+	?>
 
 <!-- Remove Connection confirmation popup -->
 <div class="bb-remove-connection bb-action-popup" style="display: none">
@@ -297,3 +330,4 @@ bboss_nouveau_after_loop();
 		</div>
 	</transition>
 </div> <!-- .bb-remove-connection -->
+<?php endif; ?>

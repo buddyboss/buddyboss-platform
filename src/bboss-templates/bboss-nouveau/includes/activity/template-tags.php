@@ -2470,7 +2470,6 @@ function bboss_nouveau_get_activity_entry_bubble_buttons( $args ) {
 		}
 
 		if ( $is_closed_comments ) {
-			// Unable to edit closed comments activity.
 			$closed_action_label = esc_html__( 'Turn on commenting', 'buddyboss' );
 			$closed_action_class = 'unclose-activity-comment';
 		}

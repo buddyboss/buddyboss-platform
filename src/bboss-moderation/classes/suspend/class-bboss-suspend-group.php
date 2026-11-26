@@ -71,6 +71,10 @@ class BBoss_Suspend_Group extends BBoss_Suspend_Abstract {
 
 		add_filter( 'bp_groups_group_pre_validate', array( $this, 'restrict_single_item' ), 10, 2 );
 
+		// Lift the suspended-group restriction while the admin Reported Content screen resolves the group link.
+		add_action( 'bb_moderation_before_get_related_' . $this->item_type, array( $this, 'remove_pre_validate_check' ) );
+		add_action( 'bb_moderation_after_get_related_' . $this->item_type, array( $this, 'add_pre_validate_check' ) );
+
 		// Update the where condition for group subscriptions.
 		add_filter( 'bb_subscriptions_get_where_conditions', array( $this, 'bb_subscriptions_group_where_conditions' ), 10, 2 );
 	}
@@ -195,6 +199,24 @@ class BBoss_Suspend_Group extends BBoss_Suspend_Abstract {
 		}
 
 		return $restrict;
+	}
+
+	/**
+	 * Remove Pre-validate check.
+	 *
+	 * @since BuddyBoss 3.8.0
+	 */
+	public function remove_pre_validate_check() {
+		remove_filter( 'bp_groups_group_pre_validate', array( $this, 'restrict_single_item' ), 10 );
+	}
+
+	/**
+	 * Add Pre-validate check.
+	 *
+	 * @since BuddyBoss 3.8.0
+	 */
+	public function add_pre_validate_check() {
+		add_filter( 'bp_groups_group_pre_validate', array( $this, 'restrict_single_item' ), 10, 2 );
 	}
 
 	/**

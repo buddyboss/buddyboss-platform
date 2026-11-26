@@ -85,6 +85,47 @@ if ( function_exists( 'bboss_advanced_sanitize_activity_load_type' ) && ! functi
 
 
 /**
+ * Sanitize the directory load type value.
+ *
+ * Ensures only valid directory loading types are saved.
+ *
+ * @since BuddyBoss 3.8.0
+ *
+ * @param mixed $value The value to sanitize.
+ *
+ * @return string Sanitized directory load type.
+ */
+function bboss_advanced_sanitize_directory_load_type( $value ) {
+	$value   = sanitize_text_field( $value );
+	$allowed = array_keys(
+		bboss_parse_args(
+			/** This filter is documented in bboss-core/admin/settings/advanced/settings-general.php */
+			apply_filters( 'bb_performance_directory_autoload', array() ),
+			array(
+				'pagination' => __( 'Pagination', 'buddyboss' ),
+				'infinite'   => __( 'Infinite Scroll', 'buddyboss' ),
+			)
+		)
+	);
+
+	return in_array( $value, $allowed, true ) ? $value : 'pagination';
+}
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_advanced_sanitize_directory_load_type' ) && ! function_exists( 'bb_advanced_sanitize_directory_load_type' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_advanced_sanitize_directory_load_type()}.
+	 *
+	 * @deprecated Use bboss_advanced_sanitize_directory_load_type() instead.
+	 */
+	function bb_advanced_sanitize_directory_load_type( $value ) {
+		return bboss_advanced_sanitize_directory_load_type( $value );
+	}
+}
+// @bbwt-com-end compat-layer
+
+
+/**
  * Capture telemetry value before save for change detection.
  *
  * Stores the pre-save value in a static so the after-save handler

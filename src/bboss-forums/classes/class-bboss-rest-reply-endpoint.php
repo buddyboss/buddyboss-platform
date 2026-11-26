@@ -523,9 +523,21 @@ class BBoss_REST_Reply_Endpoint extends WP_REST_Controller {
 			);
 		}
 
-		if ( true === $retval && is_user_logged_in() && isset( $reply->post_type ) ) {
+		if ( true === $retval && isset( $reply->post_type ) ) {
 			$post_type = get_post_type_object( $reply->post_type );
-			if ( ! current_user_can( $post_type->cap->read_post, $reply->ID ) ) {
+
+			// read_reply always fails for guests, so limit them to public replies in public topics and forums outside private/hidden groups.
+			// Members also need access to the forum's group, and hidden forums need read_hidden_forums, like the website.
+			$can_read = is_user_logged_in()
+				? current_user_can( $post_type->cap->read_post, $reply->ID ) && $this->forum_endpoint->bb_rest_member_can_read_forum( bboss_bbp_get_reply_forum_id( $reply->ID ) )
+				: (
+					bboss_bbp_get_public_status_id() === $reply->post_status
+					&& in_array( get_post_status( bboss_bbp_get_reply_topic_id( $reply->ID ) ), bboss_bbp_get_public_topic_statuses(), true )
+					&& bboss_bbp_is_forum_public( bboss_bbp_get_reply_forum_id( $reply->ID ), false )
+					&& $this->forum_endpoint->can_access_content( bboss_bbp_get_reply_forum_id( $reply->ID ) )
+				);
+
+			if ( ! $can_read ) {
 				$retval = new WP_Error(
 					'bp_rest_authorization_required',
 					__( 'Sorry, you are not allowed to access this reply.', 'buddyboss' ),

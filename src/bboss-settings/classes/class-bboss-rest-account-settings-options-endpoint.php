@@ -728,8 +728,18 @@ class BBoss_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 
 					if ( ! empty( $group_data['fields'] ) ) {
 						$default_enabled_notifications = array_column( $group_data['fields'], 'default', 'key' );
-						$enabled_notification          = array_filter( array_combine( array_keys( $enabled_all_notification ), array_column( $enabled_all_notification, 'main' ) ) );
-						$enabled_notification          = array_merge( $default_enabled_notifications, $enabled_notification );
+						$enabled_notification          = array();
+
+						// Skip saved rows without 'main' so they fall back to the registered default.
+						if ( ! empty( $enabled_all_notification ) && is_array( $enabled_all_notification ) ) {
+							foreach ( $enabled_all_notification as $notification_key => $notification_value ) {
+								if ( is_array( $notification_value ) && isset( $notification_value['main'] ) ) {
+									$enabled_notification[ $notification_key ] = $notification_value['main'];
+								}
+							}
+						}
+
+						$enabled_notification = array_merge( $default_enabled_notifications, array_filter( $enabled_notification ) );
 
 						$group_data['fields'] = array_filter(
 							$group_data['fields'],
@@ -1177,6 +1187,8 @@ class BBoss_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
 	 * @return array|bool|void
+	 * @since BuddyBoss 3.8.1 An unchanged email address containing an apostrophe or ampersand is no longer treated as changed.
+	 *                              The user is only updated when a new password is saved.
 	 */
 	public function update_general_fields( $request ) {
 		$post_fields = $request->get_param( 'fields' );
@@ -1213,7 +1225,10 @@ class BBoss_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 			)
 		) {
 
-			$update_user = get_userdata( bboss_displayed_user_id() );
+			// Only the fields this request can change are passed to wp_update_user().
+			$update_user = array(
+				'ID' => bboss_displayed_user_id(),
+			);
 
 			/* Email Change Attempt ******************************************/
 
@@ -1221,11 +1236,13 @@ class BBoss_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 
 				// What is missing from the profile page vs signup.
 				// let's double check the goodies.
-				$user_email     = sanitize_email( esc_html( trim( $post_fields['account_email'] ) ) );
+				// get_general_fields() returns the address through esc_attr(), so accept it back in that form.
+				$user_email     = sanitize_email( wp_specialchars_decode( $post_fields['account_email'], ENT_QUOTES ) );
 				$old_user_email = $bp->displayed_user->userdata->user_email;
 
 				// User is changing email address.
-				if ( $old_user_email !== $user_email ) {
+				// WordPress saves "&" as "&amp;", so compare with the plain text version of the saved address.
+				if ( wp_specialchars_decode( $old_user_email, ENT_QUOTES ) !== $user_email ) {
 
 					// Run some tests on the email address.
 					$email_checks = bboss_core_validate_email_address( $user_email );
@@ -1273,7 +1290,7 @@ class BBoss_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 
 						// We mark that the change has taken place so as to ensure a.
 						// success message, even though verification is still required.
-						$post_fields['account_email'] = $update_user->user_email;
+						$post_fields['account_email'] = $old_user_email;
 						$email_changed                = true;
 					}
 
@@ -1303,8 +1320,8 @@ class BBoss_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 						( ! empty( $post_fields['current_password'] ) && $post_fields['current_password'] !== $post_fields['pass1'] )
 						|| is_super_admin()
 					) {
-						$update_user->user_pass = $post_fields['pass1'];
-						$pass_changed           = true;
+						$update_user['user_pass'] = $post_fields['pass1'];
+						$pass_changed             = true;
 
 						// The new password is the same as the current password.
 					} else {
@@ -1331,18 +1348,6 @@ class BBoss_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 				$pass_error = 'empty';
 			}
 
-			// The structure of the $update_user object changed in WP 3.3, but wp_update_user() still expects the old format.
-			if ( isset( $update_user->data ) && is_object( $update_user->data ) ) {
-				$update_user = $update_user->data;
-				$update_user = get_object_vars( $update_user );
-
-				// Unset the password field to prevent it from emptying out the user's user_pass field in the database.
-				// @see wp_update_user().
-				if ( false === $pass_changed ) {
-					unset( $update_user['user_pass'] );
-				}
-			}
-
 			// Clear cached data, so that the changed settings take effect on the current page load.
 			clean_user_cache( bboss_displayed_user_id() );
 
@@ -1353,10 +1358,16 @@ class BBoss_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 				add_filter( 'send_password_change_email', '__return_false' );
 			}
 
+			// Only the password is saved here. A new email address waits for the
+			// verification link, so a request without a new password has nothing
+			// to write. Skipping wp_update_user() then also keeps an address with
+			// "&" as it is: WordPress re-encodes a saved "&amp;" on every update
+			// (https://core.trac.wordpress.org/ticket/16788).
 			if (
 				empty( $email_error )
-				&& ( empty( $pass_error ) )
-				&& ( wp_update_user( $update_user ) )
+				&& empty( $pass_error )
+				&& true === $pass_changed
+				&& wp_update_user( $update_user )
 			) {
 				$bp->displayed_user->userdata = bboss_core_get_core_userdata( bboss_displayed_user_id() );
 			}

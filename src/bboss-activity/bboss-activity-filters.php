@@ -1571,6 +1571,7 @@ add_filter( 'bp_activity_set_public_scope_args', 'bp_activity_filter_public_scop
  *
  * @since BuddyPress 2.2.0
  * @since BuddyBoss 3.7.1 Returns nothing for guests, and hides hidden items of groups the user is not a member of.
+ * @since BuddyBoss 3.8.1 Shows friends-only items by the viewer's friends, not the listed member's.
  *
  * @param array $retval Empty array by default.
  * @param array $filter Current activity arguments.
@@ -1630,16 +1631,11 @@ function bboss_activity_filter_favorites_scope( $retval = array(), $filter = arr
 		$privacy[] = 'loggedin';
 
 		if ( bboss_is_active( 'friends' ) ) {
-			// Determine friends of user.
-			$friends = bboss_friends_get_friend_user_ids( $user_id );
-			if ( empty( $friends ) ) {
-				$friends = array( 0 );
-			}
-
-			if ( $user_id === bboss_loggedin_user_id() ) {
-				$friends[] = bboss_loggedin_user_id();
-				$friends   = array_unique( $friends );
-			}
+			// Friends-only items are for the author and the author's friends, so match the
+			// viewer's friends, not those of the member whose reactions are listed (PROD-10890).
+			$friends   = bboss_friends_get_friend_user_ids( bboss_loggedin_user_id() );
+			$friends[] = bboss_loggedin_user_id();
+			$friends   = array_unique( $friends );
 
 			if ( ! empty( $friends ) ) {
 				$friends_filter = array(
@@ -1746,6 +1742,7 @@ add_filter( 'bp_activity_set_favorites_scope_args', 'bp_activity_filter_favorite
  * Set up activity arguments for use with the 'favorites' scope.
  *
  * @since BuddyPress 2.2.0
+ * @since BuddyBoss 3.8.1 Matches nothing when mentions are off, and shows friends-only items by the viewer's friends.
  *
  * @param array $retval Empty array by default.
  * @param array $filter Current activity arguments.
@@ -1753,9 +1750,13 @@ add_filter( 'bp_activity_set_favorites_scope_args', 'bp_activity_filter_favorite
  */
 function bboss_activity_filter_mentions_scope( $retval = array(), $filter = array() ) {
 
-	// Are mentions disabled?
+	// Are mentions disabled? Then match nothing: an empty condition would leave the query open
+	// to every privacy level (PROD-10890).
 	if ( ! bboss_activity_do_mentions() ) {
-		return $retval;
+		return array(
+			'column' => 'id',
+			'value'  => 0,
+		);
 	}
 
 	// Determine the user_id.
@@ -1776,8 +1777,10 @@ function bboss_activity_filter_mentions_scope( $retval = array(), $filter = arra
 		$privacy[] = 'loggedin';
 
 		if ( bboss_is_active( 'friends' ) && $user_id ) {
-			// Determine friends of user.
-			$friends = bboss_friends_get_friend_user_ids( $user_id );
+			// Friends-only items are for the author and the author's friends, so match the
+			// viewer's friends, not those of the mentioned member (PROD-10890).
+			$friends   = bboss_friends_get_friend_user_ids( bboss_loggedin_user_id() );
+			$friends[] = bboss_loggedin_user_id();
 		}
 	}
 
@@ -2010,6 +2013,7 @@ add_filter( 'bp_ajax_querystring', 'bp_add_member_follow_scope_filter', 20, 2 );
  * For details on the syntax, see {@link BBoss_Activity_Query}.
  *
  * @since BuddyBoss 1.0.0
+ * @since BuddyBoss 3.8.1 Matches nothing when activity follow is off.
  *
  * @param array $retval Empty array by default.
  * @param array $filter Current activity arguments.
@@ -2018,9 +2022,13 @@ add_filter( 'bp_ajax_querystring', 'bp_add_member_follow_scope_filter', 20, 2 );
  */
 function bboss_users_filter_activity_following_scope( $retval = array(), $filter = array() ) {
 
-	// Is follow active?
+	// Is follow active? If not, match nothing: an empty condition would leave the query open
+	// to every privacy level (PROD-10890).
 	if ( ! bboss_is_activity_follow_active() ) {
-		return $retval;
+		return array(
+			'column' => 'id',
+			'value'  => 0,
+		);
 	}
 
 	// Determine the user_id.
@@ -4348,6 +4356,7 @@ if ( function_exists( 'bboss_load_activity_notifications' ) && ! function_exists
  * Add activity notifications settings to the notifications settings page.
  *
  * @since BuddyPress 1.2.0
+ * @since BuddyBoss 3.8.1 The mention label shows the displayed member's mention name.
  */
 function bboss_activity_screen_notification_settings() {
 
@@ -4381,11 +4390,10 @@ function bboss_activity_screen_notification_settings() {
 		<tbody>
 		<?php
 		if ( bboss_activity_do_mentions() ) :
-			$current_user = wp_get_current_user();
 			?>
 			<tr id="activity-notification-settings-mentions">
 				<td>&nbsp;</td>
-				<td><?php /* translators: %s: the member's @mention name. */ printf( esc_html__( 'A member mentions you in an update using "@%s"', 'buddyboss' ), esc_html( bboss_activity_get_user_mentionname( $current_user->ID ) ) ); ?></td>
+				<td><?php /* translators: %s: the member's @mention name. */ printf( esc_html__( 'A member mentions you in an update using "@%s"', 'buddyboss' ), esc_html( bboss_activity_get_user_mentionname( bboss_displayed_user_id() ) ) ); ?></td>
 				<td class="yes">
 					<div class="bp-radio-wrap">
 						<input type="radio" name="notifications[notification_activity_new_mention]" id="notification-activity-new-mention-yes" class="bs-styled-radio"

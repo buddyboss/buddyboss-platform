@@ -326,7 +326,7 @@ $width = wp_is_mobile() ? '100%' : '600px';
 												echo esc_html( $email_user->display_name ) . ' <img src="' . esc_url( bboss_core_fetch_avatar( array(
 														'item_id' => $email_user->ID,
 														'html'    => false
-													) ) ) . '" " width="34" height="34" style="border: 1px solid #b9babc; border-radius: 50%; margin-left: 12px; vertical-align: middle;" />';
+													) ) ) . '" width="34" height="34" style="border: 1px solid #b9babc; border-radius: 50%; margin-left: 12px; vertical-align: middle;" />';
 											}
 
 											/**

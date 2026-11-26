@@ -50,17 +50,132 @@ if ( function_exists( 'bboss_notifications_update_meta_cache' ) && ! function_ex
 
 
 /**
+ * Get (and lazily create) the cache-busting incrementor for a user's
+ * notification counts.
+ *
+ * The value is embedded into every notification-count cache key built by
+ * bboss_notifications_get_count_cache_key(). Bumping it via
+ * bboss_notifications_bump_user_count_cache_incrementor() makes every
+ * previously cached count for that user - no matter which component_name/
+ * item_id/etc. combination produced it - unreachable in one operation,
+ * without needing to enumerate or individually delete each variant's key.
+ *
+ * @since BuddyBoss 3.8.1
+ *
+ * @param int $user_id User ID.
+ * @return string Incrementor value.
+ */
+function bboss_notifications_get_user_count_cache_incrementor( $user_id ) {
+	$incrementor = wp_cache_get( $user_id, 'bp_notifications_count_incrementor' );
+
+	if ( false === $incrementor ) {
+		$incrementor = microtime();
+		wp_cache_set( $user_id, $incrementor, 'bp_notifications_count_incrementor' );
+	}
+
+	return $incrementor;
+}
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_notifications_get_user_count_cache_incrementor' ) && ! function_exists( 'bp_notifications_get_user_count_cache_incrementor' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_notifications_get_user_count_cache_incrementor()}.
+	 *
+	 * @deprecated Use bboss_notifications_get_user_count_cache_incrementor() instead.
+	 */
+	function bp_notifications_get_user_count_cache_incrementor( $user_id ) {
+		return bboss_notifications_get_user_count_cache_incrementor( $user_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
+
+/**
+ * Invalidate every cached notification count for a user, regardless of
+ * which component_name/item_id/etc. arguments produced it.
+ *
+ * @since BuddyBoss 3.8.1
+ *
+ * @param int $user_id User ID.
+ */
+function bboss_notifications_bump_user_count_cache_incrementor( $user_id ) {
+	wp_cache_delete( $user_id, 'bp_notifications_count_incrementor' );
+}
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_notifications_bump_user_count_cache_incrementor' ) && ! function_exists( 'bp_notifications_bump_user_count_cache_incrementor' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_notifications_bump_user_count_cache_incrementor()}.
+	 *
+	 * @deprecated Use bboss_notifications_bump_user_count_cache_incrementor() instead.
+	 */
+	function bp_notifications_bump_user_count_cache_incrementor( $user_id ) {
+		return bboss_notifications_bump_user_count_cache_incrementor( $user_id );
+	}
+}
+// @bbwt-com-end compat-layer
+
+
+/**
+ * Build a cache key for a notification count query.
+ *
+ * The key is a hash of the final count SQL plus the user's incrementor, so it
+ * reflects every input that shapes the query (including is_new, meta/date
+ * queries and conditions added through `bb_notifications_get_where_conditions`)
+ * and is always a plain 32-character hash, which is safe for Memcached.
+ *
+ * Used by BBoss_Notifications_Notification::get_total_count() so that two queries
+ * for the same user with different filters never share a cache slot. See PROD-10344.
+ *
+ * @since BuddyBoss 3.8.1
+ *
+ * @param int    $user_id User ID the count belongs to.
+ * @param string $sql     The final SQL of the count query.
+ *
+ * @return string Cache key.
+ */
+function bboss_notifications_get_count_cache_key( $user_id, $sql ) {
+	global $wpdb;
+
+	$incrementor = bboss_notifications_get_user_count_cache_incrementor( $user_id );
+
+	// Remove the placeholder escape strings from the query.
+	$sql = $wpdb->remove_placeholder_escape( $sql );
+
+	return md5( $sql . $incrementor );
+}
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_notifications_get_count_cache_key' ) && ! function_exists( 'bp_notifications_get_count_cache_key' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_notifications_get_count_cache_key()}.
+	 *
+	 * @deprecated Use bboss_notifications_get_count_cache_key() instead.
+	 */
+	function bp_notifications_get_count_cache_key( $user_id, $sql ) {
+		return bboss_notifications_get_count_cache_key( $user_id, $sql );
+	}
+}
+// @bbwt-com-end compat-layer
+
+
+/**
  * Clear all notifications cache for a given user ID.
  *
  * @since BuddyPress 2.3.0
+ * @since BuddyBoss 3.8.1 Invalidates counts by bumping the user's count incrementor instead of deleting $user_id keys.
  *
  * @param int $user_id The user ID's cache to clear.
  */
 function bboss_notifications_clear_all_for_user_cache( $user_id = 0 ) {
 	wp_cache_delete( 'all_for_user_' . $user_id, 'bp_notifications' );
-	wp_cache_delete( $user_id, 'bp_notifications_unread_count' );
-	wp_cache_delete( $user_id, 'bp_notifications_read_count' );
 	wp_cache_delete( $user_id, 'bp_notifications_grouped_notifications' );
+
+	// Unread/read counts are cached under a hash of the query (see
+	// bp_notifications_get_count_cache_key()), not under $user_id, so bumping
+	// the incrementor - rather than a direct delete() - is what invalidates
+	// them all at once. See PROD-10344.
+	bboss_notifications_bump_user_count_cache_incrementor( $user_id );
 }
 // @bbwt-com-start compat-layer
 // bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
@@ -149,9 +264,54 @@ if ( function_exists( 'bboss_notifications_clear_all_for_user_cache_before_delet
 add_action( 'bp_notification_before_delete', 'bp_notifications_clear_all_for_user_cache_before_delete' );
 
 /**
+ * Invalidate the caches of the users whose notifications were deleted.
+ *
+ * The before_delete handler looks rows up through BBoss_Notifications_Notification::get(),
+ * which defaults to unread rows of registered components only, so deleting a read
+ * notification did not clear its user's counts. delete() passes the exact rows it
+ * removed to this action, so clearing from them covers every deleted row.
+ *
+ * @since BuddyBoss 3.8.1
+ *
+ * @param int|false $retval        Number of rows deleted on success, false on failure.
+ * @param array     $notifications Deleted notification rows.
+ */
+function bboss_notifications_clear_all_for_user_cache_after_delete( $retval, $notifications ) {
+	if ( empty( $retval ) || empty( $notifications ) ) {
+		return;
+	}
+
+	$user_ids = array_unique( wp_list_pluck( $notifications, 'user_id' ) );
+	foreach ( $user_ids as $user_id ) {
+		bboss_notifications_clear_all_for_user_cache( $user_id );
+	}
+
+	foreach ( $notifications as $notification ) {
+		wp_cache_delete( $notification->id, 'bp_notifications' );
+		wp_cache_delete( 'bp_notifications_check_access_' . $notification->user_id . '_' . $notification->id, 'bp_notifications' );
+	}
+}
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_notifications_clear_all_for_user_cache_after_delete' ) && ! function_exists( 'bb_notifications_clear_all_for_user_cache_after_delete' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_notifications_clear_all_for_user_cache_after_delete()}.
+	 *
+	 * @deprecated Use bboss_notifications_clear_all_for_user_cache_after_delete() instead.
+	 */
+	function bb_notifications_clear_all_for_user_cache_after_delete( $retval, $notifications ) {
+		return bboss_notifications_clear_all_for_user_cache_after_delete( $retval, $notifications );
+	}
+}
+// @bbwt-com-end compat-layer
+
+add_action( 'bp_notification_after_delete', 'bb_notifications_clear_all_for_user_cache_after_delete', 10, 2 );
+
+/**
  * Invalidates 'all_for_user_' cache when updating.
  *
  * @since BuddyPress 2.3.0
+ * @since BuddyBoss 3.8.1 Clears every affected user when the WHERE has no user_id or id.
  *
  * @param array $update_args See BBoss_Notifications_Notification::update() for description.
  * @param array $where_args  See BBoss_Notifications_Notification::update() for description.
@@ -172,6 +332,11 @@ function bboss_notifications_clear_all_for_user_cache_before_update( $update_arg
 		bboss_notifications_clear_all_for_user_cache( $n->user_id );
 		wp_cache_delete( $n->id, 'bp_notifications' );
 		wp_cache_delete( 'bp_notifications_check_access_' . $n->user_id . '_' . $n->id, 'bp_notifications' );
+
+		// No user or notification ID (mark_all_by_type(), mark_all_from_user(), mark by item for all users):
+		// clear every user whose rows match the update's WHERE.
+	} else {
+		bboss_notifications_clear_cache_for_update_where( $where_args );
 	}
 }
 // @bbwt-com-start compat-layer
@@ -189,3 +354,71 @@ if ( function_exists( 'bboss_notifications_clear_all_for_user_cache_before_updat
 // @bbwt-com-end compat-layer
 
 add_action( 'bp_notification_before_update', 'bp_notifications_clear_all_for_user_cache_before_update', 10, 2 );
+
+/**
+ * Clear the caches of every user whose notifications match an update's WHERE arguments.
+ *
+ * Used when BBoss_Notifications_Notification::update() is called without a user_id or id,
+ * e.g. by mark_all_by_type(), mark_all_from_user() or bboss_notifications_mark_notifications_by_item_id()
+ * with no user. It reads the matching rows with the same column = value conditions that
+ * update() applies, so no default component, is_new or moderation filter can skip a row.
+ *
+ * @since BuddyBoss 3.8.1
+ *
+ * @param array $where_args See BBoss_Notifications_Notification::update() for description.
+ */
+function bboss_notifications_clear_cache_for_update_where( $where_args ) {
+	global $wpdb;
+
+	// Same columns and formats as BP_Notifications_Notification::get_query_clauses().
+	$conditions = array();
+	foreach ( array( 'item_id', 'secondary_item_id' ) as $column ) {
+		if ( ! empty( $where_args[ $column ] ) ) {
+			$conditions[] = $wpdb->prepare( "{$column} = %d", absint( $where_args[ $column ] ) ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		}
+	}
+	foreach ( array( 'component_name', 'component_action' ) as $column ) {
+		if ( ! empty( $where_args[ $column ] ) ) {
+			$conditions[] = $wpdb->prepare( "{$column} = %s", $where_args[ $column ] ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		}
+	}
+	if ( isset( $where_args['is_new'] ) ) {
+		$conditions[] = $wpdb->prepare( 'is_new = %d', ! empty( $where_args['is_new'] ) ? 1 : 0 );
+	}
+
+	// update() with no WHERE matches nothing, so there is nothing to clear.
+	if ( empty( $conditions ) ) {
+		return;
+	}
+
+	$table         = bboss()->notifications->table_name;
+	$notifications = $wpdb->get_results( "SELECT id, user_id FROM {$table} WHERE " . implode( ' AND ', $conditions ) ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+
+	if ( empty( $notifications ) ) {
+		return;
+	}
+
+	$user_ids = array_unique( wp_list_pluck( $notifications, 'user_id' ) );
+	foreach ( $user_ids as $user_id ) {
+		bboss_notifications_clear_all_for_user_cache( $user_id );
+	}
+
+	foreach ( $notifications as $notification ) {
+		wp_cache_delete( $notification->id, 'bp_notifications' );
+		wp_cache_delete( 'bp_notifications_check_access_' . $notification->user_id . '_' . $notification->id, 'bp_notifications' );
+	}
+}
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
+if ( function_exists( 'bboss_notifications_clear_cache_for_update_where' ) && ! function_exists( 'bb_notifications_clear_cache_for_update_where' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_notifications_clear_cache_for_update_where()}.
+	 *
+	 * @deprecated Use bboss_notifications_clear_cache_for_update_where() instead.
+	 */
+	function bb_notifications_clear_cache_for_update_where( $where_args ) {
+		return bboss_notifications_clear_cache_for_update_where( $where_args );
+	}
+}
+// @bbwt-com-end compat-layer
+
