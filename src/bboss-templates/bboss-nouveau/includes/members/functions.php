@@ -724,10 +724,10 @@ function bboss_nouveau_member_enqueue_scripts() {
 		$template_parts = apply_filters(
 			'bb_member_subscriptions_js_template_parts',
 			array(
-				'bb-member-subscription-loading',
-				'bb-subscription-item',
-				'bb-member-subscription-pagination',
-				'bb-member-no-subscription',
+				'bboss-member-subscription-loading',
+				'bboss-subscription-item',
+				'bboss-member-subscription-pagination',
+				'bboss-member-no-subscription',
 			)
 		);
 
