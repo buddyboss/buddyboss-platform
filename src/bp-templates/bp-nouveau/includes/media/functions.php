@@ -265,7 +265,7 @@ function bp_nouveau_get_media_directory_nav_items() {
 			'component' => 'media',
 			'slug'      => 'groups', // slug is used because BP_Core_Nav requires it, but it's the scope.
 			'li_class'  => array(),
-			'link'      => bp_loggedin_user_domain() . bp_get_media_slug() . '/groups-media/',
+			'link'      => bp_get_media_directory_permalink(), // The tab is a scope of this directory; a member has no "group photos" screen to link to.
 			'text'      => __( 'My Groups', 'buddyboss' ),
 			'count'     => false,
 			'position'  => 15,
