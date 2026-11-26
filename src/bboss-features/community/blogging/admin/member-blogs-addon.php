@@ -92,6 +92,7 @@ if ( function_exists( 'bboss_member_blogging_plugin_slug' ) && ! function_exists
 // @bbwt-com-end compat-layer
 
 
+// @bbwt-com-start licence-state-probes
 /**
  * Whether the BuddyBoss Mothership license layer is available.
  *
@@ -117,6 +118,7 @@ if ( function_exists( 'bboss_member_blogging_mothership_available' ) && ! functi
 }
 // @bbwt-com-end compat-layer
 
+// @bbwt-com-end licence-state-probes
 
 // @bbwt-com-start licence-state-probes
 /**
@@ -327,19 +329,18 @@ function bboss_member_blogging_get_addon_state() {
 
 	// Not on disk from here down — an install is the only path forward, and the
 	// add-on is not on wordpress.org, so it needs the licensed add-on server.
-	if ( ! bboss_member_blogging_mothership_available() ) {
-		$state = 'not_in_plan';
+	$state = 'not_in_plan';
 
+	// @bbwt-com-start licence-state-probes
+	if ( ! bboss_member_blogging_mothership_available() ) {
 		return $state;
 	}
 
-	// @bbwt-com-start licence-state-probes
 	if ( ! bboss_member_blogging_is_license_active() ) {
 		$state = 'needs_license';
 
 		return $state;
 	}
-	// @bbwt-com-end licence-state-probes
 
 	$product = \BuddyBoss\Core\Admin\Mothership\BB_Addons_Manager::checkProductBySlug( bboss_member_blogging_plugin_slug() );
 
@@ -358,6 +359,7 @@ function bboss_member_blogging_get_addon_state() {
 	$state = \BuddyBoss\Core\Admin\Mothership\BB_Addons_Manager::productsApiErrored()
 		? 'api_unavailable'
 		: 'not_in_plan';
+	// @bbwt-com-end licence-state-probes
 
 	return $state;
 }

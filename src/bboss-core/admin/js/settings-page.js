@@ -117,6 +117,7 @@ window.bp = window.bp || {};
 								'method' : 'POST',
 								'data' : {
 									'action' : 'bp_core_admin_create_background_page',
+									'nonce' : BP_ADMIN.create_page_nonce,
 									'page' : dataPage
 								},
 								'success' : function( response ) {

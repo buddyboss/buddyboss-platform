@@ -1,5 +1,6 @@
 === BuddyBoss Platform ===
 Contributors: buddyboss
+Tags: community, social network, groups, forums, messaging
 Requires at least: 6.3
 Tested up to: 7.1
 Requires PHP: 7.4.0
@@ -117,9 +118,9 @@ BuddyBoss Platform connects to the services below only in the situations describ
 * **What and when:** for a member who has not uploaded a profile photo, and only while Gravatar is allowed as a fallback in the profile photo settings, the photo is requested from `https://www.gravatar.com/avatar/`. The address contains an MD5 hash of the member's email address and is requested by the visitor's browser; with the default "mystery person" setting the site itself also asks Gravatar, at most once every three hours per member, whether a photo exists for that hash.
 * **Who provides it:** Automattic Inc. [Terms of Service](https://wordpress.com/tos/), [Privacy Policy](https://automattic.com/privacy/).
 
-= YouTube and Vimeo (admin only, upgrade windows) =
+= YouTube and Vimeo (admin only, help panels and upgrade windows) =
 
-* **What and when:** some upgrade windows in BuddyBoss > Settings show a short preview video. Nothing is loaded until an administrator opens such a window; then the browser loads the video player from `https://www.youtube-nocookie.com` or `https://player.vimeo.com`. No site data is sent by the plugin.
+* **What and when:** some help panels and upgrade windows in BuddyBoss > Settings show a short video. Nothing is loaded until an administrator opens such a panel or window; then the browser loads the video player from `https://www.youtube-nocookie.com` or `https://player.vimeo.com`. No site data is sent by the plugin.
 * **Who provides it:** Google LLC ([Terms of Service](https://www.youtube.com/t/terms), [Privacy Policy](https://policies.google.com/privacy)) and Vimeo.com, Inc. ([Terms of Service](https://vimeo.com/terms), [Privacy Policy](https://vimeo.com/privacy)).
 
 == Changelog ==

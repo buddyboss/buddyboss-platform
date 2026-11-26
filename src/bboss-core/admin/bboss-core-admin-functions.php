@@ -2498,23 +2498,30 @@ add_action( 'admin_notices', 'bp_member_type_invalid_role_extended_profile_error
  * Catch and process an admin directory page.
  *
  * @since BuddyBoss 1.0.0
+ * @since BuddyBoss [BBVERSION] Checks a nonce.
  */
 function bboss_core_admin_create_background_page() {
 	if ( ! current_user_can( 'manage_options' ) ) {
 		wp_send_json_error();
 	}
 
-	if ( empty( $_POST['page'] ) ) {
+	if ( ! check_ajax_referer( 'bp_core_admin_create_background_page', 'nonce', false ) ) {
+		wp_send_json_error();
+	}
+
+	$page = isset( $_POST['page'] ) ? sanitize_key( wp_unslash( $_POST['page'] ) ) : '';
+
+	if ( empty( $page ) ) {
 		wp_send_json_error();
 	}
 
 	$page_ids    = bboss_core_get_directory_page_ids( 'all' );
 	$valid_pages = array_merge( bboss_core_admin_get_directory_pages(), bboss_core_admin_get_static_pages() );
 
-	if ( isset( $valid_pages[ $_POST['page'] ] ) ) {
+	if ( isset( $valid_pages[ $page ] ) ) {
 
 		$default_title = bboss_core_get_directory_page_default_titles();
-		$title         = ( isset( $default_title[ $_POST['page'] ] ) ) ? $default_title[ $_POST['page'] ] : $valid_pages[ $_POST['page'] ];
+		$title         = ( isset( $default_title[ $page ] ) ) ? $default_title[ $page ] : $valid_pages[ $page ];
 
 		$new_page = array(
 			'post_title'     => $title,
@@ -2526,10 +2533,10 @@ function bboss_core_admin_create_background_page() {
 		);
 
 		$page_id                    = wp_insert_post( $new_page );
-		$page_ids[ $_POST['page'] ] = (int) $page_id;
+		$page_ids[ $page ] = (int) $page_id;
 
 		// If forums page then store into the _bbp_root_slug_custom_slug option.
-		if ( 'new_forums_page' === sanitize_text_field( $_POST['page'] ) ) {
+		if ( 'new_forums_page' === $page ) {
 			bboss_update_option( '_bbp_root_slug_custom_slug', $page_id );
 			// Else store into the directory pages.
 		} else {
@@ -2537,7 +2544,7 @@ function bboss_core_admin_create_background_page() {
 		}
 
 		// If forums page then change the BBPress root slug _bbp_root_slug and flush the redirect rule.
-		if ( 'new_forums_page' === sanitize_text_field( $_POST['page'] ) ) {
+		if ( 'new_forums_page' === $page ) {
 			$slug = get_page_uri( $page_id );
 			bboss_update_option( '_bbp_root_slug', urldecode( $slug ) );
 			flush_rewrite_rules( true );

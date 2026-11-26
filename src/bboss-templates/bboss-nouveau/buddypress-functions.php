@@ -836,6 +836,9 @@ JS;
 		// Add localize variable for the link preview request time limit in milliseconds, above the server-side fetch time.
 		$params['link_preview_timeout'] = 20000;
 
+		// Add localize variable for the nonce the link preview requests send.
+		$params['link_preview_nonce'] = wp_create_nonce( 'bb_link_preview' );
+
 		/**
 		 * Filters core JavaScript strings for internationalization before AJAX usage.
 		 *

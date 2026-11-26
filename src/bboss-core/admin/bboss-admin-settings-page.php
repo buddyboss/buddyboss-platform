@@ -372,7 +372,6 @@ function bboss_admin_settings_page() {
 	// @bbwt-com-start mothership-hub
 	$bb_license_connector  = new \BuddyBoss\Core\Admin\Mothership\BB_Plugin_Connector();
 	$bb_has_active_license = $bb_license_connector->getLicenseActivationStatus();
-	// @bbwt-com-end mothership-hub
 	if ( $bb_has_active_license && class_exists( '\\BuddyBoss\\Core\\Admin\\Mothership\\BB_Addons_Manager' ) ) {
 		$bb_has_plus_tier = null !== \BuddyBoss\Core\Admin\Mothership\BB_Addons_Manager::checkProductBySlug( 'buddyboss-gamification' );
 
@@ -383,6 +382,7 @@ function bboss_admin_settings_page() {
 			$bb_has_plus_tier = true;
 		}
 	}
+	// @bbwt-com-end mothership-hub
 	$localize_data['hasActiveLicense'] = $bb_has_active_license;
 	$localize_data['hasPlusTier']      = $bb_has_plus_tier;
 

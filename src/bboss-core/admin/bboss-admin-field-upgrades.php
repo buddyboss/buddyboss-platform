@@ -717,6 +717,7 @@ if ( function_exists( 'bboss_flush_field_upgrades_cache_full' ) && ! function_ex
 // @bbwt-com-end compat-layer
 
 
+// @bbwt-com-start licence-state-probes
 /**
  * Clear the field upgrades cache when the license status changes.
  *
@@ -760,3 +761,4 @@ if ( function_exists( 'bboss_register_field_upgrades_license_hooks' ) && ! funct
 // @bbwt-com-end compat-layer
 
 add_action( 'admin_init', 'bb_register_field_upgrades_license_hooks' );
+// @bbwt-com-end licence-state-probes

@@ -440,6 +440,7 @@ function bboss_email_digest_addon_latest_release() {
 		'url'     => '',
 	);
 
+	// @bbwt-com-start licence-state-probes
 	if ( ! class_exists( '\BuddyBoss\Core\Admin\Mothership\BB_Addons_Manager' ) ) {
 		return $none;
 	}
@@ -452,14 +453,15 @@ function bboss_email_digest_addon_latest_release() {
 
 	$release = \BuddyBoss\Core\Admin\Mothership\BB_Addons_Manager::get_product_latest_version( $product );
 
-	if ( null === $release ) {
-		return $none;
+	if ( null !== $release ) {
+		return array(
+			'version' => isset( $release->number ) ? (string) $release->number : '',
+			'url'     => isset( $release->url ) ? (string) $release->url : '',
+		);
 	}
+	// @bbwt-com-end licence-state-probes
 
-	return array(
-		'version' => isset( $release->number ) ? (string) $release->number : '',
-		'url'     => isset( $release->url ) ? (string) $release->url : '',
-	);
+	return $none;
 }
 // @bbwt-com-start compat-layer
 // bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.

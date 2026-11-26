@@ -5591,7 +5591,7 @@ window.bp = window.bp || {};
 						self.loadURLAjax = bp.ajax.send(
 							'bp_activity_parse_url',
 							{
-								data: { url: url },
+								data: { url: url, nonce: BP_Nouveau.link_preview_nonce },
 								// End a slow request with the same error instead of an endless loader.
 								timeout: BP_Nouveau.link_preview_timeout
 							}

@@ -285,6 +285,7 @@ if ( ! class_exists( 'BBoss_Telemetry' ) ) {
 					unset( $bb_telemetry_data[ $bb_telemetry_private_key ] );
 				}
 
+				// @bbwt-com-start mothership-hub
 				if ( isset( $bb_telemetry_data['bb_license'] ) && is_array( $bb_telemetry_data['bb_license'] ) ) {
 					foreach ( $bb_telemetry_data['bb_license'] as $bb_telemetry_product => $bb_telemetry_licence ) {
 						if ( is_array( $bb_telemetry_licence ) ) {
@@ -292,6 +293,7 @@ if ( ! class_exists( 'BBoss_Telemetry' ) ) {
 						}
 					}
 				}
+				// @bbwt-com-end mothership-hub
 			}
 
 			/*
@@ -777,6 +779,7 @@ if ( ! class_exists( 'BBoss_Telemetry' ) ) {
 			return apply_filters( 'bb_telemetry_platform_data', $bb_telemetry_data );
 		}
 
+		// @bbwt-com-start mothership-hub
 		/**
 		 * Read a Platform license option from the scope the licence is stored in.
 		 *
@@ -830,7 +833,6 @@ if ( ! class_exists( 'BBoss_Telemetry' ) ) {
 			 * would otherwise report as unlicensed.
 			 */
 			$platform_key = '';
-			// @bbwt-com-start mothership-hub
 			if ( class_exists( '\BuddyBossPlatform\GroundLevel\Mothership\Credentials' ) ) {
 				try {
 					/*
@@ -848,7 +850,6 @@ if ( ! class_exists( 'BBoss_Telemetry' ) ) {
 					$platform_key = '';
 				}
 			}
-			// @bbwt-com-end mothership-hub
 
 			if ( '' === $platform_key && ! empty( $platform_id ) ) {
 				$platform_key = (string) get_option( $platform_id . '_license_key', '' );
@@ -999,7 +1000,9 @@ if ( ! class_exists( 'BBoss_Telemetry' ) ) {
 
 			return $data;
 		}
+		// @bbwt-com-end mothership-hub
 
+		// @bbwt-com-start drm
 		/**
 		 * Collect the DRM escalation stage for telemetry.
 		 *
@@ -1016,12 +1019,10 @@ if ( ! class_exists( 'BBoss_Telemetry' ) ) {
 		 * Reporting the stage is what makes the ladder measurable: how many sites
 		 * sit at each rung, and how many reach lockout rather than licensing.
 		 *
-		 * @bbwt-com-start drm
 		 * Derived from local state only — two indexed lookups on the DRM event
 		 * table plus two option reads. Deliberately avoids
 		 * `BB_DRM_Registry::get_addons_by_drm_status()`, which calls
 		 * `is_addon_licensed()` and can reach the Mothership API.
-		 * @bbwt-com-end drm
 		 *
 		 * @since BuddyBoss 3.4.3
 		 *
@@ -1035,7 +1036,6 @@ if ( ! class_exists( 'BBoss_Telemetry' ) ) {
 				'addons'   => array(),
 			);
 
-			// @bbwt-com-start drm
 			if (
 				! class_exists( '\BuddyBoss\Core\Admin\DRM\BB_DRM_Event' ) ||
 				! class_exists( '\BuddyBoss\Core\Admin\DRM\BB_DRM_Helper' )
@@ -1056,7 +1056,6 @@ if ( ! class_exists( 'BBoss_Telemetry' ) ) {
 			}
 
 			$data = array_merge( $data, $this->bb_get_drm_stage( $data['scenario'] ) );
-			// @bbwt-com-end drm
 
 			/**
 			 * Filters the DRM data reported by telemetry.
@@ -1067,6 +1066,7 @@ if ( ! class_exists( 'BBoss_Telemetry' ) ) {
 			 */
 			return apply_filters( 'bb_telemetry_drm_data', $data );
 		}
+		// @bbwt-com-end drm
 
 		// @bbwt-com-start drm
 		/**
