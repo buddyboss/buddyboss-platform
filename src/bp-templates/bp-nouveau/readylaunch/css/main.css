@@ -14916,6 +14916,7 @@ body.bb-rl-activity-modal-open .bb-rl-activity-update-form.modal-popup {
 .activity-topic-selector {
   flex: 1;
   min-width: 0;
+  width: 0;
 }
 
 .activity-topic-selector > ul {
@@ -14929,6 +14930,7 @@ body.bb-rl-activity-modal-open .bb-rl-activity-update-form.modal-popup {
 .activity-topic-selector > ul > li {
   position: relative;
   padding: 0;
+  flex-shrink: 0;
 }
 
 .activity-topic-selector > ul > li > a {
@@ -16820,6 +16822,7 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   }
   .activity-topic-selector {
     max-width: 100%;
+    width: auto;
   }
   .bb-rl-group-details .activity-topic-selector {
     min-width: 100%;
