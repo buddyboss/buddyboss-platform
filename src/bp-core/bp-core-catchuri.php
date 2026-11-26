@@ -655,6 +655,63 @@ function bp_core_members_shortlink_redirector( $member_slug ) {
 add_filter( 'bp_core_set_uri_globals_member_slug', 'bp_core_members_shortlink_redirector' );
 
 /**
+ * Build the rewrite rules in WordPress's own order, whatever page this request is for.
+ *
+ * bp_core_set_uri_globals() turns `$wp_rewrite->use_verbose_page_rules` off on a community page
+ * (and under WP-CLI when the front page is a community page) so WordPress accepts the page rule
+ * without looking the page up. That flag also decides whether the page rules are stored above
+ * the post rules, so a flush during such a request stored them below, and every static page
+ * then answered 404 until the next flush. The flag is put back to what the permalink structure
+ * asks for while the rules are put together, and returned to its request value afterwards.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $rules The post rewrite rules (the first set WordPress filters); returned as given.
+ *
+ * @return array
+ */
+function bb_core_rewrite_rules_set_verbose_page_rules( $rules ) {
+	global $wp_rewrite;
+
+	$bp = buddypress();
+
+	if ( ! isset( $bp->request_verbose_page_rules ) ) {
+		$bp->request_verbose_page_rules = $wp_rewrite->use_verbose_page_rules;
+	}
+
+	// The test WP_Rewrite::init() uses.
+	$wp_rewrite->use_verbose_page_rules = (bool) preg_match( '/^[^%]*%(?:postname|category|tag|author)%/', (string) $wp_rewrite->permalink_structure );
+
+	return $rules;
+}
+add_filter( 'post_rewrite_rules', 'bb_core_rewrite_rules_set_verbose_page_rules', 0 );
+
+/**
+ * Give `$wp_rewrite->use_verbose_page_rules` its request value back once the rules are built.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @see bb_core_rewrite_rules_set_verbose_page_rules()
+ *
+ * @param array $rules The complete rewrite rules; returned as given.
+ *
+ * @return array
+ */
+function bb_core_rewrite_rules_reset_verbose_page_rules( $rules ) {
+	global $wp_rewrite;
+
+	$bp = buddypress();
+
+	if ( isset( $bp->request_verbose_page_rules ) ) {
+		$wp_rewrite->use_verbose_page_rules = $bp->request_verbose_page_rules;
+		unset( $bp->request_verbose_page_rules );
+	}
+
+	return $rules;
+}
+add_filter( 'rewrite_rules_array', 'bb_core_rewrite_rules_reset_verbose_page_rules', PHP_INT_MAX );
+
+/**
  * Catch unauthorized access to certain BuddyPress pages and redirect accordingly.
  *
  * @since BuddyPress 1.5.0
