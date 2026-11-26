@@ -537,6 +537,16 @@ function bboss_appearance_normalize_field_data( $field_data, $field, $feature_id
 		$field_data['default'] = ! empty( $field_data['default'] ) && '0' !== $field_data['default'] ? '1' : '0';
 	}
 
+	// The sidebar reads the saved side menu over BB_Readylaunch::bb_rl_get_sidebar_defaults(), so
+	// an item with nothing saved follows its default there (messages and notifications are off).
+	// The list control shows an item with no saved state as enabled; give it the same merged map,
+	// or the screen shows every item on while the sidebar prints fewer.
+	if ( 'bb_rl_side_menu' === $name && class_exists( 'BBoss_Readylaunch' ) ) {
+		$stored = isset( $field_data['value'] ) && is_array( $field_data['value'] ) ? bboss_appearance_normalize_side_menu_shape( $field_data['value'] ) : array();
+
+		$field_data['value'] = wp_parse_args( $stored, BBoss_Readylaunch::bb_rl_get_sidebar_defaults() );
+	}
+
 	// Inject inline frontend links into the Template Sidebar Widgets copy at
 	// AJAX format time. At field-registration time (`bb_register_features` →
 	// `bp_loaded@5`) the BP component globals that compute these URLs —
