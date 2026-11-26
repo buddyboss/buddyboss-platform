@@ -4778,6 +4778,7 @@ window.bp = window.bp || {};
 								url: ajaxurl,
 								data: {
 									action: 'bb_forums_parse_url',
+									nonce: BP_Nouveau.link_preview_nonce,
 									url: url
 								},
 								// End a slow request with the same error instead of an endless loader.
