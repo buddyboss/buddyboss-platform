@@ -22,11 +22,12 @@ defined( 'ABSPATH' ) || exit;
 do_action( 'bp_attachments_avatar_check_template' );
 
 // Get the current avatar if it exists.
-$avatar_url      = '';
-$has_avatar      = false;
-$container_class = 'bb-rl-avatar-container';
-$avatar_id       = 0;
-$avatar_label    = '';
+$avatar_url        = '';
+$has_avatar        = false;
+$container_class   = 'bb-rl-avatar-container';
+$avatar_id         = 0;
+$avatar_label      = '';
+$avatar_icon_class = 'bb-icons-rl-x';
 
 if ( bboss_is_group() ) {
 	$group_id     = bboss_get_current_group_id();

@@ -250,9 +250,9 @@ $bb_is_load_more_request = $bb_directory_autoload && isset( $_POST['page'] ) && 
 						<div class="bb_more_options_list bb_more_dropdown">
 							<?php bboss_get_template_part( 'common/more-options-view' ); ?>
 							<?php
-							echo wp_kses_post( $member_switch_button );
-							echo wp_kses_post( $member_report_button );
-							echo wp_kses_post( $member_block_button );
+							echo wp_kses_post( (string) $member_switch_button );
+							echo wp_kses_post( (string) $member_report_button );
+							echo wp_kses_post( (string) $member_block_button );
 							?>
 						</div>
 						<div class="bb_more_dropdown_overlay"></div>
