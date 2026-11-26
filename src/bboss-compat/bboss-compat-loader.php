@@ -206,8 +206,28 @@ function bb_compat_redirect_old_path() {
 	header( 'X-BB-Compat: old-path' );
 	exit;
 }
+/**
+ * The same mapping for a URL printed through the script and style APIs: an add-on that enqueues a
+ * Platform file by its old path gets the renamed URL in the page itself. The redirect above cannot
+ * cover these on every host: a web server that answers a missing .css or .js file on its own (the
+ * nginx configuration WordPress documents, which DDEV also ships) never passes the request to PHP.
+ *
+ * @param string $src Script or stylesheet URL.
+ * @return string The URL of the renamed file when $src is an old Platform path, $src otherwise.
+ */
+function bb_compat_asset_src( $src ) {
+	if ( ! is_string( $src ) || ! preg_match( '#/b[pb]-#', $src ) ) {
+		return $src;
+	}
+	$path = (string) wp_parse_url( $src, PHP_URL_PATH );
+	$to   = '' === $path ? '' : bb_compat_old_path_target( $path );
+	$at   = '' === $to ? false : strpos( $src, $path );
+	return false === $at ? $src : substr( $src, 0, $at ) . $to . substr( $src, $at + strlen( $path ) );
+}
 if ( true ) {
 	bb_compat_redirect_old_path();
+	add_filter( 'script_loader_src', 'bb_compat_asset_src', 1 );
+	add_filter( 'style_loader_src', 'bb_compat_asset_src', 1 );
 }
 
 // Sibling-declared functions (B5): the renamed name delegates to the pre-rename one when another
