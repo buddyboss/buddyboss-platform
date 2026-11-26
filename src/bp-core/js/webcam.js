@@ -25,6 +25,11 @@ window.bp = window.bp || {};
 				flipped:        false
 			};
 
+			// An avatar UI without view navigation (ReadyLaunch) has no camera view to listen for.
+			if ( ! bp.Avatar || ! bp.Avatar.nav ) {
+				return;
+			}
+
 			bp.Avatar.nav.on( 'bp-avatar-view:changed', _.bind( this.setView, this ) );
 		},
 

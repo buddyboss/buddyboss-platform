@@ -30,6 +30,11 @@ bp_nouveau_member_hook( 'before', 'profile_content' );
 			bp_get_template_part( 'members/single/profile/change-avatar' );
 			break;
 
+		// Change Cover Photo.
+		case 'change-cover-image':
+			bp_get_template_part( 'members/single/profile/change-cover-image' );
+			break;
+
 		// Compose.
 		case 'public':
 			// Display XProfile
