@@ -179,8 +179,8 @@ class BP_Notifications_Template {
 
 		// Sort order direction.
 		$orders = array( 'ASC', 'DESC' );
-		if ( ! empty( $_GET['sort_order'] ) && in_array( $_GET['sort_order'], $orders ) ) {
-			$r['sort_order'] = $_GET['sort_order'];
+		if ( ! empty( $_GET['sort_order'] ) && in_array( $_GET['sort_order'], $orders ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; sort order.
+			$r['sort_order'] = sanitize_text_field( wp_unslash( $_GET['sort_order'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; sort order.
 		} else {
 			$r['sort_order'] = in_array( $r['sort_order'], $orders ) ? $r['sort_order'] : 'DESC';
 		}

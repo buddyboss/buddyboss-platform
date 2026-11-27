@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
  * @since BuddyPress 1.0.0
  */
 function xprofile_screen_display_profile() {
-	$new = isset( $_GET['new'] ) ? $_GET['new'] : '';
+	$new = isset( $_GET['new'] ) ? sanitize_text_field( wp_unslash( $_GET['new'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only: flag passed to the xprofile_screen_display_profile hook; nothing is changed.
 
 	/**
 	 * Fires right before the loading of the XProfile screen template file.

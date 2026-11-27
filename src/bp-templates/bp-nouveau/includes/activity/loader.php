@@ -55,9 +55,9 @@ class BP_Nouveau_Activity {
 		} else {
 			add_action( 'admin_init', function() {
 				// AJAX condtion.
-				if ( defined( 'DOING_AJAX' ) && true === DOING_AJAX &&
+				if ( defined( 'DOING_AJAX' ) && true === DOING_AJAX && isset( $_REQUEST['action'] ) && // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only; only decides whether the AJAX file is loaded.
 					// Check to see if action is activity-specific.
-					( false !== strpos( $_REQUEST['action'], 'activity' ) || ( 'post_update' === $_REQUEST['action'] ) )
+					( false !== strpos( sanitize_text_field( wp_unslash( $_REQUEST['action'] ) ), 'activity' ) || ( 'post_update' === sanitize_text_field( wp_unslash( $_REQUEST['action'] ) ) ) ) // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only; only decides whether the AJAX file is loaded.
 				) {
 					require $this->dir . 'ajax.php';
 				}

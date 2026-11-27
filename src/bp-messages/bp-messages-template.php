@@ -61,7 +61,7 @@ function bp_has_message_threads( $args = array() ) {
 	$user_id = bp_displayed_user_id() ?: bp_loggedin_user_id();
 
 	// Search Terms.
-	$search_terms = isset( $_REQUEST['s'] ) ? stripslashes( $_REQUEST['s'] ) : '';
+	$search_terms = isset( $_REQUEST['s'] ) ? stripslashes( $_REQUEST['s'] ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash -- read-only search term; unslashed here and escaped with bp_esc_like() and $wpdb->prepare() in BP_Messages_Thread.
 
 	// Parse the arguments.
 	$r = bp_parse_args(
@@ -859,7 +859,7 @@ function bp_message_search_form() {
 	$default_search_value = bp_get_search_default_text( 'messages' );
 
 	// Setup a few values based on what's being searched for.
-	$search_submitted   = ! empty( $_REQUEST['s'] ) ? stripslashes( $_REQUEST['s'] ) : $default_search_value;
+	$search_submitted   = ! empty( $_REQUEST['s'] ) ? stripslashes( $_REQUEST['s'] ) : $default_search_value; // phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash -- read-only search term; unslashed here and escaped with esc_attr() on the next lines.
 	$search_placeholder = ( $search_submitted === $default_search_value ) ? ' placeholder="' . esc_attr( $search_submitted ) . '"' : '';
 	$search_value       = ( $search_submitted !== $default_search_value ) ? ' value="' . esc_attr( $search_submitted ) . '"' : '';
 
@@ -940,9 +940,9 @@ function bp_get_messages_username_value() {
 		 * @param string $value Default user name.
 		 */
 		return apply_filters( 'bp_get_messages_username_value', sanitize_text_field( wp_unslash( $_COOKIE['bp_messages_send_to'] ) ) );
-	} elseif ( isset( $_GET['r'] ) && ! isset( $_COOKIE['bp_messages_send_to'] ) ) {
+	} elseif ( isset( $_GET['r'] ) && ! isset( $_COOKIE['bp_messages_send_to'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; prefills the recipient field.
 		/** This filter is documented in bp-messages-template.php */
-		return apply_filters( 'bp_get_messages_username_value', sanitize_text_field( wp_unslash( $_GET['r'] ) ) );
+		return apply_filters( 'bp_get_messages_username_value', sanitize_text_field( wp_unslash( $_GET['r'] ) ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; prefills the recipient field.
 	}
 }
 
@@ -963,8 +963,8 @@ function bp_messages_subject_value() {
 function bp_get_messages_subject_value() {
 
 	// Sanitized in bp-messages-filters.php.
-	$subject = ! empty( $_POST['subject'] )
-		? $_POST['subject']
+	$subject = ! empty( $_POST['subject'] ) // phpcs:ignore WordPress.Security.NonceVerification.Missing -- read-only; re-displays the value of a failed submission in the compose form.
+		? $_POST['subject'] // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash -- read-only; re-displays the value of a failed submission in the compose form. Filtered with wp_filter_kses() and stripslashes_deep() on bp_get_messages_subject_value (bp-messages-filters.php).
 		: '';
 
 	/**
@@ -994,8 +994,8 @@ function bp_messages_content_value() {
 function bp_get_messages_content_value() {
 
 	// Sanitized in bp-messages-filters.php.
-	$content = ! empty( $_POST['content'] )
-		? $_POST['content']
+	$content = ! empty( $_POST['content'] ) // phpcs:ignore WordPress.Security.NonceVerification.Missing -- read-only; re-displays the value of a failed submission in the compose form.
+		? $_POST['content'] // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash -- read-only; re-displays the value of a failed submission in the compose form. Filtered with wp_filter_kses() and stripslashes_deep() on bp_get_messages_content_value (bp-messages-filters.php).
 		: '';
 
 	/**
@@ -1386,8 +1386,8 @@ function bp_get_send_private_message_link() {
 
 	if ( bp_displayed_user_id() > 0 ) {
 		$user_id = bp_displayed_user_id();
-	} elseif ( ! empty( $_GET['user'] ) && is_string( $_GET['user'] ) ) {
-		$user_id = absint( $_GET['user'] );
+	} elseif ( ! empty( $_GET['user'] ) && is_string( $_GET['user'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; only builds the private message link.
+		$user_id = absint( $_GET['user'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; only builds the private message link.
 	} else {
 		$user_id = $GLOBALS['members_template']->member->ID;
 	}
@@ -1583,8 +1583,8 @@ function bp_message_get_recipient_usernames() {
 function bp_get_message_get_recipient_usernames() {
 
 	// Sanitized in bp-messages-filters.php.
-	$recipients = isset( $_GET['r'] )
-		? $_GET['r']
+	$recipients = isset( $_GET['r'] ) // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; prefills the recipient field.
+		? $_GET['r'] // phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash -- read-only request; prefills the recipient field. Unslashed with stripslashes_deep() on bp_get_message_get_recipient_usernames (bp-messages-filters.php) and escaped with esc_attr() in bp_message_get_recipient_usernames().
 		: '';
 
 	/**

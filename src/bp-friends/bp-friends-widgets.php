@@ -46,7 +46,7 @@ function bp_core_ajax_widget_friends() {
 
 	check_ajax_referer( 'bp_core_widget_friends' );
 
-	switch ( $_POST['filter'] ) {
+	switch ( isset( $_POST['filter'] ) ? sanitize_text_field( wp_unslash( $_POST['filter'] ) ) : '' ) {
 		case 'newest-friends':
 			$type = 'newest';
 			break;
@@ -77,7 +77,7 @@ function bp_core_ajax_widget_friends() {
 	$members_args = array(
 		'user_id'         => absint( $user_id ),
 		'type'            => $type,
-		'max'             => absint( wp_unslash( $_POST['max-friends'] ) ),
+		'max'             => isset( $_POST['max-friends'] ) ? absint( wp_unslash( $_POST['max-friends'] ) ) : 0,
 		'populate_extras' => 1,
 	);
 

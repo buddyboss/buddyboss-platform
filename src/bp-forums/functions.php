@@ -915,7 +915,7 @@ function bbp_forum_topic_reply_ajax_form_search_tags() {
 	// WP_Term_Query arguments.
 	$args = array(
 		'taxonomy'   => array( 'topic-tag' ),
-		'search'     => $_GET['term'],
+		'search'     => $_GET['term'], // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- search term for WP_Term_Query, which escapes it for the LIKE query itself.
 		'hide_empty' => false,
 	);
 

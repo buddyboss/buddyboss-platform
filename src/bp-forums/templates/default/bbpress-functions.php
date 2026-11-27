@@ -784,7 +784,7 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 
 			// Get user and forum data.
 			$user_id  = bbp_get_current_user_id();
-			$forum_id = intval( wp_unslash( $_POST['id'] ) );
+			$forum_id = isset( $_POST['id'] ) ? intval( wp_unslash( $_POST['id'] ) ) : 0;
 
 			// Bail if user cannot add favorites for this user.
 			if ( ! current_user_can( 'edit_user', $user_id ) ) {
@@ -800,7 +800,7 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 			}
 
 			// Bail if user did not take this action.
-			if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'toggle-subscription_' . $forum->ID ) ) {
+			if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'toggle-subscription_' . $forum->ID ) ) {
 				bbp_ajax_response( false, __( 'Are you sure you meant to do that?', 'buddyboss' ), 304 );
 			}
 
@@ -868,7 +868,7 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 			}
 
 			// Bail if user did not take this action.
-			if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'toggle-favorite_' . $topic->ID ) ) {
+			if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'toggle-favorite_' . $topic->ID ) ) {
 				bbp_ajax_response( false, __( 'Are you sure you meant to do that?', 'buddyboss' ), 304 );
 			}
 
@@ -920,7 +920,7 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 
 			// Get user and topic data.
 			$user_id  = bbp_get_current_user_id();
-			$topic_id = intval( wp_unslash( $_POST['id'] ) );
+			$topic_id = isset( $_POST['id'] ) ? intval( wp_unslash( $_POST['id'] ) ) : 0;
 
 			// Bail if user cannot add favorites for this user.
 			if ( ! current_user_can( 'edit_user', $user_id ) ) {
@@ -936,7 +936,7 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 			}
 
 			// Bail if user did not take this action.
-			if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'toggle-subscription_' . $topic->ID ) ) {
+			if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'toggle-subscription_' . $topic->ID ) ) {
 				bbp_ajax_response( false, __( 'Are you sure you meant to do that?', 'buddyboss' ), 304 );
 			}
 

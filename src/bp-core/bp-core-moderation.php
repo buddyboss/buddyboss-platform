@@ -310,7 +310,7 @@ function bp_core_check_for_blacklist( $user_id = 0, $title = '', $content = '', 
  * @return string IP address.
  */
 function bp_core_current_user_ip() {
-	$retval = preg_replace( '/[^0-9a-fA-F:., ]/', '', isset( $_SERVER['REMOTE_ADDR'] ) ? wp_unslash( $_SERVER['REMOTE_ADDR'] ) : '' );
+	$retval = preg_replace( '/[^0-9a-fA-F:., ]/', '', isset( $_SERVER['REMOTE_ADDR'] ) ? wp_unslash( $_SERVER['REMOTE_ADDR'] ) : '' ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- restricted to IP address characters by the preg_replace() around it.
 
 	/**
 	 * Filters the current user's IP address.

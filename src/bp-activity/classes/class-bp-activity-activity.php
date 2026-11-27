@@ -1692,7 +1692,7 @@ class BP_Activity_Activity {
 			bp_is_single_activity() ||
 			(
 				bb_is_rest() &&
-				! isset( $_GET['apply_limit'] )
+				! isset( $_GET['apply_limit'] ) // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; only limits the comments that are loaded.
 			)
 		) {
 			$exclude_childrens = false;
@@ -1704,17 +1704,17 @@ class BP_Activity_Activity {
 
 		if (
 			bb_is_rest() &&
-			isset( $_GET['apply_limit'] ) &&
-			! empty( (bool) $_GET['apply_limit'] ) &&
-			! empty( $_GET['last_comment_id'] ) &&
-			! empty( $_GET['last_comment_timestamp'] )
+			isset( $_GET['apply_limit'] ) && // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; only limits the comments that are loaded.
+			! empty( (bool) $_GET['apply_limit'] ) && // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; only limits the comments that are loaded.
+			! empty( $_GET['last_comment_id'] ) && // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; only limits the comments that are loaded.
+			! empty( $_GET['last_comment_timestamp'] ) // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; only limits the comments that are loaded.
 		) {
-			$args['last_comment_id']        = intval( $_GET['last_comment_id'] );
-			$args['last_comment_timestamp'] = sanitize_text_field( wp_unslash( $_GET['last_comment_timestamp'] ) );
+			$args['last_comment_id']        = intval( $_GET['last_comment_id'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; only limits the comments that are loaded.
+			$args['last_comment_timestamp'] = sanitize_text_field( wp_unslash( $_GET['last_comment_timestamp'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; only limits the comments that are loaded.
 			$args['comment_order_by']       = apply_filters( 'bb_activity_recurse_comments_order_by', 'ASC' );
 		}
 
-		if ( bp_is_single_activity() || ( bb_is_rest() && empty( $_GET['apply_limit'] ) ) ) {
+		if ( bp_is_single_activity() || ( bb_is_rest() && empty( $_GET['apply_limit'] ) ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; only limits the comments that are loaded.
 			$comments = wp_cache_get( $activity_id, 'bp_activity_comments' );
 		} else {
 			// No caching for paginated comments.
@@ -1869,7 +1869,7 @@ class BP_Activity_Activity {
 					! bp_is_single_activity() ||
 					(
 						bb_is_rest() &&
-						! empty( (bool) $_GET['apply_limit'] )
+						! empty( (bool) $_GET['apply_limit'] ) // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; only limits the comments that are loaded.
 					)
 				) {
 					if (
@@ -1921,7 +1921,7 @@ class BP_Activity_Activity {
 						$limit++;
 					}
 
-					if ( bb_is_rest() && ! isset( $_GET['apply_limit'] ) ) {
+					if ( bb_is_rest() && ! isset( $_GET['apply_limit'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; only limits the comments that are loaded.
 						$sql['limit'] = '';
 					} else {
 						$sql['limit'] = $wpdb->prepare( 'limit %d', $limit );
@@ -1963,7 +1963,7 @@ class BP_Activity_Activity {
 				if (
 					true === $exclude_childrens ||
 					(
-						bb_is_rest() && ! isset( $_GET['apply_limit'] )
+						bb_is_rest() && ! isset( $_GET['apply_limit'] ) // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; only limits the comments that are loaded.
 					)
 				) {
 					$comments_count = self::bb_get_all_activity_comment_children_count(
@@ -2029,8 +2029,8 @@ class BP_Activity_Activity {
 				bp_is_single_activity() ||
 				(
 					bb_is_rest() &&
-					isset( $_GET['apply_limit'] ) &&
-					empty( (bool) $_GET['apply_limit'] )
+					isset( $_GET['apply_limit'] ) && // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; only limits the comments that are loaded.
+					empty( (bool) $_GET['apply_limit'] ) // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; only limits the comments that are loaded.
 				)
 			) {
 				wp_cache_set( $activity_id, $cache_value, 'bp_activity_comments' );

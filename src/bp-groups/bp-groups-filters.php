@@ -1393,7 +1393,7 @@ function bb_after_group_body_callback() {
  * @return array
  */
 function bb_add_subgroups_args_single_home( $args ) {
-	if ( ( isset( $_POST['template'] ) && 'group_subgroups' === $_POST['template'] ) || bp_is_group_subgroups() ) {
+	if ( ( isset( $_POST['template'] ) && 'group_subgroups' === $_POST['template'] ) || bp_is_group_subgroups() ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- read-only; only selects which groups are listed.
 		$descendant_groups   = bp_get_descendent_groups( bp_get_current_group_id(), bp_loggedin_user_id() );
 		$ids                 = wp_list_pluck( $descendant_groups, 'id' );
 		$args['include']     = $ids;

@@ -669,7 +669,7 @@ add_action( 'bbp_new_topic', 'bbp_buddypress_add_topic_notification', 9999, 2 );
 function bbp_buddypress_mark_notifications( $action = '' ) {
 
 	// Bail if no topic ID is passed.
-	if ( empty( $_GET['topic_id'] ) ) {
+	if ( empty( $_GET['topic_id'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- nonce checked by bbp_verify_nonce_request() just below, before anything is changed; the topic id is part of its action.
 		return;
 	}
 
@@ -680,8 +680,8 @@ function bbp_buddypress_mark_notifications( $action = '' ) {
 
 	// Get required data.
 	$user_id  = bp_loggedin_user_id();
-	$topic_id = intval( $_GET['topic_id'] );
-	$reply_id = isset( $_GET['reply_id'] ) ? intval( $_GET['reply_id'] ) : 0;
+	$topic_id = intval( $_GET['topic_id'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- nonce checked by bbp_verify_nonce_request() just below, before anything is changed; the topic id is part of its action.
+	$reply_id = isset( $_GET['reply_id'] ) ? intval( $_GET['reply_id'] ) : 0; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- nonce checked by bbp_verify_nonce_request() just below, before anything is changed; the topic id is part of its action.
 
 	// Check nonce.
 	if ( ! bbp_verify_nonce_request( 'bbp_mark_topic_' . $topic_id ) ) {
@@ -754,9 +754,9 @@ function bb_mark_modern_notifications( $success, $user_id, $topic_id ) {
 		bp_notifications_mark_notifications_by_item_id( $user_id, intval( $topic_id ), bbp_get_component_name(), 'bb_forums_subscribed_discussion' );
 	}
 
-	if ( ! empty( $_GET['reply_id'] ) ) {
-		bp_notifications_mark_notifications_by_item_id( $user_id, intval( $_GET['reply_id'] ), bbp_get_component_name(), 'bb_new_mention' );
-		bp_notifications_mark_notifications_by_item_id( $user_id, intval( $_GET['reply_id'] ), bbp_get_component_name(), 'bb_forums_subscribed_reply' );
+	if ( ! empty( $_GET['reply_id'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- runs on bbp_notifications_handler, fired by bbp_buddypress_mark_notifications() after its nonce check.
+		bp_notifications_mark_notifications_by_item_id( $user_id, intval( $_GET['reply_id'] ), bbp_get_component_name(), 'bb_new_mention' ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- runs on bbp_notifications_handler, fired by bbp_buddypress_mark_notifications() after its nonce check.
+		bp_notifications_mark_notifications_by_item_id( $user_id, intval( $_GET['reply_id'] ), bbp_get_component_name(), 'bb_forums_subscribed_reply' ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- runs on bbp_notifications_handler, fired by bbp_buddypress_mark_notifications() after its nonce check.
 	}
 }
 

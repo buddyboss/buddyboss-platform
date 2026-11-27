@@ -754,12 +754,12 @@ function bp_post_request() {
 	}
 
 	// Bail if no action.
-	if ( empty( $_POST['action'] ) ) {
+	if ( empty( $_POST['action'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- only dispatches to the bp_post_request_{action} hooks; nothing is changed here.
 		return;
 	}
 
 	// Sanitize the POST action.
-	$action = sanitize_key( $_POST['action'] );
+	$action = sanitize_key( $_POST['action'] ); // phpcs:ignore WordPress.Security.NonceVerification.Missing -- only dispatches to the bp_post_request_{action} hooks; nothing is changed here.
 
 	/**
 	 * Fires at the end of the bp_post_request function.
@@ -796,12 +796,12 @@ function bp_get_request() {
 	}
 
 	// Bail if no action.
-	if ( empty( $_GET['action'] ) ) {
+	if ( empty( $_GET['action'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- only dispatches to the bp_get_request_{action} hooks; nothing is changed here.
 		return;
 	}
 
 	// Sanitize the GET action.
-	$action = sanitize_key( $_GET['action'] );
+	$action = sanitize_key( $_GET['action'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- only dispatches to the bp_get_request_{action} hooks; nothing is changed here.
 
 	/**
 	 * Fires at the end of the bp_get_request function.

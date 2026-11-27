@@ -122,7 +122,7 @@ class BP_Messages_Notices_Admin {
 			check_admin_referer( 'new-notice', 'ns-nonce' );
 
 			$notice = bp_parse_args(
-				$_POST['bp_notice'],
+				$_POST['bp_notice'], // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash -- notice subject and content; messages_send_notice() saves them through wp_filter_kses() and bp_messages_filter_kses() (messages_notice_subject_before_save / messages_notice_message_before_save), which expect slashed data.
 				array(
 					'subject' => '',
 					'content' => '',
@@ -142,7 +142,7 @@ class BP_Messages_Notices_Admin {
 		if ( ! empty( $_GET['notice_id'] ) && ! empty( $_GET['notice_action'] ) ) {
 			$notice_id = absint( $_GET['notice_id'] );
 
-			check_admin_referer( 'messages-' . $_GET['notice_action'] . '-notice-' . $notice_id );
+			check_admin_referer( 'messages-' . sanitize_text_field( wp_unslash( $_GET['notice_action'] ) ) . '-notice-' . $notice_id );
 
 			$success = false;
 			switch ( $_GET['notice_action'] ) {
@@ -224,14 +224,14 @@ class BP_Messages_Notices_Admin {
 
 					<p>
 						<?php
-						if ( isset( $_GET['error'] ) ) {
-							if ( 'create' === $_GET['error'] ) {
+						if ( isset( $_GET['error'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only; only picks the admin notice text after the redirect.
+							if ( 'create' === $_GET['error'] ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only; only picks the admin notice text after the redirect.
 								esc_html_e( 'Notice was not created. Please try again.', 'buddyboss' );
 							} else {
 								esc_html_e( 'Notice was not updated. Please try again.', 'buddyboss' );
 							}
 						} else {
-							if ( 'create' === $_GET['success'] ) {
+							if ( 'create' === $_GET['success'] ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only; only picks the admin notice text after the redirect.
 								esc_html_e( 'Notice successfully created.', 'buddyboss' );
 							} else {
 								esc_html_e( 'Notice successfully updated.', 'buddyboss' );

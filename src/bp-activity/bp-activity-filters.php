@@ -297,7 +297,7 @@ function bp_activity_save_link_data( $activity ) {
 	// bail if the request is for privacy update.
 	if (
 		(
-			isset( $_POST['action'] ) &&
+			isset( $_POST['action'] ) && // phpcs:ignore WordPress.Security.NonceVerification.Missing -- only compares the action name; runs on bp_activity_after_save; the nonce is checked by the handler that saves the activity (bp_nouveau_ajax_post_update()).
 			in_array(
 				$_POST['action'], // phpcs:ignore WordPress.Security.NonceVerification.Missing
 				array(
@@ -317,17 +317,17 @@ function bp_activity_save_link_data( $activity ) {
 
 	// Check if link_url is missing http protocol then update it.
 	$link_url = '';
-	if ( ! empty( $_POST['link_url'] ) ) {
-		$parsed_url = wp_parse_url( $_POST['link_url'] );
+	if ( ! empty( $_POST['link_url'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- runs on bp_activity_after_save; the nonce is checked by the handler that saves the activity (bp_nouveau_ajax_post_update()).
+		$parsed_url = wp_parse_url( $_POST['link_url'] ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.NonceVerification.Missing -- validated with filter_var( FILTER_VALIDATE_URL ) below and stored with bp_activity_update_meta(), which expects slashed data; runs on bp_activity_after_save; the nonce is checked by the handler that saves the activity (bp_nouveau_ajax_post_update()).
 		if ( ! $parsed_url || empty( $parsed_url['host'] ) ) {
-			$link_url = 'http://' . $_POST['link_url'];
+			$link_url = 'http://' . $_POST['link_url']; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.NonceVerification.Missing -- validated with filter_var( FILTER_VALIDATE_URL ) below and stored with bp_activity_update_meta(), which expects slashed data; runs on bp_activity_after_save; the nonce is checked by the handler that saves the activity (bp_nouveau_ajax_post_update()).
 		} else {
-			$link_url = $_POST['link_url'];
+			$link_url = $_POST['link_url']; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.NonceVerification.Missing -- validated with filter_var( FILTER_VALIDATE_URL ) below and stored with bp_activity_update_meta(), which expects slashed data; runs on bp_activity_after_save; the nonce is checked by the handler that saves the activity (bp_nouveau_ajax_post_update()).
 		}
 	}
 
 	$link_url   = ! empty( $link_url ) ? filter_var( $link_url, FILTER_VALIDATE_URL ) : '';
-	$link_embed = isset( $_POST['link_embed'] ) ? filter_var( $_POST['link_embed'], FILTER_VALIDATE_BOOLEAN ) : false;
+	$link_embed = isset( $_POST['link_embed'] ) ? filter_var( $_POST['link_embed'], FILTER_VALIDATE_BOOLEAN ) : false; // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.MissingUnslash -- only cast to a boolean by filter_var(); runs on bp_activity_after_save; the nonce is checked by the handler that saves the activity (bp_nouveau_ajax_post_update()).
 
 	// Check if link url is set or not.
 	if ( empty( $link_url ) ) {
@@ -346,9 +346,9 @@ function bp_activity_save_link_data( $activity ) {
 		return;
 	}
 
-	$link_title       = ! empty( $_POST['link_title'] ) ? sanitize_text_field( wp_unslash( $_POST['link_title'] ) ) : '';
-	$link_description = ! empty( $_POST['link_description'] ) ? sanitize_text_field( wp_unslash( $_POST['link_description'] ) ) : '';
-	$link_image       = ! empty( $_POST['link_image'] ) ? filter_var( $_POST['link_image'], FILTER_VALIDATE_URL ) : '';
+	$link_title       = ! empty( $_POST['link_title'] ) ? sanitize_text_field( wp_unslash( $_POST['link_title'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- runs on bp_activity_after_save; the nonce is checked by the handler that saves the activity (bp_nouveau_ajax_post_update()).
+	$link_description = ! empty( $_POST['link_description'] ) ? sanitize_text_field( wp_unslash( $_POST['link_description'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- runs on bp_activity_after_save; the nonce is checked by the handler that saves the activity (bp_nouveau_ajax_post_update()).
+	$link_image       = ! empty( $_POST['link_image'] ) ? filter_var( $_POST['link_image'], FILTER_VALIDATE_URL ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.MissingUnslash -- validated with filter_var( FILTER_VALIDATE_URL ); runs on bp_activity_after_save; the nonce is checked by the handler that saves the activity (bp_nouveau_ajax_post_update()).
 
 	// Check if link embed was used.
 	if ( true === $link_embed && ! empty( $link_url ) ) {
@@ -372,7 +372,7 @@ function bp_activity_save_link_data( $activity ) {
 		}
 	}
 
-	$preview_data['link_image_index_save'] = isset( $_POST['link_image_index_save'] ) ? sanitize_text_field( wp_unslash( $_POST['link_image_index_save'] ) ) : '';
+	$preview_data['link_image_index_save'] = isset( $_POST['link_image_index_save'] ) ? sanitize_text_field( wp_unslash( $_POST['link_image_index_save'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- runs on bp_activity_after_save; the nonce is checked by the handler that saves the activity (bp_nouveau_ajax_post_update()).
 
 	if ( ! empty( $link_title ) ) {
 		$link_title            = wp_kses_post( $link_title );
@@ -1942,7 +1942,7 @@ function bp_activity_media_add( $media ) {
 	// Check the current action is edit activity comment.
 	if (
 		$bb_activity_comment_edit &&
-		isset( $_POST['edit_comment'] ) &&
+		isset( $_POST['edit_comment'] ) && // phpcs:ignore WordPress.Security.NonceVerification.Missing -- hook callback; the nonce is checked by the AJAX handler that posts the activity or comment (bp_nouveau_ajax_post_update(), bp_nouveau_ajax_new_activity_comment()).
 		! empty( $bb_activity_comment_edit_id ) &&
 		! empty( $media ) &&
 		empty( $media->activity_id )
@@ -2017,7 +2017,7 @@ function bp_activity_media_add( $media ) {
 			if ( $activity_id ) {
 
 				// Support for schedule activity medias only on activity.
-				$media->status = 'comment' !== $media->privacy && isset( $_POST['activity_action_type'] ) && bb_get_activity_scheduled_status() === $_POST['activity_action_type'] ? bb_media_get_scheduled_status() : bb_media_get_published_status();
+				$media->status = 'comment' !== $media->privacy && isset( $_POST['activity_action_type'] ) && bb_get_activity_scheduled_status() === $_POST['activity_action_type'] ? bb_media_get_scheduled_status() : bb_media_get_published_status(); // phpcs:ignore WordPress.Security.NonceVerification.Missing -- hook callback; the nonce is checked by the AJAX handler that posts the activity or comment (bp_nouveau_ajax_post_update(), bp_nouveau_ajax_new_activity_comment()).
 
 				// save media activity id in media.
 				$media->activity_id = $activity_id;
@@ -2036,7 +2036,7 @@ function bp_activity_media_add( $media ) {
 					if ( empty( $bp_new_activity_comment ) ) {
 						$media_activity                    = new BP_Activity_Activity( $activity_id );
 						$media_activity->secondary_item_id = $parent_activity_id;
-						$media_activity->status            = 'comment' !== $media_activity->privacy && isset( $_POST['activity_action_type'] ) && bb_get_activity_scheduled_status() === $_POST['activity_action_type'] ? $_POST['activity_action_type'] : bb_get_activity_published_status();
+						$media_activity->status            = 'comment' !== $media_activity->privacy && isset( $_POST['activity_action_type'] ) && bb_get_activity_scheduled_status() === $_POST['activity_action_type'] ? $_POST['activity_action_type'] : bb_get_activity_published_status(); // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- only used when it strictly equals bb_get_activity_scheduled_status(); hook callback; the nonce is checked by the AJAX handler that posts the activity or comment (bp_nouveau_ajax_post_update(), bp_nouveau_ajax_new_activity_comment()).
 						$media_activity->title_required    = false;
 						$media_activity->save();
 					}
@@ -2059,7 +2059,7 @@ function bp_activity_media_add( $media ) {
 				$media->activity_id = $parent_activity_id;
 
 				// Support for schedule activity medias only on activity.
-				$media->status = 'comment' !== $media->privacy && isset( $_POST['activity_action_type'] ) && bb_get_activity_scheduled_status() === $_POST['activity_action_type'] ? bb_media_get_scheduled_status() : bb_media_get_published_status();
+				$media->status = 'comment' !== $media->privacy && isset( $_POST['activity_action_type'] ) && bb_get_activity_scheduled_status() === $_POST['activity_action_type'] ? bb_media_get_scheduled_status() : bb_media_get_published_status(); // phpcs:ignore WordPress.Security.NonceVerification.Missing -- hook callback; the nonce is checked by the AJAX handler that posts the activity or comment (bp_nouveau_ajax_post_update(), bp_nouveau_ajax_new_activity_comment()).
 				$media->save();
 
 				// save parent activity id in attachment meta.
@@ -2082,7 +2082,7 @@ function bp_activity_create_parent_media_activity( $media_ids ) {
 	global $bp_media_upload_count, $bp_activity_post_update, $bp_media_upload_activity_content, $bb_activity_comment_edit, $bb_activity_comment_edit_id;
 
 	// Return when current action is edit activity comment.
-	if ( $bb_activity_comment_edit && isset( $_POST['edit_comment'] ) && ! empty( $bb_activity_comment_edit_id ) ) {
+	if ( $bb_activity_comment_edit && isset( $_POST['edit_comment'] ) && ! empty( $bb_activity_comment_edit_id ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- hook callback; the nonce is checked by the AJAX handler that posts the activity or comment (bp_nouveau_ajax_post_update(), bp_nouveau_ajax_new_activity_comment()).
 		return $media_ids;
 	}
 
@@ -2213,7 +2213,7 @@ function bp_activity_create_parent_media_activity( $media_ids ) {
 function bp_activity_edit_update_media( $media_ids ) {
 	global $bp_activity_edit, $bp_activity_post_update_id;
 
-	if ( ( true === $bp_activity_edit || isset( $_POST['edit'] ) ) && ! empty( $bp_activity_post_update_id ) ) {
+	if ( ( true === $bp_activity_edit || isset( $_POST['edit'] ) ) && ! empty( $bp_activity_post_update_id ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- hook callback; the nonce is checked by the AJAX handler that posts the activity or comment (bp_nouveau_ajax_post_update(), bp_nouveau_ajax_new_activity_comment()).
 		$activity_metas = bb_activity_get_metadata( $bp_activity_post_update_id );
 
 		$old_media_ids = $activity_metas['bp_media_ids'][0] ?? '';
@@ -2253,7 +2253,7 @@ function bp_activity_edit_update_media( $media_ids ) {
 
 						$media_activity                    = new BP_Activity_Activity( $activity_id );
 						$media_activity->secondary_item_id = $bp_activity_post_update_id;
-						$media_activity->status            = 'comment' !== $media_activity->privacy && isset( $_POST['activity_action_type'] ) && bb_get_activity_scheduled_status() === $_POST['activity_action_type'] ? $_POST['activity_action_type'] : bb_get_activity_published_status();
+						$media_activity->status            = 'comment' !== $media_activity->privacy && isset( $_POST['activity_action_type'] ) && bb_get_activity_scheduled_status() === $_POST['activity_action_type'] ? $_POST['activity_action_type'] : bb_get_activity_published_status(); // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- only used when it strictly equals bb_get_activity_scheduled_status(); hook callback; the nonce is checked by the AJAX handler that posts the activity or comment (bp_nouveau_ajax_post_update(), bp_nouveau_ajax_new_activity_comment()).
 						$media_activity->title_required    = false;
 						$media_activity->save();
 
@@ -2380,7 +2380,7 @@ function bp_activity_document_add( $document ) {
 	// Check the current action is edit activity comment.
 	if (
 		$bb_activity_comment_edit &&
-		isset( $_POST['edit_comment'] ) &&
+		isset( $_POST['edit_comment'] ) && // phpcs:ignore WordPress.Security.NonceVerification.Missing -- hook callback; the nonce is checked by the AJAX handler that posts the activity or comment (bp_nouveau_ajax_post_update(), bp_nouveau_ajax_new_activity_comment()).
 		! empty( $bb_activity_comment_edit_id ) &&
 		! empty( $document ) &&
 		empty( $document->activity_id )
@@ -2456,7 +2456,7 @@ function bp_activity_document_add( $document ) {
 			if ( $activity_id ) {
 
 				// Support for schedule activity documents only on activity.
-				$document->status = 'comment' !== $document->privacy && isset( $_POST['activity_action_type'] ) && bb_get_activity_scheduled_status() === $_POST['activity_action_type'] ? bb_document_get_scheduled_status() : bb_document_get_published_status();
+				$document->status = 'comment' !== $document->privacy && isset( $_POST['activity_action_type'] ) && bb_get_activity_scheduled_status() === $_POST['activity_action_type'] ? bb_document_get_scheduled_status() : bb_document_get_published_status(); // phpcs:ignore WordPress.Security.NonceVerification.Missing -- hook callback; the nonce is checked by the AJAX handler that posts the activity or comment (bp_nouveau_ajax_post_update(), bp_nouveau_ajax_new_activity_comment()).
 
 				// save document activity id in document.
 				$document->activity_id = $activity_id;
@@ -2475,7 +2475,7 @@ function bp_activity_document_add( $document ) {
 					if ( empty( $bp_new_activity_comment ) ) {
 						$document_activity                    = new BP_Activity_Activity( $activity_id );
 						$document_activity->secondary_item_id = $parent_activity_id;
-						$document_activity->status            = 'comment' !== $document_activity->privacy && isset( $_POST['activity_action_type'] ) && bb_get_activity_scheduled_status() === $_POST['activity_action_type'] ? $_POST['activity_action_type'] : bb_get_activity_published_status();
+						$document_activity->status            = 'comment' !== $document_activity->privacy && isset( $_POST['activity_action_type'] ) && bb_get_activity_scheduled_status() === $_POST['activity_action_type'] ? $_POST['activity_action_type'] : bb_get_activity_published_status(); // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- only used when it strictly equals bb_get_activity_scheduled_status(); hook callback; the nonce is checked by the AJAX handler that posts the activity or comment (bp_nouveau_ajax_post_update(), bp_nouveau_ajax_new_activity_comment()).
 						$document_activity->title_required    = false;
 						$document_activity->save();
 					}
@@ -2498,7 +2498,7 @@ function bp_activity_document_add( $document ) {
 				$document->activity_id = $parent_activity_id;
 
 				// Support for schedule activity documents only on activity.
-				$document->status = 'comment' !== $document->privacy && isset( $_POST['activity_action_type'] ) && bb_get_activity_scheduled_status() === $_POST['activity_action_type'] ? bb_document_get_scheduled_status() : bb_document_get_published_status();
+				$document->status = 'comment' !== $document->privacy && isset( $_POST['activity_action_type'] ) && bb_get_activity_scheduled_status() === $_POST['activity_action_type'] ? bb_document_get_scheduled_status() : bb_document_get_published_status(); // phpcs:ignore WordPress.Security.NonceVerification.Missing -- hook callback; the nonce is checked by the AJAX handler that posts the activity or comment (bp_nouveau_ajax_post_update(), bp_nouveau_ajax_new_activity_comment()).
 				$document->save();
 
 				// save parent activity id in attachment meta.
@@ -2520,7 +2520,7 @@ function bp_activity_create_parent_document_activity( $document_ids ) {
 	global $bp_document_upload_count, $bp_activity_post_update, $bp_document_upload_activity_content, $bb_activity_comment_edit, $bb_activity_comment_edit_id;
 
 	// Return when current action is edit activity comment.
-	if ( $bb_activity_comment_edit && isset( $_POST['edit_comment'] ) && ! empty( $bb_activity_comment_edit_id ) ) {
+	if ( $bb_activity_comment_edit && isset( $_POST['edit_comment'] ) && ! empty( $bb_activity_comment_edit_id ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- hook callback; the nonce is checked by the AJAX handler that posts the activity or comment (bp_nouveau_ajax_post_update(), bp_nouveau_ajax_new_activity_comment()).
 		return $document_ids;
 	}
 
@@ -2653,7 +2653,7 @@ function bp_activity_create_parent_document_activity( $document_ids ) {
 function bp_activity_edit_update_document( $document_ids ) {
 	global $bp_activity_edit, $bp_activity_post_update_id;
 
-	if ( ( true === $bp_activity_edit || isset( $_POST['edit'] ) ) && ! empty( $bp_activity_post_update_id ) ) {
+	if ( ( true === $bp_activity_edit || isset( $_POST['edit'] ) ) && ! empty( $bp_activity_post_update_id ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- hook callback; the nonce is checked by the AJAX handler that posts the activity or comment (bp_nouveau_ajax_post_update(), bp_nouveau_ajax_new_activity_comment()).
 		$activity_metas = bb_activity_get_metadata( $bp_activity_post_update_id );
 
 		$old_document_ids = $activity_metas['bp_document_ids'][0] ?? '';
@@ -2693,7 +2693,7 @@ function bp_activity_edit_update_document( $document_ids ) {
 
 						$document_activity                    = new BP_Activity_Activity( $activity_id );
 						$document_activity->secondary_item_id = $bp_activity_post_update_id;
-						$document_activity->status            = 'comment' !== $document_activity->privacy && isset( $_POST['activity_action_type'] ) && bb_get_activity_scheduled_status() === $_POST['activity_action_type'] ? $_POST['activity_action_type'] : bb_get_activity_published_status();
+						$document_activity->status            = 'comment' !== $document_activity->privacy && isset( $_POST['activity_action_type'] ) && bb_get_activity_scheduled_status() === $_POST['activity_action_type'] ? $_POST['activity_action_type'] : bb_get_activity_published_status(); // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- only used when it strictly equals bb_get_activity_scheduled_status(); hook callback; the nonce is checked by the AJAX handler that posts the activity or comment (bp_nouveau_ajax_post_update(), bp_nouveau_ajax_new_activity_comment()).
 						$document_activity->title_required    = false;
 						$document_activity->save();
 
@@ -3149,7 +3149,7 @@ function bp_activity_video_add( $video ) {
 	// Check the current action is edit activity comment.
 	if (
 		$bb_activity_comment_edit &&
-		isset( $_POST['edit_comment'] ) &&
+		isset( $_POST['edit_comment'] ) && // phpcs:ignore WordPress.Security.NonceVerification.Missing -- hook callback; the nonce is checked by the AJAX handler that posts the activity or comment (bp_nouveau_ajax_post_update(), bp_nouveau_ajax_new_activity_comment()).
 		! empty( $bb_activity_comment_edit_id ) &&
 		! empty( $video ) &&
 		empty( $video->activity_id )
@@ -3225,7 +3225,7 @@ function bp_activity_video_add( $video ) {
 			if ( $activity_id ) {
 
 				// Support for schedule activity videos only on activity.
-				$video->status = 'comment' !== $video->privacy && isset( $_POST['activity_action_type'] ) && bb_get_activity_scheduled_status() === $_POST['activity_action_type'] ? bb_video_get_scheduled_status() : bb_video_get_published_status();
+				$video->status = 'comment' !== $video->privacy && isset( $_POST['activity_action_type'] ) && bb_get_activity_scheduled_status() === $_POST['activity_action_type'] ? bb_video_get_scheduled_status() : bb_video_get_published_status(); // phpcs:ignore WordPress.Security.NonceVerification.Missing -- hook callback; the nonce is checked by the AJAX handler that posts the activity or comment (bp_nouveau_ajax_post_update(), bp_nouveau_ajax_new_activity_comment()).
 
 				// save video activity id in video.
 				$video->activity_id = $activity_id;
@@ -3244,7 +3244,7 @@ function bp_activity_video_add( $video ) {
 					if ( empty( $bp_new_activity_comment ) ) {
 						$video_activity                    = new BP_Activity_Activity( $activity_id );
 						$video_activity->secondary_item_id = $parent_activity_id;
-						$video_activity->status            = 'comment' !== $video_activity->privacy && isset( $_POST['activity_action_type'] ) && bb_get_activity_scheduled_status() === $_POST['activity_action_type'] ? $_POST['activity_action_type'] : bb_get_activity_published_status();
+						$video_activity->status            = 'comment' !== $video_activity->privacy && isset( $_POST['activity_action_type'] ) && bb_get_activity_scheduled_status() === $_POST['activity_action_type'] ? $_POST['activity_action_type'] : bb_get_activity_published_status(); // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- only used when it strictly equals bb_get_activity_scheduled_status(); hook callback; the nonce is checked by the AJAX handler that posts the activity or comment (bp_nouveau_ajax_post_update(), bp_nouveau_ajax_new_activity_comment()).
 						$video_activity->title_required    = false;
 						$video_activity->save();
 					}
@@ -3267,7 +3267,7 @@ function bp_activity_video_add( $video ) {
 				$video->activity_id = $parent_activity_id;
 
 				// Support for schedule activity videos only on activity.
-				$video->status = 'comment' !== $video->privacy && isset( $_POST['activity_action_type'] ) && bb_get_activity_scheduled_status() === $_POST['activity_action_type'] ? bb_video_get_scheduled_status() : bb_video_get_published_status();
+				$video->status = 'comment' !== $video->privacy && isset( $_POST['activity_action_type'] ) && bb_get_activity_scheduled_status() === $_POST['activity_action_type'] ? bb_video_get_scheduled_status() : bb_video_get_published_status(); // phpcs:ignore WordPress.Security.NonceVerification.Missing -- hook callback; the nonce is checked by the AJAX handler that posts the activity or comment (bp_nouveau_ajax_post_update(), bp_nouveau_ajax_new_activity_comment()).
 				$video->save();
 
 				// save parent activity id in attachment meta.
@@ -3290,7 +3290,7 @@ function bp_activity_create_parent_video_activity( $video_ids ) {
 	global $bp_video_upload_count, $bp_activity_post_update, $bp_video_upload_activity_content, $bb_activity_comment_edit, $bb_activity_comment_edit_id;
 
 	// Return when current action is edit activity comment.
-	if ( $bb_activity_comment_edit && isset( $_POST['edit_comment'] ) && ! empty( $bb_activity_comment_edit_id ) ) {
+	if ( $bb_activity_comment_edit && isset( $_POST['edit_comment'] ) && ! empty( $bb_activity_comment_edit_id ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- hook callback; the nonce is checked by the AJAX handler that posts the activity or comment (bp_nouveau_ajax_post_update(), bp_nouveau_ajax_new_activity_comment()).
 		return $video_ids;
 	}
 
@@ -3463,7 +3463,7 @@ function bp_activity_edit_update_video( $video_ids ) {
 
 						$video_activity                    = new BP_Activity_Activity( $activity_id );
 						$video_activity->secondary_item_id = $bp_activity_post_update_id;
-						$video_activity->status            = 'comment' !== $video_activity->privacy && isset( $_POST['activity_action_type'] ) && bb_get_activity_scheduled_status() === $_POST['activity_action_type'] ? $_POST['activity_action_type'] : bb_get_activity_published_status();
+						$video_activity->status            = 'comment' !== $video_activity->privacy && isset( $_POST['activity_action_type'] ) && bb_get_activity_scheduled_status() === $_POST['activity_action_type'] ? $_POST['activity_action_type'] : bb_get_activity_published_status(); // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- only used when it strictly equals bb_get_activity_scheduled_status(); hook callback; the nonce is checked by the AJAX handler that posts the activity or comment (bp_nouveau_ajax_post_update(), bp_nouveau_ajax_new_activity_comment()).
 						$video_activity->title_required    = false;
 						$video_activity->save();
 
@@ -4226,7 +4226,7 @@ function bb_activity_save_topic_data( $activity ) {
 		return;
 	}
 
-	if ( ! isset( $_POST['topic_id'] ) ) {
+	if ( ! isset( $_POST['topic_id'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- runs on bp_activity_after_save; the nonce is checked by the handler that saves the activity (bp_nouveau_ajax_post_update()).
 		return;
 	}
 
@@ -4260,7 +4260,7 @@ function bb_activity_save_topic_data( $activity ) {
 		return;
 	}
 
-	$topic_id = intval( $_POST['topic_id'] );
+	$topic_id = intval( $_POST['topic_id'] ); // phpcs:ignore WordPress.Security.NonceVerification.Missing -- runs on bp_activity_after_save; the nonce is checked by the handler that saves the activity (bp_nouveau_ajax_post_update()).
 	if ( bb_is_activity_topic_required() && empty( $topic_id ) ) {
 		return;
 	}
@@ -4270,7 +4270,7 @@ function bb_activity_save_topic_data( $activity ) {
 		return;
 	}
 
-	$item_id = isset( $_POST['group_id'] ) ? intval( $_POST['group_id'] ) : 0;
+	$item_id = isset( $_POST['group_id'] ) ? intval( $_POST['group_id'] ) : 0; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- runs on bp_activity_after_save; the nonce is checked by the handler that saves the activity (bp_nouveau_ajax_post_update()).
 
 	// Add/update the activity topic relationship.
 	bb_activity_topics_manager_instance()->bb_add_activity_topic_relationship(

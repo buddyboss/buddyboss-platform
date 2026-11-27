@@ -1493,8 +1493,8 @@ function bb_moderation_fetch_avatar_url_filter( $avatar_url, $old_avatar_url, $p
 			) ||
 			(
 				wp_doing_ajax() &&
-				isset( $_POST['action'] ) &&
-				'video_get_video_description' === $_POST['action']
+				isset( $_POST['action'] ) && // phpcs:ignore WordPress.Security.NonceVerification.Missing -- read-only; only compares the AJAX action name with a fixed string.
+				'video_get_video_description' === $_POST['action'] // phpcs:ignore WordPress.Security.NonceVerification.Missing -- read-only; only compares the AJAX action name with a fixed string.
 			)
 		)
 	) {

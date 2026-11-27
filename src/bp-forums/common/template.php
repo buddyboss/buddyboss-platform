@@ -227,7 +227,7 @@ function bbp_is_forum_edit() {
 	}
 
 	// Editing in admin.
-	elseif ( is_admin() && ( 'post.php' === $pagenow ) && ( get_post_type() === bbp_get_forum_post_type() ) && ( ! empty( $_GET['action'] ) && ( 'edit' === $_GET['action'] ) ) ) {
+	elseif ( is_admin() && ( 'post.php' === $pagenow ) && ( get_post_type() === bbp_get_forum_post_type() ) && ( ! empty( $_GET['action'] ) && ( 'edit' === $_GET['action'] ) ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only; only detects which screen is being viewed.
 		$retval = true;
 	}
 
@@ -336,7 +336,7 @@ function bbp_is_topic_edit() {
 	}
 
 	// Editing in admin
-	elseif ( is_admin() && ( 'post.php' === $pagenow ) && ( get_post_type() === bbp_get_topic_post_type() ) && ( ! empty( $_GET['action'] ) && ( 'edit' === $_GET['action'] ) ) ) {
+	elseif ( is_admin() && ( 'post.php' === $pagenow ) && ( get_post_type() === bbp_get_topic_post_type() ) && ( ! empty( $_GET['action'] ) && ( 'edit' === $_GET['action'] ) ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only; only detects which screen is being viewed.
 		$retval = true;
 	}
 
@@ -357,7 +357,7 @@ function bbp_is_topic_merge() {
 	$retval = false;
 
 	// Check topic edit and GET params
-	if ( bbp_is_topic_edit() && ! empty( $_GET['action'] ) && ( 'merge' === $_GET['action'] ) ) {
+	if ( bbp_is_topic_edit() && ! empty( $_GET['action'] ) && ( 'merge' === $_GET['action'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only; only detects which screen is being viewed.
 		return true;
 	}
 
@@ -378,7 +378,7 @@ function bbp_is_topic_split() {
 	$retval = false;
 
 	// Check topic edit and GET params
-	if ( bbp_is_topic_edit() && ! empty( $_GET['action'] ) && ( 'split' === $_GET['action'] ) ) {
+	if ( bbp_is_topic_edit() && ! empty( $_GET['action'] ) && ( 'split' === $_GET['action'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only; only detects which screen is being viewed.
 		$retval = true;
 	}
 
@@ -443,7 +443,7 @@ function bbp_is_topic_tag_edit() {
 	}
 
 	// Editing in admin.
-	elseif ( is_admin() && ( 'edit-tags.php' === $pagenow ) && ( bbp_get_topic_tag_tax_id() === $taxnow ) && ( ! empty( $_GET['action'] ) && ( 'edit' === $_GET['action'] ) ) ) {
+	elseif ( is_admin() && ( 'edit-tags.php' === $pagenow ) && ( bbp_get_topic_tag_tax_id() === $taxnow ) && ( ! empty( $_GET['action'] ) && ( 'edit' === $_GET['action'] ) ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only; only detects which screen is being viewed.
 		$retval = true;
 	}
 
@@ -533,7 +533,7 @@ function bbp_is_reply_edit() {
 	}
 
 	// Editing in admin.
-	elseif ( is_admin() && ( 'post.php' === $pagenow ) && ( get_post_type() === bbp_get_reply_post_type() ) && ( ! empty( $_GET['action'] ) && ( 'edit' === $_GET['action'] ) ) ) {
+	elseif ( is_admin() && ( 'post.php' === $pagenow ) && ( get_post_type() === bbp_get_reply_post_type() ) && ( ! empty( $_GET['action'] ) && ( 'edit' === $_GET['action'] ) ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only; only detects which screen is being viewed.
 		$retval = true;
 	}
 
@@ -552,7 +552,7 @@ function bbp_is_reply_move() {
 	$retval = false;
 
 	// Check reply edit and GET params
-	if ( bbp_is_reply_edit() && ! empty( $_GET['action'] ) && ( 'move' === $_GET['action'] ) ) {
+	if ( bbp_is_reply_edit() && ! empty( $_GET['action'] ) && ( 'move' === $_GET['action'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only; only detects which screen is being viewed.
 		$retval = true;
 	}
 
@@ -941,7 +941,7 @@ function bbp_is_search() {
 	}
 
 	// Check $_GET.
-	if ( empty( $retval ) && isset( $_REQUEST[ $rewrite_id ] ) && empty( $_REQUEST[ $rewrite_id ] ) ) {
+	if ( empty( $retval ) && isset( $_REQUEST[ $rewrite_id ] ) && empty( $_REQUEST[ $rewrite_id ] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only; only detects a search request.
 		$retval = true;
 	}
 
@@ -982,7 +982,7 @@ function bbp_is_search_results() {
 	}
 
 	// Check $_REQUEST.
-	if ( empty( $retval ) && ! empty( $_REQUEST[ bbp_get_search_rewrite_id() ] ) ) {
+	if ( empty( $retval ) && ! empty( $_REQUEST[ bbp_get_search_rewrite_id() ] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only; only detects a search request.
 		$retval = true;
 	}
 
@@ -1490,12 +1490,12 @@ function bbp_sanitize_val( $request = '', $input_type = 'text' ) {
 function bbp_get_sanitize_val( $request = '', $input_type = 'text' ) {
 
 	// Check that requested
-	if ( empty( $_REQUEST[ $request ] ) ) {
+	if ( empty( $_REQUEST[ $request ] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only; value is only re-displayed in a form field.
 		return false;
 	}
 
 	// Set request varaible
-	$pre_ret_val = $_REQUEST[ $request ];
+	$pre_ret_val = $_REQUEST[ $request ]; // phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- unslashed, sanitised and escaped in the switch below (sanitize_text_field() / sanitize_textarea_field(), esc_attr()); read-only; value is only re-displayed in a form field.
 
 	// Treat different kinds of fields in different ways
 	switch ( $input_type ) {
@@ -1930,7 +1930,7 @@ function bbp_reply_form_fields() {
 	}
 
 	if ( bbp_is_reply_edit() ) {
-		$forum_redirect_to = isset( $_REQUEST['forum_redirect_to'] ) ? (int) $_REQUEST['forum_redirect_to'] : 1
+		$forum_redirect_to = isset( $_REQUEST['forum_redirect_to'] ) ? (int) $_REQUEST['forum_redirect_to'] : 1 // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only; only pre-fills a hidden form field.
 		?>
 
 		<input type="hidden" name="bbp_reply_id"    id="bbp_reply_id"    value="<?php bbp_reply_id(); ?>" />

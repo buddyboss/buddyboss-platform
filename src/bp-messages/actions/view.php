@@ -44,8 +44,8 @@ function messages_action_conversation() {
 		$new_reply = messages_new_message(
 			array(
 				'thread_id' => $thread_id,
-				'subject'   => ! empty( $_POST['subject'] ) ? $_POST['subject'] : false,
-				'content'   => $_POST['content'],
+				'subject'   => ! empty( $_POST['subject'] ) ? $_POST['subject'] : false, // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash -- message subject (content); filtered with wp_filter_kses() on messages_message_subject_before_save, which expects slashed data.
+				'content'   => isset( $_POST['content'] ) ? $_POST['content'] : '', // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash -- message content; filtered with bp_messages_filter_kses() on messages_message_content_before_save, which expects slashed data.
 			)
 		);
 

@@ -38,10 +38,10 @@ function groups_screen_group_admin_edit_details() {
 				bp_core_add_message( __( 'Groups must have a name and a description. Please try again.', 'buddyboss' ), 'error' );
 			} elseif ( ! groups_edit_base_group_details(
 				array(
-					'group_id'       => $_POST['group-id'],
-					'name'           => $_POST['group-name'],
+					'group_id'       => isset( $_POST['group-id'] ) ? (int) $_POST['group-id'] : 0,
+					'name'           => $_POST['group-name'], // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- group name, filtered by wp_filter_kses() on groups_group_name_before_save, which expects slashed data.
 					'slug'           => null, // @TODO: Add to settings pane? If yes, editable by site admin only, or allow group admins to do this?
-					'description'    => $_POST['group-desc'],
+					'description'    => $_POST['group-desc'], // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- group description, filtered by bp_groups_filter_kses() on groups_group_description_before_save.
 					'notify_members' => $group_notify_members,
 					'parent_id'      => isset( $_POST['parent-id'] ) ? (int) $_POST['parent-id'] : 0
 				)

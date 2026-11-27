@@ -75,11 +75,11 @@ function groups_screen_group_admin_avatar() {
 			'object'        => 'group',
 			'avatar_dir'    => 'group-avatars',
 			'item_id'       => $bp->groups->current_group->id,
-			'original_file' => $_POST['image_src'],
-			'crop_x'        => $_POST['x'],
-			'crop_y'        => $_POST['y'],
-			'crop_w'        => $_POST['w'],
-			'crop_h'        => $_POST['h'],
+			'original_file' => $_POST['image_src'], // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotValidated, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- BP_Attachment_Avatar::crop() returns false when it is empty and uses only basename() of it.
+			'crop_x'        => $_POST['x'], // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotValidated, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- cast to int in BP_Attachment::crop(); an empty width or height falls back to the default in BP_Attachment_Avatar::crop().
+			'crop_y'        => $_POST['y'], // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotValidated, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- cast to int in BP_Attachment::crop(); an empty width or height falls back to the default in BP_Attachment_Avatar::crop().
+			'crop_w'        => $_POST['w'], // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotValidated, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- cast to int in BP_Attachment::crop(); an empty width or height falls back to the default in BP_Attachment_Avatar::crop().
+			'crop_h'        => $_POST['h'], // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotValidated, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- cast to int in BP_Attachment::crop(); an empty width or height falls back to the default in BP_Attachment_Avatar::crop().
 		);
 
 		if ( ! bp_core_avatar_handle_crop( $args ) ) {

@@ -53,7 +53,7 @@ class BP_Members_List_Table extends WP_Users_List_Table {
 	public function prepare_items() {
 		global $usersearch;
 
-		$usersearch       = isset( $_REQUEST['s'] ) ? $_REQUEST['s'] : '';
+		$usersearch       = isset( $_REQUEST['s'] ) ? $_REQUEST['s'] : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- read-only request; the search term is escaped with bp_esc_like() and prepared in BP_Signup::get().
 		$signups_per_page = $this->get_items_per_page( str_replace( '-', '_', "{$this->screen->id}_per_page" ) );
 		$paged            = $this->get_pagenum();
 
@@ -65,12 +65,12 @@ class BP_Members_List_Table extends WP_Users_List_Table {
 			'order'      => 'DESC',
 		);
 
-		if ( isset( $_REQUEST['orderby'] ) ) {
-			$args['orderby'] = $_REQUEST['orderby'];
+		if ( isset( $_REQUEST['orderby'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; list table sorting.
+			$args['orderby'] = $_REQUEST['orderby']; // phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- read-only request; the column is sanitised with sanitize_title() and a character whitelist in BP_Signup::get().
 		}
 
-		if ( isset( $_REQUEST['order'] ) ) {
-			$args['order'] = $_REQUEST['order'];
+		if ( isset( $_REQUEST['order'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; list table sorting.
+			$args['order'] = $_REQUEST['order']; // phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- read-only request; the direction is sanitised with bp_esc_sql_order() in BP_Signup::get().
 		}
 
 		$signups = BP_Signup::get( $args );

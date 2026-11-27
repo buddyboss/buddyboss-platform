@@ -354,7 +354,7 @@ class BP_Activity_Feed {
 
 		// Get ETag from supported user agents.
 		if ( isset( $_SERVER['HTTP_IF_NONE_MATCH'] ) ) {
-			$client_etag = wp_unslash( $_SERVER['HTTP_IF_NONE_MATCH'] );
+			$client_etag = sanitize_text_field( wp_unslash( $_SERVER['HTTP_IF_NONE_MATCH'] ) );
 
 			// Remove quotes from ETag.
 			$client_etag = trim( $client_etag, '"' );
@@ -371,7 +371,7 @@ class BP_Activity_Feed {
 		}
 
 		// Get client last modified timestamp from supported user agents.
-		$client_last_modified      = empty( $_SERVER['HTTP_IF_MODIFIED_SINCE'] ) ? '' : trim( $_SERVER['HTTP_IF_MODIFIED_SINCE'] );
+		$client_last_modified      = empty( $_SERVER['HTTP_IF_MODIFIED_SINCE'] ) ? '' : trim( sanitize_text_field( wp_unslash( $_SERVER['HTTP_IF_MODIFIED_SINCE'] ) ) );
 		$client_modified_timestamp = $client_last_modified ? strtotime( $client_last_modified ) : 0;
 
 		// Set 304 status if feed hasn't been updated since last fetch.

@@ -33,7 +33,7 @@ function groups_ajax_widget_groups_list() {
 
 	check_ajax_referer( 'groups_widget_groups_list' );
 
-	switch ( $_POST['filter'] ) {
+	switch ( isset( $_POST['filter'] ) ? sanitize_text_field( wp_unslash( $_POST['filter'] ) ) : '' ) {
 		case 'newest-groups':
 			$type = 'newest';
 			break;

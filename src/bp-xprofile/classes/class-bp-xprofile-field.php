@@ -534,8 +534,8 @@ class BP_XProfile_Field {
 				$parent_id = $this->id;
 
 				// Allow plugins to filter the field's child options (i.e. the items in a selectbox).
-				$post_option  = ! empty( $_POST[ "{$this->type}_option" ] ) ? $_POST[ "{$this->type}_option" ] : '';
-				$post_default = ! empty( $_POST[ "isDefault_{$this->type}_option" ] ) ? $_POST[ "isDefault_{$this->type}_option" ] : '';
+				$post_option  = ! empty( $_POST[ "{$this->type}_option" ] ) ? $_POST[ "{$this->type}_option" ] : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- posted by BB_Admin_Profile_Fields_Ajax::save_profile_field() after bb_verify_request(); option names are sanitised by bp_xprofile_sanitize_field_options() on xprofile_field_options_before_save.
+				$post_default = ! empty( $_POST[ "isDefault_{$this->type}_option" ] ) ? $_POST[ "isDefault_{$this->type}_option" ] : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- posted by BB_Admin_Profile_Fields_Ajax::save_profile_field() after bb_verify_request(); defaults are cast by bp_xprofile_sanitize_field_default() on xprofile_field_default_before_save.
 
 				/**
 				 * Filters the submitted field option value before saved.
@@ -1219,52 +1219,52 @@ class BP_XProfile_Field {
 		global $message;
 
 		// Check field name.
-		if ( ! isset( $_POST['title'] ) || ( '' === $_POST['title'] ) ) {
+		if ( ! isset( $_POST['title'] ) || ( '' === $_POST['title'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- read-only: validates the submitted form; nothing is changed.
 			$message = esc_html__( 'Profile fields must have a name.', 'buddyboss' );
 
 			return false;
 		}
 
 		// Check field requirement.
-		if ( ! isset( $_POST['required'] ) ) {
+		if ( ! isset( $_POST['required'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- read-only: validates the submitted form; nothing is changed.
 			$message = esc_html__( 'Profile field requirement is missing.', 'buddyboss' );
 
 			return false;
 		}
 
 		// Check field type.
-		if ( empty( $_POST['fieldtype'] ) ) {
+		if ( empty( $_POST['fieldtype'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- read-only: validates the submitted form; nothing is changed.
 			$message = esc_html__( 'Profile field type is missing.', 'buddyboss' );
 
 			return false;
 		}
 
 		// Check that field is of valid type.
-		if ( ! in_array( $_POST['fieldtype'], array_keys( bp_xprofile_get_field_types() ), true ) ) {
+		if ( ! in_array( $_POST['fieldtype'], array_keys( bp_xprofile_get_field_types() ), true ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- read-only: validates the submitted form; nothing is changed.
 			/* translators: %s: field type (wrapped in <code>). */
-			$message = sprintf( esc_html__( 'The profile field type %s is not registered.', 'buddyboss' ), '<code>' . esc_html( sanitize_text_field( wp_unslash( $_POST['fieldtype'] ) ) ) . '</code>' );
+			$message = sprintf( esc_html__( 'The profile field type %s is not registered.', 'buddyboss' ), '<code>' . esc_html( sanitize_text_field( wp_unslash( $_POST['fieldtype'] ) ) ) . '</code>' ); // phpcs:ignore WordPress.Security.NonceVerification.Missing -- read-only: validates the submitted form; nothing is changed.
 
 			return false;
 		}
 
 		// Get field type so we can check for and lavidate any field options.
-		$field_type = bp_xprofile_create_field_type( $_POST['fieldtype'] );
+		$field_type = bp_xprofile_create_field_type( sanitize_text_field( wp_unslash( $_POST['fieldtype'] ) ) ); // phpcs:ignore WordPress.Security.NonceVerification.Missing -- read-only: validates the submitted form; nothing is changed.
 
 		// Field type requires options.
 		if ( true === $field_type->supports_options ) {
 
 			// Build the field option key.
-			$option_name = sanitize_key( $_POST['fieldtype'] ) . '_option';
+			$option_name = sanitize_key( $_POST['fieldtype'] ) . '_option'; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- read-only: validates the submitted form; nothing is changed.
 
 			// Check for missing or malformed options.
-			if ( empty( $_POST[ $option_name ] ) || ! is_array( $_POST[ $option_name ] ) ) {
+			if ( empty( $_POST[ $option_name ] ) || ! is_array( $_POST[ $option_name ] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- read-only: validates the submitted form; nothing is changed.
 				$message = esc_html__( 'These field options are invalid.', 'buddyboss' );
 
 				return false;
 			}
 
 			// Trim out empty field options.
-			$field_values  = array_values( $_POST[ $option_name ] );
+			$field_values  = array_values( $_POST[ $option_name ] ); // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- read-only validation; sanitised on the next line with sanitize_text_field() and only counted.
 			$field_options = array_map( 'sanitize_text_field', $field_values );
 			$field_count   = count( $field_options );
 
@@ -1339,15 +1339,15 @@ class BP_XProfile_Field {
 				$users_url . '#tabs-' . (int) $this->group_id
 			);
 
-			if ( ! empty( $_POST['saveField'] ) ) {
-				$this->name        = $_POST['title'];
-				$this->description = $_POST['description'];
-				$this->is_required = $_POST['required'];
-				$this->type        = $_POST['fieldtype'];
-				$this->field_order = $_POST['field_order'];
+			if ( ! empty( $_POST['saveField'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- read-only: deprecated legacy form redisplaying the submitted values; nothing is changed.
+				$this->name        = $_POST['title']; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotValidated, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.NonceVerification.Missing -- deprecated legacy form: redisplays the submitted value, escaped on output (esc_attr(), esc_textarea(), selected()); a missing key is an empty control; nothing is saved here.
+				$this->description = $_POST['description']; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotValidated, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.NonceVerification.Missing -- deprecated legacy form: redisplays the submitted value, escaped on output (esc_attr(), esc_textarea(), selected()); a missing key is an empty control; nothing is saved here.
+				$this->is_required = $_POST['required']; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotValidated, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.NonceVerification.Missing -- deprecated legacy form: redisplays the submitted value, escaped on output (esc_attr(), esc_textarea(), selected()); a missing key is an empty control; nothing is saved here.
+				$this->type        = $_POST['fieldtype']; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotValidated, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.NonceVerification.Missing -- deprecated legacy form: redisplays the submitted value, escaped on output (esc_attr(), esc_textarea(), selected()); a missing key is an empty control; nothing is saved here.
+				$this->field_order = $_POST['field_order']; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotValidated, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.NonceVerification.Missing -- deprecated legacy form: redisplays the submitted value, escaped on output (esc_attr(), esc_textarea(), selected()); a missing key is an empty control; nothing is saved here.
 
-				if ( ! empty( $_POST[ "sort_order_{$this->type}" ] ) ) {
-					$this->order_by = $_POST[ "sort_order_{$this->type}" ];
+				if ( ! empty( $_POST[ "sort_order_{$this->type}" ] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- read-only: deprecated legacy form redisplaying the submitted values; nothing is changed.
+					$this->order_by = $_POST[ "sort_order_{$this->type}" ]; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.NonceVerification.Missing -- deprecated legacy form: redisplays the submitted value, escaped on output (esc_attr(), esc_textarea(), selected()); a missing key is an empty control; nothing is saved here.
 				}
 			}
 
@@ -1400,7 +1400,7 @@ class BP_XProfile_Field {
 			<?php if ( ( ! empty( $message ) ) || ( isset( $_GET['type'] ) && 'updated' === $_GET['type'] ) ) : ?>
 
 				<?php
-				if ( isset( $_GET['type'] ) && 'updated' === $_GET['type'] ) {
+				if ( isset( $_GET['type'] ) && 'updated' === $_GET['type'] ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only: only picks the notice to show.
 					$message      = __( 'The field was saved successfully.', 'buddyboss' );
 					$message_type = 'updated';
 				}

@@ -135,8 +135,8 @@ class BP_XProfile_Field_Type_Multiselectbox extends BP_XProfile_Field_Type {
 		$options = $this->field_obj->get_children();
 		$html    = '';
 
-		if ( empty( $original_option_values ) && ! empty( $_POST[ 'field_' . $this->field_obj->id ] ) ) {
-			$original_option_values = array_map( 'sanitize_text_field', $_POST[ 'field_' . $this->field_obj->id ] );
+		if ( empty( $original_option_values ) && ! empty( $_POST[ 'field_' . $this->field_obj->id ] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- read-only: redisplays the submitted value after a failed save; nothing is changed.
+			$original_option_values = array_map( 'sanitize_text_field', wp_unslash( $_POST[ 'field_' . $this->field_obj->id ] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Missing -- read-only: redisplays the submitted value after a failed save; nothing is changed.
 		}
 
 		$option_values = ( $original_option_values ) ? (array) $original_option_values : array();
@@ -146,9 +146,9 @@ class BP_XProfile_Field_Type_Multiselectbox extends BP_XProfile_Field_Type {
 			// Check for updated posted values, but errors preventing them from
 			// being saved first time.
 			foreach ( $option_values as $i => $option_value ) {
-				if ( isset( $_POST[ 'field_' . $this->field_obj->id ] ) && $_POST[ 'field_' . $this->field_obj->id ][ $i ] != $option_value ) {
-					if ( ! empty( $_POST[ 'field_' . $this->field_obj->id ][ $i ] ) ) {
-						$option_values[] = sanitize_text_field( wp_unslash( $_POST[ 'field_' . $this->field_obj->id ][ $i ] ) );
+				if ( isset( $_POST[ 'field_' . $this->field_obj->id ][ $i ] ) && $_POST[ 'field_' . $this->field_obj->id ][ $i ] != $option_value ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- read-only: redisplays the submitted value after a failed save; nothing is changed.
+					if ( ! empty( $_POST[ 'field_' . $this->field_obj->id ][ $i ] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- read-only: redisplays the submitted value after a failed save; nothing is changed.
+						$option_values[] = sanitize_text_field( wp_unslash( $_POST[ 'field_' . $this->field_obj->id ][ $i ] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Missing -- read-only: redisplays the submitted value after a failed save; nothing is changed.
 					}
 				}
 			}

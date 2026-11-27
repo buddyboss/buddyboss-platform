@@ -146,8 +146,8 @@ class BP_Blogs_Template {
 		$this->pag_num  = bp_sanitize_pagination_arg( 'num', $r['per_page'] );
 
 		// Backwards compatibility support for blogs by first letter.
-		if ( ! empty( $_REQUEST['letter'] ) ) {
-			$this->blogs = BP_Blogs_Blog::get_by_letter( $_REQUEST['letter'], $this->pag_num, $this->pag_page );
+		if ( ! empty( $_REQUEST['letter'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; directory letter filter.
+			$this->blogs = BP_Blogs_Blog::get_by_letter( $_REQUEST['letter'], $this->pag_num, $this->pag_page ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash -- read-only directory letter filter; BP_Blogs_Blog::get_by_letter() escapes it with bp_esc_like() and $wpdb->prepare().
 
 			// Typical blogs query.
 		} else {

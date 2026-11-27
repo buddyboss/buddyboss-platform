@@ -93,7 +93,7 @@ class BP_Members_Component extends BP_Component {
 		// Members.
 		if ( bp_is_members_component() ) {
 			// Actions - Random member handler.
-			if ( isset( $_GET['random-member'] ) ) {
+			if ( isset( $_GET['random-member'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; only decides whether to load the random member handler.
 				require $this->path . 'bp-members/actions/random.php';
 			}
 

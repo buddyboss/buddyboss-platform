@@ -308,12 +308,18 @@ function bp_media_messages_save_group_data( &$message ) {
 	static $cache               = array();
 	static $cache_first_message = array();
 
-	$group                   = ( isset( $_POST ) && isset( $_POST['group'] ) && '' !== $_POST['group'] ) ? trim( $_POST['group'] ) : ''; // Group id.
-	$message_users           = ( isset( $_POST ) && isset( $_POST['users'] ) && '' !== $_POST['users'] ) ? $_POST['users'] : ''; // all - individual.
-	$message_type            = ( isset( $_POST ) && isset( $_POST['type'] ) && '' !== $_POST['type'] ) ? trim( $_POST['type'] ) : ''; // open - private.
-	$message_meta_users_list = ( isset( $_POST ) && isset( $_POST['message_meta_users_list'] ) && '' !== $_POST['message_meta_users_list'] ) ? trim( $_POST['message_meta_users_list'] ) : ''; // users list.
-	$thread_type             = ( isset( $_POST ) && isset( $_POST['message_thread_type'] ) && '' !== $_POST['message_thread_type'] ) ? trim( $_POST['message_thread_type'] ) : ''; // new - reply.
-	$thread_action           = ( isset( $_POST ) && isset( $_POST['action'] ) && '' !== $_POST['action'] ) ? trim( $_POST['action'] ) : ''; // new - reply.
+	// phpcs:ignore WordPress.Security.NonceVerification.Missing -- hook callback on messages_message_sent, not a request handler; nonce checked by the AJAX handler that sends the message (bp_nouveau_ajax_messages_send_message(), bp_nouveau_ajax_messages_send_reply(), bp_nouveau_ajax_groups_send_message()).
+	$group                   = ( isset( $_POST ) && isset( $_POST['group'] ) && '' !== $_POST['group'] ) ? trim( sanitize_text_field( wp_unslash( $_POST['group'] ) ) ) : ''; // Group id.
+	// phpcs:ignore WordPress.Security.NonceVerification.Missing -- hook callback on messages_message_sent, not a request handler; nonce checked by the AJAX handler that sends the message (bp_nouveau_ajax_messages_send_message(), bp_nouveau_ajax_messages_send_reply(), bp_nouveau_ajax_groups_send_message()).
+	$message_users           = ( isset( $_POST ) && isset( $_POST['users'] ) && '' !== $_POST['users'] ) ? sanitize_text_field( wp_unslash( $_POST['users'] ) ) : ''; // all - individual.
+	// phpcs:ignore WordPress.Security.NonceVerification.Missing -- hook callback on messages_message_sent, not a request handler; nonce checked by the AJAX handler that sends the message (bp_nouveau_ajax_messages_send_message(), bp_nouveau_ajax_messages_send_reply(), bp_nouveau_ajax_groups_send_message()).
+	$message_type            = ( isset( $_POST ) && isset( $_POST['type'] ) && '' !== $_POST['type'] ) ? trim( sanitize_text_field( wp_unslash( $_POST['type'] ) ) ) : ''; // open - private.
+	// phpcs:ignore WordPress.Security.NonceVerification.Missing -- hook callback on messages_message_sent, not a request handler; nonce checked by the AJAX handler that sends the message (bp_nouveau_ajax_messages_send_message(), bp_nouveau_ajax_messages_send_reply(), bp_nouveau_ajax_groups_send_message()).
+	$message_meta_users_list = ( isset( $_POST ) && isset( $_POST['message_meta_users_list'] ) && '' !== $_POST['message_meta_users_list'] ) ? trim( sanitize_text_field( wp_unslash( $_POST['message_meta_users_list'] ) ) ) : ''; // users list.
+	// phpcs:ignore WordPress.Security.NonceVerification.Missing -- hook callback on messages_message_sent, not a request handler; nonce checked by the AJAX handler that sends the message (bp_nouveau_ajax_messages_send_message(), bp_nouveau_ajax_messages_send_reply(), bp_nouveau_ajax_groups_send_message()).
+	$thread_type             = ( isset( $_POST ) && isset( $_POST['message_thread_type'] ) && '' !== $_POST['message_thread_type'] ) ? trim( sanitize_text_field( wp_unslash( $_POST['message_thread_type'] ) ) ) : ''; // new - reply.
+	// phpcs:ignore WordPress.Security.NonceVerification.Missing -- hook callback on messages_message_sent, not a request handler; nonce checked by the AJAX handler that sends the message (bp_nouveau_ajax_messages_send_message(), bp_nouveau_ajax_messages_send_reply(), bp_nouveau_ajax_groups_send_message()).
+	$thread_action           = ( isset( $_POST ) && isset( $_POST['action'] ) && '' !== $_POST['action'] ) ? trim( sanitize_text_field( wp_unslash( $_POST['action'] ) ) ) : ''; // new - reply.
 
 	if ( '' === $message_meta_users_list && isset( $group ) && '' !== $group ) {
 		if ( isset( $cache[ $group ] ) ) {
@@ -782,7 +788,7 @@ function bp_messages_repair_items_unread_count( $repair_list ) {
 function bp_messages_admin_repair_unread_messages_count() {
 	global $wpdb;
 
-	$offset           = isset( $_POST['offset'] ) ? (int) $_POST['offset'] : 0;
+	$offset           = isset( $_POST['offset'] ) ? (int) $_POST['offset'] : 0; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked in bp_admin_repair_tools_wrapper_function(), which calls this repair callback.
 	$bp               = buddypress();
 	$recipients_query = $wpdb->prepare( "SELECT DISTINCT thread_id FROM {$bp->messages->table_name_recipients} LIMIT 50 OFFSET %d", $offset ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- table name from buddypress().
 	$recipients       = $wpdb->get_results( $recipients_query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $recipients_query is $wpdb->prepare()'d above.

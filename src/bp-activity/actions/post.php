@@ -32,7 +32,7 @@ function bp_activity_action_post_update() {
 	 *
 	 * @param string $value Activity message being posted.
 	 */
-	$content = apply_filters( 'bp_activity_post_update_content', $_POST['whats-new'] );
+	$content = apply_filters( 'bp_activity_post_update_content', $_POST['whats-new'] ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotValidated, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- activity content: an empty value is rejected below and it is kses-filtered on save by bp_activity_filter_kses() (bp_activity_content_before_save).
 
 	if ( ! empty( $_POST['whats-new-post-object'] ) ) {
 
@@ -43,7 +43,7 @@ function bp_activity_action_post_update() {
 		 *
 		 * @param string $value Item type to associate with.
 		 */
-		$object = apply_filters( 'bp_activity_post_update_object', $_POST['whats-new-post-object'] );
+		$object = apply_filters( 'bp_activity_post_update_object', sanitize_text_field( wp_unslash( $_POST['whats-new-post-object'] ) ) );
 	}
 
 	if ( ! empty( $_POST['whats-new-post-in'] ) ) {
@@ -55,7 +55,7 @@ function bp_activity_action_post_update() {
 		 *
 		 * @param string $value Chosen component to post activity to.
 		 */
-		$item_id = apply_filters( 'bp_activity_post_update_item_id', $_POST['whats-new-post-in'] );
+		$item_id = apply_filters( 'bp_activity_post_update_item_id', sanitize_text_field( wp_unslash( $_POST['whats-new-post-in'] ) ) );
 	}
 
 	// No activity content so provide feedback and redirect.

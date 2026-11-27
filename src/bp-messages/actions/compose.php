@@ -51,7 +51,7 @@ function bp_messages_action_create_message() {
 		if ( isset( $_POST['send-notice'] ) ) {
 
 			// Attempt to save the notice and redirect to notices.
-			if ( messages_send_notice( $_POST['subject'], $_POST['content'] ) ) {
+			if ( messages_send_notice( $_POST['subject'], $_POST['content'] ) ) { // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash -- notice subject and content; filtered with wp_filter_kses() and bp_messages_filter_kses() on messages_notice_subject_before_save / messages_notice_message_before_save, which expect slashed data.
 				$success     = true;
 				$feedback    = __( 'Notice successfully created.', 'buddyboss' );
 				$redirect_to = trailingslashit( $member_messages . 'notices' );
@@ -66,8 +66,8 @@ function bp_messages_action_create_message() {
 		} else {
 
 			// Filter recipients into the format we need - array( 'username/userid', 'username/userid' ).
-			$autocomplete_recipients = (array) explode( ',', $_POST['send-to-input'] );
-			$typed_recipients        = (array) explode( ' ', $_POST['send_to_usernames'] );
+			$autocomplete_recipients = (array) explode( ',', isset( $_POST['send-to-input'] ) ? $_POST['send-to-input'] : '' ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash -- recipient usernames or ids; each one is resolved to an existing user id in messages_new_message().
+			$typed_recipients        = (array) explode( ' ', isset( $_POST['send_to_usernames'] ) ? $_POST['send_to_usernames'] : '' ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash -- recipient usernames or ids; each one is resolved to an existing user id in messages_new_message().
 			$recipients              = array_merge( $autocomplete_recipients, $typed_recipients );
 
 			/**
@@ -83,8 +83,8 @@ function bp_messages_action_create_message() {
 			$send = messages_new_message(
 				array(
 					'recipients' => $recipients,
-					'subject'    => $_POST['subject'],
-					'content'    => $_POST['content'],
+					'subject'    => $_POST['subject'], // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash -- message subject (content); filtered with wp_filter_kses() on messages_message_subject_before_save, which expects slashed data.
+					'content'    => $_POST['content'], // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash -- message content; filtered with bp_messages_filter_kses() on messages_message_content_before_save, which expects slashed data.
 					'error_type' => 'wp_error',
 				)
 			);

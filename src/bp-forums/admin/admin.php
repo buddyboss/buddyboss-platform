@@ -557,7 +557,7 @@ if ( ! class_exists( 'BBP_Admin' ) ) :
 		public static function update_screen() {
 
 			// Get action
-			$action = isset( $_GET['action'] ) ? $_GET['action'] : ''; ?>
+			$action = isset( $_GET['action'] ) ? sanitize_text_field( wp_unslash( $_GET['action'] ) ) : ''; ?>
 
 			<div class="wrap">
 				<div id="icon-edit" class="icon32 icon32-posts-topic"><br /></div>
@@ -608,7 +608,7 @@ if ( ! class_exists( 'BBP_Admin' ) ) :
 			$bbp_db = bbp_db();
 
 			// Get action
-			$action = isset( $_GET['action'] ) ? $_GET['action'] : '';
+			$action = isset( $_GET['action'] ) ? sanitize_text_field( wp_unslash( $_GET['action'] ) ) : '';
 			?>
 
 			<div class="wrap">

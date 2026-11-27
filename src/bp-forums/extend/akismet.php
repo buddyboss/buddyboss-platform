@@ -377,7 +377,7 @@ if ( ! class_exists( 'BBP_Akismet' ) ) :
 			}
 
 			// Loop through _POST args and rekey strings
-			foreach ( $_POST as $key => $value ) {
+			foreach ( $_POST as $key => $value ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- only copied into the Akismet request; the topic and reply handlers that reach this verify the nonce.
 				if ( is_string( $value ) ) {
 					$post_data[ 'POST_' . $key ] = $value;
 				}

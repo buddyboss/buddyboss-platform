@@ -251,8 +251,8 @@ function bp_has_activities( $args = '' ) {
 
 	$search_terms_default = false;
 	$search_query_arg     = bp_core_get_component_search_query_arg( 'activity' );
-	if ( ! empty( $_REQUEST[ $search_query_arg ] ) ) {
-		$search_terms_default = stripslashes( $_REQUEST[ $search_query_arg ] );
+	if ( ! empty( $_REQUEST[ $search_query_arg ] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; nothing is changed.
+		$search_terms_default = stripslashes( $_REQUEST[ $search_query_arg ] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- read-only search term, unslashed here and escaped by BP_Activity_Activity::get() (bp_esc_like() and $wpdb->prepare()).
 	}
 
 	/*
@@ -323,8 +323,8 @@ function bp_has_activities( $args = '' ) {
 	}
 
 	// Search terms.
-	if ( ! empty( $_REQUEST['s'] ) && empty( $r['search_terms'] ) ) {
-		$r['search_terms'] = $_REQUEST['s'];
+	if ( ! empty( $_REQUEST['s'] ) && empty( $r['search_terms'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; nothing is changed.
+		$r['search_terms'] = $_REQUEST['s']; // phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- read-only search term, escaped by BP_Activity_Activity::get() (bp_esc_like() and $wpdb->prepare()).
 	}
 
 	// Do not exceed the maximum per page.
@@ -343,9 +343,9 @@ function bp_has_activities( $args = '' ) {
 	 *
 	 * @param bool $value True if BuddyPress should enable afilter support.
 	 */
-	if ( isset( $_GET['afilter'] ) && apply_filters( 'bp_activity_enable_afilter_support', false ) ) {
+	if ( isset( $_GET['afilter'] ) && apply_filters( 'bp_activity_enable_afilter_support', false ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; nothing is changed.
 		$r['filter'] = array(
-			'object' => $_GET['afilter'],
+			'object' => sanitize_text_field( wp_unslash( $_GET['afilter'] ) ), // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; nothing is changed.
 		);
 	} elseif (
 		(
@@ -2675,7 +2675,7 @@ function bp_activity_comment_form_nojs_display() {
 function bp_get_activity_comment_form_nojs_display() {
 	global $activities_template;
 
-	if ( isset( $_GET['ac'] ) && ( $_GET['ac'] === ( $activities_template->activity->id . '/' ) ) ) {
+	if ( isset( $_GET['ac'] ) && ( $_GET['ac'] === ( $activities_template->activity->id . '/' ) ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; nothing is changed.
 		return 'style="display: block"';
 	}
 
@@ -3223,7 +3223,7 @@ function bp_get_activity_filter_links( $args = false ) {
 			continue;
 		}
 
-		if ( isset( $_GET['afilter'] ) && $component === $_GET['afilter'] ) {
+		if ( isset( $_GET['afilter'] ) && $component === $_GET['afilter'] ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; nothing is changed.
 			$selected = ' class="selected"';
 		} else {
 			$selected = '';
@@ -3267,7 +3267,7 @@ function bp_get_activity_filter_links( $args = false ) {
 
 	$link = remove_query_arg( 'afilter', $link );
 
-	if ( isset( $_GET['afilter'] ) ) {
+	if ( isset( $_GET['afilter'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; nothing is changed.
 		$component_links[] = '<' . $tag . ' id="afilter-clear"><a href="' . esc_url( $link ) . '">' . __( 'Clear Filter', 'buddyboss' ) . '</a></' . $tag . '>';
 	}
 

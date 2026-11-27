@@ -255,7 +255,7 @@ function bbp_get_unique_array_values( $array = array() ) {
  * @return string The URL to redirect to, if set
  */
 function bbp_get_redirect_to() {
-	$retval = ! empty( $_REQUEST['redirect_to'] ) ? $_REQUEST['redirect_to'] : '';
+	$retval = ! empty( $_REQUEST['redirect_to'] ) ? $_REQUEST['redirect_to'] : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- returned raw by design (see the docblock); callers hand it to bbp_get_topic_permalink() / bbp_get_reply_url() and bbp_redirect(); read-only; returns the redirect target, nothing is changed.
 
 	return apply_filters( 'bbp_get_redirect_to', $retval );
 }
@@ -309,7 +309,7 @@ function bbp_remove_view_all( $original_link = '' ) {
  * @return bool Whether current user can and is viewing all
  */
 function bbp_get_view_all( $cap = 'moderate' ) {
-	$retval = ( ( ! empty( $_GET['view'] ) && ( 'all' === $_GET['view'] ) && current_user_can( $cap ) ) );
+	$retval = ( ( ! empty( $_GET['view'] ) && ( 'all' === $_GET['view'] ) && current_user_can( $cap ) ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; nothing is changed.
 	return apply_filters( 'bbp_get_view_all', (bool) $retval );
 }
 
@@ -705,9 +705,9 @@ function bbp_filter_anonymous_post_data( $args = '' ) {
 	$r = bbp_parse_args(
 		$args,
 		array(
-			'bbp_anonymous_name'    => ! empty( $_POST['bbp_anonymous_name'] ) ? sanitize_text_field( wp_unslash( $_POST['bbp_anonymous_name'] ) ) : false,
-			'bbp_anonymous_email'   => ! empty( $_POST['bbp_anonymous_email'] ) ? sanitize_email( wp_unslash( $_POST['bbp_anonymous_email'] ) ) : false,
-			'bbp_anonymous_website' => ! empty( $_POST['bbp_anonymous_website'] ) ? sanitize_text_field( wp_unslash( $_POST['bbp_anonymous_website'] ) ) : false,
+			'bbp_anonymous_name'    => ! empty( $_POST['bbp_anonymous_name'] ) ? sanitize_text_field( wp_unslash( $_POST['bbp_anonymous_name'] ) ) : false, // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked by the topic and reply handlers that call this (bbp_verify_nonce_request()) before anything is saved.
+			'bbp_anonymous_email'   => ! empty( $_POST['bbp_anonymous_email'] ) ? sanitize_email( wp_unslash( $_POST['bbp_anonymous_email'] ) ) : false, // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked by the topic and reply handlers that call this (bbp_verify_nonce_request()) before anything is saved.
+			'bbp_anonymous_website' => ! empty( $_POST['bbp_anonymous_website'] ) ? sanitize_text_field( wp_unslash( $_POST['bbp_anonymous_website'] ) ) : false, // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked by the topic and reply handlers that call this (bbp_verify_nonce_request()) before anything is saved.
 		),
 		'filter_anonymous_post_data'
 	);
@@ -2083,7 +2083,7 @@ function bbp_request_feed_trap( $query_vars = array() ) {
 						}
 
 						// Only forum replies
-						if ( ! empty( $_GET['type'] ) && ( bbp_get_reply_post_type() === $_GET['type'] ) ) {
+						if ( ! empty( $_GET['type'] ) && ( bbp_get_reply_post_type() === $_GET['type'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; only selects which feed to output.
 
 							// The query
 							$the_query = array(
@@ -2101,7 +2101,7 @@ function bbp_request_feed_trap( $query_vars = array() ) {
 							bbp_display_replies_feed_rss2( $the_query );
 
 							// Only forum topics
-						} elseif ( ! empty( $_GET['type'] ) && ( bbp_get_topic_post_type() === $_GET['type'] ) ) {
+						} elseif ( ! empty( $_GET['type'] ) && ( bbp_get_topic_post_type() === $_GET['type'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; only selects which feed to output.
 
 							// The query
 							$the_query = array(

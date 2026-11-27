@@ -4956,11 +4956,11 @@ function bp_activity_do_heartbeat() {
  * @since BuddyBoss 1.0.0
  */
 function bp_ajax_get_comments() {
-	if ( empty( $_GET['activity_id'] ) ) {
+	if ( empty( $_GET['activity_id'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; only loads the comments of the given activities.
 		exit;
 	}
 
-	if ( bp_has_activities( 'include=' . $_GET['activity_id'] ) ) {
+	if ( bp_has_activities( 'include=' . implode( ',', wp_parse_id_list( wp_unslash( $_GET['activity_id'] ) ) ) ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; only loads the comments of the given activities.
 		while ( bp_activities() ) {
 			bp_the_activity();
 			bp_nouveau_activity_comments();
@@ -5516,8 +5516,8 @@ function bp_update_activity_feed_of_custom_post_type( $post_id, $post, $update )
 
 			if ( isset( $src[0] ) ) {
 				$activity_summary .= sprintf( '<br/><img src="%s">', esc_url( $src[0] ) );
-			} elseif ( isset( $_POST ) && isset( $_POST['_featured_image_id'] ) && ! empty( $_POST['_featured_image_id'] ) ) {
-				$activity_summary .= sprintf( '<br/><img src="%s">', esc_url( wp_get_attachment_url( $_POST['_featured_image_id'] ) ) );
+			} elseif ( isset( $_POST ) && isset( $_POST['_featured_image_id'] ) && ! empty( $_POST['_featured_image_id'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- only reads an attachment id to build the activity summary; this function is not hooked (its save_post action below is commented out).
+				$activity_summary .= sprintf( '<br/><img src="%s">', esc_url( wp_get_attachment_url( (int) $_POST['_featured_image_id'] ) ) ); // phpcs:ignore WordPress.Security.NonceVerification.Missing -- only reads an attachment id to build the activity summary; this function is not hooked (its save_post action below is commented out).
 			}
 
 			// Backward compatibility filter for the blogs component.
@@ -5538,8 +5538,8 @@ function bp_update_activity_feed_of_custom_post_type( $post_id, $post, $update )
 			$activity_summary = '';
 			if ( isset( $src[0] ) ) {
 				$activity_summary = sprintf( ' <img src="%s">', esc_url( $src[0] ) );
-			} elseif ( isset( $_POST ) && isset( $_POST['_featured_image_id'] ) && ! empty( $_POST['_featured_image_id'] ) ) {
-				$activity_summary .= sprintf( '<img src="%s">', esc_url( wp_get_attachment_url( $_POST['_featured_image_id'] ) ) );
+			} elseif ( isset( $_POST ) && isset( $_POST['_featured_image_id'] ) && ! empty( $_POST['_featured_image_id'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- only reads an attachment id to build the activity summary; this function is not hooked (its save_post action below is commented out).
+				$activity_summary .= sprintf( '<img src="%s">', esc_url( wp_get_attachment_url( (int) $_POST['_featured_image_id'] ) ) ); // phpcs:ignore WordPress.Security.NonceVerification.Missing -- only reads an attachment id to build the activity summary; this function is not hooked (its save_post action below is commented out).
 			}
 
 			// Backward compatibility filter for the blogs component.

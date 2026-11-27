@@ -16,15 +16,15 @@ defined( 'ABSPATH' ) || exit;
 $post_title = '';
 $no_results = '';
 
-if ( empty( $_GET['s'] ) || '' === $_GET['s'] ) {
+if ( empty( $_GET['s'] ) || '' === $_GET['s'] ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only search request; nothing is changed.
 	$post_title = __( 'No results found', 'buddyboss' );
 	$no_results = ' bb-rl-no-search-results';
 } elseif ( BP_Search::instance()->has_search_results() ) {
 	/* translators: %s: search query. */
-	$post_title = sprintf( __( 'Showing results for <span class="bb-rl-result-label">\'%s\'</span>', 'buddyboss' ), esc_html( sanitize_text_field( wp_unslash( $_GET['s'] ) ) ) );
+	$post_title = sprintf( __( 'Showing results for <span class="bb-rl-result-label">\'%s\'</span>', 'buddyboss' ), esc_html( sanitize_text_field( wp_unslash( $_GET['s'] ) ) ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only search request; nothing is changed.
 } else {
 	/* translators: %s: search query. */
-	$post_title = sprintf( __( 'No results for <span class="bb-rl-result-label">\'%s\'</span>', 'buddyboss' ), esc_html( sanitize_text_field( wp_unslash( $_GET['s'] ) ) ) );
+	$post_title = sprintf( __( 'No results for <span class="bb-rl-result-label">\'%s\'</span>', 'buddyboss' ), esc_html( sanitize_text_field( wp_unslash( $_GET['s'] ) ) ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only search request; nothing is changed.
 	$no_results = ' bb-rl-no-search-results';
 }
 ?>

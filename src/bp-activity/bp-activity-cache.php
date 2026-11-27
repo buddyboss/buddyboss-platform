@@ -291,8 +291,8 @@ function bb_activity_reset_cache_incrementor_on_privacy_change( $activity ) {
 	// Check if the request is an ajax request and the action is activity_update_privacy.
 	if (
 		! wp_doing_ajax() ||
-		empty( $_POST['action'] ) ||
-		'activity_update_privacy' !== $_POST['action'] ||
+		empty( $_POST['action'] ) || // phpcs:ignore WordPress.Security.NonceVerification.Missing -- only compares the AJAX action name; the nonce is checked in bp_nouveau_ajax_activity_update_privacy().
+		'activity_update_privacy' !== $_POST['action'] || // phpcs:ignore WordPress.Security.NonceVerification.Missing -- only compares the AJAX action name; the nonce is checked in bp_nouveau_ajax_activity_update_privacy().
 		empty( $activity->id )
 	) {
 		return;

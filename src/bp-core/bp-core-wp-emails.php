@@ -1378,7 +1378,7 @@ if ( ! function_exists( 'bp_email_newblog_notify_siteadmin' ) ) {
 		/* translators: %s: site URL. */
 		$msg .= '<p>' . sprintf( __( 'URL: %s', 'buddyboss' ), $siteurl ) . '</p>';
 		/* translators: %s: remote IP address. */
-		$msg .= '<p>' . sprintf( __( 'Remote IP address: %s', 'buddyboss' ), wp_unslash( $_SERVER['REMOTE_ADDR'] ) ) . '</p>';
+		$msg .= '<p>' . sprintf( __( 'Remote IP address: %s', 'buddyboss' ), ( isset( $_SERVER['REMOTE_ADDR'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) ) : '' ) ) . '</p>';
 		/* translators: %s: notification settings URL. */
 		$msg .= '<p>' . sprintf( __( 'Disable these notifications:%s', 'buddyboss' ), $options_site_url ) . '</p>';
 

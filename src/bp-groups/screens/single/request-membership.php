@@ -34,7 +34,7 @@ function groups_screen_group_request_membership() {
 			return false;
 		}
 
-		if ( ! groups_send_membership_request( array( 'user_id' => bp_loggedin_user_id(), 'group_id' => $bp->groups->current_group->id, 'content' => $_POST['group-request-membership-comments'] ) ) ) {
+		if ( ! groups_send_membership_request( array( 'user_id' => bp_loggedin_user_id(), 'group_id' => $bp->groups->current_group->id, 'content' => $_POST['group-request-membership-comments'] ) ) ) { // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- BP_Invitation::save() unslashes it and strips all HTML with wp_kses().
 			bp_core_add_message( __( 'There was an error sending your group membership request. Please try again.', 'buddyboss' ), 'error' );
 		} else {
 			bp_core_add_message( __( 'Your membership request was sent to the group organizer successfully. You will be notified when the group organizer responds to your request.', 'buddyboss' ) );

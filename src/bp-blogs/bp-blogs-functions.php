@@ -401,7 +401,7 @@ function bp_blogs_record_blog( $blog_id, $user_id, $no_activity = false ) {
 	bp_blogs_update_blogmeta( $recorded_blog->blog_id, 'thread_comments_depth', $thread_depth );
 	bp_blogs_update_blogmeta( $recorded_blog->blog_id, 'comment_moderation', $moderation );
 
-	$is_private = ! empty( $_POST['blog_public'] ) && (int) $_POST['blog_public'] ? false : true;
+	$is_private = ! empty( $_POST['blog_public'] ) && (int) $_POST['blog_public'] ? false : true; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- runs on wpmu_new_blog after the site exists and only reads its visibility flag; the BuddyBoss form is verified in bp_blogs_validate_blog_signup().
 
 	/**
 	 * Filters whether or not a new blog is public.
@@ -767,7 +767,7 @@ function bp_blogs_comment_sync_activity_comment( &$activity_id, $comment = null,
 	// Sync comment - activity comment
 	if ( ! bp_disable_blogforum_comments() ) {
 
-		if ( ! empty( $_REQUEST['action'] ) ) {
+		if ( ! empty( $_REQUEST['action'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- only checks that the request carries an action; nothing is read from it.
 			$existing_activity_id = get_comment_meta( $comment->comment_ID, 'bp_activity_comment_id', true );
 
 			if ( ! empty( $existing_activity_id ) ) {

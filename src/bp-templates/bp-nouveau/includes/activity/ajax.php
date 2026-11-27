@@ -156,8 +156,8 @@ function bp_nouveau_ajax_mark_activity_favorite() {
 		wp_send_json_error( $error_message );
 	}
 
-	$item_id   = sanitize_text_field( wp_unslash( $_POST['item_id'] ) );
-	$item_type = sanitize_text_field( wp_unslash( $_POST['item_type'] ) );
+	$item_id   = isset( $_POST['item_id'] ) ? sanitize_text_field( wp_unslash( $_POST['item_id'] ) ) : '';
+	$item_type = isset( $_POST['item_type'] ) ? sanitize_text_field( wp_unslash( $_POST['item_type'] ) ) : '';
 	$user_id   = bp_loggedin_user_id();
 
 	if ( ! bb_all_enabled_reactions( $item_type ) ) {
@@ -231,7 +231,7 @@ function bp_nouveau_ajax_unmark_activity_favorite() {
 	}
 
 	$item_id   = sanitize_text_field( wp_unslash( $_POST['item_id'] ) );
-	$item_type = sanitize_text_field( wp_unslash( $_POST['item_type'] ) );
+	$item_type = isset( $_POST['item_type'] ) ? sanitize_text_field( wp_unslash( $_POST['item_type'] ) ) : '';
 	$user_id   = bp_loggedin_user_id();
 
 	if ( ! bb_all_enabled_reactions( $item_type ) ) {
@@ -545,7 +545,7 @@ function bp_nouveau_ajax_get_single_activity_content() {
 	}
 
 	$args = array(
-		'activity_ids'     => $_POST['id'],
+		'activity_ids'     => $_POST['id'], // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- ids are run through wp_parse_id_list() in BP_Activity_Activity::get().
 		'display_comments' => 'stream',
 	);
 
@@ -663,9 +663,9 @@ function bp_nouveau_ajax_new_activity_comment() {
 	$comment_id = bp_activity_new_comment(
 		array(
 			'id'          => $edit_comment_id,
-			'activity_id' => $_POST['form_id'],
-			'content'     => $_POST['content'],
-			'parent_id'   => $_POST['comment_id'],
+			'activity_id' => sanitize_text_field( wp_unslash( $_POST['form_id'] ) ),
+			'content'     => $_POST['content'], // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- filtered by bp_activity_filter_kses() on bp_activity_content_before_save in BP_Activity_Activity::save().
+			'parent_id'   => sanitize_text_field( wp_unslash( $_POST['comment_id'] ) ),
 			'skip_error'  => false === $content ? false : true, // Pass true when $content will be not empty.
 		)
 	);
@@ -771,7 +771,7 @@ function bp_nouveau_ajax_get_activity_objects() {
 		wp_send_json_error( $response );
 	}
 
-	if ( 'group' === $_POST['type'] ) {
+	if ( isset( $_POST['type'] ) && 'group' === $_POST['type'] ) {
 		$exclude_groups                     = array();
 		$exclude_groups_args                = array();
 		$exclude_groups_args['user_id']     = bp_loggedin_user_id();
@@ -779,7 +779,7 @@ function bp_nouveau_ajax_get_activity_objects() {
 		$exclude_groups_args['fields']      = 'ids';
 		$exclude_groups_args['per_page']    = - 1;
 		if ( isset( $_POST['search'] ) ) {
-			$exclude_groups_args['search_terms'] = $_POST['search'];
+			$exclude_groups_args['search_terms'] = $_POST['search']; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- search term is escaped in BP_Groups_Group::get() (bp_esc_like() and $wpdb->prepare()).
 		}
 
 		$exclude_groups_query = groups_get_groups( $exclude_groups_args );
@@ -798,10 +798,10 @@ function bp_nouveau_ajax_get_activity_objects() {
 		$args['orderby']     = 'name';
 		$args['order']       = 'ASC';
 		if ( isset( $_POST['page'] ) ) {
-			$args['page'] = $_POST['page'];
+			$args['page'] = absint( $_POST['page'] );
 		}
 		if ( isset( $_POST['search'] ) ) {
-			$args['search_terms'] = $_POST['search'];
+			$args['search_terms'] = $_POST['search']; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- search term is escaped in BP_Groups_Group::get() (bp_esc_like() and $wpdb->prepare()).
 		}
 		if ( ! empty( $exclude_groups ) ) {
 			$args['exclude'] = $exclude_groups;
@@ -820,7 +820,7 @@ function bp_nouveau_ajax_get_activity_objects() {
 		 * @param array $response Array of custom response objects to send to AJAX return.
 		 * @param array $value    Activity object type from $_POST global.
 		 */
-		$response = apply_filters( 'bp_nouveau_get_activity_custom_objects', $response, $_POST['type'] );
+		$response = apply_filters( 'bp_nouveau_get_activity_custom_objects', $response, isset( $_POST['type'] ) ? sanitize_text_field( wp_unslash( $_POST['type'] ) ) : null );
 	}
 
 	if ( empty( $response ) ) {
@@ -959,7 +959,7 @@ function bp_nouveau_ajax_post_update() {
 		);
 	}
 
-	if ( ! strlen( trim( html_entity_decode( wp_strip_all_tags( $_POST['content'] ), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) ) ) ) {
+	if ( ! strlen( trim( html_entity_decode( wp_strip_all_tags( isset( $_POST['content'] ) ? wp_unslash( $_POST['content'] ) : '' ), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) ) ) ) {
 
 		// check activity toolbar options if one of them is set, activity can be empty.
 		$toolbar_option = false;
@@ -1019,7 +1019,7 @@ function bp_nouveau_ajax_post_update() {
 
 		$media_ids      = $activity_metas['bp_media_ids'][0] ?? '';
 		$existing_media = ( ! empty( $media_ids ) ) ? explode( ',', $media_ids ) : array();
-		$posted_media   = array_column( $_POST['media'], 'media_id' );
+		$posted_media   = array_column( $_POST['media'], 'media_id' ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- ids are parsed by wp_parse_id_list() on the next line.
 		$posted_media   = wp_parse_id_list( $posted_media );
 		$is_same_media  = ( count( $existing_media ) === count( $posted_media ) && ! array_diff( $existing_media, $posted_media ) );
 
@@ -1042,7 +1042,7 @@ function bp_nouveau_ajax_post_update() {
 
 		$document_ids      = $activity_metas['bp_document_ids'][0] ?? '';
 		$existing_document = ( ! empty( $document_ids ) ) ? explode( ',', $document_ids ) : array();
-		$posted_document   = array_column( $_POST['document'], 'document_id' );
+		$posted_document   = array_column( $_POST['document'], 'document_id' ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- ids are parsed by wp_parse_id_list() on the next line.
 		$posted_document   = wp_parse_id_list( $posted_document );
 		$is_same_document  = ( count( $existing_document ) === count( $posted_document ) && ! array_diff( $existing_document, $posted_document ) );
 
@@ -1162,7 +1162,7 @@ function bp_nouveau_ajax_post_update() {
 			);
 		}
 
-		$content = $_POST['content'];
+		$content = $_POST['content']; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- filtered by bp_activity_filter_kses() on bp_activity_content_before_save in BP_Activity_Activity::save().
 
 		if ( ! empty( $_POST['user_id'] ) && bp_get_displayed_user() && $_POST['user_id'] != bp_get_displayed_user()->id ) {
 			$content = sprintf( '@%s %s', bp_get_displayed_user_mentionname(), $content );
@@ -1216,7 +1216,7 @@ function bp_nouveau_ajax_post_update() {
 			$post_array = array(
 				'id'         => $activity_id,
 				'post_title' => $post_title,
-				'content'    => $_POST['content'],
+				'content'    => $_POST['content'], // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- filtered by bp_activity_filter_kses() on bp_activity_content_before_save in BP_Activity_Activity::save().
 				'group_id'   => $item_id,
 			);
 
@@ -1248,7 +1248,7 @@ function bp_nouveau_ajax_post_update() {
 		}
 	} else {
 		/** This filter is documented in bp-activity/bp-activity-actions.php */
-		$activity_id = apply_filters( 'bp_activity_custom_update', false, $object, $item_id, $_POST['content'] );
+		$activity_id = apply_filters( 'bp_activity_custom_update', false, $object, $item_id, $_POST['content'] ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- the raw (slashed) content is the documented argument of the bp_activity_custom_update filter.
 	}
 
 	if ( empty( $activity_id ) ) {
@@ -1346,7 +1346,7 @@ function bb_nouveau_ajax_post_draft_activity() {
 		wp_send_json_error();
 	}
 
-	$draft_activity = $_REQUEST['draft_activity'] ?? '';
+	$draft_activity = $_REQUEST['draft_activity'] ?? ''; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- kept slashed on purpose (see the comment below); the keys are validated below and it is saved with bp_update_user_meta().
 
 	if ( ! empty( $_REQUEST['draft_activity'] ) && ! is_array( $_REQUEST['draft_activity'] ) ) {
 		// The composer posts two ways and they arrive in different slash
@@ -2069,7 +2069,7 @@ function bp_nouveau_ajax_spam_activity() {
 		wp_send_json_error( $response );
 	}
 
-	$activity = new BP_Activity_Activity( (int) $_POST['id'] );
+	$activity = new BP_Activity_Activity( (int) $_POST['id'] ); // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked just below, once the activity id is known.
 
 	if ( empty( $activity->component ) ) {
 		wp_send_json_error( $response );
@@ -2202,7 +2202,7 @@ function bb_nouveau_ajax_activity_update_close_comments() {
 	}
 
 	$args = array(
-		'action'      => $_POST['close_comments_action'],
+		'action'      => sanitize_text_field( wp_unslash( $_POST['close_comments_action'] ) ),
 		'activity_id' => (int) $_POST['id'],
 		'user_id'     => bp_loggedin_user_id(),
 		'retval'      => 'string',
@@ -2483,7 +2483,7 @@ function bb_nouveau_ajax_toggle_activity_notification_status() {
 	}
 
 	$args = array(
-		'action'      => $_POST['notification_toggle_action'],
+		'action'      => sanitize_text_field( wp_unslash( $_POST['notification_toggle_action'] ) ),
 		'activity_id' => (int) $_POST['id'],
 		'user_id'     => bp_loggedin_user_id(),
 	);

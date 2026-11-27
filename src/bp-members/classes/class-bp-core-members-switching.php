@@ -147,7 +147,7 @@ class BP_Core_Members_Switching {
 				// Switch user:
 				$user = bp_member_switch_to( $user_id, self::remember() );
 				if ( $user ) {
-					$redirect_to = ( ! empty( $_GET['redirect_to'] ) ) ? $_GET['redirect_to'] : self::get_redirect( $user, $current_user );
+					$redirect_to = ( ! empty( $_GET['redirect_to'] ) ) ? $_GET['redirect_to'] : self::get_redirect( $user, $current_user ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- the URL is validated by wp_safe_redirect() below.
 
 					// Redirect to the dashboard or the home URL depending on capabilities:
 					$args = array(
@@ -248,7 +248,7 @@ class BP_Core_Members_Switching {
 				<p><span class="dashicons dashicons-admin-users" aria-hidden="true"></span>
 					<?php
 					$message       = '';
-					$just_switched = isset( $_GET['user_switched'] );
+					$just_switched = isset( $_GET['user_switched'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; only chooses the notice text.
 					if ( $just_switched ) {
 						$message = esc_html(
 							sprintf(
@@ -296,12 +296,12 @@ class BP_Core_Members_Switching {
 				</p>
 			</div>
 			<?php
-		} elseif ( isset( $_GET['user_switched'] ) ) {
+		} elseif ( isset( $_GET['user_switched'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; only chooses the notice text.
 			?>
 			<div id="bp_member_switching" class="updated notice is-dismissible">
 				<p>
 					<?php
-					if ( isset( $_GET['switched_back'] ) ) {
+					if ( isset( $_GET['switched_back'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; only chooses the notice text.
 						echo esc_html(
 							sprintf(
 								/* Translators: 1: user display name; 2: username; */
@@ -493,16 +493,17 @@ class BP_Core_Members_Switching {
 			);
 			$url = self::switch_back_url( $old_user );
 
-			if ( ! empty( $_REQUEST['interim-login'] ) ) {
+			if ( ! empty( $_REQUEST['interim-login'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; only builds the switch back link.
 				$url = add_query_arg(
 					array(
 						'interim-login' => '1',
 					),
 					$url
 				);
-			} elseif ( ! empty( $_REQUEST['redirect_to'] ) ) {
+			} elseif ( ! empty( $_REQUEST['redirect_to'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; only builds the switch back link.
 				$url = add_query_arg(
 					array(
+						// phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- read-only request; the value is urlencode()d here and the link is escaped with esc_url() below.
 						'redirect_to' => urlencode( wp_unslash( $_REQUEST['redirect_to'] ) ), // WPCS: sanitization ok
 					),
 					$url

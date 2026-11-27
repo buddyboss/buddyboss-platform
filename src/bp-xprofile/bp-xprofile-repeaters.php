@@ -203,14 +203,14 @@ function bp_profile_repeaters_update_field_data( $user_id, $posted_field_ids, $e
 	}
 
 	// First, clear the data for deleted fields, if any
-	if ( isset( $_POST['deleted_field_ids'] ) && ! empty( $_POST['deleted_field_ids'] ) ) {
-		$deleted_field_ids = wp_parse_id_list( wp_unslash( $_POST['deleted_field_ids'] ) );
+	if ( isset( $_POST['deleted_field_ids'] ) && ! empty( $_POST['deleted_field_ids'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked in xprofile_screen_edit_profile(), which fires xprofile_updated_profile through bb_xprofile_save_fields(); REST requests pass a permission callback.
+		$deleted_field_ids = wp_parse_id_list( wp_unslash( $_POST['deleted_field_ids'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked in xprofile_screen_edit_profile(), which fires xprofile_updated_profile through bb_xprofile_save_fields(); REST requests pass a permission callback.
 		foreach ( $deleted_field_ids as $deleted_field_id ) {
 			xprofile_delete_field_data( $deleted_field_id, $user_id );
 		}
 	}
 
-	$field_set_sequence = isset( $_POST['repeater_set_sequence'] ) ? wp_parse_id_list( wp_unslash( $_POST['repeater_set_sequence'] ) ) : array();
+	$field_set_sequence = isset( $_POST['repeater_set_sequence'] ) ? wp_parse_id_list( wp_unslash( $_POST['repeater_set_sequence'] ) ) : array(); // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked in xprofile_screen_edit_profile(), which fires xprofile_updated_profile through bb_xprofile_save_fields(); REST requests pass a permission callback.
 
 	// We'll take the data from all clone fields and dump it into the main/template field.
 	// This is done to ensure that search etc, work smoothly.
@@ -279,7 +279,7 @@ function bp_profile_repeaters_update_field_data( $user_id, $posted_field_ids, $e
 		}
 	}
 
-	if ( isset( $_POST['repeater_set_sequence'] ) ) {
+	if ( isset( $_POST['repeater_set_sequence'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked in xprofile_screen_edit_profile(), which fires xprofile_updated_profile through bb_xprofile_save_fields(); REST requests pass a permission callback.
 		bp_set_profile_field_set_count( $field_group_id, $user_id, count( $field_set_sequence ) );
 	}
 }
@@ -1255,19 +1255,19 @@ function bb_admin_profile_repeaters_update_field_data( $user_id, $posted_field_i
 	$bp = buddypress();
 
 	// Check for admin side repeater field.
-	if ( isset( $_POST['group'] ) && is_array( $_POST['group'] ) ) {
-		foreach ( $_POST['group'] as $field_group_id ) {
+	if ( isset( $_POST['group'] ) && is_array( $_POST['group'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked in BP_XProfile_User_Admin::user_admin_load(), which fires xprofile_updated_profile.
+		foreach ( wp_parse_id_list( wp_unslash( $_POST['group'] ) ) as $field_group_id ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked in BP_XProfile_User_Admin::user_admin_load(), which fires xprofile_updated_profile.
 			$is_repeater_enabled = 'on' === BP_XProfile_Group::get_group_meta( $field_group_id, 'is_repeater_enabled' ) ? true : false;
 			if ( ! $is_repeater_enabled ) {
 				return;
 			}
 
-			$repeater_field_ids = $_POST['field_ids'][ $field_group_id ];
+			$repeater_field_ids = isset( $_POST['field_ids'][ $field_group_id ] ) ? wp_parse_id_list( wp_unslash( $_POST['field_ids'][ $field_group_id ] ) ) : array(); // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked in BP_XProfile_User_Admin::user_admin_load(), which fires xprofile_updated_profile.
 			$posted_field_ids   = wp_parse_id_list( $repeater_field_ids );
 
 			// First, clear the data for deleted fields, if any.
-			if ( isset( $_POST['deleted_field_ids'][ $field_group_id ] ) && ! empty( $_POST['deleted_field_ids'][ $field_group_id ] ) ) {
-				$deleted_field_ids = wp_parse_id_list( wp_unslash( $_POST['deleted_field_ids'][ $field_group_id ] ) );
+			if ( isset( $_POST['deleted_field_ids'][ $field_group_id ] ) && ! empty( $_POST['deleted_field_ids'][ $field_group_id ] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked in BP_XProfile_User_Admin::user_admin_load(), which fires xprofile_updated_profile.
+				$deleted_field_ids = wp_parse_id_list( wp_unslash( $_POST['deleted_field_ids'][ $field_group_id ] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked in BP_XProfile_User_Admin::user_admin_load(), which fires xprofile_updated_profile.
 				foreach ( $deleted_field_ids as $deleted_field_id ) {
 					if ( ! in_array( $deleted_field_id, $posted_field_ids, true ) ) {
 						xprofile_delete_field_data( $deleted_field_id, $user_id );
@@ -1275,7 +1275,7 @@ function bb_admin_profile_repeaters_update_field_data( $user_id, $posted_field_i
 				}
 			}
 
-			$field_set_sequence = isset( $_POST['repeater_set_sequence'][ $field_group_id ] ) ? wp_parse_id_list( wp_unslash( $_POST['repeater_set_sequence'][ $field_group_id ] ) ) : array();
+			$field_set_sequence = isset( $_POST['repeater_set_sequence'][ $field_group_id ] ) ? wp_parse_id_list( wp_unslash( $_POST['repeater_set_sequence'][ $field_group_id ] ) ) : array(); // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked in BP_XProfile_User_Admin::user_admin_load(), which fires xprofile_updated_profile.
 
 			// We'll take the data from all clone fields and dump it into the main/template field.
 			// This is done to ensure that search etc, work smoothly.
@@ -1346,7 +1346,7 @@ function bb_admin_profile_repeaters_update_field_data( $user_id, $posted_field_i
 				}
 			}
 
-			if ( isset( $_POST['repeater_set_sequence'][ $field_group_id ] ) ) {
+			if ( isset( $_POST['repeater_set_sequence'][ $field_group_id ] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked in BP_XProfile_User_Admin::user_admin_load(), which fires xprofile_updated_profile.
 				bp_set_profile_field_set_count( $field_group_id, $user_id, count( $field_set_sequence ) );
 			}
 		}

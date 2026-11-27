@@ -2081,7 +2081,7 @@ function bbp_admin_reset_database() {
 	/** User */
 
 	// Delete users
-	if ( ! empty( $_POST['bbpress-delete-imported-users'] ) ) {
+	if ( ! empty( $_POST['bbpress-delete-imported-users'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked with check_admin_referer( 'bbpress-reset' ) in bbp_admin_reset_handler(), the only caller.
 		$sql_users = $bbp_db->get_results( "SELECT `user_id` FROM `{$bbp_db->usermeta}` WHERE `meta_key` = '_bbp_user_id'", OBJECT_K );
 		if ( ! empty( $sql_users ) ) {
 			$sql_meta = array();

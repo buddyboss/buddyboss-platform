@@ -543,7 +543,7 @@ function bp_nouveau_ajax_get_users_to_invite() {
 	$potential_invites->users = array_filter( $potential_invites->users );
 
 	$total_page = (int) $potential_invites->meta['total_page'];
-	$page       = ( isset( $_POST ) && '' !== $_POST['page'] && ! is_null( $_POST['page'] ) ) ? (int) $_POST['page'] : 1;
+	$page       = ( isset( $_POST['page'] ) && '' !== $_POST['page'] && ! is_null( $_POST['page'] ) ) ? (int) $_POST['page'] : 1;
 	$html       = '';
 	ob_start();
 
@@ -715,7 +715,7 @@ function bp_nouveau_ajax_send_group_invites() {
 		wp_send_json_error( $response );
 	}
 
-	$group_id = bp_get_current_group_id() ?: $_POST['group_id'];
+	$group_id = bp_get_current_group_id() ?: ( isset( $_POST['group_id'] ) ? (int) $_POST['group_id'] : 0 );
 
 	if ( bp_is_group_create() && ! empty( $_POST['group_id'] ) ) {
 		$group_id = (int) $_POST['group_id'];
@@ -734,7 +734,7 @@ function bp_nouveau_ajax_send_group_invites() {
 	// For feedback.
 	$invited = array();
 
-	foreach ( (array) $_POST['users'] as $user_id ) {
+	foreach ( (array) $_POST['users'] as $user_id ) { // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- each value is cast to int on the next line.
 		$user_id = (int) $user_id;
 
 		// Check friends & settings component is active and all members can be invited.
@@ -746,7 +746,7 @@ function bp_nouveau_ajax_send_group_invites() {
 			array(
 				'user_id'  => $user_id,
 				'group_id' => $group_id,
-				'content'  => $_POST['message'],
+				'content'  => isset( $_POST['message'] ) ? $_POST['message'] : '', // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- BP_Invitation::save() runs it through wp_unslash() and wp_kses().
 			)
 		);
 	}
@@ -799,7 +799,7 @@ function bp_nouveau_ajax_send_group_invites() {
  * @since BuddyPress 3.0.0
  */
 function bp_nouveau_ajax_remove_group_invite() {
-	$user_id  = (int) $_POST['user'];
+	$user_id  = isset( $_POST['user'] ) ? (int) $_POST['user'] : 0;
 	$group_id = bp_get_current_group_id();
 
 	$response = array(
@@ -894,13 +894,13 @@ function bp_nouveau_ajax_groups_get_group_members_listing() {
 
 	$per_page        = apply_filters( 'bp_nouveau_ajax_groups_get_group_members_listing_per_page', 10 );
 	$search_per_page = apply_filters( 'bp_nouveau_ajax_groups_get_group_members_listing_search_per_page', 99999999999999 );
-	$page            = (int) $_POST['page'];
+	$page            = isset( $_POST['page'] ) ? (int) $_POST['page'] : 0;
 
 	if ( isset( $_POST['term'] ) && '' !== $_POST['term'] ) {
 		$args = array(
 			'per_page'            => $search_per_page,
-			'group_id'            => $_POST['group'],
-			'search_terms'        => $_POST['term'],
+			'group_id'            => isset( $_POST['group'] ) ? (int) $_POST['group'] : 0,
+			'search_terms'        => $_POST['term'], // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- search term is escaped in BP_User_Query (bp_esc_like()), which BP_Group_Member_Query extends.
 			'exclude'             => array( bp_loggedin_user_id() ),
 			'exclude_admins_mods' => false,
 		);
@@ -908,7 +908,7 @@ function bp_nouveau_ajax_groups_get_group_members_listing() {
 		$args = array(
 			'page'                => $page,
 			'per_page'            => $per_page,
-			'group_id'            => $_POST['group'],
+			'group_id'            => isset( $_POST['group'] ) ? (int) $_POST['group'] : 0,
 			'exclude'             => array( bp_loggedin_user_id() ),
 			'exclude_admins_mods' => false,
 		);

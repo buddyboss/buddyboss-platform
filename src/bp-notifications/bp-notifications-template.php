@@ -206,15 +206,15 @@ function bp_has_notifications( $args = '' ) {
 	// Set the component action (by default false to get all actions)
 	$component_action = false;
 
-	if ( isset( $_REQUEST['type'] ) ) {
-		$component_action = sanitize_key( $_REQUEST['type'] );
+	if ( isset( $_REQUEST['type'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; list filter.
+		$component_action = sanitize_key( $_REQUEST['type'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; list filter.
 	}
 
 	// Set the search terms (by default an empty string to get all notifications)
 	$search_terms = '';
 
-	if ( isset( $_REQUEST['s'] ) ) {
-		$search_terms = stripslashes( $_REQUEST['s'] );
+	if ( isset( $_REQUEST['s'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; search term.
+		$search_terms = stripslashes( $_REQUEST['s'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash -- read-only search term; unslashed here and escaped with bp_esc_like() and $wpdb->prepare() in BP_Notifications_Notification.
 	}
 
 	// Parse the args.
@@ -1011,9 +1011,9 @@ function bp_notifications_sort_order_form() {
 	$selected = 'DESC';
 
 	// Check for a custom sort_order.
-	if ( ! empty( $_REQUEST['sort_order'] ) ) {
-		if ( in_array( $_REQUEST['sort_order'], $orders ) ) {
-			$selected = $_REQUEST['sort_order'];
+	if ( ! empty( $_REQUEST['sort_order'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; sort order.
+		if ( in_array( $_REQUEST['sort_order'], $orders ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; sort order.
+			$selected = sanitize_text_field( wp_unslash( $_REQUEST['sort_order'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; sort order.
 		}
 	} ?>
 

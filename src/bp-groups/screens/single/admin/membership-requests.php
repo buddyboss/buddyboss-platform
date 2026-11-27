@@ -25,7 +25,7 @@ function groups_screen_group_admin_requests() {
 		return false;
 	}
 
-	$request_action = isset( $_GET['action'] ) ? $_GET['action'] : false;
+	$request_action = isset( $_GET['action'] ) ? sanitize_text_field( wp_unslash( $_GET['action'] ) ) : false;
 	$user_id        = isset( $_GET['user_id'] ) ? (int) $_GET['user_id'] : false;
 	$group_id       = bp_get_current_group_id();
 

@@ -68,8 +68,8 @@ function bp_media_upload() {
 			bp_is_group_messages() ||
 			bp_is_messages_component() ||
 			(
-				! empty( $_POST['component'] ) &&
-				'messages' === $_POST['component']
+				! empty( $_POST['component'] ) && // phpcs:ignore WordPress.Security.NonceVerification.Missing -- runs inside bp_media_upload(); nonce checked in its AJAX caller bp_nouveau_ajax_media_upload().
+				'messages' === $_POST['component'] // phpcs:ignore WordPress.Security.NonceVerification.Missing -- runs inside bp_media_upload(); nonce checked in its AJAX caller bp_nouveau_ajax_media_upload().
 			)
 		)
 	) {
@@ -110,7 +110,7 @@ function bp_media_upload() {
 		 * @param int    $attachment_id     Attachment ID.
 		 */
 		$attachment_medium      = apply_filters( 'bb_media_attachment_medium', home_url( '/' ) . 'bb-attachment-media-preview/' . $attachment_id . '/bb-media-activity-image', $attachment_id, 'bb-media-activity-image' );
-		$attachment_message_url = ( isset( $_POST ) && isset( $_POST['thread_id'] ) ? home_url( '/' ) . 'bb-attachment-media-preview/' . $attachment_id . '/bb-media-activity-image/' . base64_encode( 'thread_' . $_POST['thread_id'] ) : '' );
+		$attachment_message_url = ( isset( $_POST ) && isset( $_POST['thread_id'] ) ? home_url( '/' ) . 'bb-attachment-media-preview/' . $attachment_id . '/bb-media-activity-image/' . base64_encode( 'thread_' . sanitize_text_field( wp_unslash( $_POST['thread_id'] ) ) ) : '' ); // phpcs:ignore WordPress.Security.NonceVerification.Missing -- runs inside bp_media_upload(); nonce checked in its AJAX caller bp_nouveau_ajax_media_upload().
 	}
 
 	$result = array(
@@ -571,7 +571,7 @@ function bp_media_add( $args = '' ) {
 		}
 	}
 
-	if ( isset( $_POST ) && isset( $_POST['action'] ) && 'groups_get_group_members_send_message' === $_POST['action'] ) {
+	if ( isset( $_POST ) && isset( $_POST['action'] ) && 'groups_get_group_members_send_message' === $_POST['action'] ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- only compares the request action with a fixed string to pick the privacy; nothing else is read from the request.
 		$media->privacy = 'message';
 	}
 
@@ -2732,12 +2732,12 @@ function bp_media_download_url_file() {
 		// Folder links have no single file to download.
 		$can_download_btn = false;
 
-		if ( 'folder' !== $_GET['media_type'] ) {
+		if ( 'folder' !== $_GET['media_type'] ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; file download, access checked with bb_media_user_can_access() below.
 
 			// Remove action to remove meta query for forums while download check.
 			remove_action( 'pre_get_posts', 'bbp_pre_get_posts_normalize_forum_visibility', 4 );
 
-			$media_privacy    = bb_media_user_can_access( $_GET['media_file'], 'photo', $_GET['attachment_id'] ); // phpcs:ignore WordPress.Security.NonceVerification
+			$media_privacy    = bb_media_user_can_access( sanitize_text_field( wp_unslash( $_GET['media_file'] ) ), 'photo', sanitize_text_field( wp_unslash( $_GET['attachment_id'] ) ) ); // phpcs:ignore WordPress.Security.NonceVerification
 			$can_download_btn = ( true === (bool) $media_privacy['can_download'] ) ? true : false;
 
 			// Videos share the media table; without the video component they must not
@@ -2752,7 +2752,7 @@ function bp_media_download_url_file() {
 			add_action( 'pre_get_posts', 'bbp_pre_get_posts_normalize_forum_visibility', 4 );
 		}
 		if ( $can_download_btn ) {
-			bp_media_download_file( $_GET['attachment_id'], $_GET['media_type'] ); // phpcs:ignore WordPress.Security.NonceVerification
+			bp_media_download_file( sanitize_text_field( wp_unslash( $_GET['attachment_id'] ) ), sanitize_text_field( wp_unslash( $_GET['media_type'] ) ) ); // phpcs:ignore WordPress.Security.NonceVerification
 		} else {
 			wp_safe_redirect( site_url() );
 			exit();

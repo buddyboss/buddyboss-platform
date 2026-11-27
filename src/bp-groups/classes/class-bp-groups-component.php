@@ -169,7 +169,7 @@ class BP_Groups_Component extends BP_Component {
 			}
 
 			// Actions - Random group handler.
-			if ( isset( $_GET['random-group'] ) ) {
+			if ( isset( $_GET['random-group'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; only redirects to a random group.
 				require $this->path . 'bp-groups/actions/random.php';
 			}
 

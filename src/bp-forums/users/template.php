@@ -1203,6 +1203,7 @@ function bbp_get_user_subscribe_link( $args = '', $user_id = 0, $wrap = true ) {
  * @uses bbp_is_single_user_edit() To check if it's the profile edit page
  */
 function bbp_notice_edit_user_success() {
+	// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only; only selects which notice to show.
 	if ( isset( $_GET['updated'] ) && ( bbp_is_single_user() || bbp_is_single_user_edit() ) ) : ?>
 
 	<div class="bp-feedback updated">
@@ -1505,17 +1506,17 @@ function bbp_get_user_replies_created_url( $user_id = 0 ) {
 function bbp_login_notices() {
 
 	// loggedout was passed
-	if ( ! empty( $_GET['loggedout'] ) && ( true === $_GET['loggedout'] ) ) {
+	if ( ! empty( $_GET['loggedout'] ) && ( true === $_GET['loggedout'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only; only selects which notice to show.
 		bbp_add_error( 'loggedout', __( 'You are now logged out.', 'buddyboss' ), 'message' );
 
 		// registration is disabled
-	} elseif ( ! empty( $_GET['registration'] ) && ( 'disabled' === $_GET['registration'] ) ) {
+	} elseif ( ! empty( $_GET['registration'] ) && ( 'disabled' === $_GET['registration'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only; only selects which notice to show.
 		bbp_add_error( 'registerdisabled', __( 'New user registration is currently not allowed.', 'buddyboss' ) );
 
 		// Prompt user to check their email
-	} elseif ( ! empty( $_GET['checkemail'] ) && in_array( $_GET['checkemail'], array( 'confirm', 'newpass', 'registered' ) ) ) {
+	} elseif ( ! empty( $_GET['checkemail'] ) && in_array( $_GET['checkemail'], array( 'confirm', 'newpass', 'registered' ) ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only; only selects which notice to show.
 
-		switch ( $_GET['checkemail'] ) {
+		switch ( $_GET['checkemail'] ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only; only selects which notice to show.
 
 			// Email needs confirmation
 			case 'confirm':
@@ -2116,7 +2117,7 @@ function bbp_current_user_can_access_create_reply_form() {
 		$retval = current_user_can( 'edit_topic', bbp_get_topic_id() );
 
 		// Check for ajax reply.
-	} elseif ( bbp_is_ajax() && isset( $_POST['action'] ) && 'reply' === $_POST['action'] ) {
+	} elseif ( bbp_is_ajax() && isset( $_POST['action'] ) && 'reply' === $_POST['action'] ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- read-only; only detects the AJAX reply request.
 		$retval = true;
 	}
 

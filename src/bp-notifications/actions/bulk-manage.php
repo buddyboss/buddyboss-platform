@@ -26,7 +26,7 @@ function bp_notifications_action_bulk_manage() {
 	// Get the action.
 	$action        = ! empty( $_POST['notification_bulk_action'] ) ? sanitize_text_field( wp_unslash( $_POST['notification_bulk_action'] ) ) : '';
 	$nonce         = ! empty( $_POST['notifications_bulk_nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['notifications_bulk_nonce'] ) ) : '';
-	$notifications = ! empty( $_POST['notifications'] ) ? $_POST['notifications'] : '';
+	$notifications = ! empty( $_POST['notifications'] ) ? $_POST['notifications'] : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash -- nonce checked below with wp_verify_nonce() before anything is changed; ids are run through wp_parse_id_list() below.
 
 	// Bail if no action or no IDs.
 	if ( ( ! in_array( $action, array( 'delete', 'read', 'unread' ) ) ) || empty( $notifications ) || empty( $nonce ) ) {

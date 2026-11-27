@@ -62,7 +62,7 @@ function bbp_get_search_query_args() {
 function bbp_search_results_redirect() {
 
 	// Bail if not a search request action
-	if ( empty( $_GET['action'] ) || ( 'bbp-search-request' !== $_GET['action'] ) ) {
+	if ( empty( $_GET['action'] ) || ( 'bbp-search-request' !== $_GET['action'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only search request; only redirects to the pretty search URL.
 		return;
 	}
 
@@ -115,8 +115,8 @@ function bbp_sanitize_search_request( $query_arg = 's' ) {
 	}
 
 	// Get search terms if requested
-	$terms = ! empty( $_REQUEST[ $query_arg ] )
-		? $_REQUEST[ $query_arg ]
+	$terms = ! empty( $_REQUEST[ $query_arg ] ) // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only search request; nothing is changed.
+		? $_REQUEST[ $query_arg ] // phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- sanitised with sanitize_title() below, after an array value is imploded; read-only search request; nothing is changed.
 		: false;
 
 	// Bail if query argument does not exist

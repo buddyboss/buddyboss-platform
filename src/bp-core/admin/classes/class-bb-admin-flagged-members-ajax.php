@@ -113,10 +113,10 @@ class BB_Admin_Flagged_Members_Ajax {
 	public function bb_get_flagged_members() {
 		$this->bb_verify_request();
 
-		$page     = isset( $_POST['page'] ) ? absint( $_POST['page'] ) : 1;
-		$per_page = isset( $_POST['per_page'] ) ? min( absint( $_POST['per_page'] ), 100 ) : 20;
-		$search   = isset( $_POST['search'] ) ? sanitize_text_field( wp_unslash( $_POST['search'] ) ) : '';
-		$status   = isset( $_POST['status'] ) ? sanitize_text_field( wp_unslash( $_POST['status'] ) ) : '';
+		$page     = isset( $_POST['page'] ) ? absint( $_POST['page'] ) : 1; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked in bb_verify_request().
+		$per_page = isset( $_POST['per_page'] ) ? min( absint( $_POST['per_page'] ), 100 ) : 20; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked in bb_verify_request().
+		$search   = isset( $_POST['search'] ) ? sanitize_text_field( wp_unslash( $_POST['search'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked in bb_verify_request().
+		$status   = isset( $_POST['status'] ) ? sanitize_text_field( wp_unslash( $_POST['status'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked in bb_verify_request().
 
 		// Whitelist validate status filter.
 		$valid_statuses = array( '', 'suspended', 'active' );
@@ -253,8 +253,8 @@ class BB_Admin_Flagged_Members_Ajax {
 	public function bb_get_member_report() {
 		$this->bb_verify_request();
 
-		$user_id       = isset( $_POST['user_id'] ) ? absint( $_POST['user_id'] ) : 0;
-		$moderation_id = isset( $_POST['moderation_id'] ) ? absint( $_POST['moderation_id'] ) : 0;
+		$user_id       = isset( $_POST['user_id'] ) ? absint( $_POST['user_id'] ) : 0; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked in bb_verify_request().
+		$moderation_id = isset( $_POST['moderation_id'] ) ? absint( $_POST['moderation_id'] ) : 0; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked in bb_verify_request().
 
 		if ( empty( $user_id ) || empty( $moderation_id ) ) {
 			wp_send_json_error( array( 'message' => __( 'Invalid member ID.', 'buddyboss' ) ) );
@@ -396,7 +396,7 @@ class BB_Admin_Flagged_Members_Ajax {
 	public function bb_suspend_member() {
 		$this->bb_verify_request();
 
-		$user_id = isset( $_POST['user_id'] ) ? absint( $_POST['user_id'] ) : 0;
+		$user_id = isset( $_POST['user_id'] ) ? absint( $_POST['user_id'] ) : 0; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked in bb_verify_request().
 
 		if ( empty( $user_id ) ) {
 			wp_send_json_error( array( 'message' => __( 'Invalid member ID.', 'buddyboss' ) ) );
@@ -426,7 +426,7 @@ class BB_Admin_Flagged_Members_Ajax {
 	public function bb_unsuspend_member() {
 		$this->bb_verify_request();
 
-		$user_id = isset( $_POST['user_id'] ) ? absint( $_POST['user_id'] ) : 0;
+		$user_id = isset( $_POST['user_id'] ) ? absint( $_POST['user_id'] ) : 0; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked in bb_verify_request().
 
 		if ( empty( $user_id ) ) {
 			wp_send_json_error( array( 'message' => __( 'Invalid member ID.', 'buddyboss' ) ) );
@@ -453,8 +453,8 @@ class BB_Admin_Flagged_Members_Ajax {
 	public function bb_bulk_action() {
 		$this->bb_verify_request();
 
-		$action   = isset( $_POST['bulk_action'] ) ? sanitize_text_field( wp_unslash( $_POST['bulk_action'] ) ) : '';
-		$user_ids = isset( $_POST['user_ids'] ) ? array_map( 'absint', wp_unslash( (array) $_POST['user_ids'] ) ) : array();
+		$action   = isset( $_POST['bulk_action'] ) ? sanitize_text_field( wp_unslash( $_POST['bulk_action'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked in bb_verify_request().
+		$user_ids = isset( $_POST['user_ids'] ) ? array_map( 'absint', wp_unslash( (array) $_POST['user_ids'] ) ) : array(); // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked in bb_verify_request().
 
 		if ( empty( $action ) || empty( $user_ids ) ) {
 			wp_send_json_error( array( 'message' => __( 'Invalid action or no members selected.', 'buddyboss' ) ) );

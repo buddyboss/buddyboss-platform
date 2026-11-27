@@ -50,7 +50,7 @@ function bp_core_ajax_widget_members() {
 	check_ajax_referer( 'bp_core_widget_members' );
 
 	// Setup some variables to check.
-	$filter      = ! empty( $_POST['filter'] ) ? $_POST['filter'] : 'recently-active-members';
+	$filter      = ! empty( $_POST['filter'] ) ? sanitize_text_field( wp_unslash( $_POST['filter'] ) ) : 'recently-active-members';
 	$max_members = ! empty( $_POST['max-members'] ) ? absint( $_POST['max-members'] ) : 5;
 
 	// Determine the type of members query to perform.

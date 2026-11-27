@@ -36,8 +36,8 @@ $os = bb_core_get_os();
 			style="width: 100%"
 		>
 			<?php
-			if ( ! empty( $_GET['r'] ) ) :
-				$recipient_slug = sanitize_text_field( wp_unslash( $_GET['r'] ) );
+			if ( ! empty( $_GET['r'] ) ) : // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only; only preselects the recipient in the compose form.
+				$recipient_slug = sanitize_text_field( wp_unslash( $_GET['r'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only; only preselects the recipient in the compose form.
 
 				if ( bp_is_username_compatibility_mode() ) {
 					$user_id = bp_core_get_userid( urldecode( $recipient_slug ) );

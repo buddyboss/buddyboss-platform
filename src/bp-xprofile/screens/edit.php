@@ -118,10 +118,10 @@ function xprofile_screen_edit_profile() {
 					}
 				}
 
-				$member_type_name = bp_get_member_type_key( $_POST[ 'field_' . $field_id ] );
+				$member_type_name = bp_get_member_type_key( (int) $_POST[ 'field_' . $field_id ] );
 
 				// Get selected profile type role.
-				$selected_member_type_wp_roles = get_post_meta( $_POST[ 'field_' . $field_id ], '_bp_member_type_wp_roles', true );
+				$selected_member_type_wp_roles = get_post_meta( (int) $_POST[ 'field_' . $field_id ], '_bp_member_type_wp_roles', true );
 
 				if ( bp_current_user_can( 'administrator' ) ) {
 					if ( empty( $selected_member_type_wp_roles ) || ( isset( $selected_member_type_wp_roles[0] ) && 'none' === $selected_member_type_wp_roles[0] ) ) {
@@ -177,7 +177,7 @@ function xprofile_screen_edit_profile() {
 				}
 			}
 
-			if ( empty( $social_fields_validation[ $field_id ] ) && isset( $_POST[ 'field_' . $field_id ] ) && $message = xprofile_validate_field( $field_id, $_POST[ 'field_' . $field_id ], bp_displayed_user_id() ) ) {
+			if ( empty( $social_fields_validation[ $field_id ] ) && isset( $_POST[ 'field_' . $field_id ] ) && $message = xprofile_validate_field( $field_id, $_POST[ 'field_' . $field_id ], bp_displayed_user_id() ) ) { // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- checked by the xprofile_validate_field callbacks; the saved value is sanitised by xprofile_sanitize_data_value_before_save().
 				$errors = true;
 
 				// Add social networks validation messages to validations array.
@@ -205,7 +205,7 @@ function xprofile_screen_edit_profile() {
 				);
 
 				$new_values[ $field_id ] = array(
-					'value'      => $_POST[ 'field_' . $field_id ] ?? '',
+					'value'      => $_POST[ 'field_' . $field_id ] ?? '', // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- not saved here: the submitted value is only handed to the bb_xprofile_error_on_updated_profile hook, in the same raw form xprofile_updated_profile receives.
 					'visibility' => $field_visibility,
 				);
 			}

@@ -74,7 +74,7 @@ add_action( 'xprofile_group_before_save', 'bb_xprofile_before_save_xprofile_grou
 function bb_xprofile_migrate_simple_to_repeater_fields_data( $xprofile ) {
 	global $wpdb, $bp, $bb_background_updater;
 
-	$repeater_enabled = isset( $_POST['group_is_repeater'] ) && 'on' == $_POST['group_is_repeater'] ? 'on' : 'off';
+	$repeater_enabled = isset( $_POST['group_is_repeater'] ) && 'on' == $_POST['group_is_repeater'] ? 'on' : 'off'; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked in BB_Admin_Profile_Fields_Ajax::bb_verify_request() by the handlers that post group_is_repeater; only compared with 'on'.
 	$previous_value   = bp_get_option( 'xprofile_group_' . $xprofile->id );
 
 	if (

@@ -161,7 +161,7 @@ class BP_Blogs_Component extends BP_Component {
 		}
 
 		// Actions.
-		if ( isset( $_GET['random-blog'] ) ) {
+		if ( isset( $_GET['random-blog'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; only loads the random-site redirect.
 			require $this->path . 'bp-blogs/actions/random.php';
 		}
 

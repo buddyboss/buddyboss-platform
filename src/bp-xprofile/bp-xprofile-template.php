@@ -688,10 +688,10 @@ function bp_get_the_profile_field_edit_value() {
 	}
 
 	// Was a new value posted? If so, use it instead.
-	if ( isset( $_POST[ 'field_' . $field->id ] ) ) {
+	if ( isset( $_POST[ 'field_' . $field->id ] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- read-only: redisplays the submitted value after a failed save; nothing is changed.
 
 		// This is sanitized via the filter below (based on the field type)
-		$field->data->value = $_POST[ 'field_' . $field->id ];
+		$field->data->value = $_POST[ 'field_' . $field->id ]; // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- read-only redisplay after a failed save; sanitised by the bp_get_the_profile_field_edit_value filters below (xprofile_sanitize_data_value_before_display(), bp_xprofile_escape_field_data(), stripslashes).
 	}
 
 	/**
@@ -932,8 +932,8 @@ function bp_get_the_profile_field_visibility_level() {
 	// On the registration page, values stored in POST should take
 	// precedence over default visibility, so that submitted values
 	// are not lost on failure.
-	if ( bp_is_register_page() && ! empty( $_POST[ 'field_' . $field->id . '_visibility' ] ) ) {
-		$retval = sanitize_text_field( wp_unslash( $_POST[ 'field_' . $field->id . '_visibility' ] ) );
+	if ( bp_is_register_page() && ! empty( $_POST[ 'field_' . $field->id . '_visibility' ] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- read-only: redisplays the visibility submitted on the registration form; nothing is changed.
+		$retval = sanitize_text_field( wp_unslash( $_POST[ 'field_' . $field->id . '_visibility' ] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Missing -- read-only: redisplays the visibility submitted on the registration form; nothing is changed.
 	} else {
 		$retval = ! empty( $field->visibility_level ) ? $field->visibility_level : 'public';
 	}
@@ -970,8 +970,8 @@ function bp_get_the_profile_field_visibility_level_label() {
 	// On the registration page, values stored in POST should take
 	// precedence over default visibility, so that submitted values
 	// are not lost on failure.
-	if ( bp_is_register_page() && ! empty( $_POST[ 'field_' . $field->id . '_visibility' ] ) ) {
-		$level = sanitize_text_field( wp_unslash( $_POST[ 'field_' . $field->id . '_visibility' ] ) );
+	if ( bp_is_register_page() && ! empty( $_POST[ 'field_' . $field->id . '_visibility' ] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- read-only: redisplays the visibility submitted on the registration form; nothing is changed.
+		$level = sanitize_text_field( wp_unslash( $_POST[ 'field_' . $field->id . '_visibility' ] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Missing -- read-only: redisplays the visibility submitted on the registration form; nothing is changed.
 	} else {
 		$level = ! empty( $field->visibility_level ) ? $field->visibility_level : 'public';
 	}

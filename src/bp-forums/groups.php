@@ -644,7 +644,7 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 				$group_id = bp_get_new_group_id();
 			}
 
-			$create_forum = ! empty( $_POST['bbp-create-group-forum'] ) ? true : false;
+			$create_forum = ! empty( $_POST['bbp-create-group-forum'] ) ? true : false; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked by bbp_verify_nonce_request() earlier in this method.
 			$forum_id     = 0;
 			$forum_ids    = bbp_get_group_forum_ids( $group_id );
 
@@ -988,12 +988,12 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 							$bbp->current_topic_id = get_the_ID();
 
 							// Merge
-							if ( ! empty( $_GET['action'] ) && 'merge' === $_GET['action'] ) :
+							if ( ! empty( $_GET['action'] ) && 'merge' === $_GET['action'] ) : // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only; only selects which form template to load.
 								bbp_set_query_name( 'bbp_topic_merge' );
 								bbp_get_template_part( 'form', 'topic-merge' );
 
 								// Split
-							elseif ( ! empty( $_GET['action'] ) && 'split' === $_GET['action'] ) :
+							elseif ( ! empty( $_GET['action'] ) && 'split' === $_GET['action'] ) : // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only; only selects which form template to load.
 								bbp_set_query_name( 'bbp_topic_split' );
 								bbp_get_template_part( 'form', 'topic-split' );
 
@@ -1049,7 +1049,7 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 							$bbp->current_reply_id = get_the_ID();
 
 							// Move
-							if ( ! empty( $_GET['action'] ) && ( 'move' === $_GET['action'] ) ) :
+							if ( ! empty( $_GET['action'] ) && ( 'move' === $_GET['action'] ) ) : // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only; only selects which form template to load.
 								bbp_set_query_name( 'bbp_reply_move' );
 								bbp_get_template_part( 'form', 'reply-move' );
 

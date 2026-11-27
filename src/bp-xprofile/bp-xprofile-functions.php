@@ -1905,10 +1905,10 @@ function bb_xprofile_prime_hidden_fields_for_users( $user_ids, $viewer_id = 0 ) 
  *              the datebox data.
  */
 function bp_xprofile_maybe_format_datebox_post_data( $field_id ) {
-	if ( ! isset( $_POST[ 'field_' . $field_id ] ) ) {
-		if ( ! empty( $_POST[ 'field_' . $field_id . '_day' ] ) && ! empty( $_POST[ 'field_' . $field_id . '_month' ] ) && ! empty( $_POST[ 'field_' . $field_id . '_year' ] ) ) {
+	if ( ! isset( $_POST[ 'field_' . $field_id ] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked by the calling handlers: xprofile_screen_edit_profile(), BP_XProfile_User_Admin::user_admin_load(), bp_core_screen_signup().
+		if ( ! empty( $_POST[ 'field_' . $field_id . '_day' ] ) && ! empty( $_POST[ 'field_' . $field_id . '_month' ] ) && ! empty( $_POST[ 'field_' . $field_id . '_year' ] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked by the calling handlers: xprofile_screen_edit_profile(), BP_XProfile_User_Admin::user_admin_load(), bp_core_screen_signup().
 			// Concatenate the values.
-			$date_value = $_POST[ 'field_' . $field_id . '_day' ] . ' ' . $_POST[ 'field_' . $field_id . '_month' ] . ' ' . $_POST[ 'field_' . $field_id . '_year' ];
+			$date_value = sanitize_text_field( wp_unslash( $_POST[ 'field_' . $field_id . '_day' ] ) ) . ' ' . sanitize_text_field( wp_unslash( $_POST[ 'field_' . $field_id . '_month' ] ) ) . ' ' . sanitize_text_field( wp_unslash( $_POST[ 'field_' . $field_id . '_year' ] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked by the calling handlers: xprofile_screen_edit_profile(), BP_XProfile_User_Admin::user_admin_load(), bp_core_screen_signup().
 
 			$timestamp = strtotime( $date_value );
 
@@ -3790,9 +3790,9 @@ function bb_xprofile_save_fields( $posted_field_ids = array(), $is_required = ar
 		foreach ( (array) $posted_field_ids as $field_id ) {
 
 			// Certain types of fields (checkboxes, multiselects) may come through empty. Save them as an empty array so that they don't get overwritten by the default on the next edit.
-			$value = $_POST[ 'field_' . $field_id ] ?? '';
+			$value = $_POST[ 'field_' . $field_id ] ?? ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- nonce checked in xprofile_screen_edit_profile(); sanitised on save by xprofile_sanitize_data_value_before_save() (xprofile_data_value_before_save), which expects the slashed value.
 
-			$visibility_level = ! empty( $_POST[ 'field_' . $field_id . '_visibility' ] ) ? $_POST[ 'field_' . $field_id . '_visibility' ] : 'public';
+			$visibility_level = ! empty( $_POST[ 'field_' . $field_id . '_visibility' ] ) ? sanitize_text_field( wp_unslash( $_POST[ 'field_' . $field_id . '_visibility' ] ) ) : 'public'; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked in xprofile_screen_edit_profile().
 
 			// Save the old and new values. They will be
 			// passed to the filter and used to determine
@@ -3875,7 +3875,7 @@ function bb_xprofile_save_fields( $posted_field_ids = array(), $is_required = ar
 function bb_migrate_xprofile_visibility( $background = false, $page = 1 ) {
 	global $wpdb, $bb_background_updater;
 
-	$page = ! empty( $_POST['offset'] ) ? (int) $_POST['offset'] : $page;
+	$page = ! empty( $_POST['offset'] ) ? (int) $_POST['offset'] : $page; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked in bp_admin_repair_tools_wrapper_function() when run as a repair tool.
 	$bp   = buddypress();
 	$args = array(
 		'number' => apply_filters( 'bb_migrate_xprofile_visibility_users_number', 100 ),

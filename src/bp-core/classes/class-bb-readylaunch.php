@@ -109,7 +109,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				$this->load_login_registration_integration();
 			} elseif (
 				isset( $_SERVER['SCRIPT_NAME'] ) &&
-				false !== stripos( wp_login_url(), $_SERVER['SCRIPT_NAME'] ) &&
+				false !== stripos( wp_login_url(), sanitize_text_field( wp_unslash( $_SERVER['SCRIPT_NAME'] ) ) ) &&
 				! $this->bb_rl_is_page_enabled_for_integration( 'registration' )
 			) {
 				// On wp-login.php with registration disabled, restore the default
@@ -4424,7 +4424,7 @@ JS;
 		 * @return object
 		 */
 		public function bb_rl_wp_login_errors( $errors ) {
-			if ( isset( $_GET['loggedout'] ) && $_GET['loggedout'] ) {
+			if ( isset( $_GET['loggedout'] ) && $_GET['loggedout'] ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- read-only request; the flag is only tested for truthiness.
 				$errors->remove( 'loggedout' );
 				$notice  = esc_html__( 'You are logged out', 'buddyboss' );
 				$notice .= ' <span class="bb-rl-updated-close"><i class="bb-icons-rl-x"></i></span>';
@@ -4444,8 +4444,8 @@ JS;
 		 * @return string
 		 */
 		public function bb_rl_modify_search_results_group_start_html( $html ) {
-			$bp_search = isset( $_REQUEST['bp_search'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['bp_search'] ) ) : '';
-			$view      = isset( $_REQUEST['view'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['view'] ) ) : '';
+			$bp_search = isset( $_REQUEST['bp_search'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['bp_search'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; nothing is changed.
+			$view      = isset( $_REQUEST['view'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['view'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; nothing is changed.
 			if ( $bp_search || $view ) {
 				return $html;
 			}

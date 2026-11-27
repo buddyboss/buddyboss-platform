@@ -57,11 +57,11 @@ function xprofile_screen_change_avatar() {
 
 		$args = array(
 			'item_id'       => bp_displayed_user_id(),
-			'original_file' => $_POST['image_src'],
-			'crop_x'        => $_POST['x'],
-			'crop_y'        => $_POST['y'],
-			'crop_w'        => $_POST['w'],
-			'crop_h'        => $_POST['h'],
+			'original_file' => $_POST['image_src'], // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotValidated, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- posted by the crop form; BP_Attachment_Avatar::crop() bails on an empty value, reduces it with basename() and requires the file to exist in the avatar folder.
+			'crop_x'        => $_POST['x'], // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotValidated, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- posted by the crop form; cast with (int) in BP_Attachment::crop() before wp_crop_image().
+			'crop_y'        => $_POST['y'], // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotValidated, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- posted by the crop form; cast with (int) in BP_Attachment::crop() before wp_crop_image().
+			'crop_w'        => $_POST['w'], // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotValidated, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- posted by the crop form; BP_Attachment_Avatar::crop() falls back to the full avatar size when empty and BP_Attachment::crop() casts it with (int).
+			'crop_h'        => $_POST['h'], // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotValidated, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- posted by the crop form; BP_Attachment_Avatar::crop() falls back to the full avatar size when empty and BP_Attachment::crop() casts it with (int).
 		);
 
 		if ( ! bp_core_avatar_handle_crop( $args ) ) {

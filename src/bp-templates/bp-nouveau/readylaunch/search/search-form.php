@@ -14,7 +14,7 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-$search_term = ! empty( $_REQUEST['s'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['s'] ) ) : '';
+$search_term = ! empty( $_REQUEST['s'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['s'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only search request; nothing is changed.
 ?>
 
 <div class="<?php bp_nouveau_search_container_class(); ?> bp-search-form">

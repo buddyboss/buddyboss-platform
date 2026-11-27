@@ -17,7 +17,7 @@ defined( 'ABSPATH' ) || exit;
 function bp_blogs_redirect_to_random_blog() {
 
 	// Bail if not looking for a random blog.
-	if ( ! bp_is_blogs_component() || ! isset( $_GET['random-blog'] ) ) {
+	if ( ! bp_is_blogs_component() || ! isset( $_GET['random-blog'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; only redirects to a random site.
 		return;
 	}
 

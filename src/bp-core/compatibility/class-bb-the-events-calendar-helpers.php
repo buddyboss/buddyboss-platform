@@ -73,8 +73,8 @@ class BB_The_Event_Calendar_Helpers {
 			(
 				true === (bool) defined( 'DOING_AJAX' ) &&
 				true === (bool) DOING_AJAX &&
-				isset( $_REQUEST['action'] ) &&
-				'bp_search_ajax' === $_REQUEST['action']
+				isset( $_REQUEST['action'] ) && // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; nothing is changed.
+				'bp_search_ajax' === $_REQUEST['action'] // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; nothing is changed.
 			)
 		) {
 			$query->set( 'tribe_suppress_query_filters', true );
@@ -137,7 +137,7 @@ class BB_The_Event_Calendar_Helpers {
 	public function bb_private_network_pre_check_event_ical( $is_public ) {
 
 		// Check if the private site is enabled and it's an iCal request.
-		if ( ! $is_public && ! empty( $_GET['ical'] ) ) {
+		if ( ! $is_public && ! empty( $_GET['ical'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; nothing is changed.
 			$is_public = true;
 		}
 

@@ -154,7 +154,7 @@ class BP_Moderation_Groups extends BP_Moderation_Abstract {
 	 */
 	public function restrict_single_item( $restrict, $group ) {
 
-		$username_visible = isset( $_GET['username_visible'] ) ? sanitize_text_field( wp_unslash( $_GET['username_visible'] ) ) : false;
+		$username_visible = isset( $_GET['username_visible'] ) ? sanitize_text_field( wp_unslash( $_GET['username_visible'] ) ) : false; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; only decides whether the item is shown.
 
 		if ( ! empty( $username_visible ) ) {
 			return $restrict;

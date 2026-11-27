@@ -25,14 +25,14 @@ function bp_core_screen_signup() {
 	if ( $allow_custom_registration && '' !== bp_custom_register_page_url() ) {
 
 		// Check it's not a Email Invites
-		if ( bp_is_active( 'invites' ) && isset( $_GET ) && isset( $_GET['bp-invites'] ) && 'accept-member-invitation' === $_GET['bp-invites'] ) {
+		if ( bp_is_active( 'invites' ) && isset( $_GET ) && isset( $_GET['bp-invites'] ) && 'accept-member-invitation' === $_GET['bp-invites'] ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; only redirects an invitation link to the custom registration page.
 			if ( wp_parse_url( bp_custom_register_page_url(), PHP_URL_QUERY ) ) {
-				$email   = isset( $_GET ) && isset( $_GET['email'] ) ? $_GET['email'] : '';
-				$inviter = isset( $_GET ) && isset( $_GET['inviter'] ) ? $_GET['inviter'] : '';
+				$email   = isset( $_GET ) && isset( $_GET['email'] ) ? $_GET['email'] : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- read-only request; the value is only passed on in the redirect URL, which bp_core_redirect() sends through wp_safe_redirect().
+				$inviter = isset( $_GET ) && isset( $_GET['inviter'] ) ? $_GET['inviter'] : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- read-only request; the value is only passed on in the redirect URL, which bp_core_redirect() sends through wp_safe_redirect().
 				$url = bp_custom_register_page_url() . '&bp-invites=accept-member-invitation&email=' . $email . '&inviter=' .$inviter . '&user_email=' . $email;
 			} else {
-				$email   = isset( $_GET ) && isset( $_GET['email'] ) ? $_GET['email'] : '';
-				$inviter = isset( $_GET ) && isset( $_GET['inviter'] ) ? $_GET['inviter'] : '';
+				$email   = isset( $_GET ) && isset( $_GET['email'] ) ? $_GET['email'] : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- read-only request; the value is only passed on in the redirect URL, which bp_core_redirect() sends through wp_safe_redirect().
+				$inviter = isset( $_GET ) && isset( $_GET['inviter'] ) ? $_GET['inviter'] : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- read-only request; the value is only passed on in the redirect URL, which bp_core_redirect() sends through wp_safe_redirect().
 				$url = bp_custom_register_page_url() . '?bp-invites=accept-member-invitation&email=' . $email . '&inviter=' .$inviter . '&user_email=' . $email;
 			}
 			bp_core_redirect( $url );
@@ -71,7 +71,7 @@ function bp_core_screen_signup() {
 		$bp->signup->step = 'registration-disabled';
 
 		// If the signup page is submitted, validate and save.
-	} elseif ( isset( $_POST['signup_submit'] ) && bp_verify_nonce_request( 'bp_new_signup' ) ) {
+	} elseif ( isset( $_POST['signup_submit'] ) && bp_verify_nonce_request( 'bp_new_signup' ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked on this line with bp_verify_nonce_request( 'bp_new_signup' ).
 
 		/**
 		 * Fires before the validation of a new signup.
@@ -97,7 +97,7 @@ function bp_core_screen_signup() {
 		}
 
 		// Check that both password fields are filled in.
-		if ( empty( $_POST['signup_password'] ) ) {
+		if ( empty( $_POST['signup_password'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked with bp_verify_nonce_request( 'bp_new_signup' ) at the top of this branch.
 			$bp->signup->errors['signup_password'] = __( 'Please make sure to enter your password.', 'buddyboss' );
 		}
 
@@ -105,12 +105,12 @@ function bp_core_screen_signup() {
 		if ( true === $email_opt ) {
 
 			// Check that both password fields are filled in.
-			if ( empty( $_POST['signup_email'] ) || empty( $_POST['signup_email_confirm'] ) ) {
+			if ( empty( $_POST['signup_email'] ) || empty( $_POST['signup_email_confirm'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked with bp_verify_nonce_request( 'bp_new_signup' ) at the top of this branch.
 				$bp->signup->errors['signup_email'] = __( 'Please make sure to enter your email twice.', 'buddyboss' );
 			}
 
 			// Check that the passwords match.
-			if ( ( ! empty( $_POST['signup_email'] ) && ! empty( $_POST['signup_email_confirm'] ) ) && strcasecmp( $_POST['signup_email'], $_POST['signup_email_confirm'] ) !== 0 ) {
+			if ( ( ! empty( $_POST['signup_email'] ) && ! empty( $_POST['signup_email_confirm'] ) ) && strcasecmp( $_POST['signup_email'], $_POST['signup_email_confirm'] ) !== 0 ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- nonce checked with bp_verify_nonce_request( 'bp_new_signup' ) at the top of this branch; the two addresses are only compared with each other.
 				$bp->signup->errors['signup_email'] = __( 'The emails entered do not match.', 'buddyboss' );
 			}
 		}
@@ -119,12 +119,12 @@ function bp_core_screen_signup() {
 		if ( true === $password_opt ) {
 
 			// Check that both password fields are filled in.
-			if ( empty( $_POST['signup_password'] ) || empty( $_POST['signup_password_confirm'] ) ) {
+			if ( empty( $_POST['signup_password'] ) || empty( $_POST['signup_password_confirm'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked with bp_verify_nonce_request( 'bp_new_signup' ) at the top of this branch.
 				$bp->signup->errors['signup_password'] = __( 'Please make sure to enter your password twice.', 'buddyboss' );
 			}
 
 			// Check that the passwords match.
-			if ( ( ! empty( $_POST['signup_password'] ) && ! empty( $_POST['signup_password_confirm'] ) ) && $_POST['signup_password'] != $_POST['signup_password_confirm'] ) {
+			if ( ( ! empty( $_POST['signup_password'] ) && ! empty( $_POST['signup_password_confirm'] ) ) && $_POST['signup_password'] != $_POST['signup_password_confirm'] ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked with bp_verify_nonce_request( 'bp_new_signup' ) at the top of this branch.
 				$bp->signup->errors['signup_password'] = __( 'The passwords entered do not match.', 'buddyboss' );
 			}
 		}
@@ -136,26 +136,26 @@ function bp_core_screen_signup() {
 		if ( bp_is_active( 'xprofile' ) ) {
 
 			// Make sure hidden field is passed and populated.
-			if ( isset( $_POST['signup_profile_field_ids'] ) && ! empty( $_POST['signup_profile_field_ids'] ) ) {
+			if ( isset( $_POST['signup_profile_field_ids'] ) && ! empty( $_POST['signup_profile_field_ids'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked with bp_verify_nonce_request( 'bp_new_signup' ) at the top of this branch.
 
 				// Let's compact any profile field info into an array.
-				$profile_field_ids = explode( ',', $_POST['signup_profile_field_ids'] );
+				$profile_field_ids = wp_parse_id_list( wp_unslash( $_POST['signup_profile_field_ids'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked with bp_verify_nonce_request( 'bp_new_signup' ) at the top of this branch.
 
 				// Loop through the posted fields formatting any datebox values then validate the field.
 				foreach ( (array) $profile_field_ids as $field_id ) {
 					bp_xprofile_maybe_format_datebox_post_data( $field_id );
 
 					// Trim post fields.
-					if ( isset( $_POST[ 'field_' . $field_id ] ) ) {
-						if ( is_array( $_POST[ 'field_' . $field_id ] ) ) {
-							$_POST[ 'field_' . $field_id ] = array_map( 'trim', $_POST[ 'field_' . $field_id ] );
+					if ( isset( $_POST[ 'field_' . $field_id ] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked with bp_verify_nonce_request( 'bp_new_signup' ) at the top of this branch.
+						if ( is_array( $_POST[ 'field_' . $field_id ] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked with bp_verify_nonce_request( 'bp_new_signup' ) at the top of this branch.
+							$_POST[ 'field_' . $field_id ] = array_map( 'trim', $_POST[ 'field_' . $field_id ] ); // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- nonce checked with bp_verify_nonce_request( 'bp_new_signup' ) at the top of this branch; the profile field value is kept as submitted and sanitised by xprofile_set_field_data() when it is saved.
 						} else {
-							$_POST[ 'field_' . $field_id ] = trim( $_POST[ 'field_' . $field_id ] );
+							$_POST[ 'field_' . $field_id ] = trim( $_POST[ 'field_' . $field_id ] ); // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- nonce checked with bp_verify_nonce_request( 'bp_new_signup' ) at the top of this branch; the profile field value is kept as submitted and sanitised by xprofile_set_field_data() when it is saved.
 						}
 					}
 
 					// Create errors for required fields without values.
-					if ( xprofile_check_is_required_field( $field_id ) && empty( $_POST[ 'field_' . $field_id ] ) && ! bp_current_user_can( 'bp_moderate' ) ) {
+					if ( xprofile_check_is_required_field( $field_id ) && empty( $_POST[ 'field_' . $field_id ] ) && ! bp_current_user_can( 'bp_moderate' ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked with bp_verify_nonce_request( 'bp_new_signup' ) at the top of this branch.
 						$bp->signup->errors[ 'field_' . $field_id ] = sprintf(
 							'<div class="bp-messages bp-feedback error">
 								<span class="bp-icon" aria-hidden="true"></span>
@@ -165,7 +165,7 @@ function bp_core_screen_signup() {
 						);
 					} else {
 						// Validate xprofile.
-						if ( isset( $_POST[ 'field_' . $field_id ] ) && $message = xprofile_validate_field( $field_id, $_POST[ 'field_' . $field_id ], '' ) ) {
+						if ( isset( $_POST[ 'field_' . $field_id ] ) && $message = xprofile_validate_field( $field_id, $_POST[ 'field_' . $field_id ], '' ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- nonce checked with bp_verify_nonce_request( 'bp_new_signup' ) at the top of this branch; the value is only validated here by the xprofile_validate_field filters.
 							if ( is_array( $message ) ) {
 								$message = implode( '<br>', $message ) . '</br>';
 							}
@@ -222,11 +222,11 @@ function bp_core_screen_signup() {
 		}
 
 		// Finally, let's check the blog details, if the user wants a blog and blog creation is enabled.
-		if ( isset( $_POST['signup_with_blog'] ) ) {
+		if ( isset( $_POST['signup_with_blog'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked with bp_verify_nonce_request( 'bp_new_signup' ) at the top of this branch.
 			$active_signup = bp_core_get_root_option( 'registration' );
 
 			if ( 'blog' == $active_signup || 'all' == $active_signup ) {
-				$blog_details = bp_core_validate_blog_signup( $_POST['signup_blog_url'], $_POST['signup_blog_title'] );
+				$blog_details = bp_core_validate_blog_signup( $_POST['signup_blog_url'], $_POST['signup_blog_title'] ); // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- nonce checked with bp_verify_nonce_request( 'bp_new_signup' ) at the top of this branch; the site name and title are validated by wpmu_validate_blog_signup().
 
 				// If there are errors with blog details, set them for display.
 				if ( ! empty( $blog_details['errors']->errors['blogname'] ) ) {
@@ -247,7 +247,7 @@ function bp_core_screen_signup() {
 		do_action( 'bp_signup_validate' );
 
 		// Adding error message for the legal agreement checkbox.
-		if ( true === bb_register_legal_agreement() && empty( $_POST['legal_agreement'] ) ) {
+		if ( true === bb_register_legal_agreement() && empty( $_POST['legal_agreement'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked with bp_verify_nonce_request( 'bp_new_signup' ) at the top of this branch.
 			$bp->signup->errors['legal_agreement'] = __( 'This is a required field.', 'buddyboss' );
 		}
 
@@ -279,7 +279,7 @@ function bp_core_screen_signup() {
 				// Make sure the profiles fields module is enabled.
 				if ( bp_is_active( 'xprofile' ) ) {
 					// Let's compact any profile field info into usermeta.
-					$profile_field_ids = explode( ',', $_POST['signup_profile_field_ids'] );
+					$profile_field_ids = wp_parse_id_list( wp_unslash( $_POST['signup_profile_field_ids'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked with bp_verify_nonce_request( 'bp_new_signup' ) at the top of this branch.
 
 					/*
 					 * Loop through the posted fields, formatting any
@@ -288,25 +288,25 @@ function bp_core_screen_signup() {
 					foreach ( (array) $profile_field_ids as $field_id ) {
 						bp_xprofile_maybe_format_datebox_post_data( $field_id );
 
-						if ( ! empty( $_POST[ 'field_' . $field_id ] ) ) {
-							$usermeta[ 'field_' . $field_id ] = $_POST[ 'field_' . $field_id ];
+						if ( ! empty( $_POST[ 'field_' . $field_id ] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked with bp_verify_nonce_request( 'bp_new_signup' ) at the top of this branch.
+							$usermeta[ 'field_' . $field_id ] = $_POST[ 'field_' . $field_id ]; // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- nonce checked with bp_verify_nonce_request( 'bp_new_signup' ) at the top of this branch; the profile field value is kept as submitted and sanitised by xprofile_set_field_data() when it is saved.
 						}
 
-						if ( ! empty( $_POST[ 'field_' . $field_id . '_visibility' ] ) ) {
-							$usermeta[ 'field_' . $field_id . '_visibility' ] = $_POST[ 'field_' . $field_id . '_visibility' ];
+						if ( ! empty( $_POST[ 'field_' . $field_id . '_visibility' ] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked with bp_verify_nonce_request( 'bp_new_signup' ) at the top of this branch.
+							$usermeta[ 'field_' . $field_id . '_visibility' ] = $_POST[ 'field_' . $field_id . '_visibility' ]; // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- nonce checked with bp_verify_nonce_request( 'bp_new_signup' ) at the top of this branch; the level is checked against the allowed levels in xprofile_set_field_visibility_level() when it is saved.
 						}
 					}
 
 					// Store the profile field ID's in usermeta.
-					$usermeta['profile_field_ids'] = $_POST['signup_profile_field_ids'];
+					$usermeta['profile_field_ids'] = sanitize_text_field( wp_unslash( $_POST['signup_profile_field_ids'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked with bp_verify_nonce_request( 'bp_new_signup' ) at the top of this branch.
 				}
 
 				// Hash and store the password.
-				$usermeta['password'] = wp_hash_password( $_POST['signup_password'] );
+				$usermeta['password'] = wp_hash_password( $_POST['signup_password'] ); // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- nonce checked with bp_verify_nonce_request( 'bp_new_signup' ) at the top of this branch; a password must not be changed by sanitising, it is only hashed here.
 
 				// If the user decided to create a blog, save those details to usermeta.
 				if ( 'blog' == $active_signup || 'all' == $active_signup ) {
-					$usermeta['public'] = ( isset( $_POST['signup_blog_privacy'] ) && 'public' == $_POST['signup_blog_privacy'] ) ? true : false;
+					$usermeta['public'] = ( isset( $_POST['signup_blog_privacy'] ) && 'public' == $_POST['signup_blog_privacy'] ) ? true : false; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked with bp_verify_nonce_request( 'bp_new_signup' ) at the top of this branch.
 				}
 
 				/**
@@ -319,7 +319,7 @@ function bp_core_screen_signup() {
 				$usermeta = apply_filters( 'bp_signup_usermeta', $usermeta );
 
 				// Finally, sign up the user and/or blog.
-				if ( isset( $_POST['signup_with_blog'] ) && is_multisite() ) {
+				if ( isset( $_POST['signup_with_blog'] ) && is_multisite() ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked with bp_verify_nonce_request( 'bp_new_signup' ) at the top of this branch.
 					$wp_user_id = bp_core_signup_blog(
 						$blog_details['domain'],
 						$blog_details['path'],
@@ -331,7 +331,7 @@ function bp_core_screen_signup() {
 				} else {
 					$wp_user_id = bp_core_signup_user(
 						bp_get_signup_username_value(),
-						$_POST['signup_password'],
+						$_POST['signup_password'], // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- nonce checked with bp_verify_nonce_request( 'bp_new_signup' ) at the top of this branch; a password must not be changed by sanitising, it is hashed when the user is created.
 						bp_get_signup_email_value(),
 						$usermeta
 					);
@@ -341,7 +341,7 @@ function bp_core_screen_signup() {
 					$bp->signup->step = 'request-details';
 					bp_core_add_message( $wp_user_id->get_error_message(), 'error' );
 				} else {
-					if ( ! empty( $wp_user_id ) && ! is_wp_error( $wp_user_id ) && ! empty( $_POST['legal_agreement'] ) ) {
+					if ( ! empty( $wp_user_id ) && ! is_wp_error( $wp_user_id ) && ! empty( $_POST['legal_agreement'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked with bp_verify_nonce_request( 'bp_new_signup' ) at the top of this branch.
 						update_user_meta( $wp_user_id, 'bb_legal_agreement', true );
 					}
 					$bp->signup->step = 'completed-confirmation';

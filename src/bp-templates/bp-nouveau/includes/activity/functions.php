@@ -90,7 +90,7 @@ function bp_nouveau_activity_enqueue_scripts() {
  */
 function bp_nouveau_activity_localize_scripts( $params = array() ) {
 	static $group_query_cache = array();
-	if ( ! bp_is_activity_component() && ! bp_is_group_activity() && ! bp_is_media_component() && ! bp_is_document_component() && ! bp_is_media_directory() && ! bp_is_document_directory() && ! bp_is_group_media() && ! bp_is_group_document() && ! bp_is_group_albums() && ! bp_is_group_folders() && ( ! isset( $_REQUEST ) && ! isset( $_REQUEST['bp_search'] ) ) ) {
+	if ( ! bp_is_activity_component() && ! bp_is_group_activity() && ! bp_is_media_component() && ! bp_is_document_component() && ! bp_is_media_directory() && ! bp_is_document_directory() && ! bp_is_group_media() && ! bp_is_group_document() && ! bp_is_group_albums() && ! bp_is_group_folders() && ( ! isset( $_REQUEST ) && ! isset( $_REQUEST['bp_search'] ) ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only; only decides whether the script strings are needed.
 		// media popup overlay needs activity scripts.
 		return $params;
 	}
@@ -548,8 +548,8 @@ function bp_nouveau_activity_scope_newest_class( $classes = '' ) {
 	 */
 	$scope = '';
 
-	if ( ! empty( $_POST['data']['bp_heartbeat']['scope'] ) ) {
-		$scope = sanitize_key( $_POST['data']['bp_heartbeat']['scope'] );
+	if ( ! empty( $_POST['data']['bp_heartbeat']['scope'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- read-only; the heartbeat scope only selects CSS classes.
+		$scope = sanitize_key( $_POST['data']['bp_heartbeat']['scope'] ); // phpcs:ignore WordPress.Security.NonceVerification.Missing -- read-only; the heartbeat scope only selects CSS classes.
 	}
 
 	// Add specific classes to perform specific actions on the client side.
