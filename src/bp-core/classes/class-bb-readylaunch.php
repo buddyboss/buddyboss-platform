@@ -1074,6 +1074,45 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		}
 
 		/**
+		 * Check if the request is for a media, video, document or feature image preview file.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @return bool True if the request is served by a file preview template.
+		 */
+		public function bb_rl_is_file_preview_request() {
+			$query_vars = array(
+				'bb-media-preview',
+				'media-attachment-id',
+				'bb-video-preview',
+				'bb-video-thumb-preview',
+				'video-attachment-id',
+				'bb-document-preview',
+				'bb-document-player',
+				'document-attachment-id',
+				'activity-feature-image-attachment-id',
+				'bb-activity-post-feature-image-attachment-id',
+			);
+
+			/**
+			 * Filters the query vars that mark a request as a file preview.
+			 *
+			 * @since BuddyBoss [BBVERSION]
+			 *
+			 * @param array $query_vars Query var names.
+			 */
+			$query_vars = (array) apply_filters( 'bb_rl_file_preview_query_vars', $query_vars );
+
+			foreach ( $query_vars as $query_var ) {
+				if ( ! empty( get_query_var( $query_var ) ) ) {
+					return true;
+				}
+			}
+
+			return false;
+		}
+
+		/**
 		 * Override the page templates.
 		 *
 		 * @since BuddyBoss 2.9.00
@@ -1088,6 +1127,12 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			if ( $wp_query->is_404() ) {
 				// For 404 pages, don't use ReadyLaunch layout.
 				// Let WordPress handle the 404 template naturally.
+				return $template;
+			}
+
+			// File preview URLs only set custom query vars, so they count as the blog home.
+			// Keep the template their own handler picked (PROD-10917).
+			if ( $this->bb_rl_is_file_preview_request() ) {
 				return $template;
 			}
 
