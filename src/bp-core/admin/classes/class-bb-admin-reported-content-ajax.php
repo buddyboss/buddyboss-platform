@@ -683,7 +683,7 @@ class BB_Admin_Reported_Content_Ajax {
 		$placeholders = implode( ',', array_fill( 0, count( $ids ), '%d' ) );
 		$rows         = $wpdb->get_results( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 			$wpdb->prepare(
-				"SELECT id, item_id, item_type FROM {$bp->moderation->table_name} WHERE id IN ({$placeholders})", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+				"SELECT id, item_id, item_type FROM {$bp->moderation->table_name} WHERE id IN ({$placeholders})", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
 				...$ids
 			)
 		);

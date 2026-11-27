@@ -3940,7 +3940,7 @@ function bb_update_to_2_6_70() {
 				// Delete related entries from the suspend details table.
 				$wpdb->query(
 					$wpdb->prepare(
-						"DELETE FROM {$suspend_details_table} WHERE suspend_id IN ($ids_placeholder)",
+						"DELETE FROM {$suspend_details_table} WHERE suspend_id IN ($ids_placeholder)", // phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare -- the placeholders are built above, one per value passed.
 						$ids_to_delete
 					)
 				);
@@ -3952,7 +3952,7 @@ function bb_update_to_2_6_70() {
 				// Delete related entries from the moderation table.
 				$wpdb->query(
 					$wpdb->prepare(
-						"DELETE FROM {$moderation_table} WHERE moderation_id IN ($ids_placeholder)",
+						"DELETE FROM {$moderation_table} WHERE moderation_id IN ($ids_placeholder)", // phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare -- the placeholders are built above, one per value passed.
 						$ids_to_delete
 					)
 				);
@@ -3964,7 +3964,7 @@ function bb_update_to_2_6_70() {
 				// Delete related entries from the moderation meta table.
 				$wpdb->query(
 					$wpdb->prepare(
-						"DELETE FROM {$moderation_meta_table} WHERE moderation_id IN ($ids_placeholder)",
+						"DELETE FROM {$moderation_meta_table} WHERE moderation_id IN ($ids_placeholder)", // phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare -- the placeholders are built above, one per value passed.
 						$ids_to_delete
 					)
 				);
@@ -3973,7 +3973,7 @@ function bb_update_to_2_6_70() {
 			// Delete the rows from the suspend table.
 			$wpdb->query(
 				$wpdb->prepare(
-					"DELETE FROM {$suspend_table} WHERE ID IN ($ids_placeholder)",
+					"DELETE FROM {$suspend_table} WHERE ID IN ($ids_placeholder)", // phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare -- the placeholders are built above, one per value passed.
 					$ids_to_delete
 				)
 			);

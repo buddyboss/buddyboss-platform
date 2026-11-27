@@ -388,7 +388,7 @@ add_action( 'bp_enqueue_scripts', 'bp_core_cover_image_scripts' );
  */
 function bp_core_add_jquery_cropper() {
 	wp_enqueue_style( 'jcrop' );
-	wp_enqueue_script( 'jcrop', array( 'jquery' ) );
+	wp_enqueue_script( 'jcrop' );
 
 	// This runs on wp_print_scripts, before the head scripts print, so the inline JS still attaches to the jcrop handle.
 	bp_core_add_cropper_inline_js();

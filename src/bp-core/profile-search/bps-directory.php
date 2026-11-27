@@ -89,8 +89,8 @@ function bp_ps_show_directory( $attr, $content ) {
 
 	if ( bp_ps_debug() ) {
 		echo "<!--\n";
-		print_r( $attr );
-		print_r( bp_ps_hidden_filters() );
+		print_r( $attr ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_print_r -- debug output, only when debugging is switched on.
+		print_r( bp_ps_hidden_filters() ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_print_r -- debug output, only when debugging is switched on.
 		echo "-->\n";
 	}
 

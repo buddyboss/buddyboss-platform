@@ -642,7 +642,8 @@ function bb_recaptcha_display( $action = '' ) {
 				'jquery',
 				'bb-recaptcha-api',
 			),
-			buddypress()->version
+			buddypress()->version,
+			false
 		);
 
 		if ( bb_recaptcha_conflict_mode() ) {

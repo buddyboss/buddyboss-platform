@@ -10410,9 +10410,9 @@ function bb_error_log( $log = '', $always_print = false ) {
 		true === $always_print
 	) {
 		if ( is_array( $log ) || is_object( $log ) ) {
-			error_log( print_r( $log, true ) );
+			error_log( print_r( $log, true ) ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log, WordPress.PHP.DevelopmentFunctions.error_log_print_r -- deliberate log entry for site administrators, not left-over debugging.
 		} else {
-			error_log( $log );
+			error_log( $log ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log -- deliberate log entry for site administrators, not left-over debugging.
 		}
 	}
 }

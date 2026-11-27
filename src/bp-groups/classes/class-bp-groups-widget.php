@@ -41,7 +41,7 @@ class BP_Groups_Widget extends WP_Widget {
 	 */
 	public function enqueue_scripts() {
 		$min = bp_core_get_minified_asset_suffix();
-		wp_enqueue_script( 'groups_widget_groups_list-js', buddypress()->plugin_url . "bp-groups/js/widget-groups{$min}.js", array( 'jquery' ), bp_get_version() );
+		wp_enqueue_script( 'groups_widget_groups_list-js', buddypress()->plugin_url . "bp-groups/js/widget-groups{$min}.js", array( 'jquery' ), bp_get_version(), false );
 	}
 
 	/**

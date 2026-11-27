@@ -2226,7 +2226,7 @@ class BB_Admin_Settings_Ajax {
 		// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- $placeholders is built from count() only; values are bound via $uncached in prepare() on next line.
 		$results = $wpdb->get_results(
 			$wpdb->prepare(
-				"SELECT option_name, option_value FROM {$wpdb->options} WHERE option_name IN ({$placeholders})",
+				"SELECT option_name, option_value FROM {$wpdb->options} WHERE option_name IN ({$placeholders})", // phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare -- the placeholders are built above, one per value passed.
 				$uncached
 			),
 			OBJECT_K

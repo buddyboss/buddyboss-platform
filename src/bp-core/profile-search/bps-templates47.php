@@ -22,7 +22,8 @@ function bp_ps_escaped_form_data47( $version ) {
 		'bp-ps-template',
 		buddypress()->plugin_url . 'bp-core/profile-search/bp-ps-template.js',
 		array(),
-		bp_get_version()
+		bp_get_version(),
+		false
 	);
 
 	$F            = new stdClass();

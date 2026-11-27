@@ -126,7 +126,7 @@ if ( ! class_exists( 'BP_Background_Updater' ) ) {
 					bb_error_log( sprintf( 'Finished running %s callback', json_encode( $callback ) ) );
 				}
 			} else {
-				error_log( sprintf( 'Could not find %s callback', json_encode( $callback ) ) );
+				error_log( sprintf( 'Could not find %s callback', json_encode( $callback ) ) ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log -- deliberate log entry for site administrators, not left-over debugging.
 			}
 
 			return $result ? $callback : false;

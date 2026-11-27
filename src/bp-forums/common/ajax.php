@@ -68,7 +68,9 @@ function bbp_do_ajax() {
 	}
 
 	// Set WordPress core ajax constant
-	define( 'DOING_AJAX', true );
+	if ( ! defined( 'DOING_AJAX' ) ) {
+		define( 'DOING_AJAX', true ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedConstantFound -- WordPress core constant, set for this theme-side AJAX request.
+	}
 
 	// Set the header content type
 	@header( 'Content-Type: text/html; charset=' . get_option( 'blog_charset' ) );

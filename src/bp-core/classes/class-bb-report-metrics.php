@@ -752,7 +752,7 @@ if ( ! class_exists( 'BB_Report_Metrics' ) ) {
 				}
 
 				$query = self::$wpdb->prepare(
-					implode( ' ', $query_parts ), // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- the parts above are string literals, the $wpdb->posts/$wpdb->postmeta table names and $status_placeholders (only '%s' repeated count( $config['status'] ) times); every value (post type, statuses, meta key, $since) is bound through $query_args.
+					implode( ' ', $query_parts ), // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare -- the parts above are string literals, the $wpdb->posts/$wpdb->postmeta table names and $status_placeholders (only '%s' repeated count( $config['status'] ) times); every value (post type, statuses, meta key, $since) is bound through $query_args.
 					$query_args
 				);
 
