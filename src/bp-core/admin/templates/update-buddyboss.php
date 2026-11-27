@@ -71,7 +71,7 @@ if ( false === $bb_changelog_data ) {
 }
 
 // If you have any video then add url here.
-$video_url = 'https://www.youtube.com/embed/ThTdHOYwNxU';
+$video_url = 'https://www.youtube-nocookie.com/embed/ThTdHOYwNxU';
 ?>
 <div id="bp-hello-backdrop" style="display: none;"></div>
 

@@ -1737,13 +1737,27 @@ function bp_nouveau_ajax_media_get_media_description() {
  */
 function bp_nouveau_ajax_media_get_album_view() {
 
-	$type = bb_filter_input_string( INPUT_POST, 'type' );
-	$id   = bb_filter_input_string( INPUT_POST, 'id' );
+	if ( ! is_user_logged_in() ) {
+		wp_send_json_error();
+	}
 
+	$type = bb_filter_input_string( INPUT_POST, 'type' );
+	$id   = absint( bb_filter_input_string( INPUT_POST, 'id' ) );
+
+	/*
+	 * The list is the "move to" picker: a member picks among their own albums, or
+	 * the albums of a group they belong to. The Add-ons video and document scripts
+	 * send this request without a nonce, so access is decided here instead.
+	 */
 	if ( 'profile' === $type ) {
+		if ( bp_loggedin_user_id() !== $id && ! bp_current_user_can( 'bp_moderate' ) ) {
+			$id = bp_loggedin_user_id();
+		}
 		$ul = bp_media_user_media_album_tree_view_li_html( $id, 0 );
-	} else {
+	} elseif ( $id && bp_is_active( 'groups' ) && ( groups_is_user_member( bp_loggedin_user_id(), $id ) || bp_current_user_can( 'bp_moderate' ) ) ) {
 		$ul = bp_media_user_media_album_tree_view_li_html( bp_loggedin_user_id(), $id );
+	} else {
+		$ul = '';
 	}
 
 	$first_text   = '';

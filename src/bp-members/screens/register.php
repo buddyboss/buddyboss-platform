@@ -384,6 +384,20 @@ function bp_signup_check_email_username() {
 
 	$signup_username = '';
 	$signup_email    = '';
+
+	// The request is the serialized register form, which carries the form's nonce.
+	// Without it nothing is looked up; the form submission validates everything again.
+	$nonce = isset( $_POST['_wpnonce'] ) ? sanitize_text_field( wp_unslash( $_POST['_wpnonce'] ) ) : '';
+	if ( ! wp_verify_nonce( $nonce, 'bp_new_signup' ) ) {
+		wp_send_json(
+			array(
+				'field_id'        => bp_xprofile_nickname_field_id(),
+				'signup_email'    => $signup_email,
+				'signup_username' => $signup_username,
+			)
+		);
+	}
+
 	$account_details = bp_core_validate_user_signup( bp_get_signup_username_value(), bp_get_signup_email_value() );
 	$email_opt       = function_exists( 'bp_register_confirm_email' ) && true === bp_register_confirm_email() ? true : false;
 	$password_opt    = function_exists( 'bp_register_confirm_password' ) && true === bp_register_confirm_password() ? true : false;
@@ -399,12 +413,15 @@ function bp_signup_check_email_username() {
 	if ( true === $email_opt ) {
 
 		// Check that both password fields are filled in.
-		if ( empty( $_POST['signup_email'] ) || empty( $_POST['signup_email_confirm'] ) ) {
+		$posted_email         = isset( $_POST['signup_email'] ) ? sanitize_email( wp_unslash( $_POST['signup_email'] ) ) : '';
+		$posted_email_confirm = isset( $_POST['signup_email_confirm'] ) ? sanitize_email( wp_unslash( $_POST['signup_email_confirm'] ) ) : '';
+
+		if ( empty( $posted_email ) || empty( $posted_email_confirm ) ) {
 			$signup_email = __( 'Please make sure to enter your email twice.', 'buddyboss' );
 		}
 
 		// Check that the passwords match.
-		if ( ( ! empty( $_POST['signup_email'] ) && ! empty( $_POST['signup_email_confirm'] ) ) && strcasecmp( $_POST['signup_email'], $_POST['signup_email_confirm'] ) !== 0 ) {
+		if ( ( ! empty( $posted_email ) && ! empty( $posted_email_confirm ) ) && strcasecmp( $posted_email, $posted_email_confirm ) !== 0 ) {
 			$signup_email = __( 'The emails entered do not match.', 'buddyboss' );
 		}
 	}

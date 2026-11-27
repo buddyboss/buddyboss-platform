@@ -37,7 +37,9 @@ if ( require __DIR__ . '/bp-core/bb-core-edition-precedence.php' ) {
 define( 'BB_PLATFORM_LOADED_FROM', __FILE__ );
 // @bbwt-com-end edition-precedence
 
+// @bbwt-com-start mothership-hub
 define('PLATFORM_EDITION', 'developer');
+// @bbwt-com-end mothership-hub
 
 if ( ! defined( 'BP_SOURCE_SUBDIRECTORY' ) && file_exists( dirname( __FILE__ ) . '/vendor/autoload.php' ) ) {
 	require dirname( __FILE__ ) . '/vendor/autoload.php';
@@ -111,7 +113,8 @@ if ( $bp_is_multisite ) {
 	}
 }
 $bp_plugins   = array_merge( $bp_sitewide_plugins, (array) get_option( 'active_plugins', array() ) );
-$bp_plugins[] = isset( $_REQUEST['plugin'] ) ? $_REQUEST['plugin'] : array();
+// Only compared with known plugin files below; never stored or printed.
+$bp_plugins[] = ( isset( $_REQUEST['plugin'] ) && is_string( $_REQUEST['plugin'] ) ) ? sanitize_text_field( wp_unslash( $_REQUEST['plugin'] ) ) : array(); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
 // Declared conditionally, like every other function in this file.
 if ( ! function_exists( 'bp_core_active_plugin_is' ) ) {
@@ -303,9 +306,11 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 			}
 		}
 
+		$bb_request_uri = isset( $_SERVER['REQUEST_URI'] ) ? esc_url_raw( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '';
+
 		if ( is_network_admin()
-			 || strpos( $_SERVER['REQUEST_URI'], $plugins_path ) !== false
-			 || strpos( $_SERVER['REQUEST_URI'], $ajax_path ) !== false
+			 || strpos( $bb_request_uri, $plugins_path ) !== false
+			 || strpos( $bb_request_uri, $ajax_path ) !== false
 		) {
 
 			/**
@@ -722,8 +727,18 @@ if ( ! function_exists( 'bp_core_load_buddypress_textdomain' ) ) {
 			//
 			// WP 6.1+ only (the registry does not exist earlier), so the fast path
 			// below may only trust this directory when the registration happened.
+			//
+			// Not before `after_setup_theme`: from the moment the registry knows a
+			// directory for this domain, the first translation call that finds no
+			// loaded catalog (every call on an English site) sends core's
+			// just-in-time loader to it, and WordPress 6.7+ reports that as "loading
+			// triggered too early" on every request, because Platform translates
+			// component and feature labels at `bp_loaded`. A catalog found by the
+			// probe above is still loaded at once by the loop below; only the
+			// registration waits for the init:0 run of this function.
 			if (
 				! $path_registered
+				&& did_action( 'after_setup_theme' )
 				&& isset( $GLOBALS['wp_textdomain_registry'] )
 				&& is_object( $GLOBALS['wp_textdomain_registry'] )
 				&& method_exists( $GLOBALS['wp_textdomain_registry'], 'set_custom_path' )
@@ -916,6 +931,13 @@ if ( ! function_exists( 'bp_core_load_buddypress_textdomain' ) ) {
 					unset( $GLOBALS['l10n'][ $domain ] );
 				}
 
+				return false;
+			}
+
+			// load_plugin_textdomain() registers the directory as well, so it waits
+			// for the same moment (see the registration above); the init:0 run of
+			// this function comes back here when no catalog was loaded.
+			if ( ! did_action( 'after_setup_theme' ) ) {
 				return false;
 			}
 

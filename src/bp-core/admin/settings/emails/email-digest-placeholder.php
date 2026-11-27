@@ -86,6 +86,7 @@ function bb_email_digest_addon_plugin_slug() {
 	return 'buddyboss-addons';
 }
 
+// @bbwt-com-start licence-state-probes
 /**
  * Plan SKU prefixes whose licence includes the Email Digest.
  *
@@ -146,6 +147,7 @@ function bb_email_digest_required_plans() {
 	 */
 	return (array) apply_filters( 'bb_email_digest_required_plans', $plans );
 }
+// @bbwt-com-end licence-state-probes
 
 // @bbwt-com-start licence-state-probes
 /**
