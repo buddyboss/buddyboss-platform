@@ -168,6 +168,7 @@ function bp_core_admin_settings() {
 // they are still referenced by the BP_Admin_Integration_tab base class
 // which Pro and third-party integration tabs extend.
 
+// @bbwt-com-start buddyboss-app-integration
 /**
  * Load the BuddyBoss App integration admin screen.
  *
@@ -181,6 +182,7 @@ function bp_core_admin_buddyboss_app() {
 	</div>
 	<?php
 }
+// @bbwt-com-end buddyboss-app-integration
 
 /**
  * Output settings API option.
