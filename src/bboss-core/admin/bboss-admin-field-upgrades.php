@@ -283,7 +283,7 @@ function bboss_get_field_upgrade_for( $feature_id, $panel_id = '', $section_id =
 
 				if ( empty( $matches ) ) {
 					if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
-						error_log( sprintf( 'bb_field_upgrades: catalog entry "%s" has no match/matches', $item['upgrade_title'] ?? '?' ) );
+						error_log( sprintf( 'bb_field_upgrades: catalog entry "%s" has no match/matches', $item['upgrade_title'] ?? '?' ) ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log -- deliberate log entry for site administrators, not left-over debugging.
 					}
 					continue;
 				}
@@ -293,7 +293,7 @@ function bboss_get_field_upgrade_for( $feature_id, $panel_id = '', $section_id =
 						// Require feature_id to prevent a malformed entry from
 						// hijacking every field on every screen.
 						if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
-							error_log( sprintf( 'bb_field_upgrades: match missing feature_id in "%s"', $item['upgrade_title'] ?? '?' ) );
+							error_log( sprintf( 'bb_field_upgrades: match missing feature_id in "%s"', $item['upgrade_title'] ?? '?' ) ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log -- deliberate log entry for site administrators, not left-over debugging.
 						}
 						continue;
 					}

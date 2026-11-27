@@ -38,7 +38,7 @@ if ( ! class_exists( 'BBoss_Notifications_Background_Updater' ) ) {
 			$dispatched = parent::dispatch();
 
 			if ( is_wp_error( $dispatched ) ) {
-				error_log( sprintf( 'Unable to dispatch BuddyBoss Notifications updater: %s', $dispatched->get_error_message() ) );
+				error_log( sprintf( 'Unable to dispatch BuddyBoss Notifications updater: %s', $dispatched->get_error_message() ) ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log -- deliberate log entry for site administrators, not left-over debugging.
 			}
 		}
 
@@ -126,7 +126,7 @@ if ( ! class_exists( 'BBoss_Notifications_Background_Updater' ) ) {
 					bboss_error_log( sprintf( 'Finished running %s callback', json_encode( $callback ) ) );
 				}
 			} else {
-				error_log( sprintf( 'Could not find %s callback', json_encode( $callback ) ) );
+				error_log( sprintf( 'Could not find %s callback', json_encode( $callback ) ) ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log -- deliberate log entry for site administrators, not left-over debugging.
 			}
 
 			return $result ? $callback : false;

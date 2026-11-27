@@ -929,9 +929,9 @@ function bboss_bbp_filter_anonymous_post_data( $args = '' ) {
 	$r = bboss_bbp_parse_args(
 		$args,
 		array(
-			'bbp_anonymous_name'    => ! empty( $_POST['bbp_anonymous_name'] ) ? sanitize_text_field( $_POST['bbp_anonymous_name'] ) : false,
-			'bbp_anonymous_email'   => ! empty( $_POST['bbp_anonymous_email'] ) ? sanitize_email( $_POST['bbp_anonymous_email'] ) : false,
-			'bbp_anonymous_website' => ! empty( $_POST['bbp_anonymous_website'] ) ? sanitize_text_field( $_POST['bbp_anonymous_website'] ) : false,
+			'bbp_anonymous_name'    => ! empty( $_POST['bbp_anonymous_name'] ) ? sanitize_text_field( wp_unslash( $_POST['bbp_anonymous_name'] ) ) : false,
+			'bbp_anonymous_email'   => ! empty( $_POST['bbp_anonymous_email'] ) ? sanitize_email( wp_unslash( $_POST['bbp_anonymous_email'] ) ) : false,
+			'bbp_anonymous_website' => ! empty( $_POST['bbp_anonymous_website'] ) ? sanitize_text_field( wp_unslash( $_POST['bbp_anonymous_website'] ) ) : false,
 		),
 		'filter_anonymous_post_data'
 	);

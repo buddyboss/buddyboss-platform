@@ -1022,7 +1022,7 @@ function bboss_avatar_ajax_delete() {
 	}
 
 	$avatar_data              = $_POST;
-	$avatar_data['item_type'] = isset( $_POST['item_type'] ) ? sanitize_text_field( $_POST['item_type'] ) : null;
+	$avatar_data['item_type'] = isset( $_POST['item_type'] ) ? sanitize_text_field( wp_unslash( $_POST['item_type'] ) ) : null;
 
 	if ( empty( $avatar_data['object'] ) || ( empty( $avatar_data['item_id'] ) && empty( $avatar_data['item_type'] ) ) ) {
 		wp_send_json_error();
@@ -1398,7 +1398,7 @@ add_action( 'wp_ajax_bp_avatar_upload', 'bp_avatar_ajax_upload' );
  * @return bool True on success, false on failure.
  */
 function bboss_avatar_handle_capture( $data = '', $item_id = 0 ) {
-	$item_type = isset( $_POST['item_type'] ) ? sanitize_text_field( $_POST['item_type'] ) : null;
+	$item_type = isset( $_POST['item_type'] ) ? sanitize_text_field( wp_unslash( $_POST['item_type'] ) ) : null;
 
 	if ( empty( $data ) || ( empty( $item_id ) && empty( $item_type ) ) ) {
 		return false;
@@ -1601,7 +1601,7 @@ function bboss_avatar_ajax_set() {
 		)
 	);
 
-	$avatar_data['item_type'] = isset( $_POST['item_type'] ) ? sanitize_text_field( $_POST['item_type'] ) : null;
+	$avatar_data['item_type'] = isset( $_POST['item_type'] ) ? sanitize_text_field( wp_unslash( $_POST['item_type'] ) ) : null;
 
 	if ( empty( $avatar_data['object'] ) || ( empty( $avatar_data['item_id'] ) && empty( $avatar_data['item_type'] ) ) || empty( $avatar_data['original_file'] ) ) {
 		wp_send_json_error();

@@ -1874,7 +1874,7 @@ if ( ! class_exists( 'BBoss_Members_Admin' ) ) :
 
 			} else {
 				if ( ! empty( $_REQUEST['signup_ids'] ) ) {
-					$signups = wp_parse_id_list( $_REQUEST['signup_ids'] );
+					$signups = wp_parse_id_list( wp_unslash( $_REQUEST['signup_ids'] ) );
 				}
 
 				// Handle resent activation links.
@@ -2362,7 +2362,7 @@ if ( ! class_exists( 'BBoss_Members_Admin' ) ) :
 			// Get the user IDs from the URL.
 			$ids = false;
 			if ( ! empty( $_POST['allsignups'] ) ) {
-				$ids = wp_parse_id_list( $_POST['allsignups'] );
+				$ids = wp_parse_id_list( wp_unslash( $_POST['allsignups'] ) );
 			} elseif ( ! empty( $_GET['signup_id'] ) ) {
 				$ids = absint( $_GET['signup_id'] );
 			}
@@ -2633,9 +2633,9 @@ if ( ! class_exists( 'BBoss_Members_Admin' ) ) :
 
 			$new_type = '';
 			if ( ! empty( $_REQUEST['bp_change_type2'] ) ) {
-				$new_type = sanitize_text_field( $_REQUEST['bp_change_type2'] );
+				$new_type = sanitize_text_field( wp_unslash( $_REQUEST['bp_change_type2'] ) );
 			} elseif ( ! empty( $_REQUEST['bp_change_type'] ) ) {
-				$new_type = sanitize_text_field( $_REQUEST['bp_change_type'] );
+				$new_type = sanitize_text_field( wp_unslash( $_REQUEST['bp_change_type'] ) );
 			}
 
 			// Check that the selected type actually exists.
@@ -2884,7 +2884,7 @@ if ( ! class_exists( 'BBoss_Members_Admin' ) ) :
 			global $pagenow;
 
 			if ( is_admin() && 'users.php' === $pagenow && ! empty( $_REQUEST['bp-member-type'] ) ) {
-				$type_slug = sanitize_text_field( $_REQUEST['bp-member-type'] );
+				$type_slug = sanitize_text_field( wp_unslash( $_REQUEST['bp-member-type'] ) );
 
 				// Check that the type is registered.
 				if ( null == bboss_get_member_type_object( $type_slug ) ) {

@@ -712,7 +712,7 @@ function bboss_ps_anyfield_search( $f ) {
 						$query_placeholder[] = '%' . bboss_ps_esc_like( $term ) . '%';
 					}
 				}
-				$sql['where'][ $filter ] = $wpdb->prepare( implode( ' OR ', $every_word_clauses ), ...$query_placeholder ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- every clause is the literal '( xpd.value LIKE %s )'; each search term is bound as a %s value.
+				$sql['where'][ $filter ] = $wpdb->prepare( implode( ' OR ', $every_word_clauses ), ...$query_placeholder ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare -- every clause is the literal '( xpd.value LIKE %s )'; each search term is bound as a %s value.
 			} else {
 				$sql['where'][ $filter ] = '1=1';
 			}

@@ -1493,7 +1493,7 @@ if ( ! class_exists( 'BBoss_Search_Members' ) ) :
 
 					case 'range':
 						// Date range search.
-						$conditions[] = $wpdb->prepare(
+						$conditions[] = $wpdb->prepare( // phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber -- the values are passed as one array holding one item per placeholder.
 							"field_id IN ({$field_ids_placeholders}) AND DATE(value) BETWEEN %s AND %s",
 							array_merge( $field_ids_sanitized, array( $date_value['start'], $date_value['end'] ) )
 						);

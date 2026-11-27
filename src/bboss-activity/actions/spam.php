@@ -78,7 +78,7 @@ function bboss_activity_action_spam_activity( $activity_id = 0 ) {
 
 	// Check for the redirect query arg, otherwise let WP handle things.
 	if ( ! empty( $_GET['redirect_to'] ) ) {
-		bboss_core_redirect( esc_url( $_GET['redirect_to'] ) );
+		bboss_core_redirect( esc_url( wp_unslash( $_GET['redirect_to'] ) ) );
 	} else {
 		bboss_core_redirect( wp_get_referer() );
 	}

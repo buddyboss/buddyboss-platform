@@ -921,7 +921,7 @@ add_filter( 'bp_repair_list', 'bb_moderation_migrate_old_data' );
 function bboss_moderation_admin_repair_old_moderation_data() {
 	global $wpdb;
 	$suspend_table            = "{$wpdb->base_prefix}bp_suspend";
-	$offset                   = isset( $_POST['offset'] ) ? (int) ( $_POST['offset'] ) : 0;
+	$offset                   = isset( $_POST['offset'] ) ? (int) $_POST['offset'] : 0;
 	// The offset counts rows already processed (the first request sends 0), so the next page
 	// starts at it; `$offset - 1` sent OFFSET -1 on the first request, which MySQL rejects.
 	$sql_offset               = max( 0, $offset );

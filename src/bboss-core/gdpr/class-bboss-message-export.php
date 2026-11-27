@@ -227,7 +227,7 @@ final class BBoss_Message_Export extends BBoss_Export {
 
 		$get_results = $wpdb->get_results(
 			$wpdb->prepare(
-				"SELECT *FROM {$table} WHERE thread_id IN ({$ids_in})",
+				"SELECT *FROM {$table} WHERE thread_id IN ({$ids_in})", // phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare -- the placeholders are built above, one per value passed.
 				$thread_ids
 			)
 		);

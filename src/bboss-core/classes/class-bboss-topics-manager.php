@@ -1427,14 +1427,14 @@ class BBoss_Topics_Manager {
 		if ( ! empty( $r['include'] ) ) {
 			$include_ids        = wp_parse_id_list( $r['include'] );
 			$include_ph         = implode( ',', array_fill( 0, count( $include_ids ), '%d' ) );
-			$where_conditions[] = $this->wpdb->prepare( "tr.topic_id IN ( {$include_ph} )", $include_ids ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+			$where_conditions[] = $this->wpdb->prepare( "tr.topic_id IN ( {$include_ph} )", $include_ids ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
 		}
 
 		// exclude.
 		if ( ! empty( $r['exclude'] ) ) {
 			$exclude_ids        = wp_parse_id_list( $r['exclude'] );
 			$exclude_ph         = implode( ',', array_fill( 0, count( $exclude_ids ), '%d' ) );
-			$where_conditions[] = $this->wpdb->prepare( "tr.topic_id NOT IN ( {$exclude_ph} )", $exclude_ids ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+			$where_conditions[] = $this->wpdb->prepare( "tr.topic_id NOT IN ( {$exclude_ph} )", $exclude_ids ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
 		}
 
 		/**

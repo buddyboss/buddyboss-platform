@@ -784,7 +784,7 @@ if ( ! class_exists( 'BBoss_BBP_Default' ) ) :
 
 			// Get user and forum data.
 			$user_id  = bboss_bbp_get_current_user_id();
-			$forum_id = intval( $_POST['id'] );
+			$forum_id = intval( wp_unslash( $_POST['id'] ) );
 
 			// Bail if user cannot add favorites for this user.
 			if ( ! current_user_can( 'edit_user', $user_id ) ) {
@@ -920,7 +920,7 @@ if ( ! class_exists( 'BBoss_BBP_Default' ) ) :
 
 			// Get user and topic data.
 			$user_id  = bboss_bbp_get_current_user_id();
-			$topic_id = intval( $_POST['id'] );
+			$topic_id = intval( wp_unslash( $_POST['id'] ) );
 
 			// Bail if user cannot add favorites for this user.
 			if ( ! current_user_can( 'edit_user', $user_id ) ) {

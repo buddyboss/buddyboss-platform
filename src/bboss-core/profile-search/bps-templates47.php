@@ -22,7 +22,8 @@ function bboss_ps_escaped_form_data47( $version ) {
 		'bp-ps-template',
 		bboss()->plugin_url . 'bboss-core/profile-search/bboss-ps-template.js',
 		array(),
-		bboss_get_version()
+		bboss_get_version(),
+		false
 	);
 
 	$F            = new stdClass();

@@ -895,7 +895,7 @@ function bboss_login_redirector() {
 	 * skip the login form and redirect them to the content.
 	 */
 	if ( bboss_loggedin_user_id() ) {
-		wp_safe_redirect( esc_url_raw( $_GET['redirect_to'] ) );
+		wp_safe_redirect( esc_url_raw( wp_unslash( $_GET['redirect_to'] ) ) );
 		exit;
 	}
 }

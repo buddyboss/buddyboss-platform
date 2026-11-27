@@ -1704,7 +1704,7 @@ function bboss_xprofile_repeater_field_repair_callback() {
 	global $wpdb;
 	$bp = bboss();
 
-	$offset = isset( $_POST['offset'] ) ? (int) ( $_POST['offset'] ) : 0;
+	$offset = isset( $_POST['offset'] ) ? (int) $_POST['offset'] : 0;
 
 	// Table names from $bp->profile; OFFSET bound as %d.
 	$added_fields = $wpdb->get_results(
