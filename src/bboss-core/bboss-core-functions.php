@@ -4766,8 +4766,8 @@ function bboss_ajax_get_suggestions() {
 	}
 
 	$args = array(
-			'term'        => sanitize_text_field( $_GET['term'] ),
-			'type'        => sanitize_text_field( $_GET['type'] ),
+			'term'        => sanitize_text_field( wp_unslash( $_GET['term'] ) ),
+			'type'        => sanitize_text_field( wp_unslash( $_GET['type'] ) ),
 			'count_total' => 'count_query',
 	);
 
@@ -5038,26 +5038,26 @@ function bboss_core_parse_url( $url ) {
 		}
 
 		if ( $original_url === $url ) {
-			$context = array(
-				'http' => array(
-					'method'          => 'GET',
-					// Stop at the first response so the Location header below reflects the redirect.
-					'follow_location' => 0,
-					'user_agent'      => $user_agent,
-				),
+			// Stop at the first response so the Location header reflects the redirect.
+			// wp_safe_remote_get() also refuses private and loopback addresses.
+			$redirect_response = wp_safe_remote_get(
+				$url,
+				array(
+					'redirection' => 0,
+					'headers'     => array(
+						'user-agent' => $user_agent,
+					),
+				)
 			);
 
-			@file_get_contents( $url, null, stream_context_create( $context ) );
-			if ( ! empty( $http_response_header ) && is_array( $http_response_header ) ) {
-				// Find the redirect target instead of relying on a fixed header position.
-				foreach ( $http_response_header as $response_header ) {
-					if ( 0 === stripos( $response_header, 'Location:' ) ) {
-						$new_url = trim( substr( $response_header, strlen( 'Location:' ) ) );
-						if ( filter_var( $new_url, FILTER_VALIDATE_URL ) ) {
-							$url = $new_url;
-						}
-						break;
-					}
+			if ( ! is_wp_error( $redirect_response ) ) {
+				$new_url = wp_remote_retrieve_header( $redirect_response, 'location' );
+				if ( is_array( $new_url ) ) {
+					$new_url = reset( $new_url );
+				}
+				$new_url = trim( (string) $new_url );
+				if ( filter_var( $new_url, FILTER_VALIDATE_URL ) ) {
+					$url = $new_url;
 				}
 			}
 		}
@@ -11640,15 +11640,6 @@ function bboss_has_paid_product() {
 		$detected = ( 'buddyboss-theme' === get_template() );
 
 
-		// Licence data from before the Mothership migration. Multisite stored
-		// this network-wide, so mirror the migration loader's site-option
-		// fallback or licensed pre-Mothership networks read as unpaid.
-		if ( ! $detected ) {
-			$detected = ! empty( get_option( 'bboss_updater_saved_licenses', array() ) );
-		}
-		if ( ! $detected && is_multisite() ) {
-			$detected = ! empty( get_site_option( 'bboss_updater_saved_licenses', array() ) );
-		}
 
 		/*
 		 * Only memoize once add-ons have had the chance to register (they do so

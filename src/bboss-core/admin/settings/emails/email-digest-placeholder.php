@@ -86,66 +86,6 @@ function bboss_email_digest_addon_plugin_slug() {
 	return 'buddyboss-addons';
 }
 
-/**
- * Plan SKU prefixes whose licence includes the Email Digest.
- *
- * Mirrors the allowlist the add-on's licence manager declares for the module. Duplicated
- * deliberately: Platform has to answer "is this plan entitled?" on a site where the add-on
- * is not installed at all, so it cannot ask the add-on. Matched as PREFIXES, which is what
- * makes the list tolerant of per-site-count variants of the same plan.
- *
- * @since BuddyBoss 3.5.0
- *
- * @return array List of lowercase plan SKU prefixes.
- */
-function bboss_email_digest_required_plans() {
-	// SINGLE SOURCE OF TRUTH when the add-on is installed. The list below is a copy, and a
-	// copy drifts: the moment a new plan SKU is added to the add-on's registry and not here,
-	// this panel starts telling entitled customers to upgrade (or, in the other direction,
-	// promises a digest that will never load). The add-on's accessor returns the PLAN
-	// requirement only — not its entitlement verdict, which also requires the module folder
-	// on disk and would send a customer on a valid plan with a stripped build to pricing.
-	if ( function_exists( 'bb_addons_module_plans' ) ) {
-		$from_addon = bb_addons_module_plans( 'notification-digest' );
-		if ( ! empty( $from_addon ) ) {
-			/** This filter is documented in src/bboss-core/admin/settings/emails/email-digest-placeholder.php */
-			return (array) apply_filters( 'bb_email_digest_required_plans', $from_addon );
-		}
-	}
-
-	// Fallback copy, for the case this panel exists FOR: a site where the add-on is not
-	// installed at all, so there is nothing to ask. Keep in sync with the `$bundled_plans`
-	// list in the add-on's class-bb-addons-license-manager.php.
-	$plans = array(
-		'bb-web-start',
-		'bb-plus-web',
-		'bb-lifetime-deal-10-sites',
-		'bb-lifetime-deal-5-sites',
-		'bb-lifetime-deal-2-sites',
-		'bb-lifetime-deal-1-site',
-		'bb-platform-pro-10-sites',
-		'bb-platform-pro-5-sites',
-		'bb-platform-pro-2-sites',
-		'bb-platform-pro-1-site',
-		'bb-web-20-sites',
-		'bb-web-10-sites',
-		'bb-web-5-sites',
-		'bb-web-2-sites',
-		'bb-web-1-site',
-		'bb-bundle',
-		'bb-web',
-		'bb-web-plus',
-	);
-
-	/**
-	 * Filters the plan SKU prefixes that include the Email Digest.
-	 *
-	 * @since BuddyBoss 3.5.0
-	 *
-	 * @param array $plans Lowercase plan SKU prefixes.
-	 */
-	return (array) apply_filters( 'bb_email_digest_required_plans', $plans );
-}
 
 
 

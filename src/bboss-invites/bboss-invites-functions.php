@@ -283,7 +283,7 @@ function bboss_invites_member_invite_register_screen_message() {
 			$args = array(
 				'post_type'      => bboss_get_invite_post_type(),
 				'posts_per_page' => -1,
-				'posts_author'   => base64_decode( $_GET['inviter'] ),
+				'posts_author'   => absint( base64_decode( sanitize_text_field( wp_unslash( $_GET['inviter'] ) ) ) ), // phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_decode -- id from the emailed invitation link.
 				'meta_query'     => array(
 					array(
 						'key'     => '_bp_invitee_email',
