@@ -202,9 +202,21 @@ class BP_REST_Media_Albums_Endpoint extends WP_REST_Controller {
 			}
 		}
 
+		// Drop a requested privacy level the current user may not see.
+		if (
+			! bp_current_user_can( 'bp_moderate' ) &&
+			! in_array( $args['privacy'], array_merge( array( 'public' ), array_slice( $privacy, 1 ) ), true )
+		) {
+			array_shift( $privacy );
+		}
+
 		if ( isset( $args['group_id'] ) && ! empty( $args['group_id'] ) ) {
 			$args['user_id'] = false;
 			$privacy         = array( 'grouponly' );
+		}
+
+		if ( empty( $privacy ) ) {
+			return bp_rest_response_add_total_headers( rest_ensure_response( array() ), 0, $request['per_page'] );
 		}
 
 		$args['privacy'] = $privacy;
@@ -248,10 +260,25 @@ class BP_REST_Media_Albums_Endpoint extends WP_REST_Controller {
 		}
 
 		$retval = array();
+		$hidden = 0;
 		foreach ( $medias['albums'] as $album ) {
+			// Leave out albums the current user may not view.
+			if (
+				'public' !== $album->privacy &&
+				! bp_current_user_can( 'bp_moderate' ) &&
+				true === $this->bp_rest_check_album_privacy_restriction( $album )
+			) {
+				++$hidden;
+				continue;
+			}
+
 			$retval[] = $this->prepare_response_for_collection(
 				$this->prepare_item_for_response( $album, $request )
 			);
+		}
+
+		if ( $hidden && is_numeric( $medias['total'] ) ) {
+			$medias['total'] = max( 0, (int) $medias['total'] - $hidden );
 		}
 
 		$response = rest_ensure_response( $retval );
