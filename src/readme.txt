@@ -3,7 +3,7 @@ Contributors: buddyboss
 Requires at least: 4.9.1
 Tested up to: 7.1
 Requires PHP: 7.4.0
-Stable tag: 3.7.1
+Stable tag: 3.8.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -55,6 +55,65 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 3.8.1 =
+* Bug: Activity - Fixed an issue where the close button on the discussion quick reply window did not work in the activity feed
+* Bug: Activity - Fixed an issue where the Edit option disappeared from the activity More Options menu when commenting was turned off
+* Bug: Activity - Fixed an issue where the emoji picker and topic dropdown were cut off on mobile and tablet screens in the post form
+* Bug: Blog - Fixed an issue where Member Blog pagination links broke and ignored the selected sort order
+* Bug: Core - Fixed a critical error that could make the website unavailable on the front end
+* Bug: Email - Fixed an issue where custom links could not be added in the email template editor
+* Bug: Email - Fixed an issue where WordPress system emails contained invalid markup around the user avatar
+* Bug: Groups - Fixed an issue where group members did not load when editing a group in the admin while BuddyPress Group Email Subscription was active
+* Bug: Groups - Fixed issues with the member search in group Manage > Members, including the reset button, the Enter key, and searches stopping after the first letter
+* Bug: Media - Fixed an issue where PHP symlink warnings flooded the error log on every media page load
+* Bug: Media - Fixed an issue where renaming a document or folder to an empty name appeared to succeed without showing an error
+* Bug: Members Account - Fixed an issue where saving an unchanged email address containing an apostrophe or ampersand created a false pending email change
+* Bug: Notifications - Fixed an issue where admins viewing another member's notification settings saw their own preferences instead
+* Bug: Notifications - Fixed an issue where notification counts could show incorrect numbers
+* Bug: Notifications - Fixed an issue where some notifications were incorrectly treated as read-only
+* Bug: Security - Fixed a security issue related to access to private activity content
+* Bug: Security - Fixed a security issue related to document privacy settings
+* Bug: Security - Fixed a security issue related to member invitations in the REST API
+* Bug: Security - Fixed a security issue related to renaming documents
+* Bug: Security - Fixed several security issues in the REST API related to access permissions
+
+= 3.8.0 =
+* Enhancement: Members - Added an option to load member and group lists with infinite scroll
+* Bug: Activity - Fixed an error message shown when pasting Google Maps links into an activity post
+* Bug: Activity - Fixed an issue where link previews showed a member avatar instead of the page image
+* Bug: Activity - Fixed an issue where link previews kept loading and never appeared
+* Bug: Activity - Fixed an issue where older posts without a title could not be updated from the app after post titles were made required
+* Bug: Activity - Fixed incorrect times shown on the admin Activity screen
+* Bug: Core - Fixed an issue where regular pages could show a 404 error until permalinks were saved again
+* Bug: Core - Fixed repeated database queries that slowed down page loads
+* Bug: Elementor - Fixed an issue where Elementor global colors and fonts could stop showing on the site
+* Bug: Email - Fixed an issue where the email digest did not work with some email sending plugins
+* Bug: Forums - Fixed an issue where membership access settings on forums were not saved correctly
+* Bug: Forums - Fixed PHP 8.3 errors when forum discussions are enabled
+* Bug: Groups - Fixed an issue where group email notifications were not sent for some groups
+* Bug: Groups - Fixed an issue where line breaks in group descriptions were removed when editing from the dashboard
+* Bug: Groups - Fixed an issue where the group type list did not appear on the group settings page with ReadyLaunch enabled
+* Bug: Media - Fixed an issue where video thumbnails were missing in comments and small videos slowed down page loads
+* Bug: Members - Fixed incorrect joined dates on member cards for sites in other languages
+* Bug: Messages - Fixed an issue where delayed email notifications for new messages were not sent after turning on Private Messaging
+* Bug: Moderation - Fixed an issue where reports for hidden posts with multiple images showed an unknown reporter and a broken link
+* Bug: Notifications - Fixed an issue where notification preferences could save unexpected values
+* Bug: ReadyLaunch - Fixed an issue where the Messages and Notifications quick links in the mobile menu could not be tapped
+* Bug: ReadyLaunch - Fixed issues with error messages and post status not updating correctly when managing media in pop-up windows
+* Bug: ReadyLaunch - Fixed the description placeholder text shown when uploading photos, videos and documents
+* Bug: Translations - Fixed an issue where profile field section labels were not translated in the Profile Completion widget
+* Bug: Translations - Fixed an issue where translated gender values did not show on the profile page
+
+= 3.7.2 =
+* Bug: Activity - Fixed an issue where an activity post containing only an emoji could not be posted
+* Bug: Core - Fixed a limitation in the API cache so the app can store separate cached responses for each app language
+* Bug: Elementor - Fixed an issue where the Elementor activity widget lost its custom layout after deleting media from a post
+* Bug: Media - Fixed an issue where choosing Move on an activity document opened the wrong popup when the feed had several document posts
+* Bug: Messages - Fixed an issue where messages that had been read still appeared in bold like unread messages
+* Bug: Moderation - Fixed an issue where long reasons were cut off when viewing a report on reported content
+* Bug: Profiles - Fixed an issue where the profile photo options could not be reached using the keyboard
+* Bug: Translations - Fixed an issue where formatting options in the rich text editor could not be translated
 
 = 3.7.1 =
 * Bug: Activity - Fixed a slowdown caused by activity post drafts with pasted images taking up too much storage

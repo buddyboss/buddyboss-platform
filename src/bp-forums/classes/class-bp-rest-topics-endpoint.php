@@ -147,7 +147,13 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 		);
 
 		if ( ! empty( $request['status'] ) ) {
-			$args['post_status'] = implode( ' ', $request['status'] );
+			// Keep it an array; WP_Query ignores a status string it can't split on commas and then filters by no status.
+			$args['post_status'] = (array) $request['status'];
+
+			// Closed topics are public topics too, and the documented default (publish private) has always returned them.
+			if ( in_array( bbp_get_public_status_id(), $args['post_status'], true ) ) {
+				$args['post_status'][] = bbp_get_closed_status_id();
+			}
 		}
 
 		if ( ! empty( $request['search'] ) ) {
@@ -444,10 +450,20 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 			);
 		}
 
-		if ( isset( $topic->post_type ) ) {
+		if ( true === $retval && isset( $topic->post_type ) ) {
 			$post_type = get_post_type_object( $topic->post_type );
 
-			if ( true === $retval && is_user_logged_in() && ! current_user_can( $post_type->cap->read_post, $topic->ID ) ) {
+			// read_topic always fails for guests, so limit them to public topics in public forums outside private/hidden groups.
+			// Members also need access to the forum's group, and hidden forums need read_hidden_forums, like the website.
+			$can_read = is_user_logged_in()
+				? current_user_can( $post_type->cap->read_post, $topic->ID ) && $this->forum_endpoint->bb_rest_member_can_read_forum( bbp_get_topic_forum_id( $topic->ID ) )
+				: (
+					in_array( $topic->post_status, bbp_get_public_topic_statuses(), true )
+					&& bbp_is_forum_public( bbp_get_topic_forum_id( $topic->ID ), false )
+					&& $this->forum_endpoint->can_access_content( bbp_get_topic_forum_id( $topic->ID ) )
+				);
+
+			if ( ! $can_read ) {
 				$retval = new WP_Error(
 					'bp_rest_authorization_required',
 					__( 'Sorry, you are not allowed to access this topic.', 'buddyboss' ),

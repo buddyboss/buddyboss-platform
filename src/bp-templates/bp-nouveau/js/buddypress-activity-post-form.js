@@ -42,6 +42,19 @@ window.bp = window.bp || {};
 	    bbRlDocument = bpNouveau.document,
 	    bbRlVideo    = bpNouveau.video;
 
+	// Build the WYSIWYG toolbar buttons list, applying translated tooltip labels when available
+	// so the format toolbar (bold, ordered list, quote, etc.) isn't stuck in MediumEditor's English defaults.
+	function bbGetActivityEditorToolbarButtons() {
+		var buttonNames  = [ 'bold', 'italic', 'unorderedlist', 'orderedlist', 'quote', 'anchor', 'pre', 'h3', 'h4' ],
+			buttonLabels = bpNouveau.activityEditorButtonLabels || {};
+
+		return buttonNames.map(
+			function ( buttonName ) {
+				return buttonLabels[ buttonName ] ? { name: buttonName, aria: buttonLabels[ buttonName ] } : buttonName;
+			}
+		);
+	}
+
 	_.extend( bp, _.pick( wp, 'Backbone', 'ajax', 'template' ) );
 
 	bp.Models      = bp.Models || {};
@@ -295,7 +308,7 @@ window.bp = window.bp || {};
 						hideOnClick: true
 					},
 					toolbar: {
-						buttons: [ 'bold', 'italic', 'unorderedlist', 'orderedlist', 'quote', 'anchor', 'pre', 'h3', 'h4' ],
+						buttons: bbGetActivityEditorToolbarButtons(),
 						relativeContainer: edit_activity_editor_content,
 						static: true,
 						updateOnEmptySelection: true
@@ -4319,7 +4332,8 @@ window.bp = window.bp || {};
 
 			var contentValidate = (
 				$( $.parseHTML( content ) ).text().trim() !== '' ||
-				content.includes( 'class="emoji"' ) ||
+				// Typed emoji render as img.emoji, while the emoji picker and restored drafts or edits use img.emojioneemoji.
+				0 < $( '<div></div>' ).append( $.parseHTML( content ) ).find( 'img.emoji, img.emojioneemoji' ).length ||
 				(
 					! _.isUndefined( this.postForm.model.get( 'link_success' ) ) &&
 					true === this.postForm.model.get( 'link_success' )
@@ -6249,7 +6263,7 @@ window.bp = window.bp || {};
 			loadURLPreview: function ( url ) {
 				var self = this;
 
-				var regexp = /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,24}(:[0-9]{1,5})?(\/.*)?$/;
+				var regexp = /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,24}(:[0-9]{1,5})?(\/.*)?$/i;
 				url        = $.trim( url );
 				if ( regexp.test( url ) ) {
 					if ( ( ! _.isUndefined( self.options.activity.get( 'link_success' ) ) && self.options.activity.get( 'link_success' ) == true ) && self.options.activity.get( 'link_url' ) === url ) {
@@ -6288,8 +6302,26 @@ window.bp = window.bp || {};
 					);
 
 					if ( ! urlResponse ) {
-						self.loadURLAjax = bp.ajax.post( 'bp_activity_parse_url', { url: url } ).always(
-							function ( response ) {
+						self.loadURLAjax = bp.ajax.send(
+							'bp_activity_parse_url',
+							{
+								data: { url: url },
+								// End a slow request with the same error instead of an endless loader.
+								timeout: BP_Nouveau.link_preview_timeout
+							}
+						).always(
+							function ( response, textStatus ) {
+								// A failed request passes the jqXHR here, not the parsed preview data.
+								if ( ! _.isObject( response ) || ! _.isUndefined( response.readyState ) ) {
+
+									// A newer request replaced this one.
+									if ( 'abort' === textStatus ) {
+										return;
+									}
+
+									response = { error: BP_Nouveau.link_preview_error };
+								}
+
 								self.setURLResponse( response, url );
 							}
 						);
@@ -6392,7 +6424,7 @@ window.bp = window.bp || {};
 											hideOnClick: true
 										},
 										toolbar: {
-											buttons: [ 'bold', 'italic', 'unorderedlist', 'orderedlist', 'quote', 'anchor', 'pre', 'h3', 'h4' ],
+											buttons: bbGetActivityEditorToolbarButtons(),
 											relativeContainer: whatsnewcontent,
 											static: true,
 											updateOnEmptySelection: true
