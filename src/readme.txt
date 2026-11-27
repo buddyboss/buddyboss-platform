@@ -100,7 +100,7 @@ BuddyBoss Platform connects to the services below only in the situations describ
 
 = BuddyBoss add-on and upgrade catalog (admin only) =
 
-* **What and when:** when an administrator opens BuddyBoss > Settings, the site fetches two small JSON files from `https://bb-features-marketing.s3.amazonaws.com` (the list of BuddyBoss add-ons that are not installed, and the descriptions and images shown in the upgrade windows of settings that need a paid add-on). The result is cached for six hours. The request is a plain download and carries no information about your site.
+* **What and when:** when an administrator opens BuddyBoss > Settings, and once a day in the background after an administrator has used the WordPress dashboard, the site fetches two small JSON files from `https://bb-features-marketing.s3.amazonaws.com` (the list of BuddyBoss add-ons that are not installed, and the descriptions and images shown in the upgrade windows of settings that need a paid add-on). The result is cached for six hours. The request is a plain download and carries no information about your site. When BuddyBoss > Settings shows those add-ons and upgrade windows, the administrator's browser loads their icons and pictures from the same address; as for any image, that request carries the browser's IP address and user agent.
 * **Who provides it:** BuddyBoss, hosted on Amazon S3. [Terms](https://www.buddyboss.com/terms-and-conditions/), [Privacy Policy](https://www.buddyboss.com/privacy-policy/).
 
 = "Chat with Buddy" support assistant (admin only, on click) =
@@ -118,9 +118,9 @@ BuddyBoss Platform connects to the services below only in the situations describ
 * **What and when:** for a member who has not uploaded a profile photo, and only while Gravatar is allowed as a fallback in the profile photo settings, the photo is requested from `https://www.gravatar.com/avatar/`. The address contains an MD5 hash of the member's email address and is requested by the visitor's browser; with the default "mystery person" setting the site itself also asks Gravatar, at most once every three hours per member, whether a photo exists for that hash.
 * **Who provides it:** Automattic Inc. [Terms of Service](https://wordpress.com/tos/), [Privacy Policy](https://automattic.com/privacy/).
 
-= YouTube and Vimeo (admin only, help panels and upgrade windows) =
+= YouTube and Vimeo (admin only, help panels, welcome and upgrade windows) =
 
-* **What and when:** some help panels and upgrade windows in BuddyBoss > Settings show a short video. Nothing is loaded until an administrator opens such a panel or window; then the browser loads the video player from `https://www.youtube-nocookie.com` or `https://player.vimeo.com`. No site data is sent by the plugin.
+* **What and when:** some help panels, welcome windows and upgrade windows in the BuddyBoss admin screens show a short video. Nothing is loaded until an administrator opens such a panel or window; then the browser loads the video player from `https://www.youtube-nocookie.com` or `https://player.vimeo.com`. No site data is sent by the plugin.
 * **Who provides it:** Google LLC ([Terms of Service](https://www.youtube.com/t/terms), [Privacy Policy](https://policies.google.com/privacy)) and Vimeo.com, Inc. ([Terms of Service](https://vimeo.com/terms), [Privacy Policy](https://vimeo.com/privacy)).
 
 == Changelog ==

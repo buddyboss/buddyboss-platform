@@ -114,6 +114,7 @@ if ( function_exists( 'bboss_email_digest_addon_plugin_slug' ) && ! function_exi
 // @bbwt-com-end compat-layer
 
 
+// @bbwt-com-start licence-state-probes
 /**
  * Plan SKU prefixes whose licence includes the Email Digest.
  *
@@ -188,6 +189,7 @@ if ( function_exists( 'bboss_email_digest_required_plans' ) && ! function_exists
 }
 // @bbwt-com-end compat-layer
 
+// @bbwt-com-end licence-state-probes
 
 // @bbwt-com-start licence-state-probes
 /**
