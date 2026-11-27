@@ -2034,7 +2034,7 @@ if ( ! class_exists( 'BBoss_Members_Admin' ) ) :
 									'%s activation email successfully sent! ',
 									'%s activation emails successfully sent! ',
 									absint( $_REQUEST['resent'] ), // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; only chooses the admin notice.
-									'buddyboss'
+									'buddyboss-community-social-network-groups-forums-messaging'
 								),
 								bboss_core_number_format( absint( $_REQUEST['resent'] ) ) // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; only chooses the admin notice.
 							);
@@ -2047,7 +2047,7 @@ if ( ! class_exists( 'BBoss_Members_Admin' ) ) :
 									'%s activation email was not sent.',
 									'%s activation emails were not sent.',
 									absint( $_REQUEST['notsent'] ), // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; only chooses the admin notice.
-									'buddyboss'
+									'buddyboss-community-social-network-groups-forums-messaging'
 								),
 								bboss_core_number_format( absint( $_REQUEST['notsent'] ) ) // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; only chooses the admin notice.
 							);
@@ -2072,7 +2072,7 @@ if ( ! class_exists( 'BBoss_Members_Admin' ) ) :
 									'%s account successfully activated! ',
 									'%s accounts successfully activated! ',
 									absint( $_REQUEST['activated'] ), // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; only chooses the admin notice.
-									'buddyboss'
+									'buddyboss-community-social-network-groups-forums-messaging'
 								),
 								bboss_core_number_format( absint( $_REQUEST['activated'] ) ) // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; only chooses the admin notice.
 							);
@@ -2085,7 +2085,7 @@ if ( ! class_exists( 'BBoss_Members_Admin' ) ) :
 									'%s account was not activated.',
 									'%s accounts were not activated.',
 									absint( $_REQUEST['notactivated'] ), // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; only chooses the admin notice.
-									'buddyboss'
+									'buddyboss-community-social-network-groups-forums-messaging'
 								),
 								bboss_core_number_format( absint( $_REQUEST['notactivated'] ) ) // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; only chooses the admin notice.
 							);
@@ -2110,7 +2110,7 @@ if ( ! class_exists( 'BBoss_Members_Admin' ) ) :
 									'%s sign-up successfully deleted!',
 									'%s sign-ups successfully deleted!',
 									absint( $_REQUEST['deleted'] ), // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; only chooses the admin notice.
-									'buddyboss'
+									'buddyboss-community-social-network-groups-forums-messaging'
 								),
 								bboss_core_number_format( absint( $_REQUEST['deleted'] ) ) // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; only chooses the admin notice.
 							);
@@ -2123,7 +2123,7 @@ if ( ! class_exists( 'BBoss_Members_Admin' ) ) :
 									'%s sign-up was not deleted.',
 									'%s sign-ups were not deleted.',
 									absint( $_REQUEST['notdeleted'] ), // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; only chooses the admin notice.
-									'buddyboss'
+									'buddyboss-community-social-network-groups-forums-messaging'
 								),
 								bboss_core_number_format( absint( $_REQUEST['notdeleted'] ) ) // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; only chooses the admin notice.
 							);
