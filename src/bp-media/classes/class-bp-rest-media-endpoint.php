@@ -249,11 +249,48 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 		 */
 		$args = apply_filters( 'bp_rest_media_get_items_query_args', $args, $request );
 
+		// Set to false when this viewer may see none of the requested media.
+		$can_see_media = true;
+
+		// Another member's user_id list skips the default privacy scopes, so only keep the privacy levels this viewer may see of that user.
+		if ( ! empty( $args['user_id'] ) && empty( $args['group_id'] ) && bp_loggedin_user_id() !== (int) $args['user_id'] && ! bp_current_user_can( 'bp_moderate' ) ) {
+			$allowed_privacy = bp_media_query_privacy( (int) $args['user_id'] );
+			$args['privacy'] = empty( $args['privacy'] ) ? $allowed_privacy : array_values( array_intersect( (array) $args['privacy'], $allowed_privacy ) );
+			$can_see_media   = ! empty( $args['privacy'] );
+		}
+
+		// Requested IDs are fetched without any privacy check, so only pass on the ones this viewer may open
+		// (core's per-media rule: owner, friends, groups, messages, forums and comments).
+		if ( $can_see_media && ! empty( $args['media_ids'] ) && ! bp_current_user_can( 'bp_moderate' ) ) {
+			$args['media_ids'] = array_values(
+				array_filter(
+					wp_parse_id_list( $args['media_ids'] ),
+					function ( $media_id ) {
+						$access = bb_media_user_can_access( $media_id, 'photo' );
+						$media  = new BP_Media( $media_id );
+						return ! empty( $access['can_view'] ) && $this->bb_rest_viewer_can_access_item_group( $media->group_id );
+					}
+				)
+			);
+
+			$can_see_media = ! empty( $args['media_ids'] );
+		}
+
 		if ( isset( $args['album_id'] ) && 0 === $args['album_id'] ) {
 			$args['album_id'] = 'existing-media';
 		}
 
-		$medias = $this->assemble_response_data( $args );
+		// Nothing this viewer may see: skip the query but keep the normal response flow (headers and the action below).
+		if ( $can_see_media ) {
+			$medias = $this->assemble_response_data( $args );
+		} else {
+			$medias = array(
+				'medias'         => array(),
+				'total'          => 0,
+				'has_more_items' => false,
+				'total_video'    => null,
+			);
+		}
 
 		$retval = array();
 		$hidden = 0;
@@ -312,9 +349,10 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 		}
 
 		if ( true === $retval && ! empty( $request['group_id'] ) && bp_is_active( 'groups' ) ) {
-			// Check the current user's membership, not the requested member's.
+			// Group access is checked for the viewer; the request's user_id only filters whose items are listed.
 			$group       = groups_get_group( $request['group_id'] );
-			$user_groups = groups_get_user_groups( bp_loggedin_user_id() );
+			$user_id     = bp_loggedin_user_id();
+			$user_groups = groups_get_user_groups( $user_id );
 
 			if ( empty( $group->id ) ) {
 				$retval = new WP_Error(
@@ -1365,6 +1403,35 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 		 * @since 0.1.0
 		 */
 		return apply_filters( 'bp_rest_media_upload_item_permissions_check', $retval, $request );
+	}
+
+	/**
+	 * Whether the current viewer may see an item that belongs to a group.
+	 *
+	 * Core's per-item access check reads a comment upload's privacy from the post it was added to, and group posts
+	 * are stored as public, so uploads on comments in private or hidden groups would pass it. Items outside a group,
+	 * items in public groups and moderators are always allowed.
+	 *
+	 * @since BuddyBoss 3.8.1
+	 *
+	 * @param int $group_id Group ID the item belongs to.
+	 *
+	 * @return bool
+	 */
+	public function bb_rest_viewer_can_access_item_group( $group_id ) {
+		$group_id = (int) $group_id;
+
+		if ( empty( $group_id ) || ! bp_is_active( 'groups' ) || bp_current_user_can( 'bp_moderate' ) ) {
+			return true;
+		}
+
+		$group = groups_get_group( $group_id );
+
+		if ( empty( $group->id ) || 'public' === bp_get_group_status( $group ) ) {
+			return true;
+		}
+
+		return (bool) groups_is_user_member( bp_loggedin_user_id(), $group_id );
 	}
 
 	/**

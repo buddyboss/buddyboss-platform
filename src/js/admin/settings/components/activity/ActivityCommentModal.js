@@ -14,7 +14,7 @@ import {
 } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import { safeUrl } from '../../utils/sanitize';
-import { forceRemoveEditor } from '../common/RichTextEditor';
+import { forceRemoveEditor, addLinkModalCommand, getRichTextEditorHtml } from '../common/RichTextEditor';
 
 /**
  * Activity Comment Modal Component
@@ -68,6 +68,8 @@ export function ActivityCommentModal( { isOpen, activity, onClose, onSave, isSav
 								editor.on( 'change keyup', function () {
 									setContent( editor.getContent() );
 								} );
+
+								addLinkModalCommand( editor );
 							},
 						},
 						quicktags: {
@@ -108,14 +110,8 @@ export function ActivityCommentModal( { isOpen, activity, onClose, onSave, isSav
 	}
 
 	var handleSave = function () {
-		// Pull latest content from TinyMCE.
-		var latestContent = content;
-		if ( window.tinymce ) {
-			var editorInstance = window.tinymce.get( editorId );
-			if ( editorInstance ) {
-				latestContent = editorInstance.getContent();
-			}
-		}
+		// Pull latest content from the editor, including Code tab edits.
+		var latestContent = getRichTextEditorHtml( editorId, content );
 
 		if ( ! latestContent || ! latestContent.trim() ) {
 			setError( __( 'Please enter a comment.', 'buddyboss' ) );

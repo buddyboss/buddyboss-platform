@@ -339,6 +339,9 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 			)
 		);
 
+		// get_group_object() prefers `group_id` over the route `id` the writers save to; pin both to the same group.
+		$request->set_param( 'group_id', (int) $request->get_param( 'id' ) );
+
 		if ( is_user_logged_in() && bp_is_active( 'groups' ) ) {
 			$retval = true;
 			$group  = $this->groups_endpoint->get_group_object( $request );

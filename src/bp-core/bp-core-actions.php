@@ -585,6 +585,7 @@ add_filter( 'bbp_request', 'bb_restricate_rss_feed_forums_request', 9 );
  * Function will remove REST APIs endpoint.
  *
  * @since BuddyBoss 1.8.6
+ * @since BuddyBoss 3.8.0 Only restricts requests served over the REST API, not internal rest_do_request() calls.
  *
  * @param WP_REST_Response|WP_HTTP_Response|WP_Error|mixed $response Result to send to the client.
  *                                                                   Usually a WP_REST_Response or WP_Error.
@@ -595,6 +596,12 @@ add_filter( 'bbp_request', 'bb_restricate_rss_feed_forums_request', 9 );
  */
 function bb_restricate_rest_api_callback( $response, $handler, $request ) {
 	if ( is_wp_error( $response ) ) {
+		return $response;
+	}
+
+	// Internal rest_do_request() calls made while rendering a page (e.g. Elementor reading its global
+	// colors and fonts to build the kit CSS) are not external REST access, so leave them alone.
+	if ( ! defined( 'REST_REQUEST' ) || ! REST_REQUEST ) {
 		return $response;
 	}
 
@@ -1411,3 +1418,23 @@ function bb_load_readylaunch() {
 }
 
 add_action( 'bp_init', 'bb_load_readylaunch', 1 );
+
+/**
+ * Schedule the one-time cleanup of document preview symlinks that point at a directory.
+ *
+ * Runs bb_core_delete_directory_symlinks() once per site through a single cron event, so the
+ * directory scan never runs during a page request. Skips scheduling when the cleanup has
+ * already run on this site or is already queued.
+ *
+ * @since BuddyBoss 3.8.1
+ */
+function bb_core_schedule_delete_directory_symlinks() {
+	if ( get_option( 'bb_directory_symlinks_deleted' ) || wp_next_scheduled( 'bb_core_delete_directory_symlinks' ) ) {
+		return;
+	}
+
+	wp_schedule_single_event( time(), 'bb_core_delete_directory_symlinks' );
+}
+
+add_action( 'bp_init', 'bb_core_schedule_delete_directory_symlinks' );
+add_action( 'bb_core_delete_directory_symlinks', 'bb_core_delete_directory_symlinks' );
