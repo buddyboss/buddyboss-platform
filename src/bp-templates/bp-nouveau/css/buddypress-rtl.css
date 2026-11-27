@@ -1665,6 +1665,24 @@ a.layout-grid-view {
   margin-right: 5px;
 }
 
+#whats-new-form .bb-draft-save-feedback,
+#whats-new-form .bb-draft-retention-note {
+  display: none;
+}
+
+#whats-new-form.focus-in .bb-draft-save-feedback,
+#whats-new-form.focus-in .bb-draft-retention-note {
+  display: flex;
+}
+
+#whats-new-form.focus-in .bb-draft-save-feedback ~ .bb-draft-retention-note {
+  display: none;
+}
+
+.bb-draft-save-feedback ~ .bb-draft-retention-note.bp-feedback {
+  display: none;
+}
+
 #whats-new-form.focus-in--privacy #whats-new-privacy-stage {
   display: block;
 }
@@ -3721,17 +3739,12 @@ input.search-query-input {
 }
 
 .activity-list .activity-item.bb-closed-comments .acomment-reply,
-.activity-list .activity-item.bb-closed-comments .acomment-edit,
-.activity-list .activity-item.bb-closed-comments .edit-activity {
+.activity-list .activity-item.bb-closed-comments .acomment-edit {
   display: none !important;
 }
 
 .activity-list .activity-item.bb-closed-comments > .activity-comments > .ac-form {
   display: none !important;
-}
-
-.activity-list .activity-item.bb-closed-comments .generic-button:has(.edit-activity) {
-  display: none;
 }
 
 .activity-list .activity-item.bb-closed-comments .bb-activity-closed-comments-notice {
@@ -3958,6 +3971,7 @@ input.search-query-input {
   font-size: 18px;
   font-weight: 600;
   margin: 0 0 10px 0;
+  overflow-wrap: break-word;
 }
 
 .activity-list .activity-item .activity-content .activity-header,
@@ -10317,6 +10331,41 @@ form.ac-form .activity-attached-gif-container .gif-image-remove:hover .bb-icon-t
   margin-right: 0;
 }
 
+.buddypress-wrap .groups-list .load-more {
+  background: none;
+  border: none;
+  font-size: 110%;
+  margin: 15px 0;
+  padding: 0;
+  text-align: center;
+  width: 100%;
+  flex-basis: 100%;
+  max-width: 100%;
+}
+
+.buddypress-wrap .groups-list .load-more a {
+  color: #555;
+  display: block;
+  padding: 0.7em 0;
+}
+
+.buddypress-wrap .groups-list .load-more a:focus, .buddypress-wrap .groups-list .load-more a:hover {
+  color: #333;
+}
+
+.buddypress-wrap .groups-list .load-more a.loading:after {
+  content: "";
+  display: inline-block;
+  height: 16px;
+  width: 16px;
+  border: 2px solid #eaeaea;
+  border-top-color: #555;
+  border-radius: 50%;
+  animation: spin 3s infinite linear;
+  margin-right: 8px;
+  vertical-align: middle;
+}
+
 .buddypress-wrap .mygroups .groups-list.grid .wrap {
   min-height: 450px;
   padding-bottom: 0;
@@ -10574,6 +10623,46 @@ form.ac-form .activity-attached-gif-container .gif-image-remove:hover .bb-icon-t
 .buddypress-wrap .members-list:not(.grid) .member-button-wrap.footer-button-wrap,
 .buddypress-wrap .friends-mutual-list:not(.grid) .member-button-wrap.footer-button-wrap {
   display: block;
+}
+
+.buddypress-wrap .members-list .load-more,
+.buddypress-wrap .friends-mutual-list .load-more {
+  background: none;
+  border: none;
+  font-size: 110%;
+  margin: 15px 0;
+  padding: 0;
+  text-align: center;
+  width: 100%;
+  flex-basis: 100%;
+  max-width: 100%;
+}
+
+.buddypress-wrap .members-list .load-more a,
+.buddypress-wrap .friends-mutual-list .load-more a {
+  color: #555;
+  display: block;
+  padding: 0.7em 0;
+}
+
+.buddypress-wrap .members-list .load-more a:focus, .buddypress-wrap .members-list .load-more a:hover,
+.buddypress-wrap .friends-mutual-list .load-more a:focus,
+.buddypress-wrap .friends-mutual-list .load-more a:hover {
+  color: #333;
+}
+
+.buddypress-wrap .members-list .load-more a.loading:after,
+.buddypress-wrap .friends-mutual-list .load-more a.loading:after {
+  content: "";
+  display: inline-block;
+  height: 16px;
+  width: 16px;
+  border: 2px solid #eaeaea;
+  border-top-color: #555;
+  border-radius: 50%;
+  animation: spin 3s infinite linear;
+  margin-right: 8px;
+  vertical-align: middle;
 }
 
 @media screen and (min-width: 46.8em) {
@@ -13122,6 +13211,21 @@ body.register .buddypress-wrap .page ul {
   opacity: 1;
 }
 
+/* Focus */
+#item-header-avatar:focus a.link-change-profile-image,
+#item-header-avatar:focus-within a.link-change-profile-image {
+  opacity: 1;
+}
+
+.link-change-profile-image:focus {
+  filter: brightness(0.8);
+}
+
+#header-cover-image a.link-change-cover-image:focus {
+  opacity: 1;
+  filter: brightness(0.8);
+}
+
 .users-header #social-networks-popup,
 .bp-widget.social #social-networks-popup {
   display: none;
@@ -13168,7 +13272,11 @@ body.register .buddypress-wrap .page ul {
   transform: translateX(50%);
 }
 
-.users-header #item-header-avatar:hover .link-change-overlay {
+.users-header #item-header-avatar:focus {
+  outline: 0;
+}
+
+.users-header #item-header-avatar:focus .link-change-overlay, .users-header #item-header-avatar:focus-within .link-change-overlay, .users-header #item-header-avatar:hover .link-change-overlay {
   position: absolute;
   right: 3px;
   left: 3px;
@@ -13176,6 +13284,15 @@ body.register .buddypress-wrap .page ul {
   height: 164px;
   background-color: rgba(0, 0, 0, 0.3);
   border-radius: 50%;
+}
+
+.users-header #item-header-avatar:has(.bb-gm-avatar-with-rank-badge):focus .link-change-overlay, .users-header #item-header-avatar:has(.bb-gm-avatar-with-rank-badge):focus-within .link-change-overlay {
+  height: 148px;
+  right: 2px;
+  pointer-events: none;
+  left: 2px;
+  top: 2px;
+  z-index: 1;
 }
 
 .social-networks-wrap span.social {
@@ -23615,7 +23732,10 @@ ul.bb-albums-list .load-more {
 
 #buddypress .activity-list li.load-more,
 #buddypress .bb-photo-list li.load-more,
-#buddypress .bb-video-list li.load-more {
+#buddypress .bb-video-list li.load-more,
+#buddypress .members-list li.load-more,
+#buddypress .groups-list li.load-more,
+#buddypress .bp-list.grid > li.load-more {
   margin: 20px auto 10px;
   text-align: center;
   -ms-flex-preferred-size: 100%;
@@ -23626,7 +23746,10 @@ ul.bb-albums-list .load-more {
 
 #buddypress .activity-list li.load-more > a,
 #buddypress .bb-photo-list li.load-more > a,
-#buddypress .bb-video-list li.load-more > a {
+#buddypress .bb-video-list li.load-more > a,
+#buddypress .members-list li.load-more > a,
+#buddypress .groups-list li.load-more > a,
+#buddypress .bp-list.grid > li.load-more > a {
   max-width: 33%;
   pointer-events: auto;
 }

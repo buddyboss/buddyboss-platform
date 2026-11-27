@@ -215,8 +215,14 @@ function bp_has_activities( $args = '' ) {
 		: (
 		( ! empty( bp_current_action() ) && ! is_numeric( bp_current_action() ) )
 			? bp_current_action()
-			: ( isset( $_REQUEST['scope'] ) ? $_REQUEST['scope'] : 'all' )
+			: ( isset( $_REQUEST['scope'] ) ? bb_activity_get_request_scope( wp_unslash( $_REQUEST['scope'] ) ) : 'all' ) // phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Only registered scope names pass.
 		);
+
+	// AJAX takes the URL from the Referer, so its segment can be anything. Outside a group,
+	// one that no scope handles would add no condition to the query (PROD-10890).
+	if ( ! bp_is_group() ) {
+		$scope = bb_activity_get_request_scope( $scope );
+	}
 
 	if ( bp_is_user_activity() || bp_is_activity_directory() ) {
 

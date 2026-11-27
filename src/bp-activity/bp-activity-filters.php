@@ -1248,6 +1248,8 @@ add_filter( 'bp_activity_set_public_scope_args', 'bp_activity_filter_public_scop
  * Set up activity arguments for use with the 'favorites' scope.
  *
  * @since BuddyPress 2.2.0
+ * @since BuddyBoss 3.7.1 Returns nothing for guests, and hides hidden items of groups the user is not a member of.
+ * @since BuddyBoss 3.8.1 Shows friends-only items by the viewer's friends, not the listed member's.
  *
  * @param array $retval Empty array by default.
  * @param array $filter Current activity arguments.
@@ -1264,8 +1266,8 @@ function bp_activity_filter_favorites_scope( $retval = array(), $filter = array(
 			: bp_loggedin_user_id();
 	}
 
-	// Determine the favorites.
-	$favs = bp_activity_get_user_favorites( $user_id );
+	// Determine the favorites. A guest has none, and asking for user 0 returns everyone's reactions.
+	$favs = ! empty( $user_id ) ? bp_activity_get_user_favorites( $user_id ) : array();
 	if ( empty( $favs ) ) {
 		$favs = array( 0 );
 	}
@@ -1277,6 +1279,27 @@ function bp_activity_filter_favorites_scope( $retval = array(), $filter = array(
 			'column' => 'hide_sitewide',
 			'value'  => 0,
 		);
+	} elseif ( ! empty( $user_id ) && bp_is_active( 'groups' ) && ! bp_current_user_can( 'bp_moderate' ) ) {
+		// A reaction outlives group membership, and reacting never checked it, so only show
+		// hidden group items from the user's own groups (PROD-10649).
+		$user_groups = groups_get_user_groups( $user_id );
+		$show_hidden = array(
+			'relation' => 'OR',
+			array(
+				'column' => 'hide_sitewide',
+				'value'  => 0,
+			),
+			array(
+				'column'  => 'component',
+				'compare' => '!=',
+				'value'   => buddypress()->groups->id,
+			),
+			array(
+				'column'  => 'item_id',
+				'compare' => 'IN',
+				'value'   => ! empty( $user_groups['groups'] ) ? array_map( 'intval', $user_groups['groups'] ) : array( 0 ),
+			),
+		);
 	}
 
 	$friends_filter = array();
@@ -1286,16 +1309,11 @@ function bp_activity_filter_favorites_scope( $retval = array(), $filter = array(
 		$privacy[] = 'loggedin';
 
 		if ( bp_is_active( 'friends' ) ) {
-			// Determine friends of user.
-			$friends = friends_get_friend_user_ids( $user_id );
-			if ( empty( $friends ) ) {
-				$friends = array( 0 );
-			}
-
-			if ( $user_id === bp_loggedin_user_id() ) {
-				$friends[] = bp_loggedin_user_id();
-				$friends   = array_unique( $friends );
-			}
+			// Friends-only items are for the author and the author's friends, so match the
+			// viewer's friends, not those of the member whose reactions are listed (PROD-10890).
+			$friends   = friends_get_friend_user_ids( bp_loggedin_user_id() );
+			$friends[] = bp_loggedin_user_id();
+			$friends   = array_unique( $friends );
 
 			if ( ! empty( $friends ) ) {
 				$friends_filter = array(
@@ -1388,6 +1406,7 @@ add_filter( 'bp_activity_set_favorites_scope_args', 'bp_activity_filter_favorite
  * Set up activity arguments for use with the 'favorites' scope.
  *
  * @since BuddyPress 2.2.0
+ * @since BuddyBoss 3.8.1 Matches nothing when mentions are off, and shows friends-only items by the viewer's friends.
  *
  * @param array $retval Empty array by default.
  * @param array $filter Current activity arguments.
@@ -1395,9 +1414,13 @@ add_filter( 'bp_activity_set_favorites_scope_args', 'bp_activity_filter_favorite
  */
 function bp_activity_filter_mentions_scope( $retval = array(), $filter = array() ) {
 
-	// Are mentions disabled?
+	// Are mentions disabled? Then match nothing: an empty condition would leave the query open
+	// to every privacy level (PROD-10890).
 	if ( ! bp_activity_do_mentions() ) {
-		return $retval;
+		return array(
+			'column' => 'id',
+			'value'  => 0,
+		);
 	}
 
 	// Determine the user_id.
@@ -1418,8 +1441,10 @@ function bp_activity_filter_mentions_scope( $retval = array(), $filter = array()
 		$privacy[] = 'loggedin';
 
 		if ( bp_is_active( 'friends' ) && $user_id ) {
-			// Determine friends of user.
-			$friends = friends_get_friend_user_ids( $user_id );
+			// Friends-only items are for the author and the author's friends, so match the
+			// viewer's friends, not those of the mentioned member (PROD-10890).
+			$friends   = friends_get_friend_user_ids( bp_loggedin_user_id() );
+			$friends[] = bp_loggedin_user_id();
 		}
 	}
 
@@ -1538,6 +1563,36 @@ function bp_activity_filter_mentions_scope( $retval = array(), $filter = array()
 add_filter( 'bp_activity_set_mentions_scope_args', 'bp_activity_filter_mentions_scope', 10, 2 );
 
 /**
+ * Limit the 'video' and 'document' scopes to lookups of specific activity IDs.
+ *
+ * These scopes match the hidden sub-activities of every group and profile. Combined with a
+ * scope that shows hidden items, such as `favorites,video`, they would list them all. The
+ * scope callbacks live in BuddyBoss Add-ons, and older Add-ons versions do not guard them,
+ * so apply the same rule as the 'media' scope after them (PROD-10649).
+ *
+ * @since BuddyBoss 3.7.1
+ *
+ * @param array $retval Scope query arguments.
+ * @param array $filter Current activity arguments.
+ *
+ * @return array
+ */
+function bb_activity_limit_sub_activity_scope_to_ids( $retval = array(), $filter = array() ) {
+	// Without IDs the scope matches nothing, also when its component is off: an empty
+	// condition would leave the query open to every privacy level.
+	if ( empty( $filter['in'] ) ) {
+		return array(
+			'column' => 'id',
+			'value'  => 0,
+		);
+	}
+
+	return $retval;
+}
+add_filter( 'bp_activity_set_video_scope_args', 'bb_activity_limit_sub_activity_scope_to_ids', 20, 2 );
+add_filter( 'bp_activity_set_document_scope_args', 'bb_activity_limit_sub_activity_scope_to_ids', 20, 2 );
+
+/**
  * Filter the members loop on a follow page.
  *
  * This is done so we can return users that:
@@ -1580,6 +1635,7 @@ add_filter( 'bp_ajax_querystring', 'bp_add_member_follow_scope_filter', 20, 2 );
  * For details on the syntax, see {@link BP_Activity_Query}.
  *
  * @since BuddyBoss 1.0.0
+ * @since BuddyBoss 3.8.1 Matches nothing when activity follow is off.
  *
  * @param array $retval Empty array by default.
  * @param array $filter Current activity arguments.
@@ -1588,9 +1644,13 @@ add_filter( 'bp_ajax_querystring', 'bp_add_member_follow_scope_filter', 20, 2 );
  */
 function bp_users_filter_activity_following_scope( $retval = array(), $filter = array() ) {
 
-	// Is follow active?
+	// Is follow active? If not, match nothing: an empty condition would leave the query open
+	// to every privacy level (PROD-10890).
 	if ( ! bp_is_activity_follow_active() ) {
-		return $retval;
+		return array(
+			'column' => 'id',
+			'value'  => 0,
+		);
 	}
 
 	// Determine the user_id.
@@ -3526,6 +3586,7 @@ function bb_load_activity_notifications() {
  * Add activity notifications settings to the notifications settings page.
  *
  * @since BuddyPress 1.2.0
+ * @since BuddyBoss 3.8.1 The mention label shows the displayed member's mention name.
  */
 function bp_activity_screen_notification_settings() {
 
@@ -3559,11 +3620,10 @@ function bp_activity_screen_notification_settings() {
 		<tbody>
 		<?php
 		if ( bp_activity_do_mentions() ) :
-			$current_user = wp_get_current_user();
 			?>
 			<tr id="activity-notification-settings-mentions">
 				<td>&nbsp;</td>
-				<td><?php printf( esc_html__( 'A member mentions you in an update using "@%s"', 'buddyboss' ), bp_activity_get_user_mentionname( $current_user->ID ) ); ?></td>
+				<td><?php printf( esc_html__( 'A member mentions you in an update using "@%s"', 'buddyboss' ), bp_activity_get_user_mentionname( bp_displayed_user_id() ) ); ?></td>
 				<td class="yes">
 					<div class="bp-radio-wrap">
 						<input type="radio" name="notifications[notification_activity_new_mention]" id="notification-activity-new-mention-yes" class="bs-styled-radio"

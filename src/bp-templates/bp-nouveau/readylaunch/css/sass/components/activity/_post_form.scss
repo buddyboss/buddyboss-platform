@@ -1,3 +1,9 @@
+// One draft notice at a time in every composer, the forum forms included:
+// the retention note always follows a refusal notice.
+.bb-draft-save-feedback ~ .bb-draft-retention-note {
+	display: none;
+}
+
 // Activity Post Form default view
 [class*="bb-rl-activity-form"] {
 	background-color: var(--bb-rl-background-color);
@@ -136,6 +142,40 @@
 
 		#bb-rl-discard-draft-activity {
 			display: block;
+		}
+	}
+
+	// Draft notices belong to the OPEN composer, not the collapsed bar - same
+	// default-hidden / shown-on-focus-in pattern as the rest of the chrome.
+	.bb-draft-save-feedback,
+	.bb-draft-retention-note {
+		display: none;
+	}
+
+	&.bb-rl-focus-in {
+
+		.bb-draft-save-feedback,
+		.bb-draft-retention-note {
+			display: flex;
+			margin: var(--bb-rl-space-200) var(--bb-rl-space-300) 0;
+			padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
+			border-radius: var(--bb-rl-radius-md);
+			font-size: var(--bb-rl-font-size-sm);
+			font-weight: 400;
+		}
+
+		.bb-draft-save-feedback.error {
+			border-color: var(--bb-rl-border-danger-secondary-color);
+		}
+
+		.bb-draft-retention-note.info {
+			border-color: var(--bb-rl-border-info-secondary-color);
+		}
+
+		// One notice at a time: the retention note always follows a refusal
+		// notice, so it waits until that notice is cleared.
+		.bb-draft-save-feedback ~ .bb-draft-retention-note {
+			display: none;
 		}
 	}
 
@@ -786,11 +826,47 @@
 		.bb-rl-post-emoji {
 			padding: 0;
 			border: 0;
+
+			@media (max-width: 680px) {
+				// Stop this icon wrapper from being the picker's containing block -
+				// it collapses to button-width, which threw off horizontal centering.
+				// Falls back to #bb-rl-whats-new-toolbar, centred with the footer.
+				position: static;
+
+				// The emojionearea wrapper is positioned too, so release it as well.
+				.emojionearea {
+					position: static;
+				}
+
+				// Static positioning moves the tooltip onto the "Aa" button, and
+				// phones show it on tap, so hide it at this size.
+				&[data-bp-tooltip] {
+
+					&:after,
+					&:before {
+						display: none;
+					}
+				}
+			}
 		}
 
 		.emojionearea-picker.emojionearea-picker-position-top {
 			top: inherit;
 			bottom: 40px;
+
+			@media (max-width: 680px) {
+				left: 50%;
+				right: auto;
+				transform: translateX(-50%);
+			}
+
+			// The default anchor sits the picker to the left of the emoji button, which
+			// runs off-screen until the post modal clears the picker's width. Open it
+			// to the right of the button instead, inside the modal.
+			@media (min-width: 681px) and (max-width: 1240px) {
+				left: 0;
+				right: auto;
+			}
 		}
 
 		.emojionearea-button {
@@ -955,7 +1031,6 @@
 			}
 		}
 
-
 		> a {
 			font-size: 0;
 
@@ -1051,7 +1126,6 @@
 #activity-url-scrapper-img-holder + .activity-link-preview-info {
 	border-radius: 0 0 var(--bb-rl-radius-lg) var(--bb-rl-radius-lg);
 }
-
 
 .activity-url-scrapper-container.activity-post-form-link-wp-embed .activity-link-preview-info {
 	background-color: transparent;
@@ -1197,7 +1271,6 @@
 .twitter-timeline {
 	width: 100% !important;
 }
-
 
 .whats-new-topic-selector {
 	position: relative;
@@ -1451,6 +1524,8 @@
 
 		.bb-rl-topic-selector-list {
 			z-index: 9;
+			left: 50%;
+			transform: translateX(-50%);
 		}
 
 		.bb-rl-topic-selector-button {
@@ -1463,3 +1538,4 @@
 		}
 	}
 }
+

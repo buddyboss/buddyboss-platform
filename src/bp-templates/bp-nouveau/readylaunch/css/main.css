@@ -638,6 +638,23 @@ h6 {
   width: 100%;
 }
 
+.bb-rl-members ul.bp-list.bb-list-autoload,
+.bb-rl-groups ul.bp-list.bb-list-autoload {
+  margin-bottom: var(--bb-rl-space-400);
+}
+
+.bb-rl-members ul.bp-list .bb-rl-load-more,
+.bb-rl-groups ul.bp-list .bb-rl-load-more {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: var(--bb-rl-space-200) 0;
+}
+
+.bb-rl-members ul.bp-list .bb-rl-load-more .bb-rl-button,
+.bb-rl-groups ul.bp-list .bb-rl-load-more .bb-rl-button {
+  font-size: 14px;
+}
+
 .bp-screen-reader-text,
 .bb-screen-reader-text,
 .bb-rl-screen-reader-text {
@@ -13290,6 +13307,10 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   }
 }
 
+.bb-draft-save-feedback ~ .bb-draft-retention-note {
+  display: none;
+}
+
 [class*="bb-rl-activity-form"] {
   background-color: var(--bb-rl-background-color);
   border: 1px solid var(--bb-rl-border-tertiary-color);
@@ -13419,6 +13440,33 @@ body.bb-rl-activity-modal-open .bb-rl-activity-update-form.modal-popup {
 
 .bb-rl-activity-form.has-draft.bb-rl-focus-in #bb-rl-discard-draft-activity {
   display: block;
+}
+
+.bb-rl-activity-form .bb-draft-save-feedback,
+.bb-rl-activity-form .bb-draft-retention-note {
+  display: none;
+}
+
+.bb-rl-activity-form.bb-rl-focus-in .bb-draft-save-feedback,
+.bb-rl-activity-form.bb-rl-focus-in .bb-draft-retention-note {
+  display: flex;
+  margin: var(--bb-rl-space-200) var(--bb-rl-space-300) 0;
+  padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
+  border-radius: var(--bb-rl-radius-md);
+  font-size: var(--bb-rl-font-size-sm);
+  font-weight: 400;
+}
+
+.bb-rl-activity-form.bb-rl-focus-in .bb-draft-save-feedback.error {
+  border-color: var(--bb-rl-border-danger-secondary-color);
+}
+
+.bb-rl-activity-form.bb-rl-focus-in .bb-draft-retention-note.info {
+  border-color: var(--bb-rl-border-info-secondary-color);
+}
+
+.bb-rl-activity-form.bb-rl-focus-in .bb-draft-save-feedback ~ .bb-draft-retention-note {
+  display: none;
 }
 
 .bb-rl-activity-form.bb-rl-focus-in {
@@ -14032,9 +14080,36 @@ body.bb-rl-activity-modal-open .bb-rl-activity-update-form.modal-popup {
   border: 0;
 }
 
+@media (max-width: 680px) {
+  .bb-rl-activity-form #bb-rl-whats-new-toolbar .bb-rl-post-emoji {
+    position: static;
+  }
+  .bb-rl-activity-form #bb-rl-whats-new-toolbar .bb-rl-post-emoji .emojionearea {
+    position: static;
+  }
+  .bb-rl-activity-form #bb-rl-whats-new-toolbar .bb-rl-post-emoji[data-bp-tooltip]:after, .bb-rl-activity-form #bb-rl-whats-new-toolbar .bb-rl-post-emoji[data-bp-tooltip]:before {
+    display: none;
+  }
+}
+
 .bb-rl-activity-form #bb-rl-whats-new-toolbar .emojionearea-picker.emojionearea-picker-position-top {
   top: inherit;
   bottom: 40px;
+}
+
+@media (max-width: 680px) {
+  .bb-rl-activity-form #bb-rl-whats-new-toolbar .emojionearea-picker.emojionearea-picker-position-top {
+    left: 50%;
+    right: auto;
+    transform: translateX(-50%);
+  }
+}
+
+@media (min-width: 681px) and (max-width: 1240px) {
+  .bb-rl-activity-form #bb-rl-whats-new-toolbar .emojionearea-picker.emojionearea-picker-position-top {
+    left: 0;
+    right: auto;
+  }
 }
 
 .bb-rl-activity-form #bb-rl-whats-new-toolbar .emojionearea-button {
@@ -14656,6 +14731,8 @@ body.bb-rl-activity-modal-open .bb-rl-activity-update-form.modal-popup {
   }
   .whats-new-topic-selector .bb-rl-topic-selector-list {
     z-index: 9;
+    left: 50%;
+    transform: translateX(-50%);
   }
   .whats-new-topic-selector .bb-rl-topic-selector-button {
     max-width: 100%;
@@ -15074,17 +15151,12 @@ body.bb-rl-activity-modal-open .bb-rl-activity-update-form.modal-popup {
 }
 
 .bb-rl-activity-list li.activity-item.bb-closed-comments .acomment-reply,
-.bb-rl-activity-list li.activity-item.bb-closed-comments .acomment-edit,
-.bb-rl-activity-list li.activity-item.bb-closed-comments .edit-activity {
+.bb-rl-activity-list li.activity-item.bb-closed-comments .acomment-edit {
   display: none !important;
 }
 
 .bb-rl-activity-list li.activity-item.bb-closed-comments > .activity-comments > .ac-form {
   display: none !important;
-}
-
-.bb-rl-activity-list li.activity-item.bb-closed-comments .generic-button:has(.edit-activity) {
-  display: none;
 }
 
 .bb-rl-activity-list li.activity-item.bb-closed-comments .bb-rl-activity-closed-comments-notice {

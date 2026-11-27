@@ -61,6 +61,16 @@ window.bp = window.bp || {};
 		},
 
 		/**
+		 * Check if a given element is inside the activity modal or a media model container.
+		 *
+		 * @param {jQuery} target - Element to check (e.g. event target or button).
+		 * @return {boolean} True if inside activity modal or media/document/video theatre container.
+		 */
+		isInsideModalOrContainer: function( target ) {
+			return target.closest( '#bb-rl-activity-modal, #bb-rl-media-model-container, .bb-rl-media-model-container' ).length > 0;
+		},
+
+		/**
 		 * [setupGlobals description]
 		 *
 		 * @return {[type]} [description]
@@ -783,7 +793,7 @@ window.bp = window.bp || {};
 				);
 			}
 
-			$( '.activity-item.bb-closed-comments' ).find( '.edit-activity, .acomment-edit' ).parents( '.generic-button' ).hide();
+			$( '.activity-item.bb-closed-comments' ).find( '.acomment-edit' ).parents( '.generic-button' ).hide();
 		},
 
 		/**
@@ -1168,10 +1178,17 @@ window.bp = window.bp || {};
 			    $body         = $( 'body' );
 
 			// Check if target is inside #bb-rl-activity-modal or media theater.
-			var isInsideModal        = target.closest( '#bb-rl-activity-modal' ).length > 0;
-			var isInsideMediaTheatre = target.closest( '.bb-rl-internal-model' ).length > 0;
+			var isInsideModal         = this.isInsideModalOrContainer( target );
+			var isInsideActivityModal = target.closest( '#bb-rl-activity-modal' ).length > 0;
+			var isInsideMediaTheatre  = target.closest( '.bb-rl-internal-model' ).length > 0;
 
-			if ( isInsideModal ) {
+			// The modal-scoped .activity-state / .comments-count / .acomments-count nodes
+			// only exist inside #bb-rl-activity-modal. isInsideModal is broad (it also
+			// matches the media/video theatre, where closest('#bb-rl-activity-modal') is
+			// empty), so gate this lookup on the narrow isInsideActivityModal — otherwise it
+			// overwrites the sensible activityItem.find() defaults above with empty sets and
+			// the subsequent updates become no-ops.
+			if ( isInsideActivityModal ) {
 				activityState = activityItem.closest( '#bb-rl-activity-modal' ).find( '.activity-state' );
 				commentsText  = activityItem.closest( '#bb-rl-activity-modal' ).find( '.comments-count' );
 				repliesText   = activityItem.closest( '#bb-rl-activity-modal' ).find( '.acomments-count' );
@@ -1694,6 +1711,10 @@ window.bp = window.bp || {};
 							dictMaxFilesExceeded         : BP_Nouveau.video.video_dict_file_exceeded,
 							previewTemplate              : acCommentVideoTemplate,
 							dictCancelUploadConfirmation : BP_Nouveau.media.dictCancelUploadConfirmation,
+							chunking                     : true,
+							chunkSize                    : 30 * 1024 * 1024,
+							retryChunks                  : true,
+							retryChunksLimit             : 3,
 						}
 					);
 
@@ -3994,9 +4015,7 @@ window.bp = window.bp || {};
 									}
 								);
 
-								if ( update_pinned_icon ) {
-									activityItem.addClass( 'bb-pinned' );
-								}
+								activityItem.addClass( 'bb-pinned' );
 
 								target.addClass( 'unpin-activity' ).removeClass( 'pin-activity' );
 
@@ -4026,7 +4045,10 @@ window.bp = window.bp || {};
 							]
 						);
 
-						if ( isInsideModal ) {
+						// Check if inside modal or media theatre.
+						var isInsideModalOrTheatre = bp.Nouveau.Activity.isInsideModalOrContainer( target );
+
+						if ( isInsideModalOrTheatre ) {
 							if ( 'undefined' !== typeof bp.Nouveau.Activity.activityHasUpdates ) {
 								bp.Nouveau.Activity.activityHasUpdates = true;
 							}
@@ -4194,18 +4216,18 @@ window.bp = window.bp || {};
 								}
 								target.addClass( 'unclose-activity-comment' ).removeClass( 'close-activity-comment' );
 								target.find( 'span' ).html( bbRlActivity.strings.uncloseComments );
-								$activityItem.find( '.edit-activity, .acomment-edit' ).parents( '.generic-button' ).hide();
+								$activityItem.find( '.acomment-edit' ).parents( '.generic-button' ).hide();
 								$activityItem.find( '.bb-rl-activity-comments' ).after( '<div class="bb-rl-activity-closed-comments-notice">' + response.data.feedback + '</div>' );
 								// Handle event from media theater.
 								if ( target.parents( '.bb-rl-media-model-wrapper' ).length > 0 && $media_parent.length > 0 ) {
 									$media_parent.addClass( 'bb-closed-comments' );
 									$media_parent.find( '.bb-activity-more-options .close-activity-comment span' ).html( bbRlActivity.strings.uncloseComments );
 									$media_parent.find( '.bb-activity-more-options .close-activity-comment' ).addClass( 'unclose-activity-comment' ).removeClass( 'close-activity-comment' );
-									$media_parent.find( '.edit-activity, .acomment-edit' ).parents( '.generic-button' ).hide();
+									$media_parent.find( '.acomment-edit' ).parents( '.generic-button' ).hide();
 									$media_parent.find( '.bb-rl-activity-comments' ).after( '<div class="bb-rl-activity-closed-comments-notice">' + response.data.feedback + '</div>' );
 								}
 							} else if ( 'unclose_comments' === close_comments_action ) {
-								$activityItem.find( '.edit-activity, .acomment-edit' ).parents( '.generic-button' ).show();
+								$activityItem.find( '.acomment-edit' ).parents( '.generic-button' ).show();
 								$activityItem.removeClass( 'bb-closed-comments' );
 								if ( $activityItem.closest( '#bb-rl-activity-modal' ).length > 0 ) {
 									$activityItem.closest( '#bb-rl-activity-modal' ).removeClass( 'bb-closed-comments' );
@@ -4215,7 +4237,7 @@ window.bp = window.bp || {};
 
 								// Handle event from media theater.
 								if ( target.parents( '.bb-rl-media-model-wrapper' ).length > 0 && $media_parent.length > 0 ) {
-									$media_parent.find( '.edit-activity, .acomment-edit' ).parents( '.generic-button' ).show();
+									$media_parent.find( '.acomment-edit' ).parents( '.generic-button' ).show();
 									$media_parent.removeClass( 'bb-closed-comments' );
 									$media_parent.find( '.bb-activity-more-options .unclose-activity-comment span' ).html( bbRlActivity.strings.closeComments );
 									$media_parent.find( '.bb-activity-more-options .unclose-activity-comment' ).addClass( 'close-activity-comment' ).removeClass( 'unclose-activity-comment' );
@@ -4344,6 +4366,11 @@ window.bp = window.bp || {};
 			dropzoneObj.on(
 				'success',
 				function ( file, response ) {
+					if ( file.upload && true === file.upload.chunked ) {
+						// Chunked upload: Dropzone passes an empty response, read the final chunk response from the XHR.
+						response = JSON.parse( file.xhr.response );
+					}
+
 					if ( 'document' === type ) {
 						var filename      = file.upload.filename,
 							fileExtension = filename.substr(
@@ -4360,14 +4387,43 @@ window.bp = window.bp || {};
 						}
 					}
 
-					if ( response.data.id ) {
-						file.id                  = response.id;
+					if ( response.data && response.data.id ) {
+						file.id                  = response.data.id;
 						response.data.uuid       = file.upload.uuid;
 						response.data.menu_order = $( file.previewElement ).closest( '.dropzone' ).find( file.previewElement ).index() - 1;
 						var subType = 'document' === type ? 'media' : type;
 						response.data.album_id   = typeof BP_Nouveau[subType] !== 'undefined' && typeof BP_Nouveau[subType].album_id !== 'undefined' ? BP_Nouveau[subType].album_id : false;
 						response.data.group_id   = typeof BP_Nouveau[subType] !== 'undefined' && typeof BP_Nouveau[subType].group_id !== 'undefined' ? BP_Nouveau[subType].group_id : false;
 						response.data.saved      = false;
+
+						if ( 'video' === type ) {
+							// Unlike the post composer's dropzone handler, this comment-reply handler never
+							// captured a client-side thumbnail, so a comment video's persisted thumbnail
+							// depended entirely on the server-side FFmpeg background job — missing on hosts
+							// without an FFmpeg binary. Capture js_preview the same way, backfilling it once
+							// bp.Nouveau.getVideoThumb()'s async capture finishes if it hasn't already.
+							response.data.js_preview = $( file.previewElement ).find( '.dz-image img' ).attr( 'src' );
+
+							if ( ! response.data.js_preview ) {
+								var thumbnailCheckAttempts = 0;
+								// Poll until the capture settles, the preview leaves the page (file removed or
+								// comment submitted), or 60s pass, so the interval never outlives the form.
+								var thumbnailCheck = setInterval(
+									function () {
+										var $thumbnailPreview = $( file.previewElement ).closest( '.dz-preview' );
+										thumbnailCheckAttempts++;
+										if ( $thumbnailPreview.hasClass( 'dz-has-no-thumbnail' ) || $thumbnailPreview.hasClass( 'dz-has-thumbnail' ) ) {
+											response.data.js_preview = $( file.previewElement ).find( '.dz-image img' ).attr( 'src' );
+											clearInterval( thumbnailCheck );
+										} else if ( ! file.previewElement || ! document.body.contains( file.previewElement ) || thumbnailCheckAttempts >= 300 ) {
+											clearInterval( thumbnailCheck );
+										}
+									},
+									200
+								);
+							}
+						}
+
 						dropzoneDataObj.push( response.data );
 						return file.previewElement.classList.add( 'dz-success' );
 					} else {
@@ -4411,6 +4467,8 @@ window.bp = window.bp || {};
 						            file.xhr && file.xhr.status === 0
 						) ) { // update server error text to user friendly.
 							$( file.previewElement ).find( '.dz-error-message span' ).text( BP_Nouveau.media.connection_lost_error );
+						} else if ( 'error' === file.status && file.xhr && file.xhr.status >= 400 && 'string' === typeof response ) { // Non-JSON error body (e.g. proxy 413 page): show a readable message instead of raw HTML.
+							$( file.previewElement ).find( '.dz-error-message span' ).text( ( 413 === file.xhr.status ? BP_Nouveau.media.upload_too_large_error : BP_Nouveau.media.upload_server_error.replace( '{{statusCode}}', file.xhr.status ) ) );
 						}
 					} else {
 						var commentForm = target.closest( '.ac-form' );
@@ -4644,6 +4702,69 @@ window.bp = window.bp || {};
 					settings.commentsActivityItem.removeClass( 'active' );
 				}
 			} );
+		},
+
+		/**
+		 * Sync pinned state from page-level activity to the currently open media/video modal.
+		 * Call when modal content has finished loading so the modal shows the correct pin icon and class.
+		 */
+		syncPinIconToModal: function() {
+			var parentActivityId = $( '#hidden_parent_id' ).length > 0 ? parseInt( $( '#hidden_parent_id' ).val(), 10 ) : 0;
+			if ( parentActivityId <= 0 ) {
+				return;
+			}
+			var $pageActivityListItem = $( '#bb-rl-activity-stream li.activity-item[data-bp-activity-id="' + parentActivityId + '"]' );
+			if ( ! $pageActivityListItem.length || ! $pageActivityListItem.hasClass( 'bb-pinned' ) ) {
+				return;
+			}
+			var $activityItemInModal = $( '.bb-media-info-section:visible .bb-rl-activity-list li.activity-item' ).first();
+			if ( ! $activityItemInModal.length ) {
+				$activityItemInModal = $( '#bb-rl-media-model-container .bb-rl-activity-list li.activity-item, .bb-rl-media-model-container .bb-rl-activity-list li.activity-item' ).first();
+			}
+			if ( ! $activityItemInModal.length ) {
+				return;
+			}
+			var modalActivityId = parseInt( $activityItemInModal.data( 'bp-activity-id' ), 10 );
+			if ( modalActivityId !== parentActivityId ) {
+				return;
+			}
+			$activityItemInModal.addClass( 'bb-pinned' );
+		},
+
+		/**
+		 * Sync pin/unpin state when closing media modal theatre.
+		 *
+		 * @param {jQuery} target - The close button element that triggered the modal close.
+		 */
+		syncPinPostActivityOnCloseTheatre: function( target ) {
+			var parentActivityId         = $( '#hidden_parent_id' ).length > 0 ? parseInt( $( '#hidden_parent_id' ).val(), 10 ) : 0;
+			var $wrapper                 = target.closest( '.bb-rl-media-model-wrapper' );
+			if ( ! $wrapper.length ) {
+				return;
+			}
+			var $activityItemInModal     = $wrapper.find( '.bb-media-info-section .bb-rl-activity-list li.activity-item' ).first();
+			if ( ! $activityItemInModal.length ) {
+				$activityItemInModal = $wrapper.find( '.bb-rl-activity-list li.activity-item' ).first();
+			}
+			var parentActivityIdForModel = $activityItemInModal.length ? parseInt( $activityItemInModal.data( 'bp-activity-id' ), 10 ) : undefined;
+			var isSameActivity           = parentActivityId > 0 && ( parentActivityIdForModel === undefined || parentActivityId === parentActivityIdForModel );
+
+			if ( 
+				isSameActivity &&
+				target.hasClass( 'bb-rl-close-media-theatre' ) &&
+				'undefined' !== typeof bp.Nouveau.Activity.activityPinHasUpdates &&
+				bp.Nouveau.Activity.activityPinHasUpdates 
+			) {
+				var $pageActivityListItem = $( '#bb-rl-activity-stream li.activity-item[data-bp-activity-id=' + parentActivityId + ']' );
+				$pageActivityListItem.addClass( 'activity-sync' );
+				bp.Nouveau.Activity.heartbeat_data.last_recorded = 0;
+				bp.Nouveau.refreshActivities();
+				// Clear the flag immediately: both buddypress-media.js and
+				// buddypress-video.js bind closeTheatre to .bb-rl-close-media-theatre, so
+				// this can run twice for one close. Resetting here makes the second call a
+				// no-op instead of firing refreshActivities() a second time in the same tick.
+				bp.Nouveau.Activity.activityPinHasUpdates = false;
+			}
 		},
 	};
 

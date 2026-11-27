@@ -149,6 +149,8 @@ function bp_nouveau_media_localize_scripts( $params = array() ) {
 		'create_album_title'                 => __( 'Create Album', 'buddyboss' ),
 		'dictCancelUploadConfirmation'       => __( 'Are you sure you want to cancel this upload?', 'buddyboss' ),
 		'connection_lost_error'              => __( 'Connection lost with the server.', 'buddyboss' ),
+		'upload_server_error'                => __( 'Upload failed. The server rejected the request (HTTP {{statusCode}}). Please try again later.', 'buddyboss' ),
+		'upload_too_large_error'             => __( 'Upload failed. The file is too large for the server to accept (HTTP 413).', 'buddyboss' ),
 	);
 
 	if ( bp_is_single_album() ) {
@@ -201,6 +203,7 @@ function bp_nouveau_media_localize_scripts( $params = array() ) {
 		'photos'               => __( 'photos', 'buddyboss' ),
 		'video'                => __( 'video', 'buddyboss' ),
 		'videos'               => __( 'videos', 'buddyboss' ),
+		'title_required'       => __( 'Please enter a title.', 'buddyboss' ),
 	);
 
 	$params['dir_labels'] = array_merge(

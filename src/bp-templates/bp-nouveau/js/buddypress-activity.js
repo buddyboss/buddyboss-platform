@@ -627,7 +627,7 @@ window.bp = window.bp || {};
 				);
 			}
 
-			$( '.activity-item.bb-closed-comments' ).find( '.edit-activity, .acomment-edit' ).parents( '.generic-button' ).hide();
+			$( '.activity-item.bb-closed-comments' ).find( '.acomment-edit' ).parents( '.generic-button' ).hide();
 		},
 
 		/**
@@ -1185,6 +1185,7 @@ window.bp = window.bp || {};
 
 				var ajaxData = {
 					action      : 'delete_activity',
+					bb_legacy_template : 1, // Keep non-RL markup in the response when ReadyLaunch is on.
 					'id'        : activity_id,
 					'_wpnonce'  : parent.getLinkParams( target.prop( 'href' ), '_wpnonce' ),
 					'is_single' : target.closest( '[data-bp-single]' ).length
@@ -1230,7 +1231,11 @@ window.bp = window.bp || {};
 							}
 
 							if ( response.data.parent_activity_id && response.data.activity ) {
-								$( 'body:not(.activity-singular) #buddypress #activity-stream ul.activity-list li#activity-' + response.data.parent_activity_id ).replaceWith( response.data.activity );
+								bp.Nouveau.replaceActivityItem(
+									$( 'body:not(.activity-singular) #buddypress #activity-stream ul.activity-list li#activity-' + response.data.parent_activity_id ),
+									response.data.activity,
+									[ '.activity-inner > .bb-activity-media-wrap', '.activity-inner > .bb-activity-video-wrap', '.activity-state' ]
+								);
 							}
 
 							if ( activity_comment_id ) {
@@ -1337,6 +1342,7 @@ window.bp = window.bp || {};
 				parent.ajax(
 					{
 						action : 'get_single_activity_content',
+						bb_legacy_template : 1, // Keep non-RL markup in the response when ReadyLaunch is on.
 						id     : item_id
 					},
 					'activity'
@@ -1726,6 +1732,7 @@ window.bp = window.bp || {};
 
 				comment_data = {
 					action                        : 'new_activity_comment',
+					bb_legacy_template            : 1, // Keep non-RL markup in the response when ReadyLaunch is on.
 					_wpnonce_new_activity_comment : $( '#_wpnonce_new_activity_comment' ).val(),
 					comment_id                    : item_id,
 					form_id                       : activity_id,
@@ -2355,7 +2362,7 @@ window.bp = window.bp || {};
 									target.addClass( 'unclose-activity-comment' );
 									target.removeClass( 'close-activity-comment' );
 									target.find( 'span' ).html( BP_Nouveau.activity.strings.uncloseComments );
-									target.closest( 'li.activity-item.bb-closed-comments' ).find( '.edit-activity, .acomment-edit' ).parents( '.generic-button' ).hide();
+									target.closest( 'li.activity-item.bb-closed-comments' ).find( '.acomment-edit' ).parents( '.generic-button' ).hide();
 									target.closest( '.activity-item' ).find( '.activity-comments' ).before( '<div class="bb-activity-closed-comments-notice">' + response.data.feedback + '</div>' );
 
 									// Handle event from media theatre.
@@ -2364,12 +2371,12 @@ window.bp = window.bp || {};
 											$media_parent.addClass( 'bb-closed-comments' );
 											$media_parent.find( '.bb-activity-more-options .close-activity-comment span' ).html( BP_Nouveau.activity.strings.uncloseComments );
 											$media_parent.find( '.bb-activity-more-options .close-activity-comment' ).addClass( 'unclose-activity-comment' ).removeClass( 'close-activity-comment' );
-											$media_parent.find( '.edit-activity, .acomment-edit' ).parents( '.generic-button' ).hide();
+											$media_parent.find( '.acomment-edit' ).parents( '.generic-button' ).hide();
 											$media_parent.find( '.activity-comments' ).before( '<div class="bb-activity-closed-comments-notice">' + response.data.feedback + '</div>' );
 										}
 									}
 								} else if ( 'unclose_comments' === close_comments_action ) {
-									target.closest( 'li.activity-item.bb-closed-comments' ).find( '.edit-activity, .acomment-edit' ).parents( '.generic-button' ).show();
+									target.closest( 'li.activity-item.bb-closed-comments' ).find( '.acomment-edit' ).parents( '.generic-button' ).show();
 									target.closest( 'li.activity-item' ).removeClass( 'bb-closed-comments' );
 									if ( target.closest( '#activity-modal' ).length > 0 ) {
 										target.closest( '#activity-modal' ).removeClass( 'bb-closed-comments' );
@@ -2381,7 +2388,7 @@ window.bp = window.bp || {};
 									// Handle event from media theatre.
 									if ( target.parents( '.bb-media-model-wrapper' ).length > 0 ) {
 										if ( $media_parent.length > 0 ) {
-											$media_parent.find( '.edit-activity, .acomment-edit' ).parents( '.generic-button' ).show();
+											$media_parent.find( '.acomment-edit' ).parents( '.generic-button' ).show();
 											$media_parent.removeClass( 'bb-closed-comments' );
 											$media_parent.find( '.bb-activity-more-options .unclose-activity-comment span' ).html( BP_Nouveau.activity.strings.closeComments );
 											$media_parent.find( '.bb-activity-more-options .unclose-activity-comment' ).addClass( 'close-activity-comment' ).removeClass( 'unclose-activity-comment' );
@@ -2768,7 +2775,7 @@ window.bp = window.bp || {};
 						'success',
 						function(file, response) {
 							if ( response.data.id ) {
-								file.id                  = response.id;
+								file.id                  = response.data.id;
 								response.data.uuid       = file.upload.uuid;
 								response.data.menu_order = $( file.previewElement ).closest( '.dropzone' ).find( file.previewElement ).index() - 1;
 								response.data.album_id   = typeof BP_Nouveau.media !== 'undefined' && typeof BP_Nouveau.media.album_id !== 'undefined' ? BP_Nouveau.media.album_id : false;
@@ -2813,6 +2820,8 @@ window.bp = window.bp || {};
 									$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
 								} else if ( file.status == 'error' && ( file.xhr && file.xhr.status == 0 ) ) { // update server error text to user friendly.
 									$( file.previewElement ).find( '.dz-error-message span' ).text( BP_Nouveau.media.connection_lost_error );
+								} else if ( 'error' === file.status && file.xhr && file.xhr.status >= 400 && 'string' === typeof response ) { // Non-JSON error body (e.g. proxy 413 page): show a readable message instead of raw HTML.
+									$( file.previewElement ).find( '.dz-error-message span' ).text( ( 413 === file.xhr.status ? BP_Nouveau.media.upload_too_large_error : BP_Nouveau.media.upload_server_error.replace( '{{statusCode}}', file.xhr.status ) ) );
 								}
 							} else {
 								var commentForm = target.closest( '.ac-form' );
@@ -3025,7 +3034,7 @@ window.bp = window.bp || {};
 						'success',
 						function(file, response) {
 							if ( response.data.id ) {
-								file.id                  = response.id;
+								file.id                  = response.data.id;
 								response.data.uuid       = file.upload.uuid;
 								response.data.menu_order = $( file.previewElement ).closest( '.dropzone' ).find( file.previewElement ).index() - 1;
 								response.data.album_id   = typeof BP_Nouveau.media !== 'undefined' && typeof BP_Nouveau.media.album_id !== 'undefined' ? BP_Nouveau.media.album_id : false;
@@ -3059,6 +3068,8 @@ window.bp = window.bp || {};
 									$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
 								} else if ( file.status == 'error' && ( file.xhr && file.xhr.status == 0 ) ) { // update server error text to user friendly.
 									$( file.previewElement ).find( '.dz-error-message span' ).text( BP_Nouveau.media.connection_lost_error );
+								} else if ( 'error' === file.status && file.xhr && file.xhr.status >= 400 && 'string' === typeof response ) { // Non-JSON error body (e.g. proxy 413 page): show a readable message instead of raw HTML.
+									$( file.previewElement ).find( '.dz-error-message span' ).text( ( 413 === file.xhr.status ? BP_Nouveau.media.upload_too_large_error : BP_Nouveau.media.upload_server_error.replace( '{{statusCode}}', file.xhr.status ) ) );
 								}
 							} else {
 								var commentForm = target.closest( '.ac-form' );
@@ -3191,6 +3202,10 @@ window.bp = window.bp || {};
 						dictMaxFilesExceeded 		: BP_Nouveau.video.video_dict_file_exceeded,
 						previewTemplate		 		: acCommentVideoTemplate,
 						dictCancelUploadConfirmation: BP_Nouveau.video.dictCancelUploadConfirmation,
+						chunking                    : true,
+						chunkSize                   : 30*1024*1024,
+						retryChunks                 : true,
+						retryChunksLimit            : 3,
 					};
 
 					// init dropzone.
@@ -3285,8 +3300,13 @@ window.bp = window.bp || {};
 								$( file.previewElement ).closest( '.dz-preview' ).addClass( 'dz-complete' );
 							}
 
-							if ( response.data.id ) {
-								file.id                  = response.id;
+							if ( true === file.upload.chunked ) {
+								// Chunked upload: Dropzone passes an empty response, read the final chunk response from the XHR.
+								response = JSON.parse( file.xhr.response );
+							}
+
+							if ( response.data && response.data.id ) {
+								file.id                  = response.data.id;
 								response.data.uuid       = file.upload.uuid;
 								response.data.menu_order = $( file.previewElement ).closest( '.dropzone' ).find( file.previewElement ).index() - 1;
 								response.data.album_id   = typeof BP_Nouveau.video !== 'undefined' && typeof BP_Nouveau.video.album_id !== 'undefined' ? BP_Nouveau.video.album_id : false;
@@ -3294,6 +3314,32 @@ window.bp = window.bp || {};
 								response.data.saved      = false;
 								response.data.js_preview = $( file.previewElement ).find( '.dz-video-thumbnail img' ).attr( 'src' );
 								self.dropzone_video.push( response.data );
+
+								// The thumbnail capture (bp.Nouveau.getVideoThumb) runs async and can still be
+								// in progress here. Backfill js_preview on this same object (already pushed
+								// above, by reference) once the capture finishes, instead of reading the
+								// <img> immediately and losing the preview.
+								if ( ! response.data.js_preview ) {
+									var thumbnailCheckAttempts = 0;
+									// getVideoThumb() reads the whole file before capturing, so on large files or
+									// slow devices it can settle well after the upload. Poll every 200ms until it
+									// settles, the preview leaves the page (file removed or comment submitted), or
+									// 60s pass, so the interval never outlives the comment form.
+									var thumbnailCheck = setInterval(
+										function () {
+											var $thumbnailPreview = $( file.previewElement ).closest( '.dz-preview' );
+											thumbnailCheckAttempts++;
+											if ( $thumbnailPreview.hasClass( 'dz-has-no-thumbnail' ) || $thumbnailPreview.hasClass( 'dz-has-thumbnail' ) ) {
+												response.data.js_preview = $( file.previewElement ).find( '.dz-video-thumbnail img' ).attr( 'src' );
+												clearInterval( thumbnailCheck );
+											} else if ( ! file.previewElement || ! document.body.contains( file.previewElement ) || thumbnailCheckAttempts >= 300 ) {
+												clearInterval( thumbnailCheck );
+											}
+										},
+										200
+									);
+								}
+
 								return file.previewElement.classList.add( 'dz-success' );
 							} else {
 								var node, _i, _len, _ref, _results;
@@ -3321,6 +3367,8 @@ window.bp = window.bp || {};
 									$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
 								} else if ( file.status == 'error' && ( file.xhr && file.xhr.status == 0 ) ) { // update server error text to user friendly.
 									$( file.previewElement ).find( '.dz-error-message span' ).text( BP_Nouveau.media.connection_lost_error );
+								} else if ( 'error' === file.status && file.xhr && file.xhr.status >= 400 && 'string' === typeof response ) { // Non-JSON error body (e.g. proxy 413 page): show a readable message instead of raw HTML.
+									$( file.previewElement ).find( '.dz-error-message span' ).text( ( 413 === file.xhr.status ? BP_Nouveau.media.upload_too_large_error : BP_Nouveau.media.upload_server_error.replace( '{{statusCode}}', file.xhr.status ) ) );
 								}
 							} else {
 								var commentForm = target.closest( '.ac-form' );
@@ -4264,6 +4312,7 @@ window.bp = window.bp || {};
 
 			var data = {
 				action: 'activity_loadmore_comments',
+				bb_legacy_template: 1, // Keep non-RL markup in the response when ReadyLaunch is on.
 				activity_id: activityId,
 				parent_comment_id: parentCommentId,
 				offset: $( e.currentTarget ).parents( '.activity-comments' ).find( 'ul[data-parent_comment_id ="' + parentCommentId + '"] > li.comment-item:not(.bb-recent-comment)' ).length,
@@ -4425,6 +4474,7 @@ window.bp = window.bp || {};
 
 					var data = {
 						action: 'activity_sync_from_modal',
+						bb_legacy_template: 1, // Keep non-RL markup in the response when ReadyLaunch is on.
 						activity_id: activityId,
 					};
 
@@ -4434,7 +4484,11 @@ window.bp = window.bp || {};
 								return;
 							} else if ( 'undefined' !== typeof response.data && 'undefined' !== typeof response.data.activity ) {
 								// success
-								$pageActivityListItem.replaceWith( $.parseHTML( response.data.activity ) );
+								bp.Nouveau.replaceActivityItem(
+									$pageActivityListItem,
+									$.parseHTML( response.data.activity ),
+									[ '.activity-inner > .bb-activity-media-wrap', '.activity-inner > .bb-activity-video-wrap', '.activity-state', '.activity-comments ul[data-activity_id]' ]
+								);
 								// replace dummy image with original image by faking scroll event to call bp.Nouveau.lazyLoad.
 								jQuery( window ).scroll();
 
