@@ -156,8 +156,8 @@ function bboss_nouveau_ajax_mark_activity_favorite() {
 		wp_send_json_error( $error_message );
 	}
 
-	$item_id   = sanitize_text_field( $_POST['item_id'] );
-	$item_type = sanitize_text_field( $_POST['item_type'] );
+	$item_id   = sanitize_text_field( wp_unslash( $_POST['item_id'] ) );
+	$item_type = sanitize_text_field( wp_unslash( $_POST['item_type'] ) );
 	$user_id   = bboss_loggedin_user_id();
 
 	if ( ! bboss_all_enabled_reactions( $item_type ) ) {
@@ -165,7 +165,7 @@ function bboss_nouveau_ajax_mark_activity_favorite() {
 	}
 
 	if ( ! empty( $_POST['reaction_id'] ) ) {
-		$reaction_id = sanitize_text_field( $_POST['reaction_id'] );
+		$reaction_id = sanitize_text_field( wp_unslash( $_POST['reaction_id'] ) );
 	} else {
 		$reaction = bboss_load_reaction();
 		$reaction_id = $reaction ? $reaction->bb_reactions_reaction_id() : 0;
@@ -230,8 +230,8 @@ function bboss_nouveau_ajax_unmark_activity_favorite() {
 		wp_send_json_error( esc_html__( 'No item id', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 	}
 
-	$item_id   = sanitize_text_field( $_POST['item_id'] );
-	$item_type = sanitize_text_field( $_POST['item_type'] );
+	$item_id   = sanitize_text_field( wp_unslash( $_POST['item_id'] ) );
+	$item_type = sanitize_text_field( wp_unslash( $_POST['item_type'] ) );
 	$user_id   = bboss_loggedin_user_id();
 
 	if ( ! bboss_all_enabled_reactions( $item_type ) ) {
@@ -2329,7 +2329,7 @@ function bboss_nouveau_ajax_activity_load_more_comments() {
 		array(
 			'limit'                  => bboss_get_activity_comment_loading(),
 			'offset'                 => ! empty( $_POST['offset'] ) ? (int) $_POST['offset'] : 0,
-			'last_comment_timestamp' => ! empty( $_POST['last_comment_timestamp'] ) ? sanitize_text_field( $_POST['last_comment_timestamp'] ) : '',
+			'last_comment_timestamp' => ! empty( $_POST['last_comment_timestamp'] ) ? sanitize_text_field( wp_unslash( $_POST['last_comment_timestamp'] ) ) : '',
 			'last_comment_id'        => ! empty( $_POST['last_comment_id'] ) ? (int) $_POST['last_comment_id'] : 0,
 			'comment_order_by'       => apply_filters( 'bb_activity_recurse_comments_order_by', 'ASC' ),
 		)
@@ -2353,7 +2353,7 @@ function bboss_nouveau_ajax_activity_load_more_comments() {
 		'parent_comment_id'      => $parent_comment_id,
 		'main_activity_id'       => $activity_id,
 		'is_ajax_load_more'      => true,
-		'last_comment_timestamp' => ! empty( $_POST['last_comment_timestamp'] ) ? sanitize_text_field( $_POST['last_comment_timestamp'] ) : '',
+		'last_comment_timestamp' => ! empty( $_POST['last_comment_timestamp'] ) ? sanitize_text_field( wp_unslash( $_POST['last_comment_timestamp'] ) ) : '',
 		'last_comment_id'        => ! empty( $_POST['last_comment_id'] ) ? (int) $_POST['last_comment_id'] : 0,
 	);
 

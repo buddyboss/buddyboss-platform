@@ -695,7 +695,7 @@ if ( ! class_exists( 'BBoss_Telemetry' ) ) {
 			$bp_prefix    = bboss_core_get_table_prefix();
 			$sanitized    = array_map( 'sanitize_key', $bb_platform_db_options );
 			$placeholders = implode( ', ', array_fill( 0, count( $sanitized ), '%s' ) );
-			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table prefix is safe; placeholders are parameterized.
+			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare -- Table prefix is safe; placeholders are parameterized.
 			$results = $wpdb->get_results( $wpdb->prepare( "SELECT option_name, option_value FROM {$bp_prefix}options WHERE option_name IN ({$placeholders})", $sanitized ), ARRAY_A );
 
 			if ( ! empty( $results ) ) {

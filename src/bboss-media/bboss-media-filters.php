@@ -1225,7 +1225,7 @@ function bboss_media_add_admin_repair_items( $repair_list ) {
  */
 function bboss_media_message_privacy_repair() {
 	global $wpdb;
-	$offset = isset( $_POST['offset'] ) ? (int) ( $_POST['offset'] ) : 0;
+	$offset = isset( $_POST['offset'] ) ? (int) $_POST['offset'] : 0;
 	$bp     = bboss();
 
 	// Table name from $bp->media; OFFSET bound as %d.
@@ -1266,7 +1266,7 @@ function bboss_media_message_privacy_repair() {
  */
 function bboss_media_admin_repair_media() {
 	global $wpdb;
-	$offset = isset( $_POST['offset'] ) ? (int) ( $_POST['offset'] ) : 0;
+	$offset = isset( $_POST['offset'] ) ? (int) $_POST['offset'] : 0;
 	$bp     = bboss();
 
 	// Table name from $bp->media; OFFSET bound as %d.
@@ -1328,7 +1328,7 @@ function bboss_media_admin_repair_media() {
  */
 function bboss_media_forum_privacy_repair() {
 	global $wpdb;
-	$offset = isset( $_POST['offset'] ) ? (int) ( $_POST['offset'] ) : 0;
+	$offset = isset( $_POST['offset'] ) ? (int) $_POST['offset'] : 0;
 	$bp     = bboss();
 
 	// Table names from $wpdb; OFFSET bound as %d.

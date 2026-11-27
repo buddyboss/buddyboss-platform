@@ -77,7 +77,7 @@ function bboss_core_ajax_widget_friends() {
 	$members_args = array(
 		'user_id'         => absint( $user_id ),
 		'type'            => $type,
-		'max'             => absint( $_POST['max-friends'] ),
+		'max'             => absint( wp_unslash( $_POST['max-friends'] ) ),
 		'populate_extras' => 1,
 	);
 

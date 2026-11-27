@@ -204,7 +204,7 @@ function bboss_profile_repeaters_update_field_data( $user_id, $posted_field_ids,
 
 	// First, clear the data for deleted fields, if any
 	if ( isset( $_POST['deleted_field_ids'] ) && ! empty( $_POST['deleted_field_ids'] ) ) {
-		$deleted_field_ids = wp_parse_id_list( $_POST['deleted_field_ids'] );
+		$deleted_field_ids = wp_parse_id_list( wp_unslash( $_POST['deleted_field_ids'] ) );
 		foreach ( $deleted_field_ids as $deleted_field_id ) {
 			bboss_xprofile_delete_field_data( $deleted_field_id, $user_id );
 		}
@@ -1267,7 +1267,7 @@ function bboss_admin_profile_repeaters_update_field_data( $user_id, $posted_fiel
 
 			// First, clear the data for deleted fields, if any.
 			if ( isset( $_POST['deleted_field_ids'][ $field_group_id ] ) && ! empty( $_POST['deleted_field_ids'][ $field_group_id ] ) ) {
-				$deleted_field_ids = wp_parse_id_list( $_POST['deleted_field_ids'][ $field_group_id ] );
+				$deleted_field_ids = wp_parse_id_list( wp_unslash( $_POST['deleted_field_ids'][ $field_group_id ] ) );
 				foreach ( $deleted_field_ids as $deleted_field_id ) {
 					if ( ! in_array( $deleted_field_id, $posted_field_ids, true ) ) {
 						bboss_xprofile_delete_field_data( $deleted_field_id, $user_id );

@@ -642,7 +642,8 @@ function bboss_recaptcha_display( $action = '' ) {
 				'jquery',
 				'bb-recaptcha-api',
 			),
-			bboss()->version
+			bboss()->version,
+			false
 		);
 
 		if ( bboss_recaptcha_conflict_mode() ) {

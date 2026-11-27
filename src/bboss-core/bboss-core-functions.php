@@ -7293,7 +7293,7 @@ function bboss_attachments_get_default_profile_group_cover_image( $component ) {
  */
 function bboss_get_default_profile_group_cover( $data, $args ) {
 
-	if ( isset( $_POST['action'] ) && 'bp_cover_image_delete' === sanitize_text_field( $_POST['action'] ) ) {
+	if ( isset( $_POST['action'] ) && 'bp_cover_image_delete' === sanitize_text_field( wp_unslash( $_POST['action'] ) ) ) {
 		return false;
 	}
 
@@ -10399,9 +10399,9 @@ function bboss_error_log( $log = '', $always_print = false ) {
 		true === $always_print
 	) {
 		if ( is_array( $log ) || is_object( $log ) ) {
-			error_log( print_r( $log, true ) );
+			error_log( print_r( $log, true ) ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log, WordPress.PHP.DevelopmentFunctions.error_log_print_r -- deliberate log entry for site administrators, not left-over debugging.
 		} else {
-			error_log( $log );
+			error_log( $log ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log -- deliberate log entry for site administrators, not left-over debugging.
 		}
 	}
 }

@@ -1273,7 +1273,7 @@ function bboss_nouveau_ajax_delete_thread_messages() {
 		wp_send_json_error( $response );
 	}
 
-	$thread_ids = wp_parse_id_list( $_POST['id'] );
+	$thread_ids = wp_parse_id_list( wp_unslash( $_POST['id'] ) );
 
 	foreach ( $thread_ids as $thread_id ) {
 		if ( ! bboss_messages_check_thread_access( $thread_id ) && ! bboss_current_user_can( 'bp_moderate' ) ) {
@@ -1338,7 +1338,7 @@ function bboss_nouveau_ajax_delete_thread() {
 		wp_send_json_error( $response );
 	}
 
-	$thread_ids = wp_parse_id_list( $_POST['id'] );
+	$thread_ids = wp_parse_id_list( wp_unslash( $_POST['id'] ) );
 
 	foreach ( $thread_ids as $thread_id ) {
 		if ( ! bboss_messages_check_thread_access( $thread_id ) && ! bboss_current_user_can( 'bp_moderate' ) ) {
@@ -1481,7 +1481,7 @@ function bboss_nouveau_ajax_star_thread_messages() {
 		wp_send_json_error( $response );
 	}
 
-	$ids      = wp_parse_id_list( $_POST['id'] );
+	$ids      = wp_parse_id_list( wp_unslash( $_POST['id'] ) );
 	$messages = array();
 
 	// Use global nonce for bulk actions involving more than one id.
@@ -1594,7 +1594,7 @@ function bboss_nouveau_ajax_readunread_thread_messages() {
 		wp_send_json_error( $response );
 	}
 
-	$thread_ids = wp_parse_id_list( $_POST['id'] );
+	$thread_ids = wp_parse_id_list( wp_unslash( $_POST['id'] ) );
 
 	$response['messages'] = array();
 
@@ -1732,7 +1732,7 @@ function bboss_nouveau_ajax_dsearch_recipients() {
 
 	$results = bboss_core_get_suggestions(
 		array(
-			'term'            => sanitize_text_field( $_GET['term'] ),
+			'term'            => sanitize_text_field( wp_unslash( $_GET['term'] ) ),
 			'type'            => 'members',
 			'only_friends'    => false,
 			'count_total'     => 'count_query',
@@ -2954,7 +2954,7 @@ function bboss_nouveau_ajax_hide_thread() {
 		wp_send_json_error( $response );
 	}
 
-	$thread_ids = wp_parse_id_list( $_POST['id'] );
+	$thread_ids = wp_parse_id_list( wp_unslash( $_POST['id'] ) );
 
 	// Only threads the member is in (or moderators, as for deleting): the toast below names the recipients or the group.
 	foreach ( $thread_ids as $thread_id ) {
@@ -3516,7 +3516,7 @@ function bboss_nouveau_ajax_unhide_thread() {
 		wp_send_json_error( $response );
 	}
 
-	$thread_ids = wp_parse_id_list( $_POST['id'] );
+	$thread_ids = wp_parse_id_list( wp_unslash( $_POST['id'] ) );
 
 	// Only threads the member is in (or moderators, as for deleting): the toast below names the recipients or the group.
 	foreach ( $thread_ids as $thread_id ) {

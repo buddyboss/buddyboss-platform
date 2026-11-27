@@ -1945,7 +1945,7 @@ function bboss_default_custom_profile_group_cover_image_upload_dir( $upload_dir 
 		return $upload_dir;
 	}
 
-	$object = sanitize_text_field( $_POST['bp_params']['object'] );
+	$object = sanitize_text_field( wp_unslash( $_POST['bp_params']['object'] ) );
 
 	// Set the subdir.
 	$subdir = '/members/0/cover-image';
@@ -1997,7 +1997,7 @@ function bboss_attachments_get_profile_group_attachment_dir( $cover_dir, $object
 		return $cover_dir;
 	}
 
-	$object = sanitize_text_field( $_POST['bp_params']['object'] );
+	$object = sanitize_text_field( wp_unslash( $_POST['bp_params']['object'] ) );
 
 	$upload_dir = bboss_attachments_uploads_dir_get();
 
@@ -2052,18 +2052,18 @@ add_filter( 'bb_attachments_get_attachment_sub_dir', 'bboss_attachments_get_prof
  */
 function bboss_save_profile_group_options_on_upload_custom_avatar( $item_id, $type, $avatar_data = array() ) {
 	$item_id   = ! empty( $_POST['item_id'] ) ? (int) $_POST['item_id'] : '';
-	$item_type = ! empty( $_POST['item_type'] ) ? sanitize_text_field( $_POST['item_type'] ) : null;
+	$item_type = ! empty( $_POST['item_type'] ) ? sanitize_text_field( wp_unslash( $_POST['item_type'] ) ) : null;
 
 	if ( is_admin() && empty( $item_id ) && 'default' === $item_type ) {
 
 		$avatar = isset( $avatar_data['avatar'] ) ? $avatar_data['avatar'] : '';
 
 		if ( ! empty( $avatar ) ) {
-			if ( 'user' === sanitize_text_field( $_POST['object'] ) ) {
+			if ( 'user' === sanitize_text_field( wp_unslash( $_POST['object'] ) ) ) {
 				bboss_update_option( 'bp-profile-avatar-type', 'BuddyBoss' );
 				bboss_update_option( 'bp-default-profile-avatar-type', 'custom' );
 				bboss_update_option( 'bp-default-custom-profile-avatar', $avatar );
-			} elseif ( 'group' === sanitize_text_field( $_POST['object'] ) ) {
+			} elseif ( 'group' === sanitize_text_field( wp_unslash( $_POST['object'] ) ) ) {
 				bboss_update_option( 'bp-disable-group-avatar-uploads', '' );
 				bboss_update_option( 'bp-default-group-avatar-type', 'custom' );
 				bboss_update_option( 'bp-default-custom-group-avatar', $avatar );
@@ -2126,7 +2126,7 @@ function bboss_save_profile_group_cover_options_on_upload_custom_cover( $item_id
 
 	if ( $is_validate && ! empty( $cover_url ) ) {
 
-		$object = sanitize_text_field( $_POST['bp_params']['object'] );
+		$object = sanitize_text_field( wp_unslash( $_POST['bp_params']['object'] ) );
 
 		if ( 'user' === $object ) {
 			bboss_update_option( 'bp-disable-cover-image-uploads', '' );
@@ -2151,14 +2151,14 @@ add_action( 'groups_cover_image_uploaded', 'bboss_save_profile_group_cover_optio
  */
 function bboss_delete_profile_group_cover_images_url( $item_id ) {
 	$item_id   = ! empty( $_POST['item_id'] ) ? (int) $_POST['item_id'] : '';
-	$item_type = ! empty( $_POST['item_type'] ) ? sanitize_text_field( $_POST['item_type'] ) : null;
+	$item_type = ! empty( $_POST['item_type'] ) ? sanitize_text_field( wp_unslash( $_POST['item_type'] ) ) : null;
 
 	if ( is_admin() && empty( $item_id ) && 'default' === $item_type ) {
 
-		if ( 'user' === sanitize_text_field( $_POST['object'] ) ) {
+		if ( 'user' === sanitize_text_field( wp_unslash( $_POST['object'] ) ) ) {
 			bboss_update_option( 'bp-default-profile-cover-type', 'buddyboss' );
 			bboss_update_option( 'bp-default-custom-profile-cover', '' );
-		} elseif ( 'group' === sanitize_text_field( $_POST['object'] ) ) {
+		} elseif ( 'group' === sanitize_text_field( wp_unslash( $_POST['object'] ) ) ) {
 			bboss_update_option( 'bp-default-group-cover-type', 'buddyboss' );
 			bboss_update_option( 'bp-default-custom-group-cover', '' );
 		}

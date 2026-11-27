@@ -3875,7 +3875,7 @@ function bboss_xprofile_save_fields( $posted_field_ids = array(), $is_required =
 function bboss_migrate_xprofile_visibility( $background = false, $page = 1 ) {
 	global $wpdb, $bb_background_updater;
 
-	$page = ! empty( $_POST['offset'] ) ? (int) ( $_POST['offset'] ) : $page;
+	$page = ! empty( $_POST['offset'] ) ? (int) $_POST['offset'] : $page;
 	$bp   = bboss();
 	$args = array(
 		'number' => apply_filters( 'bb_migrate_xprofile_visibility_users_number', 100 ),

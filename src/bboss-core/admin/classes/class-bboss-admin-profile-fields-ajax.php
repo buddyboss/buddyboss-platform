@@ -636,7 +636,7 @@ class BBoss_Admin_Profile_Fields_Ajax {
 				// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Placeholders are safe integers.
 				$rows = $wpdb->get_results(
 					$wpdb->prepare(
-						"SELECT id, group_id FROM {$bp->profile->table_name_fields} WHERE id IN ( {$placeholders} )",
+						"SELECT id, group_id FROM {$bp->profile->table_name_fields} WHERE id IN ( {$placeholders} )", // phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare -- the placeholders are built above, one per value passed.
 						...$all_submitted_ids
 					)
 				);
