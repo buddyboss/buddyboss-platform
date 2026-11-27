@@ -391,7 +391,6 @@ class BBoss_Core extends BBoss_Component {
 		$bp->available_integrations = apply_filters(
 			'bp_integrations',
 			array(
-				'buddyboss-app',
 				'pusher',
 				'recaptcha',
 				'two-factor',

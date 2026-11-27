@@ -912,19 +912,13 @@ function bboss_core_get_admin_integrations_tabs( $active_tab = '' ) {
  */
 function bboss_core_get_admin_integration_active_tab() {
 
-	if ( ! is_plugin_active( 'buddyboss-app/buddyboss-app.php' ) ) {
-
-		$default_tab = apply_filters( 'bp_core_admin_default_active_tab', 'bp-buddyboss-app' );
-
-		return isset( $_GET['tab'] ) ? $_GET['tab'] : $default_tab;
-
-	} else {
+	// Builds without the BuddyBoss App integration tab (the wordpress.org edition) always
+	// default to the compatibility tab: the two fenced blocks below leave only the else body.
 
 		$default_tab = apply_filters( 'bp_core_admin_default_active_tab', 'bp-compatibility' );
 
 		return isset( $_GET['tab'] ) ? $_GET['tab'] : $default_tab;
 
-	}
 }
 
 /**

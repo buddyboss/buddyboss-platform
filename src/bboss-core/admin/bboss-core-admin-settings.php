@@ -168,19 +168,6 @@ function bboss_core_admin_settings() {
 // they are still referenced by the BP_Admin_Integration_tab base class
 // which Pro and third-party integration tabs extend.
 
-/**
- * Load the BuddyBoss App integration admin screen.
- *
- * @since BuddyBoss 1.0.0
- */
-function bboss_core_admin_buddyboss_app() {
-	?>
-	<div class="wrap">
-		<h2 class="nav-tab-wrapper"><?php bboss_core_admin_tabs( __( 'BuddyBoss App', 'buddyboss-community-social-network-groups-forums-messaging' ) ); ?></h2>
-		<?php require bboss()->plugin_dir . 'bboss-core/admin/templates/about-buddyboss-app.php'; ?>
-	</div>
-	<?php
-}
 
 /**
  * Output settings API option.
