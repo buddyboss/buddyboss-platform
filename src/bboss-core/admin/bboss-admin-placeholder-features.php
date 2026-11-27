@@ -119,7 +119,7 @@ function bboss_refresh_placeholder_features_data() {
 	 */
 	$url = apply_filters(
 		'bb_placeholder_features_endpoint',
-		'https://bb-features-marketing.s3.amazonaws.com/bb-features.json'
+		'https://bb-features-marketing.s3.amazonaws.com/wp-features.json'
 	);
 
 	$response = wp_remote_get(
