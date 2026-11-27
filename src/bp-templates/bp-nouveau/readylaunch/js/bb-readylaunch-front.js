@@ -723,6 +723,11 @@ window.bp = window.bp || {};
 					dropzone.on(
 						'addedfile',
 						function ( file ) {
+							// Keep submit disabled while a HEIC photo converts to JPEG.
+							if ( ! _.isUndefined( bp.HeicConverter ) && bp.HeicConverter.handles( dropzone, file ) ) {
+								view.$el.closest( parentSelector ).addClass( 'media-uploading' );
+							}
+
 							if ( file[ mediaType + '_edit_data' ] ) {
 								view[ modelKey ].push( file[ mediaType + '_edit_data' ] );
 								view.model.set( modelKey, view[ modelKey ] );
@@ -942,6 +947,7 @@ window.bp = window.bp || {};
 						function () {
 							if ( 0 === dropzone.getUploadingFiles().length &&
 								0 === dropzone.getQueuedFiles().length &&
+								0 === dropzone.getFilesWithStatus( window.Dropzone.ADDED ).length &&
 								dropzone.files.length > 0 ) {
 								view.$el.closest( parentSelector ).removeClass( 'media-uploading' );
 							}
