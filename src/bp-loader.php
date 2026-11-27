@@ -921,7 +921,21 @@ if ( ! function_exists( 'bboss_core_load_buddypress_textdomain' ) ) {
 			// load_plugin_textdomain() registers the directory as well, so it waits
 			// for the same moment (see the registration above); the init:0 run of
 			// this function comes back here when no catalog was loaded.
+			//
+			// Until then, leave the placeholder core itself leaves after a failed
+			// just-in-time attempt. WordPress 6.8+ registers the folder named by the
+			// plugin header before plugins load, so without it the first label
+			// translated at `bp_loaded` on a site with no catalog (every English
+			// site) starts a just-in-time lookup and logs "loading triggered too
+			// early" on every request. There is nothing to load at this point: every
+			// location was probed above. The placeholder is not a loaded catalog
+			// (is_textdomain_loaded() ignores it), so the init:0 run still does its
+			// full pass and removes it below.
 			if ( ! did_action( 'after_setup_theme' ) ) {
+				if ( ! isset( $GLOBALS['l10n'][ $domain ] ) && class_exists( 'NOOP_Translations' ) ) {
+					$GLOBALS['l10n'][ $domain ] = new NOOP_Translations();
+				}
+
 				return false;
 			}
 
