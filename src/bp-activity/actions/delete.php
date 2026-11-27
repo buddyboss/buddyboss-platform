@@ -77,7 +77,7 @@ function bp_activity_action_delete_activity( $activity_id = 0 ) {
 
 	// Check for the redirect query arg, otherwise let WP handle things.
 	if ( ! empty( $_GET['redirect_to'] ) ) {
-		bp_core_redirect( esc_url( $_GET['redirect_to'] ) );
+		bp_core_redirect( esc_url( wp_unslash( $_GET['redirect_to'] ) ) );
 	} else {
 		bp_core_redirect( wp_get_referer() );
 	}

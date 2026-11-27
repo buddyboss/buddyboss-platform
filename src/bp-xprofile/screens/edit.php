@@ -45,7 +45,7 @@ function xprofile_screen_edit_profile() {
 
 		// First, clear the data for deleted fields, if any.
 		if ( isset( $_POST['deleted_field_ids'] ) && ! empty( $_POST['deleted_field_ids'] ) ) {
-			$deleted_field_ids = wp_parse_id_list( $_POST['deleted_field_ids'] );
+			$deleted_field_ids = wp_parse_id_list( wp_unslash( $_POST['deleted_field_ids'] ) );
 			foreach ( $deleted_field_ids as $deleted_field_id ) {
 				xprofile_delete_field_data( $deleted_field_id, bp_displayed_user_id() );
 			}
@@ -54,7 +54,7 @@ function xprofile_screen_edit_profile() {
 		// Check we have field ID's.
 		if ( empty( $_POST['field_ids'] ) ) {
 			if ( isset( $_POST['repeater_set_sequence'] ) && (int) bp_action_variable( 1 ) > 0 ) {
-				$field_set_sequence = wp_parse_id_list( $_POST['repeater_set_sequence'] );
+				$field_set_sequence = wp_parse_id_list( wp_unslash( $_POST['repeater_set_sequence'] ) );
 				bp_set_profile_field_set_count( (int) bp_action_variable( 1 ), bp_displayed_user_id(), count( (array) $field_set_sequence ) );
 			}
 			bp_core_redirect( trailingslashit( bp_displayed_user_domain() . bp_get_profile_slug() . '/edit/group/' . bp_action_variable( 1 ) ) );
@@ -62,7 +62,7 @@ function xprofile_screen_edit_profile() {
 
 		// Explode the posted field IDs into an array so we know which
 		// fields have been submitted.
-		$posted_field_ids         = wp_parse_id_list( $_POST['field_ids'] );
+		$posted_field_ids         = wp_parse_id_list( wp_unslash( $_POST['field_ids'] ) );
 		$is_required              = array();
 		$validations              = array();
 		$is_required_fields_error = array();

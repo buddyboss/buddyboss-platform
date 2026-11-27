@@ -26,7 +26,7 @@ function bp_nouveau_ajax_object_template_loader() {
 		wp_send_json_error();
 	}
 
-	$object = sanitize_title( $_POST['object'] );
+	$object = sanitize_title( wp_unslash( $_POST['object'] ) );
 
 	// Bail if object is not an active component to prevent arbitrary file inclusion.
 	if ( ! bp_is_active( $object ) ) {
@@ -49,7 +49,7 @@ function bp_nouveau_ajax_object_template_loader() {
 
 		$scope = '';
 		if ( ! empty( $_POST['scope'] ) ) {
-			$scope = sanitize_text_field( $_POST['scope'] );
+			$scope = sanitize_text_field( wp_unslash( $_POST['scope'] ) );
 		}
 
 		// We need to calculate and return the feed URL for each scope.

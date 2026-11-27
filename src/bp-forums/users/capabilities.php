@@ -200,7 +200,7 @@ function bbp_profile_update_role( $user_id = 0 ) {
 	}
 
 	// Fromus role we want the user to have
-	$new_role    = sanitize_text_field( $_POST['bbp-forums-role'] );
+	$new_role    = sanitize_text_field( wp_unslash( $_POST['bbp-forums-role'] ) );
 	$forums_role = bbp_get_user_role( $user_id );
 
 	// Bail if no role change

@@ -210,7 +210,7 @@ function xprofile_register_activity_action( $key, $value ) {
  * @return bool
  */
 function bp_xprofile_new_avatar_activity( $user_id = 0 ) {
-	$item_type = ( isset( $_POST['item_type'] ) && ! empty( $_POST['item_type'] ) ) ? sanitize_text_field( $_POST['item_type'] ) : null;
+	$item_type = ( isset( $_POST['item_type'] ) && ! empty( $_POST['item_type'] ) ) ? sanitize_text_field( wp_unslash( $_POST['item_type'] ) ) : null;
 
 	// Bail if activity component is not active.
 	if ( ! bp_is_active( 'activity' ) ) {

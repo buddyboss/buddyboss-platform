@@ -1228,7 +1228,7 @@ function bp_media_add_admin_repair_items( $repair_list ) {
  */
 function bp_media_message_privacy_repair() {
 	global $wpdb;
-	$offset = isset( $_POST['offset'] ) ? (int) ( $_POST['offset'] ) : 0;
+	$offset = isset( $_POST['offset'] ) ? (int) $_POST['offset'] : 0;
 	$bp     = buddypress();
 
 	// Table name from $bp->media; OFFSET bound as %d.
@@ -1269,7 +1269,7 @@ function bp_media_message_privacy_repair() {
  */
 function bp_media_admin_repair_media() {
 	global $wpdb;
-	$offset = isset( $_POST['offset'] ) ? (int) ( $_POST['offset'] ) : 0;
+	$offset = isset( $_POST['offset'] ) ? (int) $_POST['offset'] : 0;
 	$bp     = buddypress();
 
 	// Table name from $bp->media; OFFSET bound as %d.
@@ -1331,7 +1331,7 @@ function bp_media_admin_repair_media() {
  */
 function bp_media_forum_privacy_repair() {
 	global $wpdb;
-	$offset = isset( $_POST['offset'] ) ? (int) ( $_POST['offset'] ) : 0;
+	$offset = isset( $_POST['offset'] ) ? (int) $_POST['offset'] : 0;
 	$bp     = buddypress();
 
 	// Table names from $wpdb; OFFSET bound as %d.

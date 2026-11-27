@@ -2022,7 +2022,7 @@ function bbp_split_topic_form_fields() {
 	?>
 
 	<input type="hidden" name="action"       id="bbp_post_action" value="bbp-split-topic" />
-	<input type="hidden" name="bbp_reply_id" id="bbp_reply_id"    value="<?php echo absint( $_GET['reply_id'] ); ?>" />
+	<input type="hidden" name="bbp_reply_id" id="bbp_reply_id"    value="<?php echo absint( wp_unslash( $_GET['reply_id'] ) ); ?>" />
 
 	<?php
 	wp_nonce_field( 'bbp-split-topic_' . bbp_get_topic_id() );
@@ -2039,7 +2039,7 @@ function bbp_move_reply_form_fields() {
 	?>
 
 	<input type="hidden" name="action"       id="bbp_post_action" value="bbp-move-reply" />
-	<input type="hidden" name="bbp_reply_id" id="bbp_reply_id"    value="<?php echo absint( $_GET['reply_id'] ); ?>" />
+	<input type="hidden" name="bbp_reply_id" id="bbp_reply_id"    value="<?php echo absint( wp_unslash( $_GET['reply_id'] ) ); ?>" />
 
 	<?php
 	wp_nonce_field( 'bbp-move-reply_' . bbp_get_reply_id() );

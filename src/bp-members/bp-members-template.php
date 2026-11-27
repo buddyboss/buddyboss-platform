@@ -2796,7 +2796,7 @@ function bp_signup_confirm_email_value() {
 function bp_get_signup_confirm_email_value() {
 	$value = '';
 	if ( isset( $_POST['signup_email_confirm'] ) ) {
-		$value = sanitize_email( $_POST['signup_email_confirm'] );
+		$value = sanitize_email( wp_unslash( $_POST['signup_email_confirm'] ) );
 	}
 
 	/**

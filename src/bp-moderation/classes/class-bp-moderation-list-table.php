@@ -131,7 +131,7 @@ class BP_Moderation_List_Table extends WP_List_Table {
 		// Check for content type filter (only for reported content).
 		$content_type_filter = false;
 		if ( 'reported-content' === $current_tab && ! empty( $_REQUEST['content_type'] ) ) {
-			$content_type_filter = sanitize_text_field( $_REQUEST['content_type'] );
+			$content_type_filter = sanitize_text_field( wp_unslash( $_REQUEST['content_type'] ) );
 		}
 
 		$moderation_request_args = array(

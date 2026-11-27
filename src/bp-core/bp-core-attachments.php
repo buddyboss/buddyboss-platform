@@ -92,7 +92,7 @@ function bp_attachments_uploads_dir_get( $data = '' ) {
  */
 function bp_attachments_cover_image_upload_dir( $args = array() ) {
 	$object_id           = 0;
-	$object_type         = isset( $_POST['item_type'] ) ? sanitize_text_field( $_POST['item_type'] ) : '';
+	$object_type         = isset( $_POST['item_type'] ) ? sanitize_text_field( wp_unslash( $_POST['item_type'] ) ) : '';
 	$args['object_type'] = $object_type;
 
 	// Default values are for profiles.
@@ -1794,7 +1794,7 @@ function bp_attachments_cover_image_ajax_delete() {
 	}
 
 	$args = array(
-		'object'  => sanitize_text_field( $_POST['object'] ),
+		'object'  => sanitize_text_field( wp_unslash( $_POST['object'] ) ),
 		'item_id' => (int) $_POST['item_id'],
 	);
 

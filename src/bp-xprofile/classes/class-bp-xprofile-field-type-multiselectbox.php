@@ -148,7 +148,7 @@ class BP_XProfile_Field_Type_Multiselectbox extends BP_XProfile_Field_Type {
 			foreach ( $option_values as $i => $option_value ) {
 				if ( isset( $_POST[ 'field_' . $this->field_obj->id ] ) && $_POST[ 'field_' . $this->field_obj->id ][ $i ] != $option_value ) {
 					if ( ! empty( $_POST[ 'field_' . $this->field_obj->id ][ $i ] ) ) {
-						$option_values[] = sanitize_text_field( $_POST[ 'field_' . $this->field_obj->id ][ $i ] );
+						$option_values[] = sanitize_text_field( wp_unslash( $_POST[ 'field_' . $this->field_obj->id ][ $i ] ) );
 					}
 				}
 			}

@@ -7299,7 +7299,7 @@ function bb_attachments_get_default_profile_group_cover_image( $component ) {
  */
 function bb_get_default_profile_group_cover( $data, $args ) {
 
-	if ( isset( $_POST['action'] ) && 'bp_cover_image_delete' === sanitize_text_field( $_POST['action'] ) ) {
+	if ( isset( $_POST['action'] ) && 'bp_cover_image_delete' === sanitize_text_field( wp_unslash( $_POST['action'] ) ) ) {
 		return false;
 	}
 
