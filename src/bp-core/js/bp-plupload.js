@@ -142,6 +142,58 @@ window.bp = window.bp || {};
 		};
 
 		/**
+		 * Swap HEIC/HEIF photos for a JPEG copy before the default handler queues and starts the upload.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @event FilesAdded
+		 * @param {plupload.Uploader} uploader Uploader instance.
+		 * @param {Array}             files    Files added to the queue.
+		 */
+		if ( ! _.isUndefined( bp.HeicConverter ) && bp.HeicConverter.isSupported() ) {
+			this.uploader.bind(
+				'FilesAdded',
+				function( uploader, files ) {
+					var heicFiles = _.filter(
+						files,
+						function( file ) {
+							return bp.HeicConverter.isHeic( file );
+						}
+					);
+
+					if ( ! heicFiles.length ) {
+						return true;
+					}
+
+					_.each(
+						heicFiles,
+						function( file ) {
+							var nativeFile = file.getNative();
+
+							files.splice( _.indexOf( files, file ), 1 );
+							uploader.removeFile( file );
+
+							bp.HeicConverter.convert( nativeFile ).then(
+								function( jpeg ) {
+									uploader.addFile( jpeg, jpeg.name );
+								}
+							).catch(
+								function() {
+									$( self ).trigger( 'bp-uploader-warning', bp.HeicConverter.getErrorMessage() );
+								}
+							);
+						}
+					);
+
+					// Let any other selected files continue; stop when only HEIC files were added.
+					return files.length > 0;
+				},
+				null,
+				10
+			);
+		}
+
+		/**
 		 * After files were filtered and added to the queue, create a model for each.
 		 *
 		 * @event FilesAdded
@@ -401,11 +453,11 @@ window.bp = window.bp || {};
 		}
 	);
 
-	// Allow only image files.
+	// Allow only image files (HEIC/HEIF too when the browser can convert them to JPEG).
 	BP_Uploader.settings.defaults.filters = _.extend(
 		BP_Uploader.settings.defaults.filters,
 		{mime_types : [
-			{ title : 'Image files', extensions : 'jpg,jpeg,png,gif' },
+			{ title : 'Image files', extensions : 'jpg,jpeg,png,gif' + ( ! _.isUndefined( bp.HeicConverter ) && bp.HeicConverter.isSupported() ? ',heic,heif' : '' ) },
 			]}
 	);
 
