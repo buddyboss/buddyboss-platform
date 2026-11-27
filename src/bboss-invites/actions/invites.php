@@ -63,13 +63,13 @@ function bboss_member_invite_submit() {
 	$invite_duplicate_array  = array();
 	$duplicate_email_inputs  = array();
 
-	foreach ( $_POST['email'] as $key => $value ) {
+	foreach ( $_POST['email'] as $key => $value ) { // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash -- nested array of rows; every address is sanitised with sanitize_email( wp_unslash() ) where it is used below.
 
 		// Ignore duplicate email input.
 		if ( in_array( $_POST['email'][ $key ][0], $duplicate_email_inputs, true ) ) {
 			continue;
 		}
-		$duplicate_email_inputs[] = strtolower( trim( $_POST['email'][ $key ][0] ) );
+		$duplicate_email_inputs[] = strtolower( trim( $_POST['email'][ $key ][0] ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash -- only compared with the other submitted rows to skip duplicates; the address is sanitised with sanitize_email( wp_unslash() ) before it is used.
 
 		/*
 		 * Sanitize and gate the invitee Profile Type before it is stored.
@@ -92,14 +92,14 @@ function bboss_member_invite_submit() {
 			$bb_invitee_member_type = '';
 		}
 
-		if ( '' !== $_POST['invitee'][ $key ][0] && '' !== $_POST['email'][ $key ][0] && is_email( $_POST['email'][ $key ][0] ) ) {
+		if ( isset( $_POST['email'][ $key ][0] ) && '' !== $_POST['invitee'][ $key ][0] && '' !== $_POST['email'][ $key ][0] && is_email( $_POST['email'][ $key ][0] ) ) { // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash -- only compared with an empty string and validated with is_email(); sanitised with sanitize_email( wp_unslash() ) before it is used.
 			if ( email_exists( (string) sanitize_email( wp_unslash( $_POST['email'][ $key ][0] ) ) ) ) {
 				$invite_exists_array[] = sanitize_email( wp_unslash( $_POST['email'][ $key ][0] ) );
 			} elseif ( bboss_is_email_address_already_invited( sanitize_email( wp_unslash( $_POST['email'][ $key ][0] ) ), bboss_loggedin_user_id() ) ) {
 				$invite_duplicate_array[] = sanitize_email( wp_unslash( $_POST['email'][ $key ][0] ) );
 			} elseif ( bboss_is_allowed_register_email_address( sanitize_email( wp_unslash( $_POST['email'][ $key ][0] ) ) ) ) {
 				$invite_correct_array[] = array(
-					'name'        => sanitize_text_field( wp_unslash( $_POST['invitee'][ $key ][0] ) ),
+					'name'        => isset( $_POST['invitee'][ $key ][0] ) ? sanitize_text_field( wp_unslash( $_POST['invitee'][ $key ][0] ) ) : '',
 					'email'       => sanitize_email( wp_unslash( $_POST['email'][ $key ][0] ) ),
 					'member_type' => $bb_invitee_member_type,
 				);
@@ -108,7 +108,7 @@ function bboss_member_invite_submit() {
 			}
 		} else {
 			$invite_wrong_array[] = array(
-				'name'        => sanitize_text_field( wp_unslash( $_POST['invitee'][ $key ][0] ) ),
+				'name'        => isset( $_POST['invitee'][ $key ][0] ) ? sanitize_text_field( wp_unslash( $_POST['invitee'][ $key ][0] ) ) : '',
 				'email'       => sanitize_email( wp_unslash( $_POST['email'][ $key ][0] ) ),
 				'member_type' => $bb_invitee_member_type,
 			);
@@ -122,13 +122,13 @@ function bboss_member_invite_submit() {
 	foreach ( $invite_correct_array as $key => $value ) {
 
 		if ( true === bboss_disable_invite_member_email_subject() ) {
-			$subject = sanitize_textarea_field( wp_unslash( $_POST['bp_member_invites_custom_subject'] ) );
+			$subject = isset( $_POST['bp_member_invites_custom_subject'] ) ? sanitize_textarea_field( wp_unslash( $_POST['bp_member_invites_custom_subject'] ) ) : '';
 		} else {
 			$subject = stripslashes( wp_strip_all_tags( bboss_get_member_invitation_subject() ) );
 		}
 
 		if ( true === bboss_disable_invite_member_email_content() ) {
-			$message = stripslashes( wp_strip_all_tags( $_POST['bp_member_invites_custom_content'] ) );
+			$message = isset( $_POST['bp_member_invites_custom_content'] ) ? stripslashes( wp_strip_all_tags( $_POST['bp_member_invites_custom_content'] ) ) : ''; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash -- invitation message (content); tags are stripped with wp_strip_all_tags() and it is unslashed with stripslashes() on this line.
 		} else {
 			$message = stripslashes( wp_strip_all_tags( bboss_get_member_invitation_message() ) );
 		}
@@ -249,8 +249,8 @@ add_action( 'bp_actions', 'bboss_member_invite_submit' );
  */
 function bboss_invites_member_invite_filter_subject( $subject, $email ) {
 
-	if ( isset( $_POST['bp_member_invites_custom_subject'] ) && '' !== $_POST['bp_member_invites_custom_subject'] && 'invites-member-invite' === $email->get( 'type' ) ) {
-		$subject = bboss_get_member_invites_wildcard_replace( $_POST['bp_member_invites_custom_subject'] );
+	if ( isset( $_POST['bp_member_invites_custom_subject'] ) && '' !== $_POST['bp_member_invites_custom_subject'] && 'invites-member-invite' === $email->get( 'type' ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- email filter, not a request handler; the handler that sends the invitation verifies the request (check_admin_referer() in bp_member_invite_submit()).
+		$subject = bboss_get_member_invites_wildcard_replace( $_POST['bp_member_invites_custom_subject'] ); // phpcs:ignore WordPress.Security.NonceVerification.Missing -- email filter, not a request handler; the handler that sends the invitation verifies the request (check_admin_referer() in bp_member_invite_submit()).
 	}
 	return apply_filters( 'bp_invites_member_invite_filter_subject', $subject, $email );
 }
@@ -268,8 +268,8 @@ add_filter( 'bp_email_set_subject', 'bboss_invites_member_invite_filter_subject'
  */
 function bboss_invites_member_invite_filter_content( $content, $email ) {
 
-	if ( isset( $_POST['bp_member_invites_custom_content'] ) && '' !== $_POST['bp_member_invites_custom_content'] && 'invites-member-invite' === $email->get( 'type' ) ) {
-		$content = bboss_get_member_invites_wildcard_replace( wp_kses( stripslashes( $_POST['bp_member_invites_custom_content'] ), bboss_invites_kses_allowed_tags() ), $_POST['custom_user_email'] );
+	if ( isset( $_POST['bp_member_invites_custom_content'] ) && '' !== $_POST['bp_member_invites_custom_content'] && 'invites-member-invite' === $email->get( 'type' ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- email filter, not a request handler; the handler that sends the invitation verifies the request (check_admin_referer() in bp_member_invite_submit()).
+		$content = bboss_get_member_invites_wildcard_replace( wp_kses( stripslashes( $_POST['bp_member_invites_custom_content'] ), bboss_invites_kses_allowed_tags() ), isset( $_POST['custom_user_email'] ) ? $_POST['custom_user_email'] : '' ); // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash -- email filter, not a request handler; the handler that sends the invitation verifies the request (check_admin_referer() in bp_member_invite_submit()). The message is content: unslashed with stripslashes() and filtered with wp_kses() on this line; custom_user_email is set by the sending handler from a sanitize_email() value and urlencode()d in bp_get_member_invites_wildcard_replace().
 	}
 
 	if ( 'invites-member-invite' === $email->get( 'type' ) ) {
@@ -298,8 +298,8 @@ add_filter( 'bp_email_set_content_html', 'bboss_invites_member_invite_filter_con
  */
 function bboss_invites_member_invite_filter_content_plaintext( $content, $email ) {
 
-	if ( isset( $_POST['bp_member_invites_custom_content'] ) && '' !== $_POST['bp_member_invites_custom_content'] && 'invites-member-invite' === $email->get( 'type' ) ) {
-		$content = bboss_get_member_invites_wildcard_replace( wp_kses( stripslashes( $_POST['bp_member_invites_custom_content'] ), bboss_invites_kses_allowed_tags() ), $_POST['custom_user_email'] );
+	if ( isset( $_POST['bp_member_invites_custom_content'] ) && '' !== $_POST['bp_member_invites_custom_content'] && 'invites-member-invite' === $email->get( 'type' ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- email filter, not a request handler; the handler that sends the invitation verifies the request (check_admin_referer() in bp_member_invite_submit()).
+		$content = bboss_get_member_invites_wildcard_replace( wp_kses( stripslashes( $_POST['bp_member_invites_custom_content'] ), bboss_invites_kses_allowed_tags() ), isset( $_POST['custom_user_email'] ) ? $_POST['custom_user_email'] : '' ); // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash -- email filter, not a request handler; the handler that sends the invitation verifies the request (check_admin_referer() in bp_member_invite_submit()). The message is content: unslashed with stripslashes() and filtered with wp_kses() on this line; custom_user_email is set by the sending handler from a sanitize_email() value and urlencode()d in bp_get_member_invites_wildcard_replace().
 	}
 
 	if ( 'invites-member-invite' === $email->get( 'type' ) ) {
@@ -322,8 +322,8 @@ add_filter( 'bp_email_set_content_plaintext', 'bboss_invites_member_invite_filte
  */
 function bboss_invites_member_invite_set_email_avatar( $avatar, $data ) {
 
-	if ( isset( $_POST['custom_user_avatar'] ) && '' === $avatar && '' !== $_POST['custom_user_avatar'] ) {
-		$avatar = esc_url_raw( wp_unslash( $_POST['custom_user_avatar'] ) );
+	if ( isset( $_POST['custom_user_avatar'] ) && '' === $avatar && '' !== $_POST['custom_user_avatar'] ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- email filter, not a request handler; the handler that sends the invitation verifies the request (check_admin_referer() in bp_member_invite_submit()).
+		$avatar = esc_url_raw( wp_unslash( $_POST['custom_user_avatar'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Missing -- email filter, not a request handler; the handler that sends the invitation verifies the request (check_admin_referer() in bp_member_invite_submit()).
 	}
 	return apply_filters( 'bp_invites_member_invite_set_email_avatar', $avatar, $data );
 }
@@ -341,8 +341,8 @@ add_filter( 'bp_email_recipient_get_avatar', 'bboss_invites_member_invite_set_em
  */
 function bboss_invites_member_invite_set_email_user_name( $name, $data ) {
 
-	if ( isset( $_POST['custom_user_name'] ) && '' === $name && '' !== $_POST['custom_user_name'] ) {
-		$name = sanitize_text_field( wp_unslash( $_POST['custom_user_name'] ) );
+	if ( isset( $_POST['custom_user_name'] ) && '' === $name && '' !== $_POST['custom_user_name'] ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- email filter, not a request handler; the handler that sends the invitation verifies the request (check_admin_referer() in bp_member_invite_submit()).
+		$name = sanitize_text_field( wp_unslash( $_POST['custom_user_name'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Missing -- email filter, not a request handler; the handler that sends the invitation verifies the request (check_admin_referer() in bp_member_invite_submit()).
 	}
 	return apply_filters( 'bp_invites_member_invite_set_email_user_name', $name, $data );
 }

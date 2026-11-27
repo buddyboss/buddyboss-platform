@@ -227,7 +227,7 @@ function bboss_nouveau_prepare_group_potential_invites_for_js( $user ) {
 	);
 
 	// Group id
-	$group_id = bboss_get_current_group_id()?: (int) $_REQUEST['group_id'];
+	$group_id = bboss_get_current_group_id()?: ( isset( $_REQUEST['group_id'] ) ? (int) $_REQUEST['group_id'] : 0 ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only; only prepares the member data for the invites list.
 
 	// Do extra queries only if needed
 	if ( ! empty( $bp->groups->invites_scope ) && 'invited' === $bp->groups->invites_scope ) {

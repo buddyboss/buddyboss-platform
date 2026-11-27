@@ -34,7 +34,7 @@ function bboss_groups_screen_group_request_membership() {
 			return false;
 		}
 
-		if ( ! bboss_groups_send_membership_request( array( 'user_id' => bboss_loggedin_user_id(), 'group_id' => $bp->groups->current_group->id, 'content' => $_POST['group-request-membership-comments'] ) ) ) {
+		if ( ! bboss_groups_send_membership_request( array( 'user_id' => bboss_loggedin_user_id(), 'group_id' => $bp->groups->current_group->id, 'content' => $_POST['group-request-membership-comments'] ) ) ) { // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- BP_Invitation::save() unslashes it and strips all HTML with wp_kses().
 			bboss_core_add_message( __( 'There was an error sending your group membership request. Please try again.', 'buddyboss-community-social-network-groups-forums-messaging' ), 'error' );
 		} else {
 			bboss_core_add_message( __( 'Your membership request was sent to the group organizer successfully. You will be notified when the group organizer responds to your request.', 'buddyboss-community-social-network-groups-forums-messaging' ) );

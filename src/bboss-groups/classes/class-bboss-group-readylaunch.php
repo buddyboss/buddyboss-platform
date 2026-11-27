@@ -755,7 +755,7 @@ class BBoss_Group_Readylaunch {
 	 * @return array Modified response array.
 	 */
 	public function bb_rl_modify_group_request_membership_response( $response ) {
-		$action = isset( $_POST['action'] ) ? sanitize_text_field( wp_unslash( $_POST['action'] ) ) : '';
+		$action = isset( $_POST['action'] ) ? sanitize_text_field( wp_unslash( $_POST['action'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked in bp_nouveau_ajax_joinleave_group(), which applies this filter.
 		if ( empty( $action ) ) {
 			return $response;
 		}
@@ -765,7 +765,7 @@ class BBoss_Group_Readylaunch {
 		}
 
 		if ( 'groups_membership_requested' === $action ) {
-			$group_id = isset( $_POST['item_id'] ) ? absint( sanitize_text_field( wp_unslash( $_POST['item_id'] ) ) ) : 0;
+			$group_id = isset( $_POST['item_id'] ) ? absint( sanitize_text_field( wp_unslash( $_POST['item_id'] ) ) ) : 0; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked in bp_nouveau_ajax_joinleave_group(), which applies this filter.
 			if ( ! $group_id ) {
 				return $response;
 			}

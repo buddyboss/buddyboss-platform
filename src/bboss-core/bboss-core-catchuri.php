@@ -72,8 +72,8 @@ function bboss_core_set_uri_globals() {
 	// Ajax or not?
 	if ( defined( 'DOING_AJAX' ) && DOING_AJAX || strpos( $request_uri, 'wp-load.php' ) ) {
 		$path = bboss_get_referer_path();
-	} elseif ( ! empty( $_REQUEST['_wp_http_referer'] ) && ! empty( $_REQUEST['action'] ) && in_array( $_REQUEST['action'], array( 'bbp-edit-topic', 'bbp-new-topic' ), true ) ) {
-		$path = esc_url( esc_url_raw( wp_unslash( $_REQUEST['_wp_http_referer'] ) ) );
+	} elseif ( ! empty( $_REQUEST['_wp_http_referer'] ) && ! empty( $_REQUEST['action'] ) && in_array( $_REQUEST['action'], array( 'bbp-edit-topic', 'bbp-new-topic' ), true ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; only resolves the path used for routing.
+		$path = esc_url( esc_url_raw( wp_unslash( $_REQUEST['_wp_http_referer'] ) ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; only resolves the path used for routing.
 	} else {
 		$path = esc_url( $request_uri );
 	}
@@ -162,7 +162,7 @@ function bboss_core_set_uri_globals() {
 	 * so that $current_component is populated (unless a specific WP post is being requested
 	 * via a URL parameter, usually signifying Preview mode).
 	 */
-	if ( 'page' == get_option( 'show_on_front' ) && get_option( 'page_on_front' ) && empty( $bp_uri ) && empty( $_GET['p'] ) && empty( $_GET['page_id'] ) && empty( $_GET['cat'] ) ) {
+	if ( 'page' == get_option( 'show_on_front' ) && get_option( 'page_on_front' ) && empty( $bp_uri ) && empty( $_GET['p'] ) && empty( $_GET['page_id'] ) && empty( $_GET['cat'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; only checks whether a specific post is requested.
 		$post = get_post( get_option( 'page_on_front' ) );
 		if ( ! empty( $post ) && apply_filters( 'bp_core_set_uri_show_on_front', true ) ) {
 			$bp_uri[0] = $post->post_name;
@@ -267,7 +267,7 @@ function bboss_core_set_uri_globals() {
 	}
 
 	// Search doesn't have an associated page, so we check for it separately.
-	if ( isset( $_POST['search-terms'] ) && ! empty( $bp_uri[0] ) && ( bboss_get_search_slug() == $bp_uri[0] ) ) {
+	if ( isset( $_POST['search-terms'] ) && ! empty( $bp_uri[0] ) && ( bboss_get_search_slug() == $bp_uri[0] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- read-only request; only routes to the search component.
 		$matches[]   = 1;
 		$match       = new stdClass();
 		$match->key  = 'search';
@@ -418,7 +418,7 @@ function bboss_core_set_uri_globals() {
 	 * If a BuddyPress directory is set to the WP front page, URLs like example.com/members/?s=foo
 	 * shouldn't interfere with blog searches.
 	 */
-	if ( empty( $current_action ) && ! empty( $_GET['s'] ) && 'page' == get_option( 'show_on_front' ) && ! empty( $match->id ) ) {
+	if ( empty( $current_action ) && ! empty( $_GET['s'] ) && 'page' == get_option( 'show_on_front' ) && ! empty( $match->id ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; only checks whether a blog search is requested.
 		$page_on_front = (int) get_option( 'page_on_front' );
 		if ( (int) $match->id === $page_on_front ) {
 			$bp->current_component = '';
@@ -788,7 +788,7 @@ function bboss_core_no_access( $args = '' ) {
  */
 function bboss_login_redirector() {
 	// Redirect links must include the `redirect_to` and `bp-auth` parameters.
-	if ( empty( $_GET['redirect_to'] ) || empty( $_GET['bp-auth'] ) ) {
+	if ( empty( $_GET['redirect_to'] ) || empty( $_GET['bp-auth'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; nothing is changed.
 		return;
 	}
 
@@ -797,7 +797,7 @@ function bboss_login_redirector() {
 	 * skip the login form and redirect them to the content.
 	 */
 	if ( bboss_loggedin_user_id() ) {
-		wp_safe_redirect( esc_url_raw( wp_unslash( $_GET['redirect_to'] ) ) );
+		wp_safe_redirect( esc_url_raw( wp_unslash( $_GET['redirect_to'] ) ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; redirects an already logged-in user with wp_safe_redirect().
 		exit;
 	}
 }
@@ -813,11 +813,11 @@ add_action( 'login_init', 'bboss_login_redirector', 1 );
  * @return WP_Error
  */
 function bboss_core_no_access_wp_login_error( $errors ) {
-	if ( empty( $_GET['action'] ) || 'bpnoaccess' !== $_GET['action'] ) {
+	if ( empty( $_GET['action'] ) || 'bpnoaccess' !== $_GET['action'] ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; only chooses the login error message.
 		return $errors;
 	}
 
-	if ( isset( $_REQUEST['redirect_from'] ) && 'private_group' === $_REQUEST['redirect_from'] ) {
+	if ( isset( $_REQUEST['redirect_from'] ) && 'private_group' === $_REQUEST['redirect_from'] ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; only chooses the login error message.
 		$bp_error_message = __( 'Please login to access this group.', 'buddyboss-community-social-network-groups-forums-messaging' );
 	} else {
 		$bp_error_message = __( 'Please login to access this website.', 'buddyboss-community-social-network-groups-forums-messaging' );
@@ -886,7 +886,7 @@ function bboss_redirect_canonical() {
 		// This is for backward compatibility with plugins that submit form requests to
 		// non-canonical URLs. Plugin authors should do their best to use canonical URLs in
 		// their form actions.
-		if ( ! empty( $_POST ) ) {
+		if ( ! empty( $_POST ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- read-only request; only skips the canonical redirect.
 			return;
 		}
 

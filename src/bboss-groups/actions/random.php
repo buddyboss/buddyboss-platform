@@ -16,7 +16,7 @@ defined( 'ABSPATH' ) || exit;
  */
 function bboss_groups_action_redirect_to_random_group() {
 
-	if ( bboss_is_groups_component() && isset( $_GET['random-group'] ) ) {
+	if ( bboss_is_groups_component() && isset( $_GET['random-group'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; only redirects to a random group.
 		$group = BBoss_Groups_Group::get_random( 1, 1 );
 
 		bboss_core_redirect( trailingslashit( bboss_get_groups_directory_permalink() . $group['groups'][0]->slug ) );

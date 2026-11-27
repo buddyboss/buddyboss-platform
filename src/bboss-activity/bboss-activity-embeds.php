@@ -171,7 +171,7 @@ function bboss_activity_get_embed_excerpt( $content = '' ) {
  */
 function bboss_activity_embed_media() {
 	// Bail if oEmbed request explicitly hides media.
-	if ( isset( $_GET['hide_media'] ) && true == wp_validate_boolean( $_GET['hide_media'] ) ) {
+	if ( isset( $_GET['hide_media'] ) && true == wp_validate_boolean( $_GET['hide_media'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- read-only oEmbed display flag, only cast to a boolean by wp_validate_boolean().
 		/**
 		 * Do something after media is rendered for an activity oEmbed item.
 		 *

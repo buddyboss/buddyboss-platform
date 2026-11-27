@@ -239,13 +239,13 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 
 			if ( isset( $_POST['view'] ) && $_POST['view'] == 'content' ) {
 
-				$_GET['s'] = $_POST['s'];
+				$_GET['s'] = isset( $_POST['s'] ) ? $_POST['s'] : null; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash -- copied for prepare_search_page(); search term; sanitised with sanitize_text_field() in BP_Search::sanitize_args() (called by do_search()).
 				if ( ! empty( $_POST['subset'] ) ) {
-					$_GET['subset'] = $_POST['subset'];
+					$_GET['subset'] = sanitize_text_field( wp_unslash( $_POST['subset'] ) );
 				}
 
 				if ( ! empty( $_POST['list'] ) ) {
-					$_GET['list'] = $_POST['list'];
+					$_GET['list'] = $_POST['list']; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash -- copied for prepare_search_page(), which casts it to int.
 				}
 
 				$content = '';
@@ -259,7 +259,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 			}
 
 			$args = array(
-				'search_term'   => $_REQUEST['search_term'],
+				'search_term'   => isset( $_REQUEST['search_term'] ) ? $_REQUEST['search_term'] : null, // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash -- search term; sanitised with sanitize_text_field() in BP_Search::sanitize_args() (called by do_search()).
 				// How many results should be displyed in autosuggest?
 				// @todo: give a settings field for this value.
 				'ajax_per_page' => isset( $_REQUEST['per_page'] ) ? absint( wp_unslash( $_REQUEST['per_page'] ) ) : 0,
@@ -270,8 +270,8 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 			$key = 'all';
 
 			if ( isset( $_REQUEST['subset'] ) && ! empty( $_REQUEST['subset'] ) ) {
-				$args['search_subset'] = $_REQUEST['subset'];
-				$key                   = $_REQUEST['subset'];
+				$args['search_subset'] = sanitize_text_field( wp_unslash( $_REQUEST['subset'] ) );
+				$key                   = sanitize_text_field( wp_unslash( $_REQUEST['subset'] ) );
 			}
 
 			if ( isset( $_REQUEST['forum_search_term'] ) ) {
@@ -519,7 +519,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 					 * This also means that all such classes must have a common set of methods.
 					 */
 					$obj                   = $this->search_helpers[ $search_type ];
-					$limit                 = isset( $_REQUEST['view'] ) ? ' LIMIT ' . absint( $args['number'] ) : '';
+					$limit                 = isset( $_REQUEST['view'] ) ? ' LIMIT ' . absint( $args['number'] ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only; only checks whether a results view was requested.
 					if (
 						bboss_is_active( 'forums' ) &&
 						in_array( $search_type, array( bboss_bbp_get_forum_post_type(), bboss_bbp_get_topic_post_type(), bboss_bbp_get_reply_post_type() ), true )
@@ -804,16 +804,16 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 		 */
 		public function prepare_search_page() {
 			$args = array();
-			if ( isset( $_GET['subset'] ) && ! empty( $_GET['subset'] ) ) {
-				$args['search_subset'] = $_GET['subset'];
+			if ( isset( $_GET['subset'] ) && ! empty( $_GET['subset'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only search request (the AJAX path is verified in ajax_search()).
+				$args['search_subset'] = sanitize_text_field( wp_unslash( $_GET['subset'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only search request (the AJAX path is verified in ajax_search()).
 			}
 
-			if ( isset( $_GET['s'] ) && ! empty( $_GET['s'] ) ) {
-				$args['search_term'] = $_GET['s'];
+			if ( isset( $_GET['s'] ) && ! empty( $_GET['s'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only search request (the AJAX path is verified in ajax_search()).
+				$args['search_term'] = $_GET['s']; // phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash -- read-only search request (the AJAX path is verified in ajax_search()); search term; sanitised with sanitize_text_field() in BP_Search::sanitize_args() (called by do_search()).
 			}
 
-			if ( isset( $_GET['list'] ) && ! empty( $_GET['list'] ) ) {
-				$current_page = (int) $_GET['list'];
+			if ( isset( $_GET['list'] ) && ! empty( $_GET['list'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only search request (the AJAX path is verified in ajax_search()).
+				$current_page = (int) $_GET['list']; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only search request (the AJAX path is verified in ajax_search()).
 				if ( $current_page > 0 ) {
 					$args['current_page'] = $current_page;
 				}

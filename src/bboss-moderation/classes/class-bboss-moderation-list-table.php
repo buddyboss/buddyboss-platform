@@ -121,8 +121,8 @@ class BBoss_Moderation_List_Table extends WP_List_Table {
 
 		// Check if we're doing a search (only for flagged members).
 		$search_terms = false;
-		if ( 'reported-content' !== $current_tab && ! empty( $_REQUEST['s'] ) ) {
-			$search_terms = trim( sanitize_text_field( wp_unslash( $_REQUEST['s'] ) ) );
+		if ( 'reported-content' !== $current_tab && ! empty( $_REQUEST['s'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; admin list search.
+			$search_terms = trim( sanitize_text_field( wp_unslash( $_REQUEST['s'] ) ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; admin list search.
 			if ( strlen( $search_terms ) > 100 ) { // Reasonable limit
 				$search_terms = substr( $search_terms, 0, 100 );
 			}
@@ -130,8 +130,8 @@ class BBoss_Moderation_List_Table extends WP_List_Table {
 
 		// Check for content type filter (only for reported content).
 		$content_type_filter = false;
-		if ( 'reported-content' === $current_tab && ! empty( $_REQUEST['content_type'] ) ) {
-			$content_type_filter = sanitize_text_field( wp_unslash( $_REQUEST['content_type'] ) );
+		if ( 'reported-content' === $current_tab && ! empty( $_REQUEST['content_type'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; admin list filter.
+			$content_type_filter = sanitize_text_field( wp_unslash( $_REQUEST['content_type'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; admin list filter.
 		}
 
 		$moderation_request_args = array(

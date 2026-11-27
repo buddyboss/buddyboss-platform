@@ -756,7 +756,7 @@ if ( ! class_exists( 'BBoss_Admin' ) ) :
 		 * @return bool
 		 */
 		public static function is_new_install() {
-			return (bool) isset( $_GET['is_new_install'] );
+			return (bool) isset( $_GET['is_new_install'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; nothing is changed.
 		}
 
 		/**

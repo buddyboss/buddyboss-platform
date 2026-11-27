@@ -2369,8 +2369,8 @@ function bboss_bbp_form_forum_title() {
 function bboss_bbp_get_form_forum_title() {
 
 	// Get _POST data
-	if ( bboss_bbp_is_post_request() && isset( $_POST['bbp_forum_title'] ) ) {
-		$forum_title = $_POST['bbp_forum_title'];
+	if ( bboss_bbp_is_post_request() && isset( $_POST['bbp_forum_title'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- read-only; only re-fills the form after a failed submit, nothing is saved.
+		$forum_title = $_POST['bbp_forum_title']; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.NonceVerification.Missing -- only re-displayed; escaped with esc_attr() in the return below; read-only; only re-fills the form after a failed submit, nothing is saved.
 
 		// Get edit data
 	} elseif ( bboss_bbp_is_forum_edit() ) {
@@ -2407,8 +2407,8 @@ function bboss_bbp_form_forum_content() {
 function bboss_bbp_get_form_forum_content() {
 
 	// Get _POST data
-	if ( bboss_bbp_is_post_request() && isset( $_POST['bbp_forum_content'] ) ) {
-		$forum_content = stripslashes( $_POST['bbp_forum_content'] );
+	if ( bboss_bbp_is_post_request() && isset( $_POST['bbp_forum_content'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- read-only; only re-fills the form after a failed submit, nothing is saved.
+		$forum_content = stripslashes( $_POST['bbp_forum_content'] ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.NonceVerification.Missing -- unslashed by stripslashes(); only re-displayed, escaped by the esc_textarea filter on bbp_get_form_forum_content; read-only; only re-fills the form after a failed submit, nothing is saved.
 
 		// Get edit data
 	} elseif ( bboss_bbp_is_forum_edit() ) {
@@ -2446,8 +2446,8 @@ function bboss_bbp_form_forum_parent() {
 function bboss_bbp_get_form_forum_parent() {
 
 	// Get _POST data
-	if ( bboss_bbp_is_post_request() && isset( $_POST['bbp_forum_id'] ) ) {
-		$forum_parent = $_POST['bbp_forum_id'];
+	if ( bboss_bbp_is_post_request() && isset( $_POST['bbp_forum_id'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- read-only; only re-fills the form after a failed submit, nothing is saved.
+		$forum_parent = $_POST['bbp_forum_id']; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.NonceVerification.Missing -- only re-displayed; escaped with esc_attr() in the return below; read-only; only re-fills the form after a failed submit, nothing is saved.
 
 		// Get edit data
 	} elseif ( bboss_bbp_is_forum_edit() ) {
@@ -2485,8 +2485,8 @@ function bboss_bbp_form_forum_type() {
 function bboss_bbp_get_form_forum_type() {
 
 	// Get _POST data
-	if ( bboss_bbp_is_post_request() && isset( $_POST['bbp_forum_type'] ) ) {
-		$forum_type = $_POST['bbp_forum_type'];
+	if ( bboss_bbp_is_post_request() && isset( $_POST['bbp_forum_type'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- read-only; only re-fills the form after a failed submit, nothing is saved.
+		$forum_type = $_POST['bbp_forum_type']; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.NonceVerification.Missing -- only re-displayed; escaped with esc_attr() in the return below; read-only; only re-fills the form after a failed submit, nothing is saved.
 
 		// Get edit data
 	} elseif ( bboss_bbp_is_forum_edit() ) {
@@ -2524,8 +2524,8 @@ function bboss_bbp_form_forum_visibility() {
 function bboss_bbp_get_form_forum_visibility() {
 
 	// Get _POST data
-	if ( bboss_bbp_is_post_request() && isset( $_POST['bbp_forum_visibility'] ) ) {
-		$forum_visibility = $_POST['bbp_forum_visibility'];
+	if ( bboss_bbp_is_post_request() && isset( $_POST['bbp_forum_visibility'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- read-only; only re-fills the form after a failed submit, nothing is saved.
+		$forum_visibility = $_POST['bbp_forum_visibility']; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.NonceVerification.Missing -- only re-displayed; escaped with esc_attr() in the return below; read-only; only re-fills the form after a failed submit, nothing is saved.
 
 		// Get edit data
 	} elseif ( bboss_bbp_is_forum_edit() ) {
@@ -2570,8 +2570,8 @@ function bboss_bbp_get_form_forum_subscribed() {
 	$forum_subscribed = false;
 
 	// Get _POST data.
-	if ( bboss_bbp_is_post_request() && isset( $_POST['bbp_forum_subscription'] ) ) {
-		$forum_subscribed = (bool) $_POST['bbp_forum_subscription'];
+	if ( bboss_bbp_is_post_request() && isset( $_POST['bbp_forum_subscription'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- read-only; only re-fills the form after a failed submit, nothing is saved.
+		$forum_subscribed = (bool) $_POST['bbp_forum_subscription']; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- read-only; only re-fills the form after a failed submit, nothing is saved.
 
 		// Get edit data.
 	} elseif ( bboss_bbp_is_forum_edit() || bboss_bbp_is_reply_edit() ) {
@@ -2644,8 +2644,8 @@ function bboss_bbp_get_form_forum_type_dropdown( $args = '' ) {
 	if ( empty( $r['selected'] ) ) {
 
 		// Post value is passed
-		if ( bboss_bbp_is_post_request() && isset( $_POST[ $r['select_id'] ] ) ) {
-			$r['selected'] = $_POST[ $r['select_id'] ];
+		if ( bboss_bbp_is_post_request() && isset( $_POST[ $r['select_id'] ] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- read-only; only re-fills the form after a failed submit, nothing is saved.
+			$r['selected'] = $_POST[ $r['select_id'] ]; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.NonceVerification.Missing -- only compared with selected() when the dropdown is built; read-only; only re-fills the form after a failed submit, nothing is saved.
 
 			// No Post value was passed
 		} else {
@@ -2735,8 +2735,8 @@ function bboss_bbp_get_form_forum_status_dropdown( $args = '' ) {
 	if ( empty( $r['selected'] ) ) {
 
 		// Post value is passed
-		if ( bboss_bbp_is_post_request() && isset( $_POST[ $r['select_id'] ] ) ) {
-			$r['selected'] = $_POST[ $r['select_id'] ];
+		if ( bboss_bbp_is_post_request() && isset( $_POST[ $r['select_id'] ] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- read-only; only re-fills the form after a failed submit, nothing is saved.
+			$r['selected'] = $_POST[ $r['select_id'] ]; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.NonceVerification.Missing -- only compared with selected() when the dropdown is built; read-only; only re-fills the form after a failed submit, nothing is saved.
 
 			// No Post value was passed
 		} else {
@@ -2825,8 +2825,8 @@ function bboss_bbp_get_form_forum_visibility_dropdown( $args = '' ) {
 	if ( empty( $r['selected'] ) ) {
 
 		// Post value is passed
-		if ( bboss_bbp_is_post_request() && isset( $_POST[ $r['select_id'] ] ) ) {
-			$r['selected'] = $_POST[ $r['select_id'] ];
+		if ( bboss_bbp_is_post_request() && isset( $_POST[ $r['select_id'] ] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- read-only; only re-fills the form after a failed submit, nothing is saved.
+			$r['selected'] = $_POST[ $r['select_id'] ]; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.NonceVerification.Missing -- only compared with selected() when the dropdown is built; read-only; only re-fills the form after a failed submit, nothing is saved.
 
 			// No Post value was passed
 		} else {

@@ -184,8 +184,8 @@ class BBoss_Core_Members_Template {
 		$this->pag_num  = bboss_sanitize_pagination_arg( 'num',          $r['per_page']    );
 		$this->type     = $r['type'];
 
-		if ( ! empty( $_REQUEST['letter'] ) ) {
-			$this->members = BBoss_Core_User::get_users_by_letter( $_REQUEST['letter'], $this->pag_num, $this->pag_page, $r['populate_extras'], $r['exclude'] );
+		if ( ! empty( $_REQUEST['letter'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; filters the members list by first letter.
+			$this->members = BBoss_Core_User::get_users_by_letter( $_REQUEST['letter'], $this->pag_num, $this->pag_page, $r['populate_extras'], $r['exclude'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- read-only request; the letter is checked and prepared in BP_Core_User::get_users_by_letter().
 		} else {
 			$this->members = bboss_core_get_users(
 				array(

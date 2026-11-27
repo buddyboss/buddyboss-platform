@@ -158,18 +158,18 @@ function bboss_bbp_new_reply_handler( $action = '' ) {
 	/** Topic ID */
 
 	// Topic id was not passed.
-	if ( empty( $_POST['bbp_topic_id'] ) ) {
+	if ( empty( $_POST['bbp_topic_id'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked by bbp_verify_nonce_request() at the top of this handler.
 		bboss_bbp_add_error( 'bbp_reply_topic_id', __( '<strong>ERROR</strong>: Discussion ID is missing.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 
 		// Topic id is not a number.
-	} elseif ( ! is_numeric( $_POST['bbp_topic_id'] ) ) {
+	} elseif ( ! is_numeric( $_POST['bbp_topic_id'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked by bbp_verify_nonce_request() at the top of this handler.
 		bboss_bbp_add_error( 'bbp_reply_topic_id', __( '<strong>ERROR</strong>: Discussion ID must be a number.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 
 		// Topic id might be valid.
 	} else {
 
 		// Get the topic id.
-		$posted_topic_id = intval( $_POST['bbp_topic_id'] );
+		$posted_topic_id = intval( $_POST['bbp_topic_id'] ); // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked by bbp_verify_nonce_request() at the top of this handler.
 
 		// Topic id is a negative number.
 		if ( 0 > $posted_topic_id ) {
@@ -188,25 +188,25 @@ function bboss_bbp_new_reply_handler( $action = '' ) {
 	/** Forum ID */
 
 	// Try to use the forum id of the topic.
-	if ( ! isset( $_POST['bbp_forum_id'] ) && ! empty( $topic_id ) ) {
+	if ( ! isset( $_POST['bbp_forum_id'] ) && ! empty( $topic_id ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked by bbp_verify_nonce_request() at the top of this handler.
 		$forum_id = bboss_bbp_get_topic_forum_id( $topic_id );
 
 		// Error check the POST'ed forum id.
-	} elseif ( isset( $_POST['bbp_forum_id'] ) ) {
+	} elseif ( isset( $_POST['bbp_forum_id'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked by bbp_verify_nonce_request() at the top of this handler.
 
 		// Empty Forum id was passed.
-		if ( empty( $_POST['bbp_forum_id'] ) ) {
+		if ( empty( $_POST['bbp_forum_id'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked by bbp_verify_nonce_request() at the top of this handler.
 			bboss_bbp_add_error( 'bbp_reply_forum_id', __( '<strong>ERROR</strong>: Forum ID is missing.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 
 			// Forum id is not a number.
-		} elseif ( ! is_numeric( $_POST['bbp_forum_id'] ) ) {
+		} elseif ( ! is_numeric( $_POST['bbp_forum_id'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked by bbp_verify_nonce_request() at the top of this handler.
 			bboss_bbp_add_error( 'bbp_reply_forum_id', __( '<strong>ERROR</strong>: Forum ID must be a number.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 
 			// Forum id might be valid.
 		} else {
 
 			// Get the forum id.
-			$posted_forum_id = intval( $_POST['bbp_forum_id'] );
+			$posted_forum_id = intval( $_POST['bbp_forum_id'] ); // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked by bbp_verify_nonce_request() at the top of this handler.
 
 			// Forum id is empty.
 			if ( 0 === $posted_forum_id ) {
@@ -265,7 +265,7 @@ function bboss_bbp_new_reply_handler( $action = '' ) {
 	/** Unfiltered HTML */
 
 	// Remove kses filters from title and content for capable users and if the nonce is verified.
-	if ( current_user_can( 'unfiltered_html' ) && ! empty( $_POST['_bbp_unfiltered_html_reply'] ) && wp_create_nonce( 'bbp-unfiltered-html-reply_' . $topic_id ) === $_POST['_bbp_unfiltered_html_reply'] ) {
+	if ( current_user_can( 'unfiltered_html' ) && ! empty( $_POST['_bbp_unfiltered_html_reply'] ) && wp_create_nonce( 'bbp-unfiltered-html-reply_' . $topic_id ) === $_POST['_bbp_unfiltered_html_reply'] ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked by bbp_verify_nonce_request() at the top of this handler.
 		remove_filter( 'bbp_new_reply_pre_title', 'wp_filter_kses' );
 		remove_filter( 'bbp_new_reply_pre_content', 'bboss_bbp_encode_bad', 10 );
 		// remove_filter( 'bbp_new_reply_pre_content', 'bbp_filter_kses', 30 ); //todo: removing this from here bcoz we need to filter mention tags from content
@@ -273,8 +273,8 @@ function bboss_bbp_new_reply_handler( $action = '' ) {
 
 	/** Reply Title */
 
-	if ( ! empty( $_POST['bbp_reply_title'] ) ) {
-		$reply_title = esc_attr( wp_strip_all_tags( $_POST['bbp_reply_title'] ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized,WordPress.Security.ValidatedSanitizedInput.MissingUnslash -- bbPress stores this entity-encoded via esc_attr( wp_strip_all_tags() ) and wp_insert_post() expects slashed input; sanitize_text_field()/wp_unslash() would change the stored format.
+	if ( ! empty( $_POST['bbp_reply_title'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked by bbp_verify_nonce_request() at the top of this handler.
+		$reply_title = esc_attr( wp_strip_all_tags( $_POST['bbp_reply_title'] ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized,WordPress.Security.ValidatedSanitizedInput.MissingUnslash,WordPress.Security.NonceVerification.Missing -- bbPress stores this entity-encoded via esc_attr( wp_strip_all_tags() ) and wp_insert_post() expects slashed input; sanitize_text_field()/wp_unslash() would change the stored format. Nonce checked by bbp_verify_nonce_request() at the top of this handler.
 	}
 
 	// Filter and sanitize.
@@ -282,21 +282,21 @@ function bboss_bbp_new_reply_handler( $action = '' ) {
 
 	/** Reply Content */
 
-	if ( ! empty( $_POST['bbp_reply_content'] ) ) {
-		$reply_content = $_POST['bbp_reply_content'];
+	if ( ! empty( $_POST['bbp_reply_content'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked by bbp_verify_nonce_request() at the top of this handler.
+		$reply_content = $_POST['bbp_reply_content']; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.NonceVerification.Missing -- filtered by bbp_new_reply_pre_content (bbp_encode_bad(), bbp_filter_kses(), balanceTags()); wp_insert_post() expects slashed input; nonce checked by bbp_verify_nonce_request() at the top of this handler.
 	}
 
 	// Filter and sanitize.
 	$reply_content = apply_filters( 'bbp_new_reply_pre_content', $reply_content );
 
-	$link_preview_post_data = ! empty( $_POST['link_preview_data'] ) ? map_deep( (array) json_decode( stripslashes( $_POST['link_preview_data'] ), true ), 'sanitize_text_field' ) : [];
+	$link_preview_post_data = ! empty( $_POST['link_preview_data'] ) ? map_deep( (array) json_decode( stripslashes( $_POST['link_preview_data'] ), true ), 'sanitize_text_field' ) : []; // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- JSON string, unslashed by stripslashes() and sanitised with map_deep( 'sanitize_text_field' ) after decoding; nonce checked by bbp_verify_nonce_request() at the top of this handler.
 
 	// No reply content.
 	if ( empty( trim( html_entity_decode( wp_strip_all_tags( $reply_content ), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) ) )
-		 && empty( $_POST['bbp_media'] )
-		 && empty( $_POST['bbp_video'] )
-		 && empty( $_POST['bbp_media_gif'] )
-		 && empty( $_POST['bbp_document'] )
+		 && empty( $_POST['bbp_media'] ) // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked by bbp_verify_nonce_request() at the top of this handler.
+		 && empty( $_POST['bbp_video'] ) // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked by bbp_verify_nonce_request() at the top of this handler.
+		 && empty( $_POST['bbp_media_gif'] ) // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked by bbp_verify_nonce_request() at the top of this handler.
+		 && empty( $_POST['bbp_document'] ) // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked by bbp_verify_nonce_request() at the top of this handler.
 		 && ( false === bboss_bbp_use_autoembed() || ( false !== bboss_bbp_use_autoembed() && empty( $link_preview_post_data['link_url'] ) ) )
 	) {
 		bboss_bbp_add_error( 'bbp_reply_content', __( '<strong>ERROR</strong>: Your reply cannot be empty.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
@@ -306,28 +306,28 @@ function bboss_bbp_new_reply_handler( $action = '' ) {
 		$forum_id = bboss_bbp_get_topic_forum_id( $topic_id );
 	}
 
-	if ( ! empty( $_POST['bbp_media'] ) ) {
+	if ( ! empty( $_POST['bbp_media'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked by bbp_verify_nonce_request() at the top of this handler.
 		$can_send_media = bboss_user_has_access_upload_media( 0, bboss_loggedin_user_id(), $forum_id, 0, 'forum' );
 		if ( ! $can_send_media ) {
 			bboss_bbp_add_error( 'bbp_topic_media', __( '<strong>ERROR</strong>: You don\'t have access to send the media.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 		}
 	}
 
-	if ( ! empty( $_POST['bbp_document'] ) ) {
+	if ( ! empty( $_POST['bbp_document'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked by bbp_verify_nonce_request() at the top of this handler.
 		$can_send_document = bboss_user_has_access_upload_document( 0, bboss_loggedin_user_id(), $forum_id, 0, 'forum' );
 		if ( ! $can_send_document ) {
 			bboss_bbp_add_error( 'bbp_topic_document', __( '<strong>ERROR</strong>: You don\'t have access to send the document.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 		}
 	}
 
-	if ( ! empty( $_POST['bbp_video'] ) ) {
+	if ( ! empty( $_POST['bbp_video'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked by bbp_verify_nonce_request() at the top of this handler.
 		$can_send_video = bboss_user_has_access_upload_video( 0, bboss_loggedin_user_id(), $forum_id, 0, 'forum' );
 		if ( ! $can_send_video ) {
 			bboss_bbp_add_error( 'bbp_topic_video', __( '<strong>ERROR</strong>: You don\'t have access to send the video.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 		}
 	}
 
-	if ( ! empty( $_POST['bbp_media_gif'] ) ) {
+	if ( ! empty( $_POST['bbp_media_gif'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked by bbp_verify_nonce_request() at the top of this handler.
 		$can_send_gif = bboss_user_has_access_upload_gif( 0, bboss_loggedin_user_id(), $forum_id, 0, 'forum' );
 		if ( ! $can_send_gif ) {
 			bboss_bbp_add_error( 'bbp_topic_gif', __( '<strong>ERROR</strong>: You don\'t have access to send the gif.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
@@ -374,8 +374,8 @@ function bboss_bbp_new_reply_handler( $action = '' ) {
 	/** Reply To */
 
 	// Handle Reply To of the reply; $_REQUEST for non-JS submissions.
-	if ( isset( $_REQUEST['bbp_reply_to'] ) ) {
-		$reply_to = bboss_bbp_validate_reply_to( $_REQUEST['bbp_reply_to'] );
+	if ( isset( $_REQUEST['bbp_reply_to'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- nonce checked by bbp_verify_nonce_request() at the top of this handler.
+		$reply_to = bboss_bbp_validate_reply_to( $_REQUEST['bbp_reply_to'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- validated by bbp_validate_reply_to() (must be a reply) and returned as an integer; nonce checked by bbp_verify_nonce_request() at the top of this handler.
 	}
 
 	/** Topic Closed */
@@ -388,11 +388,11 @@ function bboss_bbp_new_reply_handler( $action = '' ) {
 	/** Topic Tags */
 
 	// Either replace terms.
-	if ( bboss_bbp_allow_topic_tags() && current_user_can( 'assign_topic_tags' ) && ! empty( $_POST['bbp_topic_tags'] ) ) {
-		$terms = esc_attr( wp_strip_all_tags( $_POST['bbp_topic_tags'] ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized,WordPress.Security.ValidatedSanitizedInput.MissingUnslash -- bbPress stores this entity-encoded via esc_attr( wp_strip_all_tags() ) and wp_insert_post() expects slashed input; sanitize_text_field()/wp_unslash() would change the stored format.
+	if ( bboss_bbp_allow_topic_tags() && current_user_can( 'assign_topic_tags' ) && ! empty( $_POST['bbp_topic_tags'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked by bbp_verify_nonce_request() at the top of this handler.
+		$terms = esc_attr( wp_strip_all_tags( $_POST['bbp_topic_tags'] ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized,WordPress.Security.ValidatedSanitizedInput.MissingUnslash,WordPress.Security.NonceVerification.Missing -- bbPress stores this entity-encoded via esc_attr( wp_strip_all_tags() ) and wp_insert_post() expects slashed input; sanitize_text_field()/wp_unslash() would change the stored format. Nonce checked by bbp_verify_nonce_request() at the top of this handler.
 
 		// ...or remove them.
-	} elseif ( isset( $_POST['bbp_topic_tags'] ) ) {
+	} elseif ( isset( $_POST['bbp_topic_tags'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked by bbp_verify_nonce_request() at the top of this handler.
 		$terms = '';
 
 		// Existing terms.
@@ -598,13 +598,13 @@ function bboss_bbp_edit_reply_handler( $action = '' ) {
 	/** Reply */
 
 	// Reply id was not passed.
-	if ( empty( $_POST['bbp_reply_id'] ) ) {
+	if ( empty( $_POST['bbp_reply_id'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked by bbp_verify_nonce_request() just below, before anything is changed; this id is part of its action.
 		bboss_bbp_add_error( 'bbp_edit_reply_id', __( '<strong>ERROR</strong>: Reply ID not found.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 		return;
 
 		// Reply id was passed.
-	} elseif ( is_numeric( $_POST['bbp_reply_id'] ) ) {
-		$reply_id = (int) $_POST['bbp_reply_id'];
+	} elseif ( is_numeric( $_POST['bbp_reply_id'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked by bbp_verify_nonce_request() just below, before anything is changed; this id is part of its action.
+		$reply_id = (int) $_POST['bbp_reply_id']; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked by bbp_verify_nonce_request() just below, before anything is changed; this id is part of its action.
 		$reply    = bboss_bbp_get_reply( $reply_id );
 	}
 
@@ -643,7 +643,7 @@ function bboss_bbp_edit_reply_handler( $action = '' ) {
 	}
 
 	// Remove kses filters from title and content for capable users and if the nonce is verified.
-	if ( current_user_can( 'unfiltered_html' ) && ! empty( $_POST['_bbp_unfiltered_html_reply'] ) && wp_create_nonce( 'bbp-unfiltered-html-reply_' . $reply_id ) === $_POST['_bbp_unfiltered_html_reply'] ) {
+	if ( current_user_can( 'unfiltered_html' ) && ! empty( $_POST['_bbp_unfiltered_html_reply'] ) && wp_create_nonce( 'bbp-unfiltered-html-reply_' . $reply_id ) === $_POST['_bbp_unfiltered_html_reply'] ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked by bbp_verify_nonce_request() earlier in this handler.
 		remove_filter( 'bbp_edit_reply_pre_title', 'wp_filter_kses' );
 		remove_filter( 'bbp_edit_reply_pre_content', 'bboss_bbp_encode_bad', 10 );
 		// remove_filter( 'bbp_edit_reply_pre_content', 'bbp_filter_kses', 30 );
@@ -689,8 +689,8 @@ function bboss_bbp_edit_reply_handler( $action = '' ) {
 
 	/** Reply Title */
 
-	if ( ! empty( $_POST['bbp_reply_title'] ) ) {
-		$reply_title = esc_attr( wp_strip_all_tags( $_POST['bbp_reply_title'] ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized,WordPress.Security.ValidatedSanitizedInput.MissingUnslash -- bbPress stores this entity-encoded via esc_attr( wp_strip_all_tags() ) and wp_insert_post() expects slashed input; sanitize_text_field()/wp_unslash() would change the stored format.
+	if ( ! empty( $_POST['bbp_reply_title'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked by bbp_verify_nonce_request() earlier in this handler.
+		$reply_title = esc_attr( wp_strip_all_tags( $_POST['bbp_reply_title'] ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized,WordPress.Security.ValidatedSanitizedInput.MissingUnslash,WordPress.Security.NonceVerification.Missing -- bbPress stores this entity-encoded via esc_attr( wp_strip_all_tags() ) and wp_insert_post() expects slashed input; sanitize_text_field()/wp_unslash() would change the stored format. Nonce checked by bbp_verify_nonce_request() earlier in this handler.
 	}
 
 	// Filter and sanitize.
@@ -698,22 +698,22 @@ function bboss_bbp_edit_reply_handler( $action = '' ) {
 
 	/** Reply Content */
 
-	if ( ! empty( $_POST['bbp_reply_content'] ) ) {
-		$reply_content = $_POST['bbp_reply_content'];
+	if ( ! empty( $_POST['bbp_reply_content'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked by bbp_verify_nonce_request() earlier in this handler.
+		$reply_content = $_POST['bbp_reply_content']; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.NonceVerification.Missing -- filtered by bbp_edit_reply_pre_content (bbp_encode_bad(), bbp_filter_kses(), balanceTags()); wp_update_post() expects slashed input; nonce checked by bbp_verify_nonce_request() earlier in this handler.
 	}
 
 	// Filter and sanitize.
 	$reply_content = apply_filters( 'bbp_edit_reply_pre_content', $reply_content, $reply_id );
 
-	$link_preview_post_data = ! empty( $_POST['link_preview_data'] ) ? map_deep( (array) json_decode( stripslashes( $_POST['link_preview_data'] ), true ), 'sanitize_text_field' ) : [];
+	$link_preview_post_data = ! empty( $_POST['link_preview_data'] ) ? map_deep( (array) json_decode( stripslashes( $_POST['link_preview_data'] ), true ), 'sanitize_text_field' ) : []; // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- JSON string, unslashed by stripslashes() and sanitised with map_deep( 'sanitize_text_field' ) after decoding; nonce checked by bbp_verify_nonce_request() earlier in this handler.
 
 	// No reply content.
 	if (
 		empty( trim( html_entity_decode( wp_strip_all_tags( $reply_content ), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) ) )
-		&& empty( $_POST['bbp_media'] )
-		&& empty( $_POST['bbp_video'] )
-		&& empty( $_POST['bbp_media_gif'] )
-		&& empty( $_POST['bbp_document'] )
+		&& empty( $_POST['bbp_media'] ) // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked by bbp_verify_nonce_request() earlier in this handler.
+		&& empty( $_POST['bbp_video'] ) // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked by bbp_verify_nonce_request() earlier in this handler.
+		&& empty( $_POST['bbp_media_gif'] ) // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked by bbp_verify_nonce_request() earlier in this handler.
+		&& empty( $_POST['bbp_document'] ) // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked by bbp_verify_nonce_request() earlier in this handler.
 		&& ( false === bboss_bbp_use_autoembed() || ( false !== bboss_bbp_use_autoembed() && empty( $link_preview_post_data['link_url'] ) ) )
 	) {
 		bboss_bbp_add_error( 'bbp_edit_reply_content', __( '<strong>ERROR</strong>: Your reply cannot be empty.', 'buddyboss-community-social-network-groups-forums-messaging' ) );
@@ -748,18 +748,18 @@ function bboss_bbp_edit_reply_handler( $action = '' ) {
 	/** Reply To */
 
 	// Handle Reply To of the reply; $_REQUEST for non-JS submissions.
-	if ( isset( $_REQUEST['bbp_reply_to'] ) ) {
-		$reply_to = bboss_bbp_validate_reply_to( $_REQUEST['bbp_reply_to'] );
+	if ( isset( $_REQUEST['bbp_reply_to'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- nonce checked by bbp_verify_nonce_request() earlier in this handler.
+		$reply_to = bboss_bbp_validate_reply_to( $_REQUEST['bbp_reply_to'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- validated by bbp_validate_reply_to() (must be a reply) and returned as an integer; nonce checked by bbp_verify_nonce_request() earlier in this handler.
 	}
 
 	/** Topic Tags */
 
 	// Either replace terms.
-	if ( bboss_bbp_allow_topic_tags() && current_user_can( 'assign_topic_tags' ) && ! empty( $_POST['bbp_topic_tags'] ) ) {
-		$terms = esc_attr( wp_strip_all_tags( $_POST['bbp_topic_tags'] ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized,WordPress.Security.ValidatedSanitizedInput.MissingUnslash -- bbPress stores this entity-encoded via esc_attr( wp_strip_all_tags() ) and wp_insert_post() expects slashed input; sanitize_text_field()/wp_unslash() would change the stored format.
+	if ( bboss_bbp_allow_topic_tags() && current_user_can( 'assign_topic_tags' ) && ! empty( $_POST['bbp_topic_tags'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked by bbp_verify_nonce_request() earlier in this handler.
+		$terms = esc_attr( wp_strip_all_tags( $_POST['bbp_topic_tags'] ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized,WordPress.Security.ValidatedSanitizedInput.MissingUnslash,WordPress.Security.NonceVerification.Missing -- bbPress stores this entity-encoded via esc_attr( wp_strip_all_tags() ) and wp_insert_post() expects slashed input; sanitize_text_field()/wp_unslash() would change the stored format. Nonce checked by bbp_verify_nonce_request() earlier in this handler.
 
 		// ...or remove them.
-	} elseif ( isset( $_POST['bbp_topic_tags'] ) ) {
+	} elseif ( isset( $_POST['bbp_topic_tags'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked by bbp_verify_nonce_request() earlier in this handler.
 		$terms = '';
 
 		// Existing terms.
@@ -829,12 +829,12 @@ function bboss_bbp_edit_reply_handler( $action = '' ) {
 	/** Revisions */
 
 	// Revision Reason.
-	if ( ! empty( $_POST['bbp_reply_edit_reason'] ) ) {
-		$reply_edit_reason = esc_attr( wp_strip_all_tags( $_POST['bbp_reply_edit_reason'] ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized,WordPress.Security.ValidatedSanitizedInput.MissingUnslash -- bbPress stores this entity-encoded via esc_attr( wp_strip_all_tags() ) and wp_insert_post() expects slashed input; sanitize_text_field()/wp_unslash() would change the stored format.
+	if ( ! empty( $_POST['bbp_reply_edit_reason'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked by bbp_verify_nonce_request() earlier in this handler.
+		$reply_edit_reason = esc_attr( wp_strip_all_tags( $_POST['bbp_reply_edit_reason'] ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized,WordPress.Security.ValidatedSanitizedInput.MissingUnslash,WordPress.Security.NonceVerification.Missing -- bbPress stores this entity-encoded via esc_attr( wp_strip_all_tags() ) and wp_insert_post() expects slashed input; sanitize_text_field()/wp_unslash() would change the stored format. Nonce checked by bbp_verify_nonce_request() earlier in this handler.
 	}
 
 	// Update revision log.
-	if ( ! empty( $_POST['bbp_log_reply_edit'] ) && ( '1' === $_POST['bbp_log_reply_edit'] ) ) {
+	if ( ! empty( $_POST['bbp_log_reply_edit'] ) && ( '1' === $_POST['bbp_log_reply_edit'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked by bbp_verify_nonce_request() earlier in this handler.
 		$revision_id = wp_save_post_revision( $reply_id );
 		if ( ! empty( $revision_id ) ) {
 			bboss_bbp_update_reply_revision_log(
@@ -986,7 +986,7 @@ function bboss_bbp_update_reply( $reply_id = 0, $topic_id = 0, $forum_id = 0, $a
 	// Handle Subscription Checkbox.
 	if ( bboss_is_enabled_subscription( $subscribe_type ) && ! empty( $author_id ) && ! empty( $topic_id ) ) {
 		$subscribed = bboss_bbp_is_user_subscribed( $author_id, $topic_id );
-		$subscheck  = ( ! empty( $_POST['bbp_topic_subscription'] ) && ( 'bbp_subscribe' === $_POST['bbp_topic_subscription'] ) ) ? true : false;
+		$subscheck  = ( ! empty( $_POST['bbp_topic_subscription'] ) && ( 'bbp_subscribe' === $_POST['bbp_topic_subscription'] ) ) ? true : false; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- runs on bbp_new_reply / bbp_edit_reply; bbp_new_reply_handler() and bbp_edit_reply_handler() verify the nonce before firing them.
 
 		// Subscribed and unsubscribing.
 		if ( true === $subscribed && false === $subscheck ) {
@@ -1376,10 +1376,10 @@ function bboss_bbp_move_reply_handler( $action = '' ) {
 
 	/** Move Reply */
 
-	if ( empty( $_POST['bbp_reply_id'] ) ) {
+	if ( empty( $_POST['bbp_reply_id'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked by bbp_verify_nonce_request() just below, before anything is changed; this id is part of its action.
 		bboss_bbp_add_error( 'bbp_move_reply_reply_id', __( '<strong>ERROR</strong>: Reply ID to move not found!', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 	} else {
-		$move_reply_id = (int) $_POST['bbp_reply_id'];
+		$move_reply_id = (int) $_POST['bbp_reply_id']; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked by bbp_verify_nonce_request() just below, before anything is changed; this id is part of its action.
 	}
 
 	$move_reply = bboss_bbp_get_reply( $move_reply_id );
@@ -1411,8 +1411,8 @@ function bboss_bbp_move_reply_handler( $action = '' ) {
 	}
 
 	// How to move.
-	if ( ! empty( $_POST['bbp_reply_move_option'] ) ) {
-		$move_option = (string) trim( $_POST['bbp_reply_move_option'] );
+	if ( ! empty( $_POST['bbp_reply_move_option'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked by bbp_verify_nonce_request() earlier in this handler.
+		$move_option = sanitize_text_field( wp_unslash( $_POST['bbp_reply_move_option'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked by bbp_verify_nonce_request() earlier in this handler.
 	}
 
 	// Invalid move option.
@@ -1428,10 +1428,10 @@ function bboss_bbp_move_reply_handler( $action = '' ) {
 			// Into an existing topic.
 			case 'existing':
 				// Get destination topic id.
-				if ( empty( $_POST['bbp_destination_topic'] ) ) {
+				if ( empty( $_POST['bbp_destination_topic'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked by bbp_verify_nonce_request() earlier in this handler.
 					bboss_bbp_add_error( 'bbp_move_reply_destination_id', __( '<strong>ERROR</strong>: Destination discussion ID not found!', 'buddyboss-community-social-network-groups-forums-messaging' ) );
 				} else {
-					$destination_topic_id = (int) $_POST['bbp_destination_topic'];
+					$destination_topic_id = (int) $_POST['bbp_destination_topic']; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked by bbp_verify_nonce_request() earlier in this handler.
 				}
 
 				// Get the destination topic.
@@ -1476,8 +1476,8 @@ function bboss_bbp_move_reply_handler( $action = '' ) {
 				if ( current_user_can( 'publish_topics' ) ) {
 
 					// Use the new title that was passed.
-					if ( ! empty( $_POST['bbp_reply_move_destination_title'] ) ) {
-						$destination_topic_title = esc_attr( wp_strip_all_tags( $_POST['bbp_reply_move_destination_title'] ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized,WordPress.Security.ValidatedSanitizedInput.MissingUnslash -- bbPress stores this entity-encoded via esc_attr( wp_strip_all_tags() ) and wp_insert_post() expects slashed input; sanitize_text_field()/wp_unslash() would change the stored format.
+					if ( ! empty( $_POST['bbp_reply_move_destination_title'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked by bbp_verify_nonce_request() earlier in this handler.
+						$destination_topic_title = esc_attr( wp_strip_all_tags( $_POST['bbp_reply_move_destination_title'] ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized,WordPress.Security.ValidatedSanitizedInput.MissingUnslash,WordPress.Security.NonceVerification.Missing -- bbPress stores this entity-encoded via esc_attr( wp_strip_all_tags() ) and wp_insert_post() expects slashed input; sanitize_text_field()/wp_unslash() would change the stored format. Nonce checked by bbp_verify_nonce_request() earlier in this handler.
 
 						// Use the source topic title.
 					} else {
@@ -1729,7 +1729,7 @@ function bboss_bbp_toggle_reply_handler( $action = '' ) {
 
 		// Toggle trash.
 		case 'bbp_toggle_reply_trash':
-			$sub_action = in_array( $_GET['sub_action'], array( 'trash', 'untrash', 'delete' ) ) ? $_GET['sub_action'] : false;
+			$sub_action = ! empty( $_GET['sub_action'] ) && in_array( $_GET['sub_action'], array( 'trash', 'untrash', 'delete' ) ) ? sanitize_text_field( wp_unslash( $_GET['sub_action'] ) ) : false;
 
 			if ( empty( $sub_action ) ) {
 				break;

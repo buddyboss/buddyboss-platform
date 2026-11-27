@@ -1032,7 +1032,7 @@ class BBoss_Suspend_Member extends BBoss_Suspend_Abstract {
 	 */
 	public function bp_core_get_user_domain( $domain, $user_id ) {
 
-		$username_visible = isset( $_GET['username_visible'] ) ? sanitize_text_field( wp_unslash( $_GET['username_visible'] ) ) : false;
+		$username_visible = isset( $_GET['username_visible'] ) ? sanitize_text_field( wp_unslash( $_GET['username_visible'] ) ) : false; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; only decides whether the item is shown.
 
 		if (
 			empty( $username_visible ) &&
@@ -1078,7 +1078,7 @@ class BBoss_Suspend_Member extends BBoss_Suspend_Abstract {
 	 * @return string
 	 */
 	public function get_the_author_name( $value, $user_id ) {
-		$username_visible = isset( $_GET['username_visible'] ) ? sanitize_text_field( wp_unslash( $_GET['username_visible'] ) ) : false;
+		$username_visible = isset( $_GET['username_visible'] ) ? sanitize_text_field( wp_unslash( $_GET['username_visible'] ) ) : false; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; only decides whether the item is shown.
 		if ( ! empty( $username_visible ) || ( bboss_is_my_profile() && 'blocked-members' === bboss_current_action() ) ) {
 			return $value;
 		}

@@ -103,7 +103,7 @@ function bboss_admin_repair_list() {
 		'bp-missing-emails',
 		esc_html__( 'Install missing emails (restore missing emails from defaults)', 'buddyboss-community-social-network-groups-forums-messaging' ),
 		'bboss_admin_install_emails',
-		( isset( $_GET['tool'] ) && 'bp-reinstall-emails' === $_GET['tool'] ),
+		( isset( $_GET['tool'] ) && 'bp-reinstall-emails' === $_GET['tool'] ), // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; only preselects a repair tool.
 	);
 
 	// - reinstall emails.
@@ -111,7 +111,7 @@ function bboss_admin_repair_list() {
 		'bp-reinstall-emails',
 		esc_html__( 'Reset emails (delete and restore from defaults)', 'buddyboss-community-social-network-groups-forums-messaging' ),
 		'bboss_admin_reinstall_emails',
-		( isset( $_GET['tool'] ) && 'bp-missing-emails' === $_GET['tool'] ),
+		( isset( $_GET['tool'] ) && 'bp-missing-emails' === $_GET['tool'] ), // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; only preselects a repair tool.
 	);
 
 	// Check whether member type is enabled.
@@ -477,7 +477,7 @@ function bboss_admin_repair_activity_topic_relationships() {
  */
 function bboss_resync_xprofile_wordpress_fields() {
 
-	$offset = isset( $_POST['offset'] ) ? (int) $_POST['offset'] : 0;
+	$offset = isset( $_POST['offset'] ) ? (int) $_POST['offset'] : 0; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked in bp_admin_repair_tools_wrapper_function().
 
 	$args = array(
 		'number' => 50,
@@ -517,7 +517,7 @@ function bboss_resync_xprofile_wordpress_fields() {
  */
 function bboss_resync_wordpress_xprofile_fields() {
 
-	$offset = isset( $_POST['offset'] ) ? (int) $_POST['offset'] : 0;
+	$offset = isset( $_POST['offset'] ) ? (int) $_POST['offset'] : 0; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked in bp_admin_repair_tools_wrapper_function().
 
 	$args = array(
 		'number' => 50,
@@ -570,7 +570,7 @@ function bboss_resync_wordpress_xprofile_fields() {
  */
 function xprofile_update_display_names() {
 
-	$offset = isset( $_POST['offset'] ) ? (int) $_POST['offset'] : 0;
+	$offset = isset( $_POST['offset'] ) ? (int) $_POST['offset'] : 0; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked in bp_admin_repair_tools_wrapper_function().
 
 	$args = array(
 		'number' => 50,
@@ -953,7 +953,7 @@ add_action( 'network_admin_notices', 'bboss_core_admin_notice_repopulate_blogs_r
  */
 function bboss_admin_assign_member_type() {
 
-	$offset = isset( $_POST['offset'] ) ? (int) $_POST['offset'] : 0;
+	$offset = isset( $_POST['offset'] ) ? (int) $_POST['offset'] : 0; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked in bp_admin_repair_tools_wrapper_function().
 
 	$args = array(
 		'number' => 50,
@@ -1225,7 +1225,7 @@ function bboss_admin_update_activity_favourite() {
 	$bp_activity_reactions = bboss_get_option( 'bp_activity_reactions', false );
 
 	if ( ! $bp_activity_reactions ) {
-		$offset   = isset( $_POST['offset'] ) ? (int) $_POST['offset'] : 0;
+		$offset   = isset( $_POST['offset'] ) ? (int) $_POST['offset'] : 0; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked in bp_admin_repair_tools_wrapper_function().
 		$per_page = (int) apply_filters( 'bb_admin_update_activity_favourite_per_page', 200 );
 
 		$items = $wpdb->get_results(
@@ -1443,7 +1443,7 @@ function bboss_admin_invitations_table() {
  * @return array
  */
 function bboss_sync_profile_completion_widget() {
-	$offset = isset( $_POST['offset'] ) ? (int) $_POST['offset'] : 0;
+	$offset = isset( $_POST['offset'] ) ? (int) $_POST['offset'] : 0; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked in bp_admin_repair_tools_wrapper_function().
 
 	// Users args.
 	$args = array(

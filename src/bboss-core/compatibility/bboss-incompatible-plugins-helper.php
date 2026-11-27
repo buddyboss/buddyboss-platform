@@ -648,7 +648,7 @@ function bboss_core_learndash_bbpress_notices() {
  * @return mixed
  */
 function bboss_core_fix_notices_woocommerce_admin_status( $tabs ) {
-	if ( isset( $_GET['page'] ) && 'wc-status' == $_GET['page'] ) {
+	if ( isset( $_GET['page'] ) && 'wc-status' == $_GET['page'] ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; nothing is changed.
 		bboss_core_unset_bbpress_buddypress_active();
 	}
 	return $tabs;
@@ -1054,7 +1054,7 @@ function bboss_elementor_library_template() {
 		return;
 	}
 
-	if ( isset( $_GET['elementor_library'] ) ) {
+	if ( isset( $_GET['elementor_library'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; nothing is changed.
 		remove_action( 'template_redirect', 'bboss_template_redirect', 10 );
 	}
 }
@@ -1106,7 +1106,7 @@ function bboss_is_elementor_maintenance_mode_enabled() {
 
 	static $user = null;
 
-	if ( isset( $_GET['elementor-preview'] ) && get_the_ID() === (int) $_GET['elementor-preview'] ) {
+	if ( isset( $_GET['elementor-preview'] ) && get_the_ID() === (int) $_GET['elementor-preview'] ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; nothing is changed.
 		return false;
 	}
 

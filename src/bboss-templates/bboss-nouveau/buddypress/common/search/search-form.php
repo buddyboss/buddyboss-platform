@@ -11,7 +11,7 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-$search_term = ( is_search() && isset( $_GET['s'] ) ) ? $_GET['s'] : '';
+$search_term = ( is_search() && isset( $_GET['s'] ) ) ? sanitize_text_field( wp_unslash( $_GET['s'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only search request; nothing is changed.
 ?>
 
 <div class="<?php bboss_nouveau_search_container_class(); ?> bp-search" data-bp-search="<?php bboss_nouveau_search_object_data_attr() ;?>">

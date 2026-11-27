@@ -92,7 +92,7 @@ function bboss_member_type_query( $query ) {
 
 	$cookie_scope = filter_input( INPUT_COOKIE, 'bp-members-scope', FILTER_VALIDATE_INT );
 	// $post_scope   = filter_input( INPUT_POST, 'scope', FILTER_VALIDATE_INT );
-	$post_scope = isset( $_POST['scope'] ) ? intval( $_POST['scope'] ) : null;
+	$post_scope = isset( $_POST['scope'] ) ? intval( $_POST['scope'] ) : null; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- read-only request; only filters the members query.
 
 	if ( $post_scope ) {
 		$type_id = $post_scope;

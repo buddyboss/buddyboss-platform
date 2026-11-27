@@ -157,8 +157,8 @@ class BBoss_Moderation_Members extends BBoss_Moderation_Abstract {
 			(
 				! empty( $GLOBALS['wp']->query_vars['rest_route'] ) &&
 				preg_match( '/buddyboss\/v+(\d+)\/groups\/+(\d+)\/members/', $GLOBALS['wp']->query_vars['rest_route'], $matches ) &&
-				empty( $_REQUEST['scope'] ) &&
-				empty( $_REQUEST['show-all'] )
+				empty( $_REQUEST['scope'] ) && // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; only checks whether a list filter is present.
+				empty( $_REQUEST['show-all'] ) // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; only checks whether a list filter is present.
 			)
 		) {
 			$blocked_user_query = false;
@@ -264,7 +264,7 @@ class BBoss_Moderation_Members extends BBoss_Moderation_Abstract {
 	 * @return string
 	 */
 	public function bp_core_get_userlink( $value, $user_id ) {
-		$username_visible = isset( $_GET['username_visible'] ) ? sanitize_text_field( wp_unslash( $_GET['username_visible'] ) ) : false;
+		$username_visible = isset( $_GET['username_visible'] ) ? sanitize_text_field( wp_unslash( $_GET['username_visible'] ) ) : false; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; only decides whether the item is shown.
 
 		if ( empty( $username_visible ) && ( bboss_moderation_is_user_blocked( $user_id ) || bboss_moderation_is_user_blocked_by( $user_id ) ) ) {
 			return '<a>' . bboss_core_get_user_displayname( $user_id ) . '</a>';

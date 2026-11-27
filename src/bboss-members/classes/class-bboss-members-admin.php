@@ -416,8 +416,8 @@ if ( ! class_exists( 'BBoss_Members_Admin' ) ) :
 			$this->user_id = (int) get_current_user_id();
 
 			// We'll need a user ID when not on self profile.
-			if ( ! empty( $_GET['user_id'] ) ) {
-				$this->user_id = (int) $_GET['user_id'];
+			if ( ! empty( $_GET['user_id'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; only selects the user shown on the screen, the handlers check their own nonce.
+				$this->user_id = (int) $_GET['user_id']; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; only selects the user shown on the screen, the handlers check their own nonce.
 			}
 
 			return $this->user_id;
@@ -469,8 +469,8 @@ if ( ! class_exists( 'BBoss_Members_Admin' ) ) :
 			$notice = array();
 
 			// Updates.
-			if ( ! empty( $_REQUEST['updated'] ) ) {
-				switch ( $_REQUEST['updated'] ) {
+			if ( ! empty( $_REQUEST['updated'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; only chooses the admin notice.
+				switch ( $_REQUEST['updated'] ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; only chooses the admin notice.
 					case 'avatar':
 						$notice = array(
 							'class'   => 'updated',
@@ -499,8 +499,8 @@ if ( ! class_exists( 'BBoss_Members_Admin' ) ) :
 			}
 
 			// Errors.
-			if ( ! empty( $_REQUEST['error'] ) ) {
-				switch ( $_REQUEST['error'] ) {
+			if ( ! empty( $_REQUEST['error'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; only chooses the admin notice.
+				switch ( $_REQUEST['error'] ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; only chooses the admin notice.
 					case 'avatar':
 						$notice = array(
 							'class'   => 'error',
@@ -540,7 +540,7 @@ if ( ! class_exists( 'BBoss_Members_Admin' ) ) :
 					case 4:
 						$notice = array(
 							'class'   => 'error',
-							'message' => stripcslashes( $_REQUEST['message'] ),
+							'message' => isset( $_REQUEST['message'] ) ? stripcslashes( $_REQUEST['message'] ) : '', // phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- read-only request; the message is unslashed with stripcslashes() and escaped with esc_html() in user_admin().
 						);
 						break;
 				}
@@ -670,7 +670,7 @@ if ( ! class_exists( 'BBoss_Members_Admin' ) ) :
 				$this->is_self_profile = true;
 
 				// Is the user attempting to edit their own profile.
-			} elseif ( isset( $_GET['user_id'] ) || ( isset( $_GET['page'] ) && ( 'bp-profile-edit' === $_GET['page'] ) ) ) {
+			} elseif ( isset( $_GET['user_id'] ) || ( isset( $_GET['page'] ) && ( 'bp-profile-edit' === $_GET['page'] ) ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; only detects whose profile is being edited.
 				$this->is_self_profile = (bool) ( $this->get_user_id() === $this->current_user_id );
 			}
 
@@ -817,8 +817,8 @@ if ( ! class_exists( 'BBoss_Members_Admin' ) ) :
 			}
 
 			// Conditionally add a referer if it exists in the existing request.
-			if ( ! empty( $_REQUEST['wp_http_referer'] ) ) {
-				$wp_http_referer               = wp_unslash( $_REQUEST['wp_http_referer'] );
+			if ( ! empty( $_REQUEST['wp_http_referer'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; only builds the profile links.
+				$wp_http_referer               = wp_unslash( $_REQUEST['wp_http_referer'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- read-only request; sanitised with esc_url_raw() and wp_validate_redirect() below.
 				$wp_http_referer               = wp_validate_redirect( esc_url_raw( $wp_http_referer ) );
 				$query_args['wp_http_referer'] = urlencode( $wp_http_referer );
 			}
@@ -911,7 +911,7 @@ if ( ! class_exists( 'BBoss_Members_Admin' ) ) :
 			 * @param string $doaction Current bulk action being processed.
 			 * @param array  $_REQUEST Current $_REQUEST global.
 			 */
-			do_action_ref_array( 'bp_members_admin_load', array( $doaction, $_REQUEST ) );
+			do_action_ref_array( 'bp_members_admin_load', array( $doaction, $_REQUEST ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only; the request is only passed to the bp_members_admin_load action, changes below are behind check_admin_referer().
 
 			/**
 			 * Filters the allowed actions for use in the user admin page.
@@ -1086,8 +1086,8 @@ if ( ! class_exists( 'BBoss_Members_Admin' ) ) :
 			$request_url     = remove_query_arg( array( 'action', 'error', 'updated', 'spam', 'ham' ), $request_uri );
 			$form_action_url = add_query_arg( 'action', 'update', $request_url );
 			$wp_http_referer = false;
-			if ( ! empty( $_REQUEST['wp_http_referer'] ) ) {
-				$wp_http_referer = wp_unslash( $_REQUEST['wp_http_referer'] );
+			if ( ! empty( $_REQUEST['wp_http_referer'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; only builds the profile links.
+				$wp_http_referer = wp_unslash( $_REQUEST['wp_http_referer'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- read-only request; sanitised with esc_url_raw() and wp_validate_redirect() below.
 				$wp_http_referer = remove_query_arg( array( 'action', 'updated' ), $wp_http_referer );
 				$wp_http_referer = wp_validate_redirect( esc_url_raw( $wp_http_referer ) );
 			}
@@ -1431,7 +1431,7 @@ if ( ! class_exists( 'BBoss_Members_Admin' ) ) :
 			}
 
 			// profile type string must either reference a valid profile type, or be empty.
-			$member_type = stripslashes( $_POST['bp-members-profile-member-type'] );
+			$member_type = sanitize_text_field( wp_unslash( $_POST['bp-members-profile-member-type'] ) );
 			if ( ! empty( $member_type ) && ! bboss_get_member_type_object( $member_type ) ) {
 				return;
 			}
@@ -1540,7 +1540,7 @@ if ( ! class_exists( 'BBoss_Members_Admin' ) ) :
 				}
 
 				// profile type string must either reference a valid profile type, or be empty.
-				$is_suspend = isset( $_POST['user_status'] ) ? stripslashes( $_POST['user_status'] ) : '';
+				$is_suspend = isset( $_POST['user_status'] ) ? sanitize_text_field( wp_unslash( $_POST['user_status'] ) ) : '';
 
 				if ( ! empty( $is_suspend ) && 'suspend' === $is_suspend ) {
 					BBoss_Suspend_Member::suspend_user( $user_id );
@@ -1576,7 +1576,7 @@ if ( ! class_exists( 'BBoss_Members_Admin' ) ) :
 			}
 
 			// Add the referer.
-			$wp_http_referer         = wp_unslash( $_SERVER['REQUEST_URI'] );
+			$wp_http_referer         = isset( $_SERVER['REQUEST_URI'] ) ? wp_unslash( $_SERVER['REQUEST_URI'] ) : ''; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- sanitised with esc_url_raw() and wp_validate_redirect() on the next line.
 			$wp_http_referer         = wp_validate_redirect( esc_url_raw( $wp_http_referer ) );
 			$args['wp_http_referer'] = urlencode( $wp_http_referer );
 
@@ -1806,7 +1806,7 @@ if ( ! class_exists( 'BBoss_Members_Admin' ) ) :
 			 * @param string $doaction Current bulk action being processed.
 			 * @param array  $_REQUEST Current $_REQUEST global.
 			 */
-			do_action( 'bp_signups_admin_load', $doaction, $_REQUEST );
+			do_action( 'bp_signups_admin_load', $doaction, $_REQUEST ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only; the request is only passed to the bp_signups_admin_load action, changes below are behind check_admin_referer().
 
 			/**
 			 * Filters the allowed actions for use in the user signups admin page.
@@ -2019,40 +2019,40 @@ if ( ! class_exists( 'BBoss_Members_Admin' ) ) :
 			$notice = array();
 
 			// Updates.
-			if ( ! empty( $_REQUEST['updated'] ) ) {
-				switch ( $_REQUEST['updated'] ) {
+			if ( ! empty( $_REQUEST['updated'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; only chooses the admin notice.
+				switch ( $_REQUEST['updated'] ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; only chooses the admin notice.
 					case 'resent':
 						$notice = array(
 							'class'   => 'updated',
 							'message' => '',
 						);
 
-						if ( ! empty( $_REQUEST['resent'] ) ) {
+						if ( ! empty( $_REQUEST['resent'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; only chooses the admin notice.
 							$notice['message'] .= sprintf(
 								// translators: %s: number of activation emails successfully sent.
 								_n(
 									'%s activation email successfully sent! ',
 									'%s activation emails successfully sent! ',
-									absint( $_REQUEST['resent'] ),
-									'buddyboss-community-social-network-groups-forums-messaging'
+									absint( $_REQUEST['resent'] ), // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; only chooses the admin notice.
+									'buddyboss'
 								),
-								bboss_core_number_format( absint( $_REQUEST['resent'] ) )
+								bboss_core_number_format( absint( $_REQUEST['resent'] ) ) // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; only chooses the admin notice.
 							);
 						}
 
-						if ( ! empty( $_REQUEST['notsent'] ) ) {
+						if ( ! empty( $_REQUEST['notsent'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; only chooses the admin notice.
 							$notice['message'] .= sprintf(
 								// translators: %s: number of activation emails that were not sent.
 								_n(
 									'%s activation email was not sent.',
 									'%s activation emails were not sent.',
-									absint( $_REQUEST['notsent'] ),
-									'buddyboss-community-social-network-groups-forums-messaging'
+									absint( $_REQUEST['notsent'] ), // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; only chooses the admin notice.
+									'buddyboss'
 								),
-								bboss_core_number_format( absint( $_REQUEST['notsent'] ) )
+								bboss_core_number_format( absint( $_REQUEST['notsent'] ) ) // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; only chooses the admin notice.
 							);
 
-							if ( empty( $_REQUEST['resent'] ) ) {
+							if ( empty( $_REQUEST['resent'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; only chooses the admin notice.
 								$notice['class'] = 'error';
 							}
 						}
@@ -2065,32 +2065,32 @@ if ( ! class_exists( 'BBoss_Members_Admin' ) ) :
 							'message' => '',
 						);
 
-						if ( ! empty( $_REQUEST['activated'] ) ) {
+						if ( ! empty( $_REQUEST['activated'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; only chooses the admin notice.
 							$notice['message'] .= sprintf(
 								// translators: %s: number of accounts successfully activated.
 								_n(
 									'%s account successfully activated! ',
 									'%s accounts successfully activated! ',
-									absint( $_REQUEST['activated'] ),
-									'buddyboss-community-social-network-groups-forums-messaging'
+									absint( $_REQUEST['activated'] ), // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; only chooses the admin notice.
+									'buddyboss'
 								),
-								bboss_core_number_format( absint( $_REQUEST['activated'] ) )
+								bboss_core_number_format( absint( $_REQUEST['activated'] ) ) // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; only chooses the admin notice.
 							);
 						}
 
-						if ( ! empty( $_REQUEST['notactivated'] ) ) {
+						if ( ! empty( $_REQUEST['notactivated'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; only chooses the admin notice.
 							$notice['message'] .= sprintf(
 								// translators: %s: number of accounts that were not activated.
 								_n(
 									'%s account was not activated.',
 									'%s accounts were not activated.',
-									absint( $_REQUEST['notactivated'] ),
-									'buddyboss-community-social-network-groups-forums-messaging'
+									absint( $_REQUEST['notactivated'] ), // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; only chooses the admin notice.
+									'buddyboss'
 								),
-								bboss_core_number_format( absint( $_REQUEST['notactivated'] ) )
+								bboss_core_number_format( absint( $_REQUEST['notactivated'] ) ) // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; only chooses the admin notice.
 							);
 
-							if ( empty( $_REQUEST['activated'] ) ) {
+							if ( empty( $_REQUEST['activated'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; only chooses the admin notice.
 								$notice['class'] = 'error';
 							}
 						}
@@ -2103,32 +2103,32 @@ if ( ! class_exists( 'BBoss_Members_Admin' ) ) :
 							'message' => '',
 						);
 
-						if ( ! empty( $_REQUEST['deleted'] ) ) {
+						if ( ! empty( $_REQUEST['deleted'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; only chooses the admin notice.
 							$notice['message'] .= sprintf(
 								// translators: %s: number of sign-ups successfully deleted.
 								_n(
 									'%s sign-up successfully deleted!',
 									'%s sign-ups successfully deleted!',
-									absint( $_REQUEST['deleted'] ),
-									'buddyboss-community-social-network-groups-forums-messaging'
+									absint( $_REQUEST['deleted'] ), // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; only chooses the admin notice.
+									'buddyboss'
 								),
-								bboss_core_number_format( absint( $_REQUEST['deleted'] ) )
+								bboss_core_number_format( absint( $_REQUEST['deleted'] ) ) // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; only chooses the admin notice.
 							);
 						}
 
-						if ( ! empty( $_REQUEST['notdeleted'] ) ) {
+						if ( ! empty( $_REQUEST['notdeleted'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; only chooses the admin notice.
 							$notice['message'] .= sprintf(
 								// translators: %s: number of sign-ups that were not deleted.
 								_n(
 									'%s sign-up was not deleted.',
 									'%s sign-ups were not deleted.',
-									absint( $_REQUEST['notdeleted'] ),
-									'buddyboss-community-social-network-groups-forums-messaging'
+									absint( $_REQUEST['notdeleted'] ), // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; only chooses the admin notice.
+									'buddyboss'
 								),
-								bboss_core_number_format( absint( $_REQUEST['notdeleted'] ) )
+								bboss_core_number_format( absint( $_REQUEST['notdeleted'] ) ) // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; only chooses the admin notice.
 							);
 
-							if ( empty( $_REQUEST['deleted'] ) ) {
+							if ( empty( $_REQUEST['deleted'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; only chooses the admin notice.
 								$notice['class'] = 'error';
 							}
 						}
@@ -2138,8 +2138,8 @@ if ( ! class_exists( 'BBoss_Members_Admin' ) ) :
 			}
 
 			// Errors.
-			if ( ! empty( $_REQUEST['error'] ) ) {
-				switch ( $_REQUEST['error'] ) {
+			if ( ! empty( $_REQUEST['error'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; only chooses the admin notice.
+				switch ( $_REQUEST['error'] ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; only chooses the admin notice.
 					case 'do_resend':
 						$notice = array(
 							'class'   => 'error',
@@ -2237,7 +2237,7 @@ if ( ! class_exists( 'BBoss_Members_Admin' ) ) :
 		public function signups_admin_index() {
 			global $plugin_page, $bp_members_signup_list_table;
 
-			$usersearch = ! empty( $_REQUEST['s'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['s'] ) ) : '';
+			$usersearch = ! empty( $_REQUEST['s'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['s'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; search term for the pending accounts list.
 
 			// Prepare the group items for display.
 			$bp_members_signup_list_table->prepare_items();
@@ -2361,10 +2361,10 @@ if ( ! class_exists( 'BBoss_Members_Admin' ) ) :
 
 			// Get the user IDs from the URL.
 			$ids = false;
-			if ( ! empty( $_POST['allsignups'] ) ) {
-				$ids = wp_parse_id_list( wp_unslash( $_POST['allsignups'] ) );
-			} elseif ( ! empty( $_GET['signup_id'] ) ) {
-				$ids = absint( $_GET['signup_id'] );
+			if ( ! empty( $_POST['allsignups'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- read-only; only builds the confirmation screen, the action itself is behind check_admin_referer() in signups_admin_load().
+				$ids = wp_parse_id_list( wp_unslash( $_POST['allsignups'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Missing -- read-only; only builds the confirmation screen, the action itself is behind check_admin_referer() in signups_admin_load().
+			} elseif ( ! empty( $_GET['signup_id'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only; only builds the confirmation screen, the action itself is behind check_admin_referer() in signups_admin_load().
+				$ids = absint( $_GET['signup_id'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only; only builds the confirmation screen, the action itself is behind check_admin_referer() in signups_admin_load().
 			}
 
 			if ( empty( $ids ) ) {
@@ -2644,7 +2644,7 @@ if ( ! class_exists( 'BBoss_Members_Admin' ) ) :
 			} else {
 				// Run through user ids.
 				$error = false;
-				foreach ( (array) $_REQUEST['users'] as $user_id ) {
+				foreach ( array_map( 'intval', (array) $_REQUEST['users'] ) as $user_id ) {
 					$user_id = (int) $user_id;
 
 					// Get the old profile type to check against.
@@ -2809,7 +2809,7 @@ if ( ! class_exists( 'BBoss_Members_Admin' ) ) :
 		 * @since BuddyPress 2.7.0
 		 */
 		public function users_type_change_notice() {
-			$updated = isset( $_REQUEST['updated'] ) ? $_REQUEST['updated'] : false;
+			$updated = isset( $_REQUEST['updated'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['updated'] ) ) : false; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; only chooses the admin notice.
 
 			// Display feedback.
 			if ( $updated && in_array( $updated, array( 'member-type-change-error', 'member-type-change-success', 'member-type-change-owner-error' ), true ) ) {
@@ -2883,8 +2883,8 @@ if ( ! class_exists( 'BBoss_Members_Admin' ) ) :
 		public function users_table_filter_by_type( $query ) {
 			global $pagenow;
 
-			if ( is_admin() && 'users.php' === $pagenow && ! empty( $_REQUEST['bp-member-type'] ) ) {
-				$type_slug = sanitize_text_field( wp_unslash( $_REQUEST['bp-member-type'] ) );
+			if ( is_admin() && 'users.php' === $pagenow && ! empty( $_REQUEST['bp-member-type'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; filters the users list by profile type.
+				$type_slug = sanitize_text_field( wp_unslash( $_REQUEST['bp-member-type'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; filters the users list by profile type.
 
 				// Check that the type is registered.
 				if ( null == bboss_get_member_type_object( $type_slug ) ) {

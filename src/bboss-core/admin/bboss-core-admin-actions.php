@@ -839,21 +839,21 @@ function bboss_validate_restricted_email_on_profile_update( $user_id ) {
 function bboss_core_settings_saved_notice() {
 
 	// Only handle notices on BuddyBoss pages.
-	if ( ! isset( $_GET['page'] ) ) {
+	if ( ! isset( $_GET['page'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; only decides whether the saved notice is shown.
 		return;
 	}
 
-	$page = sanitize_key( wp_unslash( $_GET['page'] ) );
+	$page = sanitize_key( wp_unslash( $_GET['page'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; only decides whether the saved notice is shown.
 
 	if ( ! in_array( $page, array( 'bp-settings', 'bp-pages', 'bp-integrations' ), true ) ) {
 		return;
 	}
 
 	// Check if settings were updated.
-	if ( isset( $_GET['updated'] ) || isset( $_GET['edited'] ) || isset( $_GET['added'] ) ) {
+	if ( isset( $_GET['updated'] ) || isset( $_GET['edited'] ) || isset( $_GET['added'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; only picks the notice to show (and clears its one-time transient).
 		$setting_message       = __( 'Settings saved successfully.', 'buddyboss-community-social-network-groups-forums-messaging' );
-		$setting_updated       = isset( $_GET['updated'] ) ? sanitize_text_field( wp_unslash( $_GET['updated'] ) ) : '';
-		$updated_transient_key = isset( $_GET['updated'] ) ? sanitize_key( wp_unslash( $_GET['updated'] ) ) : '';
+		$setting_updated       = isset( $_GET['updated'] ) ? sanitize_text_field( wp_unslash( $_GET['updated'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; only picks the notice to show (and clears its one-time transient).
+		$updated_transient_key = isset( $_GET['updated'] ) ? sanitize_key( wp_unslash( $_GET['updated'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; only picks the notice to show (and clears its one-time transient).
 
 		if ( 'emotion_deleted' === $setting_updated && ! empty( $updated_transient_key ) ) {
 			$setting_message = get_transient( $updated_transient_key );
@@ -1077,8 +1077,8 @@ function bboss_redirect_legacy_settings_to_settings_2() {
 	 * Redirect legacy CPT single edit screens (post.php?post=ID&action=edit) to Settings 2.0.
 	 * These post types are now managed via React admin — the classic editor should not be accessible.
 	 */
-	$post_id = isset( $_GET['post'] ) ? absint( $_GET['post'] ) : 0;
-	$action  = isset( $_GET['action'] ) ? sanitize_key( wp_unslash( $_GET['action'] ) ) : '';
+	$post_id = isset( $_GET['post'] ) ? absint( $_GET['post'] ) : 0; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; only decides where a legacy admin URL redirects.
+	$action  = isset( $_GET['action'] ) ? sanitize_key( wp_unslash( $_GET['action'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; only decides where a legacy admin URL redirects.
 	// phpcs:enable WordPress.Security.NonceVerification.Recommended
 
 	/*
@@ -1193,7 +1193,7 @@ function bboss_redirect_legacy_settings_to_settings_2() {
 	// Redirect legacy Forum CPT pages to Settings 2.0.
 	if ( $forums_active ) {
 		// Check taxonomy first — edit-tags.php passes both taxonomy and post_type params.
-		$taxonomy = isset( $_GET['taxonomy'] ) ? sanitize_key( wp_unslash( $_GET['taxonomy'] ) ) : '';
+		$taxonomy = isset( $_GET['taxonomy'] ) ? sanitize_key( wp_unslash( $_GET['taxonomy'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; only decides where a legacy admin URL redirects.
 		if ( 'topic-tag' === $taxonomy ) {
 			wp_safe_redirect( bboss_get_admin_url( 'admin.php?page=bb-settings&tab=forums&panel=discussion_tags' ) );
 			exit;

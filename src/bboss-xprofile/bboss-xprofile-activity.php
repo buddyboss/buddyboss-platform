@@ -210,7 +210,7 @@ function bboss_xprofile_register_activity_action( $key, $value ) {
  * @return bool
  */
 function bboss_xprofile_new_avatar_activity( $user_id = 0 ) {
-	$item_type = ( isset( $_POST['item_type'] ) && ! empty( $_POST['item_type'] ) ) ? sanitize_text_field( wp_unslash( $_POST['item_type'] ) ) : null;
+	$item_type = ( isset( $_POST['item_type'] ) && ! empty( $_POST['item_type'] ) ) ? sanitize_text_field( wp_unslash( $_POST['item_type'] ) ) : null; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked by the avatar handlers that fire xprofile_avatar_uploaded (xprofile_screen_change_avatar(), bp_avatar_ajax_set()); the REST endpoint uses its permission callback.
 
 	// Bail if activity component is not active.
 	if ( ! bboss_is_active( 'activity' ) ) {

@@ -139,11 +139,11 @@ class BBoss_Admin_Reported_Content_Ajax {
 	public function bb_get_reported_content() {
 		$this->bb_verify_request();
 
-		$page         = isset( $_POST['page'] ) ? absint( $_POST['page'] ) : 1;
-		$per_page     = isset( $_POST['per_page'] ) ? min( absint( $_POST['per_page'] ), 100 ) : 20;
-		$search       = isset( $_POST['search'] ) ? sanitize_text_field( wp_unslash( $_POST['search'] ) ) : '';
-		$content_type = isset( $_POST['content_type'] ) ? sanitize_text_field( wp_unslash( $_POST['content_type'] ) ) : '';
-		$status       = isset( $_POST['status'] ) ? sanitize_text_field( wp_unslash( $_POST['status'] ) ) : '';
+		$page         = isset( $_POST['page'] ) ? absint( $_POST['page'] ) : 1; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked in bb_verify_request().
+		$per_page     = isset( $_POST['per_page'] ) ? min( absint( $_POST['per_page'] ), 100 ) : 20; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked in bb_verify_request().
+		$search       = isset( $_POST['search'] ) ? sanitize_text_field( wp_unslash( $_POST['search'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked in bb_verify_request().
+		$content_type = isset( $_POST['content_type'] ) ? sanitize_text_field( wp_unslash( $_POST['content_type'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked in bb_verify_request().
+		$status       = isset( $_POST['status'] ) ? sanitize_text_field( wp_unslash( $_POST['status'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked in bb_verify_request().
 
 		// Whitelist validate status filter.
 		$valid_statuses = array( '', 'hidden', 'visible' );
@@ -376,7 +376,7 @@ class BBoss_Admin_Reported_Content_Ajax {
 	public function bb_get_content_report() {
 		$this->bb_verify_request();
 
-		$moderation_id = isset( $_POST['moderation_id'] ) ? absint( $_POST['moderation_id'] ) : 0;
+		$moderation_id = isset( $_POST['moderation_id'] ) ? absint( $_POST['moderation_id'] ) : 0; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked in bb_verify_request().
 
 		if ( empty( $moderation_id ) ) {
 			wp_send_json_error( array( 'message' => __( 'Invalid moderation ID.', 'buddyboss-community-social-network-groups-forums-messaging' ) ) );
@@ -534,8 +534,8 @@ class BBoss_Admin_Reported_Content_Ajax {
 	public function bb_hide_content() {
 		$this->bb_verify_request();
 
-		$item_id   = isset( $_POST['item_id'] ) ? absint( $_POST['item_id'] ) : 0;
-		$item_type = isset( $_POST['item_type'] ) ? sanitize_text_field( wp_unslash( $_POST['item_type'] ) ) : '';
+		$item_id   = isset( $_POST['item_id'] ) ? absint( $_POST['item_id'] ) : 0; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked in bb_verify_request().
+		$item_type = isset( $_POST['item_type'] ) ? sanitize_text_field( wp_unslash( $_POST['item_type'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked in bb_verify_request().
 
 		if ( empty( $item_id ) || empty( $item_type ) ) {
 			wp_send_json_error( array( 'message' => __( 'Invalid content ID or type.', 'buddyboss-community-social-network-groups-forums-messaging' ) ) );
@@ -570,8 +570,8 @@ class BBoss_Admin_Reported_Content_Ajax {
 	public function bb_unhide_content() {
 		$this->bb_verify_request();
 
-		$item_id   = isset( $_POST['item_id'] ) ? absint( $_POST['item_id'] ) : 0;
-		$item_type = isset( $_POST['item_type'] ) ? sanitize_text_field( wp_unslash( $_POST['item_type'] ) ) : '';
+		$item_id   = isset( $_POST['item_id'] ) ? absint( $_POST['item_id'] ) : 0; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked in bb_verify_request().
+		$item_type = isset( $_POST['item_type'] ) ? sanitize_text_field( wp_unslash( $_POST['item_type'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked in bb_verify_request().
 
 		if ( empty( $item_id ) || empty( $item_type ) ) {
 			wp_send_json_error( array( 'message' => __( 'Invalid content ID or type.', 'buddyboss-community-social-network-groups-forums-messaging' ) ) );
@@ -606,7 +606,7 @@ class BBoss_Admin_Reported_Content_Ajax {
 	public function bb_suspend_content_owner() {
 		$this->bb_verify_request();
 
-		$user_id = isset( $_POST['user_id'] ) ? absint( $_POST['user_id'] ) : 0;
+		$user_id = isset( $_POST['user_id'] ) ? absint( $_POST['user_id'] ) : 0; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked in bb_verify_request().
 
 		if ( empty( $user_id ) ) {
 			wp_send_json_error( array( 'message' => __( 'Invalid user ID.', 'buddyboss-community-social-network-groups-forums-messaging' ) ) );
@@ -636,7 +636,7 @@ class BBoss_Admin_Reported_Content_Ajax {
 	public function bb_unsuspend_content_owner() {
 		$this->bb_verify_request();
 
-		$user_id = isset( $_POST['user_id'] ) ? absint( $_POST['user_id'] ) : 0;
+		$user_id = isset( $_POST['user_id'] ) ? absint( $_POST['user_id'] ) : 0; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked in bb_verify_request().
 
 		if ( empty( $user_id ) ) {
 			wp_send_json_error( array( 'message' => __( 'Invalid user ID.', 'buddyboss-community-social-network-groups-forums-messaging' ) ) );
@@ -663,8 +663,8 @@ class BBoss_Admin_Reported_Content_Ajax {
 	public function bb_bulk_action() {
 		$this->bb_verify_request();
 
-		$action = isset( $_POST['bulk_action'] ) ? sanitize_text_field( wp_unslash( $_POST['bulk_action'] ) ) : '';
-		$ids    = isset( $_POST['ids'] ) ? array_map( 'absint', wp_unslash( (array) $_POST['ids'] ) ) : array();
+		$action = isset( $_POST['bulk_action'] ) ? sanitize_text_field( wp_unslash( $_POST['bulk_action'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked in bb_verify_request().
+		$ids    = isset( $_POST['ids'] ) ? array_map( 'absint', wp_unslash( (array) $_POST['ids'] ) ) : array(); // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked in bb_verify_request().
 
 		if ( empty( $action ) || empty( $ids ) ) {
 			wp_send_json_error( array( 'message' => __( 'Invalid action or no items selected.', 'buddyboss-community-social-network-groups-forums-messaging' ) ) );

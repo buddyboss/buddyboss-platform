@@ -486,8 +486,8 @@ class BBoss_Group_Extension {
 		$group_id = bboss_get_current_group_id();
 
 		// On the admin, get the group id out of the $_GET params.
-		if ( empty( $group_id ) && is_admin() && ( isset( $_GET['page'] ) && ( 'bp-groups' === $_GET['page'] ) ) && ! empty( $_GET['gid'] ) ) {
-			$group_id = (int) $_GET['gid'];
+		if ( empty( $group_id ) && is_admin() && ( isset( $_GET['page'] ) && ( 'bp-groups' === $_GET['page'] ) ) && ! empty( $_GET['gid'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only; only reads which group the admin screen shows.
+			$group_id = (int) $_GET['gid']; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only; only reads which group the admin screen shows.
 		}
 
 		// This fallback will only be hit when the create step is very
@@ -499,8 +499,8 @@ class BBoss_Group_Extension {
 		// On some setups, the group id has to be fetched out of the
 		// $_POST array
 		// @todo Figure out why this is happening during group creation.
-		if ( empty( $group_id ) && isset( $_POST['group_id'] ) ) {
-			$group_id = (int) $_POST['group_id'];
+		if ( empty( $group_id ) && isset( $_POST['group_id'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- only reads the group id; nothing is changed here.
+			$group_id = (int) $_POST['group_id']; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- only reads the group id; nothing is changed here.
 		}
 
 		return $group_id;
@@ -1059,7 +1059,7 @@ class BBoss_Group_Extension {
 	 * @since BuddyPress 1.8.0
 	 */
 	public function call_edit_screen_save() {
-		if ( empty( $_POST ) ) {
+		if ( empty( $_POST ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- only checks that a form was posted; the nonce is checked below with $this->check_nonce( 'edit' ).
 			return;
 		}
 

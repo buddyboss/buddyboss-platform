@@ -331,10 +331,10 @@ function bboss_parse_args( $args, $defaults = array(), $filter_key = '' ) {
 function bboss_sanitize_pagination_arg( $page_arg = '', $page = 1 ) {
 
 	// Check if request overrides exist.
-	if ( isset( $_REQUEST[ $page_arg ] ) ) {
+	if ( isset( $_REQUEST[ $page_arg ] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; pagination argument.
 
 		// Get the absolute integer value of the override.
-		$int = absint( $_REQUEST[ $page_arg ] );
+		$int = absint( $_REQUEST[ $page_arg ] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; pagination argument.
 
 		// If override is 0, do not use it. This prevents unlimited result sets.
 		// @see https://buddypress.trac.wordpress.org/ticket/5796.
@@ -1559,11 +1559,11 @@ function bboss_core_setup_message() {
 	$bp = bboss();
 
 	if ( empty( $bp->template_message ) && isset( $_COOKIE['bp-message'] ) ) {
-		$bp->template_message = strip_shortcodes( wp_kses_post( stripslashes( rawurldecode( $_COOKIE['bp-message'] ) ) ) );
+		$bp->template_message = strip_shortcodes( wp_kses_post( stripslashes( rawurldecode( $_COOKIE['bp-message'] ) ) ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- unslashed with stripslashes() after rawurldecode() and sanitised with wp_kses_post().
 	}
 
 	if ( empty( $bp->template_message_type ) && isset( $_COOKIE['bp-message-type'] ) ) {
-		$bp->template_message_type = sanitize_text_field( stripslashes( rawurldecode( $_COOKIE['bp-message-type'] ) ) );
+		$bp->template_message_type = sanitize_text_field( stripslashes( rawurldecode( $_COOKIE['bp-message-type'] ) ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- unslashed with stripslashes() after rawurldecode() and sanitised with sanitize_text_field().
 	}
 
 	add_action( 'template_notices', 'bboss_core_render_message' );
@@ -2409,13 +2409,13 @@ function bboss_core_action_search_site( $slug = '' ) {
 		return;
 	}
 
-	if ( empty( $_POST['search-terms'] ) ) {
+	if ( empty( $_POST['search-terms'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- read-only request; redirects to the search results URL.
 		bboss_core_redirect( bboss_get_root_domain() );
 		return;
 	}
 
-	$search_terms = stripslashes( $_POST['search-terms'] );
-	$search_which = ! empty( $_POST['search-which'] ) ? $_POST['search-which'] : '';
+	$search_terms = stripslashes( $_POST['search-terms'] ); // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- read-only request; redirects to the search results URL; the term is unslashed with stripslashes() and urlencode()d.
+	$search_which = ! empty( $_POST['search-which'] ) ? sanitize_text_field( wp_unslash( $_POST['search-which'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- read-only request; redirects to the search results URL.
 	$query_string = '/?s=';
 
 	if ( empty( $slug ) ) {
@@ -4281,9 +4281,9 @@ function bboss_email_get_type_schema( $field = 'description' ) {
  */
 function bboss_email_unsubscribe_handler() {
 	$emails         = bboss_email_get_unsubscribe_type_schema();
-	$raw_email_type = ! empty( $_GET['nt'] ) ? $_GET['nt'] : '';
-	$raw_hash       = ! empty( $_GET['nh'] ) ? $_GET['nh'] : '';
-	$raw_user_id    = ! empty( $_GET['uid'] ) ? absint( $_GET['uid'] ) : 0;
+	$raw_email_type = ! empty( $_GET['nt'] ) ? sanitize_text_field( wp_unslash( $_GET['nt'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- request is authenticated by the HMAC hash checked with hash_equals() below.
+	$raw_hash       = ! empty( $_GET['nh'] ) ? sanitize_text_field( wp_unslash( $_GET['nh'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- request is authenticated by the HMAC hash checked with hash_equals() below.
+	$raw_user_id    = ! empty( $_GET['uid'] ) ? absint( $_GET['uid'] ) : 0; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- request is authenticated by the HMAC hash checked with hash_equals() below.
 	$new_hash       = hash_hmac( 'sha1', "{$raw_email_type}:{$raw_user_id}", bboss_email_get_salt() );
 	$message_type   = 'error';
 
@@ -4760,28 +4760,28 @@ function bboss_core_strip_header_tags( $content ) {
  * @info Moved from /bboss-activity/bboss-activity-functions.php
  */
 function bboss_ajax_get_suggestions() {
-	if ( ! bboss_is_user_active() || empty( $_GET['term'] ) || empty( $_GET['type'] ) ) {
+	if ( ! bboss_is_user_active() || empty( $_GET['term'] ) || empty( $_GET['type'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; suggestions lookup.
 		wp_send_json_error( 'missing_parameter' );
 		exit;
 	}
 
 	$args = array(
-			'term'        => sanitize_text_field( wp_unslash( $_GET['term'] ) ),
-			'type'        => sanitize_text_field( wp_unslash( $_GET['type'] ) ),
+			'term'        => sanitize_text_field( wp_unslash( $_GET['term'] ) ), // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; suggestions lookup.
+			'type'        => sanitize_text_field( wp_unslash( $_GET['type'] ) ), // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; suggestions lookup.
 			'count_total' => 'count_query',
 	);
 
-	if ( ! empty( $_GET['page'] ) ) {
-		$args['page'] = absint( $_GET['page'] );
+	if ( ! empty( $_GET['page'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; suggestions lookup.
+		$args['page'] = absint( $_GET['page'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; suggestions lookup.
 	}
 
-	if ( ! empty( $_GET['only_friends'] ) ) {
-		$args['only_friends'] = absint( $_GET['only_friends'] );
+	if ( ! empty( $_GET['only_friends'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; suggestions lookup.
+		$args['only_friends'] = absint( $_GET['only_friends'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; suggestions lookup.
 	}
 
 	// Support per-Group suggestions.
-	if ( ! empty( $_GET['group-id'] ) ) {
-		$args['group_id'] = absint( $_GET['group-id'] );
+	if ( ! empty( $_GET['group-id'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; suggestions lookup.
+		$args['group_id'] = absint( $_GET['group-id'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; suggestions lookup.
 	}
 
 	$results = bboss_core_get_suggestions( $args );
@@ -7293,7 +7293,7 @@ function bboss_attachments_get_default_profile_group_cover_image( $component ) {
  */
 function bboss_get_default_profile_group_cover( $data, $args ) {
 
-	if ( isset( $_POST['action'] ) && 'bp_cover_image_delete' === sanitize_text_field( wp_unslash( $_POST['action'] ) ) ) {
+	if ( isset( $_POST['action'] ) && 'bp_cover_image_delete' === sanitize_text_field( wp_unslash( $_POST['action'] ) ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- read-only check of the current action.
 		return false;
 	}
 
@@ -9884,7 +9884,7 @@ function bboss_get_directory_layout_preference( $action ) {
 	if ( is_user_logged_in() ) {
 		$existing_layouts = get_user_meta( get_current_user_id(), 'bb_layout_view', true );
 	} else {
-		$existing_layouts = ! empty( $_COOKIE['bb_layout_view'] ) ? json_decode( rawurldecode( wp_unslash( $_COOKIE['bb_layout_view'] ) ), true ) : array();
+		$existing_layouts = ! empty( $_COOKIE['bb_layout_view'] ) ? json_decode( rawurldecode( wp_unslash( $_COOKIE['bb_layout_view'] ) ), true ) : array(); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- JSON-decoded, then sanitised with map_deep( 'sanitize_text_field' ) on the next line.
 		$existing_layouts = is_array( $existing_layouts ) ? map_deep( $existing_layouts, 'sanitize_text_field' ) : array();
 	}
 	$default_value = '';

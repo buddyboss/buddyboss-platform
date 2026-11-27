@@ -164,8 +164,8 @@ class BBoss_XProfile_Field_Type_Member_Types extends BBoss_XProfile_Field_Type {
 
 		$html = '';
 
-		if ( ! empty( $_POST[ 'field_' . $this->field_obj->id ] ) ) {
-			$new_post_selected = (int) $_POST[ 'field_' . $this->field_obj->id ];
+		if ( ! empty( $_POST[ 'field_' . $this->field_obj->id ] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- read-only: redisplays the submitted value after a failed save; nothing is changed.
+			$new_post_selected = (int) $_POST[ 'field_' . $this->field_obj->id ]; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- read-only: redisplays the submitted value after a failed save; nothing is changed.
 			$post_selected     = ( $post_selected != $new_post_selected ) ? $new_post_selected : $post_selected;
 		}
 

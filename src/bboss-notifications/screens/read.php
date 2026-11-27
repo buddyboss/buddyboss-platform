@@ -48,9 +48,9 @@ function bboss_notifications_action_mark_unread() {
 	}
 
 	// Get the action.
-	$action = ! empty( $_GET['action'] ) ? sanitize_text_field( wp_unslash( $_GET['action'] ) ) : '';
-	$nonce  = ! empty( $_GET['_wpnonce'] ) ? sanitize_text_field( wp_unslash( $_GET['_wpnonce'] ) ) : '';
-	$id     = ! empty( $_GET['notification_id'] ) ? absint( $_GET['notification_id'] ) : 0;
+	$action = ! empty( $_GET['action'] ) ? sanitize_text_field( wp_unslash( $_GET['action'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- nonce checked below with bp_verify_nonce_request() before anything is changed.
+	$nonce  = ! empty( $_GET['_wpnonce'] ) ? sanitize_text_field( wp_unslash( $_GET['_wpnonce'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- nonce checked below with bp_verify_nonce_request() before anything is changed.
+	$id     = ! empty( $_GET['notification_id'] ) ? absint( $_GET['notification_id'] ) : 0; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- nonce checked below with bp_verify_nonce_request() before anything is changed.
 
 	// Bail if no action or no ID.
 	if ( ( 'unread' !== $action ) || empty( $id ) || empty( $nonce ) ) {

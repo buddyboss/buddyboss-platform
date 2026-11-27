@@ -151,10 +151,10 @@ function bboss_has_blogs( $args = '' ) {
 	// Check for and use search terms.
 	$search_terms_default = false;
 	$search_query_arg     = bboss_core_get_component_search_query_arg( 'blogs' );
-	if ( ! empty( $_REQUEST[ $search_query_arg ] ) ) {
-		$search_terms_default = stripslashes( $_REQUEST[ $search_query_arg ] );
-	} elseif ( ! empty( $_REQUEST['s'] ) ) {
-		$search_terms_default = stripslashes( $_REQUEST['s'] );
+	if ( ! empty( $_REQUEST[ $search_query_arg ] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; directory search term.
+		$search_terms_default = stripslashes( $_REQUEST[ $search_query_arg ] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash -- read-only directory search term; unslashed here and escaped with bp_esc_like() and $wpdb->prepare() in BP_Blogs_Blog::get().
+	} elseif ( ! empty( $_REQUEST['s'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; directory search term.
+		$search_terms_default = stripslashes( $_REQUEST['s'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash -- read-only directory search term; unslashed here and escaped with bp_esc_like() and $wpdb->prepare() in BP_Blogs_Blog::get().
 	}
 
 	// Parse arguments.
@@ -932,16 +932,16 @@ function bboss_blog_latest_post_has_featured_image( $thumbnail = 'thumbnail' ) {
  * hidden fields.
  */
 function bboss_blog_hidden_fields() {
-	if ( isset( $_REQUEST['s'] ) ) {
-		echo '<input type="hidden" id="search_terms" value="' . esc_attr( sanitize_text_field( wp_unslash( $_REQUEST['s'] ) ) ) . '" name="search_terms" />';
+	if ( isset( $_REQUEST['s'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; value is only echoed back into a hidden field.
+		echo '<input type="hidden" id="search_terms" value="' . esc_attr( sanitize_text_field( wp_unslash( $_REQUEST['s'] ) ) ) . '" name="search_terms" />'; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; value is only echoed back into a hidden field.
 	}
 
-	if ( isset( $_REQUEST['letter'] ) ) {
-		echo '<input type="hidden" id="selected_letter" value="' . esc_attr( sanitize_text_field( wp_unslash( $_REQUEST['letter'] ) ) ) . '" name="selected_letter" />';
+	if ( isset( $_REQUEST['letter'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; value is only echoed back into a hidden field.
+		echo '<input type="hidden" id="selected_letter" value="' . esc_attr( sanitize_text_field( wp_unslash( $_REQUEST['letter'] ) ) ) . '" name="selected_letter" />'; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; value is only echoed back into a hidden field.
 	}
 
-	if ( isset( $_REQUEST['blogs_search'] ) ) {
-		echo '<input type="hidden" id="search_terms" value="' . esc_attr( sanitize_text_field( wp_unslash( $_REQUEST['blogs_search'] ) ) ) . '" name="search_terms" />';
+	if ( isset( $_REQUEST['blogs_search'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; value is only echoed back into a hidden field.
+		echo '<input type="hidden" id="search_terms" value="' . esc_attr( sanitize_text_field( wp_unslash( $_REQUEST['blogs_search'] ) ) ) . '" name="search_terms" />'; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; value is only echoed back into a hidden field.
 	}
 }
 
@@ -1045,7 +1045,7 @@ function bboss_blog_signup_enabled() {
 function bboss_show_blog_signup_form( $blogname = '', $blog_title = '', $errors = '' ) {
 	global $current_user;
 
-	if ( isset( $_POST['submit'] ) ) {
+	if ( isset( $_POST['submit'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked in bp_blogs_validate_blog_signup().
 		bboss_blogs_validate_blog_signup();
 	} else {
 		if ( ! is_wp_error( $errors ) ) {
@@ -1171,7 +1171,7 @@ function bboss_blogs_signup_blog( $blogname = '', $blog_title = '', $errors = ''
 		<label class="checkbox" for="blog_public_on">
 			<input type="radio" id="blog_public_on" name="blog_public" value="1"
 			<?php
-			if ( ! isset( $_POST['blog_public'] ) || '1' == $_POST['blog_public'] ) {
+			if ( ! isset( $_POST['blog_public'] ) || '1' == $_POST['blog_public'] ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- read-only; only re-selects the radio button when the form is shown again.
 				?>
 				checked="checked"<?php } ?> />
 			<strong><?php esc_html_e( 'Yes', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></strong>
@@ -1179,7 +1179,7 @@ function bboss_blogs_signup_blog( $blogname = '', $blog_title = '', $errors = ''
 		<label class="checkbox" for="blog_public_off">
 			<input type="radio" id="blog_public_off" name="blog_public" value="0"
 			<?php
-			if ( isset( $_POST['blog_public'] ) && '0' == $_POST['blog_public'] ) {
+			if ( isset( $_POST['blog_public'] ) && '0' == $_POST['blog_public'] ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- read-only; only re-selects the radio button when the form is shown again.
 				?>
 				checked="checked"<?php } ?> />
 			<strong><?php esc_html_e( 'No', 'buddyboss-community-social-network-groups-forums-messaging' ); ?></strong>
@@ -1227,7 +1227,7 @@ function bboss_blogs_validate_blog_signup() {
 		return false;
 	}
 
-	$public = (int) $_POST['blog_public'];
+	$public = isset( $_POST['blog_public'] ) ? (int) $_POST['blog_public'] : 0;
 
 	// Depreciated.
 	$meta = apply_filters(
@@ -1273,7 +1273,7 @@ function bboss_blogs_validate_blog_form() {
 		$user = wp_get_current_user();
 	}
 
-	return wpmu_validate_blog_signup( $_POST['blogname'], $_POST['blog_title'], $user );
+	return wpmu_validate_blog_signup( isset( $_POST['blogname'] ) ? $_POST['blogname'] : '', isset( $_POST['blog_title'] ) ? $_POST['blog_title'] : '', $user ); // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash -- nonce checked in bp_blogs_validate_blog_signup(); wpmu_validate_blog_signup() sanitises both values (sanitize_user(), strip_tags()), as WordPress core passes them in wp-signup.php.
 }
 
 /**
@@ -1399,8 +1399,8 @@ function bboss_directory_blogs_search_form() {
 
 	$query_arg = bboss_core_get_component_search_query_arg( 'blogs' );
 
-	if ( ! empty( $_REQUEST[ $query_arg ] ) ) {
-		$search_value = stripslashes( $_REQUEST[ $query_arg ] );
+	if ( ! empty( $_REQUEST[ $query_arg ] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; directory search term.
+		$search_value = stripslashes( $_REQUEST[ $query_arg ] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash -- read-only directory search term; unslashed here and escaped with esc_attr() when the form is built below.
 	} else {
 		$search_value = bboss_get_search_default_text( 'blogs' );
 	}

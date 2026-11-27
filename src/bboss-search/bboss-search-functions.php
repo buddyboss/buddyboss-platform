@@ -280,7 +280,7 @@ if ( ! function_exists( 'bboss_search_pagination' ) ) :
 								case 'link':
 									unset( $_GET[ $param_key ] );
 									$base_link = get_bloginfo( 'url' ) . "/$slug?";
-									foreach ( $_GET as $k => $v ) {
+									foreach ( $_GET as $k => $v ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; rebuilds the pagination link, escaped with esc_url() below.
 										$base_link .= "$k=$v&";
 									}
 									$base_link .= "$param_key=$e[1]";
@@ -448,12 +448,12 @@ function bboss_gs_create_group_searchstring( $groupid ) {
 		$groupid = $bp->groups->new_group_id;
 	}
 
-	$address = isset( $_POST['bpla-group-address'] ) ? $_POST['bpla-group-address'] : '';
-	$street  = isset( $_POST['bpla-group-street'] ) ? $_POST['bpla-group-street'] : '';
-	$city    = isset( $_POST['bpla-group-city'] ) ? $_POST['bpla-group-city'] : '';
-	$state   = isset( $_POST['bpla-group-state'] ) ? $_POST['bpla-group-state'] : '';
-	$zip     = isset( $_POST['bpla-group-zip'] ) ? $_POST['bpla-group-zip'] : '';
-	$country = isset( $_POST['bpla-group-country'] ) ? $_POST['bpla-group-country'] : '';
+	$address = isset( $_POST['bpla-group-address'] ) ? $_POST['bpla-group-address'] : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash -- hook callback on groups_create_group_step_save_group-details / groups_details_updated, not a request handler; nonce checked in groups_action_create_group() and groups_screen_group_admin_edit_details(). Search text handed to groups_update_groupmeta() (update_metadata()), which expects slashed data.
+	$street  = isset( $_POST['bpla-group-street'] ) ? $_POST['bpla-group-street'] : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash -- hook callback on groups_create_group_step_save_group-details / groups_details_updated, not a request handler; nonce checked in groups_action_create_group() and groups_screen_group_admin_edit_details(). Search text handed to groups_update_groupmeta() (update_metadata()), which expects slashed data.
+	$city    = isset( $_POST['bpla-group-city'] ) ? $_POST['bpla-group-city'] : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash -- hook callback on groups_create_group_step_save_group-details / groups_details_updated, not a request handler; nonce checked in groups_action_create_group() and groups_screen_group_admin_edit_details(). Search text handed to groups_update_groupmeta() (update_metadata()), which expects slashed data.
+	$state   = isset( $_POST['bpla-group-state'] ) ? $_POST['bpla-group-state'] : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash -- hook callback on groups_create_group_step_save_group-details / groups_details_updated, not a request handler; nonce checked in groups_action_create_group() and groups_screen_group_admin_edit_details(). Search text handed to groups_update_groupmeta() (update_metadata()), which expects slashed data.
+	$zip     = isset( $_POST['bpla-group-zip'] ) ? $_POST['bpla-group-zip'] : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash -- hook callback on groups_create_group_step_save_group-details / groups_details_updated, not a request handler; nonce checked in groups_action_create_group() and groups_screen_group_admin_edit_details(). Search text handed to groups_update_groupmeta() (update_metadata()), which expects slashed data.
+	$country = isset( $_POST['bpla-group-country'] ) ? $_POST['bpla-group-country'] : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash -- hook callback on groups_create_group_step_save_group-details / groups_details_updated, not a request handler; nonce checked in groups_action_create_group() and groups_screen_group_admin_edit_details(). Search text handed to groups_update_groupmeta() (update_metadata()), which expects slashed data.
 
 	if ( $address ) {
 		bboss_groups_update_groupmeta( $groupid, 'bbgs_group_search_string', $address );
@@ -570,7 +570,7 @@ function bboss_search_get_post_thumbnail_default( $post_type, $icon_type = 'svg'
  * @return bool
  */
 function bboss_search_is_search() {
-	return ! is_admin() && is_search() && isset( $_REQUEST['bp_search'] );
+	return ! is_admin() && is_search() && isset( $_REQUEST['bp_search'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; only checks whether this is a network search.
 }
 
 if ( in_array( 'geo-my-wp/geo-my-wp.php', apply_filters( 'active_plugins', (array) get_option( 'active_plugins', array() ) ), true ) ) {
@@ -580,9 +580,9 @@ if ( in_array( 'geo-my-wp/geo-my-wp.php', apply_filters( 'active_plugins', (arra
 		$hidden_filters = bboss_bps_get_hidden_filters();
 
 		$cookie  = apply_filters( 'bps_cookie_name', 'bps_request' );
-		$request = isset( $_REQUEST['bps_form'] ) ? map_deep( wp_unslash( $_REQUEST ), 'sanitize_text_field' ) : array();
+		$request = isset( $_REQUEST['bps_form'] ) ? map_deep( wp_unslash( $_REQUEST ), 'sanitize_text_field' ) : array(); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; profile search form values.
 		if ( empty( $request ) && isset( $_COOKIE[ $cookie ] ) ) {
-			parse_str( wp_unslash( $_COOKIE[ $cookie ] ), $request );
+			parse_str( wp_unslash( $_COOKIE[ $cookie ] ), $request ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- parsed with parse_str() and every value is sanitised with map_deep( ..., sanitize_text_field ) on the next line.
 			$request = map_deep( $request, 'sanitize_text_field' );
 		}
 
@@ -641,7 +641,7 @@ if ( in_array( 'geo-my-wp/geo-my-wp.php', apply_filters( 'active_plugins', (arra
 			$data = isset( $bps_directory_data ) ? $bps_directory_data : array();
 		} elseif ( isset( $_COOKIE[ $cookie ] ) ) {
 			$current = bboss_bps_current_page();
-			parse_str( wp_unslash( $_COOKIE[ $cookie ] ), $data );
+			parse_str( wp_unslash( $_COOKIE[ $cookie ] ), $data ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- parsed with parse_str() and every value is sanitised with map_deep( ..., sanitize_text_field ) on the next line.
 			$data = map_deep( $data, 'sanitize_text_field' );
 			if ( $data['page'] != $current ) {
 				$data = array();

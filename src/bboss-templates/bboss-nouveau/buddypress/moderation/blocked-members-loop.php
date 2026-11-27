@@ -37,7 +37,7 @@ while ( bboss_moderation() ) :
 	bboss_get_template_part( 'moderation/moderation-blocked-members-entry' );
 endwhile;
 
-if ( empty( $_POST['page'] ) || 1 === (int) bboss_filter_input_string( INPUT_POST, 'page' ) ) :
+if ( empty( $_POST['page'] ) || 1 === (int) bboss_filter_input_string( INPUT_POST, 'page' ) ) : // phpcs:ignore WordPress.Security.NonceVerification.Missing -- read-only; only decides whether the list wrapper is printed.
 	?>
 	</tbody>
 	</table>

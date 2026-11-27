@@ -33,16 +33,16 @@ function bboss_ps_set_request() {
 		setcookie( $cookie, http_build_query( $filters ), 0, COOKIEPATH );
 	}
 
-	if ( isset( $_REQUEST['bp_ps_debug'] ) ) {
+	if ( isset( $_REQUEST['bp_ps_debug'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only search request; only cookies are set.
 		$cookie = apply_filters( 'bp_ps_cookie_name', 'bp_ps_debug' );
 		setcookie( $cookie, 1, 0, COOKIEPATH );
 	}
 
 	$persistent = bboss_ps_get_option( 'persistent', '1' );
-	$new_search = isset( $_REQUEST[ bboss_core_get_component_search_query_arg( 'members' ) ] );
+	$new_search = isset( $_REQUEST[ bboss_core_get_component_search_query_arg( 'members' ) ] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only search request; only cookies are set.
 
 	if ( $new_search || ! $persistent ) {
-		if ( ! isset( $_REQUEST[ BBOSS_PS_FORM ] ) ) {
+		if ( ! isset( $_REQUEST[ BBOSS_PS_FORM ] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only search request; only cookies are set.
 			$_REQUEST[ BBOSS_PS_FORM ] = 'clear';
 		}
 	}
@@ -51,11 +51,11 @@ function bboss_ps_set_request() {
 	// Empty for a "clear" submission and for persistent mode (which uses the cookie).
 	$redirect_query = '';
 
-	if ( isset( $_REQUEST[ BBOSS_PS_FORM ] ) ) {
+	if ( isset( $_REQUEST[ BBOSS_PS_FORM ] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only search request; only cookies are set.
 
 		$cookie = apply_filters( 'bp_ps_cookie_name', 'bp_ps_request' );
-		if ( $_REQUEST[ BBOSS_PS_FORM ] != 'clear' ) {
-			$filtered_request = array_filter( $_REQUEST );
+		if ( $_REQUEST[ BBOSS_PS_FORM ] != 'clear' ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only search request; only cookies are set.
+			$filtered_request = array_filter( $_REQUEST ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only search request; only cookies are set.
 
 			/*
 			* removing arrays with empty value
@@ -143,16 +143,16 @@ function bboss_ps_get_request( $type, $form = 0 ) {
 	$current = bboss_ps_current_page();
 
 	$cookie  = apply_filters( 'bp_ps_cookie_name', 'bp_ps_request' );
-	$request = isset( $_REQUEST[ BBOSS_PS_FORM ] ) ? $_REQUEST : array();
+	$request = isset( $_REQUEST[ BBOSS_PS_FORM ] ) ? $_REQUEST : array(); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only search request; nothing is changed.
 	if ( empty( $request ) && isset( $_COOKIE[ $cookie ] ) ) {
-		parse_str( stripslashes( $_COOKIE[ $cookie ] ), $request );
+		parse_str( stripslashes( $_COOKIE[ $cookie ] ), $request ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- unslashed here with stripslashes() and sanitised by map_deep( ..., sanitize_text_field ) below.
 	}
 	$request = map_deep( $request, 'sanitize_text_field' );
 
 	$cookie  = apply_filters( 'bp_ps_cookie_name', 'bp_ps_filters' );
 	$filters = bboss_ps_hidden_filters();
 	if ( empty( $filters ) && isset( $_COOKIE[ $cookie ] ) ) {
-		parse_str( stripslashes( $_COOKIE[ $cookie ] ), $filters );
+		parse_str( stripslashes( $_COOKIE[ $cookie ] ), $filters ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- unslashed here with stripslashes() and sanitised by map_deep( ..., sanitize_text_field ) below.
 	}
 	$filters = map_deep( $filters, 'sanitize_text_field' );
 
@@ -298,7 +298,7 @@ function bboss_ps_current_page() {
  */
 function bboss_ps_debug() {
 	$cookie = apply_filters( 'bp_ps_cookie_name', 'bp_ps_debug' );
-	return isset( $_REQUEST['bp_ps_debug'] ) ? true : ( isset( $_COOKIE[ $cookie ] ) ? true : false );
+	return isset( $_REQUEST['bp_ps_debug'] ) ? true : ( isset( $_COOKIE[ $cookie ] ) ? true : false ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only search request; nothing is changed.
 }
 
 // add_action ('bp_before_directory_members_content', 'bp_ps_display_filters');

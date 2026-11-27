@@ -141,7 +141,7 @@ function bboss_search_clear_native_search_query( $query ) {
  **/
 function bboss_search_filter_bp_before_has_groups_parse_args( $args ) {
 
-	if ( wp_doing_ajax() && isset( $_GET['action'] ) && $_GET['action'] === 'bp_search_ajax' ) {
+	if ( wp_doing_ajax() && isset( $_GET['action'] ) && $_GET['action'] === 'bp_search_ajax' ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; only checks whether this is the search AJAX request.
 		$args['type'] = '';
 	}
 

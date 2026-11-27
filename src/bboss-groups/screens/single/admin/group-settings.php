@@ -29,32 +29,32 @@ function bboss_groups_screen_group_admin_settings() {
 	// If the edit form has been submitted, save the edited details.
 	if ( isset( $_POST['save'] ) ) {
 		$enable_forum = ( isset( $_POST['group-show-forum'] ) ) ? 1 : 0;
-		$parent_id    = ( isset( $_POST['bp-groups-parent'] ) ) ? $_POST['bp-groups-parent'] : 0;
+		$parent_id    = ( isset( $_POST['bp-groups-parent'] ) ) ? sanitize_text_field( wp_unslash( $_POST['bp-groups-parent'] ) ) : 0;
 
 		// Checked against a whitelist for security.
 		/** This filter is documented in bboss-groups/bboss-groups-admin.php */
 		$allowed_status = apply_filters( 'groups_allowed_status', array( 'public', 'private', 'hidden' ) );
-		$status         = ( in_array( $_POST['group-status'], (array) $allowed_status ) ) ? $_POST['group-status'] : 'public';
+		$status         = ( isset( $_POST['group-status'] ) && in_array( $_POST['group-status'], (array) $allowed_status ) ) ? sanitize_text_field( wp_unslash( $_POST['group-status'] ) ) : 'public';
 
 		// Checked against a whitelist for security.
 		/** This filter is documented in bboss-groups/bboss-groups-admin.php */
 		$allowed_invite_status = bboss_groups_get_settings_status( 'invite' );
-		$invite_status         = isset( $_POST['group-invite-status'] ) && in_array( $_POST['group-invite-status'], (array) $allowed_invite_status ) ? $_POST['group-invite-status'] : bboss_groups_settings_default_fallback( 'invite', current( $allowed_invite_status ) );
+		$invite_status         = isset( $_POST['group-invite-status'] ) && in_array( $_POST['group-invite-status'], (array) $allowed_invite_status ) ? sanitize_text_field( wp_unslash( $_POST['group-invite-status'] ) ) : bboss_groups_settings_default_fallback( 'invite', current( $allowed_invite_status ) );
 
 		// Checked against a whitelist for security.
 		/** This filter is documented in bboss-groups/bboss-groups-admin.php */
 		$allowed_activity_feed_status = bboss_groups_get_settings_status( 'activity_feed' );
-		$activity_feed_status         = isset( $_POST['group-activity-feed-status'] ) && in_array( $_POST['group-activity-feed-status'], (array) $allowed_activity_feed_status ) ? $_POST['group-activity-feed-status'] : bboss_groups_settings_default_fallback( 'activity_feed', current( $allowed_activity_feed_status ) );
+		$activity_feed_status         = isset( $_POST['group-activity-feed-status'] ) && in_array( $_POST['group-activity-feed-status'], (array) $allowed_activity_feed_status ) ? sanitize_text_field( wp_unslash( $_POST['group-activity-feed-status'] ) ) : bboss_groups_settings_default_fallback( 'activity_feed', current( $allowed_activity_feed_status ) );
 
 		// Checked against a whitelist for security.
 		/** This filter is documented in bboss-groups/bboss-groups-admin.php */
 		$allowed_media_status = bboss_groups_get_settings_status( 'media' );
-		$media_status         = isset( $_POST['group-media-status'] ) && in_array( $_POST['group-media-status'], (array) $allowed_media_status ) ? $_POST['group-media-status'] : bboss_groups_settings_default_fallback( 'media', current( $allowed_media_status ) );
+		$media_status         = isset( $_POST['group-media-status'] ) && in_array( $_POST['group-media-status'], (array) $allowed_media_status ) ? sanitize_text_field( wp_unslash( $_POST['group-media-status'] ) ) : bboss_groups_settings_default_fallback( 'media', current( $allowed_media_status ) );
 
 		// Checked against a whitelist for security.
 		/** This filter is documented in bboss-groups/bboss-groups-admin.php */
 		$allowed_document_status = bboss_groups_get_settings_status( 'document' );
-		$document_status         = isset( $_POST['group-document-status'] ) && in_array( $_POST['group-document-status'], (array) $allowed_document_status ) ? $_POST['group-document-status'] : bboss_groups_settings_default_fallback( 'document', current( $allowed_document_status ) );
+		$document_status         = isset( $_POST['group-document-status'] ) && in_array( $_POST['group-document-status'], (array) $allowed_document_status ) ? sanitize_text_field( wp_unslash( $_POST['group-document-status'] ) ) : bboss_groups_settings_default_fallback( 'document', current( $allowed_document_status ) );
 
 		// The Documents and Videos fields are not shown while the component is unavailable
 		// (e.g. BuddyBoss Add-ons is inactive). Keep the stored value instead of resetting it.
@@ -74,12 +74,12 @@ function bboss_groups_screen_group_admin_settings() {
 		// Checked against a whitelist for security.
 		/** This filter is documented in bboss-groups/bboss-groups-admin.php */
 		$allowed_album_status = bboss_groups_get_settings_status( 'album' );
-		$album_status         = isset( $_POST['group-album-status'] ) && in_array( $_POST['group-album-status'], (array) $allowed_album_status ) ? $_POST['group-album-status'] : bboss_groups_settings_default_fallback( 'album', current( $allowed_album_status ) );
+		$album_status         = isset( $_POST['group-album-status'] ) && in_array( $_POST['group-album-status'], (array) $allowed_album_status ) ? sanitize_text_field( wp_unslash( $_POST['group-album-status'] ) ) : bboss_groups_settings_default_fallback( 'album', current( $allowed_album_status ) );
 
 		// Checked against a whitelist for security.
 		/** This filter is documented in bboss-groups/bboss-groups-admin.php */
 		$allowed_message_status = bboss_groups_get_settings_status( 'message' );
-		$message_status         = isset( $_POST['group-message-status'] ) && in_array( $_POST['group-message-status'], (array) $allowed_message_status ) ? $_POST['group-message-status'] : bboss_groups_settings_default_fallback( 'message', current( $allowed_message_status ) );
+		$message_status         = isset( $_POST['group-message-status'] ) && in_array( $_POST['group-message-status'], (array) $allowed_message_status ) ? sanitize_text_field( wp_unslash( $_POST['group-message-status'] ) ) : bboss_groups_settings_default_fallback( 'message', current( $allowed_message_status ) );
 
 
 		// Check the nonce.
@@ -95,7 +95,7 @@ function bboss_groups_screen_group_admin_settings() {
 		$current_types = bboss_groups_get_group_type( bboss_get_current_group_id(), false );
 		$current_types = array_intersect( bboss_groups_get_group_types( array( 'show_in_create_screen' => false ) ), (array) $current_types );
 		if ( isset( $_POST['group-types'] ) ) {
-			$current_types = array_merge( $current_types, $_POST['group-types'] );
+			$current_types = array_merge( $current_types, map_deep( wp_unslash( $_POST['group-types'] ), 'sanitize_text_field' ) );
 
 			// Set group types.
 			bboss_groups_set_group_type( bboss_get_current_group_id(), $current_types );
@@ -113,7 +113,7 @@ function bboss_groups_screen_group_admin_settings() {
 			bboss_groups_set_group_type( bboss_get_current_group_id(), $current_types );
 		}
 
-		if ( ! bboss_groups_edit_group_settings( $_POST['group-id'], $enable_forum, $status, $invite_status, $activity_feed_status, $parent_id, $media_status, $document_status, $video_status, $album_status, $message_status ) ) {
+		if ( ! bboss_groups_edit_group_settings( isset( $_POST['group-id'] ) ? (int) $_POST['group-id'] : 0, $enable_forum, $status, $invite_status, $activity_feed_status, $parent_id, $media_status, $document_status, $video_status, $album_status, $message_status ) ) {
 			bboss_core_add_message( __( 'There was an error updating group settings. Please try again.', 'buddyboss-community-social-network-groups-forums-messaging' ), 'error' );
 		} else {
 			bboss_core_add_message( __( 'Group settings were successfully updated.', 'buddyboss-community-social-network-groups-forums-messaging' ) );

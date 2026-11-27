@@ -139,7 +139,7 @@ function bboss_get_invite_post_type_supports() {
 function bboss_invites_member_invite_invitation_page() {
 	$retval = false;
 
-	if ( bboss_is_register_page() && ! empty( $_GET['bp-invites'] ) && 'accept-member-invitation' === urldecode( $_GET['bp-invites'] ) ) {
+	if ( bboss_is_register_page() && ! empty( $_GET['bp-invites'] ) && 'accept-member-invitation' === urldecode( $_GET['bp-invites'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash -- read-only request; the value is only compared with a fixed string.
 		$retval = true;
 	}
 
@@ -162,7 +162,7 @@ function bboss_invites_member_invite_remove_registration_lock() {
 		return;
 	}
 
-	if ( ! isset( $_GET['email'] ) || ! $email = urldecode( $_GET['email'] ) ) {
+	if ( ! isset( $_GET['email'] ) || ! $email = urldecode( $_GET['email'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash -- read-only request; address from the emailed invitation link, only used as a WP_Query meta value below.
 		return;
 	}
 
@@ -226,8 +226,8 @@ function bboss_invites_member_invite_register_screen_message() {
 		return;
 	}
 
-	if ( isset( $_GET['email'] ) ) {
-		$email = urldecode( $_GET['email'] );
+	if ( isset( $_GET['email'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; address from the emailed invitation link.
+		$email = urldecode( $_GET['email'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash -- read-only request; address from the emailed invitation link, only used as a WP_Query meta value and printed through wp_json_encode() below.
 	} else {
 		$email = '';
 	}
@@ -279,7 +279,7 @@ function bboss_invites_member_invite_register_screen_message() {
 			echo '<aside class="bp-feedback bp-messages info"><span class="bp-icon" aria-hidden="true"></span><p>' . esc_html( $message ) . '</p></aside>';
 		}
 
-		if ( isset( $_GET['inviter'] ) ) {
+		if ( isset( $_GET['inviter'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; inviter id from the emailed invitation link.
 			$args = array(
 				'post_type'      => bboss_get_invite_post_type(),
 				'posts_per_page' => -1,

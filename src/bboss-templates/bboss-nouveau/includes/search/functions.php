@@ -63,8 +63,8 @@ function bboss_nouveau_search_enqueue_scripts() {
 		'forums_autocomplete'   => false,
 	);
 
-	if ( isset( $_GET['s'] ) ) {
-		$data['search_term'] = $_GET['s'];
+	if ( isset( $_GET['s'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only; the search term is only handed to the search script.
+		$data['search_term'] = $_GET['s']; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only; the search term is only handed to the search script.
 	}
 
 	if ( bboss_is_active( 'forums' ) ) {
@@ -214,8 +214,8 @@ function bboss_rl_search_enqueue_scripts() {
 		'forums_autocomplete'   => false,
 	);
 
-	if ( isset( $_GET['s'] ) ) {
-		$data['search_term'] = $_GET['s'];
+	if ( isset( $_GET['s'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only; the search term is only handed to the search script.
+		$data['search_term'] = $_GET['s']; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only; the search term is only handed to the search script.
 	}
 
 	$min = bboss_core_get_minified_asset_suffix();

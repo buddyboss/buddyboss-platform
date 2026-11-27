@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
  * @since BuddyPress 1.0.0
  */
 function bboss_core_get_random_member() {
-	if ( ! isset( $_GET['random-member'] ) ) {
+	if ( ! isset( $_GET['random-member'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; only redirects to a random member.
 		return;
 	}
 

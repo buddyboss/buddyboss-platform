@@ -89,7 +89,7 @@ if ( ! class_exists( 'BBoss_Elementor_Plugin_Compatibility') ) {
 		 */
 		public function elementor_library_preview_permalink( $bp, $bp_uri ) {
 
-			if ( isset( $_GET['elementor_library'] ) ) {
+			if ( isset( $_GET['elementor_library'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; nothing is changed.
 				$bp->current_component = '';
 				$bp->current_action    = '';
 			}
@@ -137,13 +137,13 @@ if ( ! class_exists( 'BBoss_Elementor_Plugin_Compatibility') ) {
 		 */
 		public function set_uri_elementor_show_on_front( $bool ) {
 			if (
-				isset( $_REQUEST['elementor-preview'] )
+				isset( $_REQUEST['elementor-preview'] ) // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; nothing is changed.
 				|| (
 					is_admin() &&
-					isset( $_REQUEST['action'] )
+					isset( $_REQUEST['action'] ) // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; nothing is changed.
 					&& (
-						'elementor' === $_REQUEST['action']
-						|| 'elementor_ajax' === $_REQUEST['action']
+						'elementor' === $_REQUEST['action'] // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; nothing is changed.
+						|| 'elementor_ajax' === $_REQUEST['action'] // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; nothing is changed.
 					)
 				)
 			) {
@@ -163,7 +163,7 @@ if ( ! class_exists( 'BBoss_Elementor_Plugin_Compatibility') ) {
 		 * @return bool
 		 */
 		public function theme_compat_reset_post( $bool ) {
-			if ( isset( $_GET['elementor-preview'] ) && get_the_ID() === (int) $_GET['elementor-preview'] ) {
+			if ( isset( $_GET['elementor-preview'] ) && get_the_ID() === (int) $_GET['elementor-preview'] ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; nothing is changed.
 				return true;
 			}
 
@@ -182,8 +182,8 @@ if ( ! class_exists( 'BBoss_Elementor_Plugin_Compatibility') ) {
 		 */
 		public function current_component( $is_current_component, $component ) {
 			if (
-				isset( $_GET['elementor-preview'] ) &&
-				get_the_ID() === (int) $_GET['elementor-preview'] &&
+				isset( $_GET['elementor-preview'] ) && // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; nothing is changed.
+				get_the_ID() === (int) $_GET['elementor-preview'] && // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; nothing is changed.
 				true === $is_current_component &&
 				(
 					'activate' === $component ||

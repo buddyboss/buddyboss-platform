@@ -113,7 +113,7 @@ function bboss_bbp_set_current_anonymous_user_data( $anonymous_data = array() ) 
  * @return string
  */
 function bboss_bbp_current_author_ip() {
-	$retval = preg_replace( '/[^0-9a-fA-F:., ]/', '', $_SERVER['REMOTE_ADDR'] );
+	$retval = preg_replace( '/[^0-9a-fA-F:., ]/', '', isset( $_SERVER['REMOTE_ADDR'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) ) : '' );
 
 	return apply_filters( 'bbp_current_author_ip', $retval );
 }
@@ -904,7 +904,7 @@ function bboss_bbp_forum_subscriptions_handler( $action = '' ) {
 	}
 
 	// Bail if no forum ID is passed
-	if ( empty( $_GET['forum_id'] ) ) {
+	if ( empty( $_GET['forum_id'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- nonce checked by bbp_verify_nonce_request() just below, before anything is changed; this id is part of its action.
 		return;
 	}
 
@@ -921,7 +921,7 @@ function bboss_bbp_forum_subscriptions_handler( $action = '' ) {
 
 	// Get required data
 	$user_id  = bboss_bbp_get_user_id( 0, true, true );
-	$forum_id = intval( $_GET['forum_id'] );
+	$forum_id = intval( $_GET['forum_id'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- nonce checked by bbp_verify_nonce_request() just below, before anything is changed; this id is part of its action.
 
 	// Check for empty forum
 	if ( empty( $forum_id ) ) {
@@ -1008,7 +1008,7 @@ function bboss_bbp_subscriptions_handler( $action = '' ) {
 	}
 
 	// Bail if no topic ID is passed
-	if ( empty( $_GET['topic_id'] ) ) {
+	if ( empty( $_GET['topic_id'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- nonce checked by bbp_verify_nonce_request() just below, before anything is changed; this id is part of its action.
 		return;
 	}
 
@@ -1025,7 +1025,7 @@ function bboss_bbp_subscriptions_handler( $action = '' ) {
 
 	// Get required data
 	$user_id  = bboss_bbp_get_user_id( 0, true, true );
-	$topic_id = intval( $_GET['topic_id'] );
+	$topic_id = intval( $_GET['topic_id'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- nonce checked by bbp_verify_nonce_request() just below, before anything is changed; this id is part of its action.
 
 	// Check for empty topic
 	if ( empty( $topic_id ) ) {
@@ -1275,7 +1275,7 @@ function bboss_bbp_sanitize_displayed_user_field( $value = '', $field = '', $con
 function bboss_bbp_user_maybe_convert_pass() {
 
 	// Bail if no username
-	$username = ! empty( $_POST['log'] ) ? $_POST['log'] : '';
+	$username = ! empty( $_POST['log'] ) ? $_POST['log'] : ''; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- login name; only used as a %s value in $wpdb->prepare() and handed to the converter callback_pass().
 	if ( empty( $username ) ) {
 		return;
 	}
@@ -1307,6 +1307,6 @@ function bboss_bbp_user_maybe_convert_pass() {
 
 	// Try to call the conversion method.
 	if ( is_a( $converter, 'BBP_Converter_Base' ) && method_exists( $converter, 'callback_pass' ) ) {
-		$converter->callback_pass( $username, $_POST['pwd'] );
+		$converter->callback_pass( $username, $_POST['pwd'] ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- password; must reach the converter callback_pass() unchanged.
 	}
 }

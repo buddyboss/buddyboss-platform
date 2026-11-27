@@ -172,7 +172,7 @@ class BBoss_XProfile_Group {
 		}
 
 		// Save metadata
-		$repeater_enabled = isset( $_POST['group_is_repeater'] ) && 'on' == $_POST['group_is_repeater'] ? 'on' : 'off';
+		$repeater_enabled = isset( $_POST['group_is_repeater'] ) && 'on' == $_POST['group_is_repeater'] ? 'on' : 'off'; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked in BB_Admin_Profile_Fields_Ajax::bb_verify_request() by the handlers that post group_is_repeater; only compared with 'on'.
 
 		/*
 		 * A set holding a Bio field cannot start repeating: the Bio field is shared
@@ -766,7 +766,7 @@ class BBoss_XProfile_Group {
 		global $message;
 
 		// Validate Form.
-		if ( empty( $_POST['group_name'] ) ) {
+		if ( empty( $_POST['group_name'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- read-only: validates the submitted form; nothing is changed.
 			$message = __( 'Please make sure you give the group a name.', 'buddyboss-community-social-network-groups-forums-messaging' );
 			return false;
 		} else {

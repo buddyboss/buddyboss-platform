@@ -231,7 +231,7 @@ if ( ! class_exists( 'BBoss_XProfile_User_Admin' ) ) :
 				 * must ensure that these ids are "merged" into a single comma
 				 * separated list.
 				 */
-				$merge_ids = join( ',', $_POST['field_ids'] );
+				$merge_ids = join( ',', array_map( 'sanitize_text_field', wp_unslash( $_POST['field_ids'] ) ) );
 
 				// Explode the posted field IDs into an array so we know which fields have been submitted.
 				$posted_field_ids = wp_parse_id_list( $merge_ids );
@@ -248,7 +248,7 @@ if ( ! class_exists( 'BBoss_XProfile_User_Admin' ) ) :
 					}
 
 					// Validate xprofile
-					if ( isset( $_POST[ 'field_' . $field_id ] ) && $message = xprofile_validate_field( $field_id, $_POST[ 'field_' . $field_id ], $user_id ) ) {
+					if ( isset( $_POST[ 'field_' . $field_id ] ) && $message = xprofile_validate_field( $field_id, $_POST[ 'field_' . $field_id ], $user_id ) ) { // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- checked by the xprofile_validate_field callbacks; the saved value is sanitised by xprofile_sanitize_data_value_before_save().
 						$message     = is_array( $message ) ? reset( $message ) : $message;
 						$redirect_to = add_query_arg(
 							array(
@@ -274,9 +274,9 @@ if ( ! class_exists( 'BBoss_XProfile_User_Admin' ) ) :
 					 * through empty. Save them as an empty array so that they don't
 					 * get overwritten by the default on the next edit.
 					 */
-					$value = isset( $_POST[ 'field_' . $field_id ] ) ? $_POST[ 'field_' . $field_id ] : '';
+					$value = isset( $_POST[ 'field_' . $field_id ] ) ? $_POST[ 'field_' . $field_id ] : ''; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- sanitised on save by xprofile_sanitize_data_value_before_save() (xprofile_data_value_before_save), which expects the slashed value.
 
-					$visibility_level = ! empty( $_POST[ 'field_' . $field_id . '_visibility' ] ) ? $_POST[ 'field_' . $field_id . '_visibility' ] : 'public';
+					$visibility_level = ! empty( $_POST[ 'field_' . $field_id . '_visibility' ] ) ? sanitize_text_field( wp_unslash( $_POST[ 'field_' . $field_id . '_visibility' ] ) ) : 'public';
 					/*
 					 * Save the old and new values. They will be
 					 * passed to the filter and used to determine
@@ -577,8 +577,8 @@ if ( ! class_exists( 'BBoss_XProfile_User_Admin' ) ) :
 						'action'  => 'delete_avatar',
 					);
 
-					if ( ! empty( $_REQUEST['wp_http_referer'] ) ) {
-						$wp_http_referer               = wp_unslash( $_REQUEST['wp_http_referer'] );
+					if ( ! empty( $_REQUEST['wp_http_referer'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only: only builds the avatar delete link.
+						$wp_http_referer               = wp_unslash( $_REQUEST['wp_http_referer'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- read-only: only builds the avatar delete link; passed through esc_url_raw() and wp_validate_redirect() two lines below.
 						$wp_http_referer               = remove_query_arg( array( 'action', 'updated' ), $wp_http_referer );
 						$wp_http_referer               = wp_validate_redirect( esc_url_raw( $wp_http_referer ) );
 						$query_args['wp_http_referer'] = urlencode( $wp_http_referer );

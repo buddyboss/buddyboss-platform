@@ -802,7 +802,7 @@ function bboss_recaptcha_get_current_ip() {
 
 		foreach ( $address_headers as $header ) {
 			if ( array_key_exists( $header, $_SERVER ) ) {
-				$address_chain = explode( ',', $_SERVER[ $header ] );
+				$address_chain = explode( ',', sanitize_text_field( wp_unslash( $_SERVER[ $header ] ) ) );
 				$current_ip    = trim( $address_chain[0] );
 
 				if ( filter_var( $current_ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE ) !== false ) {

@@ -105,7 +105,7 @@ function bboss_nouveau_ajax_object_template_loader() {
 	}
 
 	// Get the template path based on the 'template' variable via the AJAX request.
-	$template = isset( $_POST['template'] ) ? wp_unslash( $_POST['template'] ) : '';
+	$template = isset( $_POST['template'] ) ? sanitize_text_field( wp_unslash( $_POST['template'] ) ) : '';
 
 	switch ( $template ) {
 		case 'group_members':

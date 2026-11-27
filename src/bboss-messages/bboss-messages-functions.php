@@ -94,7 +94,7 @@ function bboss_messages_new_message( $args = '' ) {
 		}
 	}
 
-	$group_id = ! empty( $_POST['group'] ) ? (int) sanitize_text_field( wp_unslash( $_POST['group'] ) ) : 0;
+	$group_id = ! empty( $_POST['group'] ) ? (int) sanitize_text_field( wp_unslash( $_POST['group'] ) ) : 0; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- messages_new_message() is not a request handler; nonce checked by the handlers that call it (bp_nouveau_ajax_messages_send_message(), bp_nouveau_ajax_messages_send_reply(), bp_messages_action_create_message(), messages_action_conversation()).
 
 	/**
 	 * Filter to validate message content.
@@ -107,7 +107,7 @@ function bboss_messages_new_message( $args = '' ) {
 	 *
 	 * @return bool True if message is valid, false otherwise.
 	 */
-	$validated_content = (bool) apply_filters( 'bp_messages_message_validated_content', ! empty( $r['content'] ) && strlen( trim( html_entity_decode( wp_strip_all_tags( $r['content'] ), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) ) ), $r['content'], $_POST );
+	$validated_content = (bool) apply_filters( 'bp_messages_message_validated_content', ! empty( $r['content'] ) && strlen( trim( html_entity_decode( wp_strip_all_tags( $r['content'] ), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) ) ), $r['content'], $_POST ); // phpcs:ignore WordPress.Security.NonceVerification.Missing -- messages_new_message() is not a request handler; nonce checked by the handlers that call it (bp_nouveau_ajax_messages_send_message(), bp_nouveau_ajax_messages_send_reply(), bp_messages_action_create_message(), messages_action_conversation()).
 
 	if ( ! $validated_content ) {
 		if ( 'wp_error' === $r['error_type'] ) {
@@ -119,7 +119,7 @@ function bboss_messages_new_message( $args = '' ) {
 		}
 	}
 
-	if ( ! empty( $_POST['media'] ) ) {
+	if ( ! empty( $_POST['media'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- messages_new_message() is not a request handler; nonce checked by the handlers that call it (bp_nouveau_ajax_messages_send_message(), bp_nouveau_ajax_messages_send_reply(), bp_messages_action_create_message(), messages_action_conversation()).
 		$can_send_media = bboss_user_has_access_upload_media( $group_id, bboss_loggedin_user_id(), 0, $r['thread_id'], 'message' );
 		if ( ! $can_send_media ) {
 			$error_code = 'messages_empty_content';
@@ -128,7 +128,7 @@ function bboss_messages_new_message( $args = '' ) {
 		}
 	}
 
-	if ( ! empty( $_POST['document'] ) ) {
+	if ( ! empty( $_POST['document'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- messages_new_message() is not a request handler; nonce checked by the handlers that call it (bp_nouveau_ajax_messages_send_message(), bp_nouveau_ajax_messages_send_reply(), bp_messages_action_create_message(), messages_action_conversation()).
 		$can_send_document = bboss_user_has_access_upload_document( $group_id, bboss_loggedin_user_id(), 0, $r['thread_id'], 'message' );
 		if ( ! $can_send_document ) {
 			$error_code = 'messages_empty_content';
@@ -137,7 +137,7 @@ function bboss_messages_new_message( $args = '' ) {
 		}
 	}
 
-	if ( ! empty( $_POST['video'] ) ) {
+	if ( ! empty( $_POST['video'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- messages_new_message() is not a request handler; nonce checked by the handlers that call it (bp_nouveau_ajax_messages_send_message(), bp_nouveau_ajax_messages_send_reply(), bp_messages_action_create_message(), messages_action_conversation()).
 		$can_send_video = bboss_user_has_access_upload_video( $group_id, bboss_loggedin_user_id(), 0, $r['thread_id'], 'message' );
 		if ( ! $can_send_video ) {
 			$error_code = 'messages_empty_content';
@@ -146,7 +146,7 @@ function bboss_messages_new_message( $args = '' ) {
 		}
 	}
 
-	if ( ! empty( $_POST['gif_data'] ) ) {
+	if ( ! empty( $_POST['gif_data'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- messages_new_message() is not a request handler; nonce checked by the handlers that call it (bp_nouveau_ajax_messages_send_message(), bp_nouveau_ajax_messages_send_reply(), bp_messages_action_create_message(), messages_action_conversation()).
 		$can_send_gif = bboss_user_has_access_upload_gif( $group_id, bboss_loggedin_user_id(), 0, $r['thread_id'], 'message' );
 		if ( ! $can_send_gif ) {
 			$error_code = 'messages_empty_content';
@@ -1983,7 +1983,7 @@ function bboss_send_group_message_background( $post_data, $members = array(), $c
 		/**
 		 * Create Message based on the `message_thread_type` and `member_thread_id`.
 		 */
-		if ( isset( $_POST['message_thread_type'] ) && 'new' === $_POST['message_thread_type'] ) {
+		if ( isset( $_POST['message_thread_type'] ) && 'new' === $_POST['message_thread_type'] ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- not request input; message_thread_type is set by this function just above.
 			$message_args = array(
 				'sender_id'           => $current_user_id,
 				'recipients'          => $member,
@@ -1992,7 +1992,7 @@ function bboss_send_group_message_background( $post_data, $members = array(), $c
 				'append_thread'       => false,
 				'message_thread_type' => 'new',
 			);
-		} elseif ( isset( $_POST['message_thread_type'] ) && 'reply' === $_POST['message_thread_type'] && ! empty( $member_thread_id ) ) {
+		} elseif ( isset( $_POST['message_thread_type'] ) && 'reply' === $_POST['message_thread_type'] && ! empty( $member_thread_id ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- not request input; message_thread_type is set by this function just above.
 			$message_args = array(
 				'sender_id'           => $current_user_id,
 				'thread_id'           => $member_thread_id,
@@ -3001,7 +3001,7 @@ function bboss_get_message_response_object( $message ) {
 	// set a flag.
 	$reply['is_new']  = true;
 	$inbox_unread_cnt = apply_filters( 'thread_recipient_inbox_unread_counts', array(), $get_thread_recipients );
-	$hash             = ! empty( $_POST['hash'] ) ? wp_unslash( $_POST['hash'] ) : '';
+	$hash             = ! empty( $_POST['hash'] ) ? sanitize_text_field( wp_unslash( $_POST['hash'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- response builder, not a request handler; nonce checked in its caller bp_nouveau_ajax_messages_send_reply().
 
 	return array(
 		'messages'                      => array( $reply ),

@@ -15,7 +15,7 @@ bboss_nouveau_before_loop();
 
 if ( bboss_has_activities( bboss_ajax_querystring( 'activity' ) ) ) :
 
-	if ( empty( $_POST['page'] ) || 1 === (int) $_POST['page'] ) :
+	if ( empty( $_POST['page'] ) || 1 === (int) $_POST['page'] ) : // phpcs:ignore WordPress.Security.NonceVerification.Missing -- read-only; only decides whether the list wrapper is printed.
 		?>
 		<ul class="activity-list item-list bp-list">
 		<?php
@@ -37,7 +37,7 @@ if ( bboss_has_activities( bboss_ajax_querystring( 'activity' ) ) ) :
 
 	<li class="activity activity_update activity-item activity-popup"></li>
 
-	<?php if ( empty( $_POST['page'] ) || 1 === (int) $_POST['page'] ) :
+	<?php if ( empty( $_POST['page'] ) || 1 === (int) $_POST['page'] ) : // phpcs:ignore WordPress.Security.NonceVerification.Missing -- read-only; only decides whether the list wrapper is printed.
 		?>
 		</ul>
 		<?php

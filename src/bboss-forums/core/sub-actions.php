@@ -357,12 +357,12 @@ function bboss_bbp_post_request() {
 	}
 
 	// Bail if no action, or if not a string (arrays not supported)
-	if ( empty( $_POST['action'] ) || ! is_string( $_POST['action'] ) ) {
+	if ( empty( $_POST['action'] ) || ! is_string( $_POST['action'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- dispatcher only; every handler hooked to bbp_post_request verifies its own nonce.
 		return;
 	}
 
 	// Sanitize the POST action
-	$action = sanitize_key( $_POST['action'] );
+	$action = sanitize_key( $_POST['action'] ); // phpcs:ignore WordPress.Security.NonceVerification.Missing -- dispatcher only; every handler hooked to bbp_post_request verifies its own nonce.
 
 	// Bail if action was totally invalid
 	if ( empty( $action ) ) {
@@ -391,12 +391,12 @@ function bboss_bbp_get_request() {
 	}
 
 	// Bail if no action, or if not a string (arrays not supported)
-	if ( empty( $_GET['action'] ) || ! is_string( $_GET['action'] ) ) {
+	if ( empty( $_GET['action'] ) || ! is_string( $_GET['action'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- dispatcher only; every handler hooked to bbp_get_request verifies its own nonce.
 		return;
 	}
 
 	// Sanitize the GET action
-	$action = sanitize_key( $_GET['action'] );
+	$action = sanitize_key( $_GET['action'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- dispatcher only; every handler hooked to bbp_get_request verifies its own nonce.
 
 	// Bail if action was totally invalid
 	if ( empty( $action ) ) {

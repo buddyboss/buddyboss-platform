@@ -78,7 +78,7 @@ if ( bboss_has_albums( bboss_ajax_querystring( 'albums' ) ) ) :
 	?>
 	<div id="albums-dir-list" class="bb-albums bb-albums-dir-list">
 		<?php
-		if ( empty( $_POST['page'] ) || 1 === (int) $_POST['page'] ) :
+		if ( empty( $_POST['page'] ) || 1 === (int) $_POST['page'] ) : // phpcs:ignore WordPress.Security.NonceVerification.Missing -- read-only; only decides whether the list wrapper is printed.
 			?>
 			<ul class="bb-albums-list">
 			<?php
@@ -100,7 +100,7 @@ if ( bboss_has_albums( bboss_ajax_querystring( 'albums' ) ) ) :
 			<?php
 		endif;
 
-		if ( empty( $_POST['page'] ) || 1 === (int) $_POST['page'] ) :
+		if ( empty( $_POST['page'] ) || 1 === (int) $_POST['page'] ) : // phpcs:ignore WordPress.Security.NonceVerification.Missing -- read-only; only decides whether the list wrapper is printed.
 			?>
 			</ul>
 			<?php

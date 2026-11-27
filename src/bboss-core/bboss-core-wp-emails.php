@@ -1378,7 +1378,7 @@ if ( ! function_exists( 'bboss_email_newblog_notify_siteadmin' ) ) {
 		/* translators: %s: site URL. */
 		$msg .= '<p>' . sprintf( __( 'URL: %s', 'buddyboss-community-social-network-groups-forums-messaging' ), $siteurl ) . '</p>';
 		/* translators: %s: remote IP address. */
-		$msg .= '<p>' . sprintf( __( 'Remote IP address: %s', 'buddyboss-community-social-network-groups-forums-messaging' ), wp_unslash( $_SERVER['REMOTE_ADDR'] ) ) . '</p>';
+		$msg .= '<p>' . sprintf( __( 'Remote IP address: %s', 'buddyboss-community-social-network-groups-forums-messaging' ), ( isset( $_SERVER['REMOTE_ADDR'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) ) : '' ) ) . '</p>';
 		/* translators: %s: notification settings URL. */
 		$msg .= '<p>' . sprintf( __( 'Disable these notifications:%s', 'buddyboss-community-social-network-groups-forums-messaging' ), $options_site_url ) . '</p>';
 

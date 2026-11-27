@@ -53,7 +53,7 @@ class BBoss_Nouveau_Messages {
 		// Load AJAX code only on AJAX requests.
 		} else {
 			add_action( 'admin_init', function() {
-				if ( defined( 'DOING_AJAX' ) && true === DOING_AJAX && 0 === strpos( $_REQUEST['action'], 'messages_' ) ) {
+				if ( defined( 'DOING_AJAX' ) && true === DOING_AJAX && isset( $_REQUEST['action'] ) && 0 === strpos( sanitize_text_field( wp_unslash( $_REQUEST['action'] ) ), 'messages_' ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only; only decides whether the AJAX file is loaded.
 					require $this->dir . 'ajax.php';
 				}
 			} );

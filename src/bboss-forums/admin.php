@@ -71,8 +71,8 @@ add_filter( 'bp_admin_menu_order', 'bboss_forums_admin_menu_order' );
  * @since BuddyBoss 1.0.0
  */
 function bboss_forums_highlight_topic_tag_parent_menu( $parent_file ) {
-	$taxonomy  = isset( $_GET['taxonomy'] ) ? $_GET['taxonomy'] : '';
-	$post_type = isset( $_GET['post_type'] ) ? $_GET['post_type'] : '';
+	$taxonomy  = isset( $_GET['taxonomy'] ) ? sanitize_text_field( wp_unslash( $_GET['taxonomy'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; only picks the admin menu item to highlight.
+	$post_type = isset( $_GET['post_type'] ) ? sanitize_text_field( wp_unslash( $_GET['post_type'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; only picks the admin menu item to highlight.
 
 	if ( bboss_bbp_get_topic_tag_tax_id() == $taxonomy && bboss_bbp_get_topic_post_type() == $post_type ) {
 		return 'bp-forums';
@@ -88,8 +88,8 @@ add_filter( 'parent_file', 'bboss_forums_highlight_topic_tag_parent_menu' );
  * @since BuddyBoss 1.0.0
  */
 function bboss_forums_highlight_topic_tag_submenu( $submenu_file ) {
-	$taxonomy  = isset( $_GET['taxonomy'] ) ? $_GET['taxonomy'] : '';
-	$post_type = isset( $_GET['post_type'] ) ? $_GET['post_type'] : '';
+	$taxonomy  = isset( $_GET['taxonomy'] ) ? sanitize_text_field( wp_unslash( $_GET['taxonomy'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; only picks the admin menu item to highlight.
+	$post_type = isset( $_GET['post_type'] ) ? sanitize_text_field( wp_unslash( $_GET['post_type'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; only picks the admin menu item to highlight.
 
 	if ( bboss_bbp_get_topic_tag_tax_id() == $taxonomy && bboss_bbp_get_topic_post_type() == $post_type ) {
 		return 'edit-tags.php?taxonomy=' . bboss_bbp_get_topic_tag_tax_id() . '&post_type=' . bboss_bbp_get_topic_post_type();
@@ -107,7 +107,7 @@ add_filter( 'submenu_file', 'bboss_forums_highlight_topic_tag_submenu' );
 function bboss_forums_highlight_forums_new_parent_menu( $parent_file ) {
 	global $pagenow;
 
-	$post_type         = isset( $_GET['post_type'] ) ? $_GET['post_type'] : '';
+	$post_type         = isset( $_GET['post_type'] ) ? sanitize_text_field( wp_unslash( $_GET['post_type'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; only picks the admin menu item to highlight.
 	$forums_post_types = array( bboss_bbp_get_forum_post_type(), bboss_bbp_get_topic_post_type(), bboss_bbp_get_reply_post_type() );
 
 	if ( $pagenow && 'post-new.php' == $pagenow && in_array( $post_type, $forums_post_types ) ) {
@@ -126,7 +126,7 @@ add_filter( 'parent_file', 'bboss_forums_highlight_forums_new_parent_menu' );
 function bboss_forums_highlight_forums_new_submenu( $submenu_file ) {
 	global $pagenow;
 
-	$post_type         = isset( $_GET['post_type'] ) ? $_GET['post_type'] : '';
+	$post_type         = isset( $_GET['post_type'] ) ? sanitize_text_field( wp_unslash( $_GET['post_type'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; only picks the admin menu item to highlight.
 	$forums_post_types = array( bboss_bbp_get_forum_post_type(), bboss_bbp_get_topic_post_type(), bboss_bbp_get_reply_post_type() );
 
 	if ( $pagenow && 'post-new.php' == $pagenow && in_array( $post_type, $forums_post_types ) ) {

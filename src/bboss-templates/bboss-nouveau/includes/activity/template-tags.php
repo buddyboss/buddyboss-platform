@@ -1829,7 +1829,7 @@ function bboss_nouveau_get_activity_entry_bubble_buttons( $args ) {
 		);
 	}
 
-	if ( bboss_is_active( 'video' ) && $activity_type !== 'activity_comment' && ! empty( $_REQUEST['action'] ) && ( 'video_get_activity' === $_REQUEST['action'] ) ) {
+	if ( bboss_is_active( 'video' ) && $activity_type !== 'activity_comment' && ! empty( $_REQUEST['action'] ) && ( 'video_get_activity' === $_REQUEST['action'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only; only checks which AJAX action is rendering the entry.
 		$video_id       = BP_Video::get_activity_video_id( $activity_id );
 		$video_group_id = bp_get_video_group_id();
 		if ( ! empty( $video_id ) ) {

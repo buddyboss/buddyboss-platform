@@ -37,7 +37,7 @@ function bboss_settings_action_notifications() {
 
 	check_admin_referer( 'bp_settings_notifications' );
 
-	bboss_settings_update_notification_settings( bboss_displayed_user_id(), (array) $_POST['notifications'] );
+	bboss_settings_update_notification_settings( bboss_displayed_user_id(), isset( $_POST['notifications'] ) ? (array) $_POST['notifications'] : array() ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash -- bp_settings_update_notification_settings() runs the array through bp_settings_sanitize_notification_settings(), which only keeps registered keys.
 
 	// Switch feedback for super admins.
 	if ( bboss_is_my_profile() ) {

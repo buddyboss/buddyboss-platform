@@ -78,9 +78,9 @@ function bboss_nouveau_ajax_querystring( $query_string, $object ) {
 		'extras'       => '',
 	);
 
-	if ( ! empty( $_POST ) ) {
+	if ( ! empty( $_POST ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- read-only; only builds the loop query string, nothing is changed.
 
-		$post_query = bboss_parse_args( $_POST, $post_query );
+		$post_query = bboss_parse_args( $_POST, $post_query ); // phpcs:ignore WordPress.Security.NonceVerification.Missing -- read-only; only builds the loop query string, nothing is changed.
 
 		// Make sure to transport the scope, filter etc.. in HeartBeat Requests
 		if ( ! empty( $post_query['data']['bp_heartbeat'] ) ) {
@@ -157,20 +157,20 @@ function bboss_nouveau_ajax_querystring( $query_string, $object ) {
 		$qs['offset'] = intval( $post_query['offset'] );
 	}
 
-	if ( isset( $_POST['member_type_id'] ) && '' !== $_POST['member_type_id'] && 'all' !== $_POST['member_type_id'] && 'undefined' !== $_POST['member_type_id'] ) {
-		$member_type_id    = $_POST['member_type_id'];
+	if ( isset( $_POST['member_type_id'] ) && '' !== $_POST['member_type_id'] && 'all' !== $_POST['member_type_id'] && 'undefined' !== $_POST['member_type_id'] ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- read-only; only builds the loop query string, nothing is changed.
+		$member_type_id    = sanitize_text_field( wp_unslash( $_POST['member_type_id'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Missing -- read-only; only builds the loop query string, nothing is changed.
 		$member_type_key   = get_post_meta( $member_type_id, '_bp_member_type_key', true );
 		$qs['member_type'] = $member_type_key;
 	}
 
-	if ( isset( $_POST['group_type'] ) && '' !== $_POST['group_type'] && 'all' !== $_POST['group_type'] && 'undefined' !== $_POST['group_type'] && is_scalar( $_POST['group_type'] ) ) {
-		$group_type       = $_POST['group_type'];
+	if ( isset( $_POST['group_type'] ) && '' !== $_POST['group_type'] && 'all' !== $_POST['group_type'] && 'undefined' !== $_POST['group_type'] && is_scalar( $_POST['group_type'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- read-only; only builds the loop query string, nothing is changed.
+		$group_type       = sanitize_text_field( wp_unslash( $_POST['group_type'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Missing -- read-only; only builds the loop query string, nothing is changed.
 		$qs['group_type'] = $group_type;
 	}
 
 	$object_search_text = bboss_get_search_default_text( $object );
 	if ( ! empty( $post_query['search_terms'] ) && $object_search_text != $post_query['search_terms'] && 'false' != $post_query['search_terms'] && 'undefined' != $post_query['search_terms'] ) {
-		$qs['search_terms'] = $_POST['search_terms'];
+		$qs['search_terms'] = $_POST['search_terms']; // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- read-only; the search term goes into the loop query string as is and the query classes escape it (bp_esc_like() and $wpdb->prepare()).
 	}
 
 	if (
@@ -604,11 +604,11 @@ function bboss_nouveau_get_component_filters( $context = '', $component = '' ) {
  * @since BuddyPress 3.0.0
  */
 function bboss_nouveau_get_temporary_setting( $option = '', $retval = false ) {
-	if ( empty( $option ) || ! isset( $_POST['customized'] ) ) {
+	if ( empty( $option ) || ! isset( $_POST['customized'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- read-only; previews Customizer settings for this request, nothing is saved.
 		return $retval;
 	}
 
-	$temporary_setting = wp_unslash( $_POST['customized'] );
+	$temporary_setting = wp_unslash( $_POST['customized'] ); // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- read-only; JSON string (or array) of Customizer settings, decoded on the next line; nothing is saved.
 	if ( ! is_array( $temporary_setting ) ) {
 		$temporary_setting = json_decode( $temporary_setting, true );
 	}
@@ -631,8 +631,8 @@ function bboss_nouveau_get_temporary_setting( $option = '', $retval = false ) {
 		$retval = $temporary_setting[ 'bp_nouveau_appearance[' . $option . ']' ];
 
 		// Used when it's an ajax request
-	} elseif ( isset( $_POST['customized'][ 'bp_nouveau_appearance_' . $option ] ) ) {
-		$retval = $_POST['customized'][ 'bp_nouveau_appearance_' . $option ];
+	} elseif ( isset( $_POST['customized'][ 'bp_nouveau_appearance_' . $option ] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- read-only; previews Customizer settings for this request, nothing is saved.
+		$retval = $_POST['customized'][ 'bp_nouveau_appearance_' . $option ]; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- read-only; previews Customizer settings for this request, nothing is saved.
 	}
 
 	return $retval;

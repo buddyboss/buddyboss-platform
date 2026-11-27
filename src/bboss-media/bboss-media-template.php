@@ -133,8 +133,8 @@ function bboss_has_media( $args = '' ) {
 
 	$search_terms_default = false;
 	$search_query_arg     = bboss_core_get_component_search_query_arg( 'media' );
-	if ( ! empty( $_REQUEST[ $search_query_arg ] ) ) {
-		$search_terms_default = stripslashes( $_REQUEST[ $search_query_arg ] );
+	if ( ! empty( $_REQUEST[ $search_query_arg ] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; search term.
+		$search_terms_default = stripslashes( $_REQUEST[ $search_query_arg ] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash -- read-only search term; unslashed here and escaped with bp_esc_like() and $wpdb->prepare() in BP_Media::get().
 	}
 
 	// Album filtering.
@@ -154,8 +154,8 @@ function bboss_has_media( $args = '' ) {
 		bboss_is_active( 'groups' ) &&
 		bboss_is_group() &&
 		(
-			! isset( $_GET['action'] ) ||
-			'bp_search_ajax' !== $_GET['action']
+			! isset( $_GET['action'] ) || // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; only checks whether this is the search AJAX request.
+			'bp_search_ajax' !== $_GET['action'] // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; only checks whether this is the search AJAX request.
 		)
 	) {
 		$group_id = bboss_get_current_group_id();
@@ -167,7 +167,7 @@ function bboss_has_media( $args = '' ) {
 	}
 
 	// The default scope should recognize custom slugs.
-	$scope = ( isset( $_REQUEST['scope'] ) && ! empty( $_REQUEST['scope'] ) ? $_REQUEST['scope'] : 'all' );
+	$scope = ( isset( $_REQUEST['scope'] ) && ! empty( $_REQUEST['scope'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['scope'] ) ) : 'all' ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; list scope.
 	$scope = ( isset( $args['scope'] ) && ! empty( $args['scope'] ) ? $args['scope'] : $scope );
 
 	$scope = bboss_media_default_scope( trim( $scope ) );
@@ -214,8 +214,8 @@ function bboss_has_media( $args = '' ) {
 	);
 
 	// Search terms.
-	if ( ! empty( $_REQUEST['s'] ) && empty( $r['search_terms'] ) ) {
-		$r['search_terms'] = $_REQUEST['s'];
+	if ( ! empty( $_REQUEST['s'] ) && empty( $r['search_terms'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; search term.
+		$r['search_terms'] = $_REQUEST['s']; // phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash -- read-only search term; escaped with bp_esc_like() and $wpdb->prepare() in BP_Media::get().
 	}
 
 	// Do not exceed the maximum per page.
@@ -1145,8 +1145,8 @@ function bboss_has_albums( $args = '' ) {
 
 	$search_terms_default = false;
 	$search_query_arg     = bboss_core_get_component_search_query_arg( 'album' );
-	if ( ! empty( $_REQUEST[ $search_query_arg ] ) ) {
-		$search_terms_default = stripslashes( $_REQUEST[ $search_query_arg ] );
+	if ( ! empty( $_REQUEST[ $search_query_arg ] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; search term.
+		$search_terms_default = stripslashes( $_REQUEST[ $search_query_arg ] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash -- read-only search term; unslashed here and escaped with bp_esc_like() and $wpdb->prepare() in BP_Media_Album::get().
 	}
 
 	$privacy = array( 'public' );
@@ -1216,8 +1216,8 @@ function bboss_has_albums( $args = '' ) {
 	 */
 
 	// Search terms.
-	if ( ! empty( $_REQUEST['s'] ) && empty( $r['search_terms'] ) ) {
-		$r['search_terms'] = $_REQUEST['s'];
+	if ( ! empty( $_REQUEST['s'] ) && empty( $r['search_terms'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; search term.
+		$r['search_terms'] = $_REQUEST['s']; // phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash -- read-only search term; escaped with bp_esc_like() and $wpdb->prepare() in BP_Media_Album::get().
 	}
 
 	// Do not exceed the maximum per page.

@@ -90,8 +90,8 @@ function bboss_members_signup_with_subdirectory_blog( $illegal_names = array() )
 		return $illegal_names;
 	}
 
-	if ( is_network_admin() && isset( $_POST['blog'] ) ) {
-		$blog   = $_POST['blog'];
+	if ( is_network_admin() && isset( $_POST['blog'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- read-only; only reads the new site domain to extend the reserved names, and wp-admin/network/site-new.php checks the add-blog nonce.
+		$blog   = $_POST['blog']; // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- read-only, and wp-admin/network/site-new.php checks the add-blog nonce; only $blog['domain'] is used and it is validated with preg_match() below.
 		$domain = '';
 
 		if ( preg_match( '|^([a-zA-Z0-9-])$|', $blog['domain'] ) ) {

@@ -25,7 +25,7 @@ function bboss_messages_action_bulk_manage() {
 
 	$action   = ! empty( $_POST['messages_bulk_action'] ) ? sanitize_text_field( wp_unslash( $_POST['messages_bulk_action'] ) ) : '';
 	$nonce    = ! empty( $_POST['messages_bulk_nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['messages_bulk_nonce'] ) ) : '';
-	$messages = ! empty( $_POST['message_ids'] ) ? $_POST['message_ids'] : '';
+	$messages = ! empty( $_POST['message_ids'] ) ? $_POST['message_ids'] : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash -- nonce checked below with wp_verify_nonce() before anything is changed; ids are run through wp_parse_id_list() below.
 
 	$messages = wp_parse_id_list( $messages );
 

@@ -55,7 +55,7 @@ class BBoss_Nouveau_Groups {
 		// Load AJAX code only on AJAX requests.
 		} else {
 			add_action( 'admin_init', function() {
-				if ( defined( 'DOING_AJAX' ) && true === DOING_AJAX && 0 === strpos( $_REQUEST['action'], 'groups_' ) ) {
+				if ( defined( 'DOING_AJAX' ) && true === DOING_AJAX && isset( $_REQUEST['action'] ) && 0 === strpos( sanitize_text_field( wp_unslash( $_REQUEST['action'] ) ), 'groups_' ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only; only decides whether the AJAX file is loaded.
 					require $this->dir . 'ajax.php';
 				}
 			} );
