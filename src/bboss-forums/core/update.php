@@ -87,10 +87,10 @@ function bboss_bbp_is_activation( $basename = '' ) {
 		return false;
 	}
 
-	if ( ! empty( $_REQUEST['action'] ) && ( '-1' !== $_REQUEST['action'] ) ) {
-		$action = $_REQUEST['action'];
-	} elseif ( ! empty( $_REQUEST['action2'] ) && ( '-1' !== $_REQUEST['action2'] ) ) {
-		$action = $_REQUEST['action2'];
+	if ( ! empty( $_REQUEST['action'] ) && ( '-1' !== $_REQUEST['action'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only; only detects whether Forums is being (de)activated on plugins.php, where WordPress core verifies the nonce.
+		$action = sanitize_text_field( wp_unslash( $_REQUEST['action'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only; only detects whether Forums is being (de)activated on plugins.php, where WordPress core verifies the nonce.
+	} elseif ( ! empty( $_REQUEST['action2'] ) && ( '-1' !== $_REQUEST['action2'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only; only detects whether Forums is being (de)activated on plugins.php, where WordPress core verifies the nonce.
+		$action = sanitize_text_field( wp_unslash( $_REQUEST['action2'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only; only detects whether Forums is being (de)activated on plugins.php, where WordPress core verifies the nonce.
 	}
 
 	// Bail if not activating
@@ -100,9 +100,9 @@ function bboss_bbp_is_activation( $basename = '' ) {
 
 	// The plugin(s) being activated
 	if ( $action === 'activate' ) {
-		$plugins = isset( $_GET['plugin'] ) ? array( $_GET['plugin'] ) : array();
+		$plugins = isset( $_GET['plugin'] ) ? array( sanitize_text_field( wp_unslash( $_GET['plugin'] ) ) ) : array(); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only; only detects whether Forums is being (de)activated on plugins.php, where WordPress core verifies the nonce.
 	} else {
-		$plugins = isset( $_POST['checked'] ) ? (array) $_POST['checked'] : array();
+		$plugins = isset( $_POST['checked'] ) ? array_map( 'sanitize_text_field', wp_unslash( (array) $_POST['checked'] ) ) : array(); // phpcs:ignore WordPress.Security.NonceVerification.Missing -- read-only; only detects whether Forums is being (de)activated on plugins.php, where WordPress core verifies the nonce.
 	}
 
 	// Set basename if empty
@@ -150,10 +150,10 @@ function bboss_bbp_is_deactivation( $basename = '' ) {
 		return false;
 	}
 
-	if ( ! empty( $_REQUEST['action'] ) && ( '-1' !== $_REQUEST['action'] ) ) {
-		$action = $_REQUEST['action'];
-	} elseif ( ! empty( $_REQUEST['action2'] ) && ( '-1' !== $_REQUEST['action2'] ) ) {
-		$action = $_REQUEST['action2'];
+	if ( ! empty( $_REQUEST['action'] ) && ( '-1' !== $_REQUEST['action'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only; only detects whether Forums is being (de)activated on plugins.php, where WordPress core verifies the nonce.
+		$action = sanitize_text_field( wp_unslash( $_REQUEST['action'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only; only detects whether Forums is being (de)activated on plugins.php, where WordPress core verifies the nonce.
+	} elseif ( ! empty( $_REQUEST['action2'] ) && ( '-1' !== $_REQUEST['action2'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only; only detects whether Forums is being (de)activated on plugins.php, where WordPress core verifies the nonce.
+		$action = sanitize_text_field( wp_unslash( $_REQUEST['action2'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only; only detects whether Forums is being (de)activated on plugins.php, where WordPress core verifies the nonce.
 	}
 
 	// Bail if not deactivating
@@ -163,9 +163,9 @@ function bboss_bbp_is_deactivation( $basename = '' ) {
 
 	// The plugin(s) being deactivated
 	if ( $action === 'deactivate' ) {
-		$plugins = isset( $_GET['plugin'] ) ? array( $_GET['plugin'] ) : array();
+		$plugins = isset( $_GET['plugin'] ) ? array( sanitize_text_field( wp_unslash( $_GET['plugin'] ) ) ) : array(); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only; only detects whether Forums is being (de)activated on plugins.php, where WordPress core verifies the nonce.
 	} else {
-		$plugins = isset( $_POST['checked'] ) ? (array) $_POST['checked'] : array();
+		$plugins = isset( $_POST['checked'] ) ? array_map( 'sanitize_text_field', wp_unslash( (array) $_POST['checked'] ) ) : array(); // phpcs:ignore WordPress.Security.NonceVerification.Missing -- read-only; only detects whether Forums is being (de)activated on plugins.php, where WordPress core verifies the nonce.
 	}
 
 	// Set basename if empty

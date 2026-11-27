@@ -51,6 +51,7 @@ bboss_get_template_part( 'common/header-register' );
 
 	if ( bboss_account_was_activated() ) {
 
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only; only picks which success message is shown.
 		if ( isset( $_GET['e'] ) ) { ?>
 			<p><?php esc_html_e( 'Your account was activated successfully! Your account details have been sent to you in a separate email.', 'buddyboss' ); ?></p>
 		<?php } else { ?>

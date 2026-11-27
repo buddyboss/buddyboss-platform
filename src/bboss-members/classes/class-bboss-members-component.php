@@ -93,7 +93,7 @@ class BBoss_Members_Component extends BBoss_Component {
 		// Members.
 		if ( bboss_is_members_component() ) {
 			// Actions - Random member handler.
-			if ( isset( $_GET['random-member'] ) ) {
+			if ( isset( $_GET['random-member'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; only decides whether to load the random member handler.
 				require $this->path . 'bboss-members/actions/random.php';
 			}
 

@@ -258,7 +258,7 @@ abstract class BBoss_Setup_Wizard_Manager {
 	 */
 	public function handle_activation_redirect( $query_args ) {
 		// Bail if no activation redirect.
-		if ( isset( $_GET['activate-multi'] ) ) {
+		if ( isset( $_GET['activate-multi'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; nothing is changed.
 			return;
 		}
 
@@ -878,7 +878,7 @@ abstract class BBoss_Setup_Wizard_Manager {
 
 		// Get and sanitize step data.
 		$step     = isset( $_POST['step'] ) ? intval( $_POST['step'] ) : 0;
-		$raw_data = isset( $_POST['data'] ) ? wp_unslash( $_POST['data'] ) : '';
+		$raw_data = isset( $_POST['data'] ) ? wp_unslash( $_POST['data'] ) : ''; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- sanitised by sanitize_step_data().
 		$data     = $this->sanitize_step_data( $raw_data );
 
 		// If wrapper keys are present (as sent from React) use only the inner form_data array for tracking.
@@ -934,7 +934,7 @@ abstract class BBoss_Setup_Wizard_Manager {
 		}
 
 		// Get and sanitize preferences.
-		$raw_prefs   = isset( $_POST['preferences'] ) ? wp_unslash( $_POST['preferences'] ) : '';
+		$raw_prefs   = isset( $_POST['preferences'] ) ? wp_unslash( $_POST['preferences'] ) : ''; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- sanitised by sanitize_preferences().
 		$preferences = $this->sanitize_preferences( $raw_prefs );
 
 		$pref_key = isset( $_POST['preference_key'] ) ? sanitize_key( wp_unslash( $_POST['preference_key'] ) ) : '';

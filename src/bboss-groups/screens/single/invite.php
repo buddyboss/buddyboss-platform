@@ -29,7 +29,7 @@ function bboss_groups_screen_group_invite() {
 		}
 
 		if ( ! empty( $_POST['friends'] ) ) {
-			foreach ( (array) $_POST['friends'] as $friend ) {
+			foreach ( wp_parse_id_list( wp_unslash( $_POST['friends'] ) ) as $friend ) {
 				bboss_groups_invite_user(
 					array(
 						'user_id'  => $friend,

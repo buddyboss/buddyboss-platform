@@ -299,7 +299,7 @@ class BBoss_Akismet {
 		 * This helps Akismet ensure that the update was a valid form submission.
 		 */
 		elseif ( ! empty( $activity->secondary_item_id ) && ! empty( $_POST[ '_bp_as_nonce_' . $activity->secondary_item_id ] ) ) {
-			$activity_data['akismet_comment_nonce'] = wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST[ "_bp_as_nonce_{$activity->secondary_item_id}" ] ) ), "_bp_as_nonce_{$userdata->ID}_{$activity->secondary_item_id}" ) ? 'passed' : 'failed';
+			$activity_data['akismet_comment_nonce'] = wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST[ "_bp_as_nonce_{$activity->secondary_item_id}" ] ) ), "_bp_as_nonce_{$userdata->ID}_{$activity->secondary_item_id}" ) ? 'passed' : 'failed'; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotValidated -- checked with ! empty() in the elseif condition above (same key, built by concatenation).
 		}
 
 		/**
@@ -483,7 +483,7 @@ class BBoss_Akismet {
 		}
 
 		// Loop through _POST args and rekey strings.
-		foreach ( $_POST as $key => $value ) {
+		foreach ( $_POST as $key => $value ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- only copies the posted fields into the Akismet spam-check request; nothing is changed.
 			if ( is_string( $value ) && 'cookie' != $key ) {
 				$activity_data[ 'POST_' . $key ] = sanitize_text_field( wp_unslash( $value ) );
 			}

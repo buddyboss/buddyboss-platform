@@ -3546,10 +3546,10 @@ function bboss_core_wpsignup_redirect() {
 		return;
 	}
 
-	$action = ! empty( $_GET['action'] ) ? $_GET['action'] : '';
+	$action = ! empty( $_GET['action'] ) ? sanitize_text_field( wp_unslash( $_GET['action'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; only decides whether to redirect to the registration page.
 
 	// Not at the WP core signup page and action is not register.
-	if ( ! empty( $_SERVER['SCRIPT_NAME'] ) && false === strpos( 'wp-signup.php', $_SERVER['SCRIPT_NAME'] ) && ( 'register' != $action ) ) {
+	if ( ! empty( $_SERVER['SCRIPT_NAME'] ) && false === strpos( 'wp-signup.php', sanitize_text_field( wp_unslash( $_SERVER['SCRIPT_NAME'] ) ) ) && ( 'register' != $action ) ) {
 		return;
 	}
 
@@ -3613,7 +3613,7 @@ function bboss_stop_live_spammer() {
 	$is_login = false;
 	if ( isset( $GLOBALS['pagenow'] ) && ( false !== strpos( $GLOBALS['pagenow'], 'wp-login.php' ) ) ) {
 		$is_login = true;
-	} elseif ( isset( $_SERVER['SCRIPT_NAME'] ) && false !== strpos( $_SERVER['SCRIPT_NAME'], 'wp-login.php' ) ) {
+	} elseif ( isset( $_SERVER['SCRIPT_NAME'] ) && false !== strpos( sanitize_text_field( wp_unslash( $_SERVER['SCRIPT_NAME'] ) ), 'wp-login.php' ) ) {
 		$is_login = true;
 	}
 
@@ -5579,7 +5579,7 @@ function bboss_member_switching_get_auth_cookie() {
 	}
 
 	if ( isset( $_COOKIE[ $auth_cookie_name ] ) && is_string( $_COOKIE[ $auth_cookie_name ] ) ) {
-		$cookie = json_decode( wp_unslash( $_COOKIE[ $auth_cookie_name ] ) );
+		$cookie = json_decode( wp_unslash( $_COOKIE[ $auth_cookie_name ] ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- JSON decoded here, then sanitised with map_deep( $cookie, 'sanitize_text_field' ) below.
 	}
 	if ( ! isset( $cookie ) || ! is_array( $cookie ) ) {
 		$cookie = array();

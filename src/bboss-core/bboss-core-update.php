@@ -103,10 +103,10 @@ function bboss_is_activation( $basename = '' ) {
 	$bp     = bboss();
 	$action = false;
 
-	if ( ! empty( $_REQUEST['action'] ) && ( '-1' != $_REQUEST['action'] ) ) {
-		$action = $_REQUEST['action'];
-	} elseif ( ! empty( $_REQUEST['action2'] ) && ( '-1' != $_REQUEST['action2'] ) ) {
-		$action = $_REQUEST['action2'];
+	if ( ! empty( $_REQUEST['action'] ) && ( '-1' != $_REQUEST['action'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only check; WordPress core verifies the nonce for the plugin action.
+		$action = sanitize_text_field( wp_unslash( $_REQUEST['action'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only check; WordPress core verifies the nonce for the plugin action.
+	} elseif ( ! empty( $_REQUEST['action2'] ) && ( '-1' != $_REQUEST['action2'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only check; WordPress core verifies the nonce for the plugin action.
+		$action = sanitize_text_field( wp_unslash( $_REQUEST['action2'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only check; WordPress core verifies the nonce for the plugin action.
 	}
 
 	// Bail if not activating.
@@ -116,9 +116,9 @@ function bboss_is_activation( $basename = '' ) {
 
 	// The plugin(s) being activated.
 	if ( 'activate' === $action ) {
-		$plugins = isset( $_GET['plugin'] ) ? array( $_GET['plugin'] ) : array();
+		$plugins = isset( $_GET['plugin'] ) ? array( sanitize_text_field( wp_unslash( $_GET['plugin'] ) ) ) : array(); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only check; WordPress core verifies the nonce for the plugin action.
 	} else {
-		$plugins = isset( $_POST['checked'] ) ? (array) $_POST['checked'] : array();
+		$plugins = isset( $_POST['checked'] ) ? array_map( 'sanitize_text_field', wp_unslash( (array) $_POST['checked'] ) ) : array(); // phpcs:ignore WordPress.Security.NonceVerification.Missing -- read-only check; WordPress core verifies the nonce for the plugin action.
 	}
 
 	// Set basename if empty.
@@ -161,10 +161,10 @@ function bboss_is_deactivation( $basename = '' ) {
 	$bp     = bboss();
 	$action = false;
 
-	if ( ! empty( $_REQUEST['action'] ) && ( '-1' != $_REQUEST['action'] ) ) {
-		$action = $_REQUEST['action'];
-	} elseif ( ! empty( $_REQUEST['action2'] ) && ( '-1' != $_REQUEST['action2'] ) ) {
-		$action = $_REQUEST['action2'];
+	if ( ! empty( $_REQUEST['action'] ) && ( '-1' != $_REQUEST['action'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only check; WordPress core verifies the nonce for the plugin action.
+		$action = sanitize_text_field( wp_unslash( $_REQUEST['action'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only check; WordPress core verifies the nonce for the plugin action.
+	} elseif ( ! empty( $_REQUEST['action2'] ) && ( '-1' != $_REQUEST['action2'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only check; WordPress core verifies the nonce for the plugin action.
+		$action = sanitize_text_field( wp_unslash( $_REQUEST['action2'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only check; WordPress core verifies the nonce for the plugin action.
 	}
 
 	// Bail if not deactivating.
@@ -174,9 +174,9 @@ function bboss_is_deactivation( $basename = '' ) {
 
 	// The plugin(s) being deactivated.
 	if ( 'deactivate' == $action ) {
-		$plugins = isset( $_GET['plugin'] ) ? array( $_GET['plugin'] ) : array();
+		$plugins = isset( $_GET['plugin'] ) ? array( sanitize_text_field( wp_unslash( $_GET['plugin'] ) ) ) : array(); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only check; WordPress core verifies the nonce for the plugin action.
 	} else {
-		$plugins = isset( $_POST['checked'] ) ? (array) $_POST['checked'] : array();
+		$plugins = isset( $_POST['checked'] ) ? array_map( 'sanitize_text_field', wp_unslash( (array) $_POST['checked'] ) ) : array(); // phpcs:ignore WordPress.Security.NonceVerification.Missing -- read-only check; WordPress core verifies the nonce for the plugin action.
 	}
 
 	// Set basename if empty.
@@ -1724,7 +1724,7 @@ if ( function_exists( 'bboss_migrate_directory_page_titles' ) && ! function_exis
 function bboss_add_activation_redirect() {
 
 	// Bail if activating from network, or bulk.
-	if ( isset( $_GET['activate-multi'] ) ) {
+	if ( isset( $_GET['activate-multi'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; nothing is changed.
 		return;
 	}
 
@@ -2436,8 +2436,8 @@ function bboss_update_to_1_8_6() {
 		$buddyboss_theme_options = get_option( 'buddyboss_theme_options', array() );
 	}
 
-	$reset_files = $_FILES;
-	$reset_post  = $_POST;
+	$reset_files = $_FILES; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- upgrade routine, not a form request; the superglobals are backed up here and restored after the migration upload.
+	$reset_post  = $_POST; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- upgrade routine, not a form request; the superglobals are backed up here and restored after the migration upload.
 
 	// Set Profile Avatar.
 	$show_profile_avatar = bboss_get_option( 'show_avatars' );
@@ -2479,7 +2479,7 @@ function bboss_update_to_1_8_6() {
 			);
 
 			// No error.
-			$profile_cover_image = $cover_image_attachment->upload( $_FILES );
+			$profile_cover_image = $cover_image_attachment->upload( $_FILES ); // phpcs:ignore WordPress.Security.NonceVerification.Missing -- upgrade routine; $_FILES is filled by this function just above, not by a request.
 
 			remove_filter( 'bp_attachments_get_allowed_types', 'bb_to_1_8_6_allow_extension' );
 			remove_filter( 'bp_attachment_upload_overrides', 'bb_to_1_8_6_change_overrides' );
@@ -2539,7 +2539,7 @@ function bboss_update_to_1_8_6() {
 			);
 
 			// No error.
-			$group_cover_image = $group_cover_image_attachment->upload( $_FILES );
+			$group_cover_image = $group_cover_image_attachment->upload( $_FILES ); // phpcs:ignore WordPress.Security.NonceVerification.Missing -- upgrade routine; $_FILES is filled by this function just above, not by a request.
 
 			remove_filter( 'bp_attachments_get_allowed_types', 'bb_to_1_8_6_allow_extension' );
 			remove_filter( 'bp_attachment_upload_overrides', 'bb_to_1_8_6_change_overrides' );
@@ -2730,7 +2730,7 @@ if ( function_exists( 'bboss_to_1_8_6_change_overrides' ) && ! function_exists( 
 function bboss_to_1_8_6_image_upload_dir( $args ) {
 	// Set the subdir.
 	$subdir = '/members/0/cover-image';
-	if ( isset( $_POST['group_cover_upload'] ) ) {
+	if ( isset( $_POST['group_cover_upload'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- flag set by bb_update_to_1_8_6(), not by a request.
 		$subdir = '/groups/0/cover-image';
 	}
 

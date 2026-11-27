@@ -43,7 +43,7 @@ function bboss_groups_screen_group_invites() {
 		}
 
 		if ( isset( $_GET['redirect_to'] ) ) {
-			$redirect_to = urldecode( $_GET['redirect_to'] );
+			$redirect_to = urldecode( $_GET['redirect_to'] ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- only passed to bp_core_redirect(), which uses wp_safe_redirect().
 		} else {
 			$redirect_to = trailingslashit( bboss_loggedin_user_domain() . bboss_get_groups_slug() . '/' . bboss_current_action() );
 		}
@@ -63,7 +63,7 @@ function bboss_groups_screen_group_invites() {
 		}
 
 		if ( isset( $_GET['redirect_to'] ) ) {
-			$redirect_to = urldecode( $_GET['redirect_to'] );
+			$redirect_to = urldecode( $_GET['redirect_to'] ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- only passed to bp_core_redirect(), which uses wp_safe_redirect().
 		} else {
 			$redirect_to = trailingslashit( bboss_loggedin_user_domain() . bboss_get_groups_slug() . '/' . bboss_current_action() );
 		}

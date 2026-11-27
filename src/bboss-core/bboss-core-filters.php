@@ -479,7 +479,7 @@ function bboss_core_login_redirect( $redirect_to, $redirect_to_raw, $user ) {
 		return $redirect_to;
 	}
 
-	if ( false === strpos( wp_get_referer(), 'wp-login.php' ) && false === strpos( wp_get_referer(), 'activate' ) && empty( $_REQUEST['nr'] ) ) {
+	if ( false === strpos( wp_get_referer(), 'wp-login.php' ) && false === strpos( wp_get_referer(), 'activate' ) && empty( $_REQUEST['nr'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; only chooses the redirect target.
 		return wp_get_referer();
 	}
 
@@ -721,7 +721,7 @@ function bboss_core_activation_signup_user_notification( $user, $user_email, $ke
 		// If the user is created from the WordPress Add User screen, don't send BuddyPress signup notifications.
 		if ( in_array( get_current_screen()->id, array( 'user', 'user-network' ) ) ) {
 			// If the Super Admin want to skip confirmation email.
-			if ( isset( $_POST['noconfirmation'] ) && is_super_admin() ) {
+			if ( isset( $_POST['noconfirmation'] ) && is_super_admin() ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- flag only; nonce checked by WordPress core on the Add User screen.
 				return false;
 
 				// WordPress will manage the signup process.
@@ -2464,15 +2464,15 @@ function bboss_validate_custom_profile_group_avatar_ajax_reuqest() {
 	// successful crop save.
 	$request_actions     = array( 'bp_cover_image_upload', 'bb_admin_cover_image_set' );
 
-	if ( ! isset( $_POST['action'] ) || ( isset( $_POST['action'] ) && ! in_array( sanitize_text_field( $_POST['action'] ), $request_actions, true ) ) ) {
+	if ( ! isset( $_POST['action'] ) || ( isset( $_POST['action'] ) && ! in_array( sanitize_text_field( $_POST['action'] ), $request_actions, true ) ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- read-only check; the admitted actions are nonce-checked in bp_attachments_cover_image_ajax_upload() and bb_admin_cover_crop_validate_request().
 		return false;
 	}
 
-	if ( ! isset( $_POST['bp_params'] ) || empty( $_POST['bp_params'] ) ) {
+	if ( ! isset( $_POST['bp_params'] ) || empty( $_POST['bp_params'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- read-only check; the admitted actions are nonce-checked in bp_attachments_cover_image_ajax_upload() and bb_admin_cover_crop_validate_request().
 		return false;
 	}
 
-	$bp_params = $_POST['bp_params'];
+	$bp_params = $_POST['bp_params']; // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- read-only check; the admitted actions are nonce-checked in bp_attachments_cover_image_ajax_upload() and bb_admin_cover_crop_validate_request(); only object (compared with fixed strings) and item_id (compared with 0) are read.
 
 	if ( ! is_admin() || ! isset( $bp_params['object'] ) || ! isset( $bp_params['item_id'] ) ) {
 		return false;
@@ -2519,7 +2519,7 @@ function bboss_default_custom_profile_group_cover_image_upload_dir( $upload_dir 
 		return $upload_dir;
 	}
 
-	$object = sanitize_text_field( wp_unslash( $_POST['bp_params']['object'] ) );
+	$object = sanitize_text_field( wp_unslash( $_POST['bp_params']['object'] ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotValidated, WordPress.Security.NonceVerification.Missing -- isset() and the request are checked in bb_validate_custom_profile_group_avatar_ajax_reuqest().
 
 	// Set the subdir.
 	$subdir = '/members/0/cover-image';
@@ -2585,7 +2585,7 @@ function bboss_attachments_get_profile_group_attachment_dir( $cover_dir, $object
 		return $cover_dir;
 	}
 
-	$object = sanitize_text_field( wp_unslash( $_POST['bp_params']['object'] ) );
+	$object = sanitize_text_field( wp_unslash( $_POST['bp_params']['object'] ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotValidated, WordPress.Security.NonceVerification.Missing -- isset() and the request are checked in bb_validate_custom_profile_group_avatar_ajax_reuqest().
 
 	$upload_dir = bboss_attachments_uploads_dir_get();
 
@@ -2667,19 +2667,19 @@ add_filter( 'bb_attachments_get_attachment_sub_dir', 'bb_attachments_get_profile
  * @param array  $avatar_data Array of parameters passed to the avatar handler.
  */
 function bboss_save_profile_group_options_on_upload_custom_avatar( $item_id, $type, $avatar_data = array() ) {
-	$item_id   = ! empty( $_POST['item_id'] ) ? (int) $_POST['item_id'] : '';
-	$item_type = ! empty( $_POST['item_type'] ) ? sanitize_text_field( wp_unslash( $_POST['item_type'] ) ) : null;
+	$item_id   = ! empty( $_POST['item_id'] ) ? (int) $_POST['item_id'] : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked in bp_avatar_ajax_set() and the avatar screens that fire this hook.
+	$item_type = ! empty( $_POST['item_type'] ) ? sanitize_text_field( wp_unslash( $_POST['item_type'] ) ) : null; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked in bp_avatar_ajax_set() and the avatar screens that fire this hook.
 
 	if ( is_admin() && empty( $item_id ) && 'default' === $item_type ) {
 
 		$avatar = isset( $avatar_data['avatar'] ) ? $avatar_data['avatar'] : '';
 
 		if ( ! empty( $avatar ) ) {
-			if ( 'user' === sanitize_text_field( wp_unslash( $_POST['object'] ) ) ) {
+			if ( 'user' === ( isset( $_POST['object'] ) ? sanitize_text_field( wp_unslash( $_POST['object'] ) ) : '' ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked in bp_avatar_ajax_set() and the avatar screens that fire this hook.
 				bboss_update_option( 'bp-profile-avatar-type', 'BuddyBoss' );
 				bboss_update_option( 'bp-default-profile-avatar-type', 'custom' );
 				bboss_update_option( 'bp-default-custom-profile-avatar', $avatar );
-			} elseif ( 'group' === sanitize_text_field( wp_unslash( $_POST['object'] ) ) ) {
+			} elseif ( 'group' === ( isset( $_POST['object'] ) ? sanitize_text_field( wp_unslash( $_POST['object'] ) ) : '' ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked in bp_avatar_ajax_set() and the avatar screens that fire this hook.
 				bboss_update_option( 'bp-disable-group-avatar-uploads', '' );
 				bboss_update_option( 'bp-default-group-avatar-type', 'custom' );
 				bboss_update_option( 'bp-default-custom-group-avatar', $avatar );
@@ -2770,7 +2770,7 @@ function bboss_save_profile_group_cover_options_on_upload_custom_cover( $item_id
 
 	if ( $is_validate && ! empty( $cover_url ) ) {
 
-		$object = sanitize_text_field( wp_unslash( $_POST['bp_params']['object'] ) );
+		$object = sanitize_text_field( wp_unslash( $_POST['bp_params']['object'] ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotValidated, WordPress.Security.NonceVerification.Missing -- isset() and the request are checked in bb_validate_custom_profile_group_avatar_ajax_reuqest().
 
 		if ( 'user' === $object ) {
 			bboss_update_option( 'bp-disable-cover-image-uploads', '' );
@@ -2808,15 +2808,15 @@ add_action( 'groups_cover_image_uploaded', 'bb_save_profile_group_cover_options_
  * @param int $item_id Inform about the item id the cover photo was deleted for.
  */
 function bboss_delete_profile_group_cover_images_url( $item_id ) {
-	$item_id   = ! empty( $_POST['item_id'] ) ? (int) $_POST['item_id'] : '';
-	$item_type = ! empty( $_POST['item_type'] ) ? sanitize_text_field( wp_unslash( $_POST['item_type'] ) ) : null;
+	$item_id   = ! empty( $_POST['item_id'] ) ? (int) $_POST['item_id'] : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked in bp_attachments_cover_image_ajax_delete(), which fires this hook.
+	$item_type = ! empty( $_POST['item_type'] ) ? sanitize_text_field( wp_unslash( $_POST['item_type'] ) ) : null; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked in bp_attachments_cover_image_ajax_delete(), which fires this hook.
 
 	if ( is_admin() && empty( $item_id ) && 'default' === $item_type ) {
 
-		if ( 'user' === sanitize_text_field( wp_unslash( $_POST['object'] ) ) ) {
+		if ( 'user' === ( isset( $_POST['object'] ) ? sanitize_text_field( wp_unslash( $_POST['object'] ) ) : '' ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked in bp_attachments_cover_image_ajax_delete(), which fires this hook.
 			bboss_update_option( 'bp-default-profile-cover-type', 'buddyboss' );
 			bboss_update_option( 'bp-default-custom-profile-cover', '' );
-		} elseif ( 'group' === sanitize_text_field( wp_unslash( $_POST['object'] ) ) ) {
+		} elseif ( 'group' === ( isset( $_POST['object'] ) ? sanitize_text_field( wp_unslash( $_POST['object'] ) ) : '' ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked in bp_attachments_cover_image_ajax_delete(), which fires this hook.
 			bboss_update_option( 'bp-default-group-cover-type', 'buddyboss' );
 			bboss_update_option( 'bp-default-custom-group-cover', '' );
 		}

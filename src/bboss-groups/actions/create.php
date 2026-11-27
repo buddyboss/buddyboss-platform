@@ -59,7 +59,7 @@ function bboss_groups_action_create_group() {
 
 	// Fetch the currently completed steps variable.
 	if ( isset( $_COOKIE['bp_completed_create_steps'] ) && ! isset( $reset_steps ) ) {
-		$completed_create_steps             = json_decode( base64_decode( wp_unslash( $_COOKIE['bp_completed_create_steps'] ) ) ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_decode
+		$completed_create_steps             = json_decode( base64_decode( wp_unslash( $_COOKIE['bp_completed_create_steps'] ) ) ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_decode, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- decoded here, then every value is sanitised with map_deep() and sanitize_text_field() on the next line.
 		$bp->groups->completed_create_steps = is_array( $completed_create_steps ) ? map_deep( $completed_create_steps, 'sanitize_text_field' ) : array();
 	}
 
@@ -81,7 +81,7 @@ function bboss_groups_action_create_group() {
 		check_admin_referer( 'groups_create_save_' . bboss_get_groups_current_create_step() );
 
 		if ( 'group-details' == bboss_get_groups_current_create_step() ) {
-			if ( empty( $_POST['group-name'] ) || ! strlen( trim( $_POST['group-name'] ) ) ) {
+			if ( empty( $_POST['group-name'] ) || ! strlen( trim( $_POST['group-name'] ) ) ) { // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- only checked for being empty.
 				bboss_core_add_message( __( 'Please fill in all of the required fields', 'buddyboss' ), 'error' );
 				bboss_core_redirect( trailingslashit( bboss_get_groups_directory_permalink() . 'create/step/' . bboss_get_groups_current_create_step() ) );
 			}
@@ -91,8 +91,8 @@ function bboss_groups_action_create_group() {
 			if ( ! $bp->groups->new_group_id = bboss_groups_create_group(
 				array(
 					'group_id'     => $new_group_id,
-					'name'         => $_POST['group-name'],
-					'description'  => $_POST['group-desc'],
+					'name'         => $_POST['group-name'], // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- group name, filtered by wp_filter_kses() on groups_group_name_before_save, which expects slashed data.
+					'description'  => $_POST['group-desc'], // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- group description, filtered by bp_groups_filter_kses() on groups_group_description_before_save.
 					'slug'         => bboss_groups_check_slug( sanitize_title( wp_unslash( $_POST['group-name'] ) ) ),
 					'date_created' => bboss_core_current_time(),
 					'status'       => 'public',
@@ -111,13 +111,13 @@ function bboss_groups_action_create_group() {
 				$group_enable_forum = 0;
 			}
 
-			if ( 'private' == $_POST['group-status'] ) {
+			if ( isset( $_POST['group-status'] ) && 'private' == $_POST['group-status'] ) {
 				$group_status = 'private';
-			} elseif ( 'hidden' == $_POST['group-status'] ) {
+			} elseif ( isset( $_POST['group-status'] ) && 'hidden' == $_POST['group-status'] ) {
 				$group_status = 'hidden';
 			}
 
-			$parent_id = ( isset( $_POST['bp-groups-parent'] ) ) ? $_POST['bp-groups-parent'] : 0;
+			$parent_id = ( isset( $_POST['bp-groups-parent'] ) ) ? sanitize_text_field( wp_unslash( $_POST['bp-groups-parent'] ) ) : 0;
 
 			if ( ! $bp->groups->new_group_id = bboss_groups_create_group(
 				array(
@@ -133,7 +133,7 @@ function bboss_groups_action_create_group() {
 
 			// Save group types.
 			if ( ! empty( $_POST['group-types'] ) ) {
-				bboss_groups_set_group_type( $bp->groups->new_group_id, $_POST['group-types'] );
+				bboss_groups_set_group_type( $bp->groups->new_group_id, map_deep( wp_unslash( $_POST['group-types'] ), 'sanitize_text_field' ) );
 			}
 
 			/**
@@ -146,7 +146,7 @@ function bboss_groups_action_create_group() {
 			 *                     'mods', and 'admins'.
 			 */
 			$allowed_invite_status = bboss_groups_get_settings_status( 'invite' );
-			$invite_status         = ! empty( $_POST['group-invite-status'] ) && in_array( $_POST['group-invite-status'], (array) $allowed_invite_status ) ? $_POST['group-invite-status'] : bboss_groups_settings_default_fallback( 'invite_status', current( $allowed_invite_status ) );
+			$invite_status         = ! empty( $_POST['group-invite-status'] ) && in_array( $_POST['group-invite-status'], (array) $allowed_invite_status ) ? sanitize_text_field( wp_unslash( $_POST['group-invite-status'] ) ) : bboss_groups_settings_default_fallback( 'invite_status', current( $allowed_invite_status ) );
 
 			bboss_groups_update_groupmeta( $bp->groups->new_group_id, 'invite_status', $invite_status );
 
@@ -160,7 +160,7 @@ function bboss_groups_action_create_group() {
 			 *                     'mods', and 'admins'.
 			 */
 			$allowed_activity_feed_status = bboss_groups_get_settings_status( 'activity_feed' );
-			$activity_feed_status         = ! empty( $_POST['group-activity-feed-status'] ) && in_array( $_POST['group-activity-feed-status'], (array) $allowed_activity_feed_status ) ? $_POST['group-activity-feed-status'] : bboss_groups_settings_default_fallback( 'activity_feed_status', current( $allowed_activity_feed_status ) );
+			$activity_feed_status         = ! empty( $_POST['group-activity-feed-status'] ) && in_array( $_POST['group-activity-feed-status'], (array) $allowed_activity_feed_status ) ? sanitize_text_field( wp_unslash( $_POST['group-activity-feed-status'] ) ) : bboss_groups_settings_default_fallback( 'activity_feed_status', current( $allowed_activity_feed_status ) );
 
 			bboss_groups_update_groupmeta( $bp->groups->new_group_id, 'activity_feed_status', $activity_feed_status );
 
@@ -174,7 +174,7 @@ function bboss_groups_action_create_group() {
 			 *                     'mods', and 'admins'.
 			 */
 			$allowed_media_status = bboss_groups_get_settings_status( 'media' );
-			$media_status         = ! empty( $_POST['group-media-status'] ) && in_array( $_POST['group-media-status'], (array) $allowed_media_status ) ? $_POST['group-media-status'] : bboss_groups_settings_default_fallback( 'media_status', current( $allowed_media_status ) );
+			$media_status         = ! empty( $_POST['group-media-status'] ) && in_array( $_POST['group-media-status'], (array) $allowed_media_status ) ? sanitize_text_field( wp_unslash( $_POST['group-media-status'] ) ) : bboss_groups_settings_default_fallback( 'media_status', current( $allowed_media_status ) );
 
 			bboss_groups_update_groupmeta( $bp->groups->new_group_id, 'media_status', $media_status );
 
@@ -188,7 +188,7 @@ function bboss_groups_action_create_group() {
 			 *                     'mods', and 'admins'.
 			 */
 			$allowed_document_status = bboss_groups_get_settings_status( 'document' );
-			$document_status         = ! empty( $_POST['group-document-status'] ) && in_array( $_POST['group-document-status'], (array) $allowed_document_status ) ? $_POST['group-document-status'] : bboss_groups_settings_default_fallback( 'document_status', current( $allowed_document_status ) );
+			$document_status         = ! empty( $_POST['group-document-status'] ) && in_array( $_POST['group-document-status'], (array) $allowed_document_status ) ? sanitize_text_field( wp_unslash( $_POST['group-document-status'] ) ) : bboss_groups_settings_default_fallback( 'document_status', current( $allowed_document_status ) );
 
 			bboss_groups_update_groupmeta( $bp->groups->new_group_id, 'document_status', $document_status );
 
@@ -217,12 +217,12 @@ function bboss_groups_action_create_group() {
 			 *                     'mods', and 'admins'.
 			 */
 			$allowed_album_status = bboss_groups_get_settings_status( 'album' );
-			$album_status         = ! empty( $_POST['group-album-status'] ) && in_array( $_POST['group-album-status'], (array) $allowed_album_status ) ? $_POST['group-album-status'] : bboss_groups_settings_default_fallback( 'album_status', current( $allowed_album_status ) );
+			$album_status         = ! empty( $_POST['group-album-status'] ) && in_array( $_POST['group-album-status'], (array) $allowed_album_status ) ? sanitize_text_field( wp_unslash( $_POST['group-album-status'] ) ) : bboss_groups_settings_default_fallback( 'album_status', current( $allowed_album_status ) );
 
 			bboss_groups_update_groupmeta( $bp->groups->new_group_id, 'album_status', $album_status );
 
 			$allowed_message_status = bboss_groups_get_settings_status( 'message' );
-			$message_status         = isset( $_POST['group-message-status'] ) && in_array( $_POST['group-message-status'], (array) $allowed_message_status ) ? $_POST['group-message-status'] : bboss_groups_settings_default_fallback( 'message_status', current( $allowed_message_status ) );
+			$message_status         = isset( $_POST['group-message-status'] ) && in_array( $_POST['group-message-status'], (array) $allowed_message_status ) ? sanitize_text_field( wp_unslash( $_POST['group-message-status'] ) ) : bboss_groups_settings_default_fallback( 'message_status', current( $allowed_message_status ) );
 
 			bboss_groups_update_groupmeta( $bp->groups->new_group_id, 'message_status', $message_status );
 
@@ -230,7 +230,7 @@ function bboss_groups_action_create_group() {
 
 		if ( 'group-invites' === bboss_get_groups_current_create_step() ) {
 			if ( ! empty( $_POST['friends'] ) ) {
-				foreach ( (array) $_POST['friends'] as $friend ) {
+				foreach ( wp_parse_id_list( wp_unslash( $_POST['friends'] ) ) as $friend ) {
 					bboss_groups_invite_user(
 						array(
 							'user_id'  => (int) $friend,
@@ -369,11 +369,11 @@ function bboss_groups_action_create_group() {
 				'object'        => 'group',
 				'avatar_dir'    => 'group-avatars',
 				'item_id'       => $bp->groups->current_group->id,
-				'original_file' => $_POST['image_src'],
-				'crop_x'        => $_POST['x'],
-				'crop_y'        => $_POST['y'],
-				'crop_w'        => $_POST['w'],
-				'crop_h'        => $_POST['h'],
+				'original_file' => $_POST['image_src'], // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotValidated, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- BP_Attachment_Avatar::crop() returns false when it is empty and uses only basename() of it.
+				'crop_x'        => $_POST['x'], // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotValidated, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- cast to int in BP_Attachment::crop(); an empty width or height falls back to the default in BP_Attachment_Avatar::crop().
+				'crop_y'        => $_POST['y'], // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotValidated, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- cast to int in BP_Attachment::crop(); an empty width or height falls back to the default in BP_Attachment_Avatar::crop().
+				'crop_w'        => $_POST['w'], // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotValidated, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- cast to int in BP_Attachment::crop(); an empty width or height falls back to the default in BP_Attachment_Avatar::crop().
+				'crop_h'        => $_POST['h'], // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotValidated, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- cast to int in BP_Attachment::crop(); an empty width or height falls back to the default in BP_Attachment_Avatar::crop().
 			);
 
 			if ( ! bboss_core_avatar_handle_crop( $args ) ) {

@@ -591,7 +591,7 @@ function bboss_nouveau_ajax_media_delete() {
 
 	$response = array();
 	if ( $activity_id ) {
-		$response = bboss_media_get_activity_media( $_POST['activity_id'] );
+		$response = bboss_media_get_activity_media( isset( $_POST['activity_id'] ) ? (int) $_POST['activity_id'] : 0 );
 
 		// A comment kept after the delete shows its grid with the comment
 		// thumbnail limit, so return the markup the comment template renders.
@@ -961,7 +961,7 @@ function bboss_nouveau_ajax_media_album_save() {
 		wp_send_json_error( $response );
 	}
 
-	$title = sanitize_text_field( wp_unslash( $_POST['title'] ) );
+	$title = isset( $_POST['title'] ) ? sanitize_text_field( wp_unslash( $_POST['title'] ) ) : '';
 
 	if ( empty( $title ) ) {
 		$response['feedback'] = sprintf(
@@ -1479,7 +1479,7 @@ function bboss_nouveau_ajax_media_description_save() {
 	}
 
 	$attachment_id = filter_input( INPUT_POST, 'attachment_id', FILTER_VALIDATE_INT );
-	$description   = sanitize_textarea_field( wp_unslash( $_POST['description'] ) );
+	$description   = isset( $_POST['description'] ) ? sanitize_textarea_field( wp_unslash( $_POST['description'] ) ) : '';
 
 	// check description empty.
 	if ( empty( $description ) ) {

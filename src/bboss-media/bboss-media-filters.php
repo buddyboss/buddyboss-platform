@@ -338,10 +338,10 @@ function bboss_media_update_activity_media_meta( $content, $user_id, $activity_i
 			! empty( $activity_id ) &&
 			(
 				(
-					$bp_activity_edit && isset( $_POST['edit'] )
+					$bp_activity_edit && isset( $_POST['edit'] ) // phpcs:ignore WordPress.Security.NonceVerification.Missing -- hook callback on bp_activity_posted_update / bp_activity_comment_posted, not a request handler; nonce checked by the handler that posts the activity (bp_nouveau_ajax_post_update(), bp_nouveau_ajax_new_activity_comment()).
 				) ||
 				(
-					$bb_activity_comment_edit && isset( $_POST['edit_comment'] )
+					$bb_activity_comment_edit && isset( $_POST['edit_comment'] ) // phpcs:ignore WordPress.Security.NonceVerification.Missing -- hook callback on bp_activity_posted_update / bp_activity_comment_posted, not a request handler; nonce checked by the handler that posts the activity (bp_nouveau_ajax_post_update(), bp_nouveau_ajax_new_activity_comment()).
 				)
 			)
 		) {
@@ -387,7 +387,7 @@ function bboss_media_update_activity_media_meta( $content, $user_id, $activity_i
 	remove_action( 'bp_activity_comment_posted_notification_skipped', 'bp_media_activity_comments_update_media_meta', 10, 3 );
 	remove_action( 'bp_activity_posted_update', 'bb_activity_at_name_send_emails', 12, 3 );
 
-	$media_ids = bboss_media_add_handler( $medias, $_POST['privacy'] );
+	$media_ids = bboss_media_add_handler( $medias, isset( $_POST['privacy'] ) ? $_POST['privacy'] : 'public' ); // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash -- hook callback on bp_activity_posted_update / bp_activity_comment_posted, not a request handler; nonce checked by the handler that posts the activity (bp_nouveau_ajax_post_update(), bp_nouveau_ajax_new_activity_comment()). bp_media_add_handler() only accepts a key of bp_media_get_visibility_levels() and falls back to public.
 
 	add_action( 'bp_activity_posted_update', 'bp_media_update_activity_media_meta', 10, 3 );
 	add_action( 'bp_groups_posted_update', 'bp_media_groups_activity_update_media_meta', 10, 4 );
@@ -399,7 +399,7 @@ function bboss_media_update_activity_media_meta( $content, $user_id, $activity_i
 	if ( ! empty( $activity_id ) ) {
 
 		// Delete media if not exists in current media ids.
-		if ( isset( $_POST['edit'] ) || isset( $_POST['edit_comment'] ) ) {
+		if ( isset( $_POST['edit'] ) || isset( $_POST['edit_comment'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- hook callback on bp_activity_posted_update / bp_activity_comment_posted, not a request handler; nonce checked by the handler that posts the activity (bp_nouveau_ajax_post_update(), bp_nouveau_ajax_new_activity_comment()).
 			$old_media_ids = bboss_activity_get_meta( $activity_id, 'bp_media_ids', true );
 			$old_media_ids = explode( ',', $old_media_ids );
 
@@ -632,13 +632,13 @@ if ( function_exists( 'bboss_media_update_media_privacy' ) && ! function_exists(
  */
 function bboss_media_forums_new_post_media_save( $post_id ) {
 
-	if ( ! empty( $_POST['bbp_media'] ) ) {
+	if ( ! empty( $_POST['bbp_media'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- hook callback on bbp_new_topic / bbp_new_reply / edit_post, not a request handler; nonce checked by the handler that saves the post (bbp_new_topic_handler(), bbp_new_reply_handler(), bbp_edit_topic_handler(), bbp_edit_reply_handler()).
 
 		// save activity id if it is saved in forums and enabled in platform settings.
 		$main_activity_id = get_post_meta( $post_id, '_bbp_activity_id', true );
 
 		// save media.
-		$medias = json_decode( wp_unslash( $_POST['bbp_media'] ), true ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- JSON is decoded first and every value is sanitized on the next line.
+		$medias = json_decode( wp_unslash( $_POST['bbp_media'] ), true ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.NonceVerification.Missing -- JSON is decoded first and every value is sanitized on the next line. Hook callback on bbp_new_topic / bbp_new_reply / edit_post, not a request handler; nonce checked by the handler that saves the post (bbp_new_topic_handler(), bbp_new_reply_handler(), bbp_edit_topic_handler(), bbp_edit_reply_handler()).
 		$medias = ! empty( $medias ) && is_array( $medias ) ? map_deep( $medias, 'sanitize_text_field' ) : array();
 
 		if ( ! empty( $medias ) ) {
@@ -854,22 +854,22 @@ if ( function_exists( 'bboss_media_forums_embed_attachments' ) && ! function_exi
  * @param $message
  */
 function bboss_media_attach_media_to_message( &$message ) {
-	$group_id = ! empty( $_POST['group'] ) ? (int) sanitize_text_field( wp_unslash( $_POST['group'] ) ) : 0;
+	$group_id = ! empty( $_POST['group'] ) ? (int) sanitize_text_field( wp_unslash( $_POST['group'] ) ) : 0; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- hook callback on messages_message_sent, not a request handler; nonce checked in bp_nouveau_ajax_messages_send_message() and bp_nouveau_ajax_messages_send_reply().
 
 	if (
 		bboss_user_has_access_upload_media( $group_id, $message->sender_id, 0, $message->thread_id, 'message' ) &&
 		! empty( $message->id ) &&
 		(
-			! empty( $_POST['media'] ) ||
-			! empty( $_POST['bp_media_ids'] )
+			! empty( $_POST['media'] ) || // phpcs:ignore WordPress.Security.NonceVerification.Missing -- hook callback on messages_message_sent, not a request handler; nonce checked in bp_nouveau_ajax_messages_send_message() and bp_nouveau_ajax_messages_send_reply().
+			! empty( $_POST['bp_media_ids'] ) // phpcs:ignore WordPress.Security.NonceVerification.Missing -- hook callback on messages_message_sent, not a request handler; nonce checked in bp_nouveau_ajax_messages_send_message() and bp_nouveau_ajax_messages_send_reply().
 		)
 	) {
 		$media_attachments = array();
 
-		if ( ! empty( $_POST['media'] ) ) {
-			$media_attachments = $_POST['media'];
-		} else if ( ! empty( $_POST['bp_media_ids'] ) ) {
-			$media_attachments = $_POST['bp_media_ids'];
+		if ( ! empty( $_POST['media'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- hook callback on messages_message_sent, not a request handler; nonce checked in bp_nouveau_ajax_messages_send_message() and bp_nouveau_ajax_messages_send_reply().
+			$media_attachments = $_POST['media']; // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash -- hook callback on messages_message_sent, not a request handler; nonce checked in bp_nouveau_ajax_messages_send_message() and bp_nouveau_ajax_messages_send_reply(). Only each attachment id is read, and only as the object id for get_post_meta(), which runs it through absint().
+		} else if ( ! empty( $_POST['bp_media_ids'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- hook callback on messages_message_sent, not a request handler; nonce checked in bp_nouveau_ajax_messages_send_message() and bp_nouveau_ajax_messages_send_reply().
+			$media_attachments = $_POST['bp_media_ids']; // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash -- hook callback on messages_message_sent, not a request handler; nonce checked in bp_nouveau_ajax_messages_send_message() and bp_nouveau_ajax_messages_send_reply(). Only each attachment id is read, and only as the object id for get_post_meta(), which runs it through absint().
 		}
 
 		$media_ids = array();
@@ -1273,7 +1273,7 @@ function bboss_media_activation_notice() {
 	global $wpdb;
 	global $bp;
 
-	if ( ! empty( $_GET['page'] ) && 'bp-media-import' === $_GET['page'] ) {
+	if ( ! empty( $_GET['page'] ) && 'bp-media-import' === $_GET['page'] ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; only checks which admin page is shown.
 		return;
 	}
 
@@ -1578,7 +1578,7 @@ if ( function_exists( 'bboss_media_add_admin_repair_items' ) && ! function_exist
  */
 function bboss_media_message_privacy_repair() {
 	global $wpdb;
-	$offset = isset( $_POST['offset'] ) ? (int) $_POST['offset'] : 0;
+	$offset = isset( $_POST['offset'] ) ? (int) $_POST['offset'] : 0; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked in bp_admin_repair_tools_wrapper_function(), which calls this repair callback.
 	$bp     = bboss();
 
 	// Table name from $bp->media; OFFSET bound as %d.
@@ -1633,7 +1633,7 @@ if ( function_exists( 'bboss_media_message_privacy_repair' ) && ! function_exist
  */
 function bboss_media_admin_repair_media() {
 	global $wpdb;
-	$offset = isset( $_POST['offset'] ) ? (int) $_POST['offset'] : 0;
+	$offset = isset( $_POST['offset'] ) ? (int) $_POST['offset'] : 0; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked in bp_admin_repair_tools_wrapper_function(), which calls this repair callback.
 	$bp     = bboss();
 
 	// Table name from $bp->media; OFFSET bound as %d.
@@ -1709,7 +1709,7 @@ if ( function_exists( 'bboss_media_admin_repair_media' ) && ! function_exists( '
  */
 function bboss_media_forum_privacy_repair() {
 	global $wpdb;
-	$offset = isset( $_POST['offset'] ) ? (int) $_POST['offset'] : 0;
+	$offset = isset( $_POST['offset'] ) ? (int) $_POST['offset'] : 0; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked in bp_admin_repair_tools_wrapper_function(), which calls this repair callback.
 	$bp     = bboss();
 
 	// Table names from $wpdb; OFFSET bound as %d.
@@ -3074,9 +3074,9 @@ add_filter( 'redirect_canonical', 'bb_media_remove_specific_trailing_slash', 999
  * @return mixed
  */
 function bboss_messages_media_save( $attachment ) {
-	$thread_id            = ! empty( $_POST['thread_id'] ) ? (int) sanitize_text_field( wp_unslash( $_POST['thread_id'] ) ) : 0;
-	$group_id             = ! empty( $_POST['group_id'] ) ? (int) sanitize_text_field( wp_unslash( $_POST['group_id'] ) ) : 0;
-	$component            = ! empty( $_POST['component'] ) ? sanitize_text_field( wp_unslash( $_POST['component'] ) ) : '';
+	$thread_id            = ! empty( $_POST['thread_id'] ) ? (int) sanitize_text_field( wp_unslash( $_POST['thread_id'] ) ) : 0; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- hook callback on bb_media_upload; nonce checked in its AJAX caller bp_nouveau_ajax_media_upload().
+	$group_id             = ! empty( $_POST['group_id'] ) ? (int) sanitize_text_field( wp_unslash( $_POST['group_id'] ) ) : 0; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- hook callback on bb_media_upload; nonce checked in its AJAX caller bp_nouveau_ajax_media_upload().
+	$component            = ! empty( $_POST['component'] ) ? sanitize_text_field( wp_unslash( $_POST['component'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- hook callback on bb_media_upload; nonce checked in its AJAX caller bp_nouveau_ajax_media_upload().
 	$is_message_component = ( bboss_is_group_messages() || bboss_is_messages_component() || ( ! empty( $component ) && 'messages' === $component ) );
 
 	if ( empty( $group_id ) && bboss_is_group_messages() ) {
@@ -3108,8 +3108,8 @@ function bboss_messages_media_save( $attachment ) {
 			update_post_meta( $attachment->ID, 'bp_media_saved', 0 );
 
 			$thread_id = 0;
-			if ( ! empty( $_POST['thread_id'] ) ) {
-				$thread_id = absint( $_POST['thread_id'] );
+			if ( ! empty( $_POST['thread_id'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- hook callback on bb_media_upload; nonce checked in its AJAX caller bp_nouveau_ajax_media_upload().
+				$thread_id = absint( $_POST['thread_id'] ); // phpcs:ignore WordPress.Security.NonceVerification.Missing -- hook callback on bb_media_upload; nonce checked in its AJAX caller bp_nouveau_ajax_media_upload().
 			}
 
 			// Message not actually sent.

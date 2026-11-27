@@ -20,7 +20,7 @@ function bboss_messages_action_bulk_delete() {
 		return false;
 	}
 
-	$thread_ids = $_POST['thread_ids'];
+	$thread_ids = $_POST['thread_ids']; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked below with check_admin_referer() before anything is deleted.
 
 	if ( ! $thread_ids || ! bboss_messages_check_thread_access( $thread_ids ) ) {
 		bboss_core_redirect( trailingslashit( bboss_displayed_user_domain() . bboss_get_messages_slug() . '/' . bboss_current_action() ) );

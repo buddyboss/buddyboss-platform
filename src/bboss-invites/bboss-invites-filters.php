@@ -74,7 +74,7 @@ function bboss_invites_add_invite_fields_after_wp_registration_fields() {
 	// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 	if ( bboss_is_active( 'invites' ) && isset( $_GET ) && isset( $_GET['bp-invites'] ) && 'accept-member-invitation' === $_GET['bp-invites'] && ! empty( $_GET['action'] ) && 'register' === $_GET['action'] ) {
 		$bp_invites = sanitize_text_field( wp_unslash( $_GET['bp-invites'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-		$inviter    = sanitize_text_field( wp_unslash( $_GET['inviter'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$inviter    = isset( $_GET['inviter'] ) ? sanitize_text_field( wp_unslash( $_GET['inviter'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
 		?>
 		<input type="hidden" name="bp-invites" value="<?php echo esc_attr( $bp_invites ); ?>">

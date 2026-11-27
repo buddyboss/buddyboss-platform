@@ -56,8 +56,8 @@ class BBoss_Nouveau_Nav_Customize_Control extends WP_Customize_Control {
 			$slug = array();
 			$type = 'group';
 
-			if ( isset( $_GET['url'] ) && ! empty( $_GET['url'] ) ) {
-				$parse_url = wp_parse_url( $_GET['url'] );
+			if ( isset( $_GET['url'] ) && ! empty( $_GET['url'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only; picks the group shown in the Customizer preview.
+				$parse_url = wp_parse_url( $_GET['url'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- read-only; only the group slug in the path is used, and BP_Groups_Group::get() runs it through sanitize_title().
 				$path_arr  = explode( '/', $parse_url['path'] );
 				if ( 'groups' === $path_arr[1] && '' !== $path_arr[2] ) {
 					$slug = array( $path_arr[2] );

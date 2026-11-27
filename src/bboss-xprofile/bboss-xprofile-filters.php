@@ -1704,7 +1704,7 @@ function bboss_xprofile_repeater_field_repair_callback() {
 	global $wpdb;
 	$bp = bboss();
 
-	$offset = isset( $_POST['offset'] ) ? (int) $_POST['offset'] : 0;
+	$offset = isset( $_POST['offset'] ) ? (int) $_POST['offset'] : 0; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked in bp_admin_repair_tools_wrapper_function().
 
 	// Table names from $bp->profile; OFFSET bound as %d.
 	$added_fields = $wpdb->get_results(
@@ -2008,9 +2008,9 @@ function bboss_profile_update_completion_user_progress( $user_id, $old_user_data
 	if ( empty( $user_id ) ) {
 		$user_id = get_current_user_id();
 	}
-	if ( defined( 'IS_PROFILE_PAGE' ) && IS_PROFILE_PAGE && isset( $_GET['newuseremail'] ) && $user_id ) {
+	if ( defined( 'IS_PROFILE_PAGE' ) && IS_PROFILE_PAGE && isset( $_GET['newuseremail'] ) && $user_id ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- the emailed hash in newuseremail is the token, compared with hash_equals() here, as WordPress core does on profile.php.
 		$new_email = get_user_meta( $user_id, '_new_email', true );
-		if ( $new_email && hash_equals( $new_email['hash'], $_GET['newuseremail'] ) ) {
+		if ( $new_email && hash_equals( $new_email['hash'], sanitize_text_field( wp_unslash( $_GET['newuseremail'] ) ) ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- the emailed hash in newuseremail is the token, compared with hash_equals() here, as WordPress core does on profile.php.
 			bboss_core_xprofile_update_profile_completion_user_progress();
 		}
 	}

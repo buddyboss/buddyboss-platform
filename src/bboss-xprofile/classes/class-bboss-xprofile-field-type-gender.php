@@ -111,8 +111,8 @@ class BBoss_XProfile_Field_Type_Gender extends BBoss_XProfile_Field_Type {
 		$options = $this->field_obj->get_children();
 		$html    = '<option value="">' . /* translators: no option picked in select box */ esc_html__( '----', 'buddyboss' ) . '</option>';
 
-		if ( empty( $original_option_values ) && ! empty( $_POST[ 'field_' . $this->field_obj->id ] ) ) {
-			$original_option_values = sanitize_text_field( wp_unslash( $_POST[ 'field_' . $this->field_obj->id ] ) );
+		if ( empty( $original_option_values ) && ! empty( $_POST[ 'field_' . $this->field_obj->id ] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- read-only: redisplays the submitted value after a failed save; nothing is changed.
+			$original_option_values = sanitize_text_field( wp_unslash( $_POST[ 'field_' . $this->field_obj->id ] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Missing -- read-only: redisplays the submitted value after a failed save; nothing is changed.
 		}
 
 		if ( isset( $this->field_obj->id) && ! empty( $this->field_obj->id ) ) {
@@ -128,9 +128,9 @@ class BBoss_XProfile_Field_Type_Gender extends BBoss_XProfile_Field_Type {
 			// Check for updated posted values, but errors preventing them from
 			// being saved first time.
 			foreach ( $option_values as $i => $option_value ) {
-				if ( isset( $_POST[ 'field_' . $this->field_obj->id ] ) && $_POST[ 'field_' . $this->field_obj->id ] != $option_value ) {
-					if ( ! empty( $_POST[ 'field_' . $this->field_obj->id ] ) ) {
-						$option_values[ $i ] = sanitize_text_field( wp_unslash( $_POST[ 'field_' . $this->field_obj->id ] ) );
+				if ( isset( $_POST[ 'field_' . $this->field_obj->id ] ) && $_POST[ 'field_' . $this->field_obj->id ] != $option_value ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- read-only: redisplays the submitted value after a failed save; nothing is changed.
+					if ( ! empty( $_POST[ 'field_' . $this->field_obj->id ] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- read-only: redisplays the submitted value after a failed save; nothing is changed.
+						$option_values[ $i ] = sanitize_text_field( wp_unslash( $_POST[ 'field_' . $this->field_obj->id ] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Missing -- read-only: redisplays the submitted value after a failed save; nothing is changed.
 					}
 				}
 			}
@@ -289,13 +289,13 @@ class BBoss_XProfile_Field_Type_Gender extends BBoss_XProfile_Field_Type {
 					$options = array();
 					$i       = 1;
 
-					while ( isset( $_POST[ $type . '_option' ][ $i ] ) ) {
+					while ( isset( $_POST[ $type . '_option' ][ $i ] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- read-only: rebuilds the options of the submitted field form for redisplay; nothing is changed.
 
 						// Multiselectbox and checkboxes support MULTIPLE default options; all other core types support only ONE.
-						if ( $current_type_obj->supports_options && ! $current_type_obj->supports_multiple_defaults && isset( $_POST[ "isDefault_{$type}_option" ][ $i ] ) && (int) $_POST[ "isDefault_{$type}_option" ] === $i ) {
+						if ( $current_type_obj->supports_options && ! $current_type_obj->supports_multiple_defaults && isset( $_POST[ "isDefault_{$type}_option" ][ $i ] ) && (int) $_POST[ "isDefault_{$type}_option" ] === $i ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- read-only: rebuilds the options of the submitted field form for redisplay; nothing is changed.
 							$is_default_option = true;
-						} elseif ( isset( $_POST[ "isDefault_{$type}_option" ][ $i ] ) ) {
-							$is_default_option = (bool) $_POST[ "isDefault_{$type}_option" ][ $i ];
+						} elseif ( isset( $_POST[ "isDefault_{$type}_option" ][ $i ] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- read-only: rebuilds the options of the submitted field form for redisplay; nothing is changed.
+							$is_default_option = (bool) $_POST[ "isDefault_{$type}_option" ][ $i ]; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- read-only: rebuilds the options of the submitted field form for redisplay; nothing is changed.
 						} else {
 							$is_default_option = false;
 						}
@@ -304,7 +304,7 @@ class BBoss_XProfile_Field_Type_Gender extends BBoss_XProfile_Field_Type {
 						$options[] = (object) array(
 							'id'                => -1,
 							'is_default_option' => $is_default_option,
-							'name'              => sanitize_text_field( stripslashes( $_POST[ $type . '_option' ][ $i ] ) ),
+							'name'              => sanitize_text_field( wp_unslash( $_POST[ $type . '_option' ][ $i ] ) ), // phpcs:ignore WordPress.Security.NonceVerification.Missing -- read-only: rebuilds the options of the submitted field form for redisplay; nothing is changed.
 						);
 
 						++$i;

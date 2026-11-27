@@ -435,9 +435,9 @@ function bboss_core_activation_notice() {
 
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only URL inspection to suppress the "Repair" link when the user is already on the Pages panel.
 		$on_pages_panel = isset( $_GET['page'], $_GET['tab'], $_GET['panel'] )
-			&& 'bb-settings' === $_GET['page']
-			&& 'appearance' === $_GET['tab']
-			&& 'pages' === $_GET['panel'];
+			&& 'bb-settings' === $_GET['page'] // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only URL inspection; nothing is changed.
+			&& 'appearance' === $_GET['tab'] // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only URL inspection; nothing is changed.
+			&& 'pages' === $_GET['panel']; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only URL inspection; nothing is changed.
 
 		if ( $on_pages_panel ) {
 			$notice = sprintf(
@@ -501,9 +501,9 @@ function bboss_core_activation_notice() {
 
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only URL inspection to suppress the "Repair" link when the user is already on the Pages panel.
 		$on_pages_panel = isset( $_GET['page'], $_GET['tab'], $_GET['panel'] )
-			&& 'bb-settings' === $_GET['page']
-			&& 'appearance' === $_GET['tab']
-			&& 'pages' === $_GET['panel'];
+			&& 'bb-settings' === $_GET['page'] // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only URL inspection; nothing is changed.
+			&& 'appearance' === $_GET['tab'] // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only URL inspection; nothing is changed.
+			&& 'pages' === $_GET['panel']; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only URL inspection; nothing is changed.
 
 		if ( $on_pages_panel ) {
 			$notice = sprintf(
@@ -571,7 +571,7 @@ function bboss_do_activation_redirect() {
 	delete_transient( '_bp_activation_redirect' );
 
 	// Bail if activating from network, or bulk.
-	if ( isset( $_GET['activate-multi'] ) ) {
+	if ( isset( $_GET['activate-multi'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; nothing is changed.
 		return;
 	}
 
@@ -704,7 +704,7 @@ function bboss_core_settings_admin_tabs( $active_tab = '' ) {
 	$tabs_html    = '';
 	$idle_class   = '';
 	$active_class = 'current';
-	$active_tab   = isset( $_GET['tab'] ) ? $_GET['tab'] : 'bp-general';
+	$active_tab   = isset( $_GET['tab'] ) ? sanitize_text_field( wp_unslash( $_GET['tab'] ) ) : 'bp-general'; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; only selects the settings tab shown.
 
 	/**
 	 * Filters the admin tabs to be displayed.
@@ -961,7 +961,7 @@ if ( function_exists( 'bboss_core_get_admin_tabs' ) && ! function_exists( 'bp_co
 function bboss_core_get_admin_active_tab() {
 	$default_tab = apply_filters( 'bp_core_admin_default_active_tab', 'bp-general' );
 
-	return isset( $_GET['tab'] ) ? $_GET['tab'] : $default_tab;
+	return isset( $_GET['tab'] ) ? sanitize_text_field( wp_unslash( $_GET['tab'] ) ) : $default_tab; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; only selects the settings tab shown.
 }
 // @bbwt-com-start compat-layer
 // bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
@@ -1188,14 +1188,14 @@ function bboss_core_get_admin_integration_active_tab() {
 
 		$default_tab = apply_filters( 'bp_core_admin_default_active_tab', 'bp-buddyboss-app' );
 
-		return isset( $_GET['tab'] ) ? $_GET['tab'] : $default_tab;
+		return isset( $_GET['tab'] ) ? sanitize_text_field( wp_unslash( $_GET['tab'] ) ) : $default_tab; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; only selects the settings tab shown.
 
 	} else {
 	// @bbwt-com-end buddyboss-app-integration
 
 		$default_tab = apply_filters( 'bp_core_admin_default_active_tab', 'bp-compatibility' );
 
-		return isset( $_GET['tab'] ) ? $_GET['tab'] : $default_tab;
+		return isset( $_GET['tab'] ) ? sanitize_text_field( wp_unslash( $_GET['tab'] ) ) : $default_tab; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; only selects the settings tab shown.
 
 	// @bbwt-com-start buddyboss-app-integration
 	}
@@ -1609,11 +1609,11 @@ if ( function_exists( 'bboss_admin_menu_order' ) && ! function_exists( 'bp_admin
  */
 function bboss_admin_list_table_current_bulk_action() {
 
-	$action = ! empty( $_REQUEST['action'] ) ? $_REQUEST['action'] : '';
+	$action = ! empty( $_REQUEST['action'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['action'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only helper; the caller checks the nonce before running the bulk action.
 
 	// If the bottom is set, let it override the action.
-	if ( ! empty( $_REQUEST['action2'] ) && $_REQUEST['action2'] != '-1' ) {
-		$action = $_REQUEST['action2'];
+	if ( ! empty( $_REQUEST['action2'] ) && $_REQUEST['action2'] != '-1' ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only helper; the caller checks the nonce before running the bulk action.
+		$action = sanitize_text_field( wp_unslash( $_REQUEST['action2'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only helper; the caller checks the nonce before running the bulk action.
 	}
 
 	return $action;
@@ -2191,9 +2191,9 @@ function bboss_core_admin_user_manage_spammers() {
 	// Print our inline scripts on non-Multisite.
 	add_action( 'admin_footer', 'bp_core_admin_user_spammed_js' );
 
-	$action  = isset( $_REQUEST['action'] ) ? $_REQUEST['action'] : false;
-	$updated = isset( $_REQUEST['updated'] ) ? $_REQUEST['updated'] : false;
-	$mode    = isset( $_POST['mode'] ) ? $_POST['mode'] : false;
+	$action  = isset( $_REQUEST['action'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['action'] ) ) : false; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- nonce checked below with check_admin_referer() before anything is changed.
+	$updated = isset( $_REQUEST['updated'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['updated'] ) ) : false; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; only picks the notice to show.
+	$mode    = isset( $_POST['mode'] ) ? sanitize_text_field( wp_unslash( $_POST['mode'] ) ) : false; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- read-only flag; nonce checked below with check_admin_referer() before anything is changed.
 
 	// If this is a multisite, bulk request, stop now!
 	if ( 'list' == $mode ) {
@@ -3361,8 +3361,8 @@ if ( function_exists( 'bboss_admin_verify_ajax_request' ) && ! function_exists( 
 function bboss_core_admin_get_active_components_from_submitted_settings( $submitted, $action = 'all' ) {
 	$current_action = $action;
 
-	if ( isset( $_GET['action'] ) && in_array( $_GET['action'], array( 'active', 'inactive' ), true ) ) {
-		$current_action = $_GET['action'];
+	if ( isset( $_GET['action'] ) && in_array( $_GET['action'], array( 'active', 'inactive' ), true ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; only reads which components list was submitted from.
+		$current_action = sanitize_text_field( wp_unslash( $_GET['action'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; only reads which components list was submitted from.
 	}
 
 	$current_components = bboss()->active_components;

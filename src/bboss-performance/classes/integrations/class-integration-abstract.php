@@ -352,7 +352,7 @@ abstract class Integration_Abstract {
 						/**
 						 * Fetch Single item data if any single item cache is cleared
 						 */
-						$embed   = isset( $_GET['_embed'] ) ? rest_parse_embed_param( $_GET['_embed'] ) : false;
+						$embed   = isset( $_GET['_embed'] ) ? rest_parse_embed_param( $_GET['_embed'] ) : false; // phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash -- read-only request; rest_parse_embed_param() is the WordPress core parser for this parameter.
 						$request = new WP_REST_Request( $args['request_method'], '/' . $rest_endpoint . '?_embed=' . $embed );
 
 						if ( is_array( $unique_id ) ) {

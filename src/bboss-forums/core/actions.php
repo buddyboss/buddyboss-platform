@@ -474,7 +474,7 @@ function bboss_post_topic_reply_draft() {
 		wp_send_json_error();
 	}
 
-	$draft_topic_reply = $_REQUEST['draft_topic_reply'] ?? '';
+	$draft_topic_reply = $_REQUEST['draft_topic_reply'] ?? ''; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- string or nested array; unslashed just below per transport and sanitised by bb_forums_sanitize_draft_entry().
 	$usermeta_key      = 'bb_user_topic_reply_draft';
 	$user_id           = bboss_loggedin_user_id();
 	$all_data          = array();
@@ -506,7 +506,7 @@ function bboss_post_topic_reply_draft() {
 	}
 
 	if ( ! empty( $_REQUEST['all_data'] ) && ! is_array( $_REQUEST['all_data'] ) ) {
-		$decoded_all_data = json_decode( stripslashes( $_REQUEST['all_data'] ), true );
+		$decoded_all_data = json_decode( stripslashes( $_REQUEST['all_data'] ), true ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- JSON string, unslashed by stripslashes(); the decoded entries are re-authorised and sanitised by bb_forums_sanitize_draft_entry() in the sibling merge below.
 
 		// Narrowed at the boundary, where the rest of this handler's slash and
 		// shape normalisation already happens. json_decode() returns a SCALAR
@@ -526,7 +526,7 @@ function bboss_post_topic_reply_draft() {
 	$all_rev  = array();
 	foreach ( array( 'all_base' => &$all_base, 'all_rev' => &$all_rev ) as $all_field => &$all_target ) {
 		if ( ! empty( $_REQUEST[ $all_field ] ) && is_string( $_REQUEST[ $all_field ] ) ) {
-			$decoded_all_field = json_decode( stripslashes( $_REQUEST[ $all_field ] ), true );
+			$decoded_all_field = json_decode( stripslashes( $_REQUEST[ $all_field ] ), true ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- JSON string, unslashed by stripslashes(); the decoded values are validated by bb_draft_parse_base() / bb_draft_sanitize_rev().
 			$all_target        = is_array( $decoded_all_field ) ? $decoded_all_field : array();
 		}
 	}
@@ -1894,8 +1894,8 @@ function bboss_forums_save_link_preview_data( $post_id ) {
 		return false;
 	}
 
-	if ( ! empty( $_POST['link_preview_data'] ) ) {
-		$link_preview_data = (array) json_decode( stripslashes( $_POST['link_preview_data'] ), true ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized,WordPress.Security.ValidatedSanitizedInput.MissingUnslash -- JSON string, unslashed by stripslashes(); every key read below is validated individually (filter_var() URL/boolean, sanitize_text_field()).
+	if ( ! empty( $_POST['link_preview_data'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- runs on bbp_new_topic / bbp_new_reply / bbp_edit_topic / bbp_edit_reply; the topic and reply handlers verify the nonce before firing them.
+		$link_preview_data = (array) json_decode( stripslashes( $_POST['link_preview_data'] ), true ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized,WordPress.Security.ValidatedSanitizedInput.MissingUnslash,WordPress.Security.NonceVerification.Missing -- JSON string, unslashed by stripslashes(); every key read below is validated individually (filter_var() URL/boolean, sanitize_text_field()). Runs on bbp_new_topic / bbp_new_reply / bbp_edit_topic / bbp_edit_reply; the topic and reply handlers verify the nonce before firing them.
 	} else {
 
 		// Allow Link preview related keys.
@@ -1909,7 +1909,7 @@ function bboss_forums_save_link_preview_data( $post_id ) {
 		);
 
 		// Filter the $_POST array to only include allowed keys.
-		$link_preview_data = array_filter( $_POST, function( $key ) use ( $allowed_keys ) {
+		$link_preview_data = array_filter( $_POST, function( $key ) use ( $allowed_keys ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- runs on bbp_new_topic / bbp_new_reply / bbp_edit_topic / bbp_edit_reply; the topic and reply handlers verify the nonce before firing them.
 			return in_array( $key, $allowed_keys );
 		}, ARRAY_FILTER_USE_KEY );
 	}

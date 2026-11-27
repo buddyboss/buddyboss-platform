@@ -90,11 +90,11 @@ function bboss_members_action_activate_account() {
 	}
 
 	if ( ! empty( $_POST['key'] ) ) {
-		$key = wp_unslash( $_POST['key'] );
+		$key = sanitize_text_field( wp_unslash( $_POST['key'] ) );
 
 		// Backward compatibility with templates using `method="get"` in their activation forms.
 	} elseif ( ! empty( $_GET['key'] ) ) {
-		$key = wp_unslash( $_GET['key'] );
+		$key = sanitize_text_field( wp_unslash( $_GET['key'] ) );
 	}
 
 	if ( empty( $key ) ) {

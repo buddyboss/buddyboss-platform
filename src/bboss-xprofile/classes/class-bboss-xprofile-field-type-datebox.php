@@ -214,14 +214,14 @@ class BBoss_XProfile_Field_Type_Datebox extends BBoss_XProfile_Field_Type {
 
 		// Check for updated posted values, and errors preventing them from
 		// being saved first time.
-		if ( ! empty( $_POST[ 'field_' . $this->field_obj->id . '_day' ] ) ) {
-			$new_day = (int) $_POST[ 'field_' . $this->field_obj->id . '_day' ];
+		if ( ! empty( $_POST[ 'field_' . $this->field_obj->id . '_day' ] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- read-only: redisplays the submitted value after a failed save; nothing is changed.
+			$new_day = (int) $_POST[ 'field_' . $this->field_obj->id . '_day' ]; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- read-only: redisplays the submitted value after a failed save; nothing is changed.
 			$day     = ( $day != $new_day ) ? $new_day : $day;
 		}
 
-		if ( ! empty( $_POST[ 'field_' . $this->field_obj->id . '_month' ] ) ) {
-			if ( in_array( $_POST[ 'field_' . $this->field_obj->id . '_month' ], $eng_months ) ) {
-				$new_month = $_POST[ 'field_' . $this->field_obj->id . '_month' ];
+		if ( ! empty( $_POST[ 'field_' . $this->field_obj->id . '_month' ] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- read-only: redisplays the submitted value after a failed save; nothing is changed.
+			if ( in_array( $_POST[ 'field_' . $this->field_obj->id . '_month' ], $eng_months ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- read-only: redisplays the submitted value after a failed save; nothing is changed.
+				$new_month = sanitize_text_field( wp_unslash( $_POST[ 'field_' . $this->field_obj->id . '_month' ] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Missing -- read-only: redisplays the submitted value after a failed save; nothing is changed.
 			} else {
 				$new_month = $month;
 			}
@@ -229,8 +229,8 @@ class BBoss_XProfile_Field_Type_Datebox extends BBoss_XProfile_Field_Type {
 			$month = ( $month !== $new_month ) ? $new_month : $month;
 		}
 
-		if ( ! empty( $_POST[ 'field_' . $this->field_obj->id . '_year' ] ) ) {
-			$new_year = (int) $_POST[ 'field_' . $this->field_obj->id . '_year' ];
+		if ( ! empty( $_POST[ 'field_' . $this->field_obj->id . '_year' ] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- read-only: redisplays the submitted value after a failed save; nothing is changed.
+			$new_year = (int) $_POST[ 'field_' . $this->field_obj->id . '_year' ]; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- read-only: redisplays the submitted value after a failed save; nothing is changed.
 			$year     = ( $year != $new_year ) ? $new_year : $year;
 		}
 

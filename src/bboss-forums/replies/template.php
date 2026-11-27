@@ -2799,7 +2799,7 @@ function bboss_bbp_get_cancel_reply_to_link( $text = '' ) {
 		$text = __( 'Cancel', 'buddyboss' );
 	}
 
-	$reply_to = isset( $_GET['bbp_reply_to'] ) ? (int) $_GET['bbp_reply_to'] : 0;
+	$reply_to = isset( $_GET['bbp_reply_to'] ) ? (int) $_GET['bbp_reply_to'] : 0; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only; only builds the cancel link.
 
 	// Set visibility
 	$style  = ! empty( $reply_to ) ? '' : ' style="display:none;"';
@@ -3954,8 +3954,8 @@ if ( function_exists( 'bboss_bbp_form_reply_content' ) && ! function_exists( 'bb
 function bboss_bbp_get_form_reply_content() {
 
 	// Get _POST data
-	if ( bboss_bbp_is_post_request() && isset( $_POST['bbp_reply_content'] ) ) {
-		$reply_content = stripslashes( $_POST['bbp_reply_content'] );
+	if ( bboss_bbp_is_post_request() && isset( $_POST['bbp_reply_content'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- read-only; only re-fills the form after a failed submit, nothing is saved.
+		$reply_content = stripslashes( $_POST['bbp_reply_content'] ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.NonceVerification.Missing -- unslashed by stripslashes(); only re-displayed, escaped by the esc_textarea filter on bbp_get_form_reply_content; read-only; only re-fills the form after a failed submit, nothing is saved.
 
 		// Remove unintentional empty paragraph coming from the medium editor when only link preview.
 		if ( preg_match('/^(<p><br><\/p>|<p><br \/><\/p>|<p><\/p>|<p><br\/><\/p>)$/i', $reply_content ) ) {
@@ -4028,8 +4028,8 @@ function bboss_bbp_get_form_reply_to() {
 	$reply_to = 0;
 
 	// Get $_REQUEST data
-	if ( isset( $_REQUEST['bbp_reply_to'] ) ) {
-		$reply_to = bboss_bbp_validate_reply_to( $_REQUEST['bbp_reply_to'] );
+	if ( isset( $_REQUEST['bbp_reply_to'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only; only re-fills the form after a failed submit, nothing is saved.
+		$reply_to = bboss_bbp_validate_reply_to( $_REQUEST['bbp_reply_to'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- validated by bbp_validate_reply_to() (must be a reply) and returned as an integer; read-only; only re-fills the form after a failed submit, nothing is saved.
 	}
 
 	// If empty, get from meta
@@ -4091,8 +4091,8 @@ if ( function_exists( 'bboss_bbp_form_reply_log_edit' ) && ! function_exists( 'b
 function bboss_bbp_get_form_reply_log_edit() {
 
 	// Get _POST data
-	if ( bboss_bbp_is_post_request() && isset( $_POST['bbp_log_reply_edit'] ) ) {
-		$reply_revision = $_POST['bbp_log_reply_edit'];
+	if ( bboss_bbp_is_post_request() && isset( $_POST['bbp_log_reply_edit'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- read-only; only re-fills the form after a failed submit, nothing is saved.
+		$reply_revision = $_POST['bbp_log_reply_edit']; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.NonceVerification.Missing -- only compared with checked() in the return below; read-only; only re-fills the form after a failed submit, nothing is saved.
 
 		// No data
 	} else {
@@ -4153,8 +4153,8 @@ if ( function_exists( 'bboss_bbp_form_reply_edit_reason' ) && ! function_exists(
 function bboss_bbp_get_form_reply_edit_reason() {
 
 	// Get _POST data
-	if ( bboss_bbp_is_post_request() && isset( $_POST['bbp_reply_edit_reason'] ) ) {
-		$reply_edit_reason = $_POST['bbp_reply_edit_reason'];
+	if ( bboss_bbp_is_post_request() && isset( $_POST['bbp_reply_edit_reason'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- read-only; only re-fills the form after a failed submit, nothing is saved.
+		$reply_edit_reason = $_POST['bbp_reply_edit_reason']; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.NonceVerification.Missing -- only re-displayed; escaped with esc_attr() in the return below; read-only; only re-fills the form after a failed submit, nothing is saved.
 
 		// No data
 	} else {

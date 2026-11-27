@@ -123,9 +123,9 @@ class BBoss_XProfile_Field_Type_Radiobutton extends BBoss_XProfile_Field_Type {
 
 			// Check for updated posted values, but errors preventing them from
 			// being saved first time.
-			if ( isset( $_POST[ 'field_' . $this->field_obj->id ] ) && $option_value != $_POST[ 'field_' . $this->field_obj->id ] ) {
-				if ( ! empty( $_POST[ 'field_' . $this->field_obj->id ] ) ) {
-					$option_value = sanitize_text_field( wp_unslash( $_POST[ 'field_' . $this->field_obj->id ] ) );
+			if ( isset( $_POST[ 'field_' . $this->field_obj->id ] ) && $option_value != $_POST[ 'field_' . $this->field_obj->id ] ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- read-only: redisplays the submitted value after a failed save; nothing is changed.
+				if ( ! empty( $_POST[ 'field_' . $this->field_obj->id ] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- read-only: redisplays the submitted value after a failed save; nothing is changed.
+					$option_value = sanitize_text_field( wp_unslash( $_POST[ 'field_' . $this->field_obj->id ] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Missing -- read-only: redisplays the submitted value after a failed save; nothing is changed.
 				}
 			}
 

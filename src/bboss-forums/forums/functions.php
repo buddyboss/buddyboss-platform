@@ -157,7 +157,7 @@ function bboss_bbp_new_forum_handler( $action = '' ) {
 	$forum_author = bboss_bbp_get_current_user_id();
 
 	// Remove kses filters from title and content for capable users and if the nonce is verified.
-	if ( current_user_can( 'unfiltered_html' ) && ! empty( $_POST['_bbp_unfiltered_html_forum'] ) && wp_create_nonce( 'bbp-unfiltered-html-forum_new' ) === $_POST['_bbp_unfiltered_html_forum'] ) {
+	if ( current_user_can( 'unfiltered_html' ) && ! empty( $_POST['_bbp_unfiltered_html_forum'] ) && wp_create_nonce( 'bbp-unfiltered-html-forum_new' ) === $_POST['_bbp_unfiltered_html_forum'] ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked by bbp_verify_nonce_request() at the top of this handler.
 		remove_filter( 'bbp_new_forum_pre_title', 'wp_filter_kses' );
 		remove_filter( 'bbp_new_forum_pre_content', 'bbp_encode_bad', 10 );
 		remove_filter( 'bbp_new_forum_pre_content', 'bbp_filter_kses', 30 );
@@ -165,8 +165,8 @@ function bboss_bbp_new_forum_handler( $action = '' ) {
 
 	/** Forum Title */
 
-	if ( ! empty( $_POST['bbp_forum_title'] ) ) {
-		$forum_title = esc_attr( wp_strip_all_tags( $_POST['bbp_forum_title'] ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized,WordPress.Security.ValidatedSanitizedInput.MissingUnslash -- bbPress stores this entity-encoded via esc_attr( wp_strip_all_tags() ) and wp_insert_post() expects slashed input; sanitize_text_field()/wp_unslash() would change the stored format.
+	if ( ! empty( $_POST['bbp_forum_title'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked by bbp_verify_nonce_request() at the top of this handler.
+		$forum_title = esc_attr( wp_strip_all_tags( $_POST['bbp_forum_title'] ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized,WordPress.Security.ValidatedSanitizedInput.MissingUnslash,WordPress.Security.NonceVerification.Missing -- bbPress stores this entity-encoded via esc_attr( wp_strip_all_tags() ) and wp_insert_post() expects slashed input; sanitize_text_field()/wp_unslash() would change the stored format. Nonce checked by bbp_verify_nonce_request() at the top of this handler.
 	}
 
 	// Filter and sanitize.
@@ -179,8 +179,8 @@ function bboss_bbp_new_forum_handler( $action = '' ) {
 
 	/** Forum Content */
 
-	if ( ! empty( $_POST['bbp_forum_content'] ) ) {
-		$forum_content = $_POST['bbp_forum_content'];
+	if ( ! empty( $_POST['bbp_forum_content'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked by bbp_verify_nonce_request() at the top of this handler.
+		$forum_content = $_POST['bbp_forum_content']; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.NonceVerification.Missing -- filtered by bbp_new_forum_pre_content (bbp_encode_bad(), bbp_filter_kses(), balanceTags()); wp_insert_post() expects slashed input; nonce checked by bbp_verify_nonce_request() at the top of this handler.
 	}
 
 	// Filter and sanitize.
@@ -189,8 +189,8 @@ function bboss_bbp_new_forum_handler( $action = '' ) {
 	/** Forum Parent */
 
 	// Forum parent was passed (the norm).
-	if ( ! empty( $_POST['bbp_forum_parent_id'] ) ) {
-		$forum_parent_id = bboss_bbp_get_forum_id( $_POST['bbp_forum_parent_id'] );
+	if ( ! empty( $_POST['bbp_forum_parent_id'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked by bbp_verify_nonce_request() at the top of this handler.
+		$forum_parent_id = bboss_bbp_get_forum_id( $_POST['bbp_forum_parent_id'] ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.NonceVerification.Missing -- validated with is_numeric() and cast to an integer by bbp_get_forum_id(); nonce checked by bbp_verify_nonce_request() at the top of this handler.
 	}
 
 	// Filter and sanitize.
@@ -429,13 +429,13 @@ function bboss_bbp_edit_forum_handler( $action = '' ) {
 	/** Forum */
 
 	// Forum id was not passed
-	if ( empty( $_POST['bbp_forum_id'] ) ) {
+	if ( empty( $_POST['bbp_forum_id'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked by bbp_verify_nonce_request() just below, before anything is changed; this id is part of its action.
 		bboss_bbp_add_error( 'bbp_edit_forum_id', __( '<strong>ERROR</strong>: Forum ID not found.', 'buddyboss' ) );
 		return;
 
 		// Forum id was passed
-	} elseif ( is_numeric( $_POST['bbp_forum_id'] ) ) {
-		$forum_id = (int) $_POST['bbp_forum_id'];
+	} elseif ( is_numeric( $_POST['bbp_forum_id'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked by bbp_verify_nonce_request() just below, before anything is changed; this id is part of its action.
+		$forum_id = (int) $_POST['bbp_forum_id']; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked by bbp_verify_nonce_request() just below, before anything is changed; this id is part of its action.
 		$forum    = bboss_bbp_get_forum( $forum_id );
 	}
 
@@ -456,7 +456,7 @@ function bboss_bbp_edit_forum_handler( $action = '' ) {
 	}
 
 	// Remove kses filters from title and content for capable users and if the nonce is verified
-	if ( current_user_can( 'unfiltered_html' ) && ! empty( $_POST['_bbp_unfiltered_html_forum'] ) && ( wp_create_nonce( 'bbp-unfiltered-html-forum_' . $forum_id ) === $_POST['_bbp_unfiltered_html_forum'] ) ) {
+	if ( current_user_can( 'unfiltered_html' ) && ! empty( $_POST['_bbp_unfiltered_html_forum'] ) && ( wp_create_nonce( 'bbp-unfiltered-html-forum_' . $forum_id ) === $_POST['_bbp_unfiltered_html_forum'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked by bbp_verify_nonce_request() earlier in this handler.
 		remove_filter( 'bbp_edit_forum_pre_title', 'wp_filter_kses' );
 		remove_filter( 'bbp_edit_forum_pre_content', 'bbp_encode_bad', 10 );
 		remove_filter( 'bbp_edit_forum_pre_content', 'bbp_filter_kses', 30 );
@@ -465,8 +465,8 @@ function bboss_bbp_edit_forum_handler( $action = '' ) {
 	/** Forum Parent */
 
 	// Forum parent id was passed
-	if ( ! empty( $_POST['bbp_forum_parent_id'] ) ) {
-		$forum_parent_id = bboss_bbp_get_forum_id( $_POST['bbp_forum_parent_id'] );
+	if ( ! empty( $_POST['bbp_forum_parent_id'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked by bbp_verify_nonce_request() earlier in this handler.
+		$forum_parent_id = bboss_bbp_get_forum_id( $_POST['bbp_forum_parent_id'] ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.NonceVerification.Missing -- validated with is_numeric() and cast to an integer by bbp_get_forum_id(); nonce checked by bbp_verify_nonce_request() earlier in this handler.
 	}
 
 	// Current forum this forum is in
@@ -493,8 +493,8 @@ function bboss_bbp_edit_forum_handler( $action = '' ) {
 
 	/** Forum Title */
 
-	if ( ! empty( $_POST['bbp_forum_title'] ) ) {
-		$forum_title = esc_attr( wp_strip_all_tags( $_POST['bbp_forum_title'] ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized,WordPress.Security.ValidatedSanitizedInput.MissingUnslash -- bbPress stores this entity-encoded via esc_attr( wp_strip_all_tags() ) and wp_insert_post() expects slashed input; sanitize_text_field()/wp_unslash() would change the stored format.
+	if ( ! empty( $_POST['bbp_forum_title'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked by bbp_verify_nonce_request() earlier in this handler.
+		$forum_title = esc_attr( wp_strip_all_tags( $_POST['bbp_forum_title'] ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized,WordPress.Security.ValidatedSanitizedInput.MissingUnslash,WordPress.Security.NonceVerification.Missing -- bbPress stores this entity-encoded via esc_attr( wp_strip_all_tags() ) and wp_insert_post() expects slashed input; sanitize_text_field()/wp_unslash() would change the stored format. Nonce checked by bbp_verify_nonce_request() earlier in this handler.
 	}
 
 	// Filter and sanitize
@@ -507,8 +507,8 @@ function bboss_bbp_edit_forum_handler( $action = '' ) {
 
 	/** Forum Content */
 
-	if ( ! empty( $_POST['bbp_forum_content'] ) ) {
-		$forum_content = $_POST['bbp_forum_content'];
+	if ( ! empty( $_POST['bbp_forum_content'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked by bbp_verify_nonce_request() earlier in this handler.
+		$forum_content = $_POST['bbp_forum_content']; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.NonceVerification.Missing -- filtered by bbp_edit_forum_pre_content (bbp_encode_bad(), bbp_filter_kses(), balanceTags()); wp_update_post() expects slashed input; nonce checked by bbp_verify_nonce_request() earlier in this handler.
 	}
 
 	// Filter and sanitize
@@ -683,32 +683,32 @@ function bboss_bbp_save_forum_extras( $forum_id = 0 ) {
 
 	/** Forum Status */
 
-	if ( ! empty( $_POST['bbp_forum_status'] ) && in_array( $_POST['bbp_forum_status'], array( 'open', 'closed' ) ) ) {
-		if ( 'closed' === $_POST['bbp_forum_status'] && ! bboss_bbp_is_forum_closed( $forum_id, false ) ) {
+	if ( ! empty( $_POST['bbp_forum_status'] ) && in_array( $_POST['bbp_forum_status'], array( 'open', 'closed' ) ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- runs on bbp_new_forum_post_extras / bbp_edit_forum_post_extras; bbp_new_forum_handler() and bbp_edit_forum_handler() verify the nonce before firing them.
+		if ( 'closed' === $_POST['bbp_forum_status'] && ! bboss_bbp_is_forum_closed( $forum_id, false ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- runs on bbp_new_forum_post_extras / bbp_edit_forum_post_extras; bbp_new_forum_handler() and bbp_edit_forum_handler() verify the nonce before firing them.
 			bboss_bbp_close_forum( $forum_id );
-		} elseif ( 'open' === $_POST['bbp_forum_status'] && bboss_bbp_is_forum_closed( $forum_id, false ) ) {
+		} elseif ( 'open' === $_POST['bbp_forum_status'] && bboss_bbp_is_forum_closed( $forum_id, false ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- runs on bbp_new_forum_post_extras / bbp_edit_forum_post_extras; bbp_new_forum_handler() and bbp_edit_forum_handler() verify the nonce before firing them.
 			bboss_bbp_open_forum( $forum_id );
 		}
 	}
 
 	/** Forum Type */
 
-	if ( empty( $group_ids ) && ! empty( $_POST['bbp_forum_type'] ) && in_array( $_POST['bbp_forum_type'], array( 'forum', 'category' ) ) ) {
-		if ( 'category' === $_POST['bbp_forum_type'] && ! bboss_bbp_is_forum_category( $forum_id ) ) {
+	if ( empty( $group_ids ) && ! empty( $_POST['bbp_forum_type'] ) && in_array( $_POST['bbp_forum_type'], array( 'forum', 'category' ) ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- runs on bbp_new_forum_post_extras / bbp_edit_forum_post_extras; bbp_new_forum_handler() and bbp_edit_forum_handler() verify the nonce before firing them.
+		if ( 'category' === $_POST['bbp_forum_type'] && ! bboss_bbp_is_forum_category( $forum_id ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- runs on bbp_new_forum_post_extras / bbp_edit_forum_post_extras; bbp_new_forum_handler() and bbp_edit_forum_handler() verify the nonce before firing them.
 			bboss_bbp_categorize_forum( $forum_id );
-		} elseif ( 'forum' === $_POST['bbp_forum_type'] && bboss_bbp_is_forum_category( $forum_id ) ) {
+		} elseif ( 'forum' === $_POST['bbp_forum_type'] && bboss_bbp_is_forum_category( $forum_id ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- runs on bbp_new_forum_post_extras / bbp_edit_forum_post_extras; bbp_new_forum_handler() and bbp_edit_forum_handler() verify the nonce before firing them.
 			bboss_bbp_normalize_forum( $forum_id );
 		}
 	}
 
 	/** Forum Visibility */
-	if ( empty( bboss_get_child_forum_group_ids( $forum_id ) ) && ! empty( $_POST['bbp_forum_visibility'] ) && in_array( $_POST['bbp_forum_visibility'], array( bboss_bbp_get_public_status_id(), bboss_bbp_get_private_status_id(), bboss_bbp_get_hidden_status_id() ) ) ) {
+	if ( empty( bboss_get_child_forum_group_ids( $forum_id ) ) && ! empty( $_POST['bbp_forum_visibility'] ) && in_array( $_POST['bbp_forum_visibility'], array( bboss_bbp_get_public_status_id(), bboss_bbp_get_private_status_id(), bboss_bbp_get_hidden_status_id() ) ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- runs on bbp_new_forum_post_extras / bbp_edit_forum_post_extras; bbp_new_forum_handler() and bbp_edit_forum_handler() verify the nonce before firing them.
 
 		// Get forums current visibility.
 		$visibility = bboss_bbp_get_forum_visibility( $forum_id );
 
 		// What is the new forum visibility setting?
-		switch ( $_POST['bbp_forum_visibility'] ) {
+		switch ( $_POST['bbp_forum_visibility'] ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- runs on bbp_new_forum_post_extras / bbp_edit_forum_post_extras; bbp_new_forum_handler() and bbp_edit_forum_handler() verify the nonce before firing them.
 
 			// Hidden.
 			case bboss_bbp_get_hidden_status_id():
@@ -2520,7 +2520,7 @@ function bboss_bbp_pre_get_posts_normalize_forum_visibility( $posts_query = null
 	if ( bboss_bbp_get_forum_post_type() === implode( '', $post_types ) ) {
 
 		// Prevent accidental wp-admin post_row override.
-		if ( is_admin() && isset( $_REQUEST['post_status'] ) ) {
+		if ( is_admin() && isset( $_REQUEST['post_status'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only; only checks whether an admin list filter is present.
 			return;
 		}
 

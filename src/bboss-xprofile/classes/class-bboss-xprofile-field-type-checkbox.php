@@ -135,9 +135,9 @@ class BBoss_XProfile_Field_Type_Checkbox extends BBoss_XProfile_Field_Type {
 
 		// Check for updated posted values, but errors preventing them from
 		// being saved first time.
-		if ( isset( $_POST[ 'field_' . $this->field_obj->id ] ) && $option_values != maybe_serialize( $_POST[ 'field_' . $this->field_obj->id ] ) ) {
-			if ( ! empty( $_POST[ 'field_' . $this->field_obj->id ] ) ) {
-				$option_values = array_map( 'sanitize_text_field', $_POST[ 'field_' . $this->field_obj->id ] );
+		if ( isset( $_POST[ 'field_' . $this->field_obj->id ] ) && $option_values != maybe_serialize( $_POST[ 'field_' . $this->field_obj->id ] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- read-only redisplay after a failed save; only compared with the saved value here.
+			if ( ! empty( $_POST[ 'field_' . $this->field_obj->id ] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- read-only: redisplays the submitted value after a failed save; nothing is changed.
+				$option_values = array_map( 'sanitize_text_field', wp_unslash( $_POST[ 'field_' . $this->field_obj->id ] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Missing -- read-only: redisplays the submitted value after a failed save; nothing is changed.
 			}
 		}
 

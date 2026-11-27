@@ -2053,7 +2053,7 @@ if ( function_exists( 'bboss_draft_parse_base' ) && ! function_exists( 'bb_draft
  * @return array|null See {@see bboss_draft_parse_base()}.
  */
 function bboss_draft_request_base() {
-	// phpcs:ignore WordPress.Security.NonceVerification.Missing -- read inside nonce-checked handlers.
+	// phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- read inside nonce-checked handlers; validated by bb_draft_parse_base().
 	return isset( $_POST['bb_draft_base'] ) ? bboss_draft_parse_base( wp_unslash( $_POST['bb_draft_base'] ) ) : null;
 }
 // @bbwt-com-start compat-layer
@@ -3182,7 +3182,7 @@ if ( function_exists( 'bboss_draft_drop_settled_evicted' ) && ! function_exists(
  * @return string[]
  */
 function bboss_draft_request_acked_evictions() {
-	// phpcs:ignore WordPress.Security.NonceVerification.Missing -- read inside nonce-checked handlers.
+	// phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- read inside nonce-checked handlers; sanitised with sanitize_text_field() below.
 	$raw = isset( $_POST['bb_draft_evicted_ack'] ) ? wp_unslash( $_POST['bb_draft_evicted_ack'] ) : '';
 
 	if ( is_array( $raw ) ) {

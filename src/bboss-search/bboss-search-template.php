@@ -60,7 +60,7 @@ if ( function_exists( 'bboss_search_search_page_content' ) && ! function_exists(
 
 
 add_action( 'wp_loaded', function () {
-	if ( ! is_admin() && isset( $_REQUEST['bp_search'] ) ) {
+	if ( ! is_admin() && isset( $_REQUEST['bp_search'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; only checks whether this is a network search.
 		BBoss_Search::instance()->prepare_search_page();
 	}
 } );

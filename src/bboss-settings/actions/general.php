@@ -60,7 +60,7 @@ function bboss_settings_action_general() {
 	check_admin_referer( 'bp_settings_general' );
 
 	// Validate the user again for the current password when making a big change.
-	if ( ( is_super_admin() ) || ( ! empty( $_POST['pwd'] ) && wp_check_password( $_POST['pwd'], $bp->displayed_user->userdata->user_pass, bboss_displayed_user_id() ) ) ) {
+	if ( ( is_super_admin() ) || ( ! empty( $_POST['pwd'] ) && wp_check_password( $_POST['pwd'], $bp->displayed_user->userdata->user_pass, bboss_displayed_user_id() ) ) ) { // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash -- current password; must reach wp_check_password() unaltered.
 
 		// Only the fields this form can change are passed to wp_update_user().
 		$update_user = array(
@@ -144,11 +144,11 @@ function bboss_settings_action_general() {
 
 		if ( ! empty( $_POST['pass1'] ) && ! empty( $_POST['pass2'] ) ) {
 
-			if ( ( $_POST['pass1'] == $_POST['pass2'] ) && ! strpos( ' ' . wp_unslash( $_POST['pass1'] ), '\\' ) ) {
+			if ( ( $_POST['pass1'] == $_POST['pass2'] ) && ! strpos( ' ' . wp_unslash( $_POST['pass1'] ), '\\' ) ) { // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- new password; only compared here and must not be altered.
 
 				// Password change attempt is successful.
 				if ( ( ! empty( $_POST['pwd'] ) && $_POST['pwd'] != $_POST['pass1'] ) || is_super_admin() ) {
-					$update_user['user_pass'] = $_POST['pass1'];
+					$update_user['user_pass'] = $_POST['pass1']; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash -- new password; must not be altered, wp_update_user() hashes it and expects slashed data.
 					$pass_changed             = true;
 
 					// The new password is the same as the current password.
@@ -362,7 +362,7 @@ function bboss_settings_verify_email_change() {
 		$pending_email = bboss_get_user_meta( bboss_displayed_user_id(), 'pending_email_change', true );
 
 		// Bail if the hash provided doesn't match the one saved in the database.
-		if ( ! hash_equals( urldecode( $_GET['verify_email_change'] ), $pending_email['hash'] ) ) {
+		if ( ! hash_equals( urldecode( $_GET['verify_email_change'] ), $pending_email['hash'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash -- emailed verification link; the request is authenticated by the secret hash, which is only compared with the stored one through hash_equals() on this line.
 			return;
 		}
 
@@ -390,7 +390,7 @@ function bboss_settings_verify_email_change() {
 
 		// Email change is being dismissed.
 	} elseif ( ! empty( $_GET['dismiss_email_change'] ) ) {
-		$nonce_check = isset( $_GET['_wpnonce'] ) && wp_verify_nonce( wp_unslash( $_GET['_wpnonce'] ), 'bp_dismiss_email_change' );
+		$nonce_check = isset( $_GET['_wpnonce'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_GET['_wpnonce'] ) ), 'bp_dismiss_email_change' );
 
 		if ( $nonce_check ) {
 			bboss_delete_user_meta( bboss_displayed_user_id(), 'pending_email_change' );

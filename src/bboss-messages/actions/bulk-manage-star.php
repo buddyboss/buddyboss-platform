@@ -29,8 +29,8 @@ function bboss_messages_star_bulk_manage_handler() {
 		return;
 	}
 
-	$action  = ! empty( $_POST['messages_bulk_action'] ) ? $_POST['messages_bulk_action'] : '';
-	$threads = ! empty( $_POST['message_ids'] ) ? $_POST['message_ids'] : '';
+	$action  = ! empty( $_POST['messages_bulk_action'] ) ? sanitize_text_field( wp_unslash( $_POST['messages_bulk_action'] ) ) : '';
+	$threads = ! empty( $_POST['message_ids'] ) ? $_POST['message_ids'] : ''; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash -- ids; run through wp_parse_id_list() on the next line.
 	$threads = wp_parse_id_list( $threads );
 
 	// Bail if action doesn't match our star actions or no IDs.

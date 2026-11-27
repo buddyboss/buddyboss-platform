@@ -65,7 +65,7 @@ if ( ! class_exists( 'BBoss_Admin_Setting_tab' ) ) :
 				// Note: Each of these options is represented by its opposite in the UI
 				// Ie, the Profile Syncing option reads "Enable Sync", so when it's checked,
 				// the corresponding option should be unset.
-				$value = isset( $_POST[ $legacy_option ] ) ? '' : 1;
+				$value = isset( $_POST[ $legacy_option ] ) ? '' : 1; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked in BP_Admin_Tab::maybe_save_admin_settings().
 				bboss_update_option( $legacy_option, $value );
 			}
 		}

@@ -198,7 +198,7 @@ function bboss_nouveau_ajax_messages_send_message() {
 			function ( $username ) {
 				return trim( $username, '@' );
 			},
-			$_POST['send_to']
+			$_POST['send_to'] // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- usernames, only resolved to user ids by bb_messages_is_thread_exists_by_recipients() and messages_new_message().
 		)
 	);
 
@@ -220,8 +220,8 @@ function bboss_nouveau_ajax_messages_send_message() {
 	$send = bboss_messages_new_message(
 		array(
 			'recipients'   => $recipients,
-			'subject'      => wp_trim_words( $_POST['subject'], messages_get_default_subject_length() ),
-			'content'      => $_POST['message_content'],
+			'subject'      => wp_trim_words( isset( $_POST['subject'] ) ? $_POST['subject'] : '', messages_get_default_subject_length() ), // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- filtered by wp_filter_kses() on messages_message_subject_before_save in BP_Messages_Message::send().
+			'content'      => $_POST['message_content'], // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- filtered by bp_messages_filter_kses() on messages_message_content_before_save in BP_Messages_Message::send().
 			'error_type'   => 'wp_error',
 			'mark_visible' => true,
 		)
@@ -570,8 +570,8 @@ function bboss_nouveau_ajax_messages_send_reply() {
 		$new_reply = bboss_messages_new_message(
 			array(
 				'thread_id'    => $thread_id,
-				'subject'      => ! empty( $_POST['subject'] ) ? $_POST['subject'] : false,
-				'content'      => $_POST['content'],
+				'subject'      => ! empty( $_POST['subject'] ) ? $_POST['subject'] : false, // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- filtered by wp_filter_kses() on messages_message_subject_before_save in BP_Messages_Message::send().
+				'content'      => $_POST['content'], // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- filtered by bp_messages_filter_kses() on messages_message_content_before_save in BP_Messages_Message::send().
 				'date_sent'    => $date_sent,
 				'mark_visible' => false,
 				'error_type'   => 'wp_error',
@@ -584,7 +584,7 @@ function bboss_nouveau_ajax_messages_send_reply() {
 			array(
 				'thread_id'    => $thread_id,
 				'subject'      => false,
-				'content'      => $_POST['content'],
+				'content'      => $_POST['content'], // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- filtered by bp_messages_filter_kses() on messages_message_content_before_save in BP_Messages_Message::send().
 				'date_sent'    => $date_sent,
 				'mark_visible' => false,
 				'error_type'   => 'wp_error',
@@ -697,7 +697,7 @@ function bboss_nouveau_ajax_get_user_message_threads() {
 
 	// Override bp_current_action().
 	if ( isset( $_POST['box'] ) ) {
-		$bp->current_action = $_POST['box'];
+		$bp->current_action = sanitize_text_field( wp_unslash( $_POST['box'] ) );
 	}
 
 	// Add the message thread filter.
@@ -1158,7 +1158,7 @@ function bboss_nouveau_ajax_get_user_message_threads() {
 			$threads->threads[ $i ] = array_merge( $threads->threads[ $i ], $thread_extra_content );
 		}
 
-		$threads->threads[ $i ]['is_search'] = ( isset( $_POST ) && isset( $_POST['search_terms'] ) && '' !== trim( $_POST['search_terms'] ) ) ? true : false;
+		$threads->threads[ $i ]['is_search'] = ( isset( $_POST ) && isset( $_POST['search_terms'] ) && '' !== trim( $_POST['search_terms'] ) ) ? true : false; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- only tested for being empty; the value is not used.
 		$threads->threads[ $i ]['avatars']   = bboss_messages_get_avatars( $bp_get_message_thread_id, bboss_loggedin_user_id() );
 
 		$i += 1;
@@ -1557,7 +1557,7 @@ function bboss_nouveau_ajax_star_thread_messages() {
 		wp_send_json_error();
 	}
 
-	$action = str_replace( 'messages_', '', $_POST['action'] );
+	$action = str_replace( 'messages_', '', sanitize_text_field( wp_unslash( $_POST['action'] ) ) ); // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked below in this function (bp_nouveau_messages, or bp-messages-star-{id} for a single message).
 
 	if ( 'star' === $action ) {
 		$error_message = __( 'There was a problem starring your messages. Please try again.', 'buddyboss' );
@@ -1684,7 +1684,7 @@ function bboss_nouveau_ajax_readunread_thread_messages() {
 		wp_send_json_error();
 	}
 
-	$action = str_replace( 'messages_', '', $_POST['action'] );
+	$action = str_replace( 'messages_', '', sanitize_text_field( wp_unslash( $_POST['action'] ) ) ); // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked below in this function.
 
 	$response = array(
 		'feedback' => __( 'There was a problem marking your messages as read. Please try again.', 'buddyboss' ),
@@ -1856,7 +1856,7 @@ function bboss_nouveau_ajax_dsearch_recipients() {
 
 	$exclude_user_ids = array();
 	if ( isset( $_GET['except'] ) && ! empty( $_GET['except'] ) ) {
-		$exclude          = array_map( 'sanitize_text_field', $_GET['except'] );
+		$exclude          = array_map( 'sanitize_text_field', wp_unslash( $_GET['except'] ) );
 		$exclude_user_ids = bboss_get_user_id_by_activity_mentionname( $exclude );
 	}
 
@@ -1872,11 +1872,11 @@ function bboss_nouveau_ajax_dsearch_recipients() {
 
 	$results = bboss_core_get_suggestions(
 		array(
-			'term'            => sanitize_text_field( wp_unslash( $_GET['term'] ) ),
+			'term'            => isset( $_GET['term'] ) ? sanitize_text_field( wp_unslash( $_GET['term'] ) ) : '',
 			'type'            => 'members',
 			'only_friends'    => false,
 			'count_total'     => 'count_query',
-			'page'            => $_GET['page'],
+			'page'            => isset( $_GET['page'] ) ? absint( $_GET['page'] ) : 1,
 			'limit'           => 10,
 			'populate_extras' => true,
 			'exclude'         => $exclude_user_ids,

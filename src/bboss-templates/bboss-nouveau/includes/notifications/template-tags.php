@@ -44,8 +44,8 @@ if ( function_exists( 'bboss_nouveau_notifications_filters' ) && ! function_exis
 		$filters  = bboss_nouveau_notifications_sort( bboss_nouveau_notifications_get_filters() );
 		$selected = 0;
 
-		if ( ! empty( $_REQUEST['type'] ) ) {
-			$selected = sanitize_key( $_REQUEST['type'] );
+		if ( ! empty( $_REQUEST['type'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only; only preselects the filter in the dropdown.
+			$selected = sanitize_key( $_REQUEST['type'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only; only preselects the filter in the dropdown.
 		}
 
 		foreach ( $filters as $filter ) {

@@ -31,7 +31,7 @@ function bboss_activity_action_post_comment() {
 	 *
 	 * @param string $value ID of the activity being replied to.
 	 */
-	$activity_id = apply_filters( 'bp_activity_post_comment_activity_id', $_POST['comment_form_id'] );
+	$activity_id = apply_filters( 'bp_activity_post_comment_activity_id', isset( $_POST['comment_form_id'] ) ? sanitize_text_field( wp_unslash( $_POST['comment_form_id'] ) ) : '' );
 
 	/**
 	 * Filters the comment content for a comment reply.
@@ -40,7 +40,7 @@ function bboss_activity_action_post_comment() {
 	 *
 	 * @param string $value Comment content being posted.
 	 */
-	$content = apply_filters( 'bp_activity_post_comment_content', $_POST[ 'ac_input_' . $activity_id ] );
+	$content = apply_filters( 'bp_activity_post_comment_content', $_POST[ 'ac_input_' . $activity_id ] ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotValidated, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- comment content: an empty value is rejected below and it is kses-filtered on save by bp_activity_filter_kses() (bp_activity_content_before_save).
 
 	if ( empty( $content ) ) {
 		bboss_core_add_message( __( 'Please do not leave the comment area blank.', 'buddyboss' ), 'error' );

@@ -1000,8 +1000,8 @@ if ( function_exists( 'bboss_search_placeholder' ) && ! function_exists( 'bp_sea
 function bboss_get_search_placeholder( $component = '' ) {
 	$query_arg = bboss_core_get_component_search_query_arg( $component );
 
-	if ( $query_arg && ! empty( $_REQUEST[ $query_arg ] ) ) {
-		$placeholder = wp_unslash( $_REQUEST[ $query_arg ] );
+	if ( $query_arg && ! empty( $_REQUEST[ $query_arg ] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; search term shown back in the search box.
+		$placeholder = wp_unslash( $_REQUEST[ $query_arg ] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- read-only request; search term shown back in the search box, escaped with esc_attr() in bp_search_placeholder().
 	} else {
 		$placeholder = bboss_get_search_default_text( $component );
 	}
@@ -1756,7 +1756,7 @@ if ( function_exists( 'bboss_get_blog_signup_allowed' ) && ! function_exists( 'b
  *              otherwise false.
  */
 function bboss_account_was_activated() {
-	$activation_complete = ! empty( bboss()->activation_complete ) || ( bboss_is_current_component( 'activate' ) && ! empty( $_GET['activated'] ) );
+	$activation_complete = ! empty( bboss()->activation_complete ) || ( bboss_is_current_component( 'activate' ) && ! empty( $_GET['activated'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; nothing is changed.
 
 	return $activation_complete;
 }

@@ -120,7 +120,7 @@ if ( function_exists( 'bboss_attachments_uploads_dir_get' ) && ! function_exists
  */
 function bboss_attachments_cover_image_upload_dir( $args = array() ) {
 	$object_id           = 0;
-	$object_type         = isset( $_POST['item_type'] ) ? sanitize_text_field( wp_unslash( $_POST['item_type'] ) ) : '';
+	$object_type         = isset( $_POST['item_type'] ) ? sanitize_text_field( wp_unslash( $_POST['item_type'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- read-only; only selects the upload directory.
 	$args['object_type'] = $object_type;
 
 	// Default values are for profiles.
@@ -1792,7 +1792,7 @@ function bboss_attachments_cover_image_ajax_upload() {
 	}
 
 	$bp_params = bboss_parse_args(
-		$_POST['bp_params'],
+		$_POST['bp_params'], // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- item_id is cast to int and object sanitised just below; item_type is only tested with empty().
 		array(
 			'object'    => 'user',
 			'item_id'   => bboss_loggedin_user_id(),
@@ -2020,7 +2020,7 @@ function bboss_attachments_cover_image_ajax_upload() {
 	}
 
 	// Set the name of the file.
-	$name       = $_FILES['file']['name'];
+	$name       = $_FILES['file']['name']; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotValidated, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- file validated and stored by BP_Attachment_Cover_Image::upload() above; only the display name is read.
 	$name_parts = pathinfo( $name );
 	// `pathinfo()` omits the `extension` key entirely for files with no
 	// dot (e.g. an upload named `backup`). On PHP 8.1+, `strlen( null )`
@@ -2109,7 +2109,7 @@ function bboss_attachments_cover_image_ajax_delete() {
 		wp_send_json_error();
 	}
 
-	$item_type = isset( $_POST['item_type'] ) ? $_POST['item_type'] : '';
+	$item_type = isset( $_POST['item_type'] ) ? sanitize_text_field( wp_unslash( $_POST['item_type'] ) ) : '';
 
 	if ( empty( $_POST['object'] ) || ( empty( $_POST['item_id'] ) && empty( $item_type ) ) ) {
 		wp_send_json_error();
@@ -2117,7 +2117,7 @@ function bboss_attachments_cover_image_ajax_delete() {
 
 	$args = array(
 		'object'  => sanitize_text_field( wp_unslash( $_POST['object'] ) ),
-		'item_id' => (int) $_POST['item_id'],
+		'item_id' => (int) $_POST['item_id'], // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked just below with check_admin_referer().
 	);
 
 	// Check permissions.

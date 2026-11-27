@@ -77,7 +77,7 @@ function bboss_activity_action_delete_activity( $activity_id = 0 ) {
 
 	// Check for the redirect query arg, otherwise let WP handle things.
 	if ( ! empty( $_GET['redirect_to'] ) ) {
-		bboss_core_redirect( esc_url( wp_unslash( $_GET['redirect_to'] ) ) );
+		bboss_core_redirect( esc_url( wp_unslash( $_GET['redirect_to'] ) ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- escaped with esc_url() and only passed to bp_core_redirect(), which uses wp_safe_redirect().
 	} else {
 		bboss_core_redirect( wp_get_referer() );
 	}

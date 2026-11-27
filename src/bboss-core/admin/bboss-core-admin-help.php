@@ -101,7 +101,7 @@ if ( function_exists( 'bboss_core_admin_help' ) && ! function_exists( 'bp_core_a
  * @return string
  */
 function bboss_core_admin_help_get_article_value() {
-	return isset( $_REQUEST['article'] ) ? $_REQUEST['article'] : '';
+	return isset( $_REQUEST['article'] ) ? $_REQUEST['article'] : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; nothing is changed.
 }
 // @bbwt-com-start compat-layer
 // bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.

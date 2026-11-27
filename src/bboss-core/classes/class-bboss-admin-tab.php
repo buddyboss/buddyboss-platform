@@ -384,11 +384,11 @@ if ( ! class_exists( 'BBoss_Admin_Tab' ) ) :
 		 * @since BuddyBoss 1.0.0
 		 */
 		public function is_saving() {
-			if ( ! isset( $_GET['page'] ) || ! isset( $_POST['submit'] ) ) {
+			if ( ! isset( $_GET['page'] ) || ! isset( $_POST['submit'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.NonceVerification.Missing -- presence check only; nonce checked in maybe_save_admin_settings().
 				return false;
 			}
 
-			if ( $this->menu_page != $_GET['page'] ) {
+			if ( $this->menu_page != $_GET['page'] ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only comparison; nonce checked in maybe_save_admin_settings().
 				return false;
 			}
 
@@ -425,7 +425,7 @@ if ( ! class_exists( 'BBoss_Admin_Tab' ) ) :
 						)
 					) {
 						$value = '';
-						if ( isset( $_POST[ $setting_name ] ) ) {
+						if ( isset( $_POST[ $setting_name ] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked in maybe_save_admin_settings().
 							if ( 'bp-enable-private-network-public-content' === $setting_name ) {
 								$value = wp_kses_post( wp_unslash( $_POST[ $setting_name ] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
 							} else {
@@ -444,7 +444,7 @@ if ( ! class_exists( 'BBoss_Admin_Tab' ) ) :
 					) {
 
 						unset( $_POST[ $setting_name ]['placeholder_priority_index'] );
-						$value = $_POST[ $setting_name ];
+						$value = $_POST[ $setting_name ]; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked in maybe_save_admin_settings().
 
 						if ( 'bb-domain-restrictions' === $setting_name ) {
 

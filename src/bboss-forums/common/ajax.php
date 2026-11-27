@@ -77,7 +77,7 @@ if ( function_exists( 'bboss_bbp_get_ajax_url' ) && ! function_exists( 'bbp_get_
  * @return bool Looking for bbp-ajax
  */
 function bboss_bbp_is_ajax() {
-	return (bool) ( ( isset( $_GET['bbp-ajax'] ) || isset( $_POST['bbp-ajax'] ) ) && ! empty( $_REQUEST['action'] ) );
+	return (bool) ( ( isset( $_GET['bbp-ajax'] ) || isset( $_POST['bbp-ajax'] ) ) && ! empty( $_REQUEST['action'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.NonceVerification.Missing -- read-only; only detects a Forums AJAX request.
 }
 // @bbwt-com-start compat-layer
 // bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.
@@ -121,7 +121,7 @@ function bboss_bbp_do_ajax() {
 	send_nosniff_header();
 
 	// Perform custom Forums ajax
-	do_action( 'bbp_ajax_' . $_REQUEST['action'] );
+	do_action( 'bbp_ajax_' . sanitize_text_field( wp_unslash( $_REQUEST['action'] ) ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.InputNotValidated -- checked with ! empty() in bbp_is_ajax(), called at the top of this function; dispatcher only; the handlers hooked to bbp_ajax_* (ajax_favorite(), ajax_subscription(), ajax_forum_subscription()) verify their own nonce.
 
 	// All done
 	die( '0' );

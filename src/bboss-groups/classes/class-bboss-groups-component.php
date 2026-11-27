@@ -169,7 +169,7 @@ class BBoss_Groups_Component extends BBoss_Component {
 			}
 
 			// Actions - Random group handler.
-			if ( isset( $_GET['random-group'] ) ) {
+			if ( isset( $_GET['random-group'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; only redirects to a random group.
 				require $this->path . 'bboss-groups/actions/random.php';
 			}
 

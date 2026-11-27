@@ -90,7 +90,7 @@ function bboss_xprofile_action_settings() {
 	if ( ! empty( $_POST['field_ids'] ) ) {
 
 		// Get the POST'ed field ID's.
-		$posted_field_ids = explode( ',', $_POST['field_ids'] );
+		$posted_field_ids = explode( ',', sanitize_text_field( wp_unslash( $_POST['field_ids'] ) ) );
 
 		// Backward compatibility: a bug in BP 2.0 caused only a single
 		// group's field IDs to be submitted. Look for values submitted
@@ -119,7 +119,7 @@ function bboss_xprofile_action_settings() {
 			$visibility_level = 'public';
 
 			if ( ! empty( $_POST[ 'field_' . $field_id . '_visibility' ] ) ) {
-				$visibility_level = $_POST[ 'field_' . $field_id . '_visibility' ];
+				$visibility_level = sanitize_text_field( wp_unslash( $_POST[ 'field_' . $field_id . '_visibility' ] ) );
 			}
 
 			bboss_xprofile_set_field_visibility_level( $field_id, bboss_displayed_user_id(), $visibility_level );

@@ -584,12 +584,12 @@ function bboss_has_members( $args = array() ) {
 
 	$member_type = '';
 
-	if ( isset( $_REQUEST['member_type'] ) && ! empty( $_REQUEST['member_type'] ) ) {
-		if ( is_array( $_REQUEST['member_type'] ) ) {
-			$member_type = $_REQUEST['member_type'];
+	if ( isset( $_REQUEST['member_type'] ) && ! empty( $_REQUEST['member_type'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; filters the members list by profile type.
+		if ( is_array( $_REQUEST['member_type'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; filters the members list by profile type.
+			$member_type = $_REQUEST['member_type']; // phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- read-only request; each type is validated with bp_get_member_type_object() in BP_User_Query::get_sql_clause_for_member_types().
 		} else {
 			// Can be a comma-separated list.
-			$member_type = explode( ',', $_REQUEST['member_type'] );
+			$member_type = explode( ',', $_REQUEST['member_type'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- read-only request; each type is validated with bp_get_member_type_object() in BP_User_Query::get_sql_clause_for_member_types().
 		}
 	}
 
@@ -604,8 +604,8 @@ function bboss_has_members( $args = array() ) {
 
 	$search_terms_default = null;
 	$search_query_arg     = bboss_core_get_component_search_query_arg( 'members' );
-	if ( ! empty( $_REQUEST[ $search_query_arg ] ) ) {
-		$search_terms_default = stripslashes( $_REQUEST[ $search_query_arg ] );
+	if ( ! empty( $_REQUEST[ $search_query_arg ] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; members search term.
+		$search_terms_default = stripslashes( $_REQUEST[ $search_query_arg ] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- read-only request; unslashed with stripslashes(), then escaped with bp_esc_like() and prepared in BP_User_Query.
 	}
 
 	$member_type__not_in = array();
@@ -655,8 +655,8 @@ function bboss_has_members( $args = array() ) {
 
 	// Pass a filter if ?s= is set.
 	if ( is_null( $r['search_terms'] ) ) {
-		if ( ! empty( $_REQUEST['s'] ) ) {
-			$r['search_terms'] = $_REQUEST['s'];
+		if ( ! empty( $_REQUEST['s'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; members search term.
+			$r['search_terms'] = $_REQUEST['s']; // phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- read-only request; the search term is escaped with bp_esc_like() and prepared in BP_User_Query.
 		} else {
 			$r['search_terms'] = false;
 		}
@@ -1927,16 +1927,16 @@ if ( function_exists( 'bboss_member_random_profile_data' ) && ! function_exists(
 function bboss_member_hidden_fields() {
 	$query_arg = bboss_core_get_component_search_query_arg( 'members' );
 
-	if ( isset( $_REQUEST[ $query_arg ] ) ) {
-		echo '<input type="hidden" id="search_terms" value="' . esc_attr( sanitize_text_field( wp_unslash( $_REQUEST[ $query_arg ] ) ) ) . '" name="search_terms" />';
+	if ( isset( $_REQUEST[ $query_arg ] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; only repeats the search parameters in hidden fields.
+		echo '<input type="hidden" id="search_terms" value="' . esc_attr( sanitize_text_field( wp_unslash( $_REQUEST[ $query_arg ] ) ) ) . '" name="search_terms" />'; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; only repeats the search parameters in hidden fields.
 	}
 
-	if ( isset( $_REQUEST['letter'] ) ) {
-		echo '<input type="hidden" id="selected_letter" value="' . esc_attr( sanitize_text_field( wp_unslash( $_REQUEST['letter'] ) ) ) . '" name="selected_letter" />';
+	if ( isset( $_REQUEST['letter'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; only repeats the search parameters in hidden fields.
+		echo '<input type="hidden" id="selected_letter" value="' . esc_attr( sanitize_text_field( wp_unslash( $_REQUEST['letter'] ) ) ) . '" name="selected_letter" />'; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; only repeats the search parameters in hidden fields.
 	}
 
-	if ( isset( $_REQUEST['members_search'] ) ) {
-		echo '<input type="hidden" id="search_terms" value="' . esc_attr( sanitize_text_field( wp_unslash( $_REQUEST['members_search'] ) ) ) . '" name="search_terms" />';
+	if ( isset( $_REQUEST['members_search'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; only repeats the search parameters in hidden fields.
+		echo '<input type="hidden" id="search_terms" value="' . esc_attr( sanitize_text_field( wp_unslash( $_REQUEST['members_search'] ) ) ) . '" name="search_terms" />'; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; only repeats the search parameters in hidden fields.
 	}
 }
 // @bbwt-com-start compat-layer
@@ -1963,8 +1963,8 @@ function bboss_directory_members_search_form() {
 
 	$query_arg = bboss_core_get_component_search_query_arg( 'members' );
 
-	if ( ! empty( $_REQUEST[ $query_arg ] ) ) {
-		$search_value = stripslashes( $_REQUEST[ $query_arg ] );
+	if ( ! empty( $_REQUEST[ $query_arg ] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; members search term.
+		$search_value = stripslashes( $_REQUEST[ $query_arg ] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- read-only request; unslashed with stripslashes() and escaped with esc_attr() below.
 	} else {
 		$search_value = bboss_get_search_default_text( 'members' );
 	}
@@ -3471,8 +3471,8 @@ function bboss_get_current_activation_key() {
 	$key = '';
 
 	if ( bboss_is_current_component( 'activate' ) ) {
-		if ( isset( $_GET['key'] ) ) {
-			$key = wp_unslash( $_GET['key'] );
+		if ( isset( $_GET['key'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; only reads the activation key from the URL.
+			$key = sanitize_text_field( wp_unslash( $_GET['key'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; only reads the activation key from the URL.
 		} else {
 			$key = bboss_current_action();
 		}
@@ -3538,12 +3538,12 @@ function bboss_get_signup_username_value() {
 
 	// grab the nickname field first
 	$nickname_field = 'field_' . bboss_xprofile_nickname_field_id();
-	if ( isset( $_POST[ $nickname_field ] ) ) {
-		$value = $_POST[ $nickname_field ];
+	if ( isset( $_POST[ $nickname_field ] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- only reads the submitted value back for the form; the signup is verified with bp_verify_nonce_request( 'bp_new_signup' ) in bp_core_screen_signup().
+		$value = $_POST[ $nickname_field ]; // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- only reads the submitted value back for the form; the signup is verified with bp_verify_nonce_request( 'bp_new_signup' ) in bp_core_screen_signup(); sanitised by the esc_html, wp_filter_kses and stripslashes filters added in bp_members_signup_sanitization().
 	}
 	// fallback to grab the username
-	elseif ( isset( $_POST['signup_username'] ) ) {
-		$value = $_POST['signup_username'];
+	elseif ( isset( $_POST['signup_username'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- only reads the submitted value back for the form; the signup is verified with bp_verify_nonce_request( 'bp_new_signup' ) in bp_core_screen_signup().
+		$value = $_POST['signup_username']; // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- only reads the submitted value back for the form; the signup is verified with bp_verify_nonce_request( 'bp_new_signup' ) in bp_core_screen_signup(); sanitised by the esc_html, wp_filter_kses and stripslashes filters added in bp_members_signup_sanitization().
 	}
 
 	/**
@@ -3603,8 +3603,8 @@ if ( function_exists( 'bboss_signup_email_value' ) && ! function_exists( 'bp_sig
 	 */
 function bboss_get_signup_email_value() {
 	$value = '';
-	if ( isset( $_POST['signup_email'] ) ) {
-		$value = $_POST['signup_email'];
+	if ( isset( $_POST['signup_email'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- only reads the submitted value back for the form; the signup is verified with bp_verify_nonce_request( 'bp_new_signup' ) in bp_core_screen_signup().
+		$value = $_POST['signup_email']; // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- only reads the submitted value back for the form; the signup is verified with bp_verify_nonce_request( 'bp_new_signup' ) in bp_core_screen_signup(); sanitised by the wp_filter_kses, stripslashes and sanitize_email filters added in bp_members_signup_sanitization().
 	}
 
 	/**
@@ -3662,8 +3662,8 @@ if ( function_exists( 'bboss_signup_with_blog_value' ) && ! function_exists( 'bp
 	 */
 function bboss_get_signup_with_blog_value() {
 	$value = '';
-	if ( isset( $_POST['signup_with_blog'] ) ) {
-		$value = $_POST['signup_with_blog'];
+	if ( isset( $_POST['signup_with_blog'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- only reads the submitted value back for the form; the signup is verified with bp_verify_nonce_request( 'bp_new_signup' ) in bp_core_screen_signup().
+		$value = $_POST['signup_with_blog']; // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- only reads the submitted value back for the form; the signup is verified with bp_verify_nonce_request( 'bp_new_signup' ) in bp_core_screen_signup(); sanitised by the esc_html, wp_filter_kses and stripslashes filters added in bp_members_signup_sanitization().
 	}
 
 	/**
@@ -3723,8 +3723,8 @@ if ( function_exists( 'bboss_signup_blog_url_value' ) && ! function_exists( 'bp_
 	 */
 function bboss_get_signup_blog_url_value() {
 	$value = '';
-	if ( isset( $_POST['signup_blog_url'] ) ) {
-		$value = $_POST['signup_blog_url'];
+	if ( isset( $_POST['signup_blog_url'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- only reads the submitted value back for the form; the signup is verified with bp_verify_nonce_request( 'bp_new_signup' ) in bp_core_screen_signup().
+		$value = $_POST['signup_blog_url']; // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- only reads the submitted value back for the form; the signup is verified with bp_verify_nonce_request( 'bp_new_signup' ) in bp_core_screen_signup(); sanitised by the esc_html, wp_filter_kses and stripslashes filters added in bp_members_signup_sanitization().
 	}
 
 	/**
@@ -3846,8 +3846,8 @@ if ( function_exists( 'bboss_signup_blog_title_value' ) && ! function_exists( 'b
 	 */
 function bboss_get_signup_blog_title_value() {
 	$value = '';
-	if ( isset( $_POST['signup_blog_title'] ) ) {
-		$value = $_POST['signup_blog_title'];
+	if ( isset( $_POST['signup_blog_title'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- only reads the submitted value back for the form; the signup is verified with bp_verify_nonce_request( 'bp_new_signup' ) in bp_core_screen_signup().
+		$value = $_POST['signup_blog_title']; // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- only reads the submitted value back for the form; the signup is verified with bp_verify_nonce_request( 'bp_new_signup' ) in bp_core_screen_signup(); sanitised by the esc_html, wp_filter_kses and stripslashes filters added in bp_members_signup_sanitization().
 	}
 
 	/**
@@ -3907,8 +3907,8 @@ if ( function_exists( 'bboss_signup_blog_privacy_value' ) && ! function_exists( 
 	 */
 function bboss_get_signup_blog_privacy_value() {
 	$value = '';
-	if ( isset( $_POST['signup_blog_privacy'] ) ) {
-		$value = $_POST['signup_blog_privacy'];
+	if ( isset( $_POST['signup_blog_privacy'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- only reads the submitted value back for the form; the signup is verified with bp_verify_nonce_request( 'bp_new_signup' ) in bp_core_screen_signup().
+		$value = $_POST['signup_blog_privacy']; // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- only reads the submitted value back for the form; the signup is verified with bp_verify_nonce_request( 'bp_new_signup' ) in bp_core_screen_signup(); sanitised by the esc_html, wp_filter_kses and stripslashes filters added in bp_members_signup_sanitization().
 	}
 
 	/**
@@ -3968,8 +3968,8 @@ function bboss_get_signup_avatar_dir_value() {
 	$bp = bboss();
 
 	// Check if signup_avatar_dir is passed.
-	if ( ! empty( $_POST['signup_avatar_dir'] ) ) {
-		$signup_avatar_dir = $_POST['signup_avatar_dir'];
+	if ( ! empty( $_POST['signup_avatar_dir'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- only reads the submitted value back for the form; the signup is verified with bp_verify_nonce_request( 'bp_new_signup' ) in bp_core_screen_signup().
+		$signup_avatar_dir = $_POST['signup_avatar_dir']; // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- only reads the submitted value back for the form; the signup is verified with bp_verify_nonce_request( 'bp_new_signup' ) in bp_core_screen_signup(); sanitised by the esc_html, wp_filter_kses and stripslashes filters added in bp_members_signup_sanitization().
 	}
 
 	// If not, check if global is set.
@@ -4517,8 +4517,8 @@ if ( function_exists( 'bboss_signup_confirm_email_value' ) && ! function_exists(
 	 */
 function bboss_get_signup_confirm_email_value() {
 	$value = '';
-	if ( isset( $_POST['signup_email_confirm'] ) ) {
-		$value = sanitize_email( wp_unslash( $_POST['signup_email_confirm'] ) );
+	if ( isset( $_POST['signup_email_confirm'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- only reads the submitted value back for the form; the signup is verified with bp_verify_nonce_request( 'bp_new_signup' ) in bp_core_screen_signup().
+		$value = sanitize_email( wp_unslash( $_POST['signup_email_confirm'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Missing -- only reads the submitted value back for the form; the signup is verified with bp_verify_nonce_request( 'bp_new_signup' ) in bp_core_screen_signup().
 	}
 
 	/**

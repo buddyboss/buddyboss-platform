@@ -161,7 +161,7 @@ class BBoss_Blogs_Component extends BBoss_Component {
 		}
 
 		// Actions.
-		if ( isset( $_GET['random-blog'] ) ) {
+		if ( isset( $_GET['random-blog'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request; only loads the random-site redirect.
 			require $this->path . 'bboss-blogs/actions/random.php';
 		}
 

@@ -1021,7 +1021,7 @@ function bboss_avatar_ajax_delete() {
 		wp_send_json_error();
 	}
 
-	$avatar_data              = $_POST;
+	$avatar_data              = $_POST; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked below with check_admin_referer().
 	$avatar_data['item_type'] = isset( $_POST['item_type'] ) ? sanitize_text_field( wp_unslash( $_POST['item_type'] ) ) : null;
 
 	if ( empty( $avatar_data['object'] ) || ( empty( $avatar_data['item_id'] ) && empty( $avatar_data['item_type'] ) ) ) {
@@ -1355,7 +1355,7 @@ function bboss_avatar_ajax_upload() {
 	$uploaded_image = @getimagesize( $bp->avatar_admin->image->file );
 
 	// Set the name of the file.
-	$name       = $_FILES['file']['name'];
+	$name       = $_FILES['file']['name']; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotValidated, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- file validated and stored by bp_core_avatar_handle_upload() above; only the display name is read.
 	$name_parts = pathinfo( $name );
 	$name       = trim( substr( $name, 0, - ( 1 + strlen( $name_parts['extension'] ) ) ) );
 
@@ -1398,7 +1398,7 @@ add_action( 'wp_ajax_bp_avatar_upload', 'bp_avatar_ajax_upload' );
  * @return bool True on success, false on failure.
  */
 function bboss_avatar_handle_capture( $data = '', $item_id = 0 ) {
-	$item_type = isset( $_POST['item_type'] ) ? sanitize_text_field( wp_unslash( $_POST['item_type'] ) ) : null;
+	$item_type = isset( $_POST['item_type'] ) ? sanitize_text_field( wp_unslash( $_POST['item_type'] ) ) : null; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked in bp_avatar_ajax_set().
 
 	if ( empty( $data ) || ( empty( $item_id ) && empty( $item_type ) ) ) {
 		return false;
@@ -2565,7 +2565,7 @@ function bboss_core_avatar_reset_query( $posts_query = null ) {
 	}
 
 	// A user or a group is cropping an avatar.
-	if ( true === $reset_w && isset( $_POST['avatar-crop-submit'] ) ) {
+	if ( true === $reset_w && isset( $_POST['avatar-crop-submit'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- read-only request; only resets the 'w' query var.
 		$posts_query->set( 'w', 0 );
 	}
 }
