@@ -1,7 +1,6 @@
 <?php
 /**
  * Plugin Name: BuddyBoss – Community, Social Network, Groups, Forums & Private Messaging
- * Plugin URI:  https://buddyboss.com/
  * Description: Build your online community with member profiles, activity feeds, groups, forums and private messaging in one social network plugin.
  * Author:      BuddyBoss
  * Author URI:  https://buddyboss.com/
