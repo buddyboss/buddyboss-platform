@@ -188,8 +188,10 @@ if ( ! class_exists( 'BBoss_Admin' ) ) :
 
 			// Email CPT column hooks removed — migrated to Settings 2.0 (AJAX handler).
 
+			// @bbwt-com-start buddyboss-app-integration
 			// Hello BuddyBoss/App.
 			add_action( 'admin_footer', array( $this, 'about_buddyboss_app_screen' ) );
+			// @bbwt-com-end buddyboss-app-integration
 
 			/* Filters ***********************************************************/
 
@@ -811,6 +813,7 @@ if ( ! class_exists( 'BBoss_Admin' ) ) :
 			);
 		}
 
+		// @bbwt-com-start buddyboss-app-integration
 		/** About BuddyBoss and BuddyBoss App ********************************************/
 
 		/**
@@ -826,6 +829,7 @@ if ( ! class_exists( 'BBoss_Admin' ) ) :
 
 			include $this->admin_dir . 'templates/about-buddyboss-app.php';
 		}
+		// @bbwt-com-end buddyboss-app-integration
 
 		/** Helpers ***************************************************************/
 

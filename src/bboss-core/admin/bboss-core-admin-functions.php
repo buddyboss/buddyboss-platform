@@ -1181,6 +1181,9 @@ if ( function_exists( 'bboss_core_get_admin_integrations_tabs' ) && ! function_e
  */
 function bboss_core_get_admin_integration_active_tab() {
 
+	// Builds without the BuddyBoss App integration tab (the wordpress.org edition) always
+	// default to the compatibility tab: the two fenced blocks below leave only the else body.
+	// @bbwt-com-start buddyboss-app-integration
 	if ( ! is_plugin_active( 'buddyboss-app/buddyboss-app.php' ) ) {
 
 		$default_tab = apply_filters( 'bp_core_admin_default_active_tab', 'bp-buddyboss-app' );
@@ -1188,12 +1191,15 @@ function bboss_core_get_admin_integration_active_tab() {
 		return isset( $_GET['tab'] ) ? $_GET['tab'] : $default_tab;
 
 	} else {
+	// @bbwt-com-end buddyboss-app-integration
 
 		$default_tab = apply_filters( 'bp_core_admin_default_active_tab', 'bp-compatibility' );
 
 		return isset( $_GET['tab'] ) ? $_GET['tab'] : $default_tab;
 
+	// @bbwt-com-start buddyboss-app-integration
 	}
+	// @bbwt-com-end buddyboss-app-integration
 }
 // @bbwt-com-start compat-layer
 // bbwt-rename:compat-aliases — the pre-rename name of the function above (decision 0013): declared right after it, guarded on it, so the old name exists exactly when the new one does.

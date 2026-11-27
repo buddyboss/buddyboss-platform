@@ -11344,9 +11344,11 @@ function bboss_admin_icons( $id ) {
 		case 'bp_pages':
 			$meta_icon = $bb_icon_bf . ' bb-icon-paste';
 			break;
+		// @bbwt-com-start buddyboss-app-integration
 		case 'bp_buddyboss_app-integration':
 			$meta_icon = $bb_icon_bf . ' bb-icon-brand-buddyboss-app';
 			break;
+		// @bbwt-com-end buddyboss-app-integration
 		case 'bp_compatibility-integration':
 			$meta_icon = $bb_icon_bf . ' bb-icon-brand-buddypress';
 			break;

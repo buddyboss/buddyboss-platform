@@ -266,6 +266,7 @@ if ( function_exists( 'bboss_core_admin_settings' ) && ! function_exists( 'bp_co
 // they are still referenced by the BP_Admin_Integration_tab base class
 // which Pro and third-party integration tabs extend.
 
+// @bbwt-com-start buddyboss-app-integration
 /**
  * Load the BuddyBoss App integration admin screen.
  *
@@ -293,6 +294,7 @@ if ( function_exists( 'bboss_core_admin_buddyboss_app' ) && ! function_exists( '
 }
 // @bbwt-com-end compat-layer
 
+// @bbwt-com-end buddyboss-app-integration
 
 /**
  * Output settings API option.
